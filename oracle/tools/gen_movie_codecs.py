@@ -39,22 +39,29 @@ def run(args):
     subprocess.run(args, check=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
 
 
-def planes_hashes(path, w, h):
-    """Decode `path` with ffmpeg to raw yuv420p and hash each picture's Y, U and V planes."""
+def planes_hashes(path, w, h, pix_fmt="yuv420p", decoder=None):
+    """Decode `path` with ffmpeg to raw planes and hash each picture's Y, U and V planes. A 10 bit format is hashed
+    after dropping its two low bits (the native decoder reduces a deep picture that way)."""
+    deep = "10" in pix_fmt
+    cw, ch = ((w + 1) // 2, (h + 1) // 2) if "420" in pix_fmt else (w, h)
+    pre = ["-c:v", decoder] if decoder else []
     raw = subprocess.run(
-        ["ffmpeg", "-v", "error", "-i", path, "-f", "rawvideo", "-pix_fmt", "yuv420p", "-"],
+        ["ffmpeg", "-v", "error"] + pre + ["-i", path, "-f", "rawvideo", "-pix_fmt", pix_fmt, "-"],
         check=True, stdout=subprocess.PIPE).stdout
-    cw, ch = (w + 1) // 2, (h + 1) // 2
     sizes = (w * h, cw * ch, cw * ch)
-    n = sum(sizes)
+    unit = 2 if deep else 1
+    n = sum(sizes) * unit
     assert len(raw) % n == 0
     lines = []
     for i in range(len(raw) // n):
         at = i * n
         hs = []
         for s in sizes:
-            hs.append(hashlib.sha256(raw[at:at + s]).hexdigest())
-            at += s
+            plane = raw[at:at + s * unit]
+            if deep:
+                plane = bytes(min(255, ((plane[2 * k + 1] << 8 | plane[2 * k]) >> 2)) for k in range(s))
+            hs.append(hashlib.sha256(plane).hexdigest())
+            at += s * unit
         lines.append("\t".join([str(i)] + hs))
     return lines
 
@@ -67,6 +74,33 @@ def make_vp8(name, spec):
          "-flags:v", "+bitexact"] + opts + [out])
     with open(os.path.join(media, name + ".planes.tsv"), "w") as f:
         f.write("\n".join(planes_hashes(out, w, h)) + "\n")
+    print(name, os.path.getsize(out), "bytes")
+
+
+# AV1 (rav1d, owner decision 2026-11-02): name: (lavfi source, w, h, rate, seconds, encoder options, pix_fmt, world).
+# The reference planes are decoded by libaom (`-c:v libaom-av1`), the AOMedia reference decoder, an implementation
+# independent of dav1d and so of rav1d; AV1 output is normative, so the planes must be equal.
+AV1 = {
+    "av1-testsrc": ("testsrc2", 96, 64, 10, 1.5, ["-c:v", "libaom-av1", "-cpu-used", "8", "-g", "5", "-crf", "30", "-b:v", "0"], "yuv420p", True),
+    "av1-parts": ("mandelbrot", 128, 80, 10, 1.0, ["-c:v", "libaom-av1", "-cpu-used", "6", "-g", "8", "-crf", "45", "-b:v", "0", "-tile-columns", "1", "-tile-rows", "1"], "yuv420p", True),
+    "av1-svt": ("testsrc2", 128, 80, 10, 1.0, ["-c:v", "libsvtav1", "-g", "5", "-crf", "35"], "yuv420p", True),
+    "av1-10bit": ("testsrc2", 64, 48, 10, 1.0, ["-c:v", "libaom-av1", "-cpu-used", "8", "-g", "5", "-crf", "30", "-b:v", "0"], "yuv420p10le", False),
+    "av1-444": ("testsrc2", 64, 48, 10, 1.0, ["-c:v", "libaom-av1", "-cpu-used", "8", "-g", "5", "-crf", "30", "-b:v", "0"], "yuv444p", False),
+    # Film grain synthesis (a normative post-process): libaom's test table 1.
+    "av1-grain": ("testsrc2", 64, 48, 10, 1.0, ["-c:v", "libaom-av1", "-cpu-used", "8", "-g", "5", "-crf", "30", "-b:v", "0", "-aom-params", "film-grain-test=1"], "yuv420p", False),
+}
+
+
+def make_av1(name, spec):
+    src, w, h, rate, seconds, opts, pix_fmt, world = spec
+    out = os.path.join(media, name + ".webm")
+    run(["ffmpeg", "-y", "-v", "error", "-f", "lavfi", "-t", str(seconds), "-i", f"{src}=size={w}x{h}:rate={rate}",
+         "-pix_fmt", pix_fmt, "-an", "-map_metadata", "-1", "-fflags", "+bitexact", "-flags:v", "+bitexact"]
+        + opts + [out])
+    with open(os.path.join(media, name + ".planes.tsv"), "w") as f:
+        f.write("\n".join(planes_hashes(out, w, h, pix_fmt, "libaom-av1")) + "\n")
+    if world:
+        make_world(name)
     print(name, os.path.getsize(out), "bytes")
 
 
@@ -137,6 +171,9 @@ if __name__ == "__main__":
         if not only or name in only:
             make_vp8(name, spec)
             make_world(name)
+    for name, spec in AV1.items():
+        if not only or name in only:
+            make_av1(name, spec)
     if not only or "vp8-ramp" in only:
         make_ramp()
     for name, spec in AV.items():

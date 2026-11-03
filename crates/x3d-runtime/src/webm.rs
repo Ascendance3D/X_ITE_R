@@ -10,6 +10,7 @@
 //! luma sample each, up to eight held) is bounded by [`MAX_LUMA_SAMPLES`], which is checked from the frame headers
 //! before the decoder runs; it is not bounded by `max_bytes`. A fixed 8192 x 4352 picture measured 860 MB peak.
 
+use crate::av1;
 use crate::vp8;
 use vp9dec::{Decoder, PlaneData};
 
@@ -22,6 +23,7 @@ const ID_TRACK_ENTRY: u64 = 0xAE;
 const ID_TRACK_NUMBER: u64 = 0xD7;
 const ID_TRACK_TYPE: u64 = 0x83;
 const ID_CODEC_ID: u64 = 0x86;
+const ID_CODEC_PRIVATE: u64 = 0x63A2;
 const ID_CLUSTER: u64 = 0x1F43_B675;
 const ID_TIMECODE: u64 = 0xE7;
 const ID_SIMPLE_BLOCK: u64 = 0xA3;
@@ -38,7 +40,7 @@ pub const MAX_LUMA_SAMPLES: u64 = 35_651_584;
 #[derive(Debug)]
 pub enum WebmError {
     NotWebm,
-    /// No video track with a codec that is decoded here (VP9, VP8).
+    /// No video track with a codec that is decoded here (VP9, VP8, AV1).
     NoVideoTrack,
     Decode(String),
     /// Either a picture codes more luma samples than [`MAX_LUMA_SAMPLES`] (refused before the decoder runs), or the
@@ -128,6 +130,7 @@ fn children(d: &[u8], start: usize, end: usize) -> Vec<(u64, usize, usize)> {
 enum Codec {
     Vp9,
     Vp8,
+    Av1,
 }
 
 struct Block {
@@ -324,6 +327,8 @@ fn demux(data: &[u8]) -> Result<(Codec, Vec<Block>), WebmError> {
                     track = Some((number, Codec::Vp9));
                 } else if track.is_none() && kind == 1 && codec == b"V_VP8" {
                     track = Some((number, Codec::Vp8));
+                } else if track.is_none() && kind == 1 && codec == b"V_AV1" {
+                    track = Some((number, Codec::Av1));
                 }
             }
         }
@@ -389,6 +394,7 @@ pub fn decode(data: &[u8], max_bytes: u64) -> Result<Video, WebmError> {
     match codec {
         Codec::Vp9 => decode_vp9(data, &blocks, max_bytes),
         Codec::Vp8 => decode_vp8(data, &blocks, max_bytes),
+        Codec::Av1 => decode_av1(data, &blocks, max_bytes),
     }
 }
 
@@ -453,6 +459,143 @@ fn decode_vp8(data: &[u8], blocks: &[Block], max_bytes: u64) -> Result<Video, We
             time_ms: b.time_ms,
         });
     }
+
+    if frames.is_empty() {
+        return Err(WebmError::Decode("no picture".into()));
+    }
+
+    Ok(Video {
+        width,
+        height,
+        frames,
+    })
+}
+
+/// The CodecPrivate (`av1C`) of the first `V_AV1` video track: its `configOBUs` carry the sequence header.
+fn av1_codec_private(data: &[u8]) -> Vec<u8> {
+    let top = children(data, 0, data.len());
+    let Some(&(_, seg_start, seg_end)) = top.iter().find(|t| t.0 == ID_SEGMENT) else {
+        return vec![];
+    };
+
+    for (id, s, e) in children(data, seg_start, seg_end) {
+        if id != ID_TRACKS {
+            continue;
+        }
+
+        for (tid, ts, te) in children(data, s, e) {
+            if tid != ID_TRACK_ENTRY {
+                continue;
+            }
+
+            let entry = children(data, ts, te);
+            let codec = entry.iter().find(|c| c.0 == ID_CODEC_ID);
+
+            if codec.is_some_and(|c| &data[c.1..c.2] == b"V_AV1") {
+                return entry
+                    .iter()
+                    .find(|c| c.0 == ID_CODEC_PRIVATE)
+                    .map(|c| data[c.1..c.2].to_vec())
+                    .unwrap_or_default();
+            }
+        }
+    }
+
+    vec![]
+}
+
+/// The AV1 temporal units of a file (rav1d, `crate::av1`). The sequence header of the CodecPrivate is fed first, as
+/// the Matroska mapping allows a key frame to omit it. A unit the decoder refuses ends the decode with an error.
+fn decode_av1(data: &[u8], blocks: &[Block], max_bytes: u64) -> Result<Video, WebmError> {
+    let mut decoder = av1::Av1Decoder::new(av1::Limits {
+        max_width: 16383,
+        max_height: 16383,
+    })
+    .map_err(|e| WebmError::Decode(e.to_string()))?;
+    let mut frames = vec![];
+    let (mut width, mut height) = (0, 0);
+    let mut bytes = 0u64;
+    // A picture comes out with the time of the unit that was fed when it left the decoder; with one frame of delay
+    // that is the unit's own time or the next one's, so the times are taken from the blocks in order.
+    let mut times = blocks.iter().map(|b| b.time_ms);
+    let mut push = |pictures: Vec<av1::Picture>,
+                    frames: &mut Vec<VideoFrame>,
+                    times: &mut dyn Iterator<Item = f64>|
+     -> Result<(), WebmError> {
+        for p in pictures {
+            if (p.width as u64) * (p.height as u64) > MAX_LUMA_SAMPLES {
+                return Err(WebmError::TooLarge);
+            }
+
+            width = p.width as u32;
+            height = p.height as u32;
+            bytes = bytes.saturating_add(u64::from(width) * u64::from(height) * 4);
+
+            if bytes > max_bytes {
+                return Err(WebmError::TooLarge);
+            }
+
+            let [mut y, mut u, mut v] = p.planes;
+
+            if p.full_range {
+                for s in y.iter_mut() {
+                    *s = (16.0 + f32::from(*s) * 219.0 / 255.0).round() as u8;
+                }
+
+                for s in u.iter_mut().chain(v.iter_mut()) {
+                    *s = (128.0 + (f32::from(*s) - 128.0) * 224.0 / 254.0)
+                        .round()
+                        .clamp(16.0, 240.0) as u8;
+                }
+            }
+
+            let (sx, sy) = match p.layout {
+                1 => (true, true),
+                2 => (true, false),
+                _ => (false, false),
+            };
+            // ISO/IEC 23091-4 matrix_coefficients: 5 and 6 are BT.601; 1 and 2 (unspecified) are BT.709, which a
+            // browser applies to an untagged picture.
+            let matrix = if matches!(p.matrix, 5 | 6) {
+                BT601
+            } else {
+                BT709
+            };
+
+            frames.push(VideoFrame {
+                rgba: yuv_to_rgba(p.width, p.height, sx, sy, &y, &u, &v, matrix),
+                time_ms: times.next().unwrap_or(0.0),
+            });
+        }
+
+        Ok(())
+    };
+
+    let private = av1_codec_private(data);
+    let config = av1::config_obus(&private);
+
+    if !config.is_empty() {
+        // The sequence header alone gives no picture.
+        std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| decoder.decode(config)))
+            .map_err(|_| WebmError::Decode("the decoder panicked".into()))?
+            .map_err(|e| WebmError::Decode(e.to_string()))?;
+    }
+
+    for b in blocks {
+        let pictures = std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
+            decoder.decode(&data[b.start..b.end])
+        }))
+        .map_err(|_| WebmError::Decode("the decoder panicked".into()))?
+        .map_err(|e| WebmError::Decode(e.to_string()))?;
+
+        push(pictures, &mut frames, &mut times)?;
+    }
+
+    let rest = std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| decoder.finish()))
+        .map_err(|_| WebmError::Decode("the decoder panicked".into()))?
+        .map_err(|e| WebmError::Decode(e.to_string()))?;
+
+    push(rest, &mut frames, &mut times)?;
 
     if frames.is_empty() {
         return Err(WebmError::Decode("no picture".into()));
@@ -1675,6 +1818,123 @@ mod tests {
                 );
             }
         }
+    }
+
+    /// AV1 streams: (name, width, height, layout 1 = 4:2:0 / 3 = 4:4:4). Planes as libaom outputs them (8 bit; the
+    /// 10 bit stream with its two low bits dropped). `av1-grain` has film grain synthesis, `av1-parts` has tiles,
+    /// `av1-svt` is made by a second encoder.
+    const AV1_FIXTURES: [(&str, usize, usize, u8); 6] = [
+        ("av1-testsrc", 96, 64, 1),
+        ("av1-parts", 128, 80, 1),
+        ("av1-svt", 128, 80, 1),
+        ("av1-10bit", 64, 48, 1),
+        ("av1-444", 64, 48, 3),
+        ("av1-grain", 64, 48, 1),
+    ];
+
+    fn av1_pictures(webm: &[u8]) -> Vec<av1::Picture> {
+        let (codec, blocks) = demux(webm).unwrap();
+
+        assert_eq!(codec, Codec::Av1);
+
+        let mut decoder = av1::Av1Decoder::new(av1::Limits {
+            max_width: 16383,
+            max_height: 16383,
+        })
+        .unwrap();
+        let private = av1_codec_private(webm);
+        let mut out = decoder.decode(av1::config_obus(&private)).unwrap();
+
+        for b in &blocks {
+            out.extend(decoder.decode(&webm[b.start..b.end]).unwrap());
+        }
+
+        out.extend(decoder.finish().unwrap());
+        out
+    }
+
+    /// BR1.1: every picture of every AV1 stream equals what libaom, the AOMedia reference decoder, outputs, plane by
+    /// plane: 8 and 10 bit, 4:2:0 and 4:4:4, tiles, a second encoder, and film grain.
+    #[test]
+    fn av1_pictures_equal_the_reference_decoder_plane_by_plane() {
+        for (name, w, h, layout) in AV1_FIXTURES {
+            let (webm, expected) = codec_fixture(name);
+            let pictures = av1_pictures(&webm);
+
+            assert_eq!(pictures.len(), expected.len(), "{name}: picture count");
+
+            for (i, (p, want)) in pictures.iter().zip(&expected).enumerate() {
+                assert_eq!((p.width, p.height, p.layout), (w, h, layout), "{name}");
+
+                for (k, plane) in p.planes.iter().enumerate() {
+                    assert_eq!(&sha(plane), &want[k], "{name}: picture {i}, plane {k}");
+                }
+            }
+        }
+    }
+
+    #[test]
+    fn an_av1_webm_decodes_to_rgba_pictures_with_their_times() {
+        let (webm, _) = codec_fixture("av1-testsrc");
+        let v = decode(&webm, BUDGET).unwrap();
+
+        assert_eq!((v.width, v.height), (96, 64));
+        assert_eq!(v.frames.len(), 15);
+        assert!(v.frames.iter().all(|f| f.rgba.len() == 96 * 64 * 4));
+        assert!(
+            v.frames
+                .windows(2)
+                .all(|w| (w[1].time_ms - w[0].time_ms - 100.0).abs() < 1e-6)
+        );
+        assert!(v.frames[0].rgba.chunks(4).any(|p| p[0] != p[1]));
+    }
+
+    /// BR1.8 for AV1, truncation: every cut of a file gives pictures or an error, never a panic.
+    #[test]
+    fn a_truncated_av1_file_never_panics() {
+        let (webm, _) = codec_fixture("av1-testsrc");
+        let step = (webm.len() / 50).max(1);
+
+        for cut in (0..webm.len()).step_by(step) {
+            let d = &webm[..cut];
+
+            assert!(
+                std::panic::catch_unwind(|| decode(d, BUDGET)).is_ok(),
+                "panicked on a cut at {cut}"
+            );
+        }
+    }
+
+    /// KNOWN FAILURE, owner decision pending: rav1d's C interface is `extern "C"` and cannot unwind, and some
+    /// damaged streams make it panic in its own error path (decode.rs `on_error` unwraps a frame header that is
+    /// not there), which aborts the process: `catch_unwind` cannot stop it. `Av1Decoder::check` refuses the
+    /// damage it can recognize (OBU framing, a frame before any accepted sequence header). Run with
+    /// `--ignored` to see the abort; fixing it needs a patched rav1d (catch_unwind at its three FFI entry points)
+    /// or a decode in a separate process.
+    #[test]
+    #[ignore = "rav1d aborts the process on some damaged streams (see the doc comment)"]
+    fn mutated_av1_files_never_panic() {
+        let (webm, _) = codec_fixture("av1-testsrc");
+        let mut rng = Rng(0xA71);
+
+        for _ in 0..40 {
+            let d = mutate(&webm, &mut rng);
+
+            assert!(
+                std::panic::catch_unwind(|| decode(&d, BUDGET)).is_ok(),
+                "panicked on a mutated file"
+            );
+        }
+    }
+
+    #[test]
+    fn an_av1_webm_beyond_the_byte_budget_is_refused() {
+        let (webm, _) = codec_fixture("av1-testsrc");
+
+        assert!(matches!(
+            decode(&webm, 96 * 64 * 4 * 3),
+            Err(WebmError::TooLarge)
+        ));
     }
 
     /// A WebM with two video tracks, number 1 coded `first` and number 2 coded `second`, and one block on each.

@@ -6,6 +6,9 @@ license.workspace = true
 publish.workspace = true
 description = "X3D scene runtime: event engine, PROTO instancing, loading; ported from X_ITE (MIT)."
 
+[features]
+av1-asm = ["rav1d/asm"]
+
 [dependencies]
 x3d-fields = { path = "../x3d-fields" }
 x3d-scene = { path = "../x3d-scene" }
@@ -13,6 +16,11 @@ x3d-parse = { path = "../x3d-parse" }
 x3d-text = { path = "../x3d-text" }
 # VP9 decode of a MovieTexture WebM (webm.rs): MIT, no dependencies, conformance-tested against the libvpx vectors.
 vp9dec = "0.1.1"
+# AV1 decode of a MovieTexture WebM (av1.rs): BSD-2-Clause, a Rust port of dav1d (owner decision 2026-11-02). Its `asm`
+# default feature is off: it needs nasm at build time and does not exist on wasm32. The `av1-asm` feature of this crate
+# turns it on for a native build that wants the speed. Patent exposure is an unresolved release risk recorded in
+# docs/decoder-admission.md; this dependency is not a patent clearance.
+rav1d = { version = "1.1.0", default-features = false, features = ["bitdepth_8", "bitdepth_16"] }
 url = "2"
 percent-encoding = "2"
 # Image headers only (X3DTexture2DNode width and height); the same crate x3d-render decodes with.
