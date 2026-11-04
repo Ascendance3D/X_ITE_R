@@ -11,7 +11,8 @@
 
 Sets: anim (oracle/movie-anim-baseline, playback; worlds from oracle/tools/gen_movie_anim.py, MSAA 0 and 4) and
 load-errors (oracle/movie-load-errors-baseline, PNG load states; oracle/tools/gen_movie_load_errors.py, MSAA 0) and
-video (oracle/movie-video-baseline, WebM pictures at fixed movie times; oracle/tools/gen_movie_video.py, MSAA 0 and 4).
+video (oracle/movie-video-baseline, WebM VP8 and VP9 pictures at fixed movie times; oracle/tools/gen_movie_video.py, MSAA 0 and 4) and
+video-av1 (oracle/movie-video-av1-baseline, the same seeks on AV1 streams; the same generator, its movie-video-av1 world, MSAA 0 and 4).
 A baseline is written only from an X_ITE run; the Rust result is compared (crates/x3d-viewer/tests/movie_anim.rs),
 never copied.
 """
@@ -22,6 +23,7 @@ SETS = {
     "anim": ("movie-anim-baseline", "synthetic-movie-anim", ["movie-anim"], ["0", "4"]),
     "load-errors": ("movie-load-errors-baseline", "synthetic-movie-load-errors", ["movie-load-errors"], ["0"]),
     "video": ("movie-video-baseline", "synthetic-movie-video", ["movie-video"], ["0", "4"]),
+    "video-av1": ("movie-video-av1-baseline", "synthetic-movie-video", ["movie-video-av1"], ["0", "4"]),
 }
 
 

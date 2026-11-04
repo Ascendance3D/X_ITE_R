@@ -326,8 +326,50 @@ fn movie_load_errors_match_x_ite() {
 /// WebM pictures at fixed movie times (VP8 ramp, test pattern and parts, VP9), MSAA 0 and 4, against the pinned page
 /// (oracle/movie-video-baseline, five identical recordings; oracle/tools/gen_movie_video.py). The recorder sets the
 /// element's currentTime (`movieSeek`); `x3d-drive` calls `Runtime::movie_seek` at the same frame. Each node plays at
-/// speed 0, so the picture is the one the seek chose. AV1 is not in this world (the AV1 decoder is not in master yet).
+/// speed 0, so the picture is the one the seek chose. AV1 is not in this world (see `movie_video_av1_frames_match_x_ite`).
 #[test]
 fn movie_video_frames_match_x_ite() {
     compare_baseline("movie-video-baseline");
+}
+
+/// The same seeks on AV1 streams (av1-testsrc, av1-parts, av1-svt, av1-grain, av1-10bit, av1-444), MSAA 0 and 4, against
+/// the pinned page, which plays AV1 itself (oracle/movie-video-av1-baseline, five identical recordings; the `movie-video-av1`
+/// world of oracle/tools/gen_movie_video.py). X_ITE_R decodes AV1 only with the `av1` feature (rav1d, off by default), so
+/// the comparison runs with `--features av1` (CI passes `x3d-viewer/av1`) and is reported as ignored, never as passed, without it. The baseline
+/// must be there in both cases: a missing key fails (`movie_video_av1_baseline_is_present`), and with the feature the
+/// comparison fails on a missing key and on a world whose AV1 pictures are not drawn.
+#[test]
+#[cfg_attr(
+    not(feature = "av1"),
+    ignore = "needs --features av1 (rav1d is off by default)"
+)]
+fn movie_video_av1_frames_match_x_ite() {
+    compare_baseline("movie-video-av1-baseline");
+}
+
+#[test]
+fn movie_video_av1_baseline_is_present() {
+    let root = PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("../..");
+    let dir = root.join("oracle/movie-video-av1-baseline");
+    let cases =
+        std::fs::read_to_string(dir.join("cases.txt")).expect("cases.txt of the AV1 baseline");
+    let mut seen = 0;
+
+    for line in cases.lines().filter(|l| !l.trim().is_empty()) {
+        let f: Vec<&str> = line.split_whitespace().collect();
+        let case = dir.join(format!("{}-msaa{}", f[0], f[3]));
+
+        assert!(
+            case.join("js.json").is_file(),
+            "missing {}",
+            case.join("js.json").display()
+        );
+
+        let pngs = std::fs::read_dir(case.join("js")).expect("js dir").count();
+
+        assert_eq!(pngs, 5, "{}: 5 pictures expected", case.display());
+        seen += 1;
+    }
+
+    assert_eq!(seen, 2, "MSAA 0 and MSAA 4");
 }
