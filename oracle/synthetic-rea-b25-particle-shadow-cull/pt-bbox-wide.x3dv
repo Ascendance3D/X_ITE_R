@@ -1,0 +1,23 @@
+#X3D V4.0 utf8
+PROFILE Full
+COMPONENT ParticleSystems:3
+COMPONENT Shape:5
+COMPONENT Lighting:3
+NavigationInfo { headlight FALSE }
+Viewpoint { position 0 4.5 4.5 orientation 1 0 0 -0.785 }
+Background { skyColor 0.1 0.1 0.2 }
+PointLight { location 0 3 0 radius 30 ambientIntensity 0.3 shadows TRUE shadowIntensity 1 shadowMapSize 1024 }
+Shape { appearance Appearance { material Material { diffuseColor 0.8 0.8 0.8 } } geometry Box { size 6 0.1 6 } }
+DEF PS ParticleSystem {
+  geometryType "GEOMETRY"
+  maxParticles 80
+  emissionRate 20
+  particleLifetime 4
+  lifetimeVariation 0
+  particleSize 0.3 0.3
+  geometry Sphere { radius 0.14 }
+  bboxSize 8 8 8
+  physics ForcePhysicsModel { force 0 -4 0 }
+  emitter PointEmitter { position 1.6 2.7 0 direction 0 0 1 speed 0 variation 0 mass 1 }
+  appearance Appearance { material Material { diffuseColor 1 0.6 0.2 } }
+}

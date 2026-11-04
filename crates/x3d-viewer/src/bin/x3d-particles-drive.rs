@@ -10,7 +10,8 @@
 //!              "dumps": { "<frame>": { "numParticles": n, "offset": <first float of the records> } } }
 //!   rs.f32:  little-endian float32, n * 28 per dump
 //!
-//! The script is the one x_ite_particles.mjs reads: dt, t0, frames, warmup, node (DEF name),
+//! The script is the one x_ite_particles.mjs reads: dt, t0, frames, warmup, node (DEF name, or a path "INLINE/NAME" of
+//! the DEF name of an Inline and a DEF name in its internal scene, for a system inside an Inline),
 //! dump | dumpAll, filter ("born": only the records created in that frame). The per-frame
 //! `randomSeed` of the emitter pass is X_ITE's `Math.random () * 0xffffffff`; the baseline's values
 //! are injected so that both sides see the same random numbers.
@@ -165,6 +166,25 @@ struct Capture {
     size: (u32, u32),
 }
 
+/// The node of a script's `node`: a DEF name of the root scene, or a path "INLINE/NAME" (each segment but the last names an
+/// Inline whose internal scene, Inline .getInternalScene, holds the next).
+fn named_node_path(v: &Viewer3d, path: &str) -> Option<NodeId> {
+    let mut ctx = ROOT;
+    let mut parts = path.split('/').peekable();
+
+    while let Some(part) = parts.next() {
+        let node = v.rt.scene.contexts[ctx].named_nodes.get(part)?;
+
+        if parts.peek().is_none() {
+            return Some(node);
+        }
+
+        ctx = v.rt.inline_scenes.get(&node).copied()?;
+    }
+
+    None
+}
+
 fn run(
     world: &Path,
     script: &Value,
@@ -291,10 +311,7 @@ fn run(
     let vrml_load = v.rt.scene.to_vrml_string();
 
     // Back to the state before the first animateParticles, then the recorded seeds.
-    let ps = v.rt.scene.contexts[ROOT]
-        .named_nodes
-        .get(name)
-        .ok_or_else(|| fail(format!("no node named {name}")))?;
+    let ps = named_node_path(&v, name).ok_or_else(|| fail(format!("no node named {name}")))?;
 
     if v.rt.particle_sim(ps).is_none() {
         return Err(fail(format!("{name} is not a ParticleSystem")));
