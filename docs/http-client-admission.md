@@ -29,6 +29,31 @@ covers them. The owner can replace `webpki-roots` by the roots of the operating 
 (CDLA-Permissive-2.0). The admission covers the HTTP client of the native build only; it does not widen BR1.7 for decoders. A new
 package or a license change in an update needs a new decision.
 
+**Verification, 2026-11-04 (head of PR #438 against master, `Cargo.lock`).** The PR adds 16 registry packages and `x3d-http`. The license of
+each is the `license` field of its own `Cargo.toml`:
+
+| Package | Version | License | Rule |
+| --- | --- | --- | --- |
+| base64 | 0.23.1 | MIT OR Apache-2.0 | BR1.7 list |
+| getrandom | 0.2.17 | MIT OR Apache-2.0 | BR1.7 list |
+| http | 1.5.0 | MIT OR Apache-2.0 | BR1.7 list |
+| httparse | 1.10.1 | MIT OR Apache-2.0 | BR1.7 list |
+| rustls | 0.23.46 | Apache-2.0 OR ISC OR MIT | BR1.7 list (MIT or Apache-2.0 is chosen) |
+| rustls-pki-types | 1.15.1 | MIT OR Apache-2.0 | BR1.7 list |
+| subtle | 2.6.1 | BSD-3-Clause | BR1.7 list (BSD) |
+| ureq | 3.5.1 | MIT OR Apache-2.0 | BR1.7 list |
+| ureq-proto | 0.7.1 | MIT OR Apache-2.0 | BR1.7 list |
+| utf8-zero | 0.8.1 | MIT OR Apache-2.0 | BR1.7 list |
+| wasi | 0.11.1+wasi-snapshot-preview1 | Apache-2.0 WITH LLVM-exception OR Apache-2.0 OR MIT | BR1.7 list (MIT or Apache-2.0 is chosen) |
+| zeroize | 1.9.1 | Apache-2.0 OR MIT | BR1.7 list |
+| ring | 0.17.14 | Apache-2.0 AND ISC | owner admission above |
+| rustls-webpki | 0.103.16 | ISC | owner admission above |
+| untrusted | 0.9.0 | ISC | owner admission above |
+| webpki-roots | 1.0.11 | CDLA-Permissive-2.0 | owner admission above |
+
+No package is outside the BR1.7 list and the four admitted packages. The owner selected "Admit all four" for this exact list of four
+packages and versions (coordinator session, 2026-11-04).
+
 ## Platforms
 
 No package outside the Rust crates is needed. `ring` compiles C and assembly with the C compiler that the CI jobs already have (Linux, macOS, Windows). The
