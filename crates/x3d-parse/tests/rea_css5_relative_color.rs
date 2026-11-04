@@ -43,6 +43,24 @@ fn same(a: f64, b: f64, tolerance: f64) -> bool {
     (a.is_nan() && b.is_nan()) || (a - b).abs() <= tolerance
 }
 
+/// Comparison of one converted number (Chrome's `expected`, Rust's `got`, both on the same scale).
+/// A relative tolerance alone would let a wrong sign, a wrong zero or a non-finite value pass, so:
+/// * NaN must be NaN on both sides, never NaN against a number;
+/// * an infinity must be the same infinity (the difference of two infinities is NaN, which a bare
+///   `error <= tolerance` would also reject, but an infinity against a finite number is never close);
+/// * below magnitude 1 the error is absolute, so an expected zero accepts at most
+///   `CONVERTED_TOLERANCE` and a sign flip is accepted only when both numbers are within it;
+/// * from magnitude 1 up the error is relative to the expected value.
+fn converted_same(expected: f64, got: f64) -> bool {
+    if expected.is_nan() || got.is_nan() {
+        return expected.is_nan() && got.is_nan();
+    }
+    if expected.is_infinite() || got.is_infinite() {
+        return expected == got;
+    }
+    (expected - got).abs() / expected.abs().max(1.0) <= CONVERTED_TOLERANCE
+}
+
 #[test]
 fn relative_colors_match_chrome() {
     let baseline = baseline();
@@ -125,14 +143,15 @@ fn converted_relative_colors_match_chrome_to_float_precision() {
 
         for i in 0..4 {
             let (e, g) = (expected[i] * scale(i), c[i] * scale(i));
-            if e.is_nan() || g.is_nan() {
-                ok &= e.is_nan() && g.is_nan();
+            if e.is_nan() || g.is_nan() || e.is_infinite() || g.is_infinite() {
+                ok &= converted_same(e, g);
+                all_exact &= e.to_bits() == g.to_bits() || (e.is_nan() && g.is_nan());
                 continue;
             }
             let error = (e - g).abs() / e.abs().max(1.0);
             all_exact &= same(expected[i], c[i], 1e-12 * expected[i].abs().max(1.0));
             worst = worst.max(error);
-            ok &= error <= CONVERTED_TOLERANCE;
+            ok &= converted_same(e, g);
         }
 
         exact += usize::from(all_exact);
@@ -193,4 +212,32 @@ fn relative_baseline_covers_every_function() {
         "nested values"
     );
     assert!(converted.len() >= 300, "converted values");
+}
+
+/// The converted comparison must not hide errors at zero, near zero, below zero or at non-finite
+/// values (owner condition on `CONVERTED_TOLERANCE`).
+#[test]
+fn converted_comparison_does_not_hide_edge_cases() {
+    let t = CONVERTED_TOLERANCE;
+    // Zero: only a difference within the tolerance passes, either sign.
+    assert!(converted_same(0.0, 0.0));
+    assert!(converted_same(0.0, 0.5 * t) && converted_same(0.0, -0.5 * t));
+    assert!(!converted_same(0.0, 2.0 * t) && !converted_same(0.0, -2.0 * t));
+    // Near zero (below 1 the error is absolute, so a relative error of 100% still fails above t).
+    assert!(!converted_same(1e-3, 2e-3) && !converted_same(1e-3, -1e-3));
+    assert!(converted_same(1e-3, 1e-3 + 0.5 * t));
+    // Negative values: the sign counts.
+    assert!(converted_same(-0.5, -0.5 + 0.5 * t));
+    assert!(!converted_same(-0.5, 0.5) && !converted_same(0.5, -0.5));
+    assert!(!converted_same(-2.0, 2.0));
+    // From magnitude 1 up the error is relative: 100 may differ by 100 * t, not by more.
+    assert!(converted_same(100.0, 100.0 * (1.0 + 0.5 * t)));
+    assert!(!converted_same(100.0, 100.0 * (1.0 + 2.0 * t)));
+    // Non-finite: NaN only against NaN, an infinity only against the same infinity.
+    assert!(converted_same(f64::NAN, f64::NAN));
+    assert!(!converted_same(f64::NAN, 0.0) && !converted_same(0.0, f64::NAN));
+    assert!(converted_same(f64::INFINITY, f64::INFINITY));
+    assert!(!converted_same(f64::INFINITY, f64::NEG_INFINITY));
+    assert!(!converted_same(f64::INFINITY, f64::MAX) && !converted_same(1.0, f64::INFINITY));
+    assert!(converted_same(f64::NEG_INFINITY, f64::NEG_INFINITY));
 }
