@@ -186,6 +186,37 @@ INLINE_CASES = {
 }
 
 
+# Added with issue #93's follow-up lane (XITE_R_AGENT_X_PARTICLES): records of a system inside an Inline, and a texCoord ramp
+# on POINT and LINE systems. Seeds are LATE_SEED + index of this table, so older cases keep theirs.
+LATE_SEED = 9400000
+# The dumped system is in an Inline: the script's "node" is the path "INLINE/NAME" (DEF names; the dumper and
+# x3d-particles-drive descend through Inline .getInternalScene ()). The world has no other ParticleSystem.
+INLINE_RECORD_CHILDREN = {
+    "pr-inline-records": ps("QUAD", RAMP_RGB),
+    "pr-inline-records-inner": ps("QUAD", RAMP_RGB),
+    "pr-inline-records-outer": 'Transform { translation 0.3 0 0 scale 1 1.2 1 children [ DEF IN Inline { url "pr-inline-records-inner.x3dv" } ] }\n',
+}
+INLINE_RECORD_CASES = {
+    "pr-inline-records": ('DEF INL Inline { url "inline/pr-inline-records.x3dv" }\n', "INL/PS"),
+    "pr-inline-records-nested": ('DEF OUT Inline { url "inline/pr-inline-records-outer.x3dv" }\n', "OUT/IN/PS"),
+}
+# POINT and LINE have no texture coordinates (texCoordCount 0): a texCoord ramp has no points to sample, and the
+# unlit white emissive color shows the one texel a vertex reads. Each ramp case has its no-ramp twin.
+# Every ramp point reads a red texel of the checker (the zero coordinate reads the green one), so a draw that used the ramp
+# would turn the green particles red.
+RAMP_RED = ("texCoordKey [0 0.5] texCoord TextureCoordinate { point [0.3 0.1, 0.3 0.1, 0.3 0.1, 0.3 0.1, "
+            "0.3 0.1, 0.3 0.1, 0.3 0.1, 0.3 0.1] }")
+UNLIT_TEXTURED = f"Appearance {{ material UnlitMaterial {{ emissiveColor 1 1 1 }} texture {PIXELS} }}"
+LATE_CASES = {
+    "pr-point-texture": ps("POINT", appearance=UNLIT_TEXTURED),
+    "pr-point-texramp": ps("POINT", RAMP_RED, appearance=UNLIT_TEXTURED),
+    "pr-point-texramp-props": ps("POINT", RAMP_RED, appearance=UNLIT_TEXTURED.replace(
+        "texture", "pointProperties PointProperties { pointSizeScaleFactor 6 } texture")),
+    "pr-line-texture": ps("LINE", size="0.15 0.3", appearance=UNLIT_TEXTURED),
+    "pr-line-texramp": ps("LINE", RAMP_RED, size="0.15 0.3", appearance=UNLIT_TEXTURED),
+}
+
+
 def main():
     os.makedirs(os.path.join(ROOT, "scripts"), exist_ok=True)
 
@@ -218,7 +249,25 @@ def main():
         with open(os.path.join(ROOT, GAP_CHILD_DIR, name + ".x3dv"), "w") as f:
             f.write(HEAD + body)
 
-    print(f"{len(CASES) + len(EVENTS) + len(GAP_CASES) + len(INLINE_CASES)} cases in {ROOT}")
+    for name, body in INLINE_RECORD_CHILDREN.items():
+        with open(os.path.join(ROOT, GAP_CHILD_DIR, name + ".x3dv"), "w") as f:
+            f.write(HEAD + body)
+
+    for i, (name, (body, node)) in enumerate(INLINE_RECORD_CASES.items()):
+        with open(os.path.join(ROOT, name + ".x3dv"), "w") as f:
+            f.write(HEAD + VIEW + body)
+
+        with open(os.path.join(ROOT, "scripts", name + ".json"), "w") as f:
+            json.dump(dict(script, seed=LATE_SEED + i, node=node), f)
+
+    for i, (name, body) in enumerate(LATE_CASES.items()):
+        with open(os.path.join(ROOT, name + ".x3dv"), "w") as f:
+            f.write(HEAD + VIEW + body)
+
+        with open(os.path.join(ROOT, "scripts", name + ".json"), "w") as f:
+            json.dump(dict(script, seed=LATE_SEED + 100 + i), f)
+
+    print(f"{len(CASES) + len(EVENTS) + len(GAP_CASES) + len(INLINE_CASES) + len(INLINE_RECORD_CASES) + len(LATE_CASES)} cases in {ROOT}")
 
 
 if __name__ == "__main__":

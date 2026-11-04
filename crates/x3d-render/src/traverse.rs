@@ -844,6 +844,20 @@ fn view_volume_intersects_sphere(projection: &Matrix4, radius: f64, center: &Vec
         .any(|(point, normal)| center.dot(normal) - point.dot(normal) > radius)
 }
 
+/// X3DRenderObject.addDisplayShape and addDepthShape: `viewVolume .intersectsSphere (radius, bboxCenter)` with the
+/// shape's bbox in view space (`radius = bboxSize .norm () / 2`) under `mv`, for the view volume of `projection`.
+fn bbox_sphere_in_view(projection: &Matrix4, mv: &Matrix4, bbox: &Box3) -> bool {
+    let (min, max) = bbox.extents();
+    let mut size = max;
+    size.subtract(&min);
+    let mut center = bbox.center();
+
+    mv.mult_dir_matrix(&mut size);
+    mv.mult_vec_matrix3(&mut center);
+
+    view_volume_intersects_sphere(projection, size.norm() / 2.0, &center)
+}
+
 /// One renderObject.render (TraverseType.SHADOW) of the light's group.
 #[derive(Clone, Debug)]
 pub struct ShadowView {
@@ -1369,6 +1383,9 @@ pub struct Builder<'a> {
     layer_roots: Vec<NodeId>,
     /// The shadow maps of the frame being built.
     shadow_maps: Vec<ShadowMap>,
+    /// The projection of the light view whose depth shapes [`Self::shadow_items`] collects: the view volume of
+    /// X3DRenderObject.addDepthShape (`viewVolumes .at (-1)`).
+    shadow_projection: Option<Matrix4>,
     /// The light containers with a shadow map of the frame being built: the light node, its
     /// model matrix, its invLightSpaceProjectionMatrix and its uniforms. A texture pass (a
     /// DependentRenderer) finds the container of the same light and uses its map.
@@ -1594,6 +1611,7 @@ impl<'a> Builder<'a> {
             groups: vec![],
             layer_roots: vec![],
             shadow_maps: vec![],
+            shadow_projection: None,
             shadow_sources: vec![],
             local_lights: vec![],
             local_fogs: vec![],
@@ -2694,7 +2712,7 @@ impl<'a> Builder<'a> {
                 views.push(shadow_view(
                     projection,
                     [0, 0, size, size],
-                    self.shadow_items(sg, &group, &inv_light_space),
+                    self.shadow_items(sg, &group, &inv_light_space, &projection),
                 ));
                 map_matrix = inv_light_space;
                 if !global {
@@ -2727,7 +2745,7 @@ impl<'a> Builder<'a> {
                 views.push(shadow_view(
                     projection,
                     [0, 0, size, size],
-                    self.shadow_items(sg, &group, &inv_light_space),
+                    self.shadow_items(sg, &group, &inv_light_space, &projection),
                 ));
                 map_matrix = inv_light_space;
                 if !global {
@@ -2780,7 +2798,7 @@ impl<'a> Builder<'a> {
                     views.push(shadow_view(
                         projection,
                         viewport,
-                        self.shadow_items(sg, &group, &m),
+                        self.shadow_items(sg, &group, &m, &projection),
                     ));
                 }
 
@@ -2968,8 +2986,10 @@ impl<'a> Builder<'a> {
         sg: &Sg,
         group: &ShadowGroup,
         model_view: &Matrix4,
+        projection: &Matrix4,
     ) -> Vec<DepthItem> {
         let saved = std::mem::take(&mut self.clip_planes);
+        let saved_projection = self.shadow_projection.replace(*projection);
         let mut items = vec![];
 
         match group {
@@ -2984,6 +3004,7 @@ impl<'a> Builder<'a> {
         }
 
         self.clip_planes = saved;
+        self.shadow_projection = saved_projection;
         items
     }
 
@@ -3031,6 +3052,15 @@ impl<'a> Builder<'a> {
             "ParticleSystem" => {
                 if !sg.bool(n, "castShadow", true) {
                     return;
+                }
+                // X3DShapeNode.traverse SHADOW: addDepthShape keeps the system only when its bbox sphere (the emitter's
+                // box unless bboxSize is set, not the particles') meets the light view's volume.
+                if let Some(projection) = self.shadow_projection {
+                    let bbox = self.particle_system_bbox(sg, n);
+
+                    if !bbox_sphere_in_view(&projection, mv, &bbox) {
+                        return;
+                    }
                 }
                 let line_width = match sg
                     .node(n, "appearance")
@@ -4155,15 +4185,7 @@ impl<'a> Builder<'a> {
     /// renderObject.addDisplayShape: `viewVolume .intersectsSphere (radius, bboxCenter)` with the shape's bbox in view
     /// space (`radius = bboxSize .norm () / 2`). The view volume's planes are those of the layer's projection.
     fn bbox_in_view(&self, mv: &Matrix4, bbox: &Box3) -> bool {
-        let (min, max) = bbox.extents();
-        let mut size = max;
-        size.subtract(&min);
-        let mut center = bbox.center();
-
-        mv.mult_dir_matrix(&mut size);
-        mv.mult_vec_matrix3(&mut center);
-
-        view_volume_intersects_sphere(&self.projection, size.norm() / 2.0, &center)
+        bbox_sphere_in_view(&self.projection, mv, bbox)
     }
 
     /// The geometry, the instances and the color-ramp flag of a ParticleSystem's draw with `mv` (SPRITE turns its quad

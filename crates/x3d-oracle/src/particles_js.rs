@@ -300,7 +300,14 @@ pub const INIT_B07: &str = r###"([ s, date0 ]) =>
 pub const NORMALIZE_B07: &str = r###"([name, s, t0]) =>
    {
       const browser = document .getElementById ("c") .browser;
-      const ps = browser .currentScene .getNamedNode (name) .getValue () .getInnerNode ();
+      // `name` is a DEF name, or a path "INLINE/NAME" of an Inline's DEF name and a DEF name in its internal scene
+      // (Inline .getInternalScene (); more segments go deeper): a system inside an Inline.
+      const parts = name .split ("/");
+      const ps = parts .reduce ((scene, part, i) =>
+      {
+         const node = scene .getNamedNode (part) .getValue () .getInnerNode ();
+         return i === parts .length - 1 ? node : node .getInternalScene ();
+      }, browser .currentScene);
       const out = { deltaTimeBeforeReset: ps .deltaTime, numParticlesAfterLoad: ps .numParticles, creationTimeAfterLoad: ps .creationTime };
       // Back to the state before the first animateParticles: nothing alive, zeroed buffers, deltaTime 0.
       // creationTime is Date.now () at set_maxParticles for ordinary emitters (= t0, pinned) but stays 0
