@@ -1,6 +1,6 @@
 # vk_pool_repro
 
-Minimal program for issue #89 (not part of the product crates). It makes a Vulkan device with no features and then one descriptor pool:
+Minimal program for issue #89 (not part of the product crates). It makes a Vulkan device with no features and then one descriptor pool. The case is required; an unknown case or an extra argument prints the usage and exits with status 2:
 
 ```
 cd tools/vk_pool_repro && cargo run --release -- <case>

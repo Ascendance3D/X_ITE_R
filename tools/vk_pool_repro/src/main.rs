@@ -1,13 +1,26 @@
 //! Minimal isolated Vulkan reproduction (issue #89, agent Y): create a descriptor pool with the parameters wgpu-hal 30.0.1
-//! uses for an empty bind group layout, and variants. Usage: vkrepro <case> [--ext]
+//! uses for an empty bind group layout, and variants. Usage: vkrepro <case>
 //! Cases: empty (flags FREE_DESCRIPTOR_SET, maxSets 64, poolSizeCount 0, non-null pPoolSizes), empty-null (pPoolSizes null),
 //!        empty-noflags (flags 0), one (poolSizeCount 1: UNIFORM_BUFFER 1), none (only create the device).
+//! Any other case name, or an extra argument, prints the usage and exits with status 2.
 use ash::vk;
 use std::ffi::CStr;
 
+const CASES: [&str; 5] = ["none", "empty", "empty-null", "empty-noflags", "one"];
+
 fn main() {
-    let args: Vec<String> = std::env::args().collect();
-    let case = args.get(1).map(String::as_str).unwrap_or("empty");
+    let args: Vec<String> = std::env::args().skip(1).collect();
+    let case = match args.as_slice() {
+        [case] if CASES.contains(&case.as_str()) => case.as_str(),
+        _ => {
+            eprintln!(
+                "usage: vkrepro <case>, one of: {} (got {:?})",
+                CASES.join(", "),
+                args
+            );
+            std::process::exit(2);
+        }
+    };
     let entry = unsafe { ash::Entry::load() }.expect("load vulkan");
     let app = vk::ApplicationInfo::default().api_version(vk::make_api_version(0, 1, 3, 0));
     let inst_info = vk::InstanceCreateInfo::default().application_info(&app);
@@ -52,10 +65,15 @@ fn main() {
             vk::DescriptorPoolCreateFlags::FREE_DESCRIPTOR_SET,
             &sizes_one,
         ),
-        _ => {
+        "none" => {
+            unsafe {
+                device.destroy_device(None);
+                instance.destroy_instance(None);
+            }
             println!("case none: done");
             return;
         }
+        _ => unreachable!("the case was checked at the start"),
     };
     let mut info = vk::DescriptorPoolCreateInfo::default()
         .flags(flags)
