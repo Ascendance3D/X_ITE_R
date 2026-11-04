@@ -79,8 +79,13 @@ def platform(args):
         sys.exit("set X3D_ORACLE_CHROME and X3D_ORACLE_ANGLE (x3d-oracle starts that Chrome with that ANGLE backend: crates/x3d-oracle/src/main.rs, chrome.rs)")
     # The platform must be the machine that records: apple-m1 is macOS on arm64 with ANGLE Metal.
     import platform as host
-    if plat == "apple-m1" and not (sys.platform == "darwin" and host.machine() == "arm64" and os.environ["X3D_ORACLE_ANGLE"] == "metal"):
-        sys.exit(f"apple-m1 needs macOS on arm64 and X3D_ORACLE_ANGLE=metal (this host: {sys.platform} {host.machine()}, ANGLE {os.environ['X3D_ORACLE_ANGLE']})")
+    if plat == "apple-m1":
+        chip = subprocess.run(["sysctl", "-n", "machdep.cpu.brand_string"], capture_output=True, text=True).stdout.strip() if sys.platform == "darwin" else ""
+        # "Apple M1", "Apple M1 Pro", ... are M1 chips; "Apple M10" would not be.
+        if not (sys.platform == "darwin" and host.machine() == "arm64" and (chip == "Apple M1" or chip.startswith("Apple M1 "))
+                and os.environ["X3D_ORACLE_ANGLE"] == "metal"):
+            sys.exit(f"apple-m1 needs an Apple M1 (sysctl machdep.cpu.brand_string), macOS arm64 and X3D_ORACLE_ANGLE=metal "
+                     f"(this host: {sys.platform} {host.machine()} {chip or 'no chip name'}, ANGLE {os.environ['X3D_ORACLE_ANGLE']})")
     def sha(p):
         with open(p, "rb") as f:
             return hashlib.sha256(f.read()).hexdigest()
@@ -96,7 +101,8 @@ def platform(args):
                     run_oracle(oracle, name, msaa, log, out)
                     runs.append(os.path.join(out, "js.json"))
                     f32 = os.path.join(out, "js.f32")
-                    assert not os.path.exists(f32) or os.path.getsize(f32) == 0, f"{f32}: js.f32 is expected empty for the pick cases"
+                    if os.path.exists(f32) and os.path.getsize(f32) != 0:
+                        sys.exit(f"{f32}: js.f32 is expected empty for the pick cases; nothing written")
                 if not all(filecmp.cmp(runs[0], b, shallow=False) for b in runs[1:]):
                     sys.exit(f"{base} {name} msaa {msaa}: the three runs differ; nothing written (staging {tmp})")
                 if name in NOT_KEPT or filecmp.cmp(runs[0], os.path.join(root, "oracle", base, f"msaa{msaa}", name, "js.json"), shallow=False):
@@ -107,7 +113,8 @@ def platform(args):
     # or at neither: the test takes one platform flag for the two.
     kept = {(b, c.rsplit("-msaa", 1)[0], c.rsplit("-msaa", 1)[1]) for b, c, _ in keep}
     for b, n, _ in kept:
-        assert {m for b2, n2, m in kept if (b2, n2) == (b, n)} == {"0", "4"}, f"{b} {n}: kept at one MSAA level only"
+        if {m for b2, n2, m in kept if (b2, n2) == (b, n)} != {"0", "4"}:
+            sys.exit(f"{b} {n}: kept at one MSAA level only; nothing written")
     with open(os.path.join(root, "oracle", "x_ite-pin", "PINNED_COMMIT")) as f:
         pinned = f.read().strip()
     chrome = subprocess.run([os.environ["X3D_ORACLE_CHROME"], "--version"], capture_output=True, text=True).stdout.strip()
