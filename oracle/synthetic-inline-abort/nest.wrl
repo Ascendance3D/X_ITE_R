@@ -1,0 +1,9 @@
+#VRML V2.0 utf8
+# Synthetic, newly authored (Inline abort and reload paths). No archive content.
+DEF M Script {
+  url "javascript:
+    function initialize () { print ('M initialize'); }
+    function shutdown () { print ('M shutdown'); }
+  "
+}
+DEF Leaf Inline { url "leaf-a.wrl" }

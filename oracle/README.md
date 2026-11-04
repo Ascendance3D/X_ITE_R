@@ -1627,3 +1627,15 @@ X3D_BACKEND=metal X3D_REFERENCE_PLATFORM=apple-m1 cargo nextest run -p x3d-viewe
 ```
 
 A difference between Rust and the M1 recording is investigated as a possible Rust defect; no platform tolerance hides it.
+
+## Plain Inline reload and abort paths against the browser shutdown rule (2026-11-04)
+
+`oracle/synthetic-inline-abort/` (four newly authored worlds, `x_ite-inline.mjs`) holds Inline changes that start inside the completion event
+of the load (a LoadSensor drives a Script that sets the Inline's `url`, switches `load` off, or switches it off and on). The pinned page was recorded
+three times, byte-identical, into `oracle/synthetic-inline-abort-baseline/inline-abort.json`. `crates/x3d-script/tests/inline_abort_handlers.rs`
+and `inline_reload_shutdown.rs` (the 38 scenarios of `synthetic-inline-reload`) compare every step in the browser build and in the native build.
+The browser build equals the pinned page in the console, the load count, the Inlines and the scene text, and prints no Script `shutdown`. The
+native build differs only by the pinned `shutdown ()` lines (owner-approved, ISO/IEC 14772-1 4.12.3): each affected step has its complete native
+console in a table (`PINS`), so any other line, a missing or a moved `shutdown` line fails. `X3D_PRINT_PINS=1 cargo nextest run ... --no-capture`
+prints the table. Four scenarios of `synthetic-inline-reload-known.tsv` differ for another reason (`c07`, `c09`, `c29`, `c35`); the test lists them
+by name, so a fifth cannot be added unnoticed.

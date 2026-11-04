@@ -1,0 +1,1173 @@
+{
+ "pinned": "34cdf9f97",
+ "results": [
+  {
+   "case": "loaded-cycle",
+   "ok": true,
+   "steps": [
+    {
+     "k": 0,
+     "console": [
+      "log: A initialize",
+      "log: A tick 1",
+      "log: loaded true #1"
+     ],
+     "loadCount": 0,
+     "inlines": [
+      {
+       "path": "Inl",
+       "loadState": "COMPLETE",
+       "load": true,
+       "url": [
+        "leaf-a.wrl"
+       ],
+       "loaded": true,
+       "roots": [
+        "TimeSensor",
+        "Script"
+       ],
+       "children": 2,
+       "live": true
+      }
+     ],
+     "vrml": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Networking : 3\nCOMPONENT Scripting : 1\n\nDEF Holder Group {\n  children DEF Inl Inline {\n    global TRUE\n    url \"leaf-a.wrl\"\n  }\n}\n\nDEF Watch LoadSensor {\n  children USE Inl\n}\n\nDEF Reactor Script {\n  inputOnly      SFBool  loaded\n  initializeOnly SFNode  inl USE Inl\n  initializeOnly SFInt32 n 1\n\n  url \"javascript:\n    function loaded (v) { n = n + 1; print ('loaded ' + v + ' #' + n); if (v && n == 1) { inl.load = false; inl.load = true; } }\n  \"\n  directOutput TRUE\n}\n\nROUTE Watch.isLoaded TO Reactor.loaded\n"
+    },
+    {
+     "k": 1,
+     "console": [],
+     "loadCount": 0,
+     "inlines": [
+      {
+       "path": "Inl",
+       "loadState": "COMPLETE",
+       "load": true,
+       "url": [
+        "leaf-a.wrl"
+       ],
+       "loaded": true,
+       "roots": [
+        "TimeSensor",
+        "Script"
+       ],
+       "children": 2,
+       "live": true
+      }
+     ]
+    },
+    {
+     "k": 2,
+     "console": [],
+     "loadCount": 0,
+     "inlines": [
+      {
+       "path": "Inl",
+       "loadState": "COMPLETE",
+       "load": true,
+       "url": [
+        "leaf-a.wrl"
+       ],
+       "loaded": true,
+       "roots": [
+        "TimeSensor",
+        "Script"
+       ],
+       "children": 2,
+       "live": true
+      }
+     ]
+    },
+    {
+     "k": 3,
+     "console": [],
+     "loadCount": 0,
+     "inlines": [
+      {
+       "path": "Inl",
+       "loadState": "COMPLETE",
+       "load": true,
+       "url": [
+        "leaf-a.wrl"
+       ],
+       "loaded": true,
+       "roots": [
+        "TimeSensor",
+        "Script"
+       ],
+       "children": 2,
+       "live": true
+      }
+     ]
+    },
+    {
+     "k": 4,
+     "console": [],
+     "loadCount": 0,
+     "inlines": [
+      {
+       "path": "Inl",
+       "loadState": "COMPLETE",
+       "load": true,
+       "url": [
+        "leaf-a.wrl"
+       ],
+       "loaded": true,
+       "roots": [
+        "TimeSensor",
+        "Script"
+       ],
+       "children": 2,
+       "live": true
+      }
+     ]
+    },
+    {
+     "k": 5,
+     "console": [
+      "log: A tick 2"
+     ],
+     "loadCount": 0,
+     "inlines": [
+      {
+       "path": "Inl",
+       "loadState": "COMPLETE",
+       "load": true,
+       "url": [
+        "leaf-a.wrl"
+       ],
+       "loaded": true,
+       "roots": [
+        "TimeSensor",
+        "Script"
+       ],
+       "children": 2,
+       "live": true
+      }
+     ]
+    },
+    {
+     "k": 6,
+     "console": [],
+     "loadCount": 0,
+     "inlines": [
+      {
+       "path": "Inl",
+       "loadState": "COMPLETE",
+       "load": true,
+       "url": [
+        "leaf-a.wrl"
+       ],
+       "loaded": true,
+       "roots": [
+        "TimeSensor",
+        "Script"
+       ],
+       "children": 2,
+       "live": true
+      }
+     ]
+    },
+    {
+     "k": 7,
+     "console": [],
+     "loadCount": 0,
+     "inlines": [
+      {
+       "path": "Inl",
+       "loadState": "COMPLETE",
+       "load": true,
+       "url": [
+        "leaf-a.wrl"
+       ],
+       "loaded": true,
+       "roots": [
+        "TimeSensor",
+        "Script"
+       ],
+       "children": 2,
+       "live": true
+      }
+     ]
+    },
+    {
+     "k": 8,
+     "console": [],
+     "loadCount": 0,
+     "inlines": [
+      {
+       "path": "Inl",
+       "loadState": "COMPLETE",
+       "load": true,
+       "url": [
+        "leaf-a.wrl"
+       ],
+       "loaded": true,
+       "roots": [
+        "TimeSensor",
+        "Script"
+       ],
+       "children": 2,
+       "live": true
+      }
+     ]
+    },
+    {
+     "k": 9,
+     "console": [],
+     "loadCount": 0,
+     "inlines": [
+      {
+       "path": "Inl",
+       "loadState": "COMPLETE",
+       "load": true,
+       "url": [
+        "leaf-a.wrl"
+       ],
+       "loaded": true,
+       "roots": [
+        "TimeSensor",
+        "Script"
+       ],
+       "children": 2,
+       "live": true
+      }
+     ]
+    },
+    {
+     "k": 10,
+     "console": [
+      "log: A tick 3"
+     ],
+     "loadCount": 0,
+     "inlines": [
+      {
+       "path": "Inl",
+       "loadState": "COMPLETE",
+       "load": true,
+       "url": [
+        "leaf-a.wrl"
+       ],
+       "loaded": true,
+       "roots": [
+        "TimeSensor",
+        "Script"
+       ],
+       "children": 2,
+       "live": true
+      }
+     ]
+    },
+    {
+     "k": 11,
+     "console": [],
+     "loadCount": 0,
+     "inlines": [
+      {
+       "path": "Inl",
+       "loadState": "COMPLETE",
+       "load": true,
+       "url": [
+        "leaf-a.wrl"
+       ],
+       "loaded": true,
+       "roots": [
+        "TimeSensor",
+        "Script"
+       ],
+       "children": 2,
+       "live": true
+      }
+     ]
+    },
+    {
+     "k": 12,
+     "console": [],
+     "loadCount": 0,
+     "inlines": [
+      {
+       "path": "Inl",
+       "loadState": "COMPLETE",
+       "load": true,
+       "url": [
+        "leaf-a.wrl"
+       ],
+       "loaded": true,
+       "roots": [
+        "TimeSensor",
+        "Script"
+       ],
+       "children": 2,
+       "live": true
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "case": "loaded-nested-url",
+   "ok": true,
+   "steps": [
+    {
+     "k": 0,
+     "console": [
+      "log: M initialize",
+      "log: A initialize",
+      "log: A tick 1",
+      "log: loaded true #1",
+      "log: B initialize",
+      "log: B tick 1",
+      "log: loaded true #2"
+     ],
+     "loadCount": 0,
+     "inlines": [
+      {
+       "path": "Inl",
+       "loadState": "COMPLETE",
+       "load": true,
+       "url": [
+        "leaf-b.wrl"
+       ],
+       "loaded": true,
+       "roots": [
+        "TimeSensor",
+        "Script"
+       ],
+       "children": 2,
+       "live": true
+      }
+     ],
+     "vrml": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Networking : 3\nCOMPONENT Scripting : 1\n\nDEF Holder Group {\n  children DEF Inl Inline {\n    global TRUE\n    url \"leaf-b.wrl\"\n  }\n}\n\nDEF Watch LoadSensor {\n  children USE Inl\n}\n\nDEF Reactor Script {\n  inputOnly      SFBool  loaded\n  initializeOnly SFNode  inl USE Inl\n  initializeOnly SFInt32 n 2\n\n  url \"javascript:\n    function loaded (v) { n = n + 1; print ('loaded ' + v + ' #' + n); if (v && n == 1) { inl.url = new MFString ('leaf-b.wrl'); } }\n  \"\n  directOutput TRUE\n}\n\nROUTE Watch.isLoaded TO Reactor.loaded\n"
+    },
+    {
+     "k": 1,
+     "console": [],
+     "loadCount": 0,
+     "inlines": [
+      {
+       "path": "Inl",
+       "loadState": "COMPLETE",
+       "load": true,
+       "url": [
+        "leaf-b.wrl"
+       ],
+       "loaded": true,
+       "roots": [
+        "TimeSensor",
+        "Script"
+       ],
+       "children": 2,
+       "live": true
+      }
+     ]
+    },
+    {
+     "k": 2,
+     "console": [],
+     "loadCount": 0,
+     "inlines": [
+      {
+       "path": "Inl",
+       "loadState": "COMPLETE",
+       "load": true,
+       "url": [
+        "leaf-b.wrl"
+       ],
+       "loaded": true,
+       "roots": [
+        "TimeSensor",
+        "Script"
+       ],
+       "children": 2,
+       "live": true
+      }
+     ]
+    },
+    {
+     "k": 3,
+     "console": [],
+     "loadCount": 0,
+     "inlines": [
+      {
+       "path": "Inl",
+       "loadState": "COMPLETE",
+       "load": true,
+       "url": [
+        "leaf-b.wrl"
+       ],
+       "loaded": true,
+       "roots": [
+        "TimeSensor",
+        "Script"
+       ],
+       "children": 2,
+       "live": true
+      }
+     ]
+    },
+    {
+     "k": 4,
+     "console": [],
+     "loadCount": 0,
+     "inlines": [
+      {
+       "path": "Inl",
+       "loadState": "COMPLETE",
+       "load": true,
+       "url": [
+        "leaf-b.wrl"
+       ],
+       "loaded": true,
+       "roots": [
+        "TimeSensor",
+        "Script"
+       ],
+       "children": 2,
+       "live": true
+      }
+     ]
+    },
+    {
+     "k": 5,
+     "console": [
+      "log: B tick 2"
+     ],
+     "loadCount": 0,
+     "inlines": [
+      {
+       "path": "Inl",
+       "loadState": "COMPLETE",
+       "load": true,
+       "url": [
+        "leaf-b.wrl"
+       ],
+       "loaded": true,
+       "roots": [
+        "TimeSensor",
+        "Script"
+       ],
+       "children": 2,
+       "live": true
+      }
+     ]
+    },
+    {
+     "k": 6,
+     "console": [],
+     "loadCount": 0,
+     "inlines": [
+      {
+       "path": "Inl",
+       "loadState": "COMPLETE",
+       "load": true,
+       "url": [
+        "leaf-b.wrl"
+       ],
+       "loaded": true,
+       "roots": [
+        "TimeSensor",
+        "Script"
+       ],
+       "children": 2,
+       "live": true
+      }
+     ]
+    },
+    {
+     "k": 7,
+     "console": [],
+     "loadCount": 0,
+     "inlines": [
+      {
+       "path": "Inl",
+       "loadState": "COMPLETE",
+       "load": true,
+       "url": [
+        "leaf-b.wrl"
+       ],
+       "loaded": true,
+       "roots": [
+        "TimeSensor",
+        "Script"
+       ],
+       "children": 2,
+       "live": true
+      }
+     ]
+    },
+    {
+     "k": 8,
+     "console": [],
+     "loadCount": 0,
+     "inlines": [
+      {
+       "path": "Inl",
+       "loadState": "COMPLETE",
+       "load": true,
+       "url": [
+        "leaf-b.wrl"
+       ],
+       "loaded": true,
+       "roots": [
+        "TimeSensor",
+        "Script"
+       ],
+       "children": 2,
+       "live": true
+      }
+     ]
+    },
+    {
+     "k": 9,
+     "console": [],
+     "loadCount": 0,
+     "inlines": [
+      {
+       "path": "Inl",
+       "loadState": "COMPLETE",
+       "load": true,
+       "url": [
+        "leaf-b.wrl"
+       ],
+       "loaded": true,
+       "roots": [
+        "TimeSensor",
+        "Script"
+       ],
+       "children": 2,
+       "live": true
+      }
+     ]
+    },
+    {
+     "k": 10,
+     "console": [
+      "log: B tick 3"
+     ],
+     "loadCount": 0,
+     "inlines": [
+      {
+       "path": "Inl",
+       "loadState": "COMPLETE",
+       "load": true,
+       "url": [
+        "leaf-b.wrl"
+       ],
+       "loaded": true,
+       "roots": [
+        "TimeSensor",
+        "Script"
+       ],
+       "children": 2,
+       "live": true
+      }
+     ]
+    },
+    {
+     "k": 11,
+     "console": [],
+     "loadCount": 0,
+     "inlines": [
+      {
+       "path": "Inl",
+       "loadState": "COMPLETE",
+       "load": true,
+       "url": [
+        "leaf-b.wrl"
+       ],
+       "loaded": true,
+       "roots": [
+        "TimeSensor",
+        "Script"
+       ],
+       "children": 2,
+       "live": true
+      }
+     ]
+    },
+    {
+     "k": 12,
+     "console": [],
+     "loadCount": 0,
+     "inlines": [
+      {
+       "path": "Inl",
+       "loadState": "COMPLETE",
+       "load": true,
+       "url": [
+        "leaf-b.wrl"
+       ],
+       "loaded": true,
+       "roots": [
+        "TimeSensor",
+        "Script"
+       ],
+       "children": 2,
+       "live": true
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "case": "loaded-off",
+   "ok": true,
+   "steps": [
+    {
+     "k": 0,
+     "console": [
+      "log: A initialize",
+      "log: A tick 1",
+      "log: loaded true #1"
+     ],
+     "loadCount": 0,
+     "inlines": [
+      {
+       "path": "Inl",
+       "loadState": "NOT_STARTED",
+       "load": false,
+       "url": [
+        "leaf-a.wrl"
+       ],
+       "loaded": false,
+       "roots": [],
+       "children": 0,
+       "live": null
+      }
+     ],
+     "vrml": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Networking : 3\nCOMPONENT Scripting : 1\n\nDEF Holder Group {\n  children DEF Inl Inline {\n    global TRUE\n    load FALSE\n    url \"leaf-a.wrl\"\n  }\n}\n\nDEF Watch LoadSensor {\n  children USE Inl\n}\n\nDEF Reactor Script {\n  inputOnly      SFBool  loaded\n  initializeOnly SFNode  inl USE Inl\n  initializeOnly SFInt32 n 1\n\n  url \"javascript:\n    function loaded (v) { n = n + 1; print ('loaded ' + v + ' #' + n); if (v && n == 1) { inl.load = false; } }\n  \"\n  directOutput TRUE\n}\n\nROUTE Watch.isLoaded TO Reactor.loaded\n"
+    },
+    {
+     "k": 1,
+     "console": [],
+     "loadCount": 0,
+     "inlines": [
+      {
+       "path": "Inl",
+       "loadState": "NOT_STARTED",
+       "load": false,
+       "url": [
+        "leaf-a.wrl"
+       ],
+       "loaded": false,
+       "roots": [],
+       "children": 0,
+       "live": null
+      }
+     ]
+    },
+    {
+     "k": 2,
+     "console": [],
+     "loadCount": 0,
+     "inlines": [
+      {
+       "path": "Inl",
+       "loadState": "NOT_STARTED",
+       "load": false,
+       "url": [
+        "leaf-a.wrl"
+       ],
+       "loaded": false,
+       "roots": [],
+       "children": 0,
+       "live": null
+      }
+     ]
+    },
+    {
+     "k": 3,
+     "console": [],
+     "loadCount": 0,
+     "inlines": [
+      {
+       "path": "Inl",
+       "loadState": "NOT_STARTED",
+       "load": false,
+       "url": [
+        "leaf-a.wrl"
+       ],
+       "loaded": false,
+       "roots": [],
+       "children": 0,
+       "live": null
+      }
+     ]
+    },
+    {
+     "k": 4,
+     "console": [],
+     "loadCount": 0,
+     "inlines": [
+      {
+       "path": "Inl",
+       "loadState": "NOT_STARTED",
+       "load": false,
+       "url": [
+        "leaf-a.wrl"
+       ],
+       "loaded": false,
+       "roots": [],
+       "children": 0,
+       "live": null
+      }
+     ]
+    },
+    {
+     "k": 5,
+     "console": [],
+     "loadCount": 0,
+     "inlines": [
+      {
+       "path": "Inl",
+       "loadState": "NOT_STARTED",
+       "load": false,
+       "url": [
+        "leaf-a.wrl"
+       ],
+       "loaded": false,
+       "roots": [],
+       "children": 0,
+       "live": null
+      }
+     ]
+    },
+    {
+     "k": 6,
+     "console": [],
+     "loadCount": 0,
+     "inlines": [
+      {
+       "path": "Inl",
+       "loadState": "NOT_STARTED",
+       "load": false,
+       "url": [
+        "leaf-a.wrl"
+       ],
+       "loaded": false,
+       "roots": [],
+       "children": 0,
+       "live": null
+      }
+     ]
+    },
+    {
+     "k": 7,
+     "console": [],
+     "loadCount": 0,
+     "inlines": [
+      {
+       "path": "Inl",
+       "loadState": "NOT_STARTED",
+       "load": false,
+       "url": [
+        "leaf-a.wrl"
+       ],
+       "loaded": false,
+       "roots": [],
+       "children": 0,
+       "live": null
+      }
+     ]
+    },
+    {
+     "k": 8,
+     "console": [],
+     "loadCount": 0,
+     "inlines": [
+      {
+       "path": "Inl",
+       "loadState": "NOT_STARTED",
+       "load": false,
+       "url": [
+        "leaf-a.wrl"
+       ],
+       "loaded": false,
+       "roots": [],
+       "children": 0,
+       "live": null
+      }
+     ]
+    },
+    {
+     "k": 9,
+     "console": [],
+     "loadCount": 0,
+     "inlines": [
+      {
+       "path": "Inl",
+       "loadState": "NOT_STARTED",
+       "load": false,
+       "url": [
+        "leaf-a.wrl"
+       ],
+       "loaded": false,
+       "roots": [],
+       "children": 0,
+       "live": null
+      }
+     ]
+    },
+    {
+     "k": 10,
+     "console": [],
+     "loadCount": 0,
+     "inlines": [
+      {
+       "path": "Inl",
+       "loadState": "NOT_STARTED",
+       "load": false,
+       "url": [
+        "leaf-a.wrl"
+       ],
+       "loaded": false,
+       "roots": [],
+       "children": 0,
+       "live": null
+      }
+     ]
+    },
+    {
+     "k": 11,
+     "console": [],
+     "loadCount": 0,
+     "inlines": [
+      {
+       "path": "Inl",
+       "loadState": "NOT_STARTED",
+       "load": false,
+       "url": [
+        "leaf-a.wrl"
+       ],
+       "loaded": false,
+       "roots": [],
+       "children": 0,
+       "live": null
+      }
+     ]
+    },
+    {
+     "k": 12,
+     "console": [],
+     "loadCount": 0,
+     "inlines": [
+      {
+       "path": "Inl",
+       "loadState": "NOT_STARTED",
+       "load": false,
+       "url": [
+        "leaf-a.wrl"
+       ],
+       "loaded": false,
+       "roots": [],
+       "children": 0,
+       "live": null
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "case": "loaded-url",
+   "ok": true,
+   "steps": [
+    {
+     "k": 0,
+     "console": [
+      "log: A initialize",
+      "log: A tick 1",
+      "log: loaded true #1",
+      "log: B initialize",
+      "log: B tick 1",
+      "log: loaded true #2"
+     ],
+     "loadCount": 0,
+     "inlines": [
+      {
+       "path": "Inl",
+       "loadState": "COMPLETE",
+       "load": true,
+       "url": [
+        "leaf-b.wrl"
+       ],
+       "loaded": true,
+       "roots": [
+        "TimeSensor",
+        "Script"
+       ],
+       "children": 2,
+       "live": true
+      }
+     ],
+     "vrml": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Networking : 3\nCOMPONENT Scripting : 1\n\nDEF Holder Group {\n  children DEF Inl Inline {\n    global TRUE\n    url \"leaf-b.wrl\"\n  }\n}\n\nDEF Watch LoadSensor {\n  children USE Inl\n}\n\nDEF Reactor Script {\n  inputOnly      SFBool  loaded\n  initializeOnly SFNode  inl USE Inl\n  initializeOnly SFInt32 n 2\n\n  url \"javascript:\n    function loaded (v) { n = n + 1; print ('loaded ' + v + ' #' + n); if (v && n == 1) { inl.url = new MFString ('leaf-b.wrl'); } }\n  \"\n  directOutput TRUE\n}\n\nROUTE Watch.isLoaded TO Reactor.loaded\n"
+    },
+    {
+     "k": 1,
+     "console": [],
+     "loadCount": 0,
+     "inlines": [
+      {
+       "path": "Inl",
+       "loadState": "COMPLETE",
+       "load": true,
+       "url": [
+        "leaf-b.wrl"
+       ],
+       "loaded": true,
+       "roots": [
+        "TimeSensor",
+        "Script"
+       ],
+       "children": 2,
+       "live": true
+      }
+     ]
+    },
+    {
+     "k": 2,
+     "console": [],
+     "loadCount": 0,
+     "inlines": [
+      {
+       "path": "Inl",
+       "loadState": "COMPLETE",
+       "load": true,
+       "url": [
+        "leaf-b.wrl"
+       ],
+       "loaded": true,
+       "roots": [
+        "TimeSensor",
+        "Script"
+       ],
+       "children": 2,
+       "live": true
+      }
+     ]
+    },
+    {
+     "k": 3,
+     "console": [],
+     "loadCount": 0,
+     "inlines": [
+      {
+       "path": "Inl",
+       "loadState": "COMPLETE",
+       "load": true,
+       "url": [
+        "leaf-b.wrl"
+       ],
+       "loaded": true,
+       "roots": [
+        "TimeSensor",
+        "Script"
+       ],
+       "children": 2,
+       "live": true
+      }
+     ]
+    },
+    {
+     "k": 4,
+     "console": [],
+     "loadCount": 0,
+     "inlines": [
+      {
+       "path": "Inl",
+       "loadState": "COMPLETE",
+       "load": true,
+       "url": [
+        "leaf-b.wrl"
+       ],
+       "loaded": true,
+       "roots": [
+        "TimeSensor",
+        "Script"
+       ],
+       "children": 2,
+       "live": true
+      }
+     ]
+    },
+    {
+     "k": 5,
+     "console": [
+      "log: B tick 2"
+     ],
+     "loadCount": 0,
+     "inlines": [
+      {
+       "path": "Inl",
+       "loadState": "COMPLETE",
+       "load": true,
+       "url": [
+        "leaf-b.wrl"
+       ],
+       "loaded": true,
+       "roots": [
+        "TimeSensor",
+        "Script"
+       ],
+       "children": 2,
+       "live": true
+      }
+     ]
+    },
+    {
+     "k": 6,
+     "console": [],
+     "loadCount": 0,
+     "inlines": [
+      {
+       "path": "Inl",
+       "loadState": "COMPLETE",
+       "load": true,
+       "url": [
+        "leaf-b.wrl"
+       ],
+       "loaded": true,
+       "roots": [
+        "TimeSensor",
+        "Script"
+       ],
+       "children": 2,
+       "live": true
+      }
+     ]
+    },
+    {
+     "k": 7,
+     "console": [],
+     "loadCount": 0,
+     "inlines": [
+      {
+       "path": "Inl",
+       "loadState": "COMPLETE",
+       "load": true,
+       "url": [
+        "leaf-b.wrl"
+       ],
+       "loaded": true,
+       "roots": [
+        "TimeSensor",
+        "Script"
+       ],
+       "children": 2,
+       "live": true
+      }
+     ]
+    },
+    {
+     "k": 8,
+     "console": [],
+     "loadCount": 0,
+     "inlines": [
+      {
+       "path": "Inl",
+       "loadState": "COMPLETE",
+       "load": true,
+       "url": [
+        "leaf-b.wrl"
+       ],
+       "loaded": true,
+       "roots": [
+        "TimeSensor",
+        "Script"
+       ],
+       "children": 2,
+       "live": true
+      }
+     ]
+    },
+    {
+     "k": 9,
+     "console": [],
+     "loadCount": 0,
+     "inlines": [
+      {
+       "path": "Inl",
+       "loadState": "COMPLETE",
+       "load": true,
+       "url": [
+        "leaf-b.wrl"
+       ],
+       "loaded": true,
+       "roots": [
+        "TimeSensor",
+        "Script"
+       ],
+       "children": 2,
+       "live": true
+      }
+     ]
+    },
+    {
+     "k": 10,
+     "console": [
+      "log: B tick 3"
+     ],
+     "loadCount": 0,
+     "inlines": [
+      {
+       "path": "Inl",
+       "loadState": "COMPLETE",
+       "load": true,
+       "url": [
+        "leaf-b.wrl"
+       ],
+       "loaded": true,
+       "roots": [
+        "TimeSensor",
+        "Script"
+       ],
+       "children": 2,
+       "live": true
+      }
+     ]
+    },
+    {
+     "k": 11,
+     "console": [],
+     "loadCount": 0,
+     "inlines": [
+      {
+       "path": "Inl",
+       "loadState": "COMPLETE",
+       "load": true,
+       "url": [
+        "leaf-b.wrl"
+       ],
+       "loaded": true,
+       "roots": [
+        "TimeSensor",
+        "Script"
+       ],
+       "children": 2,
+       "live": true
+      }
+     ]
+    },
+    {
+     "k": 12,
+     "console": [],
+     "loadCount": 0,
+     "inlines": [
+      {
+       "path": "Inl",
+       "loadState": "COMPLETE",
+       "load": true,
+       "url": [
+        "leaf-b.wrl"
+       ],
+       "loaded": true,
+       "roots": [
+        "TimeSensor",
+        "Script"
+       ],
+       "children": 2,
+       "live": true
+      }
+     ]
+    }
+   ]
+  }
+ ]
+}
