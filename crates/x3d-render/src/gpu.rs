@@ -151,6 +151,8 @@ struct PipelineKey {
     polygon_line: bool,
     /// The volume slot layout (`SlotKey::1`).
     volume: bool,
+    /// OrderIndependentTransparency: the shape draws into the accumulation targets (`fs_oit`, `crate::oit_gpu`).
+    oit: bool,
 }
 
 impl PipelineKey {
@@ -176,6 +178,7 @@ impl PipelineKey {
             stipple: false,
             polygon_line: false,
             volume: false,
+            oit: false,
         }
     }
 }
@@ -185,6 +188,9 @@ struct PipelineSource {
     device: wgpu::Device,
     shader: wgpu::ShaderModule,
     shader_3d: wgpu::ShaderModule,
+    /// The shaders with the `fs_oit` entry (`crate::oit_gpu::patch_shader`), once OrderIndependentTransparency is on.
+    oit_shader: Option<wgpu::ShaderModule>,
+    oit_shader_3d: Option<wgpu::ShaderModule>,
     layout: wgpu::PipelineLayout,
     layout_3d: wgpu::PipelineLayout,
     depth_mode: DepthMode,
@@ -226,11 +232,37 @@ impl PipelineSource {
                 },
             }),
         );
-        let shader = if key.volume {
+        let oit_shader = if key.volume {
+            self.oit_shader_3d.as_ref()
+        } else {
+            self.oit_shader.as_ref()
+        }
+        .filter(|_| key.oit);
+        let shader = oit_shader.unwrap_or(if key.volume {
             &self.shader_3d
         } else {
             &self.shader
-        };
+        });
+        // MultiSampleFramebuffer.bindTransparency: the blend of both accumulation targets (a BlendMode node's
+        // gl.blendFuncSeparate replaces it, as it replaces the transparent pass default).
+        let oit_blend = Some(key.blend_mode.unwrap_or_else(crate::oit_gpu::blend_state));
+        let oit_targets = [
+            Some(wgpu::ColorTargetState {
+                format: crate::oit_gpu::FORMAT,
+                blend: oit_blend,
+                write_mask: wgpu::ColorWrites::ALL,
+            }),
+            Some(wgpu::ColorTargetState {
+                format: crate::oit_gpu::FORMAT,
+                blend: oit_blend,
+                write_mask: wgpu::ColorWrites::ALL,
+            }),
+        ];
+        let color_targets = [Some(wgpu::ColorTargetState {
+            format,
+            blend,
+            write_mask: wgpu::ColorWrites::ALL,
+        })];
         self.device
             .create_render_pipeline(&wgpu::RenderPipelineDescriptor {
                 label: Some("x3d"),
@@ -306,13 +338,19 @@ impl PipelineSource {
                 },
                 fragment: Some(wgpu::FragmentState {
                     module: shader,
-                    entry_point: Some(if self.debug_ids { "fs_id" } else { "fs_main" }),
+                    entry_point: Some(if oit_shader.is_some() {
+                        "fs_oit"
+                    } else if self.debug_ids {
+                        "fs_id"
+                    } else {
+                        "fs_main"
+                    }),
                     compilation_options: Default::default(),
-                    targets: &[Some(wgpu::ColorTargetState {
-                        format,
-                        blend,
-                        write_mask: wgpu::ColorWrites::ALL,
-                    })],
+                    targets: if oit_shader.is_some() {
+                        &oit_targets
+                    } else {
+                        &color_targets
+                    },
                 }),
                 multiview_mask: None,
                 cache: None,
@@ -1023,7 +1061,8 @@ struct PassTarget {
     more: bool,
 }
 
-/// GPU time of the render pass, from timestamp queries (needs `Features::TIMESTAMP_QUERY` on
+/// GPU time of the render passes of a frame (with OrderIndependentTransparency from the start of the color pass to the end of
+/// the compose pass), from timestamp queries (needs `Features::TIMESTAMP_QUERY` on
 /// the host's device).
 struct GpuTimer {
     queries: wgpu::QuerySet,
@@ -1076,6 +1115,13 @@ pub struct Renderer {
     slots_layout_3d: wgpu::BindGroupLayout,
     layout_3d: wgpu::PipelineLayout,
     alt_shader_3d: Option<wgpu::ShaderModule>,
+    /// The OrderIndependentTransparency browser option ([`Renderer::set_order_independent_transparency`]).
+    oit: bool,
+    /// The shaders with the `fs_oit` entry, built while the option is on.
+    oit_shader: Option<wgpu::ShaderModule>,
+    oit_shader_3d: Option<wgpu::ShaderModule>,
+    /// The accumulation targets and the composite (`crate::oit_gpu`), made with the first frame that has a transparent shape.
+    oit_gpu: Option<crate::oit_gpu::Oit>,
     draw_layout: wgpu::BindGroupLayout,
     /// Bind group 2: the texture slots.
     slots_layout: wgpu::BindGroupLayout,
@@ -1341,6 +1387,21 @@ impl Renderer {
         }
     }
 
+    /// The `OrderIndependentTransparency` browser option (default off). With it on the transparent shapes of the main
+    /// frame are not sorted and are drawn into the weighted blended accumulation targets, then composed over the color
+    /// buffer ([`crate::oit_gpu`]). The shapes of the other passes (rendered textures, cube map faces, the transmission
+    /// and volume scatter buffers) are drawn unsorted too, with the normal blend.
+    pub fn set_order_independent_transparency(&mut self, on: bool) {
+        if self.oit != on {
+            self.oit = on;
+            self.rebuild_shader_variant();
+        }
+    }
+
+    pub fn order_independent_transparency(&self) -> bool {
+        self.oit
+    }
+
     /// Debug: render object identity instead of shading. Each pixel of `render_to_rgba` is
     /// `(draw index + 1) & 255, (draw index + 1) >> 8, triangle & 255, triangle >> 8` (RGBA);
     /// background faces count as draws; no antialiasing or blending. Off by default and unused by
@@ -1364,8 +1425,12 @@ impl Renderer {
         self.prepared = None;
         self.alt_shader = None;
         self.alt_shader_3d = None;
+        self.oit_shader = None;
+        self.oit_shader_3d = None;
 
-        if self.depth_mode == DepthMode::Standard && !self.debug_ids {
+        let plain = self.depth_mode == DepthMode::Standard && !self.debug_ids;
+
+        if plain && !self.oit {
             return;
         }
 
@@ -1421,6 +1486,35 @@ impl Renderer {
             } else {
                 src.push_str(&format!("\n@fragment\nfn fs_id(in: VOut) -> @location(0) vec4<f32> {{\n    let id = u32(draw.diffuse_ambient.x);\n    return {color};\n}}\n"));
             }
+        }
+
+        if self.oit && !self.debug_ids {
+            // OrderIndependentTransparency (crate::oit_gpu): the shaders of the shapes drawn into the accumulation targets.
+            match crate::oit_gpu::patch_shader(&src) {
+                Ok(oit) => {
+                    self.oit_shader_3d = Some(self.device.create_shader_module(
+                        wgpu::ShaderModuleDescriptor {
+                            label: Some("x3d.wgsl OIT (3D)"),
+                            source: wgpu::ShaderSource::Wgsl(volume_shader(&oit).into()),
+                        },
+                    ));
+                    self.oit_shader = Some(self.device.create_shader_module(
+                        wgpu::ShaderModuleDescriptor {
+                            label: Some("x3d.wgsl OIT"),
+                            source: wgpu::ShaderSource::Wgsl(oit.into()),
+                        },
+                    ));
+                }
+                Err(why) => {
+                    // The frames are drawn sorted, without the option.
+                    eprintln!("{why}; drawing without it");
+                    self.oit = false;
+                }
+            }
+        }
+
+        if plain {
+            return;
         }
 
         self.alt_shader_3d = Some(
@@ -1681,6 +1775,8 @@ impl Renderer {
                 device: device.clone(),
                 shader: shader.clone(),
                 shader_3d: shader_3d.clone(),
+                oit_shader: None,
+                oit_shader_3d: None,
                 layout: layout.clone(),
                 layout_3d: layout_3d.clone(),
                 depth_mode: DepthMode::Standard,
@@ -2080,6 +2176,10 @@ impl Renderer {
             slots_layout_3d,
             layout_3d,
             alt_shader_3d: None,
+            oit: false,
+            oit_shader: None,
+            oit_shader_3d: None,
+            oit_gpu: None,
             draw_layout,
             slots_layout,
             texture_layout,
@@ -2300,6 +2400,8 @@ impl Renderer {
                 .alt_shader_3d
                 .clone()
                 .unwrap_or_else(|| self.shader_3d.clone()),
+            oit_shader: self.oit_shader.clone(),
+            oit_shader_3d: self.oit_shader_3d.clone(),
             layout: self.layout.clone(),
             layout_3d: self.layout_3d.clone(),
             depth_mode: self.depth_mode,
@@ -4498,6 +4600,8 @@ impl Renderer {
     ) -> Result<(), String> {
         let frame_no = self.frame_no;
         let face = pass_target.face;
+        // MultiSampleFramebuffer.getOIT: the framebuffers of the view (not the TextureBuffers of the other passes).
+        let oit_on = self.oit && !face && !self.debug_ids;
         // The layer's gl.viewport (the whole target without a LayerSet).
         let layer_rect = frame
             .viewport
@@ -4884,12 +4988,16 @@ impl Renderer {
             .filter(drawn)
             .filter(|i| i.transparent)
             .collect();
+        // X3DRenderObject.draw: `if (!this .orderIndependentTransparency) transparencySorter .sort` - with the option
+        // on the transparent shapes stay in traversal order in every pass.
         // MergeSort (a .distance < b .distance): stable, ascending view-space z.
-        transparent.sort_by(|a, b| {
-            a.distance
-                .partial_cmp(&b.distance)
-                .unwrap_or(std::cmp::Ordering::Equal)
-        });
+        if !self.oit {
+            transparent.sort_by(|a, b| {
+                a.distance
+                    .partial_cmp(&b.distance)
+                    .unwrap_or(std::cmp::Ordering::Equal)
+            });
+        }
         let n_opaque = order.len();
         order.extend(transparent);
 
@@ -5460,6 +5568,10 @@ impl Renderer {
             );
             base.alpha_to_coverage = g.geometry_type == 0 && !is_transparent;
             base.volume = slot_key.1;
+            // X3DMaterialNode.addRenderOptions: X3D_ORDER_INDEPENDENT_TRANSPARENCY for an X3D_ALPHA_MODE_BLEND shape of
+            // the RENDER_KEY pass (a rendered texture, a cube map face, the transmission and the scatter pass are
+            // drawn into a TextureBuffer, which has no OIT).
+            base.oit = oit_on && is_transparent;
 
             // getPrimitiveMode: POINT draws lines and triangles as points; WIREFRAME draws
             // triangles with the polygon mode LINE. Point sprites are GL points in X_ITE.
@@ -5752,6 +5864,8 @@ impl Renderer {
                         reversed: self.depth_mode == DepthMode::Reversed,
                     });
                     c.source = Source::Custom(custom_inputs.len() - 1, back);
+                    // A ComposedShader draws with its own program, into the color target.
+                    c.key.oit = false;
                 }
             } else if calls.len() > calls_before && !item.textures.is_empty() {
                 builtin_draws.push((custom_inputs.len(), item.textures.clone()));
@@ -6113,126 +6227,202 @@ impl Renderer {
             } else {
                 None
             };
-            let timestamp_writes = self
+            // OrderIndependentTransparency: the opaque shapes (and the background) are drawn into the color target, the
+            // transparent shapes into the accumulation targets, which are composed over the color target
+            // (X3DRenderObject.drawShapes: bindTransparency, the transparent shapes, compose).
+            let use_oit = calls.iter().any(|c| c.key.oit);
+
+            if use_oit {
+                self.oit_gpu
+                    .get_or_insert_with(|| crate::oit_gpu::Oit::new(&self.device))
+                    .prepare(&self.device, format, samples.max(1), width, height);
+            }
+
+            let timing = self
                 .timer
                 .as_ref()
                 .filter(|_| !face && !pass_target.more)
-                .map(|t| wgpu::RenderPassTimestampWrites {
-                    query_set: &t.queries,
-                    beginning_of_pass_write_index: Some(0),
-                    end_of_pass_write_index: Some(1),
-                });
+                .map(|t| &t.queries);
             let [r, g, b, a] = self.clear_color;
-            let mut pass = encoder.begin_render_pass(&wgpu::RenderPassDescriptor {
-                label: Some("x3d"),
-                color_attachments: &[Some(wgpu::RenderPassColorAttachment {
-                    // MultiSampleFramebuffer.blit: the multisampled color renderbuffer is resolved
-                    // into the default framebuffer after drawShapes; the samples are not kept.
-                    view: msaa_view.unwrap_or(target),
-                    depth_slice: None,
-                    resolve_target: msaa_view.map(|_| target),
-                    // drawShapes: gl.clearColor (0, 0, 0, 0)
-                    ops: wgpu::Operations {
-                        load: if pass_target.load {
-                            wgpu::LoadOp::Load
-                        } else {
-                            wgpu::LoadOp::Clear(wgpu::Color { r, g, b, a })
+            let color_load = if pass_target.load {
+                wgpu::LoadOp::Load
+            } else {
+                wgpu::LoadOp::Clear(wgpu::Color { r, g, b, a })
+            };
+            // MultiSampleFramebuffer.blit: the multisampled color renderbuffer is resolved into the default
+            // framebuffer after drawShapes; the samples are not kept.
+            let color_store = if msaa_view.is_some() && !pass_target.more {
+                wgpu::StoreOp::Discard
+            } else {
+                wgpu::StoreOp::Store
+            };
+            // Draws the calls of the color target (`oit_pass` false) or of the accumulation targets.
+            let draw_calls = |pass: &mut wgpu::RenderPass<'_>, oit_pass: bool| {
+                pass.set_bind_group(0, &self.frame_group, &[]);
+                let white_group = &self.white_group;
+                // X3DGeometryNode.display: gl.viewport and gl.scissor per shape.
+                let mut current: Option<[u32; 4]> = None;
+
+                for c in calls.iter().filter(|c| c.key.oit == oit_pass) {
+                    let Some(rect) = target_rect(&c.viewport.unwrap_or(layer_rect), width, height)
+                    else {
+                        continue;
+                    };
+
+                    if current != Some(rect) {
+                        let [x, y, w, h] = rect;
+                        // Without a Viewport the rectangle is the whole target: no change for a
+                        // single layer, and a flipped texture pass covers it whole.
+                        let y = if flip { height - y - h } else { y };
+                        pass.set_viewport(x as f32, y as f32, w as f32, h as f32, 0.0, 1.0);
+                        pass.set_scissor_rect(x, y, w, h);
+                        current = Some(rect);
+                    }
+
+                    if let Source::Volume(i) = c.source {
+                        self.volume.draw(&mut *pass, i);
+                        continue;
+                    }
+
+                    if let Source::Custom(i, _) = c.source {
+                        self.custom.draw(&mut *pass, i);
+                        // The program's own uniforms replaced group 0: the frame group again for the next draw.
+                        pass.set_bind_group(0, &self.frame_group, &[]);
+                        continue;
+                    }
+
+                    if let Source::Splats(i) = c.source {
+                        self.splats.draw(&mut *pass, i);
+                        continue;
+                    }
+
+                    pass.set_pipeline(&self.pipelines[&(c.key, format, samples, flip)]);
+                    if let Some([r, g, b, a]) = c.blend_constant {
+                        pass.set_blend_constant(wgpu::Color { r, g, b, a });
+                    }
+                    pass.set_bind_group(
+                        1,
+                        &self.draw_group,
+                        &[(c.draw_index as u64 * DRAW_STRIDE) as u32],
+                    );
+                    pass.set_bind_group(2, &self.slot_groups[&c.textures].0, &[]);
+                    let sg = c
+                        .style_texture
+                        .and_then(|p| self.style_groups.get(&p))
+                        .map(|t| &t.1)
+                        .unwrap_or(white_group);
+                    pass.set_bind_group(3, sg, &[]);
+
+                    match c.source {
+                        Source::Scratch => {
+                            pass.set_vertex_buffer(0, self.scratch.slice(c.range.0..c.range.1))
+                        }
+                        Source::Geometry(p) => {
+                            pass.set_vertex_buffer(0, self.geometries[&p].buffer.slice(..))
+                        }
+                        Source::Sprites(p) => {
+                            pass.set_vertex_buffer(0, self.sprites[&p].buffer.slice(..))
+                        }
+                        Source::Buffer(i) => {
+                            pass.set_vertex_buffer(0, self.frame_buffers[i].slice(..))
+                        }
+                        Source::Volume(_) | Source::Splats(_) | Source::Custom(..) => {
+                            unreachable!("volumes, splats and custom shaders are drawn above")
+                        }
+                    }
+
+                    pass.draw(0..c.count, 0..c.instances);
+                }
+            };
+
+            {
+                let mut pass = encoder.begin_render_pass(&wgpu::RenderPassDescriptor {
+                    label: Some("x3d"),
+                    color_attachments: &[Some(wgpu::RenderPassColorAttachment {
+                        view: msaa_view.unwrap_or(target),
+                        depth_slice: None,
+                        // With OIT the resolve is the one of the composite pass.
+                        resolve_target: msaa_view.filter(|_| !use_oit).map(|_| target),
+                        // drawShapes: gl.clearColor (0, 0, 0, 0)
+                        ops: wgpu::Operations {
+                            load: color_load,
+                            store: if use_oit {
+                                wgpu::StoreOp::Store
+                            } else {
+                                color_store
+                            },
                         },
-                        store: if msaa_view.is_some() && !pass_target.more {
-                            wgpu::StoreOp::Discard
-                        } else {
-                            wgpu::StoreOp::Store
-                        },
-                    },
-                })],
-                depth_stencil_attachment: Some(wgpu::RenderPassDepthStencilAttachment {
-                    view: depth_view,
-                    depth_ops: Some(wgpu::Operations {
-                        load: wgpu::LoadOp::Clear(if self.depth_mode == DepthMode::Reversed {
-                            0.0
-                        } else {
-                            1.0
+                    })],
+                    depth_stencil_attachment: Some(wgpu::RenderPassDepthStencilAttachment {
+                        view: depth_view,
+                        depth_ops: Some(wgpu::Operations {
+                            load: wgpu::LoadOp::Clear(if self.depth_mode == DepthMode::Reversed {
+                                0.0
+                            } else {
+                                1.0
+                            }),
+                            store: wgpu::StoreOp::Store,
                         }),
-                        store: wgpu::StoreOp::Store,
+                        stencil_ops: None,
                     }),
-                    stencil_ops: None,
-                }),
-                timestamp_writes,
-                ..Default::default()
-            });
+                    timestamp_writes: timing.map(|queries| wgpu::RenderPassTimestampWrites {
+                        query_set: queries,
+                        beginning_of_pass_write_index: Some(0),
+                        end_of_pass_write_index: (!use_oit).then_some(1),
+                    }),
+                    ..Default::default()
+                });
 
-            pass.set_bind_group(0, &self.frame_group, &[]);
-            let white_group = &self.white_group;
-            // X3DGeometryNode.display: gl.viewport and gl.scissor per shape.
-            let mut current: Option<[u32; 4]> = None;
+                draw_calls(&mut pass, false);
+            }
 
-            for c in &calls {
-                let Some(rect) = target_rect(&c.viewport.unwrap_or(layer_rect), width, height)
-                else {
-                    continue;
-                };
+            if use_oit {
+                let oit = self.oit_gpu.as_ref().unwrap();
 
-                if current != Some(rect) {
-                    let [x, y, w, h] = rect;
-                    // Without a Viewport the rectangle is the whole target: no change for a
-                    // single layer, and a flipped texture pass covers it whole.
-                    let y = if flip { height - y - h } else { y };
-                    pass.set_viewport(x as f32, y as f32, w as f32, h as f32, 0.0, 1.0);
-                    pass.set_scissor_rect(x, y, w, h);
-                    current = Some(rect);
+                // bindTransparency: both targets cleared to (0, 0, 0, 1); the depth buffer of the color target
+                // is tested (and written only by a DepthMode node's depthMask).
+                {
+                    let mut pass = encoder.begin_render_pass(&wgpu::RenderPassDescriptor {
+                        label: Some("x3d oit"),
+                        color_attachments: &oit.color_attachments(),
+                        depth_stencil_attachment: Some(wgpu::RenderPassDepthStencilAttachment {
+                            view: depth_view,
+                            depth_ops: Some(wgpu::Operations {
+                                load: wgpu::LoadOp::Load,
+                                store: wgpu::StoreOp::Store,
+                            }),
+                            stencil_ops: None,
+                        }),
+                        ..Default::default()
+                    });
+
+                    draw_calls(&mut pass, true);
                 }
 
-                if let Source::Volume(i) = c.source {
-                    self.volume.draw(&mut pass, i);
-                    continue;
-                }
+                // compose: over the color target, whole, without the depth test.
+                {
+                    let mut pass = encoder.begin_render_pass(&wgpu::RenderPassDescriptor {
+                        label: Some("x3d oit compose"),
+                        color_attachments: &[Some(wgpu::RenderPassColorAttachment {
+                            view: msaa_view.unwrap_or(target),
+                            depth_slice: None,
+                            resolve_target: msaa_view.map(|_| target),
+                            ops: wgpu::Operations {
+                                load: wgpu::LoadOp::Load,
+                                store: color_store,
+                            },
+                        })],
+                        depth_stencil_attachment: None,
+                        timestamp_writes: timing.map(|queries| wgpu::RenderPassTimestampWrites {
+                            query_set: queries,
+                            beginning_of_pass_write_index: None,
+                            end_of_pass_write_index: Some(1),
+                        }),
+                        ..Default::default()
+                    });
 
-                if let Source::Custom(i, _) = c.source {
-                    self.custom.draw(&mut pass, i);
-                    // The program's own uniforms replaced group 0: the frame group again for the next draw.
-                    pass.set_bind_group(0, &self.frame_group, &[]);
-                    continue;
+                    oit.compose(&mut pass, format, samples.max(1));
                 }
-
-                if let Source::Splats(i) = c.source {
-                    self.splats.draw(&mut pass, i);
-                    continue;
-                }
-
-                pass.set_pipeline(&self.pipelines[&(c.key, format, samples, flip)]);
-                if let Some([r, g, b, a]) = c.blend_constant {
-                    pass.set_blend_constant(wgpu::Color { r, g, b, a });
-                }
-                pass.set_bind_group(
-                    1,
-                    &self.draw_group,
-                    &[(c.draw_index as u64 * DRAW_STRIDE) as u32],
-                );
-                pass.set_bind_group(2, &self.slot_groups[&c.textures].0, &[]);
-                let sg = c
-                    .style_texture
-                    .and_then(|p| self.style_groups.get(&p))
-                    .map(|t| &t.1)
-                    .unwrap_or(white_group);
-                pass.set_bind_group(3, sg, &[]);
-
-                match c.source {
-                    Source::Scratch => {
-                        pass.set_vertex_buffer(0, self.scratch.slice(c.range.0..c.range.1))
-                    }
-                    Source::Geometry(p) => {
-                        pass.set_vertex_buffer(0, self.geometries[&p].buffer.slice(..))
-                    }
-                    Source::Sprites(p) => {
-                        pass.set_vertex_buffer(0, self.sprites[&p].buffer.slice(..))
-                    }
-                    Source::Buffer(i) => pass.set_vertex_buffer(0, self.frame_buffers[i].slice(..)),
-                    Source::Volume(_) | Source::Splats(_) | Source::Custom(..) => {
-                        unreachable!("volumes, splats and custom shaders are drawn above")
-                    }
-                }
-
-                pass.draw(0..c.count, 0..c.instances);
             }
         }
 

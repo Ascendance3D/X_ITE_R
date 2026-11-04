@@ -1,0 +1,50 @@
+#X3D V4.0 utf8
+PROFILE Interchange
+COMPONENT Shape:4
+COMPONENT Lighting:3
+COMPONENT Layering:1
+Viewpoint { position 0 0 12 }
+
+Background { skyColor 0.12 0.14 0.2 }
+DirectionalLight { direction -0.4 -0.6 -1 intensity 1.2 }
+Transform { translation -3.300 2.200 0 children [
+Transform { translation 0.0 0.0 0 children Shape { appearance Appearance { material PhysicalMaterial { baseColor 0.8 0.3 0.2 transparency 0.5 metallic 0 roughness 0.5 } } geometry Sphere { radius 0.9 } } }
+] }
+Transform { translation -1.100 2.200 0 children [
+Transform { translation 0.0 0.0 0 children Shape { appearance Appearance { material PhysicalMaterial { baseColor 0.8 0.3 0.2 transparency 0.2 metallic 0 roughness 0.5 } } geometry Sphere { radius 0.9 } } }
+] }
+Transform { translation 1.100 2.200 0 children [
+Transform { translation 0.0 0.0 0 children Shape { appearance Appearance { material PhysicalMaterial { baseColor 0.8 0.3 0.2 transparency 0.8 metallic 0 roughness 0.5 } } geometry Sphere { radius 0.9 } } }
+] }
+Transform { translation 3.300 2.200 0 children [
+Transform { translation 0.0 0.0 0 children Shape { appearance Appearance { material PhysicalMaterial { baseColor 0.8 0.3 0.2 transparency 0.5 metallic 1 roughness 0.2 } } geometry Sphere { radius 0.9 } } }
+] }
+Transform { translation -3.300 0.000 0 children [
+Transform { translation 0.0 0.0 0 children Shape { appearance Appearance { material PhysicalMaterial { baseColor 0.2 0.6 0.9 transparency 0.5 metallic 0.5 roughness 0.8 } } geometry Sphere { radius 0.9 } } }
+] }
+Transform { translation -1.100 0.000 0 children [
+Transform { translation 0.0 0.0 0 children Shape { appearance Appearance { material PhysicalMaterial { baseColor 0.8 0.3 0.2 transparency 0.5 metallic 0 roughness 0.5 emissiveColor 0.5 0.3 0.0 } } geometry Sphere { radius 0.9 } } }
+] }
+Transform { translation 1.100 0.000 0 children [
+Transform { translation 0.0 0.0 -0.6 children Shape { appearance Appearance { material PhysicalMaterial { baseColor 0.9 0.2 0.2 transparency 0.5 metallic 0 roughness 0.5 } } geometry Box { size 1.5 1.5 0.05 } } }
+Transform { translation 0.0 0.0 0.6 children Shape { appearance Appearance { material PhysicalMaterial { baseColor 0.2 0.2 0.9 transparency 0.5 metallic 0 roughness 0.5 } } geometry Box { size 1.5 1.5 0.05 } } }
+] }
+Transform { translation 3.300 0.000 0 children [
+Transform { translation 0.0 0.0 0.6 children Shape { appearance Appearance { material PhysicalMaterial { baseColor 0.2 0.2 0.9 transparency 0.5 metallic 0 roughness 0.5 } } geometry Box { size 1.5 1.5 0.05 } } }
+Transform { translation 0.0 0.0 -0.6 children Shape { appearance Appearance { material PhysicalMaterial { baseColor 0.9 0.2 0.2 transparency 0.5 metallic 0 roughness 0.5 } } geometry Box { size 1.5 1.5 0.05 } } }
+] }
+Transform { translation -3.300 -2.200 0 children [
+Transform { translation 0.0 0.0 -0.8 children Shape { appearance Appearance { material Material { diffuseColor 0.9 0.9 0.9 emissiveColor 0.9 0.9 0.9 transparency 0 } } geometry Box { size 1.9 1.9 0.05 } } }
+Transform { translation 0.0 0.0 0 children Shape { appearance Appearance { material PhysicalMaterial { baseColor 0.9 0.2 0.2 transparency 0.5 metallic 0 roughness 0.5 } } geometry Box { size 1.6 1.6 0.05 } } }
+] }
+Transform { translation -1.100 -2.200 0 children [
+Transform { translation 0.0 0.0 0 children Shape { appearance Appearance { material PhysicalMaterial { baseColor 0.9 0.2 0.2 transparency 0.5 metallic 0 roughness 0.5 } } geometry Box { size 1.6 1.6 0.05 } } }
+Transform { translation 0.0 0.0 0.8 children Shape { appearance Appearance { material Material { diffuseColor 0.9 0.9 0.9 emissiveColor 0.9 0.9 0.9 transparency 0 } } geometry Box { size 1.9 1.9 0.05 } } }
+] }
+Transform { translation 1.100 -2.200 0 children [
+Shape { appearance Appearance { material PhysicalMaterial { baseColor 1 1 1 transparency 0.4 metallic 0 roughness 0.6 baseTexture ImageTexture { url "../synthetic-rea-b03/proj-checker.png" } } } geometry Box { size 1.6 1.6 0.05 } }
+] }
+Transform { translation 3.300 -2.200 0 children [
+Transform { rotation 0 1 0 0.8 children [ Transform { translation 0.0 0.0 0 children Shape { appearance Appearance { material PhysicalMaterial { baseColor 0.9 0.2 0.2 transparency 0.5 metallic 0 roughness 0.5 } } geometry Box { size 1.6 1.6 0.05 } } } ] }
+Transform { translation 0.0 0.0 0 children Shape { appearance Appearance { material PhysicalMaterial { baseColor 0.2 0.2 0.9 transparency 0.5 metallic 0 roughness 0.5 } } geometry Box { size 1.6 1.6 0.05 } } }
+] }
