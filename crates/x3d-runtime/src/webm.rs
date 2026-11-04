@@ -24,6 +24,7 @@ const ID_TRACK_ENTRY: u64 = 0xAE;
 const ID_TRACK_NUMBER: u64 = 0xD7;
 const ID_TRACK_TYPE: u64 = 0x83;
 const ID_CODEC_ID: u64 = 0x86;
+#[cfg(feature = "av1")]
 const ID_CODEC_PRIVATE: u64 = 0x63A2;
 const ID_CLUSTER: u64 = 0x1F43_B675;
 const ID_TIMECODE: u64 = 0xE7;
@@ -591,6 +592,9 @@ fn decode_av1(data: &[u8], blocks: &[Block], max_bytes: u64) -> Result<Video, We
         Ok(())
     };
 
+    // `catch_unwind` only turns a Rust panic in this crate's own code into an error. A panic inside rav1d's C
+    // interface cannot unwind and aborts the process; that is why `tests/av1_safety.rs` runs damaged files in child
+    // processes, and it is that test, not these wrappers, that proves the decoder does not crash.
     let private = av1_codec_private(data);
     let config = av1::config_obus(&private);
 

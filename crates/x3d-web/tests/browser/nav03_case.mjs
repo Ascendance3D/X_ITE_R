@@ -10,7 +10,7 @@
 // The input is Chrome DevTools touch events in a context with touch (no physical device, issue #143). The world is
 // synthetic, written for the tests.
 
-import { DESKTOP, fields, frames, settle, touch } from "./runtime02_case.mjs";
+import { DESKTOP, clock, fields, frames, holdClock, settle, touch } from "./runtime02_case.mjs";
 import { pageLoadURL } from "./loadurl01_case.mjs";
 
 // A red box on the left, a green sphere on the right; the canvas is 400 x 300 and the field of view 0.785, so the box
@@ -90,15 +90,20 @@ async function taps (page, points, gap, wait, moves = false)
 {
    const out = { start: await pose (page) };
 
+   // The page clock is held across the taps: the gap between them is `gap` ms of it, however long a frame takes.
+   await holdClock (page);
+   await clock (page, "freeze");
+
    for (const [ i, point ] of points .entries ())
    {
       if (i)
-         await page .waitForTimeout (gap);
+         await clock (page, "advance", gap);
 
-      // Nothing else between the taps: on a slow runner a frame takes 0.3 s, longer than the 300 ms of a double tap.
       await touch (page, "touchStart", [ point ]);
       await touch (page, "touchEnd", [ ]);
    }
+
+   await clock (page, "release");
 
    // Wait at least `wait` ms, then until the pose has stopped moving (a slower machine runs the look-at in more wall time).
    await page .waitForTimeout (wait);
@@ -196,13 +201,7 @@ const gestures = type => ({
 // A device pixel ratio of 1, so the pictures of the zoom cases have the size of the canvas in both engines.
 const context = { ... DESKTOP, hasTouch: true };
 
-// A double tap is two taps within 300 ms (400 ms in LOOKAT) of the clock of the page. On GitHub's hosted runner (a software
-// GPU) one frame takes 0.3 s or more, and a DevTools touch event waits for the frame in progress, so the second tap lands
-// after the window in X_ITE as well as in X_ITE_R (CI run 41605751679: the pose did not move in 42 s). That case is skipped
-// there and runs everywhere else (a GPU machine, XR_CASE=...).
-const SLOW_RUNNER = process .env .GITHUB_ACTIONS === "true" ? "a double tap needs two taps within 300 ms, a frame of the hosted runner takes longer" : false;
-
 export const CASE_GROUPS = {
-   navPlane:  { context, cases: gestures ("PLANE"), skipCases: { doubleTap: SLOW_RUNNER } },
-   navLookAt: { context, cases: gestures ("LOOKAT"), skipCases: { doubleTap: SLOW_RUNNER } },
+   navPlane:  { context, cases: gestures ("PLANE") },
+   navLookAt: { context, cases: gestures ("LOOKAT") },
 };

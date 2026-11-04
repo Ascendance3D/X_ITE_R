@@ -26,7 +26,7 @@ OLD = "        if f.frame_hdr.as_ref().unwrap().refresh_context != 0 {\n        
 NEW = (
     "        // x3d patch (vendor/rav1d/VENDOR.md): `rav1d_decode_frame` has already cleared `f.frame_hdr` when it fails (its\n"
     "        // exit path), so the unwrap that was here panicked, inside an `extern \"C\"` function, which aborts the process.\n"
-    "        if f.frame_hdr.as_ref().is_none_or(|h| h.refresh_context != 0) {\n"
+    "        if f.frame_hdr.as_ref().map_or(true, |h| h.refresh_context != 0) {\n"
     "            let _ = mem::take(&mut f.out_cdf);\n"
     "        }"
 )
