@@ -45,8 +45,13 @@ jobs:
     timeout-minutes: 340
     defaults:
       run:
-        shell: '"C:\Program Files\Git\bin\bash.exe" --noprofile --norc -e -o pipefail {0}'
+        shell: bash
     steps:
+      # Put Git for Windows' bash in front of the WSL launcher in this job's PATH (GITHUB_PATH is per job).
+      - name: Git bash first in PATH
+        shell: cmd
+        run: echo C:\Program Files\Git\bin>>%GITHUB_PATH%
+
       - uses: actions/checkout@v7
         with:
           persist-credentials: false
