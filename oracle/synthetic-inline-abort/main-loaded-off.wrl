@@ -1,0 +1,19 @@
+#X3D V3.3 utf8
+PROFILE Interchange
+COMPONENT Networking:3
+COMPONENT Scripting:1
+# Synthetic, newly authored (Inline abort and reload paths). No archive content.
+# The Script reacts to the first isLoaded TRUE of the Inline by changing the Inline: the reload or
+# abort starts inside the completion event of the load. The Inline is switched off.
+DEF Holder Group { children [ DEF Inl Inline { url "leaf-a.wrl" } ] }
+DEF Watch LoadSensor { watchList [ USE Inl ] }
+DEF Reactor Script {
+  directOutput TRUE
+  inputOnly SFBool loaded
+  initializeOnly SFNode inl USE Inl
+  initializeOnly SFInt32 n 0
+  url "javascript:
+    function loaded (v) { n = n + 1; print ('loaded ' + v + ' #' + n); if (v && n == 1) { inl.load = false; } }
+  "
+}
+ROUTE Watch.isLoaded TO Reactor.loaded

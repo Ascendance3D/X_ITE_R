@@ -1,0 +1,13 @@
+#VRML V2.0 utf8
+# Synthetic, newly authored (Inline abort and reload paths). No archive content.
+DEF Clock TimeSensor { cycleInterval 0.5 loop TRUE }
+DEF S Script {
+  eventIn SFTime tick
+  field SFInt32 n 0
+  url "javascript:
+    function initialize () { print ('B initialize'); }
+    function tick (t) { n = n + 1; print ('B tick ' + n); }
+    function shutdown () { print ('B shutdown'); }
+  "
+}
+ROUTE Clock.cycleTime TO S.tick
