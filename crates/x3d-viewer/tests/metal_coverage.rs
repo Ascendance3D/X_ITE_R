@@ -11,9 +11,9 @@
 //!   instead). A size above ALIASED_POINT_SIZE_RANGE [1], 511, is drawn as 511 (ml-sprite-clamp). Ids, hit points and normals
 //!   are bit for bit; the texCoord within SPRITE_TEX_ABS, except the probes of the sprites that sit on a rounding tie: those are a
 //!   known unresolved difference, pinned as measured in TIE_DIFFS (see SPRITE_TIES), never accepted by a tolerance.
-//! * `ml-lines-*`: 1 px lines. The page covers on Metal exactly the pixels the NVIDIA recording covers (measured: the same
-//!   probes hit in both), which the quad emulation of `pointing.wgsl` reproduces except at the ends of a line and at a few ties
-//!   (GL's diamond-exit rule): LINE_ID_GAPS is that number per case, and the test fails when it changes.
+//! * `ml-lines-*`: 1 px lines. The page draws them as Metal line primitives (ANGLE's gl.LINES), and so does the pointing pass on a
+//!   Metal device (`gpu::metal_native_lines`): every id, hit point and normal is bit for bit (before, the two-triangle emulation
+//!   of GL's diamond-exit rule missed 65 hit/miss probes and 49 hit points were a float32 step off).
 //!
 //! Only on a Metal device with `X3D_REFERENCE_PLATFORM=apple-m1`: the recordings are the M1's, and the Metal rules apply to Metal.
 //! Anywhere else the test says so and passes without comparing (the Vulkan results are covered by rea_batch12 and the other
@@ -58,9 +58,6 @@ const TIE_DIFFS: &[(&str, &str, usize, usize, f64, f64)] = &[
     ("ml-sprite-size", "0", 13, 0, 1.0080933570861816e-3, 0.0),
     ("ml-sprite-size", "4", 13, 0, 1.0080933570861816e-3, 0.0),
 ];
-
-/// (case, probes that hit in the recording and not in Rust or the other way round).
-const LINE_ID_GAPS: &[(&str, usize)] = &[("ml-lines-a", 27), ("ml-lines-b", 38)];
 
 fn probes(v: &Value) -> &Vec<Value> {
     v["pickProbes"].as_array().expect("pickProbes")
@@ -183,10 +180,6 @@ fn metal_coverage_matches_the_pinned_page_on_the_same_m1() {
             .iter()
             .find(|(n, _)| *n == name)
             .map_or(&[], |(_, t)| t);
-        let line_gap = LINE_ID_GAPS
-            .iter()
-            .find(|(n, _)| *n == name)
-            .map(|(_, g)| *g);
         let on_tie = |i: usize| ties.iter().any(|&(a, b)| (a..=b).contains(&i));
         let (mut id_gaps, mut worst) = (0, 0.0f64);
         let (mut tie_diffs, mut tie_id_gaps, mut tie_tex, mut tie_rest) =
@@ -208,7 +201,7 @@ fn metal_coverage_matches_the_pinned_page_on_the_same_m1() {
                 if on_tie(i) {
                     tie_id_gaps += 1;
                     tie_diffs += 1;
-                } else if line_gap.is_none() {
+                } else {
                     failures.push(format!(
                         "{name} MSAA {msaa}: probe {i}: page {a} / Rust {b}"
                     ));
@@ -225,8 +218,14 @@ fn metal_coverage_matches_the_pinned_page_on_the_same_m1() {
             let rest = max_abs(&a["point"], &b["point"]).max(max_abs(&a["normal"], &b["normal"]));
 
             if name.starts_with("ml-lines") {
-                // The hit point of a 1 px line is interpolated by the rasterizer: float32 steps (pk-lines allows 398 ulps).
+                // The hit point of a 1 px line is interpolated by the rasterizer: bit for bit with the line primitive.
                 worst = worst.max(rest);
+
+                if rest != 0.0 {
+                    failures.push(format!(
+                        "{name} MSAA {msaa}: probe {i}: page {a} / Rust {b} (hit point or normal {rest:e} off)"
+                    ));
+                }
             } else if on_tie(i) {
                 if tex != 0.0 || rest != 0.0 {
                     tie_diffs += 1;
@@ -237,14 +236,6 @@ fn metal_coverage_matches_the_pinned_page_on_the_same_m1() {
             } else if rest != 0.0 || tex > SPRITE_TEX_ABS {
                 failures.push(format!(
                     "{name} MSAA {msaa}: probe {i}: page {a} / Rust {b} (texCoord {tex:e}, rest {rest:e})"
-                ));
-            }
-        }
-
-        if let Some(gap) = line_gap {
-            if id_gaps != gap {
-                failures.push(format!(
-                    "{name} MSAA {msaa}: {id_gaps} probes hit in only one of page and Rust, recorded {gap}"
                 ));
             }
         }

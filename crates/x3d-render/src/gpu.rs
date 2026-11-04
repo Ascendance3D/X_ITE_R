@@ -6395,10 +6395,27 @@ pub fn set_max_line_width(width: f64) {
     MAX_LINE_WIDTH_BITS.store(width.to_bits(), std::sync::atomic::Ordering::Relaxed);
 }
 
-/// Makes [`max_line_width`] the limit of the backend of `device`.
+static METAL_LINES: std::sync::atomic::AtomicBool = std::sync::atomic::AtomicBool::new(false);
+
+/// Whether the device the last renderer or pointing buffer took is a Metal device, where the pinned page's 1 px `gl.LINES`
+/// are Metal line primitives (ANGLE's Metal backend), and so are the pointing pass's: the same rasterizer then decides
+/// which pixels a line covers and how its varyings are interpolated (measured on the physical M1, issue #89,
+/// oracle/synthetic-metal-coverage `ml-lines-*`: all 2755 hits bit for bit and no hit/miss gap, against
+/// 49 of 2724 hits that differ in a float32 step and 65 hit/miss gaps with the two-triangle emulation of the other backends). Vulkan and the others keep the emulation of
+/// GL's diamond-exit rule, which WebGPU's line list does not follow.
+pub fn metal_native_lines() -> bool {
+    METAL_LINES.load(std::sync::atomic::Ordering::Relaxed)
+}
+
+/// Makes [`max_line_width`] the limit of the backend of `device` (and [`metal_native_lines`] its answer).
 pub fn note_line_width_backend(device: &wgpu::Device) {
+    let backend = device.adapter_info().backend;
     MAX_LINE_WIDTH_BITS.store(
-        max_line_width_of(device.adapter_info().backend).to_bits(),
+        max_line_width_of(backend).to_bits(),
+        std::sync::atomic::Ordering::Relaxed,
+    );
+    METAL_LINES.store(
+        backend == wgpu::Backend::Metal,
         std::sync::atomic::Ordering::Relaxed,
     );
 }
