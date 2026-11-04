@@ -1,0 +1,6 @@
+#X3D V4.0 utf8
+PROFILE Full
+NavigationInfo { type "NONE" headlight FALSE }
+Background { skyColor 0.12 0.14 0.2 }
+Viewpoint { position 0 0 4 }
+Shape { appearance Appearance { texture MovieTexture { url "media/av1-testsrc.webm" } } geometry Rectangle2D { size 3 2 } }

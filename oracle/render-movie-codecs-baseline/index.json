@@ -143,6 +143,39 @@
    "pngSha256": "e86a5ce2c67042421e53f4a6a0c176f3accd018b5ee60f3b2dd873b9a953c592",
    "splashVisible": false,
    "canvasDisplay": "block"
+  },
+  {
+   "file": "av1-parts.wrl",
+   "ok": true,
+   "log": [],
+   "width": 512,
+   "height": 512,
+   "rgbaSha256": "bd8e6d6d6f40647213d4ae7b499ff1789af9cbe06b5adedd1830308d7fe93360",
+   "pngSha256": "af98fb3c85b0622bad3b006ee1c3b8999300ebc1087958fd87ed1ac78d612004",
+   "splashVisible": false,
+   "canvasDisplay": "block"
+  },
+  {
+   "file": "av1-svt.wrl",
+   "ok": true,
+   "log": [],
+   "width": 512,
+   "height": 512,
+   "rgbaSha256": "6560a654b7a35b2eed7b3fe07fb55c286abb1582c9ad21d1b92a455eb9d079ce",
+   "pngSha256": "45238f3590f01de88927bfebd714521a64aedd7436050f0254c4e74cb661ebf8",
+   "splashVisible": false,
+   "canvasDisplay": "block"
+  },
+  {
+   "file": "av1-testsrc.wrl",
+   "ok": true,
+   "log": [],
+   "width": 512,
+   "height": 512,
+   "rgbaSha256": "83cfd25b5cea3fe3ce829cc2ba12b904c057b877aa1f89f6c0a8b78979e82900",
+   "pngSha256": "8ca1f5a2328691fa98bef3d8c58fdae8a9e03af4c3fa52b4f84f7f00753466e1",
+   "splashVisible": false,
+   "canvasDisplay": "block"
   }
  ]
 }

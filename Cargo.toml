@@ -18,6 +18,8 @@ debug = "line-tables-only"
 # modification and how to check it: vendor/web-audio-api/VENDOR.md (owner direction 2026-11-02, issue #90).
 [patch.crates-io]
 web-audio-api = { path = "vendor/web-audio-api" }
+# rav1d 1.1.0 with the one-line fix of vendor/rav1d/VENDOR.md (a damaged AV1 tile aborts the process in upstream).
+rav1d = { path = "vendor/rav1d" }
 
 # vp9dec at opt-level 3 overflows the stack of rustc 1.95 (SIGSEGV in LLVM); 2 builds.
 [profile.release.package.vp9dec]

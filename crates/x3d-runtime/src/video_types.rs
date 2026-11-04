@@ -5,7 +5,7 @@
 #[derive(Debug)]
 pub enum WebmError {
     NotWebm,
-    /// No video track with a codec that is decoded here (VP9, VP8).
+    /// No video track with a codec that is decoded here (VP9, VP8, and AV1 when the `av1` feature is on).
     NoVideoTrack,
     Decode(String),
     /// Either a picture codes more luma samples than [`MAX_LUMA_SAMPLES`] (refused before the decoder runs), or the
