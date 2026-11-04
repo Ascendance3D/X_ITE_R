@@ -22,7 +22,15 @@ Mac is open until its cause is shown.
 | --- | --- |
 | PASS against the M1 recording; REFERENCE VARIATION (NVIDIA and M1 recordings differ reproducibly, Rust equals the M1 one) | 24: fly-middle-pan, fly-wall, geo-touch, pick-hits, pick-instanced, pk-overlap, pk-points, sensors, sensors-drag, sensors-touch, touch-hit-events, walk-ceiling-block, walk-ceiling-pass, walk-fall-then-walk, walk-pit, walk-radius-large, walk-ramp, walk-small-avatar, walk-step-above-limit, walk-step-below-limit, walk-step-large, walk-step-zero, walk-tilted-forward, walk-wall |
 | OPEN: Rust differs from the pinned page on the same Mac (not shown to be a Rust defect, not shown to be variation) | 5: walk-steps, walk-instanced-steps, pk-lines, pk-points-style, pk-events |
-| UNVERIFIED | none of the 29; `rea_b14_particle_pick` and `rea_b15_particle_collision` (recorded by `x3d-oracle particles`, `js.f32`) are not yet compared with M1 recordings; `gs-empty` and `gs-visible-false` time out on both platforms |
+| UNVERIFIED | none of the 29; `gs-empty` and `gs-visible-false` time out on both platforms |
+
+## ParticleSystem pointing and collision (`rea_b14`, `rea_b15`)
+
+Recorded on the M1 with `x3d-oracle particles` (`X3D_ORACLE_ANGLE=metal`, `oracle/tools/record_platform_particles.py`), three identical runs per case, 0 unstable. Stored flat as `oracle/rea-b14-particle-pick-apple-m1-baseline/NAME.json` + `NAME.f32` (23 of 24 cases differ from the NVIDIA recording) and `oracle/rea-b15-particle-collision-apple-m1-baseline/` (12 of 14).
+* `rea_b15_particle_collision_matches_x_ite`: **PASS** against the M1 recordings (14 cases); it failed on Metal against the NVIDIA recordings (111 differences).
+* `rea_b14_particle_pick_matches_x_ite`: 21 of 24 cases pass; **OPEN**: `pp-row-point-props` (3 values, 1 ulp allowed), `pp-slant-line` (8 values, 0 ulps allowed), `pp-slant-point-props` (15 values, 1 ulp allowed): one float32 step in the hit point of a point or line, the same family as `pk-lines`, `pk-events` and `pk-points-style`. It failed on 21 cases against the NVIDIA recordings.
+
+With the particle tests the full run on the M1 (`X3D_REFERENCE_PLATFORM=apple-m1`, 11 tests of 6 files): 7 passed, 4 failed (`rea_batch09_nav` shards 0 and 3, `rea_batch12`, `rea_b14`), no skip recorded.
 
 ## The five open cases (same Mac, Rust vs the M1 recording)
 
@@ -32,4 +40,4 @@ Mac is open until its cause is shown.
 * **pk-lines** (MSAA 0 and 4): 184 of 2583 probes differ; 14 are hit/miss flips (the page hits, Rust misses), all on one diagonal line, at pixels where the line's staircase steps (a half-pixel coverage tie). Rust expands pointing-pass lines in the vertex stage to the NVIDIA GL rule (`pointing.wgsl`), on every backend. The rest differ by float32 ulps.
 * **pk-points-style** (MSAA 0 and 4): 140 of 2479 probes differ; id and point agree, `texCoord` of attenuated point sprites differs by 1.0e-3; Rust equals the NVIDIA recording there.
 
-Next: the point and line coverage rules on Metal (agent F works on the point-sprite tie rule), then `walk-steps` probe 46, then b14/b15.
+Common to the open cases: a point or a line, or a probe at the edge of a depth step, where one float32 step or one pixel of coverage decides. Next: the point and line coverage rules on Metal, then `walk-steps` probe 46.
