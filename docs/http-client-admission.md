@@ -24,6 +24,11 @@ The decoder rule BR1.7 (`docs/decoder-admission.md`) names MIT, Apache-2.0 and B
 permissive license of the BSD family, and CDLA-Permissive-2.0 is a permissive data license; neither is on the BR1.7 list, and no other rule or `deny.toml`
 covers them. The owner can replace `webpki-roots` by the roots of the operating system (`platform-verifier`) at the cost of a system dependency.
 
+**Owner decision, 2026-11-04 (PR #438):** the four packages outside the BR1.7 list are admitted for the HTTP client, at these versions:
+`ring` 0.17.14 (Apache-2.0 AND ISC), `rustls-webpki` 0.103.16 (ISC), `untrusted` 0.9.0 (ISC) and `webpki-roots` 1.0.11
+(CDLA-Permissive-2.0). The admission covers the HTTP client of the native build only; it does not widen BR1.7 for decoders. A new
+package or a license change in an update needs a new decision.
+
 ## Platforms
 
 No package outside the Rust crates is needed. `ring` compiles C and assembly with the C compiler that the CI jobs already have (Linux, macOS, Windows). The
