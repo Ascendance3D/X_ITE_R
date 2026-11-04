@@ -1609,6 +1609,7 @@ impl Viewer3d {
                     clip_planes: s.clip_planes.as_slice().into(),
                     collisions: s.collisions.as_slice().into(),
                     instances: None,
+                    point_style: None,
                     splats: s.splats.clone().map(|d| (d, s.viewport)),
                 });
             }
@@ -1627,6 +1628,7 @@ impl Viewer3d {
                     clip_planes: s.clip_planes.as_slice().into(),
                     collisions: s.collisions.as_slice().into(),
                     instances: None,
+                    point_style: None,
                     splats: None,
                 });
             }
@@ -1750,6 +1752,7 @@ impl Viewer3d {
                         matrices,
                         per_vertices: per,
                     }),
+                    point_style: None,
                     splats: None,
                 });
 
@@ -1773,6 +1776,10 @@ impl Viewer3d {
                         matrices: r.matrices.clone(),
                         per_vertices: 0,
                     }),
+                    point_style: match r.template.style {
+                        Some(x3d_render::traverse::StyleParams::Point(p)) => Some(p),
+                        _ => None,
+                    },
                     splats: None,
                 });
             }

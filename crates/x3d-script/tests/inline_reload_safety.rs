@@ -56,11 +56,13 @@ fn every_scenario_leaves_nothing_behind() {
     });
 }
 
-/// Overlapping requests: the older request finishes after the newer one was made. X_ITE shows the
-/// older scene for a frame; this port never shows it, and keeps the old content until the newest
-/// scene is ready.
+/// Overlapping requests (ADR 0014, section 4; rules 1, 2 and 4): B arrived before C was requested. Its fetch
+/// is over, so `abort ()` does not cancel it (FileLoader.js:74-78) and it is applied at the end of the frame
+/// in which C was requested, while C is still pending. C replaces it one frame later, and B never survives.
+/// The Inline keeps the state of the newer request: IN_PROGRESS at step 5, where X_ITE says COMPLETE (kept
+/// difference, `synthetic-inline-reload-known.tsv`).
 #[test]
-fn overlapping_request_never_shows_the_older_scene() {
+fn arrived_older_scene_is_shown_while_the_newer_request_is_pending() {
     on_big_stack(|| {
         let (run, steps) = trace(
             "main-one.wrl",
@@ -70,23 +72,148 @@ fn overlapping_request_never_shows_the_older_scene() {
                 url(5, "Inl", &["content-c.wrl"]),
             ],
         );
-        let all = lines(&steps, 0, 12);
 
-        assert!(all.iter().any(|l| l == "log: C fraction 0"), "C is shown");
+        // Rule 1: B is applied at the end of step 5, so it runs in step 6, before C's clock, and A does not.
+        // (The native build adds `B shutdown` when C replaces B: ISO/IEC 14772-1 4.12.3, see the known table.)
+        let step6: Vec<String> = lines(&steps, 6, 6)
+            .into_iter()
+            .filter(|l| !is_shutdown_line(l))
+            .collect();
+
+        assert_eq!(step6, ["log: C fraction 0", "log: B fraction 2"], "step 6");
         assert!(
-            !all.iter().any(|l| l.starts_with("log: B fraction")),
-            "B was never shown: {all:?}"
+            !lines(&steps, 6, 12)
+                .iter()
+                .any(|l| l.starts_with("log: A fraction")),
+            "A is replaced by B at step 5"
         );
 
-        // A stays while the newest request is in progress, and the Inline is IN_PROGRESS the whole time.
-        for k in 4..=5 {
+        // Rule 4: the Inline shows B, and the state is the one of the request for C.
+        let i = inline_of(&steps[5], "Inl");
+
+        assert_eq!(i["loadState"], "IN_PROGRESS", "step 5");
+        assert_eq!(i["loaded"], true, "step 5");
+        assert_eq!(steps[5]["loadCount"], 1, "step 5: C is loading");
+
+        // Rule 2: C replaced B; B does not run again.
+        assert_eq!(inline_of(&steps[6], "Inl")["loadState"], "COMPLETE");
+        assert!(
+            !lines(&steps, 7, 12)
+                .iter()
+                .any(|l| l.starts_with("log: B fraction")),
+            "B was disposed when C became current"
+        );
+        assert!(
+            lines(&steps, 7, 12)
+                .iter()
+                .any(|l| l.starts_with("log: C fraction")),
+            "C runs"
+        );
+        assert_eq!(inline_of(&steps[12], "Inl")["loadState"], "COMPLETE");
+        assert_eq!(run.rt.inline_diagnostics().orphan_live_scenes, 0);
+        assert_eq!(run.rt.inline_diagnostics().frame_waiters, 0);
+    });
+}
+
+/// Rule 1 with a scene that waits for a nested load: `nest-mid.wrl` holds an Inline of its own, so it is applied
+/// a frame after it arrived. The request for C is made before that, and C is still pending when the scene is
+/// applied (step 6, roots `Group`): the scene is shown with the state of C (IN_PROGRESS), and C replaces it.
+#[test]
+fn older_scene_with_a_nested_load_is_shown_while_the_newer_request_is_pending() {
+    on_big_stack(|| {
+        let (run, steps) = trace(
+            "main-one.wrl",
+            10,
+            &[
+                url(4, "Inl", &["nest-mid.wrl"]),
+                url(6, "Inl", &["content-c.wrl"]),
+            ],
+        );
+        let i = inline_of(&steps[6], "Inl");
+
+        assert_eq!(
+            i["roots"],
+            json!(["TimeSensor", "Script", "Group"]),
+            "step 6"
+        );
+        assert_eq!(i["loadState"], "IN_PROGRESS", "step 6: the state of C");
+        assert_eq!(inline_of(&steps[7], "Inl")["loadState"], "COMPLETE");
+        assert_eq!(
+            inline_of(&steps[7], "Inl")["roots"],
+            json!(["TimeSensor", "Script", "Transform"])
+        );
+        assert!(
+            lines(&steps, 8, 10)
+                .iter()
+                .all(|l| !l.starts_with("log: Mid tick")),
+            "the older scene was disposed when C became current"
+        );
+        assert_eq!(run.rt.inline_diagnostics().orphan_live_scenes, 0);
+    });
+}
+
+/// Rule 3: the older scene (it waits for a nested load) arrives after the newer request failed. It is dropped:
+/// the Inline stays FAILED and empty, and nothing of the older scene runs. (Without the state of the newer
+/// request in the decision, the older scene would be shown in a FAILED Inline.)
+#[test]
+fn older_scene_after_the_newer_request_failed_is_dropped() {
+    on_big_stack(|| {
+        let (run, steps) = trace(
+            "main-one.wrl",
+            10,
+            &[
+                url(4, "Inl", &["nest-mid.wrl"]),
+                url(5, "Inl", &["no-such.wrl"]),
+            ],
+        );
+
+        for k in 5..=10 {
             let i = inline_of(&steps[k], "Inl");
 
-            assert_eq!(i["loadState"], "IN_PROGRESS", "step {k}");
-            assert_eq!(i["loaded"], true, "step {k}: the old scene stays");
+            assert_eq!(i["loadState"], "FAILED", "step {k}");
+            assert_eq!(i["loaded"], false, "step {k}: nothing is shown");
         }
 
-        assert_eq!(inline_of(&steps[12], "Inl")["loadState"], "COMPLETE");
+        assert!(
+            lines(&steps, 6, 10)
+                .iter()
+                .all(|l| !l.starts_with("log: Mid tick")),
+            "the older scene never ran after the failure"
+        );
+        assert_eq!(run.rt.inline_diagnostics().orphan_live_scenes, 0);
+        assert_eq!(run.rt.inline_diagnostics().frame_waiters, 0);
+        assert_eq!(run.rt.inline_diagnostics().pending_scenes, 0);
+    });
+}
+
+/// Rule 5: `load` FALSE in the frame of the newer request cancels it, and the scene of the older request that
+/// has arrived is not shown (c09 stays as decided).
+#[test]
+fn load_false_cancels_an_arrived_older_scene() {
+    on_big_stack(|| {
+        let (run, steps) = trace(
+            "main-one.wrl",
+            10,
+            &[
+                url(4, "Inl", &["content-b.wrl"]),
+                url(5, "Inl", &["content-c.wrl"]),
+                load(5, "Inl", false),
+            ],
+        );
+
+        for k in 5..=10 {
+            let i = inline_of(&steps[k], "Inl");
+
+            assert_eq!(i["loadState"], "NOT_STARTED", "step {k}");
+            assert_eq!(i["loaded"], false, "step {k}");
+        }
+
+        assert!(
+            lines(&steps, 5, 10)
+                .iter()
+                .all(|l| !l.starts_with("log: B fraction") && !l.starts_with("log: C fraction")),
+            "neither B nor C ran"
+        );
         assert_eq!(run.rt.inline_diagnostics().orphan_live_scenes, 0);
     });
 }

@@ -1,0 +1,11 @@
+#VRML V2.0 utf8
+# Synthetic Inline scene for inlinehold01_case.mjs (newly authored): a root named RootA, a box that is only its emissive color
+# (red for A, blue for B, green for C) and a Script that prints from its initialize.
+DEF RootA Transform
+{
+  children
+  [
+    Shape { appearance Appearance { material Material { diffuseColor 0 0 0 emissiveColor 1 0 0 } } geometry Box { size 4 4 4 } }
+    Script { url "javascript: function initialize () { print ('A initialize'); }" }
+  ]
+}

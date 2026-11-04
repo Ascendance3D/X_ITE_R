@@ -1,0 +1,329 @@
+{
+ "anchors": [],
+ "console": [],
+ "geometry": {
+  "rect": [
+   0,
+   0,
+   512,
+   512
+  ],
+  "scroll": [
+   0,
+   0
+  ],
+  "viewport": [
+   0,
+   0,
+   512,
+   512
+  ]
+ },
+ "log": [],
+ "ok": true,
+ "poses": {
+  "17": {
+   "centerOfRotation": [
+    0,
+    0,
+    0
+   ],
+   "description": "",
+   "fieldOfViewScale": 1,
+   "orientation": [
+    0,
+    0,
+    1,
+    0
+   ],
+   "position": [
+    0,
+    0,
+    12
+   ],
+   "viewer": "NONE",
+   "viewpoint": "V1"
+  },
+  "25": {
+   "centerOfRotation": [
+    0,
+    0,
+    0
+   ],
+   "description": "",
+   "fieldOfViewScale": 1,
+   "orientation": [
+    0,
+    0,
+    1,
+    0
+   ],
+   "position": [
+    0,
+    0,
+    12
+   ],
+   "viewer": "NONE",
+   "viewpoint": "V1"
+  },
+  "33": {
+   "centerOfRotation": [
+    0,
+    0,
+    0
+   ],
+   "description": "",
+   "fieldOfViewScale": 1,
+   "orientation": [
+    0,
+    0,
+    1,
+    0
+   ],
+   "position": [
+    0,
+    0,
+    12
+   ],
+   "viewer": "NONE",
+   "viewpoint": "V1"
+  },
+  "4": {
+   "centerOfRotation": [
+    0,
+    0,
+    0
+   ],
+   "description": "",
+   "fieldOfViewScale": 1,
+   "orientation": [
+    0,
+    0,
+    1,
+    0
+   ],
+   "position": [
+    0,
+    0,
+    12
+   ],
+   "viewer": "NONE",
+   "viewpoint": "V1"
+  },
+  "41": {
+   "centerOfRotation": [
+    0,
+    0,
+    0
+   ],
+   "description": "",
+   "fieldOfViewScale": 1,
+   "orientation": [
+    0,
+    0,
+    1,
+    0
+   ],
+   "position": [
+    0,
+    0,
+    12
+   ],
+   "viewer": "NONE",
+   "viewpoint": "V1"
+  },
+  "49": {
+   "centerOfRotation": [
+    0,
+    0,
+    0
+   ],
+   "description": "",
+   "fieldOfViewScale": 1,
+   "orientation": [
+    0,
+    0,
+    1,
+    0
+   ],
+   "position": [
+    0,
+    0,
+    12
+   ],
+   "viewer": "NONE",
+   "viewpoint": "V1"
+  },
+  "57": {
+   "centerOfRotation": [
+    0,
+    0,
+    0
+   ],
+   "description": "",
+   "fieldOfViewScale": 1,
+   "orientation": [
+    0,
+    0,
+    1,
+    0
+   ],
+   "position": [
+    0,
+    0,
+    12
+   ],
+   "viewer": "NONE",
+   "viewpoint": "V1"
+  },
+  "65": {
+   "centerOfRotation": [
+    0,
+    0,
+    0
+   ],
+   "description": "",
+   "fieldOfViewScale": 1,
+   "orientation": [
+    0,
+    0,
+    1,
+    0
+   ],
+   "position": [
+    0,
+    0,
+    12
+   ],
+   "viewer": "NONE",
+   "viewpoint": "V1"
+  },
+  "73": {
+   "centerOfRotation": [
+    0,
+    0,
+    0
+   ],
+   "description": "",
+   "fieldOfViewScale": 1,
+   "orientation": [
+    0,
+    0,
+    1,
+    0
+   ],
+   "position": [
+    0,
+    0,
+    12
+   ],
+   "viewer": "NONE",
+   "viewpoint": "V1"
+  },
+  "81": {
+   "centerOfRotation": [
+    0,
+    0,
+    0
+   ],
+   "description": "",
+   "fieldOfViewScale": 1,
+   "orientation": [
+    0,
+    0,
+    1,
+    0
+   ],
+   "position": [
+    0,
+    0,
+    12
+   ],
+   "viewer": "NONE",
+   "viewpoint": "V1"
+  },
+  "9": {
+   "centerOfRotation": [
+    0,
+    0,
+    0
+   ],
+   "description": "",
+   "fieldOfViewScale": 1,
+   "orientation": [
+    0,
+    0,
+    1,
+    0
+   ],
+   "position": [
+    0,
+    0,
+    12
+   ],
+   "viewer": "NONE",
+   "viewpoint": "V1"
+  },
+  "91": {
+   "centerOfRotation": [
+    0,
+    0,
+    0
+   ],
+   "description": "",
+   "fieldOfViewScale": 1,
+   "orientation": [
+    0,
+    0,
+    1,
+    0
+   ],
+   "position": [
+    0,
+    0,
+    12
+   ],
+   "viewer": "NONE",
+   "viewpoint": "V1"
+  },
+  "92": {
+   "centerOfRotation": [
+    0,
+    0,
+    0
+   ],
+   "description": "",
+   "fieldOfViewScale": 1,
+   "orientation": [
+    0,
+    0,
+    1,
+    0
+   ],
+   "position": [
+    0,
+    0,
+    12
+   ],
+   "viewer": "NONE",
+   "viewpoint": "V1"
+  }
+ },
+ "prints": [],
+ "vrml": {
+  "17": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Full\n\nCOMPONENT X_ITE : 1\nCOMPONENT Scripting : 1\n\nDEF V1 Viewpoint {\n  position 0 0 12\n}\n\nNavigationInfo {\n  type \"NONE\"\n}\n\nBackground {\n  skyColor 0.12 0.14 0.2\n}\n\nDEF I InstancedShape {\n  translations [\n    -3 1.5 0,\n    0 1.5 0,\n    3 1.5 0\n  ]\n  appearance Appearance {\n    material Material {\n      diffuseColor 0.95 0.6 0.3\n      emissiveColor 0.95 0.6 0.3\n    }\n  }\n  geometry DEF TX Text {\n    string \"Chg\"\n    fontStyle DEF FS FontStyle {\n      size 1.6\n    }\n  }\n}\n\nTransform {\n  translation 0 -2 0\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.95 0.95 0.95\n        emissiveColor 0.95 0.95 0.95\n      }\n    }\n    geometry DEF TC Text {\n      string \"Chg\"\n      fontStyle DEF FC FontStyle {\n        size 1.6\n      }\n    }\n  }\n}\n\nTransform {\n  translation 0 -4 0\n  children DEF J InstancedShape {\n    translations [\n      -2 0 0,\n      2 0 0\n    ]\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.5 0.8 0.9\n        emissiveColor 0.5 0.8 0.9\n      }\n    }\n    geometry Box {\n      size 1 1 1\n    }\n  }\n}\n\nDEF K KeySensor { }\n\nDEF R Script {\n  inputOnly      SFString on_key\n  inputOutput    SFString log \"Ka Kb \"\n  initializeOnly SFNode   i USE I\n  initializeOnly SFNode   j USE J\n  initializeOnly SFNode   tx USE TX\n  initializeOnly SFNode   fs USE FS\n  initializeOnly SFNode   tc USE TC\n  initializeOnly SFNode   fc USE FC\n\n  url \"javascript:\nfunction on_key (k)\n{\n   log = log + 'K' + k + ' ';\n   if (k == 'a') { tx .string = new MFString ('Chg'); tc .string = new MFString ('Chg'); }\n   if (k == 'b') { fs .size = 1.6; fc .size = 1.6; }\n   if (k == 'c') i .scales = new MFVec3f (new SFVec3f (1, 1, 1), new SFVec3f (1.4, 0.5, 1), new SFVec3f (0.6, 1.5, 1));\n   if (k == 'd') i .rotations = new MFRotation (new SFRotation (0, 0, 1, 0.4), new SFRotation (0, 0, 1, -0.4));\n   if (k == 'e') { fs .justify = new MFString ('MIDDLE', 'MIDDLE'); fc .justify = new MFString ('MIDDLE', 'MIDDLE'); }\n   if (k == 'f') i .translations = new MFVec3f (new SFVec3f (-3, 1.5, 0), new SFVec3f (3, 1.5, 0));\n   if (k == 'g') j .geometry = tc;\n   if (k == 'h') j .translations = new MFVec3f (new SFVec3f (0, 0, 0));\n   if (k == 'i') { tx .string = new MFString ('One', 'Two'); tc .string = new MFString ('One', 'Two'); }\n   if (k == 'j') i .geometry = null;\n}\n\"\n  directOutput TRUE\n}\n\nROUTE K.keyPress TO R.on_key\n",
+  "25": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Full\n\nCOMPONENT X_ITE : 1\nCOMPONENT Scripting : 1\n\nDEF V1 Viewpoint {\n  position 0 0 12\n}\n\nNavigationInfo {\n  type \"NONE\"\n}\n\nBackground {\n  skyColor 0.12 0.14 0.2\n}\n\nDEF I InstancedShape {\n  translations [\n    -3 1.5 0,\n    0 1.5 0,\n    3 1.5 0\n  ]\n  scales [\n    1 1 1,\n    1.4 0.5 1,\n    0.6 1.5 1\n  ]\n  appearance Appearance {\n    material Material {\n      diffuseColor 0.95 0.6 0.3\n      emissiveColor 0.95 0.6 0.3\n    }\n  }\n  geometry DEF TX Text {\n    string \"Chg\"\n    fontStyle DEF FS FontStyle {\n      size 1.6\n    }\n  }\n}\n\nTransform {\n  translation 0 -2 0\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.95 0.95 0.95\n        emissiveColor 0.95 0.95 0.95\n      }\n    }\n    geometry DEF TC Text {\n      string \"Chg\"\n      fontStyle DEF FC FontStyle {\n        size 1.6\n      }\n    }\n  }\n}\n\nTransform {\n  translation 0 -4 0\n  children DEF J InstancedShape {\n    translations [\n      -2 0 0,\n      2 0 0\n    ]\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.5 0.8 0.9\n        emissiveColor 0.5 0.8 0.9\n      }\n    }\n    geometry Box {\n      size 1 1 1\n    }\n  }\n}\n\nDEF K KeySensor { }\n\nDEF R Script {\n  inputOnly      SFString on_key\n  inputOutput    SFString log \"Ka Kb Kc \"\n  initializeOnly SFNode   i USE I\n  initializeOnly SFNode   j USE J\n  initializeOnly SFNode   tx USE TX\n  initializeOnly SFNode   fs USE FS\n  initializeOnly SFNode   tc USE TC\n  initializeOnly SFNode   fc USE FC\n\n  url \"javascript:\nfunction on_key (k)\n{\n   log = log + 'K' + k + ' ';\n   if (k == 'a') { tx .string = new MFString ('Chg'); tc .string = new MFString ('Chg'); }\n   if (k == 'b') { fs .size = 1.6; fc .size = 1.6; }\n   if (k == 'c') i .scales = new MFVec3f (new SFVec3f (1, 1, 1), new SFVec3f (1.4, 0.5, 1), new SFVec3f (0.6, 1.5, 1));\n   if (k == 'd') i .rotations = new MFRotation (new SFRotation (0, 0, 1, 0.4), new SFRotation (0, 0, 1, -0.4));\n   if (k == 'e') { fs .justify = new MFString ('MIDDLE', 'MIDDLE'); fc .justify = new MFString ('MIDDLE', 'MIDDLE'); }\n   if (k == 'f') i .translations = new MFVec3f (new SFVec3f (-3, 1.5, 0), new SFVec3f (3, 1.5, 0));\n   if (k == 'g') j .geometry = tc;\n   if (k == 'h') j .translations = new MFVec3f (new SFVec3f (0, 0, 0));\n   if (k == 'i') { tx .string = new MFString ('One', 'Two'); tc .string = new MFString ('One', 'Two'); }\n   if (k == 'j') i .geometry = null;\n}\n\"\n  directOutput TRUE\n}\n\nROUTE K.keyPress TO R.on_key\n",
+  "33": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Full\n\nCOMPONENT X_ITE : 1\nCOMPONENT Scripting : 1\n\nDEF V1 Viewpoint {\n  position 0 0 12\n}\n\nNavigationInfo {\n  type \"NONE\"\n}\n\nBackground {\n  skyColor 0.12 0.14 0.2\n}\n\nDEF I InstancedShape {\n  translations [\n    -3 1.5 0,\n    0 1.5 0,\n    3 1.5 0\n  ]\n  rotations [\n    0 0 1 0.4,\n    0 0 1 -0.4\n  ]\n  scales [\n    1 1 1,\n    1.4 0.5 1,\n    0.6 1.5 1\n  ]\n  appearance Appearance {\n    material Material {\n      diffuseColor 0.95 0.6 0.3\n      emissiveColor 0.95 0.6 0.3\n    }\n  }\n  geometry DEF TX Text {\n    string \"Chg\"\n    fontStyle DEF FS FontStyle {\n      size 1.6\n    }\n  }\n}\n\nTransform {\n  translation 0 -2 0\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.95 0.95 0.95\n        emissiveColor 0.95 0.95 0.95\n      }\n    }\n    geometry DEF TC Text {\n      string \"Chg\"\n      fontStyle DEF FC FontStyle {\n        size 1.6\n      }\n    }\n  }\n}\n\nTransform {\n  translation 0 -4 0\n  children DEF J InstancedShape {\n    translations [\n      -2 0 0,\n      2 0 0\n    ]\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.5 0.8 0.9\n        emissiveColor 0.5 0.8 0.9\n      }\n    }\n    geometry Box {\n      size 1 1 1\n    }\n  }\n}\n\nDEF K KeySensor { }\n\nDEF R Script {\n  inputOnly      SFString on_key\n  inputOutput    SFString log \"Ka Kb Kc Kd \"\n  initializeOnly SFNode   i USE I\n  initializeOnly SFNode   j USE J\n  initializeOnly SFNode   tx USE TX\n  initializeOnly SFNode   fs USE FS\n  initializeOnly SFNode   tc USE TC\n  initializeOnly SFNode   fc USE FC\n\n  url \"javascript:\nfunction on_key (k)\n{\n   log = log + 'K' + k + ' ';\n   if (k == 'a') { tx .string = new MFString ('Chg'); tc .string = new MFString ('Chg'); }\n   if (k == 'b') { fs .size = 1.6; fc .size = 1.6; }\n   if (k == 'c') i .scales = new MFVec3f (new SFVec3f (1, 1, 1), new SFVec3f (1.4, 0.5, 1), new SFVec3f (0.6, 1.5, 1));\n   if (k == 'd') i .rotations = new MFRotation (new SFRotation (0, 0, 1, 0.4), new SFRotation (0, 0, 1, -0.4));\n   if (k == 'e') { fs .justify = new MFString ('MIDDLE', 'MIDDLE'); fc .justify = new MFString ('MIDDLE', 'MIDDLE'); }\n   if (k == 'f') i .translations = new MFVec3f (new SFVec3f (-3, 1.5, 0), new SFVec3f (3, 1.5, 0));\n   if (k == 'g') j .geometry = tc;\n   if (k == 'h') j .translations = new MFVec3f (new SFVec3f (0, 0, 0));\n   if (k == 'i') { tx .string = new MFString ('One', 'Two'); tc .string = new MFString ('One', 'Two'); }\n   if (k == 'j') i .geometry = null;\n}\n\"\n  directOutput TRUE\n}\n\nROUTE K.keyPress TO R.on_key\n",
+  "4": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Full\n\nCOMPONENT X_ITE : 1\nCOMPONENT Scripting : 1\n\nDEF V1 Viewpoint {\n  position 0 0 12\n}\n\nNavigationInfo {\n  type \"NONE\"\n}\n\nBackground {\n  skyColor 0.12 0.14 0.2\n}\n\nDEF I InstancedShape {\n  translations [\n    -3 1.5 0,\n    0 1.5 0,\n    3 1.5 0\n  ]\n  appearance Appearance {\n    material Material {\n      diffuseColor 0.95 0.6 0.3\n      emissiveColor 0.95 0.6 0.3\n    }\n  }\n  geometry DEF TX Text {\n    string \"Ab\"\n    fontStyle DEF FS FontStyle { }\n  }\n}\n\nTransform {\n  translation 0 -2 0\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.95 0.95 0.95\n        emissiveColor 0.95 0.95 0.95\n      }\n    }\n    geometry DEF TC Text {\n      string \"Ctl\"\n      fontStyle DEF FC FontStyle { }\n    }\n  }\n}\n\nTransform {\n  translation 0 -4 0\n  children DEF J InstancedShape {\n    translations [\n      -2 0 0,\n      2 0 0\n    ]\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.5 0.8 0.9\n        emissiveColor 0.5 0.8 0.9\n      }\n    }\n    geometry Box {\n      size 1 1 1\n    }\n  }\n}\n\nDEF K KeySensor { }\n\nDEF R Script {\n  inputOnly      SFString on_key\n  inputOutput    SFString log \"\"\n  initializeOnly SFNode   i USE I\n  initializeOnly SFNode   j USE J\n  initializeOnly SFNode   tx USE TX\n  initializeOnly SFNode   fs USE FS\n  initializeOnly SFNode   tc USE TC\n  initializeOnly SFNode   fc USE FC\n\n  url \"javascript:\nfunction on_key (k)\n{\n   log = log + 'K' + k + ' ';\n   if (k == 'a') { tx .string = new MFString ('Chg'); tc .string = new MFString ('Chg'); }\n   if (k == 'b') { fs .size = 1.6; fc .size = 1.6; }\n   if (k == 'c') i .scales = new MFVec3f (new SFVec3f (1, 1, 1), new SFVec3f (1.4, 0.5, 1), new SFVec3f (0.6, 1.5, 1));\n   if (k == 'd') i .rotations = new MFRotation (new SFRotation (0, 0, 1, 0.4), new SFRotation (0, 0, 1, -0.4));\n   if (k == 'e') { fs .justify = new MFString ('MIDDLE', 'MIDDLE'); fc .justify = new MFString ('MIDDLE', 'MIDDLE'); }\n   if (k == 'f') i .translations = new MFVec3f (new SFVec3f (-3, 1.5, 0), new SFVec3f (3, 1.5, 0));\n   if (k == 'g') j .geometry = tc;\n   if (k == 'h') j .translations = new MFVec3f (new SFVec3f (0, 0, 0));\n   if (k == 'i') { tx .string = new MFString ('One', 'Two'); tc .string = new MFString ('One', 'Two'); }\n   if (k == 'j') i .geometry = null;\n}\n\"\n  directOutput TRUE\n}\n\nROUTE K.keyPress TO R.on_key\n",
+  "41": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Full\n\nCOMPONENT X_ITE : 1\nCOMPONENT Scripting : 1\n\nDEF V1 Viewpoint {\n  position 0 0 12\n}\n\nNavigationInfo {\n  type \"NONE\"\n}\n\nBackground {\n  skyColor 0.12 0.14 0.2\n}\n\nDEF I InstancedShape {\n  translations [\n    -3 1.5 0,\n    0 1.5 0,\n    3 1.5 0\n  ]\n  rotations [\n    0 0 1 0.4,\n    0 0 1 -0.4\n  ]\n  scales [\n    1 1 1,\n    1.4 0.5 1,\n    0.6 1.5 1\n  ]\n  appearance Appearance {\n    material Material {\n      diffuseColor 0.95 0.6 0.3\n      emissiveColor 0.95 0.6 0.3\n    }\n  }\n  geometry DEF TX Text {\n    string \"Chg\"\n    fontStyle DEF FS FontStyle {\n      size 1.6\n      justify [\n        \"MIDDLE\",\n        \"MIDDLE\"\n      ]\n    }\n  }\n}\n\nTransform {\n  translation 0 -2 0\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.95 0.95 0.95\n        emissiveColor 0.95 0.95 0.95\n      }\n    }\n    geometry DEF TC Text {\n      string \"Chg\"\n      fontStyle DEF FC FontStyle {\n        size 1.6\n        justify [\n          \"MIDDLE\",\n          \"MIDDLE\"\n        ]\n      }\n    }\n  }\n}\n\nTransform {\n  translation 0 -4 0\n  children DEF J InstancedShape {\n    translations [\n      -2 0 0,\n      2 0 0\n    ]\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.5 0.8 0.9\n        emissiveColor 0.5 0.8 0.9\n      }\n    }\n    geometry Box {\n      size 1 1 1\n    }\n  }\n}\n\nDEF K KeySensor { }\n\nDEF R Script {\n  inputOnly      SFString on_key\n  inputOutput    SFString log \"Ka Kb Kc Kd Ke \"\n  initializeOnly SFNode   i USE I\n  initializeOnly SFNode   j USE J\n  initializeOnly SFNode   tx USE TX\n  initializeOnly SFNode   fs USE FS\n  initializeOnly SFNode   tc USE TC\n  initializeOnly SFNode   fc USE FC\n\n  url \"javascript:\nfunction on_key (k)\n{\n   log = log + 'K' + k + ' ';\n   if (k == 'a') { tx .string = new MFString ('Chg'); tc .string = new MFString ('Chg'); }\n   if (k == 'b') { fs .size = 1.6; fc .size = 1.6; }\n   if (k == 'c') i .scales = new MFVec3f (new SFVec3f (1, 1, 1), new SFVec3f (1.4, 0.5, 1), new SFVec3f (0.6, 1.5, 1));\n   if (k == 'd') i .rotations = new MFRotation (new SFRotation (0, 0, 1, 0.4), new SFRotation (0, 0, 1, -0.4));\n   if (k == 'e') { fs .justify = new MFString ('MIDDLE', 'MIDDLE'); fc .justify = new MFString ('MIDDLE', 'MIDDLE'); }\n   if (k == 'f') i .translations = new MFVec3f (new SFVec3f (-3, 1.5, 0), new SFVec3f (3, 1.5, 0));\n   if (k == 'g') j .geometry = tc;\n   if (k == 'h') j .translations = new MFVec3f (new SFVec3f (0, 0, 0));\n   if (k == 'i') { tx .string = new MFString ('One', 'Two'); tc .string = new MFString ('One', 'Two'); }\n   if (k == 'j') i .geometry = null;\n}\n\"\n  directOutput TRUE\n}\n\nROUTE K.keyPress TO R.on_key\n",
+  "49": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Full\n\nCOMPONENT X_ITE : 1\nCOMPONENT Scripting : 1\n\nDEF V1 Viewpoint {\n  position 0 0 12\n}\n\nNavigationInfo {\n  type \"NONE\"\n}\n\nBackground {\n  skyColor 0.12 0.14 0.2\n}\n\nDEF I InstancedShape {\n  translations [\n    -3 1.5 0,\n    3 1.5 0\n  ]\n  rotations [\n    0 0 1 0.4,\n    0 0 1 -0.4\n  ]\n  scales [\n    1 1 1,\n    1.4 0.5 1,\n    0.6 1.5 1\n  ]\n  appearance Appearance {\n    material Material {\n      diffuseColor 0.95 0.6 0.3\n      emissiveColor 0.95 0.6 0.3\n    }\n  }\n  geometry DEF TX Text {\n    string \"Chg\"\n    fontStyle DEF FS FontStyle {\n      size 1.6\n      justify [\n        \"MIDDLE\",\n        \"MIDDLE\"\n      ]\n    }\n  }\n}\n\nTransform {\n  translation 0 -2 0\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.95 0.95 0.95\n        emissiveColor 0.95 0.95 0.95\n      }\n    }\n    geometry DEF TC Text {\n      string \"Chg\"\n      fontStyle DEF FC FontStyle {\n        size 1.6\n        justify [\n          \"MIDDLE\",\n          \"MIDDLE\"\n        ]\n      }\n    }\n  }\n}\n\nTransform {\n  translation 0 -4 0\n  children DEF J InstancedShape {\n    translations [\n      -2 0 0,\n      2 0 0\n    ]\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.5 0.8 0.9\n        emissiveColor 0.5 0.8 0.9\n      }\n    }\n    geometry Box {\n      size 1 1 1\n    }\n  }\n}\n\nDEF K KeySensor { }\n\nDEF R Script {\n  inputOnly      SFString on_key\n  inputOutput    SFString log \"Ka Kb Kc Kd Ke Kf \"\n  initializeOnly SFNode   i USE I\n  initializeOnly SFNode   j USE J\n  initializeOnly SFNode   tx USE TX\n  initializeOnly SFNode   fs USE FS\n  initializeOnly SFNode   tc USE TC\n  initializeOnly SFNode   fc USE FC\n\n  url \"javascript:\nfunction on_key (k)\n{\n   log = log + 'K' + k + ' ';\n   if (k == 'a') { tx .string = new MFString ('Chg'); tc .string = new MFString ('Chg'); }\n   if (k == 'b') { fs .size = 1.6; fc .size = 1.6; }\n   if (k == 'c') i .scales = new MFVec3f (new SFVec3f (1, 1, 1), new SFVec3f (1.4, 0.5, 1), new SFVec3f (0.6, 1.5, 1));\n   if (k == 'd') i .rotations = new MFRotation (new SFRotation (0, 0, 1, 0.4), new SFRotation (0, 0, 1, -0.4));\n   if (k == 'e') { fs .justify = new MFString ('MIDDLE', 'MIDDLE'); fc .justify = new MFString ('MIDDLE', 'MIDDLE'); }\n   if (k == 'f') i .translations = new MFVec3f (new SFVec3f (-3, 1.5, 0), new SFVec3f (3, 1.5, 0));\n   if (k == 'g') j .geometry = tc;\n   if (k == 'h') j .translations = new MFVec3f (new SFVec3f (0, 0, 0));\n   if (k == 'i') { tx .string = new MFString ('One', 'Two'); tc .string = new MFString ('One', 'Two'); }\n   if (k == 'j') i .geometry = null;\n}\n\"\n  directOutput TRUE\n}\n\nROUTE K.keyPress TO R.on_key\n",
+  "57": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Full\n\nCOMPONENT X_ITE : 1\nCOMPONENT Scripting : 1\n\nDEF V1 Viewpoint {\n  position 0 0 12\n}\n\nNavigationInfo {\n  type \"NONE\"\n}\n\nBackground {\n  skyColor 0.12 0.14 0.2\n}\n\nDEF I InstancedShape {\n  translations [\n    -3 1.5 0,\n    3 1.5 0\n  ]\n  rotations [\n    0 0 1 0.4,\n    0 0 1 -0.4\n  ]\n  scales [\n    1 1 1,\n    1.4 0.5 1,\n    0.6 1.5 1\n  ]\n  appearance Appearance {\n    material Material {\n      diffuseColor 0.95 0.6 0.3\n      emissiveColor 0.95 0.6 0.3\n    }\n  }\n  geometry DEF TX Text {\n    string \"Chg\"\n    fontStyle DEF FS FontStyle {\n      size 1.6\n      justify [\n        \"MIDDLE\",\n        \"MIDDLE\"\n      ]\n    }\n  }\n}\n\nTransform {\n  translation 0 -2 0\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.95 0.95 0.95\n        emissiveColor 0.95 0.95 0.95\n      }\n    }\n    geometry DEF TC Text {\n      string \"Chg\"\n      fontStyle DEF FC FontStyle {\n        size 1.6\n        justify [\n          \"MIDDLE\",\n          \"MIDDLE\"\n        ]\n      }\n    }\n  }\n}\n\nTransform {\n  translation 0 -4 0\n  children DEF J InstancedShape {\n    translations [\n      -2 0 0,\n      2 0 0\n    ]\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.5 0.8 0.9\n        emissiveColor 0.5 0.8 0.9\n      }\n    }\n    geometry USE TC\n  }\n}\n\nDEF K KeySensor { }\n\nDEF R Script {\n  inputOnly      SFString on_key\n  inputOutput    SFString log \"Ka Kb Kc Kd Ke Kf Kg \"\n  initializeOnly SFNode   i USE I\n  initializeOnly SFNode   j USE J\n  initializeOnly SFNode   tx USE TX\n  initializeOnly SFNode   fs USE FS\n  initializeOnly SFNode   tc USE TC\n  initializeOnly SFNode   fc USE FC\n\n  url \"javascript:\nfunction on_key (k)\n{\n   log = log + 'K' + k + ' ';\n   if (k == 'a') { tx .string = new MFString ('Chg'); tc .string = new MFString ('Chg'); }\n   if (k == 'b') { fs .size = 1.6; fc .size = 1.6; }\n   if (k == 'c') i .scales = new MFVec3f (new SFVec3f (1, 1, 1), new SFVec3f (1.4, 0.5, 1), new SFVec3f (0.6, 1.5, 1));\n   if (k == 'd') i .rotations = new MFRotation (new SFRotation (0, 0, 1, 0.4), new SFRotation (0, 0, 1, -0.4));\n   if (k == 'e') { fs .justify = new MFString ('MIDDLE', 'MIDDLE'); fc .justify = new MFString ('MIDDLE', 'MIDDLE'); }\n   if (k == 'f') i .translations = new MFVec3f (new SFVec3f (-3, 1.5, 0), new SFVec3f (3, 1.5, 0));\n   if (k == 'g') j .geometry = tc;\n   if (k == 'h') j .translations = new MFVec3f (new SFVec3f (0, 0, 0));\n   if (k == 'i') { tx .string = new MFString ('One', 'Two'); tc .string = new MFString ('One', 'Two'); }\n   if (k == 'j') i .geometry = null;\n}\n\"\n  directOutput TRUE\n}\n\nROUTE K.keyPress TO R.on_key\n",
+  "65": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Full\n\nCOMPONENT X_ITE : 1\nCOMPONENT Scripting : 1\n\nDEF V1 Viewpoint {\n  position 0 0 12\n}\n\nNavigationInfo {\n  type \"NONE\"\n}\n\nBackground {\n  skyColor 0.12 0.14 0.2\n}\n\nDEF I InstancedShape {\n  translations [\n    -3 1.5 0,\n    3 1.5 0\n  ]\n  rotations [\n    0 0 1 0.4,\n    0 0 1 -0.4\n  ]\n  scales [\n    1 1 1,\n    1.4 0.5 1,\n    0.6 1.5 1\n  ]\n  appearance Appearance {\n    material Material {\n      diffuseColor 0.95 0.6 0.3\n      emissiveColor 0.95 0.6 0.3\n    }\n  }\n  geometry DEF TX Text {\n    string \"Chg\"\n    fontStyle DEF FS FontStyle {\n      size 1.6\n      justify [\n        \"MIDDLE\",\n        \"MIDDLE\"\n      ]\n    }\n  }\n}\n\nTransform {\n  translation 0 -2 0\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.95 0.95 0.95\n        emissiveColor 0.95 0.95 0.95\n      }\n    }\n    geometry DEF TC Text {\n      string \"Chg\"\n      fontStyle DEF FC FontStyle {\n        size 1.6\n        justify [\n          \"MIDDLE\",\n          \"MIDDLE\"\n        ]\n      }\n    }\n  }\n}\n\nTransform {\n  translation 0 -4 0\n  children DEF J InstancedShape {\n    translations 0 0 0\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.5 0.8 0.9\n        emissiveColor 0.5 0.8 0.9\n      }\n    }\n    geometry USE TC\n  }\n}\n\nDEF K KeySensor { }\n\nDEF R Script {\n  inputOnly      SFString on_key\n  inputOutput    SFString log \"Ka Kb Kc Kd Ke Kf Kg Kh \"\n  initializeOnly SFNode   i USE I\n  initializeOnly SFNode   j USE J\n  initializeOnly SFNode   tx USE TX\n  initializeOnly SFNode   fs USE FS\n  initializeOnly SFNode   tc USE TC\n  initializeOnly SFNode   fc USE FC\n\n  url \"javascript:\nfunction on_key (k)\n{\n   log = log + 'K' + k + ' ';\n   if (k == 'a') { tx .string = new MFString ('Chg'); tc .string = new MFString ('Chg'); }\n   if (k == 'b') { fs .size = 1.6; fc .size = 1.6; }\n   if (k == 'c') i .scales = new MFVec3f (new SFVec3f (1, 1, 1), new SFVec3f (1.4, 0.5, 1), new SFVec3f (0.6, 1.5, 1));\n   if (k == 'd') i .rotations = new MFRotation (new SFRotation (0, 0, 1, 0.4), new SFRotation (0, 0, 1, -0.4));\n   if (k == 'e') { fs .justify = new MFString ('MIDDLE', 'MIDDLE'); fc .justify = new MFString ('MIDDLE', 'MIDDLE'); }\n   if (k == 'f') i .translations = new MFVec3f (new SFVec3f (-3, 1.5, 0), new SFVec3f (3, 1.5, 0));\n   if (k == 'g') j .geometry = tc;\n   if (k == 'h') j .translations = new MFVec3f (new SFVec3f (0, 0, 0));\n   if (k == 'i') { tx .string = new MFString ('One', 'Two'); tc .string = new MFString ('One', 'Two'); }\n   if (k == 'j') i .geometry = null;\n}\n\"\n  directOutput TRUE\n}\n\nROUTE K.keyPress TO R.on_key\n",
+  "73": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Full\n\nCOMPONENT X_ITE : 1\nCOMPONENT Scripting : 1\n\nDEF V1 Viewpoint {\n  position 0 0 12\n}\n\nNavigationInfo {\n  type \"NONE\"\n}\n\nBackground {\n  skyColor 0.12 0.14 0.2\n}\n\nDEF I InstancedShape {\n  translations [\n    -3 1.5 0,\n    3 1.5 0\n  ]\n  rotations [\n    0 0 1 0.4,\n    0 0 1 -0.4\n  ]\n  scales [\n    1 1 1,\n    1.4 0.5 1,\n    0.6 1.5 1\n  ]\n  appearance Appearance {\n    material Material {\n      diffuseColor 0.95 0.6 0.3\n      emissiveColor 0.95 0.6 0.3\n    }\n  }\n  geometry DEF TX Text {\n    string [\n      \"One\",\n      \"Two\"\n    ]\n    fontStyle DEF FS FontStyle {\n      size 1.6\n      justify [\n        \"MIDDLE\",\n        \"MIDDLE\"\n      ]\n    }\n  }\n}\n\nTransform {\n  translation 0 -2 0\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.95 0.95 0.95\n        emissiveColor 0.95 0.95 0.95\n      }\n    }\n    geometry DEF TC Text {\n      string [\n        \"One\",\n        \"Two\"\n      ]\n      fontStyle DEF FC FontStyle {\n        size 1.6\n        justify [\n          \"MIDDLE\",\n          \"MIDDLE\"\n        ]\n      }\n    }\n  }\n}\n\nTransform {\n  translation 0 -4 0\n  children DEF J InstancedShape {\n    translations 0 0 0\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.5 0.8 0.9\n        emissiveColor 0.5 0.8 0.9\n      }\n    }\n    geometry USE TC\n  }\n}\n\nDEF K KeySensor { }\n\nDEF R Script {\n  inputOnly      SFString on_key\n  inputOutput    SFString log \"Ka Kb Kc Kd Ke Kf Kg Kh Ki \"\n  initializeOnly SFNode   i USE I\n  initializeOnly SFNode   j USE J\n  initializeOnly SFNode   tx USE TX\n  initializeOnly SFNode   fs USE FS\n  initializeOnly SFNode   tc USE TC\n  initializeOnly SFNode   fc USE FC\n\n  url \"javascript:\nfunction on_key (k)\n{\n   log = log + 'K' + k + ' ';\n   if (k == 'a') { tx .string = new MFString ('Chg'); tc .string = new MFString ('Chg'); }\n   if (k == 'b') { fs .size = 1.6; fc .size = 1.6; }\n   if (k == 'c') i .scales = new MFVec3f (new SFVec3f (1, 1, 1), new SFVec3f (1.4, 0.5, 1), new SFVec3f (0.6, 1.5, 1));\n   if (k == 'd') i .rotations = new MFRotation (new SFRotation (0, 0, 1, 0.4), new SFRotation (0, 0, 1, -0.4));\n   if (k == 'e') { fs .justify = new MFString ('MIDDLE', 'MIDDLE'); fc .justify = new MFString ('MIDDLE', 'MIDDLE'); }\n   if (k == 'f') i .translations = new MFVec3f (new SFVec3f (-3, 1.5, 0), new SFVec3f (3, 1.5, 0));\n   if (k == 'g') j .geometry = tc;\n   if (k == 'h') j .translations = new MFVec3f (new SFVec3f (0, 0, 0));\n   if (k == 'i') { tx .string = new MFString ('One', 'Two'); tc .string = new MFString ('One', 'Two'); }\n   if (k == 'j') i .geometry = null;\n}\n\"\n  directOutput TRUE\n}\n\nROUTE K.keyPress TO R.on_key\n",
+  "81": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Full\n\nCOMPONENT X_ITE : 1\nCOMPONENT Scripting : 1\n\nDEF V1 Viewpoint {\n  position 0 0 12\n}\n\nNavigationInfo {\n  type \"NONE\"\n}\n\nBackground {\n  skyColor 0.12 0.14 0.2\n}\n\nDEF I InstancedShape {\n  translations [\n    -3 1.5 0,\n    3 1.5 0\n  ]\n  rotations [\n    0 0 1 0.4,\n    0 0 1 -0.4\n  ]\n  scales [\n    1 1 1,\n    1.4 0.5 1,\n    0.6 1.5 1\n  ]\n  appearance Appearance {\n    material Material {\n      diffuseColor 0.95 0.6 0.3\n      emissiveColor 0.95 0.6 0.3\n    }\n  }\n}\n\nTransform {\n  translation 0 -2 0\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.95 0.95 0.95\n        emissiveColor 0.95 0.95 0.95\n      }\n    }\n    geometry DEF TC Text {\n      string [\n        \"One\",\n        \"Two\"\n      ]\n      fontStyle DEF FC FontStyle {\n        size 1.6\n        justify [\n          \"MIDDLE\",\n          \"MIDDLE\"\n        ]\n      }\n    }\n  }\n}\n\nTransform {\n  translation 0 -4 0\n  children DEF J InstancedShape {\n    translations 0 0 0\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.5 0.8 0.9\n        emissiveColor 0.5 0.8 0.9\n      }\n    }\n    geometry USE TC\n  }\n}\n\nDEF K KeySensor { }\n\nDEF R Script {\n  inputOnly      SFString on_key\n  inputOutput    SFString log \"Ka Kb Kc Kd Ke Kf Kg Kh Ki Kj \"\n  initializeOnly SFNode   i USE I\n  initializeOnly SFNode   j USE J\n  initializeOnly SFNode   tx DEF TX Text {\n    string [\n      \"One\",\n      \"Two\"\n    ]\n    fontStyle DEF FS FontStyle {\n      size 1.6\n      justify [\n        \"MIDDLE\",\n        \"MIDDLE\"\n      ]\n    }\n  }\n  initializeOnly SFNode   fs USE FS\n  initializeOnly SFNode   tc USE TC\n  initializeOnly SFNode   fc USE FC\n\n  url \"javascript:\nfunction on_key (k)\n{\n   log = log + 'K' + k + ' ';\n   if (k == 'a') { tx .string = new MFString ('Chg'); tc .string = new MFString ('Chg'); }\n   if (k == 'b') { fs .size = 1.6; fc .size = 1.6; }\n   if (k == 'c') i .scales = new MFVec3f (new SFVec3f (1, 1, 1), new SFVec3f (1.4, 0.5, 1), new SFVec3f (0.6, 1.5, 1));\n   if (k == 'd') i .rotations = new MFRotation (new SFRotation (0, 0, 1, 0.4), new SFRotation (0, 0, 1, -0.4));\n   if (k == 'e') { fs .justify = new MFString ('MIDDLE', 'MIDDLE'); fc .justify = new MFString ('MIDDLE', 'MIDDLE'); }\n   if (k == 'f') i .translations = new MFVec3f (new SFVec3f (-3, 1.5, 0), new SFVec3f (3, 1.5, 0));\n   if (k == 'g') j .geometry = tc;\n   if (k == 'h') j .translations = new MFVec3f (new SFVec3f (0, 0, 0));\n   if (k == 'i') { tx .string = new MFString ('One', 'Two'); tc .string = new MFString ('One', 'Two'); }\n   if (k == 'j') i .geometry = null;\n}\n\"\n  directOutput TRUE\n}\n\nROUTE K.keyPress TO R.on_key\n",
+  "9": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Full\n\nCOMPONENT X_ITE : 1\nCOMPONENT Scripting : 1\n\nDEF V1 Viewpoint {\n  position 0 0 12\n}\n\nNavigationInfo {\n  type \"NONE\"\n}\n\nBackground {\n  skyColor 0.12 0.14 0.2\n}\n\nDEF I InstancedShape {\n  translations [\n    -3 1.5 0,\n    0 1.5 0,\n    3 1.5 0\n  ]\n  appearance Appearance {\n    material Material {\n      diffuseColor 0.95 0.6 0.3\n      emissiveColor 0.95 0.6 0.3\n    }\n  }\n  geometry DEF TX Text {\n    string \"Chg\"\n    fontStyle DEF FS FontStyle { }\n  }\n}\n\nTransform {\n  translation 0 -2 0\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.95 0.95 0.95\n        emissiveColor 0.95 0.95 0.95\n      }\n    }\n    geometry DEF TC Text {\n      string \"Chg\"\n      fontStyle DEF FC FontStyle { }\n    }\n  }\n}\n\nTransform {\n  translation 0 -4 0\n  children DEF J InstancedShape {\n    translations [\n      -2 0 0,\n      2 0 0\n    ]\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.5 0.8 0.9\n        emissiveColor 0.5 0.8 0.9\n      }\n    }\n    geometry Box {\n      size 1 1 1\n    }\n  }\n}\n\nDEF K KeySensor { }\n\nDEF R Script {\n  inputOnly      SFString on_key\n  inputOutput    SFString log \"Ka \"\n  initializeOnly SFNode   i USE I\n  initializeOnly SFNode   j USE J\n  initializeOnly SFNode   tx USE TX\n  initializeOnly SFNode   fs USE FS\n  initializeOnly SFNode   tc USE TC\n  initializeOnly SFNode   fc USE FC\n\n  url \"javascript:\nfunction on_key (k)\n{\n   log = log + 'K' + k + ' ';\n   if (k == 'a') { tx .string = new MFString ('Chg'); tc .string = new MFString ('Chg'); }\n   if (k == 'b') { fs .size = 1.6; fc .size = 1.6; }\n   if (k == 'c') i .scales = new MFVec3f (new SFVec3f (1, 1, 1), new SFVec3f (1.4, 0.5, 1), new SFVec3f (0.6, 1.5, 1));\n   if (k == 'd') i .rotations = new MFRotation (new SFRotation (0, 0, 1, 0.4), new SFRotation (0, 0, 1, -0.4));\n   if (k == 'e') { fs .justify = new MFString ('MIDDLE', 'MIDDLE'); fc .justify = new MFString ('MIDDLE', 'MIDDLE'); }\n   if (k == 'f') i .translations = new MFVec3f (new SFVec3f (-3, 1.5, 0), new SFVec3f (3, 1.5, 0));\n   if (k == 'g') j .geometry = tc;\n   if (k == 'h') j .translations = new MFVec3f (new SFVec3f (0, 0, 0));\n   if (k == 'i') { tx .string = new MFString ('One', 'Two'); tc .string = new MFString ('One', 'Two'); }\n   if (k == 'j') i .geometry = null;\n}\n\"\n  directOutput TRUE\n}\n\nROUTE K.keyPress TO R.on_key\n",
+  "91": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Full\n\nCOMPONENT X_ITE : 1\nCOMPONENT Scripting : 1\n\nDEF V1 Viewpoint {\n  position 0 0 12\n}\n\nNavigationInfo {\n  type \"NONE\"\n}\n\nBackground {\n  skyColor 0.12 0.14 0.2\n}\n\nDEF I InstancedShape {\n  translations [\n    -3 1.5 0,\n    3 1.5 0\n  ]\n  rotations [\n    0 0 1 0.4,\n    0 0 1 -0.4\n  ]\n  scales [\n    1 1 1,\n    1.4 0.5 1,\n    0.6 1.5 1\n  ]\n  appearance Appearance {\n    material Material {\n      diffuseColor 0.95 0.6 0.3\n      emissiveColor 0.95 0.6 0.3\n    }\n  }\n}\n\nTransform {\n  translation 0 -2 0\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.95 0.95 0.95\n        emissiveColor 0.95 0.95 0.95\n      }\n    }\n    geometry DEF TC Text {\n      string [\n        \"One\",\n        \"Two\"\n      ]\n      fontStyle DEF FC FontStyle {\n        size 1.6\n        justify [\n          \"MIDDLE\",\n          \"MIDDLE\"\n        ]\n      }\n    }\n  }\n}\n\nTransform {\n  translation 0 -4 0\n  children DEF J InstancedShape {\n    translations 0 0 0\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.5 0.8 0.9\n        emissiveColor 0.5 0.8 0.9\n      }\n    }\n    geometry USE TC\n  }\n}\n\nDEF K KeySensor { }\n\nDEF R Script {\n  inputOnly      SFString on_key\n  inputOutput    SFString log \"Ka Kb Kc Kd Ke Kf Kg Kh Ki Kj \"\n  initializeOnly SFNode   i USE I\n  initializeOnly SFNode   j USE J\n  initializeOnly SFNode   tx DEF TX Text {\n    string [\n      \"One\",\n      \"Two\"\n    ]\n    fontStyle DEF FS FontStyle {\n      size 1.6\n      justify [\n        \"MIDDLE\",\n        \"MIDDLE\"\n      ]\n    }\n  }\n  initializeOnly SFNode   fs USE FS\n  initializeOnly SFNode   tc USE TC\n  initializeOnly SFNode   fc USE FC\n\n  url \"javascript:\nfunction on_key (k)\n{\n   log = log + 'K' + k + ' ';\n   if (k == 'a') { tx .string = new MFString ('Chg'); tc .string = new MFString ('Chg'); }\n   if (k == 'b') { fs .size = 1.6; fc .size = 1.6; }\n   if (k == 'c') i .scales = new MFVec3f (new SFVec3f (1, 1, 1), new SFVec3f (1.4, 0.5, 1), new SFVec3f (0.6, 1.5, 1));\n   if (k == 'd') i .rotations = new MFRotation (new SFRotation (0, 0, 1, 0.4), new SFRotation (0, 0, 1, -0.4));\n   if (k == 'e') { fs .justify = new MFString ('MIDDLE', 'MIDDLE'); fc .justify = new MFString ('MIDDLE', 'MIDDLE'); }\n   if (k == 'f') i .translations = new MFVec3f (new SFVec3f (-3, 1.5, 0), new SFVec3f (3, 1.5, 0));\n   if (k == 'g') j .geometry = tc;\n   if (k == 'h') j .translations = new MFVec3f (new SFVec3f (0, 0, 0));\n   if (k == 'i') { tx .string = new MFString ('One', 'Two'); tc .string = new MFString ('One', 'Two'); }\n   if (k == 'j') i .geometry = null;\n}\n\"\n  directOutput TRUE\n}\n\nROUTE K.keyPress TO R.on_key\n",
+  "92": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Full\n\nCOMPONENT X_ITE : 1\nCOMPONENT Scripting : 1\n\nDEF V1 Viewpoint {\n  position 0 0 12\n}\n\nNavigationInfo {\n  type \"NONE\"\n}\n\nBackground {\n  skyColor 0.12 0.14 0.2\n}\n\nDEF I InstancedShape {\n  translations [\n    -3 1.5 0,\n    3 1.5 0\n  ]\n  rotations [\n    0 0 1 0.4,\n    0 0 1 -0.4\n  ]\n  scales [\n    1 1 1,\n    1.4 0.5 1,\n    0.6 1.5 1\n  ]\n  appearance Appearance {\n    material Material {\n      diffuseColor 0.95 0.6 0.3\n      emissiveColor 0.95 0.6 0.3\n    }\n  }\n}\n\nTransform {\n  translation 0 -2 0\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.95 0.95 0.95\n        emissiveColor 0.95 0.95 0.95\n      }\n    }\n    geometry DEF TC Text {\n      string [\n        \"One\",\n        \"Two\"\n      ]\n      fontStyle DEF FC FontStyle {\n        size 1.6\n        justify [\n          \"MIDDLE\",\n          \"MIDDLE\"\n        ]\n      }\n    }\n  }\n}\n\nTransform {\n  translation 0 -4 0\n  children DEF J InstancedShape {\n    translations 0 0 0\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.5 0.8 0.9\n        emissiveColor 0.5 0.8 0.9\n      }\n    }\n    geometry USE TC\n  }\n}\n\nDEF K KeySensor { }\n\nDEF R Script {\n  inputOnly      SFString on_key\n  inputOutput    SFString log \"Ka Kb Kc Kd Ke Kf Kg Kh Ki Kj \"\n  initializeOnly SFNode   i USE I\n  initializeOnly SFNode   j USE J\n  initializeOnly SFNode   tx DEF TX Text {\n    string [\n      \"One\",\n      \"Two\"\n    ]\n    fontStyle DEF FS FontStyle {\n      size 1.6\n      justify [\n        \"MIDDLE\",\n        \"MIDDLE\"\n      ]\n    }\n  }\n  initializeOnly SFNode   fs USE FS\n  initializeOnly SFNode   tc USE TC\n  initializeOnly SFNode   fc USE FC\n\n  url \"javascript:\nfunction on_key (k)\n{\n   log = log + 'K' + k + ' ';\n   if (k == 'a') { tx .string = new MFString ('Chg'); tc .string = new MFString ('Chg'); }\n   if (k == 'b') { fs .size = 1.6; fc .size = 1.6; }\n   if (k == 'c') i .scales = new MFVec3f (new SFVec3f (1, 1, 1), new SFVec3f (1.4, 0.5, 1), new SFVec3f (0.6, 1.5, 1));\n   if (k == 'd') i .rotations = new MFRotation (new SFRotation (0, 0, 1, 0.4), new SFRotation (0, 0, 1, -0.4));\n   if (k == 'e') { fs .justify = new MFString ('MIDDLE', 'MIDDLE'); fc .justify = new MFString ('MIDDLE', 'MIDDLE'); }\n   if (k == 'f') i .translations = new MFVec3f (new SFVec3f (-3, 1.5, 0), new SFVec3f (3, 1.5, 0));\n   if (k == 'g') j .geometry = tc;\n   if (k == 'h') j .translations = new MFVec3f (new SFVec3f (0, 0, 0));\n   if (k == 'i') { tx .string = new MFString ('One', 'Two'); tc .string = new MFString ('One', 'Two'); }\n   if (k == 'j') i .geometry = null;\n}\n\"\n  directOutput TRUE\n}\n\nROUTE K.keyPress TO R.on_key\n"
+ },
+ "warmupFrames": 8
+}

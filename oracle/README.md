@@ -1737,6 +1737,24 @@ Not covered: the runtime side of those loads, Script execution, and `x3d-drive` 
 URL lists). A case that hangs the pinned page (a PixelTexture inside a PROTO, `PROTO P [ inputOutput SFImage i 1 1 1 0 ] { PixelTexture { image IS i } }`)
 was left out: the pinned page did not finish it in 30 s (cause not investigated, so it is UNVERIFIED whether the parser is involved).
 
+## Text under InstancedShape (`node:InstancedShape`)
+
+- `tools/gen_instanced_text.py` writes `synthetic-instanced-text/` (authored, no historical assets): `it-static` (a plain Shape with Text and
+  InstancedShapes with Text: translations, scales, rotations, scaleOrientations, centers, FontStyle, `length`, `maxExtent`, no instance, a
+  transparent Material), `it-extra` (PixelTexture, `solid TRUE` under turned instances, `bboxDisplay`, explicit bbox, empty string,
+  `visible FALSE`), `it-pick` (TouchSensor over instanced Text, 2601 `pickProbes`) and `it-runtime` (`string`, FontStyle, instance fields and
+  `geometry` changed by key events, 11 pictures). All use `settle`, so the default font arrives between two frames in X_ITE and Rust alike.
+- `tools/rea_instanced_text.py record` wrote `instanced-text-baseline/NAME-msaa{0,4}.json` and `instanced-text-baseline/png/NAME-msaaN/`:
+  each case three times at MSAA 0 and at MSAA 4; the scene text, the console and every picture must be identical. The pinned X_ITE
+  needs the `x_ite-pin/node_modules` link of "Recording from a worktree". The pinned page draws Text glyphs under InstancedShape (with
+  `settle`; the earlier "no glyphs" note was a run without it).
+- `crates/x3d-viewer/tests/instanced_text.rs` compares `x3d-drive` with the baseline (scene text exact, `pickProbes` bit for bit, pictures
+  with at most 0.5% of the pixels more than 8 off) and runs four negative controls (a changed glyph, a scale, a moved instance, a changed
+  run-time FontStyle size). GPU test; it skips without an adapter.
+- Observed, not compared: in the pinned page, assigning to an InstancedShape's `geometry` at run time a node that another InstancedShape
+  already uses leaves the old geometry on screen (reproduced with Cylinder and with Text; a geometry used by a plain Shape works). The cause
+  is not found in `InstancedShape.js`, `X3DShapeNode.js` or `X3DGeometryNode.js`. The worlds avoid that operation.
+
 ## Plain Inline reload and abort paths against the browser shutdown rule (2026-11-04)
 
 `oracle/synthetic-inline-abort/` (four newly authored worlds, `x_ite-inline.mjs`) holds Inline changes that start inside the completion event
