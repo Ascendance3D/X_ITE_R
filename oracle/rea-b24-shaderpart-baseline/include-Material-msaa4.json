@@ -1,0 +1,188 @@
+{
+  "ok": true,
+  "poses": {
+    "10": {
+      "position": [
+        0,
+        0,
+        5
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "12": {
+      "position": [
+        0,
+        0,
+        5
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "24": {
+      "position": [
+        0,
+        0,
+        5
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "32": {
+      "position": [
+        0,
+        0,
+        5
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "43": {
+      "position": [
+        0,
+        0,
+        5
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "44": {
+      "position": [
+        0,
+        0,
+        5
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    }
+  },
+  "vrml": {
+    "10": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Full\n\nViewpoint {\n  position 0 0 5\n}\n\nNavigationInfo {\n  headlight FALSE\n}\n\nTransform {\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.9 0.5 0.3\n      }\n      shaders ComposedShader {\n        language \"GLSL\"\n        parts [\n          ShaderPart {\n            url \"data:x-shader/x-vertex,%23version 300 es\nin vec4 x3d_Vertex;\nuniform mat4 x3d_ProjectionMatrix;\nuniform mat4 x3d_ModelViewMatrix;\nvoid main()\n{\n   gl_Position = x3d_ProjectionMatrix * x3d_ModelViewMatrix * x3d_Vertex;\n}\n\"\n          }\n          DEF FP ShaderPart {\n            type \"FRAGMENT\"\n            url \"data:x-shader/x-fragment,%23version 300 es\nprecision mediump float;\nout vec4 fragColor;\nvoid main() { fragColor = vec4 (0.9, 0.7, 0.2, 1.0); }\n\"\n          }\n        ]\n      }\n    }\n    geometry Sphere {\n      radius 1.2\n    }\n  }\n}\n\nDEF K KeySensor { }\n\nDEF R Script {\n  inputOnly      SFString on_key\n  initializeOnly SFNode   fp USE FP\n\n  url \"javascript:\nfunction on_key (k)\n{\n   if (k == 'a') fp .url = new MFString ('data:x-shader/x-fragment,%23version 300 es%0Aprecision highp int;%0Aprecision highp float;%0Aprecision highp sampler2D;%0Aprecision highp sampler3D;%0Aprecision highp samplerCube;%0A%23include <Material>%0Aout vec4 fragColor;%0Avoid main() { fragColor = vec4 (0.3, 0.7, 0.9, 1.0); }%0A');\n   if (k == 'b') fp .url = new MFString ('data:x-shader/x-fragment,%23version 300 es%0Aprecision mediump float;%0Aout vec4 fragColor;%0Avoid main() { fragColor = vec4 (0.9, 0.7, 0.2, 1.0); }%0A');\n}\n\"\n  directOutput TRUE\n}\n\nROUTE K.keyPress TO R.on_key\n",
+    "24": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Full\n\nViewpoint {\n  position 0 0 5\n}\n\nNavigationInfo {\n  headlight FALSE\n}\n\nTransform {\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.9 0.5 0.3\n      }\n      shaders ComposedShader {\n        language \"GLSL\"\n        parts [\n          ShaderPart {\n            url \"data:x-shader/x-vertex,%23version 300 es\nin vec4 x3d_Vertex;\nuniform mat4 x3d_ProjectionMatrix;\nuniform mat4 x3d_ModelViewMatrix;\nvoid main()\n{\n   gl_Position = x3d_ProjectionMatrix * x3d_ModelViewMatrix * x3d_Vertex;\n}\n\"\n          }\n          DEF FP ShaderPart {\n            type \"FRAGMENT\"\n            url \"data:x-shader/x-fragment,%23version 300 es%0Aprecision highp int;%0Aprecision highp float;%0Aprecision highp sampler2D;%0Aprecision highp sampler3D;%0Aprecision highp samplerCube;%0A%23include <Material>%0Aout vec4 fragColor;%0Avoid main() { fragColor = vec4 (0.3, 0.7, 0.9, 1.0); }%0A\"\n          }\n        ]\n      }\n    }\n    geometry Sphere {\n      radius 1.2\n    }\n  }\n}\n\nDEF K KeySensor { }\n\nDEF R Script {\n  inputOnly      SFString on_key\n  initializeOnly SFNode   fp USE FP\n\n  url \"javascript:\nfunction on_key (k)\n{\n   if (k == 'a') fp .url = new MFString ('data:x-shader/x-fragment,%23version 300 es%0Aprecision highp int;%0Aprecision highp float;%0Aprecision highp sampler2D;%0Aprecision highp sampler3D;%0Aprecision highp samplerCube;%0A%23include <Material>%0Aout vec4 fragColor;%0Avoid main() { fragColor = vec4 (0.3, 0.7, 0.9, 1.0); }%0A');\n   if (k == 'b') fp .url = new MFString ('data:x-shader/x-fragment,%23version 300 es%0Aprecision mediump float;%0Aout vec4 fragColor;%0Avoid main() { fragColor = vec4 (0.9, 0.7, 0.2, 1.0); }%0A');\n}\n\"\n  directOutput TRUE\n}\n\nROUTE K.keyPress TO R.on_key\n",
+    "32": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Full\n\nViewpoint {\n  position 0 0 5\n}\n\nNavigationInfo {\n  headlight FALSE\n}\n\nTransform {\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.9 0.5 0.3\n      }\n      shaders ComposedShader {\n        language \"GLSL\"\n        parts [\n          ShaderPart {\n            url \"data:x-shader/x-vertex,%23version 300 es\nin vec4 x3d_Vertex;\nuniform mat4 x3d_ProjectionMatrix;\nuniform mat4 x3d_ModelViewMatrix;\nvoid main()\n{\n   gl_Position = x3d_ProjectionMatrix * x3d_ModelViewMatrix * x3d_Vertex;\n}\n\"\n          }\n          DEF FP ShaderPart {\n            type \"FRAGMENT\"\n            url \"data:x-shader/x-fragment,%23version 300 es%0Aprecision mediump float;%0Aout vec4 fragColor;%0Avoid main() { fragColor = vec4 (0.9, 0.7, 0.2, 1.0); }%0A\"\n          }\n        ]\n      }\n    }\n    geometry Sphere {\n      radius 1.2\n    }\n  }\n}\n\nDEF K KeySensor { }\n\nDEF R Script {\n  inputOnly      SFString on_key\n  initializeOnly SFNode   fp USE FP\n\n  url \"javascript:\nfunction on_key (k)\n{\n   if (k == 'a') fp .url = new MFString ('data:x-shader/x-fragment,%23version 300 es%0Aprecision highp int;%0Aprecision highp float;%0Aprecision highp sampler2D;%0Aprecision highp sampler3D;%0Aprecision highp samplerCube;%0A%23include <Material>%0Aout vec4 fragColor;%0Avoid main() { fragColor = vec4 (0.3, 0.7, 0.9, 1.0); }%0A');\n   if (k == 'b') fp .url = new MFString ('data:x-shader/x-fragment,%23version 300 es%0Aprecision mediump float;%0Aout vec4 fragColor;%0Avoid main() { fragColor = vec4 (0.9, 0.7, 0.2, 1.0); }%0A');\n}\n\"\n  directOutput TRUE\n}\n\nROUTE K.keyPress TO R.on_key\n",
+    "43": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Full\n\nViewpoint {\n  position 0 0 5\n}\n\nNavigationInfo {\n  headlight FALSE\n}\n\nTransform {\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.9 0.5 0.3\n      }\n      shaders ComposedShader {\n        language \"GLSL\"\n        parts [\n          ShaderPart {\n            url \"data:x-shader/x-vertex,%23version 300 es\nin vec4 x3d_Vertex;\nuniform mat4 x3d_ProjectionMatrix;\nuniform mat4 x3d_ModelViewMatrix;\nvoid main()\n{\n   gl_Position = x3d_ProjectionMatrix * x3d_ModelViewMatrix * x3d_Vertex;\n}\n\"\n          }\n          DEF FP ShaderPart {\n            type \"FRAGMENT\"\n            url \"data:x-shader/x-fragment,%23version 300 es%0Aprecision mediump float;%0Aout vec4 fragColor;%0Avoid main() { fragColor = vec4 (0.9, 0.7, 0.2, 1.0); }%0A\"\n          }\n        ]\n      }\n    }\n    geometry Sphere {\n      radius 1.2\n    }\n  }\n}\n\nDEF K KeySensor { }\n\nDEF R Script {\n  inputOnly      SFString on_key\n  initializeOnly SFNode   fp USE FP\n\n  url \"javascript:\nfunction on_key (k)\n{\n   if (k == 'a') fp .url = new MFString ('data:x-shader/x-fragment,%23version 300 es%0Aprecision highp int;%0Aprecision highp float;%0Aprecision highp sampler2D;%0Aprecision highp sampler3D;%0Aprecision highp samplerCube;%0A%23include <Material>%0Aout vec4 fragColor;%0Avoid main() { fragColor = vec4 (0.3, 0.7, 0.9, 1.0); }%0A');\n   if (k == 'b') fp .url = new MFString ('data:x-shader/x-fragment,%23version 300 es%0Aprecision mediump float;%0Aout vec4 fragColor;%0Avoid main() { fragColor = vec4 (0.9, 0.7, 0.2, 1.0); }%0A');\n}\n\"\n  directOutput TRUE\n}\n\nROUTE K.keyPress TO R.on_key\n",
+    "44": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Full\n\nViewpoint {\n  position 0 0 5\n}\n\nNavigationInfo {\n  headlight FALSE\n}\n\nTransform {\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.9 0.5 0.3\n      }\n      shaders ComposedShader {\n        language \"GLSL\"\n        parts [\n          ShaderPart {\n            url \"data:x-shader/x-vertex,%23version 300 es\nin vec4 x3d_Vertex;\nuniform mat4 x3d_ProjectionMatrix;\nuniform mat4 x3d_ModelViewMatrix;\nvoid main()\n{\n   gl_Position = x3d_ProjectionMatrix * x3d_ModelViewMatrix * x3d_Vertex;\n}\n\"\n          }\n          DEF FP ShaderPart {\n            type \"FRAGMENT\"\n            url \"data:x-shader/x-fragment,%23version 300 es%0Aprecision mediump float;%0Aout vec4 fragColor;%0Avoid main() { fragColor = vec4 (0.9, 0.7, 0.2, 1.0); }%0A\"\n          }\n        ]\n      }\n    }\n    geometry Sphere {\n      radius 1.2\n    }\n  }\n}\n\nDEF K KeySensor { }\n\nDEF R Script {\n  inputOnly      SFString on_key\n  initializeOnly SFNode   fp USE FP\n\n  url \"javascript:\nfunction on_key (k)\n{\n   if (k == 'a') fp .url = new MFString ('data:x-shader/x-fragment,%23version 300 es%0Aprecision highp int;%0Aprecision highp float;%0Aprecision highp sampler2D;%0Aprecision highp sampler3D;%0Aprecision highp samplerCube;%0A%23include <Material>%0Aout vec4 fragColor;%0Avoid main() { fragColor = vec4 (0.3, 0.7, 0.9, 1.0); }%0A');\n   if (k == 'b') fp .url = new MFString ('data:x-shader/x-fragment,%23version 300 es%0Aprecision mediump float;%0Aout vec4 fragColor;%0Avoid main() { fragColor = vec4 (0.9, 0.7, 0.2, 1.0); }%0A');\n}\n\"\n  directOutput TRUE\n}\n\nROUTE K.keyPress TO R.on_key\n"
+  },
+  "prints": [],
+  "log": [
+    "error: ShaderPart: Couldn't load data URL. Error: Error in ShaderPart 'FP' in URL 'Fragment', line 45, ERROR: 3:45: 'X3D_NUM_TEXTURE_COORDINATES' : unexpected token after conditional expression"
+  ],
+  "anchors": [],
+  "info": {
+    "renderer": "ANGLE (NVIDIA Corporation, NVIDIA GeForce RTX 3060 Ti/PCIe/SSE2, OpenGL ES 3.2)",
+    "x_ite": "16.5.0",
+    "multisampling": 4,
+    "antialiased": true,
+    "maxSamples": 8,
+    "contextAttributes": {
+      "alpha": true,
+      "antialias": false,
+      "depth": true,
+      "desynchronized": false,
+      "failIfMajorPerformanceCaveat": false,
+      "powerPreference": "default",
+      "premultipliedAlpha": true,
+      "preserveDrawingBuffer": true,
+      "stencil": false,
+      "xrCompatible": false
+    }
+  },
+  "loadFrames": 3,
+  "warmupFrames": 8,
+  "geometry": {
+    "rect": [
+      0,
+      0,
+      512,
+      512
+    ],
+    "viewport": [
+      0,
+      0,
+      512,
+      512
+    ],
+    "scroll": [
+      0,
+      0
+    ]
+  }
+}
