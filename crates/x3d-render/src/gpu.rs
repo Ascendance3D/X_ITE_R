@@ -1112,6 +1112,8 @@ pub struct Renderer {
     scatter_depth_copy: crate::scatter_gpu::ScatterDepthCopy,
     mip_layout: wgpu::BindGroupLayout,
     mip_pipeline: wgpu::RenderPipeline,
+    /// The rubber band of the FLY and WALK viewers (created at the first frame that has one).
+    rubber_band: Option<crate::rubber_band::RubberBandGpu>,
     /// RenderedTexture depthMap pipelines (shadow.wgsl fs_depth_color), points, lines, triangles.
     depth_color_pipelines: [wgpu::RenderPipeline; 3],
     rendered: HashMap<(u64, NodeId), RenGpu>,
@@ -2101,6 +2103,7 @@ impl Renderer {
             scatter_depth_copy,
             mip_layout,
             mip_pipeline,
+            rubber_band: None,
             rendered: HashMap::new(),
             shadow_buffer,
             shadow_capacity: 64,
@@ -3948,7 +3951,7 @@ impl Renderer {
         let flip = self.flip_now;
 
         if frame.layers.is_empty() {
-            return self.encode_frame(
+            self.encode_frame(
                 encoder,
                 frame,
                 target,
@@ -3962,7 +3965,9 @@ impl Renderer {
                     load: false,
                     more: false,
                 },
-            );
+            )?;
+            self.encode_rubber_band(encoder, frame, target, format, width, height, flip);
+            return Ok(());
         }
 
         // LayerSet.traverse: one pass per layer, in order, each keeping what the layers before it
@@ -3994,7 +3999,42 @@ impl Renderer {
             }
         }
 
+        self.encode_rubber_band(encoder, frame, target, format, width, height, flip);
         Ok(())
+    }
+
+    /// X3DFlyViewer.display (displayFinishEvents): the rubber band over the finished frame, after the multisampled color
+    /// buffer is resolved into `target` (X_ITE draws it into the framebuffer before the blit; the two agree without
+    /// multisampling, with it the band here has no antialiased edge).
+    #[allow(clippy::too_many_arguments)]
+    fn encode_rubber_band(
+        &mut self,
+        encoder: &mut wgpu::CommandEncoder,
+        frame: &Frame,
+        target: &wgpu::TextureView,
+        format: wgpu::TextureFormat,
+        width: u32,
+        height: u32,
+        flip: bool,
+    ) {
+        let Some(band) = &frame.rubber_band else {
+            return;
+        };
+
+        let device = &self.device;
+        self.rubber_band
+            .get_or_insert_with(|| crate::rubber_band::RubberBandGpu::new(device))
+            .encode(
+                device,
+                &self.queue,
+                encoder,
+                band,
+                target,
+                format,
+                width,
+                height,
+                flip,
+            );
     }
 
     /// GPU objects kept between frames: geometries, point sprites, textures, texture bind groups,

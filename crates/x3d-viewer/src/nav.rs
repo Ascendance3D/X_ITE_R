@@ -112,6 +112,8 @@ pub struct Env {
     pub viewport: [f64; 4],
     /// BrowserOptions StraightenHorizon (default TRUE).
     pub straighten: bool,
+    /// BrowserOptions Rubberband (default TRUE): read when a button goes down.
+    pub rubberband: bool,
 }
 
 pub struct Cx<'a> {
@@ -322,6 +324,14 @@ impl Viewer {
     pub fn active_viewpoint_changed(&mut self, cx: &mut Cx) {
         if let Viewer::Examine(e) = self {
             e.set_active_viewpoint(cx);
+        }
+    }
+
+    /// The rubber band of a FLY or WALK viewer (see [`Fly::rubber_band`]).
+    pub fn rubber_band(&self) -> Option<([f64; 2], [f64; 2])> {
+        match self {
+            Viewer::Fly(f) => f.rubber_band(),
+            _ => None,
         }
     }
 
@@ -1059,6 +1069,9 @@ pub struct Fly {
     fly_active: bool,
     pan_active: bool,
     look_around: bool,
+    /// X3DFlyViewer.display is connected to displayFinishEvents (the `Rubberband` option was on when the button went down):
+    /// `Some(pan)`, with `pan` true for the middle button (PAN, the line from (x, y) to (x, y), else MOVE).
+    rubber_band: Option<bool>,
     chaser: Chaser<Rotation4>,
     pending: Vec<FPend>,
 }
@@ -1078,6 +1091,7 @@ impl Fly {
             fly_active: false,
             pan_active: false,
             look_around: false,
+            rubber_band: None,
             chaser: Chaser::new(ROTATE_TIME_FLY, now),
             pending: vec![],
         }
@@ -1200,6 +1214,7 @@ impl Fly {
                     self.to_vector = self.from_vector;
                     self.direction = sub(&self.to_vector, &self.from_vector);
                     self.add_fly(cx);
+                    self.rubber_band = cx.env.rubberband.then_some(false);
                 }
 
                 self.is_active = true;
@@ -1212,6 +1227,7 @@ impl Fly {
                 self.to_vector = self.from_vector;
                 self.direction = Vector3::ZERO;
                 self.add_pan(cx);
+                self.rubber_band = cx.env.rubberband.then_some(true);
                 self.is_active = true;
             }
             _ => {}
@@ -1278,7 +1294,16 @@ impl Fly {
         self.start_time = cx.env.date_now;
     }
 
+    /// X3DFlyViewer.display: the two ends of the rubber band in viewport pixels while it is connected to displayFinishEvents.
+    pub fn rubber_band(&self) -> Option<([f64; 2], [f64; 2])> {
+        let pan = self.rubber_band?;
+        let point = |v: &Vector3| if pan { [v.x, v.y] } else { [v.x, -v.z] };
+
+        Some((point(&self.from_vector), point(&self.to_vector)))
+    }
+
     pub fn disconnect(&mut self) {
+        self.rubber_band = None;
         self.fly_active = false;
         self.pan_active = false;
         self.chaser.connected = false;
