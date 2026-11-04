@@ -29,6 +29,8 @@
 //! `createX3DFromURL` and its promise resolving: parse, setup, script loading, url object
 //! loading and exactly one frame (FileLoader.set_loadCount__ awaits `browser .nextFrame ()`).
 
+#[cfg(feature = "av1")]
+pub mod av1;
 pub mod browser_load;
 pub mod browser_options;
 pub mod bullet;

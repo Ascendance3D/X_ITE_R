@@ -44,7 +44,10 @@ fn native_video_first_pictures_match_x_ite() {
     for e in std::fs::read_dir(root.join("synthetic-movie-codecs")).unwrap() {
         let world = e.unwrap().file_name().into_string().unwrap();
 
-        if world.ends_with(".wrl") && !names.contains(&world) {
+        if world.ends_with(".wrl")
+            && !names.contains(&world)
+            && (cfg!(feature = "av1") || !world.starts_with("av1-"))
+        {
             failures.push(format!("{world}: no reference in the baseline"));
         }
     }
@@ -64,6 +67,11 @@ fn native_video_first_pictures_match_x_ite() {
     }
 
     for name in names {
+        // The AV1 worlds need the `av1` feature (rav1d is not in a default build): without it they show no frame.
+        if cfg!(not(feature = "av1")) && name.starts_with("av1-") {
+            continue;
+        }
+
         let (w, h, want) =
             x3d_render::compare::load_png(&baseline.join(format!("{name}.png"))).unwrap();
         let shot = x3d_render::render_file(
