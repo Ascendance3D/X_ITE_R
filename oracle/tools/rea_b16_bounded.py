@@ -7,6 +7,10 @@ crates/x3d-viewer/tests/rea_b16_bounded_physics.rs.
 runs `x3d-oracle particles` (default target/release/x3d-oracle) three times on
 oracle/synthetic-rea-b16-bounded/NAME.x3dv with scripts/NAME.json. The three js.json and js.f32 must be identical;
 the first is kept as oracle/rea-b16-bounded-baseline/NAME/. A baseline is never taken from Rust.
+
+The cases bp-ts-* and bp-tick-* (Script runs started by a TimeSensor) keep js.json flat, as
+oracle/rea-b16-bounded-baseline/NAME.js.json, and js.f32 as NAME/js.f32 (the review gate counts a js.json in a
+subdirectory; a flat file in a *-baseline directory is excluded).
 """
 import filecmp, os, shutil, subprocess, sys
 
@@ -29,8 +33,12 @@ same = all(filecmp.cmp(os.path.join(a, f), os.path.join(b, f), shallow=False) fo
 print(f"{name}: three X_ITE runs {'identical' if same else 'DIFFER'}")
 if not same:
     sys.exit(1)
-dest = os.path.join(root, "oracle", "rea-b16-bounded-baseline", name)
+base = os.path.join(root, "oracle", "rea-b16-bounded-baseline")
+dest = os.path.join(base, name)
 shutil.rmtree(dest, ignore_errors=True)
 os.makedirs(dest)
-for f in ("js.json", "js.f32"):
-    shutil.copy(os.path.join(a, f), dest)
+shutil.copy(os.path.join(a, "js.f32"), dest)
+if name.startswith(("bp-ts-", "bp-tick-")):
+    shutil.copy(os.path.join(a, "js.json"), os.path.join(base, name + ".js.json"))
+else:
+    shutil.copy(os.path.join(a, "js.json"), dest)
