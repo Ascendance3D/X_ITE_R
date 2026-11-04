@@ -61,7 +61,7 @@ const KNOWN: &[(&str, &str)] = &[
 /// 0 pixels at MSAA 4 (include-Fog, select-steps, url-steps, vertex-steps), so the difference is the precision and nothing
 /// else (neither the MSAA 4 edges nor the shading). The test fails when a count or the maximum changes in either direction;
 /// a case that becomes exact must be removed with its cause. Every other picture bound (8 per channel, 0.5% of the pixels)
-/// stays as it was. Counts need this GPU: on another adapter run `REA_STATS=1` and read the `STATS` lines.
+/// stays as it was. Counts need this GPU: the test applies them only on an adapter named RTX 3060 Ti; on another adapter it applies the picture bounds only (run `REA_STATS=1` and read the `STATS` lines to measure it).
 const PINNED: &[(&str, u32, usize, u8)] = &[
     ("include-Fog", 0, 145192, 1),
     ("include-Fog", 4, 145296, 1),
@@ -187,6 +187,7 @@ fn compare_case(
     msaa: u32,
     text_tol: f64,
     gpu: bool,
+    exact: bool,
     failures: &mut Vec<String>,
 ) {
     let dir = root.join(format!(
@@ -334,7 +335,7 @@ fn compare_case(
         }
     }
 
-    if images {
+    if images && exact {
         match PINNED.iter().find(|p| p.0 == name && p.1 == msaa) {
             Some(&(_, _, pixels, max)) if (pixels, max) != (differing, largest) => fail(format!(
                 "pictures differ from X_ITE in {differing} pixels, largest {largest}; pinned {pixels}, {max} (mediump in half precision, see PINNED)"
@@ -357,9 +358,20 @@ fn rea_b24_shaderpart_cases_match_x_ite() {
         .expect("baseline missing: oracle/rea-b24-shaderpart-baseline/cases.txt (make it with oracle/tools/rea_b24_shaderpart.py record); comparison NOT RUN");
     let only = std::env::var("REA_ONLY").ok();
     // One GPU at a time: the cases run in order in this test.
-    let gpu = x3d_render::gpu::Gpu::new().is_ok();
+    let adapter = x3d_render::gpu::Gpu::new()
+        .ok()
+        .map(|g| g.adapter_info.name.clone());
+    let gpu = adapter.is_some();
     if !gpu {
         x3d_evidence::no_gpu("image comparisons skipped");
+    }
+    // The exact PINNED counts were measured on this adapter (half-precision mediump, see PINNED). On any other adapter
+    // the per-picture bound (8 per channel, 0.5% of the pixels) is the whole picture rule, as before this table.
+    let exact = adapter
+        .as_deref()
+        .is_some_and(|n| n.contains("RTX 3060 Ti"));
+    if let Some(n) = adapter.as_deref().filter(|_| !exact) {
+        eprintln!("PINNED counts not applied: adapter {n} is not the measured RTX 3060 Ti");
     }
     let mut failures = vec![];
     let mut checked = 0;
@@ -387,6 +399,7 @@ fn rea_b24_shaderpart_cases_match_x_ite() {
             msaa,
             text_tol,
             gpu,
+            exact,
             &mut failures,
         );
         checked += 1;
