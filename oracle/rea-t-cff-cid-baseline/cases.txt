@@ -1,0 +1,6 @@
+tc-cid oracle/synthetic-rea-t-cff-cid/tc-cid.wrl oracle/synthetic-rea-t-cff-cid/tc-cid.json
+tc-cff2 oracle/synthetic-rea-t-cff-cid/tc-cff2.wrl oracle/synthetic-rea-t-cff-cid/tc-cff2.json
+tc-family-url oracle/synthetic-rea-t-cff-cid/tc-family-url.wrl oracle/synthetic-rea-t-cff-cid/tc-family-url.json
+tc-bad oracle/synthetic-rea-t-cff-cid/tc-bad.wrl oracle/synthetic-rea-t-cff-cid/tc-bad.json
+tc-dynamic oracle/synthetic-rea-t-cff-cid/tc-dynamic.wrl oracle/synthetic-rea-t-cff-cid/tc-dynamic.json
+tc-screen oracle/synthetic-rea-t-cff-cid/tc-screen.wrl oracle/synthetic-rea-t-cff-cid/tc-screen.json

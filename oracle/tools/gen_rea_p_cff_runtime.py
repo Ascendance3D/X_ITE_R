@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Generate the end-to-end CFF font worlds oracle/synthetic-rea-p-cff-runtime/pc-*.wrl (REA node:FontLibrary, sub:text.fonts).
-Authored; synthetic inputs only. The font is the authored OpenType-CFF font of oracle/synthetic-rea-b24-cff (gen_cff_fonts.py), and the CID-keyed
-variant of oracle/synthetic-rea-p-cff-runtime (gen_cff_cid_font.py). A Script reads the output events of every Text (origin, textBounds,
+Authored; synthetic inputs only. The font is the authored OpenType-CFF font of oracle/synthetic-rea-b24-cff (gen_cff_fonts.py); the CID-keyed
+and CFF2 fonts are those of oracle/synthetic-rea-t-cff-cid (gen_cff_cid_fonts.py, gen_rea_t_cff_cid.py). A Script reads the output events of every Text (origin, textBounds,
 lineBounds) after the fonts have arrived, and writes them into its `out` field, so the scene text of
 the dumped frame carries them. The runtime, not Font::parse, is what runs: URL resolution, FileLoader, FontLibrary registration,
 FontStyle lookup, Text layout.
@@ -20,7 +20,6 @@ G.HEAD = "#X3D V4.1 utf8\nPROFILE Full\n"
 
 BASIC = "../synthetic-rea-b24-cff/cff-basic.otf"
 BARE = "../synthetic-rea-b24-cff/cff-bare.cff"
-CID = "cff-cid.otf"
 READ = 40  # the frame the Script reads the outputs in: every font has arrived long before
 cases = []
 

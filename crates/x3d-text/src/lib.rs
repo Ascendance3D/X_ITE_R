@@ -3,6 +3,7 @@
 //! (`Browser/Text/X3DTextContext.js`, opentype.js), glyph outlines and libtess triangulation
 //! (`Browser/Text/PolygonText.js`, libtess.js) and layout (`Browser/Text/X3DTextGeometry.js`).
 
+pub mod cff;
 pub mod font;
 pub mod fonts;
 pub mod layout;

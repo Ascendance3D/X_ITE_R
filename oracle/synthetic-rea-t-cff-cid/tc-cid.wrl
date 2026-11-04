@@ -1,0 +1,72 @@
+#X3D V4.1 utf8
+PROFILE Full
+META "title" "tc cid"
+DEF L_CidFd3 FontLibrary { family "CidFd3" url "cid-fd3.otf" }
+DEF L_CidFd0 FontLibrary { family "CidFd0" url "cid-fd0.otf" }
+Shape { geometry DEF A1 Text { string [ "AB OH" "FWV" ]  fontStyle FontStyle { family "CidFd3"  } } }
+Shape { geometry DEF A2 Text { string [ "BOHF" "WV AB" ]  fontStyle FontStyle { family "CidFd3" justify [ "MIDDLE" "MIDDLE" ] } } }
+Shape { geometry DEF A3 Text { string [ "ABOH" "FWV" ]  fontStyle FontStyle { family "CidFd3" size 1.5 spacing 0.7 } } }
+Shape { geometry DEF A4 Text { string [ "ABO" "HFWV" ]  fontStyle FontStyle { family "CidFd3" horizontal FALSE size 0.9 } } }
+Shape { geometry DEF A5 Text { string [ "ABO" "HFWV" ]  fontStyle FontStyle { family "CidFd3" leftToRight FALSE } } }
+Shape { geometry DEF A6 Text { string [ "ABOH FWV" ] maxExtent 3 fontStyle FontStyle { family "CidFd3"  } } }
+Shape { geometry DEF A7 Text { string [ "ABOH" "FWV" ] length [ 3 2 ] fontStyle FontStyle { family "CidFd3"  } } }
+Shape { geometry DEF A8 Text { string [ "AZB" ]  fontStyle FontStyle { family "CidFd3"  } } }
+Shape { geometry DEF B1 Text { string [ "AB OH" "FWV" ]  fontStyle FontStyle { family "CidFd0"  } } }
+Shape { geometry DEF B2 Text { string [ "BOHF" "WV AB" ]  fontStyle FontStyle { family "CidFd0" justify [ "MIDDLE" "MIDDLE" ] } } }
+Shape { geometry DEF B3 Text { string [ "ABOH" "FWV" ]  fontStyle FontStyle { family "CidFd0" size 1.5 spacing 0.7 } } }
+Shape { geometry DEF B4 Text { string [ "ABO" "HFWV" ]  fontStyle FontStyle { family "CidFd0" horizontal FALSE size 0.9 } } }
+Shape { geometry DEF B5 Text { string [ "ABO" "HFWV" ]  fontStyle FontStyle { family "CidFd0" leftToRight FALSE } } }
+Shape { geometry DEF B6 Text { string [ "ABOH FWV" ] maxExtent 3 fontStyle FontStyle { family "CidFd0"  } } }
+Shape { geometry DEF B7 Text { string [ "ABOH" "FWV" ] length [ 3 2 ] fontStyle FontStyle { family "CidFd0"  } } }
+Shape { geometry DEF B8 Text { string [ "AZB" ]  fontStyle FontStyle { family "CidFd0"  } } }
+DEF P Script {
+  inputOutput MFString out [ ]
+
+  url "ecmascript:
+
+var R_ = [];
+function strip (s) { return String (s) .replace (/https?:\\/\\/[^\\/]+\\//g, ''); }
+function show (v, d) {
+  if (typeof v === 'number') return Object.is (v, -0) ? 'n:-0' : 'n:' + v;
+  if (typeof v === 'string') return 's:' + JSON.stringify (strip (v));
+  if (v === null || v === undefined) return String (v);
+  if (typeof v === 'function') return 'fn';
+  if (typeof v === 'boolean') return 'b:' + v;
+  if (Array.isArray (v)) return 'A[' + v .map (function (x) { return show (x); }) .join (',') + ']';
+  var c = v .constructor;
+  return (c && c .name || '?') + ':' + String (v) + raw (v);
+}
+// The components of a field object at full double precision (String () rounds floats).
+function raw (v) {
+  if (typeof v .getTypeName !== 'function' || !v [Symbol .iterator] || v .getTypeName () .indexOf ('MF') === 0 && !v .length) return '';
+  try { var a = Array .from (v, function (x) { return typeof x === 'object' && x && x [Symbol .iterator] ? '(' + Array .from (x, function (y) { return typeof y === 'object' && y && y [Symbol .iterator] ? '(' + Array .from (y) .join (' ') + ')' : y; }) .join (' ') + ')' : x; }); return ' raw=' + a .join (' '); } catch (e) { return ' raw=ERR'; }
+}
+function errText (e) {
+  var n = e && e .name;
+  if (n === 'TypeError' || n === 'ReferenceError' || n === 'SyntaxError') return 'ERR ' + n + ' (engine wording)';
+  return 'ERR ' + n + ': ' + strip (e && e .message);
+}
+function T (n, f) {
+  var r;
+  try { r = show (f ()); } catch (e) { r = errText (e); }
+  R_ .push ((R_ .length < 10 ? '00' : R_ .length < 100 ? '0' : '') + R_ .length + ' ' + n + ' = ' + r);
+}
+function flush_ () { out = new MFString (... R_); }
+
+var SELF;
+var F_ = 0;
+function N (n) { return Browser .currentScene .getNamedNode (n); }
+function RD (t) { ['origin', 'textBounds', 'lineBounds'] .forEach (function (f) { T (t + '.' + f, function () { return N (t) [f]; }); }); }
+
+function initialize () {
+  SELF = this;
+
+  flush_ ();
+}
+function prepareEvents () {
+  ++ F_;
+  if (F_ === 40) { RD ('A1'); RD ('A2'); RD ('A3'); RD ('A4'); RD ('A5'); RD ('A6'); RD ('A7'); RD ('A8'); RD ('B1'); RD ('B2'); RD ('B3'); RD ('B4'); RD ('B5'); RD ('B6'); RD ('B7'); RD ('B8'); flush_ (); }
+}
+
+  "
+}

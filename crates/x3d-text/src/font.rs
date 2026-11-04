@@ -2,8 +2,8 @@
 //! (WOFF2 is decompressed first, like `X3DTextContext.decompressFont`), and the glyph geometry
 //! of `Browser/Text/PolygonText.js` (`createGlyphGeometry`).
 //!
-//! OpenType-CFF fonts (`OTTO`, a `CFF ` table) load too; their charstring outlines come from
-//! ttf-parser's Type 2 interpreter and are turned into opentype.js `getPath` commands (`M`, `L`, `C`).
+//! OpenType-CFF fonts (`OTTO`, a `CFF ` or `CFF2` table) load too; their charstring outlines come from [`crate::cff`], a port of
+//! opentype.js's CFF parser and Type 2 interpreter (plain, CID-keyed and CFF2), and are the `getPath` commands (`M`, `L`, `C`).
 //!
 //! The glyph table is parsed here instead of with ttf-parser's outline builder because
 //! libtess' output depends on where each contour starts and on the duplicated closing points
@@ -62,9 +62,15 @@ pub struct Font {
     glyf: (usize, usize),
     /// An OpenType-CFF font: the outlines are Type 2 charstrings, `loca` and `glyf` stay empty.
     cff: bool,
+    /// The parsed `CFF ` / `CFF2` table (`None` for a TrueType font).
+    cff_tables: Option<crate::cff::Cff>,
+    /// The path of each CFF glyph built so far (opentype.js builds it once): the commands in font units, or the exception text.
+    cff_paths: RefCell<HashMap<u16, Result<std::rc::Rc<Vec<Cmd>>, String>>>,
+    /// `console .error` / `.warn` lines of the parse and of the path builds, as `error: text` / `warn: text`, until [`Font::take_log`].
+    log: RefCell<Vec<String>>,
     /// opentype.js `parseCFFCharstring` ends with `if (haveWidth) glyph .advanceWidth = width`: building a glyph's path
     /// replaces the advance it took from `hmtx`. Filled in by the first [`Font::glyph_commands`] of a glyph.
-    cff_widths: RefCell<HashMap<u16, u16>>,
+    cff_widths: RefCell<HashMap<u16, f64>>,
     advances: Vec<u16>,
     cmap: HashMap<u32, u16>,
     has_gpos: bool,
@@ -75,6 +81,8 @@ pub struct Font {
 #[derive(Debug)]
 pub enum FontError {
     Parse(String),
+    /// The text of the exception opentype.js throws (`Error: ...`): X_ITE logs it with the url.
+    OpenType(String),
 }
 
 fn be16(d: &[u8], o: usize) -> Option<u16> {
@@ -98,8 +106,9 @@ impl Font {
         let face = Face::parse(&data, 0).map_err(|e| FontError::Parse(format!("{e:?}")))?;
         let raw = RawFace::parse(&data, 0).map_err(|e| FontError::Parse(format!("{e:?}")))?;
         let table = |tag: &[u8; 4]| raw.table(Tag::from_bytes(tag));
-        // opentype.js `parse`: `glyf` + `loca` for TrueType outlines, else a `CFF ` table (CFF2 is not supported here).
-        let cff = table(b"glyf").is_none() && table(b"CFF ").is_some();
+        // opentype.js `parse`: `glyf` + `loca` for TrueType outlines, else a `CFF ` table, else a `CFF2` table.
+        let cff =
+            table(b"glyf").is_none() && (table(b"CFF ").is_some() || table(b"CFF2").is_some());
         let glyf_tag = match table(b"glyf") {
             Some(t) => t,
             None if cff => &[][..],
@@ -140,6 +149,18 @@ impl Font {
             loca.push(v);
         }
 
+        let mut log = vec![];
+        let cff_tables = if cff {
+            let t = table(b"CFF ").or_else(|| table(b"CFF2")).unwrap_or(&[]);
+            let start = t.as_ptr() as usize - data.as_ptr() as usize;
+            let (c, l) = crate::cff::Cff::parse(&data, start, num_glyphs as usize)
+                .map_err(FontError::OpenType)?;
+
+            log = l;
+            Some(c)
+        } else {
+            None
+        };
         let glyf_start = if cff {
             0
         } else {
@@ -187,6 +208,9 @@ impl Font {
             loca,
             glyf: (glyf_start, glyf_tag.len()),
             cff,
+            cff_tables,
+            cff_paths: RefCell::new(HashMap::new()),
+            log: RefCell::new(log),
             cff_widths: RefCell::new(HashMap::new()),
             advances,
             cmap,
@@ -205,7 +229,7 @@ impl Font {
 
     pub fn advance_width(&self, glyph: u16) -> f64 {
         if let Some(w) = self.cff_widths.borrow().get(&glyph) {
-            return *w as f64;
+            return *w;
         }
 
         self.advances.get(glyph as usize).copied().unwrap_or(0) as f64
@@ -670,45 +694,85 @@ impl Font {
     }
 
     /// `parseCFFCharstring` + `Glyph.getPath (0, 0, 1)` of a CFF glyph: `M`, `L` and `C` commands scaled to font size 1.
-    /// The path is built on first use in opentype.js, and that replaces the glyph's advance by the charstring width.
+    /// The path is built on first use in opentype.js, and that replaces the glyph's advance by the charstring width (when the charstring
+    /// has one) and writes the build's `console` lines. A build that throws leaves no commands (see [`Font::glyph_error`]).
     fn cff_commands(&self, glyph: u16) -> Vec<Cmd> {
+        if glyph >= self.num_glyphs {
+            return vec![];
+        }
+
+        let scale = 1.0 / self.units_per_em * 1.0;
+        let scaled = |cmds: &[Cmd]| -> Vec<Cmd> {
+            cmds.iter()
+                .map(|c| match *c {
+                    Cmd::M(x, y) => Cmd::M(x * scale, y * scale),
+                    Cmd::L(x, y) => Cmd::L(x * scale, y * scale),
+                    Cmd::Q(a, b, x, y) => Cmd::Q(a * scale, b * scale, x * scale, y * scale),
+                    Cmd::C(a, b, c, d, x, y) => Cmd::C(
+                        a * scale,
+                        b * scale,
+                        c * scale,
+                        d * scale,
+                        x * scale,
+                        y * scale,
+                    ),
+                })
+                .collect()
+        };
+
+        if let Some(done) = self.cff_paths.borrow().get(&glyph) {
+            return done.as_ref().map(|c| scaled(c)).unwrap_or_default();
+        }
+
+        let Some(tables) = &self.cff_tables else {
+            return vec![];
+        };
+        let result = tables
+            .glyph(&self.data, glyph as usize)
+            .map(|mut o| {
+                self.log.borrow_mut().append(&mut o.log);
+
+                if let Some(w) = o.width {
+                    self.cff_widths.borrow_mut().entry(glyph).or_insert(w);
+                }
+
+                if o.seac {
+                    self.cff_seac_commands(glyph)
+                } else {
+                    o.cmds
+                }
+            })
+            .map(std::rc::Rc::new);
+        let out = result.as_ref().map(|c| scaled(c)).unwrap_or_default();
+
+        self.cff_paths.borrow_mut().insert(glyph, result);
+        out
+    }
+
+    /// An accented composite (`endchar` with four arguments) of a plain CFF font: the base glyph's and the shifted accent's outlines.
+    /// opentype.js builds it from the two glyphs' paths; ttf-parser's interpreter does the same lookup by standard-encoding name.
+    fn cff_seac_commands(&self, glyph: u16) -> Vec<Cmd> {
         struct Out {
-            scale: f64,
             cmds: Vec<Cmd>,
         }
 
         impl ttf_parser::OutlineBuilder for Out {
             fn move_to(&mut self, x: f32, y: f32) {
-                self.cmds
-                    .push(Cmd::M(x as f64 * self.scale, y as f64 * self.scale));
+                self.cmds.push(Cmd::M(x as f64, y as f64));
             }
 
             fn line_to(&mut self, x: f32, y: f32) {
-                self.cmds
-                    .push(Cmd::L(x as f64 * self.scale, y as f64 * self.scale));
+                self.cmds.push(Cmd::L(x as f64, y as f64));
             }
 
             fn quad_to(&mut self, x1: f32, y1: f32, x: f32, y: f32) {
-                let s = self.scale;
-
-                self.cmds.push(Cmd::Q(
-                    x1 as f64 * s,
-                    y1 as f64 * s,
-                    x as f64 * s,
-                    y as f64 * s,
-                ));
+                self.cmds
+                    .push(Cmd::Q(x1 as f64, y1 as f64, x as f64, y as f64));
             }
 
             fn curve_to(&mut self, x1: f32, y1: f32, x2: f32, y2: f32, x: f32, y: f32) {
-                let s = self.scale;
-
                 self.cmds.push(Cmd::C(
-                    x1 as f64 * s,
-                    y1 as f64 * s,
-                    x2 as f64 * s,
-                    y2 as f64 * s,
-                    x as f64 * s,
-                    y as f64 * s,
+                    x1 as f64, y1 as f64, x2 as f64, y2 as f64, x as f64, y as f64,
                 ));
             }
 
@@ -719,23 +783,29 @@ impl Font {
         let Ok(face) = Face::parse(&self.data, 0) else {
             return vec![];
         };
-        let gid = ttf_parser::GlyphId(glyph);
-        let mut out = Out {
-            scale: 1.0 / self.units_per_em * 1.0,
-            cmds: vec![],
-        };
+        let mut out = Out { cmds: vec![] };
 
-        if glyph >= self.num_glyphs {
-            return vec![];
-        }
-
-        let _ = face.outline_glyph(gid, &mut out);
-
-        if let Some(w) = face.tables().cff.and_then(|c| c.glyph_width(gid)) {
-            self.cff_widths.borrow_mut().entry(glyph).or_insert(w);
-        }
-
+        let _ = face.outline_glyph(ttf_parser::GlyphId(glyph), &mut out);
         out.cmds
+    }
+
+    /// `font .isCIDFont`: a CID-keyed CFF font (a `ROS` entry in the top DICT).
+    pub fn is_cid_keyed(&self) -> bool {
+        self.cff_tables.as_ref().is_some_and(|c| c.is_cid())
+    }
+
+    /// The exception text of a CFF glyph whose path build threw (`TypeError: ...`), once the path has been asked for.
+    pub fn glyph_error(&self, glyph: u16) -> Option<String> {
+        self.glyph_commands(glyph);
+        self.cff_paths
+            .borrow()
+            .get(&glyph)
+            .and_then(|r| r.as_ref().err().cloned())
+    }
+
+    /// `console .error` / `.warn` lines written since the last call, as `error: text` / `warn: text`: the CFF parse (at load) and the path builds.
+    pub fn take_log(&self) -> Vec<String> {
+        std::mem::take(&mut *self.log.borrow_mut())
     }
 
     /// PolygonText.getGlyphGeometry: the triangles (three vertices each, x/y in em units) libtess
