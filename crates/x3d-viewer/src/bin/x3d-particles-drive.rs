@@ -30,7 +30,8 @@
 //! Script key `pickProbes` (`{ "frames": [k, ...], "points": [[x, y], ...] }`, see `x3d-oracle particles`): after each
 //! listed frame's step, dump and PNG, `browser .touch` at each point through the GPU pointing pass, as
 //! `pickProbes ["k"]`: id, the DEF name of the hit shape node, point, normal, texCoord. Without a GPU the ray cast
-//! picks (its double values are not X_ITE's) and `pointingGpu` is false; `--cpu-pointing` picks that way on purpose. `--records-from <baseline js.json>` also picks
+//! picks (its double values are not X_ITE's) and `pointingGpu` is false; `--cpu-pointing` picks that way on purpose (`--aliased-line-width-max N`
+//! sets the aliased line width limit of the recording's GPU, which a run without a device cannot read). `--records-from <baseline js.json>` also picks
 //! each listed frame with the baseline's particle records of that frame (its `.f32` dump) in place of the run's own,
 //! as `pickProbesReference`, then puts the run's records back: the pointing pass apart from the simulation's float32
 //! differences (REA batch 06R: within 1e-5 + 1e-5 * |reference|).
@@ -64,6 +65,18 @@ fn main() {
             "usage: x3d-particles-drive <world.x3dv> <script.json> [--seeds-from <baseline js.json>] --out <rs.json>"
         );
         std::process::exit(2);
+    }
+
+    // `--aliased-line-width-max N`: ALIASED_LINE_WIDTH_RANGE [1] of the GPU the baseline was recorded on (1 on ANGLE Metal), for
+    // a run without a device (`--cpu-pointing`); with a device it is the backend's.
+    if let Some(w) = opt("--aliased-line-width-max") {
+        match w.parse::<f64>() {
+            Ok(w) if w.is_finite() && w >= 1.0 => x3d_render::gpu::set_max_line_width(w),
+            _ => {
+                eprintln!("--aliased-line-width-max: {w:?} is not a finite number >= 1");
+                std::process::exit(2);
+            }
+        }
     }
 
     let world = PathBuf::from(&args[1]);

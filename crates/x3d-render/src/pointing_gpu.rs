@@ -32,6 +32,8 @@ struct Uniforms {
     attenuation: [f32; 4],
     clip_planes: [[f32; 4]; MAX_POINTING_CLIP_PLANES],
     flags: [f32; 4],
+    /// x: 1 on a Metal device: the point sprite rule of ANGLE on Metal (pointing.wgsl `metal_sprite`).
+    backend: [f32; 4],
     /// x: 1 when the instance matrices come from `instances`, y: the first, z: vertices per instance (0: one instance
     /// per instance_index), w: the draw's first vertex, which `vertex_index` counts from.
     instancing: [u32; 4],
@@ -216,6 +218,8 @@ const DEPTH_FORMAT: wgpu::TextureFormat = wgpu::TextureFormat::Depth24Plus;
 pub struct PointingGpu {
     device: wgpu::Device,
     queue: wgpu::Queue,
+    /// The device is a Metal device: its point sprites follow the rule the pinned page shows on ANGLE Metal.
+    metal_sprites: bool,
     /// The pipelines made so far, by [`PipelineKey`]: the pass defaults and each DepthMode state a draw asked for.
     pipelines: HashMap<PipelineKey, wgpu::RenderPipeline>,
     module: wgpu::ShaderModule,
@@ -297,6 +301,7 @@ impl PointingGpu {
     }
 
     pub fn new(device: wgpu::Device, queue: wgpu::Queue) -> PointingGpu {
+        crate::gpu::note_line_width_backend(&device);
         let module = device.create_shader_module(wgpu::ShaderModuleDescriptor {
             label: Some("pointing"),
             source: wgpu::ShaderSource::Wgsl(POINTING_WGSL.into()),
@@ -391,6 +396,7 @@ impl PointingGpu {
         });
 
         PointingGpu {
+            metal_sprites: device.adapter_info().backend == wgpu::Backend::Metal,
             device,
             queue,
             pipelines,
@@ -744,6 +750,7 @@ impl PointingGpu {
                     }
                     None => [tri.constant_tex_coord as u8 as f32, 0.0, 0.0, 0.0],
                 },
+                backend: [self.metal_sprites as u8 as f32, 0.0, 0.0, 0.0],
                 instancing: match &tri.instances {
                     Some(m) => {
                         first += m.len() as u32;

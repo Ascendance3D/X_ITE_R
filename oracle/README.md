@@ -1565,6 +1565,15 @@ never overwritten. `oracle/<stem>-apple-m1-baseline/<case>-msaa<N>.json` is the 
 runs), kept only for a case where it differs from the NVIDIA recording. A test reads it only when `X3D_REFERENCE_PLATFORM=apple-m1` is set
 (`crates/x3d-viewer/tests/common/reference.rs`): `js.json` comes from the platform recording where there is one, the pictures (`js/*.png`) always
 from the NVIDIA recording. An unknown platform name stops the test. Rust is never compared with a recording that Rust made.
+Exceptions to "the pictures always come from the NVIDIA recording": `oracle/rea-b21-wide-lines-apple-m1-baseline/` also holds
+`<case>.<frame>.png`, the M1 page's picture of a frame where it differs from the NVIDIA picture by more than the test's rule
+(`record_platform_particles.py` keeps it only then, after three identical runs); `rea_b21_wide_lines` compares Rust with it on the M1.
+
+`oracle/synthetic-metal-coverage/` (made by `oracle/tools/gen_metal_coverage.py`, not committed: about 2 MB that the Review gate cannot cover, so the test and
+the recorder generate it and `worlds.sha256` beside the recordings pins the bytes) holds minimal newly authored worlds whose probes sit on pixel
+centres; `oracle/metal-coverage-<platform>-baseline/<case>-msaa<N>.json` is the pinned page's coverage of them on that machine
+(`oracle/tools/record_metal_coverage.py`, three identical runs each, `cases.txt` and `PROVENANCE.json` beside them), used by
+`crates/x3d-viewer/tests/metal_coverage.rs` on a Metal device. These have no NVIDIA counterpart; they measure the target's rasterizer.
 
 ```
 XITE_CHROME="/Applications/Google Chrome.app/Contents/MacOS/Google Chrome" XITE_ANGLE_BACKEND=metal XITE_TESTS=<dir with node_modules/playwright> \
