@@ -90,6 +90,19 @@ Both cases were open in the earlier campaign; each cause is now measured on the 
   pictures of `pw-shadow-w6-behind`, which the page draws as triangles on Metal) are used with `X3D_REFERENCE_PLATFORM=apple-m1`; the known-gap
   tables of the test have an M1 variant (`KNOWN_GAPS_APPLE_M1`). Both tests pass on the M1. The CPU depth stand-in has no device to read the
   limit from, so the test passes `--aliased-line-width-max 1` to `x3d-particles-drive` for the M1 recordings.
+* **`rea_b22` on Metal (two-layer LINE particle shadows, issue #89): REFERENCE VARIATION.** The test failed on Metal against the NVIDIA
+  recordings: 40 failures, all in `tl-shared-w6` (layer 1 and 2 of 20 frames, 58 to 172 pixels over 8 against the limit 16); the other 5
+  cases passed. The pinned page was recorded on the M1 three times per case (`record_platform_particles.py --base
+  rea-b22-two-layer-shadows-baseline`, 6 cases, 0 unstable). The records (`js.json`, `js.f32`) of all six cases equal the NVIDIA ones, so
+  no record override is kept. 20 of the 21 pictures of `tl-shared-w6` differ from the NVIDIA pictures (frames 3 to 20, 30, 45: 59 to 173 pixels
+  over 8 per layer half; frame 2 does not) and are kept as `oracle/rea-b22-two-layer-shadows-apple-m1-baseline/tl-shared-w6.<frame>.png`; the
+  pictures of the five 24 px cases are equal to the NVIDIA ones within the rule. Cause: the same as `pw-shadow-w6-behind` of `rea_b21`; the
+  6 px shadow lines are over the `ALIASED_LINE_WIDTH_RANGE` limit of ANGLE Metal (1) and the page draws them as triangles, on NVIDIA (limit
+  10) as `gl.lineWidth` lines. Rust on Metal already takes the limit from the adapter. Result with `X3D_REFERENCE_PLATFORM=apple-m1` on the
+  M1: `rea_b22_two_layer_shadows_match_x_ite` passes (6 cases), Rust differs from the M1 pictures by at most 1 pixel in layer 1 and 2 in
+  layer 2 per frame (maximum channel difference 21), against 172 and 167 (194) for the NVIDIA pictures. Negative control: the
+  M1 picture of frame 10 replaced by the NVIDIA picture makes the test fail with 82 and 67 pixels over 8 in frame 10; without
+  `X3D_REFERENCE_PLATFORM` the 40 failures return. No tolerance changed, no platform tolerance added, no NVIDIA recording changed.
 * **1 px lines (`pk-events`, `pp-slant-line`, `pp-row-line`, `ml-lines-*`), cause: Rust drew them as two triangles on Metal.** The page's
   `gl.LINES` are Metal line primitives, so Metal's own rasterizer decides which pixels a line covers and how the varyings are interpolated
   along it. Rust emulated GL's diamond-exit rule with a quad of two triangles, a different path in the same hardware. Measured on the M1

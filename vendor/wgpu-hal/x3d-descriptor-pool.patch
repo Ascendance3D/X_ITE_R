@@ -1,0 +1,22 @@
+--- a/src/vulkan/descriptor.rs
++++ b/src/vulkan/descriptor.rs
+@@ -318,6 +318,19 @@
+         })
+         .collect::<ArrayVec<_, NR_OF_DESCRIPTOR_TYPES>>();
+ 
++    // x3d patch (vendor/wgpu-hal/VENDOR.md): a layout with no descriptors (wgpu-core makes one per device, `empty_bgl`) gave an
++    // empty `pool_sizes`. The Intel Gen11 Windows driver 31.0.101.2140 (`igvk64.dll`) crashes with an access violation in
++    // `vkCreateDescriptorPool` for flags FREE_DESCRIPTOR_SET, maxSets 64 and poolSizeCount 0; it creates the same pool with one
++    // pool size. A pool with one unused UNIFORM_BUFFER descriptor holds the same (zero-descriptor) sets. Remove this when the
++    // published wgpu-hal passes a non-empty array or the driver is fixed (VENDOR.md, "Removal condition").
++    let mut pool_sizes = pool_sizes;
++    if pool_sizes.is_empty() {
++        pool_sizes.push(vk::DescriptorPoolSize {
++            ty: vk::DescriptorType::UNIFORM_BUFFER,
++            descriptor_count: 1,
++        });
++    }
++
+     let mut flags = vk::DescriptorPoolCreateFlags::FREE_DESCRIPTOR_SET;
+     if key.update_after_bind {
+         flags |= vk::DescriptorPoolCreateFlags::UPDATE_AFTER_BIND;

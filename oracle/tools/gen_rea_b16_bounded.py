@@ -20,6 +20,10 @@ the case says otherwise; the emitters have no speed, lifetime or angle variation
   bp-enabled-*, bp-damping-change: field events on the BoundedPhysicsModel BM.
   bp-rebuild, bp-replace: a Script changes the floor's Coordinate (geometry rebuild) or replaces BM.geometry,
                    run by a field event (SW.go) before frame 21.
+  bp-ts-*, bp-tick-*: the same changes at a time the Script chooses. bp-ts-*: a TimeSensor with a startTime between
+                   frames 20 and 21 (a virtual timer of the oracle page) routes isActive to SW.go. bp-tick-*: a looping
+                   TimeSensor routes time to SW.tick every frame; the Script decides from the tick (once, at the first
+                   tick from 20.5 frames on; or on every 12th tick; or with a node it builds from a string).
 
 Newly authored; no historical content.
 """
@@ -121,6 +125,83 @@ CASES.update({
                    + switch_script("model .geometry = next;",
                                    "  inputOutput SFNode model USE BM\n  initializeOnly SFNode next "
                                    + quad(0.7) + "\n"), GO),
+})
+
+
+def timed_script(body, fields, test):
+    """A looping TimeSensor TS (started at load) routes time to the Script SW, which acts when `test` holds."""
+    return (f"DEF TS TimeSensor {{ loop TRUE startTime 1 }}\nDEF SW Script {{\n  inputOnly SFTime tick\n"
+            f"  initializeOnly SFInt32 n 0\n  initializeOnly SFBool done FALSE\n{fields}  directOutput TRUE\n"
+            f"  url \"ecmascript: function tick (value) {{ n = n + 1; if ({test}) {{ {body} }} }}\"\n}}\n"
+            "ROUTE TS.time TO SW.tick\n")
+
+
+FLOOR_COORD = ("IndexedFaceSet { solid FALSE coord DEF CO Coordinate { point [ -1 0 -1, 1 0 -1, 1 0 1, -1 0 1 ] } "
+               "coordIndex [ 0 3 2 1 -1 ] }")
+
+
+def lift(y):
+    """The Script statement that moves the floor of FLOOR_COORD to height y."""
+    return (f"co .point = new MFVec3f (new SFVec3f (-1, {y}, -1), new SFVec3f (1, {y}, -1), "
+            f"new SFVec3f (1, {y}, 1), new SFVec3f (-1, {y}, 1));")
+
+
+LIFT = lift(0.5)
+# the Script chooses its time: the first tick at or after 20.5 frames from t0
+START = repr(T0 + 20.5 * DT)
+ONCE = f"!done && value >= {START}"
+GEOM_FIELDS = "  inputOutput SFNode model USE BM\n  initializeOnly SFNode next " + quad(0.7) + "\n"
+
+CASES.update({
+    # A TimeSensor ST routes isActive to the Script. X_ITE schedules the start timeout only for a startTime EVENT (its
+    # initialize reads the file value but never schedules it), so startTime is set by an event at frame 1 (the page's
+    # virtual timers carry it); bp-ts-file-rebuild keeps the value in the file: ST never starts, the floor stays.
+    "bp-ts-rebuild": (ps(FALL, [bm(FLOOR_COORD)]) + "DEF ST TimeSensor { }\n"
+                      + switch_script(LIFT, "  inputOutput SFNode co USE CO\n") + "ROUTE ST.isActive TO SW.go\n",
+                      {"events": [{"frame": 1, "node": "ST", "field": "startTime", "value": T0 + 20.5 * DT}]}),
+    "bp-ts-replace": (ps(FALL, [bm(quad(0))]) + "DEF ST TimeSensor { }\n"
+                      + switch_script("model .geometry = next;", GEOM_FIELDS) + "ROUTE ST.isActive TO SW.go\n",
+                      {"events": [{"frame": 1, "node": "ST", "field": "startTime", "value": T0 + 20.5 * DT}]}),
+    "bp-ts-file-rebuild": (ps(FALL, [bm(FLOOR_COORD)]) + f"DEF ST TimeSensor {{ startTime {START} }}\n"
+                           + switch_script(LIFT, "  inputOutput SFNode co USE CO\n") + "ROUTE ST.isActive TO SW.go\n", {}),
+    # a looping TimeSensor ticks the Script, which acts once, at a time it chooses from the tick's time
+    "bp-tick-rebuild": (ps(FALL, [bm(FLOOR_COORD)])
+                        + timed_script("done = true; " + LIFT, "  inputOutput SFNode co USE CO\n", ONCE), {}),
+    "bp-tick-replace": (ps(FALL, [bm(quad(0))])
+                        + timed_script("done = true; model .geometry = next;", GEOM_FIELDS, ONCE), {}),
+    # the Script rebuilds the floor on every 12th tick (up, down, up ...)
+    "bp-tick-repeat": (ps(FALL, [bm(FLOOR_COORD)], life=2.5)
+                       + timed_script("done = !done; y = done ? 0.5 : 0; co .point = new MFVec3f (new SFVec3f (-1, y, -1), "
+                                      "new SFVec3f (1, y, -1), new SFVec3f (1, y, 1), new SFVec3f (-1, y, 1));",
+                                      "  inputOutput SFNode co USE CO\n", "n % 12 == 0"), {"frames": 75}),
+    # the Script builds the new geometry from a string when it chooses
+    "bp-tick-create": (ps(FALL, [bm(quad(0))])
+                       + timed_script("done = true; model .geometry = Browser .createVrmlFromString ('#VRML V2.0 utf8' + "
+                                      "String .fromCharCode (10) + 'Shape { geometry Box { size 3 0.2 3 } }') [0] .geometry;",
+                                      "  inputOutput SFNode model USE BM\n", ONCE), {}),
+})
+
+
+# One frame decides: the falling particle is at y 1.491 after frame 22 and 1.411 after frame 23; a floor lifted to 1.45
+# is hit only when the change is made before the particle step of frame 23 (a hit), not from frame 24 on (a miss).
+# X_ITE's start timeout of an event at frame 1 fires in the first step whose time is at or after the startTime
+# (measured: 23.0 frames starts the sensor in step 23, 23.1 frames in step 24), so 22.9 is a hit and 23.1 a miss.
+LATE = lift(1.45)
+
+
+def ts_late(frames_start):
+    return (ps(FALL, [bm(FLOOR_COORD)]) + "DEF ST TimeSensor { }\n"
+            + switch_script(LATE, "  inputOutput SFNode co USE CO\n") + "ROUTE ST.isActive TO SW.go\n",
+            {"events": [{"frame": 1, "node": "ST", "field": "startTime", "value": T0 + frames_start * DT}]})
+
+
+CASES.update({
+    "bp-ts-hit": ts_late(22.9),
+    "bp-ts-miss": ts_late(23.1),
+    "bp-tick-hit": (ps(FALL, [bm(FLOOR_COORD)]) + timed_script(
+        "done = true; " + LATE, "  inputOutput SFNode co USE CO\n", f"!done && value >= {T0 + 22.5 * DT!r}"), {}),
+    "bp-tick-miss": (ps(FALL, [bm(FLOOR_COORD)]) + timed_script(
+        "done = true; " + LATE, "  inputOutput SFNode co USE CO\n", f"!done && value >= {T0 + 23.5 * DT!r}"), {}),
 })
 
 

@@ -10,8 +10,8 @@
 //! a recording that Rust made.
 //!
 //! Only `js.json` (poses, probes, text) can come from a platform recording. The pictures of the case (`js/*.png`) come from the
-//! NVIDIA recording, so the image comparison of a case does not change with the platform; the one exception is rea_b21_wide_lines,
-//! whose platform recording may hold `<case>.<frame>.png` where the platform's page draws the frame differently.
+//! NVIDIA recording, so the image comparison of a case does not change with the platform; the exceptions are rea_b21_wide_lines and
+//! rea_b22_two_layer_shadows, whose platform recordings may hold `<case>.<frame>.png` where the platform's page draws the frame differently.
 
 use std::path::{Path, PathBuf};
 

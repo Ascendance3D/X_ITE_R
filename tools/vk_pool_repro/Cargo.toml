@@ -1,0 +1,16 @@
+[package]
+name = "vk_pool_repro"
+version = "0.1.0"
+edition = "2021"
+publish = false
+description = "Minimal Vulkan reproduction for issue #89: vkCreateDescriptorPool with an empty pool-size array. Not part of the workspace."
+
+# An empty table makes this package its own workspace root, so it is not a member of the repository's workspace and
+# its dependency (ash) is not in the repository's Cargo.lock.
+[workspace]
+
+[dependencies]
+ash = "=0.38.0"
+
+[profile.release]
+debug = "line-tables-only"

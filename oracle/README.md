@@ -603,8 +603,14 @@ against them.
 The BoundedPhysicsModel replay baselines `rea-b16-bounded-baseline/` (every frame's transform feedback buffer)
 come from `tools/rea_b16_bounded.py record` (three identical runs). Their worlds are `synthetic-rea-b16-bounded/`
 (`tools/gen_rea_b16_bounded.py`), and `crates/x3d-viewer/tests/rea_b16_bounded_physics.rs` replays them through
-particles_b06_common with the batch 06R tolerances. A Script there is run by a field event on its input: one started
-by a TimeSensor (startTime between two frames) did not run under this protocol, in X_ITE or in Rust.
+particles_b06_common with the batch 06R tolerances. `bp-rebuild` and `bp-replace` run their Script by a field event.
+The `bp-ts-*` and `bp-tick-*` cases run it from a TimeSensor, at a time the Script chooses (a TimeSensor `isActive`,
+or a looping TimeSensor's `time` that the Script tests). Measured on the pinned page: X_ITE 16.5.0 schedules a start
+timeout only for a `startTime` event, not for the value read from the file, so a future `startTime` in the file never
+starts the sensor (`bp-ts-file-rebuild`; this, not the oracle protocol, is why the first attempt saw no Script run).
+The `bp-ts-*` cases set `startTime` by an event at frame 1 and use the page's virtual timers; such a timer fires in the
+first step at or after its `startTime` (`bp-ts-hit` 22.9 frames, `bp-ts-miss` 23.1 frames). The records of these cases
+are flat: `rea-b16-bounded-baseline/NAME.js.json` and `NAME/js.f32`.
 
 The wide and stippled instanced line baselines `rea-b18-particle-lines-baseline/` (ParticleSystem LINE particles
 and InstancedShape IndexedLineSets with LineProperties) come from `tools/rea_b18_particle_lines.py record`: three runs
@@ -1369,6 +1375,12 @@ the eye through a Collision wall and over a drop (WorldInfo text counts the wall
 record` records each case from the pinned X_ITE three times (identical) into `rea-gravity-layers-baseline/NAME-msaa0.json` (one
 directory level); `crates/x3d-viewer/tests/rea_gravity_layers.rs` compares Rust with it, with the thresholds of `rea_b24_nav.rs`.
 
+`synthetic-rea-collision-time/` (generator `tools/gen_rea_collision_time.py`, recorder `tools/rea_collision_time.py`, test
+`crates/x3d-viewer/tests/rea_collision_time.rs`) also holds `ct-wall-pick`, `ct-nested-pick` and `ct-bb-ctl-pick` (2026-11-04): the worlds
+ct-wall, ct-nested and ct-bb-ctl with a 16 x 16 `pickProbes` grid, three identical recordings at MSAA 0 and 4. The pointing buffer's hit
+points (0.27 to 0.38 from the surface) equal the page's bit for bit; the 3.05e-7 once measured there was the avatar's stop position
+(before #423), not float32 depth.
+
 ## Native keys 01 (issue #80)
 
 `node oracle/x_ite-native-keys-01.mjs oracle/native-keys-01-baseline --runs 3` records what the pinned X_ITE does for each
@@ -1613,6 +1625,8 @@ from the NVIDIA recording. An unknown platform name stops the test. Rust is neve
 Exceptions to "the pictures always come from the NVIDIA recording": `oracle/rea-b21-wide-lines-apple-m1-baseline/` also holds
 `<case>.<frame>.png`, the M1 page's picture of a frame where it differs from the NVIDIA picture by more than the test's rule
 (`record_platform_particles.py` keeps it only then, after three identical runs); `rea_b21_wide_lines` compares Rust with it on the M1.
+`oracle/rea-b22-two-layer-shadows-apple-m1-baseline/` is the same for `rea_b22_two_layer_shadows` (its rule: more than 0.5% of the pixels
+over 8, or more than 16 in one layer's half): 20 pictures of `tl-shared-w6`, no `js.json`/`js.f32` (the six M1 records equal the NVIDIA ones).
 
 `oracle/synthetic-metal-coverage/` (made by `oracle/tools/gen_metal_coverage.py`, not committed: about 2 MB that the Review gate cannot cover, so the test and
 the recorder generate it and `worlds.sha256` beside the recordings pins the bytes) holds minimal newly authored worlds whose probes sit on pixel
@@ -1627,6 +1641,47 @@ X3D_BACKEND=metal X3D_REFERENCE_PLATFORM=apple-m1 cargo nextest run -p x3d-viewe
 ```
 
 A difference between Rust and the M1 recording is investigated as a possible Rust defect; no platform tolerance hides it.
+
+## Classic encoding edge cases (sub:parse.vrml-classic)
+
+`oracle/tools/classic_edge.py` holds the authored inputs, `oracle/x_ite-classic-edge.mjs` records the pinned page, and
+`oracle/classic-edge-baseline/classic-edge.json` is the baseline (the input of each case is in it, so the Rust test reads no other file). Every
+input is newly written (no historical Cybertown or blaxxun content). A `text` case goes through `Browser.createX3DFromString` (the parser's own
+behavior, the page URL as world URL); a `b64` case is a file of exact bytes loaded with `Browser.createX3DFromURL` (byte order marks, UTF-16,
+Latin-1 and bad UTF-8, CR / CRLF lines, NUL and Ctrl-Z bytes, gzip, truncated and nested gzip, other formats that look like VRML).
+
+The groups: headers (`#VRML`, `#X3D`, versions, case, trailing text, byte order mark, CR); PROFILE, COMPONENT, UNIT and META statements in every
+order; comments and separators in odd places (between a field name and its value, inside lists and strings, inside ROUTE / PROTO / Script
+syntax; `\f`, `\v`, U+00A0 and other characters that are not whitespace); numbers of every field type (hex, exponents, signs, NaN and Infinity,
+overflow, float32 rounding, SFImage pixels); strings and escapes; MFNode / MFString / MFInt32 brackets with and without commas, NULL, and nodes in
+the wrong place; DEF and USE names (every character class of the Id grammar, reserved words, unicode, reuse, forward use); IS, access type
+spellings (`eventIn`, `exposedField`, `inputOnly`, ...) and field name aliases (`set_`, `_changed`); ROUTE spellings, aliases, bad targets and
+type / access mismatches; PROTO and EXTERNPROTO syntax; IMPORT and EXPORT; errors (unterminated strings, unknown nodes and fields, missing
+braces, the error text at every column around the 80 character cut, with tabs, CR lines and UTF-16 surrogate pairs); a printing sweep of every list
+type at lengths 0 to 30 and every single type; sweeps of every node of the pinned node table under each profile, specification version and
+component level; XML and JSON escaping; legacy GeoViewpoint.
+
+Per case the Rust result must equal the pinned one exactly: the verdict and the rejection text; `toVRMLString`, `toXMLString` and
+`toJSONString`; encoding, specification version, profile, components, units, meta data and root node count; and the console output with its level,
+in print order (every `log`, `warn` and `error` line; the recorder leaves out X_ITE's own `info` progress notices, `Done loading ...` and
+`Initializing ...Shader`, whose order depends on the module loads). JSON cannot carry a lone UTF-16 surrogate, which X_ITE's error text can have
+(it cuts a long line with `substring`); the recorder writes each as U+FFFD, and so does the port.
+
+```
+XITE_TESTS=... python3 -I oracle/tools/classic_edge.py record   # three pinned recordings (side by side), written only when identical
+cargo nextest run -p x3d-parse --test classic_edge
+cargo nextest run -p vrml97 --test classic_edge_facade
+```
+
+A difference with a principled cause is in `crates/x3d-parse/tests/classic-edge-known.tsv` with a hash of the port's output; the test fails when the
+port's output changes and when the case matches (a stale entry). The entries today: the console lines that X_ITE prints when a node's resource loads
+after the parse (Inline, AudioClip, Script url, the import of an Inline; these run in `x3d-runtime`, the parse-only test has no loads), and the
+Annotation component (the node table of the pinned source has it, `SupportedComponents.js` has it commented out, so the pinned `COMPONENT
+Annotation:1` is an error; the port supports it by the owner decision of REA batch 04).
+
+Not covered: the runtime side of those loads, Script execution, and `x3d-drive` end to end (the file-loader and golden-gate baselines do that for
+URL lists). A case that hangs the pinned page (a PixelTexture inside a PROTO, `PROTO P [ inputOutput SFImage i 1 1 1 0 ] { PixelTexture { image IS i } }`)
+was left out: the pinned page did not finish it in 30 s (cause not investigated, so it is UNVERIFIED whether the parser is involved).
 
 ## Plain Inline reload and abort paths against the browser shutdown rule (2026-11-04)
 
