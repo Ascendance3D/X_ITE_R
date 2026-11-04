@@ -29,9 +29,10 @@ jobs:
         run: |
           powershell -NoProfile -Command "Get-CimInstance Win32_VideoController | Select-Object Name, DriverVersion, DriverDate, AdapterRAM, VideoProcessor, PNPDeviceID, Status, ConfigManagerErrorCode | Format-List"
           powershell -NoProfile -Command "Get-PnpDevice -Class Display -ErrorAction SilentlyContinue | Select-Object Status, FriendlyName, InstanceId | Format-List"
-          where nvidia-smi && nvidia-smi -L
-          echo done
+          where nvidia-smi
+          exit /b 0
       - name: Vulkan, DX12 and tools
+        if: always()
         shell: cmd
         run: |
           if exist "%windir%\System32\vulkan-1.dll" (echo vulkan-1.dll in System32: yes) else (echo vulkan-1.dll in System32: no)
@@ -39,8 +40,9 @@ jobs:
           reg query HKLM\SOFTWARE\Khronos\Vulkan\Drivers
           reg query HKLM\SOFTWARE\WOW6432Node\Khronos\Vulkan\Drivers
           where cargo rustup node python git vulkaninfo dxdiag
-          echo done
+          exit /b 0
       - name: DirectX diagnostic, display section
+        if: always()
         shell: cmd
         run: |
           powershell -NoProfile -Command "$out = Join-Path $env:RUNNER_TEMP 'dxdiag.txt'; Start-Process -FilePath dxdiag.exe -ArgumentList '/whql:off','/t',$out -Wait -NoNewWindow; $d = (Get-Date).AddSeconds(90); while (-not (Test-Path $out) -and (Get-Date) -lt $d) { Start-Sleep -Seconds 2 }; if (Test-Path $out) { $t = Get-Content $out; $s = ($t | Select-String -Pattern '^Display Devices' | Select-Object -First 1).LineNumber; if ($s) { $t[($s - 1)..([Math]::Min($s + 40, $t.Count - 1))] } else { 'no Display Devices section' }; Remove-Item $out -Force } else { 'dxdiag wrote no file' }"
