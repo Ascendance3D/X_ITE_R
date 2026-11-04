@@ -441,7 +441,7 @@ impl Runtime {
                 }
 
                 // VRMLParser (DEVELOPMENT) prints the original error before it is rethrown with the line of the input.
-                self.log_error(format!("Error: {}", e.message));
+                self.log_error(x3d_parse::error_console_text(&e.message));
                 return Err(Some(
                     x3d_parse::take_error_detail().unwrap_or_else(|| format!("Error: \n{e}")),
                 ));

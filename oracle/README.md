@@ -1627,3 +1627,44 @@ X3D_BACKEND=metal X3D_REFERENCE_PLATFORM=apple-m1 cargo nextest run -p x3d-viewe
 ```
 
 A difference between Rust and the M1 recording is investigated as a possible Rust defect; no platform tolerance hides it.
+
+## Classic encoding edge cases (sub:parse.vrml-classic)
+
+`oracle/tools/classic_edge.py` holds the authored inputs, `oracle/x_ite-classic-edge.mjs` records the pinned page, and
+`oracle/classic-edge-baseline/classic-edge.json` is the baseline (the input of each case is in it, so the Rust test reads no other file). Every
+input is newly written (no historical Cybertown or blaxxun content). A `text` case goes through `Browser.createX3DFromString` (the parser's own
+behavior, the page URL as world URL); a `b64` case is a file of exact bytes loaded with `Browser.createX3DFromURL` (byte order marks, UTF-16,
+Latin-1 and bad UTF-8, CR / CRLF lines, NUL and Ctrl-Z bytes, gzip, truncated and nested gzip, other formats that look like VRML).
+
+The groups: headers (`#VRML`, `#X3D`, versions, case, trailing text, byte order mark, CR); PROFILE, COMPONENT, UNIT and META statements in every
+order; comments and separators in odd places (between a field name and its value, inside lists and strings, inside ROUTE / PROTO / Script
+syntax; `\f`, `\v`, U+00A0 and other characters that are not whitespace); numbers of every field type (hex, exponents, signs, NaN and Infinity,
+overflow, float32 rounding, SFImage pixels); strings and escapes; MFNode / MFString / MFInt32 brackets with and without commas, NULL, and nodes in
+the wrong place; DEF and USE names (every character class of the Id grammar, reserved words, unicode, reuse, forward use); IS, access type
+spellings (`eventIn`, `exposedField`, `inputOnly`, ...) and field name aliases (`set_`, `_changed`); ROUTE spellings, aliases, bad targets and
+type / access mismatches; PROTO and EXTERNPROTO syntax; IMPORT and EXPORT; errors (unterminated strings, unknown nodes and fields, missing
+braces, the error text at every column around the 80 character cut, with tabs, CR lines and UTF-16 surrogate pairs); a printing sweep of every list
+type at lengths 0 to 30 and every single type; sweeps of every node of the pinned node table under each profile, specification version and
+component level; XML and JSON escaping; legacy GeoViewpoint.
+
+Per case the Rust result must equal the pinned one exactly: the verdict and the rejection text; `toVRMLString`, `toXMLString` and
+`toJSONString`; encoding, specification version, profile, components, units, meta data and root node count; and the console output with its level,
+in print order (every `log`, `warn` and `error` line; the recorder leaves out X_ITE's own `info` progress notices, `Done loading ...` and
+`Initializing ...Shader`, whose order depends on the module loads). JSON cannot carry a lone UTF-16 surrogate, which X_ITE's error text can have
+(it cuts a long line with `substring`); the recorder writes each as U+FFFD, and so does the port.
+
+```
+XITE_TESTS=... python3 -I oracle/tools/classic_edge.py record   # three pinned recordings (side by side), written only when identical
+cargo nextest run -p x3d-parse --test classic_edge
+cargo nextest run -p vrml97 --test classic_edge_facade
+```
+
+A difference with a principled cause is in `crates/x3d-parse/tests/classic-edge-known.tsv` with a hash of the port's output; the test fails when the
+port's output changes and when the case matches (a stale entry). The entries today: the console lines that X_ITE prints when a node's resource loads
+after the parse (Inline, AudioClip, Script url, the import of an Inline; these run in `x3d-runtime`, the parse-only test has no loads), and the
+Annotation component (the node table of the pinned source has it, `SupportedComponents.js` has it commented out, so the pinned `COMPONENT
+Annotation:1` is an error; the port supports it by the owner decision of REA batch 04).
+
+Not covered: the runtime side of those loads, Script execution, and `x3d-drive` end to end (the file-loader and golden-gate baselines do that for
+URL lists). A case that hangs the pinned page (a PixelTexture inside a PROTO, `PROTO P [ inputOutput SFImage i 1 1 1 0 ] { PixelTexture { image IS i } }`)
+was left out: the pinned page did not finish it in 30 s (cause not investigated, so it is UNVERIFIED whether the parser is involved).

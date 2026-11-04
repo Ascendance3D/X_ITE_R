@@ -93,6 +93,12 @@ impl Scene {
                 }
             }
 
+            // GeoViewpoint.initialize: its own NavigationInfo (made in the constructor, with `type` and `headlight` taken from
+            // navType and headlight) becomes the value of the field navigationInfo up to specification version 3.2.
+            if self.table.types[t].name == "GeoViewpoint" && self.is_legacy_geo_viewpoint(id) {
+                self.setup_legacy_geo_navigation_info(id);
+            }
+
             // X3DGeometryNode.setup → rebuild → IndexedFaceSet.triangulate:
             // "Add -1 (polygon end marker) to coordIndex if not present."
             if self.table.types[t].name == "IndexedFaceSet" {
@@ -114,6 +120,32 @@ impl Scene {
                 }
             }
         }
+    }
+}
+
+impl Scene {
+    fn setup_legacy_geo_navigation_info(&mut self, id: NodeId) {
+        let ctx = self.node(id).ctx;
+        let private = self.node(id).private_fields.clone();
+        let Some(slot) = self.get_predefined_field(id, "navigationInfo") else {
+            return;
+        };
+        let Some(info) = self.create_node(ctx, "NavigationInfo") else {
+            return;
+        };
+
+        for (private_name, name) in [("navType", "type"), ("headlight", "headlight")] {
+            let (Some(from), Some(to)) = (
+                private.iter().find(|f| f.name == private_name),
+                self.get_predefined_field(info, name),
+            ) else {
+                continue;
+            };
+
+            self.node_mut(info).fields[to].value = from.value.clone();
+        }
+
+        self.node_mut(id).fields[slot].value = FieldValue::SFNode(Some(info));
     }
 }
 
