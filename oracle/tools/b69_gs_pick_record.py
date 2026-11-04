@@ -18,7 +18,7 @@ the run stops and nothing is written). A js.json is kept, as oracle/b69-gs-pick[
 one directory level as the review gate expects), only where it differs from the NVIDIA recording; js.f32 is empty for these cases
 and is not kept. The NVIDIA baselines are never written. LOG=1 in the environment applies to `record` only.
 """
-import datetime, filecmp, hashlib, json, os, shutil, subprocess, sys, tempfile
+import datetime, filecmp, hashlib, json, os, shutil, subprocess, sys
 
 root = os.path.normpath(os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", ".."))
 CASES = ["gs-pick-basic", "gs-pick-default", "gs-pick-xform", "gs-pick-clip", "gs-pick-mixed", "gs-pick-ortho"]
@@ -89,7 +89,11 @@ def platform(args):
     def sha(p):
         with open(p, "rb") as f:
             return hashlib.sha256(f.read()).hexdigest()
-    tmp = tempfile.mkdtemp(prefix="b69-gs-pick-platform-")
+    # One fixed staging directory, emptied at the start of each run: a failed run leaves its output for diagnosis, and
+    # repeated attempts do not pile up (the successful path removes it at the end).
+    tmp = "/tmp/b69-gs-pick-platform"
+    shutil.rmtree(tmp, ignore_errors=True)
+    os.makedirs(tmp)
     keep, same = [], []
     for log in (False, True):
         base = "b69-gs-pick-log-baseline" if log else "b69-gs-pick-baseline"
@@ -124,9 +128,8 @@ def platform(args):
         final = os.path.join(root, "oracle", f"{base.removesuffix('-baseline')}-{plat}-baseline")
         dest = final + ".staging"
         shutil.rmtree(dest, ignore_errors=True)
-        if not any(k[0] == base for k in keep):
-            shutil.rmtree(final, ignore_errors=True)
-            continue
+        # Always a directory with PROVENANCE.json, even when every case equals the NVIDIA recording: the test reads its
+        # equal_to_nvidia list to accept a case without a platform file (tests/b69_gs_pick.rs want_path).
         os.makedirs(dest)
         cases = {}
         for b, case, src in keep:
