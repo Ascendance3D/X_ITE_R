@@ -340,9 +340,36 @@ fn vertex_common(in: VIn, vertex: u32, instance: u32) -> VOut {
         let point_size = get_point_size(t_vertex.xyz) * select(1.0, inst.matrix[0].x, draw.inst_flags.x == 1u);
         let size = clamp(point_size, 1.0, 2047.0);
         let corner = in.tex_coord.xy;
-        p = vec4<f32>(p.xy + corner * size / frame.layer.xy * p.w, p.zw);
+        // Pixel centers exactly on a sprite edge (the center of the point on a pixel center for an odd size, on a
+        // half pixel for an even size): GL fills a pixel of the square [low, high) in both window axes, Vulkan
+        // fills (low, high] along window y (the top edge of the framebuffer is the high y edge, and it is the
+        // top edge that Vulkan fills). The corners are snapped to 1/256 of a pixel, so one step of that grid
+        // turns (low, high] into [low, high) without moving any other pixel center in or out. The step must be
+        // taken on a corner that is already on the grid, because the snap rounds a half step to even and a step
+        // of one changes the parity: GL snaps the position of the point first (measured: 1/1024 px steps around
+        // a tie, oracle/render-point-tie-baseline point-tie-snap), so the center is snapped here the same way.
+        // A target that is drawn upside down (viewport.z == 1) has window y = framebuffer y and already fills
+        // [low, high), so it keeps its corners.
+        var center_y = p.y;
+        var tie_shift = 0.0;
+        // The shifted corners keep gl_PointCoord of the point: it is measured from the pixel center to the
+        // (snapped) center of the point, so the corner values move by the same step.
+        var coord_shift = 0.0;
+
+        if (frame.viewport.z != 1.0 && p.w > 0.0) {
+            let window_y = (p.y / p.w * 0.5 + 0.5) * frame.layer.y;
+            center_y = ((round(window_y * 256.0) / 256.0) / frame.layer.y - 0.5) * 2.0 * p.w;
+            tie_shift = -2.0 / (256.0 * frame.layer.y);
+            coord_shift = 1.0 / (256.0 * size);
+        }
+
+        p = vec4<f32>(
+            p.x + corner.x * size / frame.layer.x * p.w,
+            center_y + (corner.y * size / frame.layer.y + tie_shift) * p.w,
+            p.zw,
+        );
         let up = select(corner.y, -corner.y, frame.viewport.z == 1.0);
-        let pc = vec2<f32>(0.5 + 0.5 * corner.x, 0.5 - 0.5 * up);
+        let pc = vec2<f32>(0.5 + 0.5 * corner.x, 0.5 - 0.5 * up + coord_shift);
         out.point = vec3<f32>(pc, point_size);
         // Point2.glsl setPointTexCoords
         out.tex_coord = vec4<f32>(pc.x, 1.0 - pc.y, 0.0, 1.0);
