@@ -258,7 +258,7 @@ impl Runtime {
 
             let Some(resolved) = url::Url::parse(&loader.base)
                 .ok()
-                .and_then(|b| crate::loader::join_url(&b, &candidate).ok())
+                .and_then(|b| self.resolve_candidate(&b, &candidate).ok())
             else {
                 let error = "TypeError: Failed to construct 'URL': Invalid URL".to_string();
                 self.tasks
@@ -268,6 +268,17 @@ impl Runtime {
 
             if let Some(text) = loader::data_url_text(&candidate) {
                 return self.script_accept(node, index, &candidate, &text, Some(resolved));
+            }
+
+            // A host with a space (Chromium's `%20`) is no host of any server: `fetch` rejects it at once.
+            if let Some(rejection) = self.space_host_rejection(&resolved) {
+                self.tasks.push_back(Task::ScriptCandidate(
+                    node,
+                    index + 1,
+                    1,
+                    fail(rejection, Some(resolved)),
+                ));
+                return;
             }
 
             let fetched = matches!(resolved.scheme(), "http" | "https" | "file" | "blob")
