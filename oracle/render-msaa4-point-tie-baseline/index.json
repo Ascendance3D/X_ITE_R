@@ -1,0 +1,190 @@
+{
+ "pinned": "34cdf9f97",
+ "chrome": "156.0.8078.47",
+ "ms": "4",
+ "size": [
+  256,
+  256
+ ],
+ "frames": 10,
+ "settleMs": 400,
+ "gl": {
+  "vendor": "Google Inc. (NVIDIA Corporation)",
+  "renderer": "ANGLE (NVIDIA Corporation, NVIDIA GeForce RTX 3060 Ti/PCIe/SSE2, OpenGL ES 3.2)",
+  "version": "WebGL 2.0 (OpenGL ES 3.0 Chromium)",
+  "contextAttributes": {
+   "alpha": true,
+   "antialias": false,
+   "depth": true,
+   "desynchronized": false,
+   "failIfMajorPerformanceCaveat": false,
+   "powerPreference": "default",
+   "premultipliedAlpha": true,
+   "preserveDrawingBuffer": true,
+   "stencil": false,
+   "xrCompatible": false
+  },
+  "multisampling": 4,
+  "antialiased": true,
+  "splashVisible": false,
+  "canvasDisplay": "inline",
+  "drawingBuffer": [
+   256,
+   256
+  ],
+  "maxSamples": 8,
+  "x_ite": "16.5.0"
+ },
+ "results": [
+  {
+   "file": "point-tie-1.wrl",
+   "ok": true,
+   "log": [],
+   "width": 256,
+   "height": 256,
+   "rgbaSha256": "df0fdc01ce5d0bce2d30c7e07d56b4aa59ccfe19730b21d3eeea9e1b5f329909",
+   "pngSha256": "a7ad9e21b416e356b3f08cefe9d99e31c5046222ee626456532a82416e5b81fe",
+   "splashVisible": false,
+   "canvasDisplay": "block"
+  },
+  {
+   "file": "point-tie-2.wrl",
+   "ok": true,
+   "log": [],
+   "width": 256,
+   "height": 256,
+   "rgbaSha256": "2bcaa2c08964d69341b33ef1c7cfb1fdbc0e404fedb5ba91c4b4169a7332001d",
+   "pngSha256": "25550fd3f3c7ff28a2780fb322f5a81672629ca9cd70149b6acb1ffacce98270",
+   "splashVisible": false,
+   "canvasDisplay": "block"
+  },
+  {
+   "file": "point-tie-2p5.wrl",
+   "ok": true,
+   "log": [],
+   "width": 256,
+   "height": 256,
+   "rgbaSha256": "4d87b6a87dffdf8778580cc8acf210c9db5c2b1dfeedffc3cbbaa22e8fb5618c",
+   "pngSha256": "f2d2814806cb8bfe5afea170ba434598a66643a42d41b40d7a5cda72307155d9",
+   "splashVisible": false,
+   "canvasDisplay": "block"
+  },
+  {
+   "file": "point-tie-3.wrl",
+   "ok": true,
+   "log": [],
+   "width": 256,
+   "height": 256,
+   "rgbaSha256": "9b89850578596e606fbfce0a5f23f041792f4a298e9bd273cef0a7fc03206ea5",
+   "pngSha256": "7316449e3fe482cc6e391e876241deceba9213db572fda1df71f50c918764e01",
+   "splashVisible": false,
+   "canvasDisplay": "block"
+  },
+  {
+   "file": "point-tie-4.wrl",
+   "ok": true,
+   "log": [],
+   "width": 256,
+   "height": 256,
+   "rgbaSha256": "7290ffcda50afaf9773e7bd0cb42dbbe87a8b589216f50935433bae2c0ecc9ed",
+   "pngSha256": "8e5751eeea548d37d1b6b45d05e4067d13f086eed469517a17573dd89eda775e",
+   "splashVisible": false,
+   "canvasDisplay": "block"
+  },
+  {
+   "file": "point-tie-5.wrl",
+   "ok": true,
+   "log": [],
+   "width": 256,
+   "height": 256,
+   "rgbaSha256": "f55036e8dfa5c6f156b93df9fd8183386f80847a23c8659dd23e334e47802fb0",
+   "pngSha256": "e6ce2671331e9e1adb1e48dd4b8cb2de888d59380264feb10343a304a973d3e8",
+   "splashVisible": false,
+   "canvasDisplay": "block"
+  },
+  {
+   "file": "point-tie-6.wrl",
+   "ok": true,
+   "log": [],
+   "width": 256,
+   "height": 256,
+   "rgbaSha256": "f9f21d826af42fcb324a90160662e11aa5b1892a440468c4ba486c42b647e48f",
+   "pngSha256": "6487bac60b08ed99bee00cf4a3005e85b4994dea7c08fe601a6b52d5e5da3675",
+   "splashVisible": false,
+   "canvasDisplay": "block"
+  },
+  {
+   "file": "point-tie-8p5.wrl",
+   "ok": true,
+   "log": [],
+   "width": 256,
+   "height": 256,
+   "rgbaSha256": "6e95bde30714f1b52344b072120c7012b4abce0098529230b02ec8ceb5b32a04",
+   "pngSha256": "9b3857b18377c88d4040a6be14c50df4e36a6d88a672dec48f08d3b94dceccd6",
+   "splashVisible": false,
+   "canvasDisplay": "block"
+  },
+  {
+   "file": "point-tie-9.wrl",
+   "ok": true,
+   "log": [],
+   "width": 256,
+   "height": 256,
+   "rgbaSha256": "b2e6c85014630aa0bc6051d36378c174fa6e0fcb5e21e39d9b5f05c179e64ee6",
+   "pngSha256": "cc21df8c1b19bebb636b0dd9fbbdbabd472df0b4bb94f45e7f67b8959b37e2f3",
+   "splashVisible": false,
+   "canvasDisplay": "block"
+  },
+  {
+   "file": "point-tie-control.wrl",
+   "ok": true,
+   "log": [],
+   "width": 256,
+   "height": 256,
+   "rgbaSha256": "89fc321c02dd75586c76109d315bff62fd2da73387d8ef9386ee9eb2159248e0",
+   "pngSha256": "b4b0e4740dad3b3b04c85c732901e951c64387284014aafff7a20e050e1084fd",
+   "splashVisible": false,
+   "canvasDisplay": "block"
+  },
+  {
+   "file": "point-tie-control3.wrl",
+   "ok": true,
+   "log": [],
+   "width": 256,
+   "height": 256,
+   "rgbaSha256": "7c17972a733870c7c8675da8d5f010134c11dac3847ef92496ea43b2441bc8df",
+   "pngSha256": "a04dd1ceac95d1c405221b18357ff6fca0e778e6908ce3996d59045804d405c9",
+   "splashVisible": false,
+   "canvasDisplay": "block"
+  },
+  {
+   "file": "point-tie-snap.wrl",
+   "ok": true,
+   "log": [],
+   "width": 256,
+   "height": 256,
+   "rgbaSha256": "790d5b1621f451729ae02582fbecc841891ed07fe23987c85c1efe4381747041",
+   "pngSha256": "530703c42ea03311aa629f434239cf37fc918d0de950dd00e24a22acd99b0547",
+   "splashVisible": false,
+   "canvasDisplay": "block"
+  }
+ ],
+ "repeatRuns": {
+  "count": 3,
+  "identical": true,
+  "rgbaSha256": {
+   "point-tie-1.wrl": "df0fdc01ce5d0bce2d30c7e07d56b4aa59ccfe19730b21d3eeea9e1b5f329909",
+   "point-tie-2.wrl": "2bcaa2c08964d69341b33ef1c7cfb1fdbc0e404fedb5ba91c4b4169a7332001d",
+   "point-tie-2p5.wrl": "4d87b6a87dffdf8778580cc8acf210c9db5c2b1dfeedffc3cbbaa22e8fb5618c",
+   "point-tie-3.wrl": "9b89850578596e606fbfce0a5f23f041792f4a298e9bd273cef0a7fc03206ea5",
+   "point-tie-4.wrl": "7290ffcda50afaf9773e7bd0cb42dbbe87a8b589216f50935433bae2c0ecc9ed",
+   "point-tie-5.wrl": "f55036e8dfa5c6f156b93df9fd8183386f80847a23c8659dd23e334e47802fb0",
+   "point-tie-6.wrl": "f9f21d826af42fcb324a90160662e11aa5b1892a440468c4ba486c42b647e48f",
+   "point-tie-8p5.wrl": "6e95bde30714f1b52344b072120c7012b4abce0098529230b02ec8ceb5b32a04",
+   "point-tie-9.wrl": "b2e6c85014630aa0bc6051d36378c174fa6e0fcb5e21e39d9b5f05c179e64ee6",
+   "point-tie-control.wrl": "89fc321c02dd75586c76109d315bff62fd2da73387d8ef9386ee9eb2159248e0",
+   "point-tie-control3.wrl": "7c17972a733870c7c8675da8d5f010134c11dac3847ef92496ea43b2441bc8df",
+   "point-tie-snap.wrl": "790d5b1621f451729ae02582fbecc841891ed07fe23987c85c1efe4381747041"
+  }
+ }
+}
