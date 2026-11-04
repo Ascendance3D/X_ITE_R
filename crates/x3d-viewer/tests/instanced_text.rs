@@ -100,8 +100,17 @@ fn compare_case(
         return fail(format!("ok js {} rs {}", js["ok"], rs["ok"]));
     }
 
-    for (k, a) in js["vrml"].as_object().unwrap() {
-        if rs["vrml"].get(k) != Some(a) {
+    // Both ways: a frame that only one side has is a difference too.
+    let (js_vrml, rs_vrml) = (
+        js["vrml"].as_object().unwrap(),
+        rs["vrml"].as_object().unwrap(),
+    );
+
+    for k in js_vrml
+        .keys()
+        .chain(rs_vrml.keys().filter(|k| !js_vrml.contains_key(*k)))
+    {
+        if js_vrml.get(k) != rs_vrml.get(k) {
             fail(format!("scene text differs at frame {k}"));
         }
     }
@@ -142,11 +151,37 @@ fn compare_case(
         }
     }
 
-    for (k, a) in js["poses"].as_object().unwrap() {
-        let Some(b) = rs["poses"].get(k) else {
+    let (js_poses, rs_poses) = (
+        js["poses"].as_object().unwrap(),
+        rs["poses"].as_object().unwrap(),
+    );
+
+    for k in rs_poses.keys().filter(|k| !js_poses.contains_key(*k)) {
+        fail(format!("pose at frame {k} is only in the Rust output"));
+    }
+
+    for (k, a) in js_poses {
+        let Some(b) = rs_poses.get(k) else {
             fail(format!("pose at frame {k} missing"));
             continue;
         };
+
+        // A pose without its vectors is a failure, not a zero distance.
+        let complete = |p: &Value| {
+            nums(&p["position"]).len() == 3
+                && nums(&p["centerOfRotation"]).len() == 3
+                && nums(&p["orientation"]).len() == 4
+        };
+
+        if !complete(a) || !complete(b) {
+            fail(format!(
+                "pose frame {k}: position, centerOfRotation or orientation is missing or has the wrong length (X_ITE {}, Rust {})",
+                complete(a),
+                complete(b)
+            ));
+            continue;
+        }
+
         let d = |key: &str| {
             nums(&a[key])
                 .iter()
@@ -269,6 +304,10 @@ fn instanced_text_matches_x_ite() {
     }
 
     eprintln!("{checked} cases checked");
+    assert!(
+        checked > 0,
+        "REA_ONLY={only:?} selected no case (cases: {CASES:?})"
+    );
     assert!(only.is_some() || checked == CASES.len() * 2);
     assert!(
         failures.is_empty(),
