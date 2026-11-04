@@ -1104,7 +1104,8 @@ if __name__ == "__main__":
     elif mode == "record":
         # Three recordings, side by side (each uses six browsers); they must be identical.
         procs = [(i, run(f"{tmp}/{i}/classic-edge.json", f"cases{i}")) for i in (1, 2, 3)]
-        if any(p.wait() for _, p in procs):
+        statuses = [p.wait() for _, p in procs]  # wait for all three, so a failed recorder leaves no orphan behind
+        if any(statuses):
             sys.exit("a recorder failed")
         runs = [open(f"{tmp}/{i}/classic-edge.json", "rb").read() for i in (1, 2, 3)]
         sums = [hashlib.sha256(r).hexdigest() for r in runs]
