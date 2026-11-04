@@ -1,0 +1,90 @@
+{
+"geometry": {
+"rect": [
+0,
+0,
+512,
+512
+],
+"scroll": [
+0,
+0
+],
+"viewport": [
+0,
+0,
+1024,
+1024
+]
+},
+"ok": true,
+"poses": {
+"20": {
+"centerOfRotation": [
+0,
+0,
+0
+],
+"description": "start",
+"fieldOfViewScale": 1,
+"orientation": [
+0.4984694474479122,
+-0.8636760831609804,
+0.07477856201266736,
+0.34395860453081933
+],
+"position": [
+0,
+1.6,
+12
+],
+"viewer": "FLY",
+"viewpoint": ""
+},
+"50": {
+"centerOfRotation": [
+0,
+0,
+0
+],
+"description": "start",
+"fieldOfViewScale": 1,
+"orientation": [
+0.4984694474479122,
+-0.8636760831609804,
+0.07477856201266736,
+0.34395860453081933
+],
+"position": [
+0,
+1.6,
+12
+],
+"viewer": "FLY",
+"viewpoint": ""
+},
+"90": {
+"centerOfRotation": [
+0,
+0,
+0
+],
+"description": "start",
+"fieldOfViewScale": 1,
+"orientation": [
+0.4984694474479122,
+-0.8636760831609804,
+0.07477856201266736,
+0.34395860453081933
+],
+"position": [
+0,
+1.6,
+12
+],
+"viewer": "FLY",
+"viewpoint": ""
+}
+},
+"warmupFrames": 8
+}

@@ -40,5 +40,6 @@ pub fn empty_frame() -> x3d_render::traverse::Frame {
         layers: vec![],
         shadow_maps: vec![],
         projectors: vec![],
+        rubber_band: None,
     }
 }
