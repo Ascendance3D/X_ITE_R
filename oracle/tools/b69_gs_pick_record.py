@@ -60,10 +60,18 @@ def record(args):
         shutil.copy(os.path.join(a, f), dest)
 
 
+# Cases that get no platform file even when they differ (owner decision 2026-11-04, issue #69): gs-pick-ortho's hit distance
+# follows the driver's GLSL inverse () (docs/metal-reference-variation.md); it stays on the NVIDIA recording.
+NOT_KEPT = {"gs-pick-ortho": "driver inverse () of the projection matrix (owner decision 2026-11-04, issue #69)"}
+PLATFORMS = ("apple-m1",)
+
+
 def platform(args):
-    plat = args[0]
+    plat = args[0] if args else ""
     opt = lambda n, d=None: args[args.index(n) + 1] if n in args else d
     hardware, oracle = opt("--hardware", ""), opt("--oracle", os.path.join(root, "target", "release", "x3d-oracle"))
+    assert plat in PLATFORMS, f"platform must be one of {PLATFORMS}"
+    assert hardware.strip(), "--hardware TEXT is required (the machine, GPU and OS of the recording)"
     assert os.environ.get("X3D_ORACLE_CHROME") and os.environ.get("X3D_ORACLE_ANGLE"), "set X3D_ORACLE_CHROME and X3D_ORACLE_ANGLE"
     sha = lambda p: hashlib.sha256(open(p, "rb").read()).hexdigest()
     tmp = tempfile.mkdtemp(prefix="b69-gs-pick-platform-")
@@ -77,17 +85,26 @@ def platform(args):
                     out = os.path.join(tmp, f"{base}-{name}-ms{msaa}-{i}")
                     run_oracle(oracle, name, msaa, log, out)
                     runs.append(os.path.join(out, "js.json"))
+                    f32 = os.path.join(out, "js.f32")
+                    assert not os.path.exists(f32) or os.path.getsize(f32) == 0, f"{f32}: js.f32 is expected empty for the pick cases"
                 if not all(filecmp.cmp(runs[0], b, shallow=False) for b in runs[1:]):
                     sys.exit(f"{base} {name} msaa {msaa}: the three runs differ; nothing written (staging {tmp})")
-                if filecmp.cmp(runs[0], os.path.join(root, "oracle", base, f"msaa{msaa}", name, "js.json"), shallow=False):
+                if name in NOT_KEPT or filecmp.cmp(runs[0], os.path.join(root, "oracle", base, f"msaa{msaa}", name, "js.json"), shallow=False):
                     same.append(f"{base} {name}-msaa{msaa}")
                 else:
                     keep.append((base, f"{name}-msaa{msaa}", runs[0]))
     pinned = open(os.path.join(root, "oracle", "x_ite-pin", "PINNED_COMMIT")).read().strip()
     chrome = subprocess.run([os.environ["X3D_ORACLE_CHROME"], "--version"], capture_output=True, text=True).stdout.strip()
-    for base in sorted({k[0] for k in keep}):
-        dest = os.path.join(root, "oracle", f"{base.removesuffix('-baseline')}-{plat}-baseline")
-        os.makedirs(dest, exist_ok=True)
+    # Each destination is staged whole and then replaces the old one, so no file of an earlier recording survives (a case
+    # now equal to the NVIDIA recording loses its platform file) and an interrupted run leaves the old directory intact.
+    for base in ("b69-gs-pick-baseline", "b69-gs-pick-log-baseline"):
+        final = os.path.join(root, "oracle", f"{base.removesuffix('-baseline')}-{plat}-baseline")
+        dest = final + ".staging"
+        shutil.rmtree(dest, ignore_errors=True)
+        if not any(k[0] == base for k in keep):
+            shutil.rmtree(final, ignore_errors=True)
+            continue
+        os.makedirs(dest)
         cases = {}
         for b, case, src in keep:
             if b == base:
@@ -96,8 +113,15 @@ def platform(args):
         prov = dict(platform=plat, hardware=hardware, chrome=chrome, angle_backend=os.environ["X3D_ORACLE_ANGLE"],
                     pinned_x_ite="16.5.0 " + pinned, recorder="x3d-oracle particles (oracle/tools/b69_gs_pick_record.py platform)",
                     recorded=datetime.date.today().isoformat(), cases=cases,
-                    rule="3 byte-identical runs; kept only where the NVIDIA recording differs")
+                    rule="3 byte-identical runs; kept only where the NVIDIA recording differs",
+                    not_kept={n: why for n, why in NOT_KEPT.items()})
         json.dump(prov, open(os.path.join(dest, "PROVENANCE.json"), "w"), indent=1, sort_keys=True)
+        old = final + ".old"
+        shutil.rmtree(old, ignore_errors=True)
+        if os.path.exists(final):
+            os.rename(final, old)
+        os.rename(dest, final)
+        shutil.rmtree(old, ignore_errors=True)
     shutil.rmtree(tmp, ignore_errors=True)
     print(f"b69-gs-pick/{plat}: {len(keep) + len(same)} recordings made three times; {len(keep)} kept, {len(same)} equal to the NVIDIA recording")
     for k in keep:
