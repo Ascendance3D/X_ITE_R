@@ -63,7 +63,8 @@ reports.
   ones in the PR with evidence (file, line, test). Rerun a review only when the head changed. Then merge.
 - **Merge rule.** Merge a PR when the required checks (`Rust tests result`, `Web tests result`) pass at the exact head
   (`gh pr merge --match-head-commit <sha>`), the review findings are dispositioned, the diff is the PR's own files, and
-  a stacked PR's base has merged first. Check the master runs after the merge. A queued, skipped or no-adapter GPU
+  a stacked PR's base has merged first. GPU CI is not a pull-request check and does not gate a merge; after the merge,
+  read the master runs, including the GPU run. A queued, skipped or no-adapter GPU
   test is not a pass: say which tests skipped and whether they were required.
 - **Still needs the owner's authorization:** a new GitHub issue; a change to protected history (force-push, history
   rewrite, the purge of issue #168); work outside the approved issue scope; a change to `tools/candidate.lock`,
