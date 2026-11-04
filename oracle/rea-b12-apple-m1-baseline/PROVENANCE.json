@@ -1,0 +1,117 @@
+{
+ "angle_backend": "metal",
+ "cases": {
+  "pk-events-msaa0": {
+   "differs_from_nvidia_in": [
+    "vrml"
+   ],
+   "run_sha256": [
+    "19c2e79258a2fca11ed834f473a6d7dcb627d997716e3ad6979f30190f23c639",
+    "19c2e79258a2fca11ed834f473a6d7dcb627d997716e3ad6979f30190f23c639",
+    "19c2e79258a2fca11ed834f473a6d7dcb627d997716e3ad6979f30190f23c639"
+   ]
+  },
+  "pk-events-msaa4": {
+   "differs_from_nvidia_in": [
+    "info",
+    "vrml"
+   ],
+   "run_sha256": [
+    "ee9084c3b2db318c78ec658b186a13f80238a0ddee15e3aa04e0283c3c70d4cb",
+    "ee9084c3b2db318c78ec658b186a13f80238a0ddee15e3aa04e0283c3c70d4cb",
+    "ee9084c3b2db318c78ec658b186a13f80238a0ddee15e3aa04e0283c3c70d4cb"
+   ]
+  },
+  "pk-lines-msaa0": {
+   "differs_from_nvidia_in": [
+    "pickProbes"
+   ],
+   "run_sha256": [
+    "1d67714ebef04e953569c93c57260fdc09f0af5792103060c0b31a4edabf7d20",
+    "1d67714ebef04e953569c93c57260fdc09f0af5792103060c0b31a4edabf7d20",
+    "1d67714ebef04e953569c93c57260fdc09f0af5792103060c0b31a4edabf7d20"
+   ]
+  },
+  "pk-lines-msaa4": {
+   "differs_from_nvidia_in": [
+    "info",
+    "pickProbes"
+   ],
+   "run_sha256": [
+    "7f6b84b8a2dda8f06a33207e51fae2ec7d743da3f70ee7c328f30363f33d11ce",
+    "7f6b84b8a2dda8f06a33207e51fae2ec7d743da3f70ee7c328f30363f33d11ce",
+    "7f6b84b8a2dda8f06a33207e51fae2ec7d743da3f70ee7c328f30363f33d11ce"
+   ]
+  },
+  "pk-overlap-msaa0": {
+   "differs_from_nvidia_in": [
+    "pickProbes"
+   ],
+   "run_sha256": [
+    "4e6b519975d0de80501ce02a1cabda227ce0a394f076ea085e1b2d68c8f6863c",
+    "4e6b519975d0de80501ce02a1cabda227ce0a394f076ea085e1b2d68c8f6863c",
+    "4e6b519975d0de80501ce02a1cabda227ce0a394f076ea085e1b2d68c8f6863c"
+   ]
+  },
+  "pk-overlap-msaa4": {
+   "differs_from_nvidia_in": [
+    "info",
+    "pickProbes"
+   ],
+   "run_sha256": [
+    "5d1aaca9b317b7d7293910c1acc4fd572345be829f17104f183a233f9e87bf67",
+    "5d1aaca9b317b7d7293910c1acc4fd572345be829f17104f183a233f9e87bf67",
+    "5d1aaca9b317b7d7293910c1acc4fd572345be829f17104f183a233f9e87bf67"
+   ]
+  },
+  "pk-points-msaa0": {
+   "differs_from_nvidia_in": [
+    "pickProbes"
+   ],
+   "run_sha256": [
+    "cb81615bc3fa897a246147012d681bbf3b1b59e6d95f46652d8644979d8ea4cd",
+    "cb81615bc3fa897a246147012d681bbf3b1b59e6d95f46652d8644979d8ea4cd",
+    "cb81615bc3fa897a246147012d681bbf3b1b59e6d95f46652d8644979d8ea4cd"
+   ]
+  },
+  "pk-points-msaa4": {
+   "differs_from_nvidia_in": [
+    "info",
+    "pickProbes"
+   ],
+   "run_sha256": [
+    "cf1b3ca2b430bf28031e839290b0e76307cdee02bcf32986e8b5b9e59a453353",
+    "cf1b3ca2b430bf28031e839290b0e76307cdee02bcf32986e8b5b9e59a453353",
+    "cf1b3ca2b430bf28031e839290b0e76307cdee02bcf32986e8b5b9e59a453353"
+   ]
+  },
+  "pk-points-style-msaa0": {
+   "differs_from_nvidia_in": [
+    "pickProbes"
+   ],
+   "run_sha256": [
+    "e9a7f92bb688265776fb71f0e2efefa7d577c05a68d199676cdece76fe2e13c7",
+    "e9a7f92bb688265776fb71f0e2efefa7d577c05a68d199676cdece76fe2e13c7",
+    "e9a7f92bb688265776fb71f0e2efefa7d577c05a68d199676cdece76fe2e13c7"
+   ]
+  },
+  "pk-points-style-msaa4": {
+   "differs_from_nvidia_in": [
+    "info",
+    "pickProbes"
+   ],
+   "run_sha256": [
+    "62e09a5d75be980c91c2ec99caebaf52795b18385419a884054d6b521bb47968",
+    "62e09a5d75be980c91c2ec99caebaf52795b18385419a884054d6b521bb47968",
+    "62e09a5d75be980c91c2ec99caebaf52795b18385419a884054d6b521bb47968"
+   ]
+  }
+ },
+ "chrome": "Google Chrome 156.0.8078.79",
+ "hardware": "Apple M1, macOS 27.0.1",
+ "pinned_x_ite": "16.5.0 34cdf9f97",
+ "platform": "apple-m1",
+ "recorded": "2026-11-03",
+ "recorder": "oracle/x_ite-anim.mjs, oracle/x_ite-anim-msaa.mjs",
+ "rule": "3 identical runs; kept only where the NVIDIA recording differs"
+}

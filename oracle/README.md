@@ -1523,3 +1523,20 @@ frames the pinned page runs before the scripted frames start varies from run to 
 text does not. The scene text of every dumped frame and the sorted `log` (the loader's `Couldn't load URL ...` lines with the parser's error) are compared
 exactly. A NaN coordinate in a binary STL is left out of the cases: the pinned page logs `RangeError: Maximum call stack size exceeded` for it
 (measured), an engine limit and not a parser result.
+
+## Platform recordings of the pinned page (Apple M1, Metal)
+
+The pinned X_ITE 16.5.0 gives other pointing, collision and touch results on ANGLE Metal than on ANGLE/OpenGL on the NVIDIA host (owner
+decision 2026-11-04, issues #69 and #89; `docs/metal-reference-variation.md`). The NVIDIA recordings stay the reference of every test and are
+never overwritten. `oracle/<stem>-apple-m1-baseline/<case>-msaa<N>.json` is the recording of the SAME pinned page on the physical M1 (three identical
+runs), kept only for a case where it differs from the NVIDIA recording. A test reads it only when `X3D_REFERENCE_PLATFORM=apple-m1` is set
+(`crates/x3d-viewer/tests/common/reference.rs`): `js.json` comes from the platform recording where there is one, the pictures (`js/*.png`) always
+from the NVIDIA recording. An unknown platform name stops the test. Rust is never compared with a recording that Rust made.
+
+```
+XITE_CHROME="/Applications/Google Chrome.app/Contents/MacOS/Google Chrome" XITE_ANGLE_BACKEND=metal XITE_TESTS=<dir with node_modules/playwright> \
+  python3 -I -B oracle/tools/record_platform_baseline.py --platform apple-m1 --base rea-b09-nav-baseline --hardware "Apple M1, macOS 27.0.1" --names FILE
+X3D_BACKEND=metal X3D_REFERENCE_PLATFORM=apple-m1 cargo nextest run -p x3d-viewer --release -E 'test(rea_batch09_nav) | test(rea_b24_nav) | test(rea_batch12) | test(rea_batch09_inputs)'
+```
+
+A difference between Rust and the M1 recording is investigated as a possible Rust defect; no platform tolerance hides it.

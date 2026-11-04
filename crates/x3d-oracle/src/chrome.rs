@@ -75,7 +75,7 @@ pub const ORACLE_ARGS: &[&str] = &[
 ];
 
 /// [`ORACLE_ARGS`] with the ANGLE backend named by `X3D_ORACLE_ANGLE` (`gl` by default: the RTX baselines; `swiftshader`,
-/// `vulkan` or `gles` measure the same pinned X_ITE on another implementation, issue #89). An unknown name is an error:
+/// `vulkan`, `gles` or `metal` (the M1 Mac) measure the same pinned X_ITE on another implementation, issue #89). An unknown name is an error:
 /// a typo must not record a baseline from the default backend.
 pub fn oracle_args() -> Result<Vec<String>, String> {
     oracle_args_for(std::env::var("X3D_ORACLE_ANGLE").ok().as_deref())
@@ -87,9 +87,9 @@ pub fn oracle_args_for(angle: Option<&str>) -> Result<Vec<String>, String> {
         .filter(|a| !a.is_empty())
         .unwrap_or("gl");
 
-    if !["gl", "gles", "vulkan", "swiftshader"].contains(&angle) {
+    if !["gl", "gles", "vulkan", "swiftshader", "metal"].contains(&angle) {
         return Err(format!(
-            "X3D_ORACLE_ANGLE={angle:?}: expected gl, gles, vulkan or swiftshader"
+            "X3D_ORACLE_ANGLE={angle:?}: expected gl, gles, vulkan, swiftshader or metal"
         ));
     }
 
@@ -525,6 +525,11 @@ mod oracle_args_tests {
 
         assert!(args.contains(&"--use-angle=swiftshader".to_string()));
         assert_eq!(args.len(), ORACLE_ARGS.len());
-        assert!(oracle_args_for(Some("metal")).is_err());
+        assert!(oracle_args_for(Some("no-such-backend")).is_err());
+        assert!(
+            oracle_args_for(Some("metal"))
+                .unwrap()
+                .contains(&"--use-angle=metal".to_string())
+        );
     }
 }
