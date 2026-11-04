@@ -12,12 +12,28 @@ use x3d_script::compare::{ORACLE_PREFIX, encode_path};
 
 pub const CASE_DIR: &str = "synthetic-inline-reload";
 
+/// The scenario directory under `oracle/`; [`CASE_DIR`] unless a test file chose another with [`set_case_dir`].
+static CHOSEN_DIR: std::sync::RwLock<Option<String>> = std::sync::RwLock::new(None);
+
+/// Use the scenarios of another directory of `oracle/` (a test file calls this first, before any thread starts).
+pub fn set_case_dir(dir: &str) {
+    *CHOSEN_DIR.write().unwrap() = Some(dir.to_string());
+}
+
+pub fn case_dir_name() -> String {
+    CHOSEN_DIR
+        .read()
+        .unwrap()
+        .clone()
+        .unwrap_or_else(|| CASE_DIR.to_string())
+}
+
 pub fn oracle_root() -> PathBuf {
     Path::new(env!("CARGO_MANIFEST_DIR")).join("../../oracle")
 }
 
 pub fn case_dir() -> PathBuf {
-    oracle_root().join(CASE_DIR)
+    oracle_root().join(case_dir_name())
 }
 
 /// The scenarios, by name.
@@ -95,7 +111,7 @@ impl Run {
         let root = oracle_root();
         let url = format!(
             "{ORACLE_PREFIX}{}",
-            encode_path(&format!("{CASE_DIR}/{world}"))
+            encode_path(&format!("{}/{world}", case_dir_name()))
         );
         let data = std::fs::read(case_dir().join(world)).map_err(|e| format!("{world}: {e}"))?;
         let scene = x3d_parse::parse_bytes(&data, &url).map_err(|e| format!("{e:?}"))?;
@@ -249,7 +265,7 @@ fn apply(rt: &mut Runtime, overlay: &Overlay, a: &Value) -> Result<(), String> {
         overlay
             .0
             .borrow_mut()
-            .insert(format!("/{CASE_DIR}/{path}"), data);
+            .insert(format!("/{}/{path}", case_dir_name()), data);
         return Ok(());
     }
 
@@ -436,4 +452,163 @@ pub fn inline_of<'a>(step: &'a Value, path: &str) -> &'a Value {
         .iter()
         .find(|i| i["path"] == path)
         .unwrap_or_else(|| panic!("no Inline {path} in step {}", step["k"]))
+}
+
+// --- the shutdown rule against the pinned X_ITE ---------------------------------------------------
+
+/// The one approved difference of the native build: `case`, `step` and the complete console of that step in
+/// the native build. X_ITE (16.5.0) never calls `shutdown ()` of a Script of a replaced or unloaded scene
+/// (owner-approved, ISO/IEC 14772-1 4.12.3: the native build does).
+pub type Pin = (&'static str, u64, &'static [&'static str]);
+
+fn console_of(step: &Value) -> Vec<String> {
+    step["console"]
+        .as_array()
+        .unwrap()
+        .iter()
+        .map(|l| l.as_str().unwrap().to_string())
+        .collect()
+}
+
+/// A console line of a Script's `shutdown ()` in the synthetic worlds (`print ('<name> shutdown')`).
+pub fn is_shutdown_line(line: &str) -> bool {
+    line.starts_with("log: ") && line.ends_with(" shutdown")
+}
+
+/// Run every case of the case directory in the browser build (`replace_skips_shutdown`, which follows X_ITE) and
+/// in the native build and compare each step with the recording. The browser build must equal X_ITE in
+/// the console, the load count, the Inlines and the scene text, and print no `shutdown` line. The native
+/// build must differ in the console only by the pinned steps: the pinned console is exact (any other
+/// line, a missing one or a moved one fails), and without its `shutdown` lines it equals X_ITE's.
+/// `exempt (case, step)` names the steps of a deliberate difference that is not about `shutdown ()`; there
+/// only the `shutdown` lines are compared. Returns the failures.
+pub fn check_shutdown_rule(
+    baseline: &HashMap<String, Value>,
+    pins: &[Pin],
+    exempt: &dyn Fn(&str, u64) -> bool,
+) -> Vec<String> {
+    let mut fails = vec![];
+    let mut used = vec![false; pins.len()];
+    let names = case_names();
+
+    if std::env::var("X3D_PRINT_PINS").is_ok() {
+        println!("PINS");
+    }
+
+    for name in &names {
+        let expected = baseline
+            .get(name)
+            .unwrap_or_else(|| panic!("{name}: no baseline"));
+
+        if expected["skipped"].is_string() {
+            continue;
+        }
+
+        for (mode, browser) in [("browser", true), ("native", false)] {
+            let n = name.clone();
+            let actual = big_stack(move || {
+                run_scenario_with(&n, move |rt| rt.replace_skips_shutdown = browser)
+            })
+            .unwrap_or_else(|e| panic!("{name}: {e}"));
+            let (es, as_) = (
+                expected["steps"].as_array().unwrap(),
+                actual["steps"].as_array().unwrap(),
+            );
+
+            assert_eq!(es.len(), as_.len(), "{name}: step count");
+
+            let (mut ev, mut av) = (String::new(), String::new());
+
+            for (e, a) in es.iter().zip(as_) {
+                let k = e["k"].as_u64().unwrap();
+                let (xc, rc) = (console_of(e), console_of(a));
+                let skip = exempt(name, k);
+                let pin = pins.iter().position(|p| p.0 == name && p.1 == k);
+
+                if let Some(v) = e["vrml"].as_str() {
+                    ev = v.to_string();
+                }
+
+                if let Some(v) = a["vrml"].as_str() {
+                    av = v.to_string();
+                }
+
+                if !skip {
+                    for f in ["loadCount", "inlines"] {
+                        if e[f] != a[f] {
+                            fails.push(format!(
+                                "{mode} {name} step {k} {f}:\n  x_ite {}\n  rust  {}",
+                                e[f], a[f]
+                            ));
+                        }
+                    }
+
+                    if ev != av {
+                        fails.push(format!("{mode} {name} step {k} vrml differs"));
+                    }
+                }
+
+                if browser || pin.is_none() {
+                    if rc.iter().any(|l| is_shutdown_line(l)) {
+                        fails.push(format!(
+                            "{mode} {name} step {k}: a shutdown line that is not pinned: {rc:?}"
+                        ));
+                    }
+
+                    if !skip && rc != xc {
+                        fails.push(format!(
+                            "{mode} {name} step {k} console:\n  x_ite {xc:?}\n  rust  {rc:?}"
+                        ));
+                    }
+
+                    continue;
+                }
+
+                let i = pin.unwrap();
+
+                used[i] = true;
+
+                let want: Vec<String> = pins[i].2.iter().map(|s| s.to_string()).collect();
+                let rest: Vec<String> = want
+                    .iter()
+                    .filter(|l| !is_shutdown_line(l))
+                    .cloned()
+                    .collect();
+
+                if rc != want {
+                    fails.push(format!(
+                        "native {name} step {k} console:\n  pinned {want:?}\n  rust   {rc:?}"
+                    ));
+                }
+
+                if want.len() == rest.len() {
+                    fails.push(format!(
+                        "native {name} step {k}: a pin without a shutdown line"
+                    ));
+                }
+
+                if !skip && rest != xc {
+                    fails.push(format!("native {name} step {k}: the pin differs from X_ITE by more than shutdown lines:\n  x_ite {xc:?}\n  pin   {want:?}"));
+                }
+            }
+
+            if !browser && std::env::var("X3D_PRINT_PINS").is_ok() {
+                for a in as_ {
+                    let c = console_of(a);
+
+                    if c.iter().any(|l| is_shutdown_line(l)) {
+                        println!("    ({name:?}, {}, &{c:?}),", a["k"]);
+                    }
+                }
+            }
+        }
+    }
+
+    for (p, u) in pins.iter().zip(&used) {
+        if !u {
+            fails.push(format!("stale pin {} step {}", p.0, p.1));
+        }
+    }
+
+    fails
 }
