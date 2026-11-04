@@ -5157,8 +5157,17 @@ impl Renderer {
 
             if let Some(dm) = &item.depth {
                 d.flags3[1] = 1;
-                d.depth_range[0] = dm.range[0] as f32;
-                d.depth_range[1] = dm.range[1] as f32;
+                // gl.depthRange (near, far): WebGL rejects near > far (INVALID_OPERATION) and keeps the range in force,
+                // which is the default (0, 1) because DepthMode.disable restores it after every shape. A reversed range
+                // therefore draws unchanged, as in the pointing pass (pointing_gpu.rs).
+                let [n, f] = if dm.range[0] > dm.range[1] {
+                    [0.0, 1.0]
+                } else {
+                    dm.range
+                };
+
+                d.depth_range[0] = n as f32;
+                d.depth_range[1] = f as f32;
             }
 
             // FogContainer.setShaderUniforms: the draw's fog is the innermost LocalFog, else the bound Fog;
