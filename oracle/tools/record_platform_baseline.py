@@ -9,7 +9,7 @@ override only when
   1. the three recordings are identical (`loadFrames`, which follows Chrome's I/O, is left out of the check), and
   2. they differ from the NVIDIA recording of the same case (the same keys, `loadFrames` left out).
 
-The overrides go to oracle/<stem>-<platform>-baseline/<case>-msaa<N>/js.json with a cases.txt and a PROVENANCE.json. The NVIDIA
+The overrides go to oracle/<stem>-<platform>-baseline/<case>-msaa<N>.json with a cases.txt and a PROVENANCE.json. The NVIDIA
 baseline is never written. A case whose three runs differ is listed in UNSTABLE.txt and kept nowhere (UNVERIFIED, never a
 pass). A baseline is never taken from Rust. Tests choose the recording with X3D_REFERENCE_PLATFORM=<platform>
 (crates/x3d-viewer/tests/common/reference.rs); a case without an override keeps the NVIDIA recording.
@@ -69,8 +69,8 @@ for row in rows:
         same.append(key)
         continue
 
-    os.makedirs(os.path.join(dest, key), exist_ok=True)
-    shutil.copyfile(outs[0], os.path.join(dest, key, "js.json"))
+    os.makedirs(dest, exist_ok=True)
+    shutil.copyfile(outs[0], os.path.join(dest, key + ".json"))
     lines[key] = " ".join(row)
     prov[key] = dict(differs_from_nvidia_in=keys, run_sha256=[sha(o) for o in outs])
     kept.append(key)

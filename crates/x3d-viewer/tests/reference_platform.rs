@@ -18,10 +18,15 @@ fn a_platform_recording_is_used_only_when_the_platform_is_named_and_the_case_has
     std::fs::create_dir_all(&root).unwrap();
     make(&root, "oracle/base/a-msaa0");
     make(&root, "oracle/base/b-msaa0");
-    make(&root, "oracle/base-apple-m1-baseline/b-msaa0");
+    std::fs::create_dir_all(root.join("oracle/base-apple-m1-baseline")).unwrap();
+    std::fs::write(
+        root.join("oracle/base-apple-m1-baseline/b-msaa0.json"),
+        "{}",
+    )
+    .unwrap();
 
     let nvidia = |n: &str| root.join(format!("oracle/base/{n}-msaa0/js.json"));
-    let m1 = |n: &str| root.join(format!("oracle/base-apple-m1-baseline/{n}-msaa0/js.json"));
+    let m1 = |n: &str| root.join(format!("oracle/base-apple-m1-baseline/{n}-msaa0.json"));
 
     // No platform: always the NVIDIA recording, also for a case that has a platform recording.
     assert_eq!(js_json_for(&root, "base", "b", 0, None), nvidia("b"));
@@ -53,30 +58,31 @@ fn an_unknown_platform_stops_the_test() {
 }
 
 #[test]
-fn a_particle_case_uses_the_platform_directory_only_when_it_holds_both_files() {
+fn a_particle_case_uses_the_flat_platform_files_only_when_both_are_there() {
     let root = std::env::temp_dir().join(format!("reference-pair-{}", std::process::id()));
-    std::fs::create_dir_all(&root).unwrap();
+    let flat = root.join("oracle/pb-apple-m1-baseline");
+    std::fs::create_dir_all(&flat).unwrap();
     make(&root, "oracle/pb/c-x");
     std::fs::write(root.join("oracle/pb/c-x/js.f32"), "").unwrap();
-    make(&root, "oracle/pb-apple-m1-baseline/c-x");
-    make(&root, "oracle/pb-apple-m1-baseline/c-y");
-    std::fs::write(root.join("oracle/pb-apple-m1-baseline/c-y/js.f32"), "").unwrap();
+    std::fs::write(flat.join("c-x.json"), "{\"p\":1}").unwrap(); // json only
+    std::fs::write(flat.join("c-y.json"), "{\"p\":2}").unwrap();
+    std::fs::write(flat.join("c-y.f32"), [1u8, 2, 3, 4]).unwrap();
 
     // No platform: the NVIDIA directory.
     assert_eq!(
         pair_dir_for(&root, "pb", "c-y", None),
         root.join("oracle/pb/c-y")
     );
-    // A platform directory with js.json only is not used (js.f32 would come from another recording).
+    // js.json alone is not used (the f32 records would come from another recording).
     assert_eq!(
         pair_dir_for(&root, "pb", "c-x", Some("apple-m1")),
         root.join("oracle/pb/c-x")
     );
-    // Both files: used.
-    assert_eq!(
-        pair_dir_for(&root, "pb", "c-y", Some("apple-m1")),
-        root.join("oracle/pb-apple-m1-baseline/c-y")
-    );
+    // Both files: copied unchanged as js.json and js.f32.
+    let d = pair_dir_for(&root, "pb", "c-y", Some("apple-m1"));
+    assert_eq!(std::fs::read(d.join("js.json")).unwrap(), b"{\"p\":2}");
+    assert_eq!(std::fs::read(d.join("js.f32")).unwrap(), [1u8, 2, 3, 4]);
 
+    std::fs::remove_dir_all(&d).unwrap();
     std::fs::remove_dir_all(&root).unwrap();
 }

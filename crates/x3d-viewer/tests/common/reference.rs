@@ -4,7 +4,7 @@
 //! unless `X3D_REFERENCE_PLATFORM` names another platform. Pointing, collision and touch results of the pinned page
 //! depend on the GPU and the ANGLE backend (the same page gives other numbers on ANGLE Metal than on ANGLE NVIDIA), so a
 //! platform can have its own recording of the same pinned X_ITE 16.5.0 for the cases where the NVIDIA recording differs:
-//! `oracle/<stem>-<platform>-baseline/<name>-msaa<N>/js.json`, made by `oracle/tools/record_platform_baseline.py` with three
+//! `oracle/<stem>-<platform>-baseline/<name>-msaa<N>.json`, made by `oracle/tools/record_platform_baseline.py` with three
 //! identical runs on that machine. A case without such a recording keeps the NVIDIA recording (it matched there).
 //! The platform recording replaces nothing: the NVIDIA recordings are never overwritten, and Rust is never compared with
 //! a recording that Rust made.
@@ -53,7 +53,7 @@ pub fn js_json_for(
     };
 
     let over = root.join(format!(
-        "oracle/{}/{name}-msaa{msaa}/js.json",
+        "oracle/{}/{name}-msaa{msaa}.json",
         platform_base(base, p)
     ));
 
@@ -69,8 +69,10 @@ pub fn js_json(root: &Path, base: &str, name: &str, msaa: u32) -> PathBuf {
     js_json_for(root, base, name, msaa, platform().as_deref())
 }
 
-/// The directory of a particle case (`js.json` and `js.f32` side by side, rea_b14 and rea_b15): the platform's directory
-/// `oracle/<stem>-<platform>-baseline/<name>` when both files are there, else the NVIDIA one `oracle/<base>/<name>`.
+/// The directory of a particle case (`js.json` and `js.f32` side by side, rea_b14 and rea_b15; the reader finds `js.f32` through the
+/// `fileF32` field of the JSON). A platform recording is stored flat, `oracle/<stem>-<platform>-baseline/<name>.json` and `<name>.f32` (the
+/// review gate's recorded-baseline pattern covers one directory level); when both files are there they are copied unchanged into a
+/// temporary directory as `js.json` and `js.f32`, which is returned. Otherwise the NVIDIA directory `oracle/<base>/<name>`.
 pub fn pair_dir_for(root: &Path, base: &str, name: &str, platform: Option<&str>) -> PathBuf {
     let own = root.join(format!("oracle/{base}/{name}"));
 
@@ -78,14 +80,25 @@ pub fn pair_dir_for(root: &Path, base: &str, name: &str, platform: Option<&str>)
         return own;
     };
 
-    let over = root.join(format!("oracle/{}/{name}", platform_base(base, p)));
+    let flat = root.join(format!("oracle/{}", platform_base(base, p)));
+    let (json, f32s) = (
+        flat.join(format!("{name}.json")),
+        flat.join(format!("{name}.f32")),
+    );
 
-    if over.join("js.json").is_file() && over.join("js.f32").is_file() {
-        eprintln!("reference: {name} uses the {p} recording");
-        over
-    } else {
-        own
+    if !(json.is_file() && f32s.is_file()) {
+        return own;
     }
+
+    let dir = std::env::temp_dir().join(format!(
+        "reference-{p}-{}-{base}-{name}",
+        std::process::id()
+    ));
+    std::fs::create_dir_all(&dir).unwrap();
+    std::fs::copy(&json, dir.join("js.json")).unwrap();
+    std::fs::copy(&f32s, dir.join("js.f32")).unwrap();
+    eprintln!("reference: {name} uses the {p} recording");
+    dir
 }
 
 pub fn pair_dir(root: &Path, base: &str, name: &str) -> PathBuf {

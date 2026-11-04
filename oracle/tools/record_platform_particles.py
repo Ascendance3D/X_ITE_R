@@ -4,7 +4,7 @@
 Like record_platform_baseline.py (read it for the rules), for the baselines recorded by `x3d-oracle particles`: every case of the base is
 recorded three times ON THE TARGET MACHINE; `js.json` and `js.f32` of the three runs must be identical (else the case is listed in
 UNSTABLE.txt, UNVERIFIED, and kept nowhere); a recording is kept only where it differs from the NVIDIA one, as
-oracle/<stem>-<platform>-baseline/<case>/{js.json,js.f32}. The NVIDIA baseline is never written; a baseline is never taken from Rust. Tests choose it with
+oracle/<stem>-<platform>-baseline/<case>.json and <case>.f32 (flat: one directory level, as the review gate expects). The NVIDIA baseline is never written; a baseline is never taken from Rust. Tests choose it with
 X3D_REFERENCE_PLATFORM=<platform> (crates/x3d-viewer/tests/common/reference.rs, `pair_dir`).
 
   X3D_ORACLE_CHROME="/Applications/Google Chrome.app/Contents/MacOS/Google Chrome" X3D_ORACLE_ANGLE=metal \\
@@ -44,9 +44,9 @@ for name in names:
     if all(filecmp.cmp(os.path.join(runs[0], f), os.path.join(src, name, f), shallow=False) for f in ("js.json", "js.f32")):
         same.append(name)
         continue
-    os.makedirs(os.path.join(dest, name), exist_ok=True)
+    os.makedirs(dest, exist_ok=True)
     for f in ("js.json", "js.f32"):
-        shutil.copyfile(os.path.join(runs[0], f), os.path.join(dest, name, f))
+        shutil.copyfile(os.path.join(runs[0], f), os.path.join(dest, name + os.path.splitext(f)[1]))
     prov[name] = {f: sha(os.path.join(runs[0], f)) for f in ("js.json", "js.f32")}
     kept.append(name)
 

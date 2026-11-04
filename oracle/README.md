@@ -1509,7 +1509,7 @@ Rust pictures.
 
 The pinned X_ITE 16.5.0 gives other pointing, collision and touch results on ANGLE Metal than on ANGLE/OpenGL on the NVIDIA host (owner
 decision 2026-11-04, issues #69 and #89; `docs/metal-reference-variation.md`). The NVIDIA recordings stay the reference of every test and are
-never overwritten. `oracle/<stem>-apple-m1-baseline/<case>-msaa<N>/js.json` is the recording of the SAME pinned page on the physical M1 (three identical
+never overwritten. `oracle/<stem>-apple-m1-baseline/<case>-msaa<N>.json` is the recording of the SAME pinned page on the physical M1 (three identical
 runs), kept only for a case where it differs from the NVIDIA recording. A test reads it only when `X3D_REFERENCE_PLATFORM=apple-m1` is set
 (`crates/x3d-viewer/tests/common/reference.rs`): `js.json` comes from the platform recording where there is one, the pictures (`js/*.png`) always
 from the NVIDIA recording. An unknown platform name stops the test. Rust is never compared with a recording that Rust made.
