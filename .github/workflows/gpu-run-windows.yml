@@ -1,0 +1,116 @@
+# One-off run of the 16 GPU tests (GPU_TESTS in rust-tests.yml) on the Windows self-hosted runner (issue #89), whose
+# graphics adapter the probe workflow printed (Intel UHD Graphics, Jasper Lake, a hardware GPU). NOT FOR MERGE: this file
+# lives only on a draft pull request branch, which is closed after the result is read.
+# Nothing is installed outside the job: the Rust toolchain and the build go to the job's temp directory, and a last step
+# deletes them. No secrets, read-only token, and the job runs only when the pull request head is in this repository.
+name: GPU run (Windows)
+
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - ".github/workflows/gpu-run-windows.yml"
+
+permissions:
+  contents: read
+
+env:
+  CARGO_TERM_COLOR: never
+  CARGO_INCREMENTAL: "0"
+  CARGO_BUILD_JOBS: "3"
+  X3D_EVIDENCE: ci
+  X3D_QUIET_NO_GPU: "1"
+  GPU_TESTS: >-
+    test(x1_runtime_matches_x_ite)
+    | test(items_runtime_matches_x_ite)
+    | test(rea_batch09_nav_shard0_match_x_ite)
+    | test(rea_batch09_nav_shard1_match_x_ite)
+    | test(rea_batch09_nav_shard2_match_x_ite)
+    | test(rea_batch09_nav_shard3_match_x_ite)
+    | test(rea_batch09_inputs_cases_match_x_ite)
+    | test(rea_batch08_net_cases_match_x_ite)
+    | test(rea_batch12_pick_cases_match_x_ite)
+    | test(rea_b14_particle_pick_matches_x_ite)
+    | test(rea_b15_particle_collision_matches_x_ite)
+    | test(rea_b21_wide_lines_match_x_ite)
+    | test(rea_b22_two_layer_shadows_match_x_ite)
+    | test(rea_b24_nav_shard0_match_x_ite)
+    | test(rea_b24_nav_shard1_match_x_ite)
+    | test(rea_b24_nav_shard2_match_x_ite)
+
+jobs:
+  gpu:
+    if: github.event_name == 'workflow_dispatch' || github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: [self-hosted, Windows, X64]
+    timeout-minutes: 340
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+
+      # The runner's execution policy blocks PowerShell script files, so every step is bash (Git for Windows).
+      - name: Rust toolchain and nextest, in the job's temp directory
+        run: |
+          set -eux
+          export RUSTUP_HOME="$RUNNER_TEMP\\rustup" CARGO_HOME="$RUNNER_TEMP\\cargo"
+          echo "RUSTUP_HOME=$RUSTUP_HOME" >> "$GITHUB_ENV"
+          echo "CARGO_HOME=$CARGO_HOME" >> "$GITHUB_ENV"
+          echo "CARGO_TARGET_DIR=$RUNNER_TEMP\\target" >> "$GITHUB_ENV"
+          echo "$CARGO_HOME\\bin" >> "$GITHUB_PATH"
+          curl -sSfL -o "$RUNNER_TEMP/rustup-init.exe" https://static.rust-lang.org/rustup/dist/x86_64-pc-windows-msvc/rustup-init.exe
+          "$RUNNER_TEMP/rustup-init.exe" -y --profile minimal --default-toolchain 1.95.0 --no-modify-path
+          mkdir -p "$(cygpath -u "$CARGO_HOME")/bin"
+          curl -sSfL https://get.nexte.st/0.9.150/windows-tar | tar -xzf - -C "$(cygpath -u "$CARGO_HOME")/bin"
+
+      - name: Versions and adapter
+        run: |
+          cargo --version; rustc --version; cargo nextest --version | head -1
+          vulkaninfo --summary 2>/dev/null | grep -E 'deviceName|deviceType|driverName|driverInfo|apiVersion' || true
+
+      - name: Build the test binaries
+        run: cargo nextest run -p x3d-script -p x3d-viewer --release --no-run 2>&1 | tee build.log; test "${PIPESTATUS[0]}" -eq 0
+
+      # Vulkan is the headless default (the backend of the RTX results). The key names come from the manifest; the
+      # runner never holds the private keys.
+      - name: GPU tests, Vulkan (Intel driver)
+        id: vulkan
+        continue-on-error: true
+        run: |
+          export X3D_EVIDENCE_ALLOW="$(awk -F'\t' '!/^#/ && NF >= 4 { printf "%s%s", sep, $1; sep = "," }' oracle/answer-keys.tsv)"
+          export X3D_EVIDENCE_LOG="$GITHUB_WORKSPACE/evidence-skips-vulkan.tsv"
+          rm -f "$X3D_EVIDENCE_LOG"
+          cargo nextest run -p x3d-script -p x3d-viewer --release --profile ci --no-fail-fast -j 2 -E "$GPU_TESTS" 2>&1 | tee gpu-vulkan.log
+          test "${PIPESTATUS[0]}" -eq 0
+
+      - name: Counts, Vulkan
+        if: always()
+        run: |
+          grep -E '^ *Summary \[' gpu-vulkan.log | tail -1 | sed 's/^ *//' || true
+          grep -E '^ +(PASS|FAIL|SIGSEGV|SIGABRT|TIMEOUT) ' gpu-vulkan.log | sed 's/^ *//' | sort -u || true
+
+      - name: GPU tests, DX12
+        id: dx12
+        if: always()
+        continue-on-error: true
+        run: |
+          export X3D_BACKEND=dx12 X3D_POINTING_BACKEND=dx12
+          export X3D_EVIDENCE_ALLOW="$(awk -F'\t' '!/^#/ && NF >= 4 { printf "%s%s", sep, $1; sep = "," }' oracle/answer-keys.tsv)"
+          export X3D_EVIDENCE_LOG="$GITHUB_WORKSPACE/evidence-skips-dx12.tsv"
+          rm -f "$X3D_EVIDENCE_LOG"
+          cargo nextest run -p x3d-script -p x3d-viewer --release --profile ci --no-fail-fast -j 2 -E "$GPU_TESTS" 2>&1 | tee gpu-dx12.log
+          test "${PIPESTATUS[0]}" -eq 0
+
+      - name: Counts, DX12
+        if: always()
+        run: |
+          grep -E '^ *Summary \[' gpu-dx12.log | tail -1 | sed 's/^ *//' || true
+          grep -E '^ +(PASS|FAIL|SIGSEGV|SIGABRT|TIMEOUT) ' gpu-dx12.log | sed 's/^ *//' | sort -u || true
+
+      - name: Delete the toolchain and the build
+        if: always()
+        run: |
+          rm -rf "$(cygpath -u "$RUNNER_TEMP")/target" "$(cygpath -u "$RUNNER_TEMP")/cargo" "$(cygpath -u "$RUNNER_TEMP")/rustup" "$(cygpath -u "$RUNNER_TEMP")/rustup-init.exe"
+          echo cleaned
