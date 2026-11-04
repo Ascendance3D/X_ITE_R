@@ -548,8 +548,19 @@ impl Runtime {
 
         self.sync_svg_quality();
 
-        // GLTF2Parser loads its buffers through the same fetcher as the Inline itself.
-        let mut parsed = self.parse_candidate(data, url.as_str());
+        // Inline is a FileLoader with `dataAsString`: the text of a data URL that is not base64 reaches the parsers as a
+        // string, so a U+FEFF at its start stays (no suitable file handler), where the decoded bytes of a fetch lose it.
+        let mut parsed = if crate::browser_load::is_text_data_url(url) {
+            crate::loader::ParseBytesResult {
+                scene: x3d_parse::parse_string(&String::from_utf8_lossy(data), url.as_str()),
+                buffer_errors: vec![],
+                buffers_pending: false,
+                pending_buffers: vec![],
+            }
+        } else {
+            // GLTF2Parser loads its buffers through the same fetcher as the Inline itself.
+            self.parse_candidate(data, url.as_str())
+        };
 
         // `Promise .all` rejects at the first buffer that failed, also while others are in flight: the Inline goes on
         // to its next url at once and the other buffers are followed (issue #128).
