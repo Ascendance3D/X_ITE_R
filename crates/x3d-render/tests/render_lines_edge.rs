@@ -19,7 +19,8 @@
 //!     triangles (line_style_vertices) matched the key in all four scenes with thin lines (0 pixels over 8);
 //!   - a point whose center is exactly on a pixel boundary (here y = 128.0, the point at y 0.1 of a camera at y 0.1)
 //!     is a tie at the edge of its sprite: GL takes the row at the bottom of the picture, the triangles of the sprite
-//!     take the top row (Vulkan top-left rule);
+//!     take the top row (Vulkan top-left rule). Fixed by the point-sprite tie rule in x3d.wgsl (#409): lines-edge-points
+//!     at MSAA 0 is exact and is no longer in KNOWN;
 //!   - the ends of aliased wide lines (width 2 to 10 at MSAA 0): GL's diamond-exit rule draws the pixel that holds
 //!     the start point, the parallelogram of line_style_vertices stops at the pixel centers.
 //!
@@ -44,7 +45,6 @@ const WORLDS: [&str; 7] = [
 /// with `set_gl_sample_orientation` at MSAA 4). Cases not listed are exact (0 pixels over 8).
 const KNOWN: &[(&str, u32, usize, u8)] = &[
     ("lines-edge", 0, 46, 255),
-    ("lines-edge-points", 0, 18, 255),
     ("lines-edge-wide", 0, 8, 255),
     ("lines-edge-thin", 0, 20, 255),
     ("lines-edge-cam2", 0, 13, 255),
