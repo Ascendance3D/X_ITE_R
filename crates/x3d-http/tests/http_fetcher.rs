@@ -484,7 +484,7 @@ fn the_total_timeout_covers_all_redirects() {
 }
 
 #[test]
-fn a_closed_connection_and_a_cut_body_are_network_errors() {
+fn a_closed_connection_and_a_cut_body_are_network_errors_with_the_pages_texts() {
     let mut hangup = Route::new(200, &[], b"");
 
     hangup.hangup = true;
@@ -496,13 +496,15 @@ fn a_closed_connection_and_a_cut_body_are_network_errors() {
     let server = RouteServer::start(table(vec![("hangup", hangup), ("cut", cut)]));
     let fetcher = HttpFetcher::new(options());
 
-    for name in ["hangup", "cut"] {
-        assert_eq!(
-            fetcher.fetch(&url(&server, &format!("/h/{name}"))),
-            Err(NETWORK_ERROR.to_string()),
-            "{name}"
-        );
-    }
+    // A closed connection before the head is `Failed to fetch`; a body that ends early is `network error` (the page's `blob ()`).
+    assert_eq!(
+        fetcher.fetch(&url(&server, "/h/hangup")),
+        Err(NETWORK_ERROR.to_string())
+    );
+    assert_eq!(
+        fetcher.fetch(&url(&server, "/h/cut")),
+        Err("TypeError: network error".to_string())
+    );
 
     // Nothing listens on port 1.
     assert_eq!(
