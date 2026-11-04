@@ -1381,6 +1381,20 @@ ct-wall, ct-nested and ct-bb-ctl with a 16 x 16 `pickProbes` grid, three identic
 points (0.27 to 0.38 from the surface) equal the page's bit for bit; the 3.05e-7 once measured there was the avatar's stop position
 (before #423), not float32 depth.
 
+## ShaderPart at MSAA 4 (issue #95, 2026-11-04)
+
+`rea-b24-shaderpart-baseline/` holds the 16 stepped ShaderPart cases at MSAA 0 (`NAME-msaa0/js.json` and pictures) and at MSAA 4
+(`NAME-msaa4.json` flat, so that the review gate leaves it out, and pictures in `NAME-msaa4/js/`). `python3 -I -B
+oracle/tools/rea_b24_shaderpart.py record NAME 3 --msaa 4` runs `x_ite-anim-msaa.mjs --ms 4` three times; only identical runs
+(record and every picture hash) are kept. Prepare the worktree as in "Recording from a worktree". The MSAA 4 records equal the MSAA 0
+records in scene text and log (only `info` differs); the pictures are the new evidence. Rust matches scene text, log (KNOWN
+table as at MSAA 0), poses and every picture within 1 per channel. All of these fragment sources say `precision mediump float`,
+and the pinned page on the RTX 3060 Ti (ANGLE, NVIDIA driver) runs mediump in half precision: `vec4 (0.9, 0.7, 0.2, 1.0)` is
+(229, 179, 51) there and (229, 178, 51) in Rust (0.7 is 0.70019531 in half precision). With `highp` in both renderers
+include-Fog, select-steps, url-steps and vertex-steps differ by 0 pixels at MSAA 4. The `PINNED` table of
+`crates/x3d-viewer/tests/rea_b24_shaderpart.rs` holds the measured pixel counts per case; a change in either direction fails, on an adapter named RTX 3060 Ti (the measured one); on any other adapter the picture bounds apply only.
+The test skips the MSAA 4 cases without a GPU adapter.
+
 ## Native keys 01 (issue #80)
 
 `node oracle/x_ite-native-keys-01.mjs oracle/native-keys-01-baseline --runs 3` records what the pinned X_ITE does for each
