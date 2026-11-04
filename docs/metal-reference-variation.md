@@ -13,8 +13,8 @@ Mac is open until its cause is shown.
    (17), `rea-b24-nav-baseline-apple-m1` (8), `rea-b12-baseline-apple-m1` (10), `rea-b09-inputs-baseline-apple-m1` (2).
 2. `X3D_BACKEND=metal X3D_REFERENCE_PLATFORM=apple-m1 X3D_EVIDENCE=ci`, `cargo nextest run -p x3d-viewer --release` on the Mac, the nine
    tests of the four files: 6 passed, 3 failed, no skip recorded. The thresholds are the existing ones; none was changed.
-3. For comparison the same cases ran against the NVIDIA recordings (the 16-test GPU suite on Metal, issue #89: 5 passed, 11 failed of which
-   10 are in these four files).
+3. For comparison the same cases ran against the NVIDIA recordings (the 16-test GPU suite on Metal, issue #89: 5 passed, 11 failed, of which
+   9 are in these four files; the other two are rea_b14 and rea_b15).
 
 ## Classification of the 29 case names (every one differs between the NVIDIA and the M1 recording)
 
