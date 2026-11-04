@@ -1,0 +1,2 @@
+#VRML V2.0 utf8
+Inline { url [ "gone/a.wrl" "../gone/b.wrl" "/gone/c.wrl" "data:,%23VRML%20V2.0%20utf8%0A%7D" ] }

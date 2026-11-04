@@ -51,7 +51,11 @@ const pngDir   = opt ("--png-dir", "");
 
 const server = createServer (async (req, res) =>
 {
-   const path = normalize (join (ROOT, decodeURIComponent (new URL (req .url, "http://x") .pathname)));
+   // A malformed percent escape in the path (a url the world authored on purpose, oracle/synthetic-rea-file-loader) is a 404, not a crash.
+   let path;
+
+   try { path = normalize (join (ROOT, decodeURIComponent (new URL (req .url, "http://x") .pathname))); }
+   catch { res .writeHead (404, { "Cache-Control": "no-store" }); return res .end (); }
 
    if (!path .startsWith (ROOT)) { res .writeHead (403); return res .end (); }
 
