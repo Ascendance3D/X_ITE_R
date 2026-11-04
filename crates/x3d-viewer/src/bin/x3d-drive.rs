@@ -9,6 +9,8 @@
 //!   "capture": [10, 60], "dump": [60] }
 //! "buildEachFrame": true builds (but does not render) the frame after every step, like X_ITE's render loop: a ScreenGroup's matrix
 //! (last DISPLAY) feeds the next CAMERA pass.
+//! "contentScale": 2 sets the canvas attribute `contentScale` (the oracle page has 1), "browserOptions": { "Rubberband": false } is
+//! `browser .setBrowserOption (name, value)` after the load (boolean options); the pointer events stay in CSS pixels.
 //! "physics": { "nodes": { PATH: [ field, ... ] } } (REA batch 06, RigidBodyPhysics): the result gets
 //! `physics.dt` (every `RigidBodyCollection .getTimeStep ()` result with the frame it was made in; frame 0 is
 //! the load and the warm-up) and `physics.frames` (after the warm-up and after each frame, the listed
@@ -157,6 +159,15 @@ fn run(
         attributes.extend([("antialiased", "true"), ("multisampling", n)]);
     }
 
+    // `"contentScale": 2` (issue #51, F17): the `contentScale` attribute of the canvas, which the oracle page sets to 1; the pointer
+    // coordinates of the events stay CSS pixels (the oracle's `page .mouse`).
+    let content_scale = script["contentScale"].as_f64().map(|s| s.to_string());
+
+    if let Some(s) = content_scale.as_deref() {
+        attributes.retain(|(a, _)| *a != "contentScale");
+        attributes.push(("contentScale", s));
+    }
+
     // `"audio": { "sampleRate": 48000, "channels": 2, "tail": 4 }` (REA batch 05): the browser's
     // audio renders offline in step with the frames, like oracle/x_ite-anim.mjs does: frame k waits
     // until rendering is suspended at render quantum q (k), applies its events, steps, resumes.
@@ -195,6 +206,22 @@ fn run(
     };
 
     v.frame_rate = 1.0 / dt;
+
+    // `"browserOptions": { "Rubberband": false }` (issue #51, F15): `browser .setBrowserOption (name, value)` after the load, for the
+    // boolean options (the oracle's counterpart is in oracle/x_ite-anim.mjs).
+    if let Some(options) = script["browserOptions"].as_object() {
+        for (name, value) in options {
+            if let Some(b) = value.as_bool() {
+                assert!(
+                    v.rt.browser_options
+                        .set_option(name, x3d_runtime::browser_options::OptionValue::Bool(b)),
+                    "unknown browser option {name}"
+                );
+            }
+        }
+
+        v.rt.browser_options.process_events();
+    }
 
     // Warm-up frames at t0, like the oracle's frames while the world loads (anim.html).
     // `--warmup-from <oracle.json>` copies the oracle's warmupFrames (frames traversed while the

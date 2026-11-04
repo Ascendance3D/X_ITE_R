@@ -37,6 +37,7 @@ pub mod load;
 pub mod nurbs;
 pub mod particles;
 pub mod pointing_gpu;
+pub mod rubber_band;
 pub mod scatter_gpu;
 pub mod sg;
 pub mod shader_gpu;

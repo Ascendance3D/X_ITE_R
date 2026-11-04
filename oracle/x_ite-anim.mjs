@@ -317,6 +317,11 @@ try
    await page .goto (`${base}/x_ite-pin/src/anim.html`);
    await page .waitForFunction (() => window .ready, null, { timeout: 30000 });
 
+   // Script key "contentScale" (issue #51, F17): the ContentScale option of the canvas (the page has contentScale="1"),
+   // set before the world loads. The pointer then arrives in drawing-buffer pixels (CSS pixels x ContentScale).
+   if (script .contentScale !== undefined)
+      await page .evaluate (s => document .getElementById ("c") .setAttribute ("contentScale", String (s)), script .contentScale);
+
    // Script key "pinFrameRate": true pins the SAI property `browser .currentFrameRate` (what Followers'
    // X3DDamperNode reads) to 1 / dt before the world loads. The page stubs advanceTime and
    // getCurrentFrameRate, but the property is bound to the prototype method and would report the
@@ -441,6 +446,10 @@ try
 
    if (!loaded .ok)
       throw new Error (loaded .error);
+
+   // Script key "browserOptions" (issue #51, F15): { "Rubberband": false } is `browser .setBrowserOption (name, value)` after the load.
+   if (script .browserOptions)
+      await page .evaluate (o => { const b = document .getElementById ("c") .browser; for (const [ k, v ] of Object .entries (o)) b .setBrowserOption (k, v); }, script .browserOptions);
 
    await page .evaluate (d => window .setDt (d), dt);
    result .geometry = await page .evaluate (() => window .geometry ());
