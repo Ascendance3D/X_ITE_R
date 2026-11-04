@@ -1,0 +1,83 @@
+{
+ "angle_backend": "metal",
+ "cases": {
+  "pw-col-w1": {
+   "js.f32": "2262fe97067d648bf06bf84b73d25ea347be8bd4ba47bd47096dd510e24406af",
+   "js.json": "45317d1ac584a2ab1b1ba1a08bc838038bb04504428b291ca7a33cebca66c1f5"
+  },
+  "pw-col-w11": {
+   "js.f32": "2262fe97067d648bf06bf84b73d25ea347be8bd4ba47bd47096dd510e24406af",
+   "js.json": "3231aae20526a310e419153bec1fc1401b85666fc881bc7d3f59b0cfc7f434da"
+  },
+  "pw-col-w24": {
+   "js.f32": "2262fe97067d648bf06bf84b73d25ea347be8bd4ba47bd47096dd510e24406af",
+   "js.json": "8d0c66a97e30d5240616e4b94ffc4e57ff1da18030e60c4a1328b8ecae5cf185"
+  },
+  "pw-col-w24-steady": {
+   "js.f32": "9eb5e9e42567df61a7a5358d7c65bd5fc31edcd3f954050ab6ee2c8ab97fb345",
+   "js.json": "f2b535332f80b44e881cf5cc21ac05a07d847002e3ddd3d1f8bbd913ba7be2be"
+  },
+  "pw-col-w6": {
+   "js.f32": "2262fe97067d648bf06bf84b73d25ea347be8bd4ba47bd47096dd510e24406af",
+   "js.json": "51a9c49c94eeb5ff6465078ae099634f4ab054fe59f04cea3486d78c42baf782"
+  },
+  "pw-pick-row-w1": {
+   "js.f32": "8a1a44e57b8019ee6382f024a20504b2395405ce1c95cf043e202ba1a6c8b6b3",
+   "js.json": "347e386226e24f604e3299ae09c690d79ef2d883e1bf3729d1af1027b706ad60"
+  },
+  "pw-pick-row-w10": {
+   "js.f32": "8a1a44e57b8019ee6382f024a20504b2395405ce1c95cf043e202ba1a6c8b6b3",
+   "js.json": "a7f12be577513f1975ae888778d84df9477af29b17f4146eba3cb97c9c3ab257"
+  },
+  "pw-pick-row-w11": {
+   "js.f32": "8a1a44e57b8019ee6382f024a20504b2395405ce1c95cf043e202ba1a6c8b6b3",
+   "js.json": "b251c257866580e2e9fd6637d2550948acffee769689be495a0791bab4398fc3"
+  },
+  "pw-pick-row-w24": {
+   "js.f32": "8a1a44e57b8019ee6382f024a20504b2395405ce1c95cf043e202ba1a6c8b6b3",
+   "js.json": "4698656cb216b4f07b5a7c829ddf485b31d7e67b27ea785ca5a78db41e1ff2af"
+  },
+  "pw-pick-row-w24-steady": {
+   "js.f32": "d7f0f987f117cf1663093e7ad92f8045811ceba629a4103fb97e660856966347",
+   "js.json": "50462e09096793109fd11b2836dea9e41301fd3ee5de4b9df012af21c206275c"
+  },
+  "pw-pick-row-w6": {
+   "js.f32": "8a1a44e57b8019ee6382f024a20504b2395405ce1c95cf043e202ba1a6c8b6b3",
+   "js.json": "f859a15e84728495559bbc5a857e6fd6c3c87a2bcfcb2b268690d6d022381544"
+  },
+  "pw-pick-slant-w24": {
+   "js.f32": "f6f164bf2de7bff16ca219a866feed48c972f4601f568d87c000e83b22a0fcd9",
+   "js.json": "bf2dbd6031c474fc509bb7ed679182fdaf97ac4fa201d228d750e9f6f0ef1411"
+  },
+  "pw-shadow-w1-behind": {
+   "js.f32": "9a877cbb025221a0e591d453fdf3663099d4552f36f47c0024e5eeb94ec14063",
+   "js.json": "3506504d40032f46373addbf56c514ad707f605328e9efa7cff51ddbeab62209"
+  },
+  "pw-shadow-w24-behind": {
+   "js.f32": "9a877cbb025221a0e591d453fdf3663099d4552f36f47c0024e5eeb94ec14063",
+   "js.json": "41feacdbb387bb10d4b718048e264f9158aa9e47c496b4dc3508afb97436c160"
+  },
+  "pw-shadow-w24-hidden": {
+   "js.f32": "5cc31d2273d691d9535041d146dba116fb12d4c360939698f48e630bc8ff733f",
+   "js.json": "b4ebee339b462cfcb577c4c4c7df3dda87d1c55fb20c1760a4b22ae3b942306f"
+  },
+  "pw-shadow-w6-behind": {
+   "15.png": "0a7a7e8859ac2a5ef7d70609f2d5a1feb974bae56c250e086d525194411de023",
+   "30.png": "0a7a7e8859ac2a5ef7d70609f2d5a1feb974bae56c250e086d525194411de023",
+   "45.png": "0a7a7e8859ac2a5ef7d70609f2d5a1feb974bae56c250e086d525194411de023",
+   "js.f32": "9a877cbb025221a0e591d453fdf3663099d4552f36f47c0024e5eeb94ec14063",
+   "js.json": "101c5ed4dc5a7e07b256588c2d25b2bcdee02310cdee9aca780f7eb8cfea5b9b"
+  },
+  "pw-shadow-w6-hidden": {
+   "js.f32": "5cc31d2273d691d9535041d146dba116fb12d4c360939698f48e630bc8ff733f",
+   "js.json": "33075312db899a31f818455ad8ff274cf4519fef46350e7be8f1262a6c4bbb8f"
+  }
+ },
+ "chrome": "Google Chrome 156.0.8078.79",
+ "hardware": "Apple M1, macOS 27.0.1",
+ "pinned_x_ite": "16.5.0 34cdf9f97",
+ "platform": "apple-m1",
+ "recorded": "2026-11-03",
+ "recorder": "x3d-oracle particles",
+ "rule": "3 identical runs; kept only where the NVIDIA recording differs (a picture: where it differs by more than 0.5% of the pixels over 8)"
+}

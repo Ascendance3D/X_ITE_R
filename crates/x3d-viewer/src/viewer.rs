@@ -1684,7 +1684,7 @@ impl Viewer3d {
             // current one, under the instance matrices of that pass; nothing otherwise. Narrower lines are 1 px here:
             // measured, the collision depth buffer does not widen gl.lineWidth lines (rea_b21_wide_lines pw-col-w6
             // gives X_ITE's pw-col-w1 probes in every frame, while a 6 px line would reach pixels they miss).
-            if line_width > x3d_render::gpu::MAX_LINE_WIDTH {
+            if line_width > x3d_render::gpu::max_line_width() {
                 let sim = rt_at(&self.rt, &first.shape.path)
                     .and_then(|rt| rt.particle_sim(first.shape.node));
                 let lines = sim

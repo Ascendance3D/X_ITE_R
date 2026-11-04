@@ -1,0 +1,109 @@
+{
+ "angle_backend": "metal",
+ "cases": {
+  "ml-lines-a-msaa0": {
+   "probes": 8449,
+   "run_sha256": [
+    "e26c61c1e24a43aa5d9edcf558662dc57e12a7163705a86f4e3505edf422ed53",
+    "e26c61c1e24a43aa5d9edcf558662dc57e12a7163705a86f4e3505edf422ed53",
+    "e26c61c1e24a43aa5d9edcf558662dc57e12a7163705a86f4e3505edf422ed53"
+   ]
+  },
+  "ml-lines-a-msaa4": {
+   "probes": 8449,
+   "run_sha256": [
+    "babdaf6e05dc2c31a783f9ad5e886f3098570732c8ffdc125f4ada659b298616",
+    "babdaf6e05dc2c31a783f9ad5e886f3098570732c8ffdc125f4ada659b298616",
+    "babdaf6e05dc2c31a783f9ad5e886f3098570732c8ffdc125f4ada659b298616"
+   ]
+  },
+  "ml-lines-b-msaa0": {
+   "probes": 8705,
+   "run_sha256": [
+    "860f593ae3bb28cf68c0898f0d1da5e085b9e45c3071e9472ec2d71dfa9c4d4f",
+    "860f593ae3bb28cf68c0898f0d1da5e085b9e45c3071e9472ec2d71dfa9c4d4f",
+    "860f593ae3bb28cf68c0898f0d1da5e085b9e45c3071e9472ec2d71dfa9c4d4f"
+   ]
+  },
+  "ml-sprite-clamp-msaa0": {
+   "probes": 127,
+   "run_sha256": [
+    "d5e96a869ef12227f240f00eed3d18f6fefb88624a3895a9d1079c34e02fb8bf",
+    "d5e96a869ef12227f240f00eed3d18f6fefb88624a3895a9d1079c34e02fb8bf",
+    "d5e96a869ef12227f240f00eed3d18f6fefb88624a3895a9d1079c34e02fb8bf"
+   ]
+  },
+  "ml-sprite-low-msaa0": {
+   "probes": 10696,
+   "run_sha256": [
+    "626fc19b8284f94bae9aa912827adc033a1136043fe71b35ea8ef1ff36065fad",
+    "626fc19b8284f94bae9aa912827adc033a1136043fe71b35ea8ef1ff36065fad",
+    "626fc19b8284f94bae9aa912827adc033a1136043fe71b35ea8ef1ff36065fad"
+   ]
+  },
+  "ml-sprite-pos-frac-msaa0": {
+   "probes": 32896,
+   "run_sha256": [
+    "c7e04b491ab2dad93ce55a5c98739eaec7afdfe011015183654f2612416d66a1",
+    "c7e04b491ab2dad93ce55a5c98739eaec7afdfe011015183654f2612416d66a1",
+    "c7e04b491ab2dad93ce55a5c98739eaec7afdfe011015183654f2612416d66a1"
+   ]
+  },
+  "ml-sprite-pos-msaa0": {
+   "probes": 16384,
+   "run_sha256": [
+    "55207f81b6832760a12ea2f9c9e78ded5f3565bea881461cd86d09d6585a70ff",
+    "55207f81b6832760a12ea2f9c9e78ded5f3565bea881461cd86d09d6585a70ff",
+    "55207f81b6832760a12ea2f9c9e78ded5f3565bea881461cd86d09d6585a70ff"
+   ]
+  },
+  "ml-sprite-size-msaa0": {
+   "probes": 16492,
+   "run_sha256": [
+    "4d0c7759b685ff4ad80dcb68ddccd819a2c694a92224954f438aedf34299afab",
+    "4d0c7759b685ff4ad80dcb68ddccd819a2c694a92224954f438aedf34299afab",
+    "4d0c7759b685ff4ad80dcb68ddccd819a2c694a92224954f438aedf34299afab"
+   ]
+  },
+  "ml-sprite-size-msaa4": {
+   "probes": 16492,
+   "run_sha256": [
+    "b4cfb331c42c0c345bacb1940f6198aba1a18f3ad35e13fa8b6f7f91aba2d211",
+    "b4cfb331c42c0c345bacb1940f6198aba1a18f3ad35e13fa8b6f7f91aba2d211",
+    "b4cfb331c42c0c345bacb1940f6198aba1a18f3ad35e13fa8b6f7f91aba2d211"
+   ]
+  },
+  "ml-sprite-size-wide-msaa0": {
+   "probes": 2975,
+   "run_sha256": [
+    "b64db0c43a43bf596f459c72ca7325ebceb78632c762891d49f720de4d494e9b",
+    "b64db0c43a43bf596f459c72ca7325ebceb78632c762891d49f720de4d494e9b",
+    "b64db0c43a43bf596f459c72ca7325ebceb78632c762891d49f720de4d494e9b"
+   ]
+  },
+  "ml-sprite-size-wide-msaa4": {
+   "probes": 2975,
+   "run_sha256": [
+    "5bfb2a3a710d861358e311226b8ab589e88285bcc37e85b041e829a735f73ae8",
+    "5bfb2a3a710d861358e311226b8ab589e88285bcc37e85b041e829a735f73ae8",
+    "5bfb2a3a710d861358e311226b8ab589e88285bcc37e85b041e829a735f73ae8"
+   ]
+  },
+  "ml-sprite-two-msaa0": {
+   "probes": 9216,
+   "run_sha256": [
+    "40b35ebd3ea6d2f8ebbb11c9e72b28f0d38924414356b4e8851262a34fb2267e",
+    "40b35ebd3ea6d2f8ebbb11c9e72b28f0d38924414356b4e8851262a34fb2267e",
+    "40b35ebd3ea6d2f8ebbb11c9e72b28f0d38924414356b4e8851262a34fb2267e"
+   ]
+  }
+ },
+ "chrome": "Google Chrome 156.0.8078.79",
+ "generator": "oracle/tools/gen_metal_coverage.py",
+ "hardware": "Apple M1, macOS 27.0.1",
+ "pinned_x_ite": "16.5.0 34cdf9f97",
+ "platform": "apple-m1",
+ "recorded": "2026-11-03",
+ "recorder": "oracle/x_ite-anim.mjs, oracle/x_ite-anim-msaa.mjs",
+ "rule": "3 identical runs (loadFrames left out)"
+}

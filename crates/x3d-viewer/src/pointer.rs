@@ -1255,7 +1255,7 @@ fn pointing_draw(
         Prims::Lines(segments) => {
             let width = line_width(s.style.as_ref());
 
-            if width > x3d_render::gpu::MAX_LINE_WIDTH {
+            if width > x3d_render::gpu::max_line_width() {
                 // displaySimpleThick: the transformed triangles of the DISPLAY pass, six vertices per segment.
                 let Some(x3d_render::traverse::StyleParams::Line(l)) = s.style else {
                     unreachable!()

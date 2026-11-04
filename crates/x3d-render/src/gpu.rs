@@ -1499,6 +1499,7 @@ impl Renderer {
         queue: wgpu::Queue,
         target: Option<(wgpu::TextureFormat, u32)>,
     ) -> Renderer {
+        note_line_width_backend(&device);
         let shader = device.create_shader_module(wgpu::ShaderModuleDescriptor {
             label: Some("x3d.wgsl"),
             source: wgpu::ShaderSource::Wgsl(include_str!("x3d.wgsl").into()),
@@ -5474,7 +5475,7 @@ impl Renderer {
                 if l.linetype != 1 || l.width > 1.0 {
                     // POINT: gl.lineWidth does not apply to points, transformed lines are drawn
                     // with TRIANGLES -> POINTS.
-                    let l = if points && l.width <= MAX_LINE_WIDTH {
+                    let l = if points && l.width <= max_line_width() {
                         LineParams { width: 1.0, ..l }
                     } else {
                         l
@@ -5510,7 +5511,7 @@ impl Renderer {
                         // displayInstancedThick of the transformed lines: their vertices from a compute pass.
                         Some(i)
                             if !i.matrices.is_empty()
-                                && l.width > MAX_LINE_WIDTH
+                                && l.width > max_line_width()
                                 && !points
                                 && item.custom.is_none() =>
                         {
@@ -5567,7 +5568,7 @@ impl Renderer {
                         Topology::Lines
                     };
                     // WIREFRAME: only the transformed thick lines are triangles in X_ITE.
-                    base.polygon_line = wireframe && l.width > MAX_LINE_WIDTH;
+                    base.polygon_line = wireframe && l.width > max_line_width();
                     base.bias = (0, 0);
                 }
             }
@@ -6320,8 +6321,47 @@ impl GpuTimer {
 const STIPPLE_FLOATS_PER_VERTEX: usize = FLOATS_PER_VERTEX + 4;
 
 /// ALIASED_LINE_WIDTH_RANGE [1] of the oracle GPU (ANGLE on OpenGL, NVIDIA): wider lines are
-/// transformed into triangles (LineProperties.transformLines), narrower ones use gl.lineWidth.
+/// transformed into triangles (LineProperties.transformLines), narrower ones use gl.lineWidth. This is the value of every
+/// backend but Metal; see [`max_line_width`].
 pub const MAX_LINE_WIDTH: f64 = 10.0;
+
+/// ALIASED_LINE_WIDTH_RANGE [1] of ANGLE on Metal, measured on the physical M1 (Chrome 156): Metal has no wide lines, so
+/// the pinned page makes triangles of every line wider than 1 (LineProperties.set_linewidthScaleFactor__).
+pub const MAX_LINE_WIDTH_METAL: f64 = 1.0;
+
+static MAX_LINE_WIDTH_BITS: std::sync::atomic::AtomicU64 =
+    std::sync::atomic::AtomicU64::new(MAX_LINE_WIDTH.to_bits());
+
+/// The aliased line width the pinned page's GPU draws with gl.lineWidth: a wider line is transformed into triangles. The
+/// page reads `gl.getParameter (gl.ALIASED_LINE_WIDTH_RANGE) [1]`, a property of the GPU and the ANGLE backend, so this
+/// is a property of the adapter backend: [`MAX_LINE_WIDTH`] (10) except on Metal ([`MAX_LINE_WIDTH_METAL`], 1). It is set
+/// by [`note_line_width_backend`] when a renderer or a pointing buffer takes its device.
+pub fn max_line_width() -> f64 {
+    f64::from_bits(MAX_LINE_WIDTH_BITS.load(std::sync::atomic::Ordering::Relaxed))
+}
+
+/// The line width limit of `backend` ([`max_line_width`]).
+pub fn max_line_width_of(backend: wgpu::Backend) -> f64 {
+    if backend == wgpu::Backend::Metal {
+        MAX_LINE_WIDTH_METAL
+    } else {
+        MAX_LINE_WIDTH
+    }
+}
+
+/// Sets [`max_line_width`] directly: for a run without a device (the CPU depth stand-in) that stands for a given backend,
+/// e.g. `--aliased-line-width-max 1` of the drive binaries for the M1 recordings.
+pub fn set_max_line_width(width: f64) {
+    MAX_LINE_WIDTH_BITS.store(width.to_bits(), std::sync::atomic::Ordering::Relaxed);
+}
+
+/// Makes [`max_line_width`] the limit of the backend of `device`.
+pub fn note_line_width_backend(device: &wgpu::Device) {
+    MAX_LINE_WIDTH_BITS.store(
+        max_line_width_of(device.adapter_info().backend).to_bits(),
+        std::sync::atomic::Ordering::Relaxed,
+    );
+}
 
 /// The vertices of a line geometry with LineProperties, in the stipple layout. `projection` is the
 /// GL projection, window coordinates have their origin at the lower left (gl_FragCoord).
@@ -6390,7 +6430,7 @@ fn line_style_vertices(
     };
 
     let stippled = l.linetype != 1;
-    let thick = l.width > MAX_LINE_WIDTH;
+    let thick = l.width > max_line_width();
     let triangles = l.width > 1.0;
     let mut out = Vec::new();
     let mut length_so_far = 0.0;
