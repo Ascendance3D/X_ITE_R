@@ -15,8 +15,7 @@ use serde_json::Value;
 /// a value where a channel is exactly x.5 in real arithmetic, Blink's 32-bit evaluation lands on
 /// one side of it, and the port's lands on the other. `known_hwb_ties_are_exact_ties` proves every
 /// entry really is such a tie, so the list cannot hide a real error. Every other value must match
-/// exactly. Not covered: relative colors (`lab(from red l a b)`), which Chrome accepts and the port
-/// does not parse.
+/// exactly. Relative colors (`lab(from red l a b)`) are covered by `rea_css5_relative_color.rs`.
 const KNOWN_HWB_TIES: &[&str] = &[
     "hwb(10 0% 0%)",
     "hwb(10 10% 10%)",
@@ -131,11 +130,6 @@ fn css4_colors_match_chrome() {
 
     for entry in baseline["entries"].as_array().unwrap() {
         let value = entry[0].as_str().unwrap();
-
-        // Relative color syntax is not implemented (see `KNOWN_HWB_TIES`).
-        if value.contains("(from ") {
-            continue;
-        }
 
         let ours = x3d_parse::color::try_convert_color(value);
 

@@ -1,7 +1,10 @@
 //! X3DParser.convertColor: X_ITE lets the browser's CSS engine parse a color name and reads
 //! back the computed `rgb()`/`rgba()`. An invalid color inherits the wrapper's `white`.
 //! This covers CSS named colors, hex notation, `rgb()/rgba()/hsl()/hsla()` and the CSS Color 4
-//! functions `hwb()`, `lab()`, `lch()`, `oklab()`, `oklch()` and `color()`.
+//! functions `hwb()`, `lab()`, `lch()`, `oklab()`, `oklch()` and `color()`, and their CSS Color 5
+//! relative forms (`lab(from red l a b)`, see `relative`).
+
+mod relative;
 
 const NAMED: &[(&str, u32)] = &[
     ("aliceblue", 0xf0f8ff),
@@ -501,6 +504,16 @@ fn hue_rgb_f32(h: f32, s: f32, l: f32) -> [f32; 3] {
 fn functional(s: &str) -> Option<[f64; 4]> {
     let open = s.find('(')?;
     let name = s[..open].to_ascii_lowercase();
+    let inner = &s[open + 1..s.len() - 1];
+
+    // CSS Color 5 relative colors: `lab(from red l a b)`.
+    if inner
+        .trim_start()
+        .strip_prefix("from")
+        .is_some_and(|rest| rest.starts_with(|c: char| c.is_ascii_whitespace()))
+    {
+        return relative::relative_color(&name, inner);
+    }
 
     match name.as_str() {
         "hwb" | "lab" | "lch" | "oklab" | "oklch" => {
@@ -597,7 +610,25 @@ fn functional(s: &str) -> Option<[f64; 4]> {
 /// The computed color of `value` as a CSS parser would give it, or `None` where the browser
 /// ignores the declaration (an invalid color keeps the wrapper's color, see `convert_color`).
 pub fn try_convert_color(value: &str) -> Option<[f64; 4]> {
-    let lower = value.to_ascii_lowercase();
+    let mut lower = value.to_ascii_lowercase();
+
+    // A relative color left open at the end of the text is closed there, as CSS parsing does
+    // (the SVG color token ends at the first `)`, so `rgb(from red r g b / max(r, 1)` is open).
+    if let Some(open) = lower.find('(') {
+        let depth = lower
+            .matches('(')
+            .count()
+            .saturating_sub(lower.matches(')').count());
+
+        if depth > 0
+            && lower[open + 1..]
+                .trim_start()
+                .strip_prefix("from")
+                .is_some_and(|rest| rest.starts_with(|c: char| c.is_ascii_whitespace()))
+        {
+            lower.push_str(&")".repeat(depth));
+        }
+    }
 
     if lower == "transparent" {
         return Some([0.0, 0.0, 0.0, 0.0]);
@@ -619,6 +650,12 @@ pub fn try_convert_color(value: &str) -> Option<[f64; 4]> {
             1.0,
         )
     })
+}
+
+/// Like `try_convert_color`, with `currentcolor` inside a relative color meaning `current`
+/// (`[r, g, b, a]` in [0, 1]), the color of the wrapper element `convertColor` sets.
+pub fn try_convert_color_in(value: &str, current: [f64; 4]) -> Option<[f64; 4]> {
+    relative::with_current(current, || try_convert_color(value))
 }
 
 /// Returns `[r, g, b, a]` in [0, 1] like X3DParser.convertColor.
