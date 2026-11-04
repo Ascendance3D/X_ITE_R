@@ -1,0 +1,3 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="130" height="10" viewBox="0 0 130 10">
+<rect x="0" width="9" height="9" fill="color(from color(xyz-d50 0.3 0.4 0.5) xyz-d50 x y z)"/><rect x="10" width="9" height="9" fill="color(from color(xyz-d65 0.3 0.4 0.5) srgb-linear r g b)"/><rect x="20" width="9" height="9" fill="lab(from rebeccapurple l a b)"/><rect x="30" width="9" height="9" fill="color(from rebeccapurple xyz-d50 x y z)"/><rect x="40" width="9" height="9" fill="color(from orange srgb-linear r g b)"/><rect x="50" width="9" height="9" fill="lab(from teal l a b)"/>
+</svg>

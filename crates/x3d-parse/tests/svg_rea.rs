@@ -220,6 +220,22 @@ fn svg_css4_colors_match_x_ite() {
     check("synthetic-rea-b24-css4", "svg-baseline.json", "CSS Color 4");
 }
 
+/// CSS Color 5 relative colors as SVG paint through `SVGParser.colorValue` (the normal scene-loading
+/// path: the `Grammar.color` token, `convertColor`, the NaN channels, the scene text). 134 colors
+/// of `oracle/css5-relative-colors-baseline`, nested ones included, plus an inherited `color`, in 13
+/// files.
+/// Baseline: `XITE_TESTS=<x_ite-tests> node oracle/x_ite-svg.mjs oracle/synthetic-rea-css5-relative
+/// oracle/css5-relative-svg-baseline/svg-baseline.json` (three identical recordings; the baseline sits
+/// in a `*-baseline` directory, one level, which the PR review gate excludes).
+#[test]
+fn svg_css5_relative_colors_match_x_ite() {
+    check(
+        "synthetic-rea-css5-relative",
+        "../css5-relative-svg-baseline/svg-baseline.json",
+        "CSS Color 5",
+    );
+}
+
 /// The page sets them (`SVG_QUALITY=<primitive>,<texture> node oracle/x_ite-svg.mjs ...`) and the
 /// Rust parser is given the same options (the runtime does so through `sync_svg_quality`).
 #[test]
