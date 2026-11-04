@@ -1,0 +1,61 @@
+#X3D V4.1 utf8
+PROFILE Full
+META "title" "pc screen"
+DEF L1 FontLibrary { family "CffLib" url "../synthetic-rea-b24-cff/cff-basic.otf" }
+Shape { geometry DEF T1 Text { string [ "ABAB BA OS" "AB" ]  fontStyle ScreenFontStyle { family "CffLib" pointSize 24 } } }
+Shape { geometry DEF T2 Text { string [ "HiFQ" "AB O" ]  fontStyle ScreenFontStyle { family "CffLib" pointSize 16 spacing 1.5 } } }
+Shape { geometry DEF T3 Text { string [ "AB OS" "HiF" ]  fontStyle ScreenFontStyle { family "CffLib" pointSize 20 justify [ "MIDDLE" "MIDDLE" ] } } }
+Shape { geometry DEF T4 Text { string [ "ABO" "SiHF" ]  fontStyle ScreenFontStyle { family "CffLib" pointSize 12 leftToRight FALSE } } }
+Shape { geometry DEF T5 Text { string [ "ABOS HFQ" ] maxExtent 0.5 fontStyle ScreenFontStyle { family "CffLib" pointSize 24 } } }
+Shape { geometry DEF T6 Text { string [ "ABO" "SiH" ]  fontStyle ScreenFontStyle { family "CffLib" pointSize 18 horizontal FALSE } } }
+DEF P Script {
+  inputOutput MFString out [ ]
+
+  url "ecmascript:
+
+var R_ = [];
+function strip (s) { return String (s) .replace (/https?:\\/\\/[^\\/]+\\//g, ''); }
+function show (v, d) {
+  if (typeof v === 'number') return Object.is (v, -0) ? 'n:-0' : 'n:' + v;
+  if (typeof v === 'string') return 's:' + JSON.stringify (strip (v));
+  if (v === null || v === undefined) return String (v);
+  if (typeof v === 'function') return 'fn';
+  if (typeof v === 'boolean') return 'b:' + v;
+  if (Array.isArray (v)) return 'A[' + v .map (function (x) { return show (x); }) .join (',') + ']';
+  var c = v .constructor;
+  return (c && c .name || '?') + ':' + String (v) + raw (v);
+}
+// The components of a field object at full double precision (String () rounds floats).
+function raw (v) {
+  if (typeof v .getTypeName !== 'function' || !v [Symbol .iterator] || v .getTypeName () .indexOf ('MF') === 0 && !v .length) return '';
+  try { var a = Array .from (v, function (x) { return typeof x === 'object' && x && x [Symbol .iterator] ? '(' + Array .from (x, function (y) { return typeof y === 'object' && y && y [Symbol .iterator] ? '(' + Array .from (y) .join (' ') + ')' : y; }) .join (' ') + ')' : x; }); return ' raw=' + a .join (' '); } catch (e) { return ' raw=ERR'; }
+}
+function errText (e) {
+  var n = e && e .name;
+  if (n === 'TypeError' || n === 'ReferenceError' || n === 'SyntaxError') return 'ERR ' + n + ' (engine wording)';
+  return 'ERR ' + n + ': ' + strip (e && e .message);
+}
+function T (n, f) {
+  var r;
+  try { r = show (f ()); } catch (e) { r = errText (e); }
+  R_ .push ((R_ .length < 10 ? '00' : R_ .length < 100 ? '0' : '') + R_ .length + ' ' + n + ' = ' + r);
+}
+function flush_ () { out = new MFString (... R_); }
+
+var SELF;
+var F_ = 0;
+function N (n) { return Browser .currentScene .getNamedNode (n); }
+function RD (t, tag) { ['origin', 'textBounds', 'lineBounds'] .forEach (function (f) { T (t + tag + '.' + f, function () { return N (t) [f]; }); }); }
+
+function initialize () {
+  SELF = this;
+
+  flush_ ();
+}
+function prepareEvents () {
+  ++ F_;
+  if (F_ === 40) { RD ('T1', ''); RD ('T2', ''); RD ('T3', ''); RD ('T4', ''); RD ('T5', ''); RD ('T6', ''); flush_ (); }
+}
+
+  "
+}
