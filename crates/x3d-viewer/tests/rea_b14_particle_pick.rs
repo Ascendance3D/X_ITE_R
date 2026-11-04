@@ -140,9 +140,7 @@ fn compare_probes(
 }
 
 fn run_case(root: &Path, name: &str, failures: &mut Vec<String>) {
-    let base = root
-        .join("oracle/rea-b14-particle-pick-baseline")
-        .join(name);
+    let base = common::reference::pair_dir(root, "rea-b14-particle-pick-baseline", name);
     let world = root
         .join("oracle/synthetic-rea-b14-particle-pick")
         .join(format!("{name}.x3dv"));

@@ -3,7 +3,7 @@
 
 mod common;
 
-use common::reference::js_json_for;
+use common::reference::{js_json_for, pair_dir_for};
 use std::path::Path;
 
 fn make(root: &Path, dir: &str) {
@@ -50,4 +50,33 @@ fn an_unknown_platform_stops_the_test() {
     // SAFETY: this test binary has no other thread that reads the environment at the same time.
     unsafe { std::env::set_var("X3D_REFERENCE_PLATFORM", "no-such-platform") };
     let _ = common::reference::platform();
+}
+
+#[test]
+fn a_particle_case_uses_the_platform_directory_only_when_it_holds_both_files() {
+    let root = std::env::temp_dir().join(format!("reference-pair-{}", std::process::id()));
+    std::fs::create_dir_all(&root).unwrap();
+    make(&root, "oracle/pb/c-x");
+    std::fs::write(root.join("oracle/pb/c-x/js.f32"), "").unwrap();
+    make(&root, "oracle/pb-apple-m1/c-x");
+    make(&root, "oracle/pb-apple-m1/c-y");
+    std::fs::write(root.join("oracle/pb-apple-m1/c-y/js.f32"), "").unwrap();
+
+    // No platform: the NVIDIA directory.
+    assert_eq!(
+        pair_dir_for(&root, "pb", "c-y", None),
+        root.join("oracle/pb/c-y")
+    );
+    // A platform directory with js.json only is not used (js.f32 would come from another recording).
+    assert_eq!(
+        pair_dir_for(&root, "pb", "c-x", Some("apple-m1")),
+        root.join("oracle/pb/c-x")
+    );
+    // Both files: used.
+    assert_eq!(
+        pair_dir_for(&root, "pb", "c-y", Some("apple-m1")),
+        root.join("oracle/pb-apple-m1/c-y")
+    );
+
+    std::fs::remove_dir_all(&root).unwrap();
 }

@@ -58,3 +58,26 @@ pub fn js_json_for(
 pub fn js_json(root: &Path, base: &str, name: &str, msaa: u32) -> PathBuf {
     js_json_for(root, base, name, msaa, platform().as_deref())
 }
+
+/// The directory of a particle case (`js.json` and `js.f32` side by side, rea_b14 and rea_b15): the platform's directory
+/// `oracle/<base>-<platform>/<name>` when both files are there, else the NVIDIA one `oracle/<base>/<name>`.
+pub fn pair_dir_for(root: &Path, base: &str, name: &str, platform: Option<&str>) -> PathBuf {
+    let own = root.join(format!("oracle/{base}/{name}"));
+
+    let Some(p) = platform else {
+        return own;
+    };
+
+    let over = root.join(format!("oracle/{base}-{p}/{name}"));
+
+    if over.join("js.json").is_file() && over.join("js.f32").is_file() {
+        eprintln!("reference: {name} uses the {p} recording");
+        over
+    } else {
+        own
+    }
+}
+
+pub fn pair_dir(root: &Path, base: &str, name: &str) -> PathBuf {
+    pair_dir_for(root, base, name, platform().as_deref())
+}
