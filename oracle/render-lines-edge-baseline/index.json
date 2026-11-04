@@ -1,0 +1,128 @@
+{
+ "pinned": "34cdf9f97",
+ "chrome": "156.0.8078.47",
+ "size": [
+  256,
+  256
+ ],
+ "frames": 10,
+ "settleMs": 400,
+ "gl": {
+  "vendor": "Google Inc. (NVIDIA Corporation)",
+  "renderer": "ANGLE (NVIDIA Corporation, NVIDIA GeForce RTX 3060 Ti/PCIe/SSE2, OpenGL ES 3.2)",
+  "version": "WebGL 2.0 (OpenGL ES 3.0 Chromium)",
+  "contextAttributes": {
+   "alpha": true,
+   "antialias": false,
+   "depth": true,
+   "desynchronized": false,
+   "failIfMajorPerformanceCaveat": false,
+   "powerPreference": "default",
+   "premultipliedAlpha": true,
+   "preserveDrawingBuffer": true,
+   "stencil": false,
+   "xrCompatible": false
+  },
+  "multisampling": 0,
+  "antialiased": true,
+  "splashVisible": false,
+  "canvasDisplay": "inline",
+  "drawingBuffer": [
+   256,
+   256
+  ],
+  "x_ite": "16.5.0"
+ },
+ "results": [
+  {
+   "file": "lines-edge-cam2.wrl",
+   "ok": true,
+   "log": [],
+   "width": 256,
+   "height": 256,
+   "rgbaSha256": "13ef981ced2cf82f32b1629f8fd674a815c680dc3360fad5459147c118c6fea8",
+   "pngSha256": "d81e6cb231dca3089d32de770960b96de9a772e457b52407dfd47babe3a92850",
+   "splashVisible": false,
+   "canvasDisplay": "block"
+  },
+  {
+   "file": "lines-edge-cam3.wrl",
+   "ok": true,
+   "log": [],
+   "width": 256,
+   "height": 256,
+   "rgbaSha256": "1a2b1be77347ec97a77fdadbe1ce5a1b875706d141cd2867da8bb149bc25893e",
+   "pngSha256": "7329eddd700a927106f94038c7a8fdf33119bf61812b33d7848a1244db526df5",
+   "splashVisible": false,
+   "canvasDisplay": "block"
+  },
+  {
+   "file": "lines-edge-cam4.wrl",
+   "ok": true,
+   "log": [],
+   "width": 256,
+   "height": 256,
+   "rgbaSha256": "8d7fb08cf998dc4c4d8aa7b036d9daff8898d34deba1bdf5ebda612c0e42c2ba",
+   "pngSha256": "abdd371faff0406f6bad43cf1e77b309a1777eb8cc7817bb191bc9cfa94d9d9d",
+   "splashVisible": false,
+   "canvasDisplay": "block"
+  },
+  {
+   "file": "lines-edge-points.wrl",
+   "ok": true,
+   "log": [],
+   "width": 256,
+   "height": 256,
+   "rgbaSha256": "9c99c2b2e2b59e81bd288192a1ce1677a2550356fc099aa9688509128c23fd16",
+   "pngSha256": "c1a9ad1c2334a9befa8c94ff73f67ed3cf2432bc0658ba0e36b805b0e27b88a7",
+   "splashVisible": false,
+   "canvasDisplay": "block"
+  },
+  {
+   "file": "lines-edge-thin.wrl",
+   "ok": true,
+   "log": [],
+   "width": 256,
+   "height": 256,
+   "rgbaSha256": "b1a202cee7e20b36593a9a4b895e35851442992c84339d49d45e932932d5868d",
+   "pngSha256": "9904e4538dfcf57622d3399c977aeaca4025460fe08e2e092155427f599bf488",
+   "splashVisible": false,
+   "canvasDisplay": "block"
+  },
+  {
+   "file": "lines-edge-wide.wrl",
+   "ok": true,
+   "log": [],
+   "width": 256,
+   "height": 256,
+   "rgbaSha256": "30b8d436c8ab37997e341ce68f876613afb1df5d553525398036cce2b6195fc6",
+   "pngSha256": "99290fb4cb38f77e3e37edc31b9842cdb303db5ac4d15cc4b67480b5048e6631",
+   "splashVisible": false,
+   "canvasDisplay": "block"
+  },
+  {
+   "file": "lines-edge.wrl",
+   "ok": true,
+   "log": [],
+   "width": 256,
+   "height": 256,
+   "rgbaSha256": "ae68a3a92be9ad19db8eac0ae7934738acee975cb8db830c2a79c6181aeb5738",
+   "pngSha256": "e820c0a5d887610d82993ff9f4610fb744fefdd95d6b6e7742abe4b78e9d10ab",
+   "splashVisible": false,
+   "canvasDisplay": "block"
+  }
+ ],
+ "repeatRuns": {
+  "count": 3,
+  "identical": true,
+  "rgbaSha256": {
+   "lines-edge-cam2.wrl": "13ef981ced2cf82f32b1629f8fd674a815c680dc3360fad5459147c118c6fea8",
+   "lines-edge-cam3.wrl": "1a2b1be77347ec97a77fdadbe1ce5a1b875706d141cd2867da8bb149bc25893e",
+   "lines-edge-cam4.wrl": "8d7fb08cf998dc4c4d8aa7b036d9daff8898d34deba1bdf5ebda612c0e42c2ba",
+   "lines-edge-points.wrl": "9c99c2b2e2b59e81bd288192a1ce1677a2550356fc099aa9688509128c23fd16",
+   "lines-edge-thin.wrl": "b1a202cee7e20b36593a9a4b895e35851442992c84339d49d45e932932d5868d",
+   "lines-edge-wide.wrl": "30b8d436c8ab37997e341ce68f876613afb1df5d553525398036cce2b6195fc6",
+   "lines-edge.wrl": "ae68a3a92be9ad19db8eac0ae7934738acee975cb8db830c2a79c6181aeb5738"
+  }
+ }
+}

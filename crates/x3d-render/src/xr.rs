@@ -11,11 +11,15 @@
 //! * `x3d_EyeMatrix` (`view .matrix`, `pose .cameraSpaceMatrix .multRight (view .viewMatrix)`) is applied to the
 //!   positions only: `tVertex = x3d_EyeMatrix * x3d_ModelViewMatrix * vertex` (X3D_XR_SESSION).
 //!
+//! * the clip planes of each shape are in the space of its model-view matrix (after the pose) and get the eye matrix
+//!   (ClipPlaneContainer.setShaderUniforms with a view);
+//! * the shadow matrix of each light with a shadow map is `view .inverse · cameraSpaceMatrix · invLightSpaceProjectionMatrix`
+//!   (X3DLight setGlobalVariables), where `view .inverse` is the view's own transform and then the pose's inverse.
+//!
 //! The pose is given by its matrices, as XRRigidTransform and XRView hand them out (16 numbers, column-major). Not done
-//! (UNVERIFIED, no reference recorded): the shadow matrices that X_ITE builds from `view .inverse`, backgrounds under
-//! a pose, projective textures, clip planes, and the screen-space geometries (points and lines).
+//! (UNVERIFIED, no reference recorded): backgrounds of a layer other than the active one and projective textures.
 
-use crate::traverse::Frame;
+use crate::traverse::{Frame, plane_mult_right};
 use x3d_fields::math::{Matrix3, Matrix4};
 
 /// One XRView: the projection matrix, `transform .inverse .matrix` (X3DWebXRContext `view .viewMatrix`) and the
@@ -66,6 +70,17 @@ pub fn view_frame(frame: &Frame, pose: &XrPose, view: &XrView) -> (Frame, Matrix
         item.model_view.mult_right(&pose.view_matrix);
     }
 
+    // The clip planes are in the space of the model-view matrix, so after the pose, and the eye matrix is then put on
+    // each plane (ClipPlaneContainer.setShaderUniforms with a view: `planeView .assign (plane) .multRight (view .matrix)`),
+    // since the shader tests the position after `x3d_EyeMatrix`.
+    let eye = pose.eye_matrix(view);
+
+    for item in &mut f.items {
+        for plane in &mut item.clip_planes {
+            *plane = plane_mult_right(plane_mult_right(*plane, &pose.view_matrix), &eye);
+        }
+    }
+
     // The lights' model-view matrices start with the pose as well (PointLight.setGlobalVariables:
     // `modelViewMatrix .multVecMatrix (location)`, and the inverse of its 3 x 3 for the cone and the attenuation).
     let mut pose_inverse = pose.view_matrix.submatrix();
@@ -85,5 +100,26 @@ pub fn view_frame(frame: &Frame, pose: &XrPose, view: &XrView) -> (Frame, Matrix
         }
     }
 
-    (f, pose.eye_matrix(view))
+    // The shadow matrix of every light with a shadow map (X3DLight setGlobalVariables, in all three light nodes):
+    // `view .inverse .multRight (cameraSpaceMatrixArray) .multRight (invLightSpaceProjectionMatrix)`. The frame's
+    // matrix is `cameraSpaceMatrix · invLightSpaceProjectionMatrix` of the viewpoint; under a pose the layer's camera
+    // space matrix starts with `pose .cameraSpaceMatrix` and `view .inverse` is
+    // `view .cameraSpaceMatrix .multRight (pose .viewMatrix)`. The map itself is drawn once, from the light.
+    let mut view_inverse = view.view_matrix;
+
+    view_inverse.inverse();
+    view_inverse.mult_right(&pose.view_matrix);
+
+    for light in &mut f.lights {
+        if let Some(shadow) = &mut light.shadow {
+            let mut m = view_inverse;
+
+            m.mult_right(&pose.camera_space);
+            m.mult_right(&shadow.matrix);
+
+            shadow.matrix = m;
+        }
+    }
+
+    (f, eye)
 }
