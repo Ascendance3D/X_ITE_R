@@ -66,9 +66,17 @@ Pinned: step 5: C is COMPLETE, `loadCount` 0; console "B fraction 0, parent tick
 
 Rust (browser build): step 5: `Inl` IN_PROGRESS, `loadCount` 1, console as pinned. Step 6: COMPLETE, console "C fraction 0, A fraction 6" (the pinned page prints "B fraction 2" there). The native build adds `shutdown` lines.
 
-Reason (verified in the Rust code, not yet in the pinned source): every request has a generation number; a result of an older generation is dropped. B is dropped, so C completes one frame later. X_ITE applies B's result before C's.
+Reason, in part (verified in the Rust code, not yet in the pinned source): every request has a generation number; a result of an older generation is dropped, so B is never shown. X_ITE applies B's result before C's. Why C completes one frame later in Rust than in X_ITE is not explained yet; it is part of the fix.
 
-Decision: this is not a permanent difference. Fix: apply the result of an older request when it arrives before a newer request completes, where the pinned behavior is safe; never let an older request replace a newer completed scene; do not weaken the generation guard; find the cause of the one-frame completion difference. Use the existing cases and strict negative controls. The difference stays in `synthetic-inline-reload-known.tsv` until the fix merges.
+Decision: this is not a permanent difference. Fix it. Acceptance rules for the fix (each one needs a strict negative control, and the generation guard is not weakened):
+
+1. A result of an older request may be applied only while a newer request is still pending, and only if the Inline was not unloaded (`load` FALSE) and no newer request has completed or failed.
+2. An older scene that was applied in this way is disposed before the newer scene becomes current; it never becomes the scene that survives.
+3. A result of an older request that arrives after the newer request has completed, or after it has failed, is dropped.
+4. An older result never changes the state (load state, load count, failure) that belongs to the newer request.
+5. `load` FALSE cancels every outstanding request, whatever its generation (c09 stays as decided above), and an older scene that was applied is unloaded with it.
+
+Find the cause of the one-frame completion difference of C (X_ITE: COMPLETE at step 5; Rust: IN_PROGRESS at step 5, COMPLETE at step 6) in the pinned source and in the Rust code, and match it where rules 1 to 5 hold. Use the existing synthetic cases. The difference stays in `synthetic-inline-reload-known.tsv` until the fix merges.
 
 The EXTERNPROTO disposed-context behavior (issue #58) is a different case and already matches X_ITE 16.5.0.
 
