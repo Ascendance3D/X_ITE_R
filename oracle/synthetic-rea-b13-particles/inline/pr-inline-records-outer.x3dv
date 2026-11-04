@@ -1,0 +1,4 @@
+#X3D V3.3 utf8
+PROFILE Full
+COMPONENT ParticleSystems:3
+Transform { translation 0.3 0 0 scale 1 1.2 1 children [ DEF IN Inline { url "pr-inline-records-inner.x3dv" } ] }

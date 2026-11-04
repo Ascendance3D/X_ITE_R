@@ -651,6 +651,15 @@ by side) come from `tools/rea_b22_two_layer_shadows.py record` (three identical 
 `crates/x3d-viewer/tests/rea_b22_two_layer_shadows.rs` compares the records, the whole images (B18 rule) and each layer's
 half of them.
 
+The ParticleSystem shadow-culling baselines `rea-b25-particle-shadow-cull-baseline/` (MSAA 0 and 4 images of a SpotLight, a
+PointLight and a DirectionalLight over a floor, with a system whose bbox is outside the light's view volume) come from
+`tools/rea_b25_particle_shadow_cull.py record` (three identical runs per pass). Their worlds are
+`synthetic-rea-b25-particle-shadow-cull/` (`tools/gen_rea_b25_particle_shadow_cull.py`), and
+`crates/x3d-viewer/tests/rea_b25_particle_shadow_cull.rs` compares the records and at most 8 pixels per image. The records
+of a system inside an Inline (`pr-inline-records*` in `synthetic-rea-b13-particles/`) are dumped by naming it with a path in
+the script's `node`, `"INLINE/NAME"` (DEF names; `x3d-oracle particles` and `x3d-particles-drive` descend through
+Inline `.getInternalScene ()`); the texCoord-ramp-on-POINT/LINE cases are `pr-point-texramp*` and `pr-line-texramp`.
+
 When Chrome is needed: only to make or refresh an X_ITE reference (a baseline, an
 x10_compare run, a particle reference). The Rust tests compare against committed baselines.
 `cargo test --workspace --release`
