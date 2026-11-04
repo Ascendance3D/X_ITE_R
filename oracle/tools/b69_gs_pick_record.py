@@ -73,7 +73,9 @@ def platform(args):
     assert plat in PLATFORMS, f"platform must be one of {PLATFORMS}"
     assert hardware.strip(), "--hardware TEXT is required (the machine, GPU and OS of the recording)"
     assert os.environ.get("X3D_ORACLE_CHROME") and os.environ.get("X3D_ORACLE_ANGLE"), "set X3D_ORACLE_CHROME and X3D_ORACLE_ANGLE"
-    sha = lambda p: hashlib.sha256(open(p, "rb").read()).hexdigest()
+    def sha(p):
+        with open(p, "rb") as f:
+            return hashlib.sha256(f.read()).hexdigest()
     tmp = tempfile.mkdtemp(prefix="b69-gs-pick-platform-")
     keep, same = [], []
     for log in (False, True):
@@ -93,7 +95,13 @@ def platform(args):
                     same.append(f"{base} {name}-msaa{msaa}")
                 else:
                     keep.append((base, f"{name}-msaa{msaa}", runs[0]))
-    pinned = open(os.path.join(root, "oracle", "x_ite-pin", "PINNED_COMMIT")).read().strip()
+    # A pick does not depend on the multisampling (b69_gs_pick.rs asserts MSAA 0 == MSAA 4), so a case is kept at both levels
+    # or at neither: the test takes one platform flag for the two.
+    kept = {(b, c.rsplit("-msaa", 1)[0], c.rsplit("-msaa", 1)[1]) for b, c, _ in keep}
+    for b, n, _ in kept:
+        assert {m for b2, n2, m in kept if (b2, n2) == (b, n)} == {"0", "4"}, f"{b} {n}: kept at one MSAA level only"
+    with open(os.path.join(root, "oracle", "x_ite-pin", "PINNED_COMMIT")) as f:
+        pinned = f.read().strip()
     chrome = subprocess.run([os.environ["X3D_ORACLE_CHROME"], "--version"], capture_output=True, text=True).stdout.strip()
     # Each destination is staged whole and then replaces the old one, so no file of an earlier recording survives (a case
     # now equal to the NVIDIA recording loses its platform file) and an interrupted run leaves the old directory intact.
@@ -114,8 +122,11 @@ def platform(args):
                     pinned_x_ite="16.5.0 " + pinned, recorder="x3d-oracle particles (oracle/tools/b69_gs_pick_record.py platform)",
                     recorded=datetime.date.today().isoformat(), cases=cases,
                     rule="3 byte-identical runs; kept only where the NVIDIA recording differs",
-                    not_kept={n: why for n, why in NOT_KEPT.items()})
-        json.dump(prov, open(os.path.join(dest, "PROVENANCE.json"), "w"), indent=1, sort_keys=True)
+                    not_kept={n: why for n, why in NOT_KEPT.items()},
+                    equal_to_nvidia=sorted(c.split(" ", 1)[1] for c in same if c.startswith(base + " ")
+                                           and c.split(" ", 1)[1].rsplit("-msaa", 1)[0] not in NOT_KEPT))
+        with open(os.path.join(dest, "PROVENANCE.json"), "w") as f:
+            json.dump(prov, f, indent=1, sort_keys=True)
         old = final + ".old"
         shutil.rmtree(old, ignore_errors=True)
         if os.path.exists(final):
