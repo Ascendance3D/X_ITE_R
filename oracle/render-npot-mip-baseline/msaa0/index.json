@@ -1,0 +1,150 @@
+{
+ "pinned": "34cdf9f97",
+ "chrome": "156.0.8078.47",
+ "ms": "0",
+ "size": [
+  512,
+  512
+ ],
+ "frames": 10,
+ "settleMs": 400,
+ "gl": {
+  "vendor": "Google Inc. (NVIDIA Corporation)",
+  "renderer": "ANGLE (NVIDIA Corporation, NVIDIA GeForce RTX 3060 Ti/PCIe/SSE2, OpenGL ES 3.2)",
+  "version": "WebGL 2.0 (OpenGL ES 3.0 Chromium)",
+  "contextAttributes": {
+   "alpha": true,
+   "antialias": false,
+   "depth": true,
+   "desynchronized": false,
+   "failIfMajorPerformanceCaveat": false,
+   "powerPreference": "default",
+   "premultipliedAlpha": true,
+   "preserveDrawingBuffer": true,
+   "stencil": false,
+   "xrCompatible": false
+  },
+  "multisampling": 0,
+  "antialiased": false,
+  "splashVisible": false,
+  "canvasDisplay": "inline",
+  "drawingBuffer": [
+   512,
+   512
+  ],
+  "maxSamples": 8,
+  "x_ite": "16.5.0"
+ },
+ "results": [
+  {
+   "file": "npot-100x60.wrl",
+   "ok": true,
+   "log": [],
+   "width": 512,
+   "height": 512,
+   "rgbaSha256": "7b73aed7c79363ce4e58ab9941b74b3371b8e93fb279900524e6f1a2d37290a0",
+   "pngSha256": "248a25b2ab03b7c7d2ee88284a2c6cad9c4b34497de65ecd763c76a4c15b2e3c",
+   "splashVisible": false,
+   "canvasDisplay": "block"
+  },
+  {
+   "file": "npot-129x65.wrl",
+   "ok": true,
+   "log": [],
+   "width": 512,
+   "height": 512,
+   "rgbaSha256": "b57c82f44dd76209c832dc7998e87ebee291096c4c65aa9674cdaaf9639b2e90",
+   "pngSha256": "2b1684d080b3196a295a070a57a26c774215f3f8bce4d37ed9f0a9d44a914bce",
+   "splashVisible": false,
+   "canvasDisplay": "block"
+  },
+  {
+   "file": "npot-255x255-tp.wrl",
+   "ok": true,
+   "log": [],
+   "width": 512,
+   "height": 512,
+   "rgbaSha256": "d6d2ede45a87c622ca58c7ac5dd7cc8368cb702980f6c533499a449dc030c8c3",
+   "pngSha256": "18da2f84f20c47c37698aadbe600b3b7e34cf5ec90e8407d68d1b3a4570a94a1",
+   "splashVisible": false,
+   "canvasDisplay": "block"
+  },
+  {
+   "file": "npot-alpha.wrl",
+   "ok": true,
+   "log": [],
+   "width": 512,
+   "height": 512,
+   "rgbaSha256": "cbc4dccd4925a7fe9766fcf3d160892a524d84b00c39d3b0f6355b6a5c5d14d6",
+   "pngSha256": "ddf8d3ca50996c5c72f8628c489e874a9c1f79d4d9ec3567710fefa91d398c75",
+   "splashVisible": false,
+   "canvasDisplay": "block"
+  },
+  {
+   "file": "npot-deep.wrl",
+   "ok": true,
+   "log": [],
+   "width": 512,
+   "height": 512,
+   "rgbaSha256": "ea488fd50a02e217a33dfff6b2da2db9598973f187d5f587deeceaa0a699c981",
+   "pngSha256": "5b87f43027772653898e9b2082f8b968f2d4f9ee738408868e769ab98e6354c0",
+   "splashVisible": false,
+   "canvasDisplay": "block"
+  },
+  {
+   "file": "npot-mixed-tp.wrl",
+   "ok": true,
+   "log": [],
+   "width": 512,
+   "height": 512,
+   "rgbaSha256": "57b62c2b839a45aa20e0a01ec6e162e68e3806443c074d767acde1f58d76a37f",
+   "pngSha256": "6cb2e2dc7922015a0e87302170ec4aa87a97cebd32670d999fed0b3317e56e41",
+   "splashVisible": false,
+   "canvasDisplay": "block"
+  },
+  {
+   "file": "npot-parity-plain.wrl",
+   "ok": true,
+   "log": [],
+   "width": 512,
+   "height": 512,
+   "rgbaSha256": "95f85262e66a0b33bbd644af57c32ddae1ec5c27faa5feaa3636150177055a3c",
+   "pngSha256": "c384ba4c6435fcd929c455759297bd9cfb570afd2a424aed9b93918e10712edd",
+   "splashVisible": false,
+   "canvasDisplay": "block"
+  },
+  {
+   "file": "npot-parity-shifted.wrl",
+   "ok": true,
+   "log": [],
+   "width": 512,
+   "height": 512,
+   "rgbaSha256": "3aa7f9b91f755dddef6fe046a9a35a868a1e5a0fc9f9b16f8ec1654d011555fe",
+   "pngSha256": "75a3992a5849bba04106f935992eef802a13f800314a0d65c913147fab33c91c",
+   "splashVisible": false,
+   "canvasDisplay": "block"
+  },
+  {
+   "file": "npot-thin-tp.wrl",
+   "ok": true,
+   "log": [],
+   "width": 512,
+   "height": 512,
+   "rgbaSha256": "27ee5774eb7a6ffc455e4a1453884a7ae8522aa5bbee9923baeb69937d3b23a9",
+   "pngSha256": "26a01b56346a7148f6eb7d0529c93abef0d16acb7ce6895c412b6a4ccfe0ed7a",
+   "splashVisible": false,
+   "canvasDisplay": "block"
+  },
+  {
+   "file": "pot-128x64.wrl",
+   "ok": true,
+   "log": [],
+   "width": 512,
+   "height": 512,
+   "rgbaSha256": "e78d2500173b27d6e99116afc8444593023138561791257307068ee54db84f63",
+   "pngSha256": "62d8c30ac92913c5e008c766ca7da94fbcccb4a549ead8d65e5c90ef78736f57",
+   "splashVisible": false,
+   "canvasDisplay": "block"
+  }
+ ]
+}
