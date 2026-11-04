@@ -583,7 +583,7 @@ impl Runtime {
                 }
 
                 // VRMLParser (DEVELOPMENT) prints the original error before it is rethrown.
-                self.log_error(format!("Error: {}", e.message));
+                self.log_error(x3d_parse::error_console_text(&e.message));
                 return Err(Some(format!("Error: \n{e}")));
             }
             // GoldenGate.parseIntoScene names the url of a file that no parser handles.

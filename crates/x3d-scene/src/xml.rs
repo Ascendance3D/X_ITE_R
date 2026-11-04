@@ -209,9 +209,11 @@ pub(crate) fn type_name_of(scene: &Scene, id: NodeId) -> String {
 pub(crate) fn container_field_of(scene: &Scene, id: NodeId) -> Option<String> {
     match &scene.node(id).kind {
         NodeKind::Builtin(t) => Some(scene.table.types[*t].container_field.clone()),
-        NodeKind::Imported(imp) => {
-            imported_local(scene, *imp).and_then(|local| container_field_of(scene, local))
-        }
+        // The delegate is `$.try (() => exportedNode) ?.getContainerField () ?? X3DNode.prototype.getContainerField.call (this)`:
+        // an import whose exported node is not there (yet) answers with its own static containerField, "children".
+        NodeKind::Imported(imp) => imported_local(scene, *imp)
+            .and_then(|local| container_field_of(scene, local))
+            .or_else(|| Some("children".to_string())),
         // X3DPrototypeInstance has the static containerField "children".
         NodeKind::Instance(_) => Some("children".to_string()),
         _ => None,

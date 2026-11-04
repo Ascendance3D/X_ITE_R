@@ -35,6 +35,16 @@ pub fn take_error_warnings() -> Vec<String> {
     ERROR_WARNINGS.with(|w| std::mem::take(&mut *w.borrow_mut()))
 }
 
+/// `console .error (error)` of VRMLParser.parseIntoScene (DEVELOPMENT) as the page prints it, `String (error)`: a TypeError or
+/// RangeError keeps its own name, any other failure is an `Error`.
+pub fn error_console_text(message: &str) -> String {
+    if message.starts_with("TypeError: ") || message.starts_with("RangeError: ") {
+        message.to_string()
+    } else {
+        format!("Error: {message}")
+    }
+}
+
 /// The Error message VRMLParser.parseIntoScene threw for the parse that just failed (the line of the input and a caret),
 /// once; [`ParseError::message`] is the original message the parser logs first.
 pub fn take_error_detail() -> Option<String> {
@@ -84,6 +94,9 @@ pub struct Parser<'a> {
     pub(crate) field_unit: Option<String>,
     /// X3DParser.getName: the prefix of Placeholder's warning.
     pub(crate) name: &'static str,
+    /// Fields that got a value after an `IS` mapping made them an interest of a PROTO field (node, user-defined, index), in
+    /// order: the event they added is processed when the parse is done.
+    is_writebacks: Vec<(NodeId, bool, usize)>,
 }
 
 impl<'a> Parser<'a> {
@@ -105,6 +118,7 @@ impl<'a> Parser<'a> {
             placeholders: HashMap::new(),
             field_unit: None,
             name: "Parser",
+            is_writebacks: vec![],
         }
     }
 
@@ -333,14 +347,44 @@ impl<'a> Parser<'a> {
             return Err(e);
         }
 
+        self.process_is_writebacks();
         self.scene.setup_nodes();
 
         Ok(self.scene)
     }
 
+    /// X3DField.addReference makes an inputOutput node field and an inputOutput PROTO field interests of each other, so the
+    /// value a node field gets after `IS` is an event for the PROTO field. The event is not executed at once: instances made
+    /// while the parse runs keep the value they copied, and the declaration shows the node field's value when the parse is done.
+    fn process_is_writebacks(&mut self) {
+        for (node, user, index) in std::mem::take(&mut self.is_writebacks) {
+            let n = self.scene.node(node);
+            let field = if user {
+                &n.user_fields[index]
+            } else {
+                &n.fields[index]
+            };
+            let (value, references, access_type) =
+                (field.value.clone(), field.references.clone(), field.access);
+
+            for r in references {
+                let target = &mut self.scene.protos[r.proto].fields[r.index];
+
+                if access_type & target.access == access::INPUT_OUTPUT {
+                    target.value = value.clone();
+                }
+            }
+        }
+    }
+
     /// VRMLParser.getError: the message of the Error that parseIntoScene throws, with the line of the input where the
     /// parser stopped and a caret under the column.
     fn get_error(&self, message: &str) -> String {
+        // `error .message`: a TypeError's or RangeError's text does not carry its name (the ParseError message does).
+        let message = message
+            .strip_prefix("TypeError: ")
+            .or_else(|| message.strip_prefix("RangeError: "))
+            .unwrap_or(message);
         let text = String::from_utf8_lossy(self.input);
         let input: Vec<u16> = text.encode_utf16().collect();
         let len = input.len() as isize;
@@ -973,7 +1017,12 @@ impl<'a> Parser<'a> {
     }
 
     fn unknown_type_error<T>(&mut self) -> R<T> {
-        self.id();
+        // `this .Id (); throw new Error (`... '${this .result [0]}'.`)`: a failed Grammar parse leaves `result` null, so a
+        // name that is not an Id (`Script { field }`) throws the TypeError of `null [0]` instead.
+        if !self.id() {
+            return self.err("TypeError: Cannot read properties of null (reading '0')");
+        }
+
         let r = self.result.clone();
         self.err(format!("Unknown event or field type: '{r}'."))
     }
@@ -1432,6 +1481,11 @@ impl<'a> Parser<'a> {
                 if existing.access == field.access && existing.ty() == field.ty() {
                     existing.value = field.value;
                     existing.modified = true;
+
+                    if !existing.references.is_empty() {
+                        self.is_writebacks.push((node, true, i));
+                    }
+
                     return Ok(true);
                 }
 
@@ -1575,6 +1629,11 @@ impl<'a> Parser<'a> {
                 let f = &mut self.scene.node_mut(node).fields[index];
                 f.value = v;
                 f.modified = true;
+
+                if !f.references.is_empty() {
+                    self.is_writebacks.push((node, false, index));
+                }
+
                 return Ok(true);
             }
 
