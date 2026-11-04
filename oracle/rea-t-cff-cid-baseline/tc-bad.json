@@ -1,0 +1,62 @@
+{
+ "log": [
+  "error: CFF CharString operator endchar (14) is not supported in CFF2",
+  "error: CFF CharString operator endchar (14) is not supported in CFF2",
+  "error: CFF CharString operator endchar (14) is not supported in CFF2",
+  "error: CFF CharString operator endchar (14) is not supported in CFF2",
+  "error: CFF CharString operator endchar (14) is not supported in CFF2",
+  "error: CFF CharString operator endchar (14) is not supported in CFF2",
+  "error: CFF CharString operator endchar (14) is not supported in CFF2",
+  "error: CFF CharString operator return (11) is not supported in CFF2",
+  "error: CFF CharString operator return (11) is not supported in CFF2",
+  "error: CFF CharString operator return (11) is not supported in CFF2",
+  "error: CFF CharString operator return (11) is not supported in CFF2",
+  "error: CFF CharString operator return (11) is not supported in CFF2",
+  "error: CFF CharString operator return (11) is not supported in CFF2",
+  "error: CFF CharString operator return (11) is not supported in CFF2",
+  "error: CFF CharString operator return (11) is not supported in CFF2",
+  "error: CFF CharString operator return (11) is not supported in CFF2",
+  "error: CFF CharString operator return (11) is not supported in CFF2",
+  "error: FontLibrary: Couldn't load URL 'http://oracle/synthetic-rea-t-cff-cid/cff2-no-fdarray.otf'. Error: This is a CFF2 font, but FDArray information is missing",
+  "error: FontLibrary: Couldn't load URL 'http://oracle/synthetic-rea-t-cff-cid/cid-bad-fdindex.otf'. Error: CFF table CID Font FDSelect has bad FD index value 3 (FD count 3)",
+  "error: FontLibrary: Couldn't load URL 'http://oracle/synthetic-rea-t-cff-cid/cid-bad-first.otf'. Error: CFF Table CID Font FDSelect format 3 range has bad initial GID 1",
+  "error: FontLibrary: Couldn't load URL 'http://oracle/synthetic-rea-t-cff-cid/cid-no-fdselect.otf'. Error: CFF Table CID Font FDSelect table has unsupported format 1",
+  "warn: Couldn't find font family 'Bad0' with style 'PLAIN'.",
+  "warn: Couldn't find font family 'Bad1' with style 'PLAIN'.",
+  "warn: Couldn't find font family 'Bad2' with style 'PLAIN'.",
+  "warn: Couldn't find font family 'Bad3' with style 'PLAIN'.",
+  "warn: Error loading font 'http://oracle/synthetic-rea-t-cff-cid/cff2-no-fdarray.otf':",
+  "warn: Error loading font 'http://oracle/synthetic-rea-t-cff-cid/cid-bad-fdindex.otf':",
+  "warn: Error loading font 'http://oracle/synthetic-rea-t-cff-cid/cid-bad-first.otf':",
+  "warn: Error loading font 'http://oracle/synthetic-rea-t-cff-cid/cid-no-fdselect.otf':"
+ ],
+ "ok": true,
+ "poses": {
+  "44": {
+   "centerOfRotation": [
+    0,
+    0,
+    0
+   ],
+   "description": "",
+   "fieldOfViewScale": 1,
+   "orientation": [
+    0,
+    0,
+    1,
+    0
+   ],
+   "position": [
+    0,
+    0,
+    10
+   ],
+   "viewer": "EXAMINE",
+   "viewpoint": ""
+  }
+ },
+ "vrml": {
+  "44": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Full\n\nMETA \"title\" \"tc bad\"\n\nDEF L_Bad0 FontLibrary {\n  family \"Bad0\"\n  url \"cid-bad-fdindex.otf\"\n}\n\nDEF L_Bad1 FontLibrary {\n  family \"Bad1\"\n  url \"cid-no-fdselect.otf\"\n}\n\nDEF L_Bad2 FontLibrary {\n  family \"Bad2\"\n  url \"cid-bad-first.otf\"\n}\n\nDEF L_Bad3 FontLibrary {\n  family \"Bad3\"\n  url \"cff2-no-fdarray.otf\"\n}\n\nDEF L_Bad4 FontLibrary {\n  family \"Bad4\"\n  url \"cff2-legacy-ops.otf\"\n}\n\nShape {\n  geometry DEF T0 Text {\n    string [\n      \"ABOH\",\n      \"FWV\"\n    ]\n    fontStyle FontStyle {\n      family \"Bad0\"\n    }\n  }\n}\n\nShape {\n  geometry DEF T1 Text {\n    string [\n      \"ABOH\",\n      \"FWV\"\n    ]\n    fontStyle FontStyle {\n      family \"Bad1\"\n    }\n  }\n}\n\nShape {\n  geometry DEF T2 Text {\n    string [\n      \"ABOH\",\n      \"FWV\"\n    ]\n    fontStyle FontStyle {\n      family \"Bad2\"\n    }\n  }\n}\n\nShape {\n  geometry DEF T3 Text {\n    string [\n      \"ABOH\",\n      \"FWV\"\n    ]\n    fontStyle FontStyle {\n      family \"Bad3\"\n    }\n  }\n}\n\nShape {\n  geometry DEF T4 Text {\n    string [\n      \"ABOH\",\n      \"FWV\"\n    ]\n    fontStyle FontStyle {\n      family \"Bad4\"\n    }\n  }\n}\n\nDEF P Script {\n  inputOutput MFString out [\n    \"000 T0.origin = SFVec3:0 0.7250977 0 raw=0 0.72509765625 0\",\n    \"001 T0.textBounds = SFVec2:2.855957 1.725098 raw=2.85595703125 1.72509765625\",\n    \"002 T0.lineBounds = ArrayField:[\n  2.855957 1.018066,\n  2.311523 1\n] raw=(2.85595703125 1.01806640625) (2.3115234375 1)\",\n    \"003 T1.origin = SFVec3:0 0.7250977 0 raw=0 0.72509765625 0\",\n    \"004 T1.textBounds = SFVec2:2.855957 1.725098 raw=2.85595703125 1.72509765625\",\n    \"005 T1.lineBounds = ArrayField:[\n  2.855957 1.018066,\n  2.311523 1\n] raw=(2.85595703125 1.01806640625) (2.3115234375 1)\",\n    \"006 T2.origin = SFVec3:0 0.7250977 0 raw=0 0.72509765625 0\",\n    \"007 T2.textBounds = SFVec2:2.855957 1.725098 raw=2.85595703125 1.72509765625\",\n    \"008 T2.lineBounds = ArrayField:[\n  2.855957 1.018066,\n  2.311523 1\n] raw=(2.85595703125 1.01806640625) (2.3115234375 1)\",\n    \"009 T3.origin = SFVec3:0 0.7250977 0 raw=0 0.72509765625 0\",\n    \"010 T3.textBounds = SFVec2:2.855957 1.725098 raw=2.85595703125 1.72509765625\",\n    \"011 T3.lineBounds = ArrayField:[\n  2.855957 1.018066,\n  2.311523 1\n] raw=(2.85595703125 1.01806640625) (2.3115234375 1)\",\n    \"012 T4.origin = SFVec3:0 1.03 0 raw=0 1.0300000000000002 0\",\n    \"013 T4.textBounds = SFVec2:2.35 2.03 raw=2.35 2.0300000000000002\",\n    \"014 T4.lineBounds = ArrayField:[\n  2.35 1.23,\n  1.25 1\n] raw=(2.3499999046325684 1.2300000190734863) (1.25 1)\"\n  ]\n\n  url \"ecmascript:\n\nvar R_ = [];\nfunction strip (s) { return String (s) .replace (/https?:\\\\/\\\\/[^\\\\/]+\\\\//g, ''); }\nfunction show (v, d) {\n  if (typeof v === 'number') return Object.is (v, -0) ? 'n:-0' : 'n:' + v;\n  if (typeof v === 'string') return 's:' + JSON.stringify (strip (v));\n  if (v === null || v === undefined) return String (v);\n  if (typeof v === 'function') return 'fn';\n  if (typeof v === 'boolean') return 'b:' + v;\n  if (Array.isArray (v)) return 'A[' + v .map (function (x) { return show (x); }) .join (',') + ']';\n  var c = v .constructor;\n  return (c && c .name || '?') + ':' + String (v) + raw (v);\n}\n// The components of a field object at full double precision (String () rounds floats).\nfunction raw (v) {\n  if (typeof v .getTypeName !== 'function' || !v [Symbol .iterator] || v .getTypeName () .indexOf ('MF') === 0 && !v .length) return '';\n  try { var a = Array .from (v, function (x) { return typeof x === 'object' && x && x [Symbol .iterator] ? '(' + Array .from (x, function (y) { return typeof y === 'object' && y && y [Symbol .iterator] ? '(' + Array .from (y) .join (' ') + ')' : y; }) .join (' ') + ')' : x; }); return ' raw=' + a .join (' '); } catch (e) { return ' raw=ERR'; }\n}\nfunction errText (e) {\n  var n = e && e .name;\n  if (n === 'TypeError' || n === 'ReferenceError' || n === 'SyntaxError') return 'ERR ' + n + ' (engine wording)';\n  return 'ERR ' + n + ': ' + strip (e && e .message);\n}\nfunction T (n, f) {\n  var r;\n  try { r = show (f ()); } catch (e) { r = errText (e); }\n  R_ .push ((R_ .length < 10 ? '00' : R_ .length < 100 ? '0' : '') + R_ .length + ' ' + n + ' = ' + r);\n}\nfunction flush_ () { out = new MFString (... R_); }\n\nvar SELF;\nvar F_ = 0;\nfunction N (n) { return Browser .currentScene .getNamedNode (n); }\nfunction RD (t) { ['origin', 'textBounds', 'lineBounds'] .forEach (function (f) { T (t + '.' + f, function () { return N (t) [f]; }); }); }\n\nfunction initialize () {\n  SELF = this;\n\n  flush_ ();\n}\nfunction prepareEvents () {\n  ++ F_;\n  if (F_ === 40) { RD ('T0'); RD ('T1'); RD ('T2'); RD ('T3'); RD ('T4'); flush_ (); }\n}\n\n  \"\n}\n"
+ },
+ "warmupFrames": 8
+}

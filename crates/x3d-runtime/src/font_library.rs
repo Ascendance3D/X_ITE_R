@@ -38,8 +38,12 @@ pub(crate) fn parse_font_file(data: &[u8]) -> Result<x3d_text::Font, x3d_text::F
     }
 }
 
-/// The text of opentype.js's error for a file it cannot parse (only the signature error is reproduced).
-pub(crate) fn font_error_text(data: &[u8]) -> String {
+/// The text of opentype.js's error for a file it cannot parse: the CFF structure errors of [`x3d_text::cff`], else the signature error.
+pub(crate) fn font_error_text(data: &[u8], error: &x3d_text::FontError) -> String {
+    if let x3d_text::FontError::OpenType(text) = error {
+        return text.clone();
+    }
+
     let tag: String = data.iter().take(4).map(|b| *b as char).collect();
 
     format!("Error: Unsupported OpenType signature {tag}")
@@ -75,7 +79,7 @@ impl Runtime {
                     // `OpenType .parse` throws inside the loader's callback: loadDocumentError, next url.
                     match parse_font_file(&data) {
                         Ok(font) => parsed = Some(Ok(Rc::new(font))),
-                        Err(_) => return Err(font_error_text(&data)),
+                        Err(e) => return Err(font_error_text(&data, &e)),
                     }
                 }
 

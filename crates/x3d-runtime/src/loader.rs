@@ -1534,9 +1534,9 @@ impl Runtime {
                                     // `OpenType .parse` throws inside the loader's callback: loadDocumentError, next url.
                                     match crate::font_library::parse_font_file(&data) {
                                         Ok(font) => parsed = Some(Ok(std::rc::Rc::new(font))),
-                                        Err(_) => {
+                                        Err(e) => {
                                             return Err(crate::font_library::font_error_text(
-                                                &data,
+                                                &data, &e,
                                             ));
                                         }
                                     }

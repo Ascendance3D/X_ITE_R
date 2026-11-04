@@ -512,6 +512,17 @@ impl Runtime {
             compression,
         );
 
+        // The `console` lines of the font's parse and of the glyph path builds this layout caused (opentype.js).
+        if let Some(f) = font.as_deref() {
+            for line in f.take_log() {
+                match line.split_once(": ") {
+                    Some(("error", m)) => self.log_error(m),
+                    Some(("warn", m)) => self.log_warn(m),
+                    _ => {}
+                }
+            }
+        }
+
         // horizontal / vertical: `text ._lineBounds [l] = lineBound`, then `text ._textBounds = size`, then `text ._origin .setValue`.
         let bounds: Vec<f32> = layout
             .line_bounds
