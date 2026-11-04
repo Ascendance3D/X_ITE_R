@@ -9,7 +9,7 @@ override only when
   1. the three recordings are identical (`loadFrames`, which follows Chrome's I/O, is left out of the check), and
   2. they differ from the NVIDIA recording of the same case (the same keys, `loadFrames` left out).
 
-The overrides go to oracle/<base>-<platform>/<case>-msaa<N>/js.json with a cases.txt and a PROVENANCE.json. The NVIDIA
+The overrides go to oracle/<stem>-<platform>-baseline/<case>-msaa<N>/js.json with a cases.txt and a PROVENANCE.json. The NVIDIA
 baseline is never written. A case whose three runs differ is listed in UNSTABLE.txt and kept nowhere (UNVERIFIED, never a
 pass). A baseline is never taken from Rust. Tests choose the recording with X3D_REFERENCE_PLATFORM=<platform>
 (crates/x3d-viewer/tests/common/reference.rs); a case without an override keeps the NVIDIA recording.
@@ -32,7 +32,7 @@ assert platform and base, "--platform and --base are required"
 assert os.environ.get("XITE_CHROME") and os.environ.get("XITE_ANGLE_BACKEND"), "set XITE_CHROME and XITE_ANGLE_BACKEND"
 
 src = os.path.join(root, "oracle", base)
-dest = os.path.join(root, "oracle", f"{base}-{platform}")
+dest = os.path.join(root, "oracle", f"{base.removesuffix('-baseline')}-{platform}-baseline")
 names = {l.strip() for l in open(names_file)} if names_file else None
 rows = [l.split() for l in open(os.path.join(src, "cases.txt")).read().splitlines() if l.strip()]
 rows = [r for r in rows if (not only or only in r[0]) and (names is None or r[0] in names)]

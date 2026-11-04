@@ -9,8 +9,8 @@ Mac is open until its cause is shown.
 
 1. The pinned page (16.5.0, `34cdf9f97`) was recorded on the M1 three times per case with `oracle/x_ite-anim.mjs` / `x_ite-anim-msaa.mjs`
    (`oracle/tools/record_platform_baseline.py`). A recording is kept only if the three runs are identical (`loadFrames` follows Chrome's I/O
-   and is left out) and it differs from the NVIDIA recording. 37 recordings of 37 cases were stable (0 unstable): `oracle/rea-b09-nav-baseline-apple-m1`
-   (17), `rea-b24-nav-baseline-apple-m1` (8), `rea-b12-baseline-apple-m1` (10), `rea-b09-inputs-baseline-apple-m1` (2).
+   and is left out) and it differs from the NVIDIA recording. 37 recordings of 37 cases were stable (0 unstable): `oracle/rea-b09-nav-apple-m1-baseline`
+   (17), `rea-b24-nav-apple-m1-baseline` (8), `rea-b12-apple-m1-baseline` (10), `rea-b09-inputs-apple-m1-baseline` (2).
 2. `X3D_BACKEND=metal X3D_REFERENCE_PLATFORM=apple-m1 X3D_EVIDENCE=ci`, `cargo nextest run -p x3d-viewer --release` on the Mac, the nine
    tests of the four files: 6 passed, 3 failed, no skip recorded. The thresholds are the existing ones; none was changed.
 3. For comparison the same cases ran against the NVIDIA recordings (the 16-test GPU suite on Metal, issue #89: 5 passed, 11 failed, of which

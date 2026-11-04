@@ -18,10 +18,10 @@ fn a_platform_recording_is_used_only_when_the_platform_is_named_and_the_case_has
     std::fs::create_dir_all(&root).unwrap();
     make(&root, "oracle/base/a-msaa0");
     make(&root, "oracle/base/b-msaa0");
-    make(&root, "oracle/base-apple-m1/b-msaa0");
+    make(&root, "oracle/base-apple-m1-baseline/b-msaa0");
 
     let nvidia = |n: &str| root.join(format!("oracle/base/{n}-msaa0/js.json"));
-    let m1 = |n: &str| root.join(format!("oracle/base-apple-m1/{n}-msaa0/js.json"));
+    let m1 = |n: &str| root.join(format!("oracle/base-apple-m1-baseline/{n}-msaa0/js.json"));
 
     // No platform: always the NVIDIA recording, also for a case that has a platform recording.
     assert_eq!(js_json_for(&root, "base", "b", 0, None), nvidia("b"));
@@ -58,9 +58,9 @@ fn a_particle_case_uses_the_platform_directory_only_when_it_holds_both_files() {
     std::fs::create_dir_all(&root).unwrap();
     make(&root, "oracle/pb/c-x");
     std::fs::write(root.join("oracle/pb/c-x/js.f32"), "").unwrap();
-    make(&root, "oracle/pb-apple-m1/c-x");
-    make(&root, "oracle/pb-apple-m1/c-y");
-    std::fs::write(root.join("oracle/pb-apple-m1/c-y/js.f32"), "").unwrap();
+    make(&root, "oracle/pb-apple-m1-baseline/c-x");
+    make(&root, "oracle/pb-apple-m1-baseline/c-y");
+    std::fs::write(root.join("oracle/pb-apple-m1-baseline/c-y/js.f32"), "").unwrap();
 
     // No platform: the NVIDIA directory.
     assert_eq!(
@@ -75,7 +75,7 @@ fn a_particle_case_uses_the_platform_directory_only_when_it_holds_both_files() {
     // Both files: used.
     assert_eq!(
         pair_dir_for(&root, "pb", "c-y", Some("apple-m1")),
-        root.join("oracle/pb-apple-m1/c-y")
+        root.join("oracle/pb-apple-m1-baseline/c-y")
     );
 
     std::fs::remove_dir_all(&root).unwrap();

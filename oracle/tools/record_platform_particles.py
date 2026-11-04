@@ -4,7 +4,7 @@
 Like record_platform_baseline.py (read it for the rules), for the baselines recorded by `x3d-oracle particles`: every case of the base is
 recorded three times ON THE TARGET MACHINE; `js.json` and `js.f32` of the three runs must be identical (else the case is listed in
 UNSTABLE.txt, UNVERIFIED, and kept nowhere); a recording is kept only where it differs from the NVIDIA one, as
-oracle/<base>-<platform>/<case>/{js.json,js.f32}. The NVIDIA baseline is never written; a baseline is never taken from Rust. Tests choose it with
+oracle/<stem>-<platform>-baseline/<case>/{js.json,js.f32}. The NVIDIA baseline is never written; a baseline is never taken from Rust. Tests choose it with
 X3D_REFERENCE_PLATFORM=<platform> (crates/x3d-viewer/tests/common/reference.rs, `pair_dir`).
 
   X3D_ORACLE_CHROME="/Applications/Google Chrome.app/Contents/MacOS/Google Chrome" X3D_ORACLE_ANGLE=metal \\
@@ -22,7 +22,7 @@ SYNTH = {"rea-b14-particle-pick-baseline": "synthetic-rea-b14-particle-pick", "r
 assert platform and base in SYNTH, "--platform and --base (one of %s) are required" % sorted(SYNTH)
 assert os.environ.get("X3D_ORACLE_CHROME") and os.environ.get("X3D_ORACLE_ANGLE"), "set X3D_ORACLE_CHROME and X3D_ORACLE_ANGLE"
 
-src, dest = os.path.join(root, "oracle", base), os.path.join(root, "oracle", f"{base}-{platform}")
+src, dest = os.path.join(root, "oracle", base), os.path.join(root, "oracle", f"{base.removesuffix('-baseline')}-{platform}-baseline")
 synth = os.path.join(root, "oracle", SYNTH[base])
 names = sorted(n for n in os.listdir(src) if os.path.isdir(os.path.join(src, n)) and (not only or only in n))
 sha = lambda p: hashlib.sha256(open(p, "rb").read()).hexdigest()
