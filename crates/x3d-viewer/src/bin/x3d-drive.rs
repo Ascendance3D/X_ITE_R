@@ -65,6 +65,12 @@ fn main() {
         .map(|w| x3d_http::OriginMap::parse(&w[1]).expect("--http-map FROM=TO"))
         .collect();
 
+    // A `--http-map` without its value (the last argument) is a usage error, not a run on the local fetcher.
+    if args.last().is_some_and(|a| a == "--http-map") {
+        eprintln!("usage: --http-map FROM=TO needs a value");
+        std::process::exit(2);
+    }
+
     if !maps.is_empty() {
         x3d_viewer::viewer::set_fetcher_wrap(Box::new(move |local| {
             let options = x3d_http::HttpOptions {
