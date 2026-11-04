@@ -166,8 +166,69 @@ fn a_redirect_loop_fails() {
         );
     }
 
-    // The loop stopped at the limit: 21 requests, not an endless number.
-    assert!(server.requests().len() <= 2 * 21 + 1);
+    // Each loop stopped at the limit: the first request and 20 redirects followed, then the 21st redirect fails unrequested.
+    assert_eq!(server.requests().len(), 2 * 21);
+}
+
+/// The `foreign` hand-off reads no body (FileLoader.js 304-312): a page larger than the body limit, or cut short after its
+/// head, still comes back as a response with its headers; without the hand-off the same routes fail as a body does.
+#[test]
+fn a_page_for_the_foreign_hand_off_is_not_read() {
+    let big = vec![b'x'; 5000];
+    let mut cut = Route::new(
+        200,
+        &[("Content-Type", "text/html; charset=utf-8")],
+        b"0123456789012345678901234567890123456789",
+    );
+    cut.truncate_to = Some(10);
+    let server = RouteServer::start(table(vec![
+        (
+            "big",
+            Route::new(200, &[("Content-Type", "application/xhtml+xml")], &big),
+        ),
+        ("cut", cut),
+        (
+            "vrml",
+            Route::new(200, &[("Content-Type", "model/vrml")], &big),
+        ),
+    ]));
+    let fetcher = HttpFetcher::new(HttpOptions {
+        max_body_bytes: 1000,
+        ..options()
+    });
+    let unread = &x3d_runtime::FOREIGN_MIME_TYPES;
+
+    for name in ["big", "cut"] {
+        let response = fetcher
+            .fetch_response_unless(&url(&server, &format!("/h/{name}")), unread)
+            .unwrap_or_else(|e| panic!("{name}: {e}"));
+
+        assert_eq!(response.status, 200, "{name}");
+        assert!(response.body.is_empty(), "{name}");
+    }
+
+    // A mime type outside `unread` is read, and the limit holds.
+    assert_eq!(
+        fetcher.fetch_response_unless(&url(&server, "/h/vrml"), unread),
+        Err("Error: The response body is larger than 1000 bytes".to_string())
+    );
+    // Negative control: without the hand-off list, the same pages are read and fail.
+    assert_eq!(
+        fetcher.fetch_response_unless(&url(&server, "/h/big"), &[]),
+        Err("Error: The response body is larger than 1000 bytes".to_string())
+    );
+    assert_eq!(
+        fetcher.fetch_response_unless(&url(&server, "/h/cut"), &[]),
+        Err("TypeError: network error".to_string())
+    );
+}
+
+/// An origin map never leaves HTTP and HTTPS.
+#[test]
+fn an_origin_map_maps_http_origins_only() {
+    assert!(x3d_http::OriginMap::parse("http://oracle=http://127.0.0.1:1").is_ok());
+    assert!(x3d_http::OriginMap::parse("http://oracle=file:///tmp").is_err());
+    assert!(x3d_http::OriginMap::parse("ftp://oracle=http://127.0.0.1:1").is_err());
 }
 
 /// A redirect never leaves HTTP and HTTPS: every other scheme fails the request, and the target is never read.

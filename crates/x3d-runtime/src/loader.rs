@@ -24,6 +24,16 @@ pub trait Fetcher {
         self.fetch(url).map(|body| Response::ok(url.clone(), body))
     }
 
+    /// [`Fetcher::fetch_response`], except that the body of a 2xx response whose mime type is in `unread` is not read: the
+    /// response comes back with an empty body. It is FileLoader.js's `foreign` hand-off, which decides from the
+    /// `Content-Type` header alone and never reads the body of a page (`FileLoader.js` 304-312), so a page that is large,
+    /// slow or cut short still goes to `foreign`. The default reads the body ([`Fetcher::fetch_response`]); an HTTP
+    /// fetcher overrides this.
+    fn fetch_response_unless(&self, url: &url::Url, unread: &[&str]) -> Result<Response, String> {
+        let _ = unread;
+        self.fetch_response(url)
+    }
+
     /// The error message of a failed request, or `None` when the request succeeded. The default
     /// calls [`Fetcher::fetch`], so for a successful request it copies the body and drops it.
     /// A fetcher that holds a response cache overrides this to answer from the cached state
@@ -901,7 +911,15 @@ impl Runtime {
                     // `checkResponse (await fetch (this .resolvedURL, options))`, then the Content-Type of the response:
                     // `FOREIGN_MIME_TYPES` go to `foreign (this .resolvedURL .href, this .target)` and are not read.
                     // The href is the requested URL, not `response .url` after a redirect.
-                    let response = self.fetcher.fetch_response(&r).map_err(Some)?;
+                    let unread: &[&str] = if hooks.foreign {
+                        &FOREIGN_MIME_TYPES
+                    } else {
+                        &[]
+                    };
+                    let response = self
+                        .fetcher
+                        .fetch_response_unless(&r, unread)
+                        .map_err(Some)?;
 
                     if hooks.foreign
                         && response

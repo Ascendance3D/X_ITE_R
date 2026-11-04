@@ -109,7 +109,17 @@ impl OriginMap {
         let (from, to) = pair
             .split_once('=')
             .ok_or_else(|| format!("{pair}: expected FROM=TO"))?;
-        let parse = |s: &str| url::Url::parse(s).map_err(|e| format!("{s}: {e}"));
+        let parse = |s: &str| {
+            let url = url::Url::parse(s).map_err(|e| format!("{s}: {e}"))?;
+
+            if is_http(&url) {
+                Ok(url)
+            } else {
+                Err(format!(
+                    "{s}: an origin map maps http and https origins only"
+                ))
+            }
+        };
 
         Ok((parse(from)?, parse(to)?))
     }
@@ -173,14 +183,28 @@ impl HttpFetcher {
         }
     }
 
+    /// Panics when an origin of `map` is not `http` or `https` ([`OriginMap::parse`] gives the error instead): a request
+    /// never leaves HTTP and HTTPS.
     pub fn with_origin_map(mut self, map: Vec<(url::Url, url::Url)>) -> HttpFetcher {
+        assert!(
+            map.iter().all(|(from, to)| is_http(from) && is_http(to)),
+            "an origin map maps http and https origins only"
+        );
         self.origin_map = OriginMap(map);
         self
     }
 
     /// `fetch (url)` for a GET request. The response has the status, the reason, the headers and the final URL of any
-    /// status; the body is read (up to [`HttpOptions::max_body_bytes`]) only for a status of 200 to 299.
+    /// status. The body is read (up to [`HttpOptions::max_body_bytes`]) only for a status of 200 to 299: the response of
+    /// any other status (a redirect without `Location` included) has an empty body, because `checkResponse` rejects it
+    /// before FileLoader reads a body.
     pub fn get(&self, url: &url::Url) -> Result<Response, HttpError> {
+        self.get_unless(url, &[])
+    }
+
+    /// [`HttpFetcher::get`], except that the body of a 2xx response whose mime type (the `Content-Type` before `;`) is in
+    /// `unread` is not read: the `foreign` hand-off of FileLoader.js decides from the header alone.
+    pub fn get_unless(&self, url: &url::Url, unread: &[&str]) -> Result<Response, HttpError> {
         let network = |why: &str| HttpError::Network(why.to_string());
 
         if !is_http(url) {
@@ -252,8 +276,13 @@ impl HttpFetcher {
                 .unwrap_or_default()
                 .to_string();
             let mut body = vec![];
+            let skip_body = response
+                .headers()
+                .get("content-type")
+                .map(|v| decode_header(v.as_bytes()))
+                .is_some_and(|v| unread.contains(&v.split(';').next().unwrap_or_default()));
 
-            if ok {
+            if ok && !skip_body {
                 let max = self.options.max_body_bytes;
                 let declared = response
                     .headers()
@@ -355,6 +384,12 @@ impl Fetcher for HttpFetcher {
     fn fetch_response(&self, url: &url::Url) -> Result<Response, String> {
         self.get(url).map_err(|e| e.message())?.check()
     }
+
+    fn fetch_response_unless(&self, url: &url::Url, unread: &[&str]) -> Result<Response, String> {
+        self.get_unless(url, unread)
+            .map_err(|e| e.message())?
+            .check()
+    }
 }
 
 /// A fetcher for the oracle comparisons: the `LocalFetcher` serves `http://oracle/`, except the paths under `prefix`
@@ -391,6 +426,14 @@ impl Fetcher for OracleHttpFetcher {
             self.http.fetch_response(url)
         } else {
             self.local.fetch_response(url)
+        }
+    }
+
+    fn fetch_response_unless(&self, url: &url::Url, unread: &[&str]) -> Result<Response, String> {
+        if self.goes_to_http(url) {
+            self.http.fetch_response_unless(url, unread)
+        } else {
+            self.local.fetch_response_unless(url, unread)
         }
     }
 }

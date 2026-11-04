@@ -42,7 +42,14 @@ impl Route {
 
     fn from_json(value: &serde_json::Value) -> Result<Route, String> {
         let mut route = Route {
-            status: value["status"].as_u64().unwrap_or(200) as u16,
+            status: match value.get("status") {
+                None => 200,
+                Some(v) => v
+                    .as_u64()
+                    .filter(|s| (100..=999).contains(s))
+                    .ok_or_else(|| format!("a route status is a number from 100 to 999, not {v}"))?
+                    as u16,
+            },
             reason: value["reason"].as_str().map(str::to_string),
             ..Route::default()
         };
