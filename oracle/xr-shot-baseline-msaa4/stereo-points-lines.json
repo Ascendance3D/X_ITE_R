@@ -1,0 +1,25 @@
+{
+ "pinned": "34cdf9f97",
+ "world": "synthetic-xr/stereo-points-lines.x3dv",
+ "script": "synthetic-xr/stereo-points-lines.json",
+ "runs": 3,
+ "ms": 4,
+ "renderer": "ANGLE (NVIDIA Corporation, NVIDIA GeForce RTX 3060 Ti/PCIe/SSE2, OpenGL ES 3.2)",
+ "size": [
+  512,
+  256
+ ],
+ "requests": [
+  "supported:immersive-vr",
+  "supported:immersive-vr",
+  "session:immersive-vr",
+  "space:local",
+  "layer:{\"antialias\":false,\"alpha\":true,\"depth\":false,\"ignoreDepthValues\":true,\"framebufferScaleFactor\":1}"
+ ],
+ "numViews": 2,
+ "log": [
+  "warn: Parser error at line 6: Unknown field 'pointSizeAttenuation' in class 'PointProperties'."
+ ],
+ "rgbaSha256": "f35c982940d510e7126f7bed5a6ec9d23a87f1f887c1159c776cccc877dc45af",
+ "pngSha256": "ec1be24b17bfac26d59d4ba69f34e7086598ec06a40e8a6b8a88a81fc796764c"
+}

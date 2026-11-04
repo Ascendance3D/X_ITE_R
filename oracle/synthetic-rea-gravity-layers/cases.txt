@@ -1,0 +1,12 @@
+layers-gravity-active0 oracle/synthetic-rea-gravity-layers/layers-gravity-active0.wrl oracle/synthetic-rea-gravity-layers/scripts/layers-gravity-active0.json
+layers-gravity-active1 oracle/synthetic-rea-gravity-layers/layers-gravity-active1.wrl oracle/synthetic-rea-gravity-layers/scripts/layers-gravity-active1.json
+layers-gravity-active2 oracle/synthetic-rea-gravity-layers/layers-gravity-active2.wrl oracle/synthetic-rea-gravity-layers/scripts/layers-gravity-active2.json
+layers-gravity-switch oracle/synthetic-rea-gravity-layers/layers-gravity-switch.wrl oracle/synthetic-rea-gravity-layers/scripts/layers-gravity-switch.json
+layers-gravity-midfall oracle/synthetic-rea-gravity-layers/layers-gravity-midfall.wrl oracle/synthetic-rea-gravity-layers/scripts/layers-gravity-midfall.json
+layers-walls-active0 oracle/synthetic-rea-gravity-layers/layers-walls-active0.wrl oracle/synthetic-rea-gravity-layers/scripts/layers-walls-active0.json
+layers-walls-active1 oracle/synthetic-rea-gravity-layers/layers-walls-active1.wrl oracle/synthetic-rea-gravity-layers/scripts/layers-walls-active1.json
+trans-gravity-skip oracle/synthetic-rea-gravity-layers/trans-gravity-skip.wrl oracle/synthetic-rea-gravity-layers/scripts/trans-gravity-skip.json
+trans-skip-probe-start oracle/synthetic-rea-gravity-layers/trans-gravity-skip.wrl oracle/synthetic-rea-gravity-layers/scripts/trans-skip-probe-start.json
+trans-skip-probe oracle/synthetic-rea-gravity-layers/trans-gravity-skip.wrl oracle/synthetic-rea-gravity-layers/scripts/trans-skip-probe.json
+trans-layer-skip oracle/synthetic-rea-gravity-layers/trans-layer-skip.wrl oracle/synthetic-rea-gravity-layers/scripts/trans-layer-skip.json
+trans-layer-probe oracle/synthetic-rea-gravity-layers/trans-layer-skip.wrl oracle/synthetic-rea-gravity-layers/scripts/trans-layer-probe.json

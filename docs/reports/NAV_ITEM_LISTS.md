@@ -125,11 +125,11 @@ Non-particle only; the particle collision of PhysicsModels is in the B15 suites.
 | C14 | avatarSize values: small avatar, radius 0, radius 1, defaults for a short or empty field, negative values (clamped to 0) | compared | rea_batch09_nav (walk-small-avatar); rea_b24_nav (walk-radius-zero, walk-radius-large, walk-avatar-size-short, walk-avatar-size-empty, walk-avatar-size-negative) |
 | C15 | up vector is the viewpoint's local y axis (WALK inside a tilted Transform: forward, fall) | compared | rea_b24_nav (walk-tilted-forward, walk-tilted-fall) |
 | C16 | GeoViewpoint up vector (WALK on the globe) | compared | rea_batch01 (geoviewpoint-walk) |
-| C17 | gravity and collision only for the active layer | missing | no navigation case with two Layers |
-| C18 | collision and gravity are skipped while a transition is active | compared indirectly | rea_batch09_nav (trans-linear-walk, trans-animate-walk, trans-teleport-walk): poses during the transition; no case isolates it |
+| C17 | gravity and the viewer's constrained moves only for the active layer; collide (Collision.isActive) and the collision shapes of every drawn layer, each with its own viewpoint, NavigationInfo and fall speed | compared | rea_gravity_layers (layers-gravity-active0/1/2, layers-gravity-switch, layers-gravity-midfall, layers-walls-active0/1) |
+| C18 | collision and gravity are skipped while a transition is active | compared | rea_gravity_layers (trans-gravity-skip, trans-layer-skip: poses, the Collision wall's isActive count and the probes after the transition; trans-skip-probe-start); rea_batch09_nav (trans-linear-walk, trans-animate-walk, trans-teleport-walk). A getClosestObject call in the middle of a transition reads X_ITE's stale collision shapes: known gap, trans-skip-probe and trans-layer-probe |
 | C19 | rendering modes of the collision pass (point and wire shading, LINE particles) | compared | rea_batch01 (shading-point-collision, shading-wireframe-collision) |
 
-compared 18 (C18 indirectly), missing 1.
+compared 19 (C18 with one known gap: the probe in the middle of a transition), missing 0.
 
 ## Differences found
 

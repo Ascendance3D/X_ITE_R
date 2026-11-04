@@ -816,6 +816,10 @@ pub struct Layer {
     /// .collisionShapes); `None` before the first. getClosestObject and constrainTranslation between traversals draw
     /// those systems' particles as they are now.
     pub collision_particle_systems: Option<Vec<crate::walk::NodeRef>>,
+    /// X3DRenderObject.speed: the fall speed of WALK gravity (a property of the layer, kept while another layer is active).
+    pub gravity_speed: f64,
+    /// X3DRenderObject.activeCollisions: the Collision nodes whose isActive the layer's last COLLISION traversal set.
+    pub active_collisions: Vec<NodeId>,
 }
 
 impl Layer {
@@ -851,6 +855,8 @@ impl Layer {
             bound_changed: false,
             viewport: (512.0, 512.0),
             collision_particle_systems: None,
+            gravity_speed: 0.0,
+            active_collisions: vec![],
         }
     }
 

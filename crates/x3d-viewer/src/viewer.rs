@@ -222,9 +222,6 @@ pub struct Viewer3d {
     synced_rendering: (u32, bool, String),
     /// The LogarithmicDepthBuffer rendering property the camera last used.
     camera_log_depth: bool,
-    gravity_speed: f64,
-    /// X3DRenderObject.activeCollisions: the Collision nodes whose isActive the last COLLISION traversal set.
-    active_collisions: Vec<x3d_fields::NodeId>,
     geom_cache: HashMap<(Vec<NodeId>, NodeId), Option<Rc<Geometry>>>,
     /// The geometry each ParticleSystem last drew into the collision depth buffer, kept between frames while it does not
     /// change, so that the depth buffer keeps its vertex buffer (a SPRITE's changes when the view turns).
@@ -523,8 +520,6 @@ impl Viewer3d {
             straighten: true,
             advance_only_time: false,
             pinned_frame_rate: None,
-            gravity_speed: 0.0,
-            active_collisions: vec![],
             geom_cache: HashMap::new(),
             particle_depth_geometry: HashMap::new(),
             thick_line_systems: vec![],
@@ -625,8 +620,6 @@ impl Viewer3d {
         self.generated_none.clear();
         self.prox.clear();
         self.vis.clear();
-        self.active_collisions.clear();
-        self.gravity_speed = 0.0;
         self.verify_motion = None;
         self.bind_world_events(false);
     }
@@ -1854,7 +1847,7 @@ impl Viewer3d {
         }
 
         // Set isActive to FALSE for affected nodes, then TRUE.
-        for c in std::mem::take(&mut self.active_collisions) {
+        for c in std::mem::take(&mut self.layer.active_collisions) {
             if !active.contains(&c) {
                 self.set_collision_active(c, false);
             }
@@ -1864,7 +1857,7 @@ impl Viewer3d {
             self.set_collision_active(*c, true);
         }
 
-        self.active_collisions = active;
+        self.layer.active_collisions = active;
     }
 
     /// Collision.set_active__.
@@ -1886,7 +1879,22 @@ impl Viewer3d {
         }
     }
 
+    /// LayerSet.traverse (COLLISION): each layer drawn, in order, collects its collision shapes and runs collide (a layer's
+    /// Collision nodes follow that layer's own viewpoint and NavigationInfo, active layer or not); gravitate runs only
+    /// for the active layer (X3DRenderObject.gravitate: `browser .getActiveLayer () === this`).
     fn collision_pass(&mut self) {
+        let home = self.current;
+
+        for key in self.drawn.clone() {
+            self.swap_to(key);
+            self.collision_layer_pass(key == home);
+        }
+
+        self.swap_to(home);
+    }
+
+    /// The COLLISION traversal of the current layer; `active`: it is the active layer.
+    fn collision_layer_pass(&mut self, active: bool) {
         // The COLLISION traversal (X3DBrowserContext: `getCollisionCount () || getViewer () .isCollidable ()`, not
         // during a transition) collects the collision shapes.
         if (self.scan_display.collisions > 0 || self.nav.is_collidable())
@@ -1913,7 +1921,7 @@ impl Viewer3d {
         // collide runs while an enabled Collision exists, gravitate in WALK. Both read the same collision shapes from
         // the same viewpoint (collide's isActive events wait for the event loop), so their depth passes are one batch.
         let collide = self.scan_display.collisions > 0;
-        let walk = self.nav.kind() == "WALK";
+        let walk = active && self.nav.kind() == "WALK";
 
         if !collide && !walk {
             return;
@@ -1947,7 +1955,7 @@ impl Viewer3d {
         let Some(ground) = ground else {
             return;
         };
-        let mut speed = self.gravity_speed;
+        let mut speed = self.layer.gravity_speed;
         let frame_rate = self.frame_rate;
 
         // X3DRenderObject.gravitate: `getBrowserOptions () ._Gravity .getValue ()`.
@@ -1960,7 +1968,7 @@ impl Viewer3d {
             v.position_offset.add(&d);
         }
 
-        self.gravity_speed = speed;
+        self.layer.gravity_speed = speed;
     }
 
     /// Recompute the display scan with the current view (X3DLayerNode.display traversal of the

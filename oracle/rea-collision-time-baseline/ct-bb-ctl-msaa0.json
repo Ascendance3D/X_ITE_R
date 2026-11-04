@@ -1,0 +1,589 @@
+{
+  "ok": true,
+  "poses": {
+    "20": {
+      "position": [
+        1.5,
+        1.6,
+        9.5808004921875
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "oblique start",
+      "viewer": "WALK",
+      "fieldOfViewScale": 1
+    },
+    "60": {
+      "position": [
+        1.5,
+        1.6,
+        4.204800328124999
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "oblique start",
+      "viewer": "WALK",
+      "fieldOfViewScale": 1
+    },
+    "76": {
+      "position": [
+        1.5,
+        1.6,
+        3.398400328124998
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "oblique start",
+      "viewer": "WALK",
+      "fieldOfViewScale": 1
+    },
+    "84": {
+      "position": [
+        -1.2,
+        1.6,
+        8
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "second start",
+      "viewer": "WALK",
+      "fieldOfViewScale": 1
+    },
+    "100": {
+      "position": [
+        -1.2,
+        1.6,
+        5.8495998359375
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "second start",
+      "viewer": "WALK",
+      "fieldOfViewScale": 1
+    },
+    "140": {
+      "position": [
+        -1.2,
+        1.6,
+        3.4304003281250015
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "second start",
+      "viewer": "WALK",
+      "fieldOfViewScale": 1
+    },
+    "150": {
+      "position": [
+        -1.2,
+        1.6,
+        3.4304003281250015
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "second start",
+      "viewer": "WALK",
+      "fieldOfViewScale": 1
+    }
+  },
+  "vrml": {
+    "20": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Full\n\nCOMPONENT Scripting : 1\n\nNavigationInfo {\n  type \"WALK\"\n  speed 4\n  transitionType \"TELEPORT\"\n}\n\nViewpoint {\n  description \"oblique start\"\n  position 1.5 1.6 12\n}\n\nViewpoint {\n  description \"second start\"\n  position -1.2 1.6 8\n}\n\nTransform {\n  translation 0 -0.1 0\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.4 0.4 0.4\n      }\n    }\n    geometry Box {\n      size 60 0.2 60\n    }\n  }\n}\n\nTransform {\n  translation 0.5 1 3\n  children DEF C1 Collision {\n    children Group {\n      children Shape {\n        appearance Appearance {\n          material Material {\n            diffuseColor 0.9 0.6 0.2\n          }\n        }\n        geometry Box {\n          size 4 2 0.1\n        }\n      }\n    }\n  }\n}\n\nTransform {\n  translation 5 0.5 6\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.9 0.9 0.2\n      }\n    }\n    geometry Box {\n      size 1 1 1\n    }\n  }\n}\n\nTransform {\n  translation -6 1 9\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.2 0.9 0.9\n      }\n    }\n    geometry Box {\n      size 1 2 1\n    }\n  }\n}\n\nTransform {\n  translation 0 2.5 -9\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.9 0.2 0.9\n      }\n    }\n    geometry Box {\n      size 6 0.4 0.4\n    }\n  }\n}\n\nDEF LOG Script {\n  inputOutput SFString hist \"\"\n  inputOutput SFInt32  frame 30\n  inputOnly   SFBool   C1_a\n  inputOnly   SFTime   C1_t\n\n  url \"ecmascript:\n    function C1_a (v, t) { hist = hist + ' ' + frame + ':C1.isActive=' + v + '@' + (t - 946684800) .toFixed (6); }\n    function C1_t (v, t) { hist = hist + ' ' + frame + ':C1.collideTime=' + (v - 946684800) .toFixed (6); }\n    function prepareEvents () { frame = frame + 1; }\n\"\n}\n\nROUTE C1.isActive TO LOG.C1_a\nROUTE C1.collideTime TO LOG.C1_t\n",
+    "60": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Full\n\nCOMPONENT Scripting : 1\n\nNavigationInfo {\n  type \"WALK\"\n  speed 4\n  transitionType \"TELEPORT\"\n}\n\nViewpoint {\n  description \"oblique start\"\n  position 1.5 1.6 12\n}\n\nViewpoint {\n  description \"second start\"\n  position -1.2 1.6 8\n}\n\nTransform {\n  translation 0 -0.1 0\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.4 0.4 0.4\n      }\n    }\n    geometry Box {\n      size 60 0.2 60\n    }\n  }\n}\n\nTransform {\n  translation 0.5 1 3\n  children DEF C1 Collision {\n    children Group {\n      children Shape {\n        appearance Appearance {\n          material Material {\n            diffuseColor 0.9 0.6 0.2\n          }\n        }\n        geometry Box {\n          size 4 2 0.1\n        }\n      }\n    }\n  }\n}\n\nTransform {\n  translation 5 0.5 6\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.9 0.9 0.2\n      }\n    }\n    geometry Box {\n      size 1 1 1\n    }\n  }\n}\n\nTransform {\n  translation -6 1 9\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.2 0.9 0.9\n      }\n    }\n    geometry Box {\n      size 1 2 1\n    }\n  }\n}\n\nTransform {\n  translation 0 2.5 -9\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.9 0.2 0.9\n      }\n    }\n    geometry Box {\n      size 6 0.4 0.4\n    }\n  }\n}\n\nDEF LOG Script {\n  inputOutput SFString hist \"\"\n  inputOutput SFInt32  frame 70\n  inputOnly   SFBool   C1_a\n  inputOnly   SFTime   C1_t\n\n  url \"ecmascript:\n    function C1_a (v, t) { hist = hist + ' ' + frame + ':C1.isActive=' + v + '@' + (t - 946684800) .toFixed (6); }\n    function C1_t (v, t) { hist = hist + ' ' + frame + ':C1.collideTime=' + (v - 946684800) .toFixed (6); }\n    function prepareEvents () { frame = frame + 1; }\n\"\n}\n\nROUTE C1.isActive TO LOG.C1_a\nROUTE C1.collideTime TO LOG.C1_t\n",
+    "76": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Full\n\nCOMPONENT Scripting : 1\n\nNavigationInfo {\n  type \"WALK\"\n  speed 4\n  transitionType \"TELEPORT\"\n}\n\nViewpoint {\n  description \"oblique start\"\n  position 1.5 1.6 12\n}\n\nViewpoint {\n  description \"second start\"\n  position -1.2 1.6 8\n}\n\nTransform {\n  translation 0 -0.1 0\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.4 0.4 0.4\n      }\n    }\n    geometry Box {\n      size 60 0.2 60\n    }\n  }\n}\n\nTransform {\n  translation 0.5 1 3\n  children DEF C1 Collision {\n    children Group {\n      children Shape {\n        appearance Appearance {\n          material Material {\n            diffuseColor 0.9 0.6 0.2\n          }\n        }\n        geometry Box {\n          size 4 2 0.1\n        }\n      }\n    }\n  }\n}\n\nTransform {\n  translation 5 0.5 6\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.9 0.9 0.2\n      }\n    }\n    geometry Box {\n      size 1 1 1\n    }\n  }\n}\n\nTransform {\n  translation -6 1 9\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.2 0.9 0.9\n      }\n    }\n    geometry Box {\n      size 1 2 1\n    }\n  }\n}\n\nTransform {\n  translation 0 2.5 -9\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.9 0.2 0.9\n      }\n    }\n    geometry Box {\n      size 6 0.4 0.4\n    }\n  }\n}\n\nDEF LOG Script {\n  inputOutput SFString hist \" 76:C1.isActive=true@2.200000 76:C1.collideTime=2.200000\"\n  inputOutput SFInt32  frame 86\n  inputOnly   SFBool   C1_a\n  inputOnly   SFTime   C1_t\n\n  url \"ecmascript:\n    function C1_a (v, t) { hist = hist + ' ' + frame + ':C1.isActive=' + v + '@' + (t - 946684800) .toFixed (6); }\n    function C1_t (v, t) { hist = hist + ' ' + frame + ':C1.collideTime=' + (v - 946684800) .toFixed (6); }\n    function prepareEvents () { frame = frame + 1; }\n\"\n}\n\nROUTE C1.isActive TO LOG.C1_a\nROUTE C1.collideTime TO LOG.C1_t\n",
+    "84": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Full\n\nCOMPONENT Scripting : 1\n\nNavigationInfo {\n  type \"WALK\"\n  speed 4\n  transitionType \"TELEPORT\"\n}\n\nViewpoint {\n  description \"oblique start\"\n  position 1.5 1.6 12\n}\n\nViewpoint {\n  description \"second start\"\n  position -1.2 1.6 8\n}\n\nTransform {\n  translation 0 -0.1 0\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.4 0.4 0.4\n      }\n    }\n    geometry Box {\n      size 60 0.2 60\n    }\n  }\n}\n\nTransform {\n  translation 0.5 1 3\n  children DEF C1 Collision {\n    children Group {\n      children Shape {\n        appearance Appearance {\n          material Material {\n            diffuseColor 0.9 0.6 0.2\n          }\n        }\n        geometry Box {\n          size 4 2 0.1\n        }\n      }\n    }\n  }\n}\n\nTransform {\n  translation 5 0.5 6\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.9 0.9 0.2\n      }\n    }\n    geometry Box {\n      size 1 1 1\n    }\n  }\n}\n\nTransform {\n  translation -6 1 9\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.2 0.9 0.9\n      }\n    }\n    geometry Box {\n      size 1 2 1\n    }\n  }\n}\n\nTransform {\n  translation 0 2.5 -9\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.9 0.2 0.9\n      }\n    }\n    geometry Box {\n      size 6 0.4 0.4\n    }\n  }\n}\n\nDEF LOG Script {\n  inputOutput SFString hist \" 76:C1.isActive=true@2.200000 76:C1.collideTime=2.200000 90:C1.isActive=false@2.666667\"\n  inputOutput SFInt32  frame 94\n  inputOnly   SFBool   C1_a\n  inputOnly   SFTime   C1_t\n\n  url \"ecmascript:\n    function C1_a (v, t) { hist = hist + ' ' + frame + ':C1.isActive=' + v + '@' + (t - 946684800) .toFixed (6); }\n    function C1_t (v, t) { hist = hist + ' ' + frame + ':C1.collideTime=' + (v - 946684800) .toFixed (6); }\n    function prepareEvents () { frame = frame + 1; }\n\"\n}\n\nROUTE C1.isActive TO LOG.C1_a\nROUTE C1.collideTime TO LOG.C1_t\n",
+    "100": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Full\n\nCOMPONENT Scripting : 1\n\nNavigationInfo {\n  type \"WALK\"\n  speed 4\n  transitionType \"TELEPORT\"\n}\n\nViewpoint {\n  description \"oblique start\"\n  position 1.5 1.6 12\n}\n\nViewpoint {\n  description \"second start\"\n  position -1.2 1.6 8\n}\n\nTransform {\n  translation 0 -0.1 0\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.4 0.4 0.4\n      }\n    }\n    geometry Box {\n      size 60 0.2 60\n    }\n  }\n}\n\nTransform {\n  translation 0.5 1 3\n  children DEF C1 Collision {\n    children Group {\n      children Shape {\n        appearance Appearance {\n          material Material {\n            diffuseColor 0.9 0.6 0.2\n          }\n        }\n        geometry Box {\n          size 4 2 0.1\n        }\n      }\n    }\n  }\n}\n\nTransform {\n  translation 5 0.5 6\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.9 0.9 0.2\n      }\n    }\n    geometry Box {\n      size 1 1 1\n    }\n  }\n}\n\nTransform {\n  translation -6 1 9\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.2 0.9 0.9\n      }\n    }\n    geometry Box {\n      size 1 2 1\n    }\n  }\n}\n\nTransform {\n  translation 0 2.5 -9\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.9 0.2 0.9\n      }\n    }\n    geometry Box {\n      size 6 0.4 0.4\n    }\n  }\n}\n\nDEF LOG Script {\n  inputOutput SFString hist \" 76:C1.isActive=true@2.200000 76:C1.collideTime=2.200000 90:C1.isActive=false@2.666667\"\n  inputOutput SFInt32  frame 110\n  inputOnly   SFBool   C1_a\n  inputOnly   SFTime   C1_t\n\n  url \"ecmascript:\n    function C1_a (v, t) { hist = hist + ' ' + frame + ':C1.isActive=' + v + '@' + (t - 946684800) .toFixed (6); }\n    function C1_t (v, t) { hist = hist + ' ' + frame + ':C1.collideTime=' + (v - 946684800) .toFixed (6); }\n    function prepareEvents () { frame = frame + 1; }\n\"\n}\n\nROUTE C1.isActive TO LOG.C1_a\nROUTE C1.collideTime TO LOG.C1_t\n",
+    "140": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Full\n\nCOMPONENT Scripting : 1\n\nNavigationInfo {\n  type \"WALK\"\n  speed 4\n  transitionType \"TELEPORT\"\n}\n\nViewpoint {\n  description \"oblique start\"\n  position 1.5 1.6 12\n}\n\nViewpoint {\n  description \"second start\"\n  position -1.2 1.6 8\n}\n\nTransform {\n  translation 0 -0.1 0\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.4 0.4 0.4\n      }\n    }\n    geometry Box {\n      size 60 0.2 60\n    }\n  }\n}\n\nTransform {\n  translation 0.5 1 3\n  children DEF C1 Collision {\n    children Group {\n      children Shape {\n        appearance Appearance {\n          material Material {\n            diffuseColor 0.9 0.6 0.2\n          }\n        }\n        geometry Box {\n          size 4 2 0.1\n        }\n      }\n    }\n  }\n}\n\nTransform {\n  translation 5 0.5 6\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.9 0.9 0.2\n      }\n    }\n    geometry Box {\n      size 1 1 1\n    }\n  }\n}\n\nTransform {\n  translation -6 1 9\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.2 0.9 0.9\n      }\n    }\n    geometry Box {\n      size 1 2 1\n    }\n  }\n}\n\nTransform {\n  translation 0 2.5 -9\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.9 0.2 0.9\n      }\n    }\n    geometry Box {\n      size 6 0.4 0.4\n    }\n  }\n}\n\nDEF LOG Script {\n  inputOutput SFString hist \" 76:C1.isActive=true@2.200000 76:C1.collideTime=2.200000 90:C1.isActive=false@2.666667\"\n  inputOutput SFInt32  frame 150\n  inputOnly   SFBool   C1_a\n  inputOnly   SFTime   C1_t\n\n  url \"ecmascript:\n    function C1_a (v, t) { hist = hist + ' ' + frame + ':C1.isActive=' + v + '@' + (t - 946684800) .toFixed (6); }\n    function C1_t (v, t) { hist = hist + ' ' + frame + ':C1.collideTime=' + (v - 946684800) .toFixed (6); }\n    function prepareEvents () { frame = frame + 1; }\n\"\n}\n\nROUTE C1.isActive TO LOG.C1_a\nROUTE C1.collideTime TO LOG.C1_t\n",
+    "150": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Full\n\nCOMPONENT Scripting : 1\n\nNavigationInfo {\n  type \"WALK\"\n  speed 4\n  transitionType \"TELEPORT\"\n}\n\nViewpoint {\n  description \"oblique start\"\n  position 1.5 1.6 12\n}\n\nViewpoint {\n  description \"second start\"\n  position -1.2 1.6 8\n}\n\nTransform {\n  translation 0 -0.1 0\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.4 0.4 0.4\n      }\n    }\n    geometry Box {\n      size 60 0.2 60\n    }\n  }\n}\n\nTransform {\n  translation 0.5 1 3\n  children DEF C1 Collision {\n    children Group {\n      children Shape {\n        appearance Appearance {\n          material Material {\n            diffuseColor 0.9 0.6 0.2\n          }\n        }\n        geometry Box {\n          size 4 2 0.1\n        }\n      }\n    }\n  }\n}\n\nTransform {\n  translation 5 0.5 6\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.9 0.9 0.2\n      }\n    }\n    geometry Box {\n      size 1 1 1\n    }\n  }\n}\n\nTransform {\n  translation -6 1 9\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.2 0.9 0.9\n      }\n    }\n    geometry Box {\n      size 1 2 1\n    }\n  }\n}\n\nTransform {\n  translation 0 2.5 -9\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.9 0.2 0.9\n      }\n    }\n    geometry Box {\n      size 6 0.4 0.4\n    }\n  }\n}\n\nDEF LOG Script {\n  inputOutput SFString hist \" 76:C1.isActive=true@2.200000 76:C1.collideTime=2.200000 90:C1.isActive=false@2.666667\"\n  inputOutput SFInt32  frame 160\n  inputOnly   SFBool   C1_a\n  inputOnly   SFTime   C1_t\n\n  url \"ecmascript:\n    function C1_a (v, t) { hist = hist + ' ' + frame + ':C1.isActive=' + v + '@' + (t - 946684800) .toFixed (6); }\n    function C1_t (v, t) { hist = hist + ' ' + frame + ':C1.collideTime=' + (v - 946684800) .toFixed (6); }\n    function prepareEvents () { frame = frame + 1; }\n\"\n}\n\nROUTE C1.isActive TO LOG.C1_a\nROUTE C1.collideTime TO LOG.C1_t\n"
+  },
+  "prints": [],
+  "log": [],
+  "anchors": [],
+  "loadFrames": 3,
+  "warmupFrames": 8,
+  "geometry": {
+    "rect": [
+      0,
+      0,
+      512,
+      512
+    ],
+    "viewport": [
+      0,
+      0,
+      512,
+      512
+    ],
+    "scroll": [
+      0,
+      0
+    ]
+  },
+  "collisionProbes": [
+    {
+      "distance": 0.3873513851019157,
+      "id": 1,
+      "normal": [
+        0,
+        1.1102230246251568e-16,
+        1
+      ]
+    },
+    {
+      "distance": 0.23372710199127966,
+      "id": 1,
+      "normal": [
+        0,
+        -1.1102230246251568e-16,
+        1
+      ]
+    },
+    {
+      "distance": 1.3765835032233726,
+      "id": 0,
+      "normal": [
+        -5.551114461381369e-17,
+        1,
+        -1.1102228922762738e-16
+      ]
+    },
+    {
+      "distance": 0.1358466924220343,
+      "id": 1,
+      "normal": [
+        1.1102230246251573e-16,
+        5.551115123125787e-16,
+        1
+      ]
+    },
+    {
+      "distance": 0.17568546495766735,
+      "id": 1,
+      "normal": [
+        -3.6977854932234945e-32,
+        3.330669073875471e-16,
+        1
+      ]
+    },
+    {
+      "distance": 0.12989917463303868,
+      "id": 1,
+      "normal": [
+        -1.1102230246251573e-16,
+        5.551115123125787e-16,
+        1
+      ]
+    },
+    {
+      "distance": 1.3765827700862305,
+      "id": 0,
+      "normal": [
+        2.7755575615628907e-17,
+        1,
+        1.1102230246251563e-16
+      ]
+    },
+    {
+      "distance": 0.2337474694575088,
+      "id": 1,
+      "normal": [
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "distance": 0.3147363849535474,
+      "id": 1,
+      "normal": [
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "distance": 0.2260473529645053,
+      "id": 1,
+      "normal": [
+        1.1102227599274236e-16,
+        5.551113799637118e-17,
+        1
+      ]
+    },
+    {
+      "distance": 1.7873879198724725,
+      "id": 0,
+      "normal": [
+        0,
+        1,
+        0
+      ]
+    },
+    {
+      "distance": 1.787388469725329,
+      "id": 0,
+      "normal": [
+        -7.632781391782769e-17,
+        1,
+        -1.1102228922762743e-16
+      ]
+    },
+    {
+      "distance": 1.787388469725329,
+      "id": 0,
+      "normal": [
+        -6.162975822039155e-32,
+        1,
+        1.1102230246251565e-16
+      ]
+    },
+    {
+      "distance": 1.787387736588187,
+      "id": 0,
+      "normal": [
+        1.3183898417423734e-16,
+        1,
+        -2.220446049250313e-16
+      ]
+    },
+    {
+      "distance": 1.7873886530096146,
+      "id": 0,
+      "normal": [
+        0,
+        1,
+        0
+      ]
+    },
+    {
+      "distance": 0.22613026619317034,
+      "id": 1,
+      "normal": [
+        0,
+        5.551115123125783e-17,
+        1
+      ]
+    },
+    {
+      "distance": 0.3804002369311805,
+      "id": 1,
+      "normal": [
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "distance": 0.3035905353479136,
+      "id": 1,
+      "normal": [
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "distance": 3.200000047683716,
+      "id": -1,
+      "normal": [
+        -1.2819751242557097e-16,
+        -0.577350269189626,
+        -0.8164965809277259
+      ]
+    },
+    {
+      "distance": 3.200000047683716,
+      "id": -1,
+      "normal": [
+        -0.8164965809277258,
+        -0.5773502691896261,
+        6.40987562127855e-17
+      ]
+    },
+    {
+      "distance": 3.200000047683716,
+      "id": -1,
+      "normal": [
+        0.5773502691896256,
+        -0.577350269189626,
+        0.5773502691896257
+      ]
+    },
+    {
+      "distance": 3.200000047683716,
+      "id": -1,
+      "normal": [
+        -0.5773502691896255,
+        -0.577350269189626,
+        -0.5773502691896257
+      ]
+    },
+    {
+      "distance": 3.200000047683716,
+      "id": -1,
+      "normal": [
+        0.8164965809277258,
+        -0.5773502691896261,
+        0
+      ]
+    },
+    {
+      "distance": 0.3036072371284322,
+      "id": 1,
+      "normal": [
+        -1.1102228922762743e-16,
+        0,
+        1
+      ]
+    },
+    {
+      "distance": 0.12717022143497392,
+      "id": 1,
+      "normal": [
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "distance": 0.13226082057426303,
+      "id": 1,
+      "normal": [
+        0,
+        -5.551115123125783e-17,
+        1
+      ]
+    },
+    {
+      "distance": 3.200000047683716,
+      "id": -1,
+      "normal": [
+        3.2049378106392725e-16,
+        -0.9082484193757544,
+        -0.41843136677529785
+      ]
+    },
+    {
+      "distance": 3.200000047683716,
+      "id": -1,
+      "normal": [
+        -0.4184313667752981,
+        -0.7865661124422733,
+        0.45412436848951976
+      ]
+    },
+    {
+      "distance": 3.200000047683716,
+      "id": -1,
+      "normal": [
+        0.6169900773689662,
+        -0.6938055024773021,
+        0.3714258595742296
+      ]
+    },
+    {
+      "distance": 3.200000047683716,
+      "id": -1,
+      "normal": [
+        -0.6169900773689665,
+        -0.7865661151224066,
+        0.02523868002653117
+      ]
+    },
+    {
+      "distance": 3.200000047683716,
+      "id": -1,
+      "normal": [
+        0.4184314258374511,
+        -0.9082483921657201,
+        1.489374871288649e-7
+      ]
+    },
+    {
+      "distance": 0.1395421303269757,
+      "id": 1,
+      "normal": [
+        0,
+        -5.551115123125783e-17,
+        1
+      ]
+    },
+    {
+      "distance": 0.14359457022241062,
+      "id": 1,
+      "normal": [
+        0,
+        1.1102230246251568e-16,
+        -1
+      ]
+    },
+    {
+      "distance": 0.12618679152313694,
+      "id": 1,
+      "normal": [
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "distance": 3.200000047683716,
+      "id": -1,
+      "normal": [
+        2.8844440295753455e-16,
+        -0.9957818904133451,
+        0.09175198485495904
+      ]
+    },
+    {
+      "distance": 3.200000047683716,
+      "id": -1,
+      "normal": [
+        0.09175198485495886,
+        -0.4978911193130043,
+        0.8623723132060878
+      ]
+    },
+    {
+      "distance": 3.200000047683716,
+      "id": -1,
+      "normal": [
+        0.5449108598972867,
+        -0.8332249540678461,
+        0.09385270739107728
+      ]
+    },
+    {
+      "distance": 3.200000047683716,
+      "id": -1,
+      "normal": [
+        -0.5449108598972865,
+        -0.4978914420587251,
+        0.6746675230739086
+      ]
+    },
+    {
+      "distance": 3.200000047683716,
+      "id": -1,
+      "normal": [
+        -0.09175181643632783,
+        -0.9957819059311774,
+        8.40074817593119e-7
+      ]
+    },
+    {
+      "distance": 0.13103356546532496,
+      "id": 1,
+      "normal": [
+        -1,
+        0,
+        -5.551115123125783e-17
+      ]
+    },
+    {
+      "distance": 1.599999899193037,
+      "id": 0,
+      "normal": [
+        0,
+        1,
+        -1.110223024625157e-16
+      ]
+    },
+    {
+      "distance": 0.399999925288242,
+      "id": 1,
+      "normal": [
+        0,
+        1,
+        1.110223024625157e-16
+      ]
+    },
+    {
+      "distance": 1.420170339164429,
+      "id": 0,
+      "normal": [
+        -1.665334404588852e-16,
+        1,
+        -1.1102228922762741e-16
+      ]
+    },
+    {
+      "distance": 0.2893842734741654,
+      "id": 1,
+      "normal": [
+        0,
+        0,
+        1
+      ]
+    }
+  ]
+}

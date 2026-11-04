@@ -52,15 +52,33 @@ the normal matrix stays the one of the model-view matrix). Reference: the pinned
 `X3DWebXRContext` itself through a mock session (`oracle/x_ite-xr-shot.mjs`, three identical runs per case; the mock replaces
 `navigator.xr`, `XRWebGLLayer` and `makeXRCompatible`, and its layer has no framebuffer of its own, so X_ITE draws each view
 into the canvas at the viewport that the script gives). `crates/x3d-render/tests/xr_views.rs` compares the Rust views with those
-pictures (at most 0.5% of the pixels more than 8 off): 7 cases (symmetric stereo, eyes turned in, off-axis frusta, a viewer pose
-that is not the identity, all together, point/spot/directional lights with a PhysicalMaterial, fog and a Background), 0 pixels
-over 8 on the RTX 3060 Ti and on lavapipe (software, at most 2 pixels over, max delta 204 on a silhouette edge). Controls: leaving
-out the eye offsets, swapping the views, dropping the eye rotation, the pose, or the off-axis frusta each takes the picture over
-the bound.
+pictures (at most 0.5% of the pixels more than 8 off), at MSAA 0 (`oracle/xr-shot-baseline`) and at MSAA 4
+(`oracle/xr-shot-baseline-msaa4`, X_ITE `Multisampling` 4 for each view; the pinned page makes one `MultiSampleFramebuffer` per view):
+12 cases (symmetric stereo, eyes turned in, off-axis frusta, a viewer pose that is not the identity, all together,
+point/spot/directional lights with a PhysicalMaterial, fog and a Background, a DirectionalLight, a SpotLight and a PointLight with
+`shadows TRUE`, ClipPlanes, and PointSet and IndexedLineSet with wide lines). On the RTX 3060 Ti: 0 pixels over 8 in 20 of the 24
+comparisons; shadow-point has 1 pixel over 8 (max delta 13 at MSAA 0, 9 at MSAA 4); points-lines has 57 pixels (0.043%, MSAA 0)
+and 92 pixels (0.070%, MSAA 4) over 8, all single pixels on the edges of the thin and wide lines (max delta 255 at MSAA 0, 64 at
+MSAA 4; rasterizer differences in the lines, not a placement error: the points match). On lavapipe (software) at most 6 pixels
+over 8 per case, except points-lines (56 and 113). Controls that must fail: leaving out the eye offsets, swapping the views,
+dropping the eye rotation, the pose or the off-axis frusta each takes the picture over the bound, as does each of the first
+three for the five added cases, and a Rust picture drawn at MSAA 0 against a key of MSAA 4.
+
+The comparison found two differences, both fixed in `view_frame`. (1) The shadow matrix: X_ITE builds it as
+`view .inverse · cameraSpaceMatrix · invLightSpaceProjectionMatrix` with `view .inverse` = the view's own transform then the pose's
+inverse, and the layer's camera space matrix starts with the pose; the Rust frame had `cameraSpaceMatrix · invLightSpaceProjectionMatrix`
+only (38%, 14% and 26% of the pixels over 8 for the directional, spot and point lights). The shadow map is drawn once from the
+light, as in X_ITE. (2) The clip planes: the plane is in the space of the model-view matrix (after the pose) and then gets the eye
+matrix (`ClipPlaneContainer.setShaderUniforms`, `planeView .assign (plane) .multRight (view .matrix)`); the Rust planes had neither
+(2.2% over 8).
 
 This is the render half that every XR route needs (WebXR with the WebGPU layer, or a native OpenXR viewer). Not covered, and
-UNVERIFIED: shadow maps, projective textures, clip planes, points and lines (screen-space geometry), MSAA with views
-(the cases are MSAA 0), the Background of a layer other than the active one, and anything that needs a session: `XRGPUBinding` or `XRWebGLLayer` framebuffers, the device's real poses and frusta, input. This machine has
+UNVERIFIED: projective textures (TextureProjector under a pose), the Background and the other state of a layer that is not the
+active one (the pose applies to the active layer only), more than one light with a shadow map in one frame, other MSAA counts than
+0 and 4, and anything that needs a session: `XRGPUBinding` or `XRWebGLLayer` framebuffers (the mock layer has no framebuffer, so
+the multisample resolve of each view into a real layer is not tested), the device's real poses and frusta, input. Limits of the
+mock: one viewer pose, two views side by side in one canvas, `getViewport` from the script, `antialias` false and `depth` false in
+the layer request as X_ITE sends them. This machine has
 no XR runtime (Chrome 156 on Linux reports `immersive-vr` unsupported, `XRGPUBinding` only behind
 `--enable-features=WebXRWebGPUBinding`; no OpenXR loader or Monado is installed).
 
