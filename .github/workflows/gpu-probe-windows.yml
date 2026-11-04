@@ -1,0 +1,63 @@
+# One-off, read-only probe of the Windows self-hosted runner (issue #89). It prints the graphics adapters and nothing else.
+# NOT FOR MERGE: this file lives only on a draft pull request branch, which is closed after the result is read.
+# No checkout, no secrets, no write permission, no cache, no artifact. The job runs only when the pull request head is in
+# this repository, so a pull request from a fork cannot reach the runner through this file.
+name: GPU probe (Windows)
+
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - ".github/workflows/gpu-probe-windows.yml"
+
+permissions: {}
+
+jobs:
+  probe:
+    if: github.event_name == 'workflow_dispatch' || github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: [self-hosted, Windows, X64]
+    timeout-minutes: 10
+    steps:
+      - name: Host and adapters
+        shell: powershell
+        run: |
+          $ErrorActionPreference = 'Continue'
+          Write-Output "== OS and machine"
+          Get-CimInstance Win32_OperatingSystem | Select-Object Caption, Version, BuildNumber, OSArchitecture | Format-List
+          Get-CimInstance Win32_ComputerSystem | Select-Object Manufacturer, Model, NumberOfLogicalProcessors, TotalPhysicalMemory, HypervisorPresent | Format-List
+          Write-Output "== Session (name, id, user)"
+          Write-Output ("session id " + [System.Diagnostics.Process]::GetCurrentProcess().SessionId)
+          Write-Output ("user " + [System.Security.Principal.WindowsIdentity]::GetCurrent().Name)
+          Write-Output "== Win32_VideoController"
+          Get-CimInstance Win32_VideoController | Select-Object Name, DriverVersion, DriverDate, AdapterRAM, VideoProcessor, PNPDeviceID, Status, ConfigManagerErrorCode | Format-List
+          Write-Output "== Display class devices (PnP)"
+          Get-PnpDevice -Class Display -ErrorAction SilentlyContinue | Select-Object Status, FriendlyName, InstanceId | Format-List
+          Write-Output "== nvidia-smi"
+          $smi = Get-Command nvidia-smi -ErrorAction SilentlyContinue
+          if ($smi) { & $smi.Source -L; & $smi.Source --query-gpu=name,driver_version,memory.total --format=csv } else { Write-Output "nvidia-smi not found" }
+          Write-Output "== Vulkan loader and registered drivers"
+          Write-Output ("vulkan-1.dll in System32: " + (Test-Path "$env:windir\System32\vulkan-1.dll"))
+          foreach ($key in 'HKLM:\SOFTWARE\Khronos\Vulkan\Drivers', 'HKLM:\SOFTWARE\WOW6432Node\Khronos\Vulkan\Drivers') {
+            if (Test-Path $key) { Write-Output $key; (Get-Item $key).Property } else { Write-Output "$key not present" }
+          }
+          Write-Output "== DX12 runtime and tools"
+          Write-Output ("d3d12.dll in System32: " + (Test-Path "$env:windir\System32\d3d12.dll"))
+          Write-Output ("WARP (d3d10warp.dll) in System32: " + (Test-Path "$env:windir\System32\d3d10warp.dll"))
+          foreach ($tool in 'cargo', 'rustup', 'node', 'python', 'git', 'vulkaninfo', 'dxdiag') {
+            $c = Get-Command $tool -ErrorAction SilentlyContinue
+            if ($c) { Write-Output ("$tool : " + $c.Source) } else { Write-Output "$tool : not found" }
+          }
+      - name: DirectX diagnostic (display section)
+        shell: powershell
+        run: |
+          $ErrorActionPreference = 'Continue'
+          $out = Join-Path $env:RUNNER_TEMP 'dxdiag.txt'
+          Start-Process -FilePath dxdiag.exe -ArgumentList "/whql:off", "/t", $out -Wait -NoNewWindow
+          $deadline = (Get-Date).AddSeconds(90)
+          while (-not (Test-Path $out) -and (Get-Date) -lt $deadline) { Start-Sleep -Seconds 2 }
+          if (Test-Path $out) {
+            $text = Get-Content $out
+            $start = ($text | Select-String -Pattern '^Display Devices' | Select-Object -First 1).LineNumber
+            if ($start) { $text[($start - 1)..([Math]::Min($start + 40, $text.Count - 1))] } else { Write-Output "no Display Devices section" }
+            Remove-Item $out -Force
+          } else { Write-Output "dxdiag wrote no file" }
