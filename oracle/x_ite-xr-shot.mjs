@@ -38,8 +38,11 @@ const [ scriptArg, outArg ] = argv .filter ((a, i) => !a .startsWith ("--") && !
 const RUNS = Number (opt ("--runs", "3"));
 const MS   = Number (opt ("--ms", "0"));
 
+if (!Number .isInteger (MS) || MS < 0 || MS > 8)
+   throw new Error (`--ms must be an integer from 0 to 8, got ${opt ("--ms", "0")}`);
+
 if (!scriptArg || !outArg)
-   throw new Error ("usage: node oracle/x_ite-xr-shot.mjs <xr-script.json> <out-dir> [--runs 3] [--ms N]");
+   throw new Error ("usage: node oracle/x_ite-xr-shot.mjs <xr-script.json> <out-dir> [--runs 3] [--ms N (0 to 8)]");
 
 const script = JSON .parse (await readFile (resolve (scriptArg), "utf8"));
 const world  = join (dirname (resolve (scriptArg)), `${script .world ?? basename (scriptArg, ".json")}.x3dv`);
@@ -110,6 +113,12 @@ async function once ()
       await page .goto (`${base}/x_ite-pin/src/xr-shot.html${MS ? `?ms=${MS}` : ""}`);
       await page .waitForFunction (() => window .ready, null, { timeout: 30000 });
       await page .evaluate (([w, h]) => window .setSize (w, h), [ W, H ]);
+
+      // The sample count that X_ITE applied (BrowserOptions.set_Multisampling__: antialiased="false" gives 0) must be the requested one.
+      const applied = await page .evaluate (() => document .getElementById ("c") .browser .getRenderingProperty ("Multisampling"));
+
+      if (applied !== MS)
+         throw new Error (`RenderingProperties.Multisampling is ${applied}, not the requested ${MS}`);
 
       const info = await page .evaluate (() =>
       {
