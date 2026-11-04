@@ -122,6 +122,17 @@ fn error_string(message: String) -> String {
     }
 }
 
+/// Whether FileLoader decoded this resolved data URL to text itself (`dataAsString`): the header before the first comma
+/// does not end with `;base64`, which is fetched instead.
+fn is_text_data_url(url: &url::Url) -> bool {
+    url.scheme() == "data"
+        && url
+            .path()
+            .split(',')
+            .next()
+            .is_some_and(|h| !h.ends_with(";base64"))
+}
+
 /// What a scene is parsed from: fetched bytes, or a JavaScript string.
 enum Input<'a> {
     Bytes(&'a [u8]),
@@ -322,20 +333,39 @@ impl Runtime {
 
         let result =
             self.load_document_hooks(&loader, &req.urls, &LoadHooks::default(), |rt, loaded| {
-                let (data, url) = match loaded {
-                    Loaded::Script(source) => (
-                        source.into_bytes(),
-                        format!(
+                // The text of a `data:` or script url reaches the parsers as a string: no byte order mark removal
+                // (`$.decodeText` leaves a string alone). The bytes of a fetch are decoded.
+                match loaded {
+                    Loaded::Script(source) => {
+                        let url = format!(
                             "{}null",
                             base.rsplit_once('/')
                                 .map_or(String::new(), |(d, _)| format!("{d}/"))
-                        ),
-                    ),
-                    Loaded::Data(data, url) => (data, url.to_string()),
-                };
+                        );
 
-                rt.browser_scene(id, req.script, req.parent, Input::Bytes(&data), &url)
-                    .map_err(error_string)
+                        rt.browser_scene(id, req.script, req.parent, Input::Text(&source), &url)
+                    }
+                    // A data URL that is not base64 was decoded to text by the loader (`dataAsString`).
+                    Loaded::Data(data, url) if is_text_data_url(&url) => {
+                        let text = String::from_utf8_lossy(&data);
+
+                        rt.browser_scene(
+                            id,
+                            req.script,
+                            req.parent,
+                            Input::Text(&text),
+                            url.as_str(),
+                        )
+                    }
+                    Loaded::Data(data, url) => rt.browser_scene(
+                        id,
+                        req.script,
+                        req.parent,
+                        Input::Bytes(&data),
+                        url.as_str(),
+                    ),
+                }
+                .map_err(error_string)
             });
 
         // The request goes on when the response of the next candidate is in.
@@ -368,6 +398,7 @@ impl Runtime {
                     data,
                     url,
                     self.accept_waits,
+                    true,
                 );
 
                 // `await buffersArray`: the scene is built when the buffers are in.
@@ -404,9 +435,13 @@ impl Runtime {
             }
             // GoldenGate.parseIntoScene.
             Err(x3d_parse::LoadError::NoHandler) => {
-                return Err(format!(
-                    "Couldn't parse X3D. No suitable file handler found for '{url}'."
-                ));
+                // `worldURL .startsWith ("data:")`: a data URL is not named.
+                return Err(if url.starts_with("data:") {
+                    "Couldn't parse X3D. No suitable file handler found for 'data:' URL."
+                        .to_string()
+                } else {
+                    format!("Couldn't parse X3D. No suitable file handler found for '{url}'.")
+                });
             }
             Err(e) => return Err(format!("Error: {e}")),
         };

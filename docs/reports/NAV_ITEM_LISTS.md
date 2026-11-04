@@ -18,7 +18,9 @@ Test names. `rea_batch09_nav` = `x3d-viewer::rea_batch09_nav rea_batch09_nav_sha
 (new in this lane), cases in `oracle/rea-batch24-nav-baseline/cases.txt`, worlds and scripts in `oracle/synthetic-rea-b24-nav`
 (generator `oracle/tools/gen_rea_b24_nav.py`, recorder `oracle/tools/rea_b24_nav.py`: three identical X_ITE recordings per case).
 `rea_batch01` = `x3d-viewer::rea_batch01 rea_batch01_cases_match_x_ite`. `rea_batch09_inputs` =
-`x3d-viewer::rea_batch09_inputs rea_batch09_inputs_cases_match_x_ite`. A case name in parentheses is the case inside that test.
+`x3d-viewer::rea_batch09_inputs rea_batch09_inputs_cases_match_x_ite`. `rea_nav_overlay` = `x3d-viewer::rea_nav_overlay rea_nav_overlay_rubber_band_matches_x_ite` and `rea_nav_overlay_content_scale_matches_x_ite`, cases in
+`oracle/synthetic-rea-nav-overlay/cases.txt` (generator and recorder `oracle/tools/rea_nav_overlay.py`, three identical X_ITE recordings per case, baselines
+flat in `oracle/rea-nav-overlay-baseline/NAME.json`). A case name in parentheses is the case inside that test.
 
 The worlds of the cases are synthetic and authored for this repository.
 
@@ -65,12 +67,12 @@ compared 13 (E01 to E13), 2 more compared outside the `x3d-viewer` tests (E14 br
 | F12 | type list (`FLY WALK`), ANY, NONE, switching the viewer at run time | compared | rea_batch09_nav (any-forward, none-drag-wheel, viewer-switch) |
 | F13 | transitions LINEAR, ANIMATE, TELEPORT, with drag, wheel and bind interrupts, NavigationInfo switch | compared | rea_batch09_nav (trans-linear-walk, trans-animate-walk, trans-teleport-walk, their -interrupt cases, trans-navigationinfo-switch) |
 | F14 | FLY collides only while the button is held, no gravity in FLY | compared | rea_batch09_nav (fly-wall, fly-no-gravity) |
-| F15 | Rubberband browser option (the drawn rubber band) | missing | overlay drawing; no picture comparison of it |
+| F15 | Rubberband browser option (the drawn rubber band: MOVE line for the left button, PAN line for the middle button or Alt; gone on release, on a roll of the wheel, on a viewer switch; not drawn for Ctrl look-around or with the option off) | compared | rea_nav_overlay (rubber-walk-up-right, -fly-down-left, -walk-vertical, -fly-horizontal, -walk-horizontal-left, -fly-vertical-up, -walk-long, -fly-short, -pan-middle, -pan-alt, -two-buttons, -wheel-roll, -ctrl-look, -option-off, -viewer-switch, -scale-2, -scale-1.5, -scale-0.5): every pixel that differs from the sky color, MSAA 0 |
 | F16 | touch: one finger drives, two fingers look around | missing | the stepped harness has no touch events |
-| F17 | direction divided by the ContentScale rendering property (HiDPI pointer) | missing | the stepped harness runs at content scale 1 |
+| F17 | direction divided by the ContentScale rendering property (HiDPI pointer) | compared | rea_nav_overlay (scale-walk-forward-2, -1.5, -0.5, -3, scale-walk-turn-2, scale-fly-diagonal-1.5, scale-fly-shift-2, scale-walk-alt-pan-2, scale-fly-middle-pan-0.5, scale-fly-ctrl-look-2): the `contentScale` canvas attribute 0.5 to 3, poses only |
 | F18 | ROLL_ANGLE for macOS and Oculus user agents (PI/512) | missing | platform branch of `navigator.userAgent` |
 
-compared 14, missing 4.
+compared 16, missing 2 (F16 is compared in the browser lane, see the ledger notes of `sub:nav.walk-fly`; F18 is a macOS platform branch, not run on this Linux host).
 
 ## sub:nav.plane (PlaneViewer.js)
 
@@ -141,6 +143,19 @@ compared 19 (C18 with one known gap: the probe in the middle of a transition), m
   step and radius cases and 5.7e-6 in the tilted-Transform case (a slanted wall at 0.19, where the shape id also differs: X_ITE
   1, Rust 0; only the hit flag and the normal are compared). `rea_b24_nav` allows 1e-5, batch 09 allows 1e-6.
 
+* Rubber band (F15): Rust drew no rubber band at all (the `Rubberband` option existed, nothing drew it); the pinned page draws a black and a
+  white strip with a fading tip over the finished frame while a FLY or WALK button is held. Fixed: `x3d-render/src/rubber_band.rs` (one pass
+  over the finished frame, ScreenLine's vertices, projection, model view and blend state), set on the frame by `Viewer3d::build_frame`
+  from the viewer (`Fly::rubber_band`). The option is read when the button goes down (X_ITE connects `display` then); `disconnect`
+  (release, wheel roll, transition start, viewer switch) ends it. Compared at MSAA 0 against the pinned pictures: the pixel sets are
+  equal and the channel difference is 0 in every case. With multisampling X_ITE draws the band into the multisampled buffer (antialiased
+  edge); Rust draws it over the resolved picture: not compared. A Viewport node of the layer is not handled (the pointer stays canvas based).
+  An exactly horizontal band at ContentScale 1 has its white strip's long edges on pixel centers: ANGLE flips y, so the tie goes to the other
+  row than the Vulkan top-left rule gives; `RubberBand::matrices` moves such a band one snap step (1/256 px) down.
+* ContentScale (F17): no difference. X_ITE's pointer is in drawing-buffer pixels and `X3DFlyViewer.mousemove` divides the direction by the
+  ContentScale rendering property; the Rust viewer's pointer is canvas pixels and needs no division. Poses at 0.5, 1.5, 2 and 3 equal the
+  pose at 1 in X_ITE (`oracle/rea-nav-overlay-baseline/scale-walk-forward-*.json`: z 10.791333 at frame 90 for every scale) and in Rust.
+
 ## Mutation checks (each reverted afterwards; the named case fails)
 
 | mutation | failing case |
@@ -153,3 +168,7 @@ compared 19 (C18 with one known gap: the probe in the middle of a transition), m
 | LOOKAT zoom factor x 2 (`nav/lookat.rs`) | x10-lookat-wheel |
 | EXAMINE zoom factor 1/20 to 1/10 (`nav.rs`) | examine-cor-wheel |
 | walk and fly `SPEED_FACTOR` 0.007 to 0.0075 | walk-speed-1, walk-speed-16 |
+| rubber band not handed to the frame (`Viewer3d::build_frame`), the state before this change | 16 of the 18 `rubber-` cases (every one with a band; 46 differences) |
+| exactly horizontal band not moved one snap step down (`RubberBand::matrices`) | rubber-fly-horizontal, rubber-walk-horizontal-left (a swapped black and white row) |
+| strip normal not scaled by ContentScale (`RubberBand::matrices`) | rubber-scale-2, -1.5, -0.5 |
+| navigation viewport taken as drawing-buffer pixels (`Viewer3d::env`) | scale-fly-ctrl-look-2 (orientation angle 0.135 rad off) |

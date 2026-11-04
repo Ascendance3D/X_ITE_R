@@ -1,0 +1,90 @@
+{
+"geometry": {
+"rect": [
+0,
+0,
+512,
+512
+],
+"scroll": [
+0,
+0
+],
+"viewport": [
+0,
+0,
+1024,
+1024
+]
+},
+"ok": true,
+"poses": {
+"20": {
+"centerOfRotation": [
+0,
+0,
+0
+],
+"description": "start",
+"fieldOfViewScale": 1,
+"orientation": [
+0,
+0,
+1,
+0
+],
+"position": [
+0.18479996240234373,
+1.6,
+12
+],
+"viewer": "WALK",
+"viewpoint": ""
+},
+"50": {
+"centerOfRotation": [
+0,
+0,
+0
+],
+"description": "start",
+"fieldOfViewScale": 1,
+"orientation": [
+0,
+0,
+1,
+0
+],
+"position": [
+0.49279996240234364,
+1.6,
+12
+],
+"viewer": "WALK",
+"viewpoint": ""
+},
+"90": {
+"centerOfRotation": [
+0,
+0,
+0
+],
+"description": "start",
+"fieldOfViewScale": 1,
+"orientation": [
+0,
+0,
+1,
+0
+],
+"position": [
+0.7186666416015627,
+1.6,
+12
+],
+"viewer": "WALK",
+"viewpoint": ""
+}
+},
+"warmupFrames": 8
+}

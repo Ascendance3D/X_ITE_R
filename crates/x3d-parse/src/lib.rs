@@ -32,17 +32,20 @@ pub use xml::{parse_attribute_into, parse_child_into};
 use std::io::Read;
 use x3d_scene::Scene;
 
-/// `$.gunzip`: decompress when the data starts with the gzip magic; on any error, the raw bytes.
+/// `$.gunzip`: decompress when the data starts with the gzip magic; on any error, the raw bytes. The pinned
+/// `DecompressionStream ("gzip")` reads one member and fails on anything after it ("Junk found after end of compressed
+/// data": a second member, trailing bytes), so such data is returned as it is, still compressed.
 pub fn gunzip(data: &[u8]) -> Vec<u8> {
     if data.len() < 2 || data[0] != 0x1f || data[1] != 0x8b {
         return data.to_vec();
     }
 
     let mut out = vec![];
+    let mut rest = data;
 
-    match flate2::read::GzDecoder::new(data).read_to_end(&mut out) {
-        Ok(_) => out,
-        Err(_) => data.to_vec(),
+    match flate2::bufread::GzDecoder::new(&mut rest).read_to_end(&mut out) {
+        Ok(_) if rest.is_empty() => out,
+        _ => data.to_vec(),
     }
 }
 
@@ -183,6 +186,17 @@ pub fn parse_bytes_with(
     options: &ParseOptions,
 ) -> Result<Scene, LoadError> {
     let mut scene = golden_gate(data, world_url, options)?;
+
+    scene.clone_counts = Some(scene.parse_clone_counts());
+    Ok(scene)
+}
+
+/// [`parse_bytes`] for bytes that `$.gunzip` has already seen, as FileLoader hands them to `createX3DFromURLAsync`: the
+/// parsers decode them (`$.decodeText`) and do not gunzip again, so the content of a gzip file inside a gzip file is
+/// not a scene.
+pub fn parse_bytes_gunzipped(data: &[u8], world_url: &str) -> Result<Scene, LoadError> {
+    let text = decode_text(data);
+    let mut scene = golden_gate_input(data.to_vec(), text, world_url, &ParseOptions::default())?;
 
     scene.clone_counts = Some(scene.parse_clone_counts());
     Ok(scene)

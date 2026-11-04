@@ -754,8 +754,8 @@ impl Runtime {
     ) -> Result<(), String> {
         self.sync_svg_quality();
 
-        let mut scene =
-            x3d_parse::parse_bytes(data, url.as_str()).map_err(|err| format!("Error: {err}"))?;
+        let mut scene = x3d_parse::parse_bytes_gunzipped(data, url.as_str())
+            .map_err(|err| format!("Error: {err}"))?;
 
         for w in std::mem::take(&mut scene.warnings) {
             self.log_warn(w);
