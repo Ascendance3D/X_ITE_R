@@ -45,13 +45,13 @@ jobs:
     timeout-minutes: 340
     defaults:
       run:
-        shell: bash
+        shell: '"C:\Program Files\Git\bin\bash.exe" --noprofile --norc -e -o pipefail {0}'
     steps:
       - uses: actions/checkout@v7
         with:
           persist-credentials: false
 
-      # The runner's execution policy blocks PowerShell script files, so every step is bash (Git for Windows).
+      # The runner's execution policy blocks PowerShell script files, so every step is Git for Windows' bash (the bare name bash is the WSL launcher, which has no distribution).
       - name: Rust toolchain and nextest, in the job's temp directory
         run: |
           set -eux
