@@ -6169,7 +6169,7 @@
     "crates/x3d-render/src/pointing_gpu.rs",
     "crates/x3d-render/src/pointing.wgsl"
    ],
-   "status": "PARTIAL",
+   "status": "COMPLETE",
    "behavior": "fields, events and observable behavior of the upstream class",
    "tests": [
     "crates/x3d-render/tests/render_rea2.rs",
@@ -6179,9 +6179,9 @@
     "crates/x3d-viewer/tests/depthmode_pick.rs",
     "crates/x3d-render/tests/render_depthmode_reversed.rs (reversed depthRange in the main color pass, MSAA 0 and 4, against the pinned page)"
    ],
-   "missing": "main color pass: a reversed depthRange (near > far) is ignored like WebGL (INVALID_OPERATION, the range stays the default), measured against the pinned page at MSAA 0 and 4 with 0 pixels over 8 (render_depthmode_reversed)",
+   "missing": "",
    "oracle": "x_ite-shot.mjs / x_ite-shot-msaa.mjs baselines oracle/render-rea2-baseline and render-msaa4-rea2-baseline: 10 worlds within threshold 8 / 0.5% at MSAA 0 and MSAA 4; oracle/rea-b23-depthmode-pick-baseline/dm-pick (pinned 16.5.0, WebGL 2 on ANGLE/OpenGL, RTX 3060 Ti; 58 pointing cells: default, depthFunction x8, depthMask, depthTest, per-shape state, depthRange, polygonOffset; 5 identical recordings, then 58 of 58 match wgpu/Vulkan on the same GPU)",
-   "notes": "REA batch 01; TwoSidedMaterial deprecation warning equal (rea_batch01 twosided-console); Wave 3 2026-10-31 (#79): GPU pointing applies DepthMode (X3DRenderObject.pointing, depthModeNode.enable). Rust defect fixed: a reversed depthRange (near > far) was applied; WebGL raises INVALID_OPERATION and keeps the default, so X_ITE ignores it. Negative checks: ignoring depthRange fails 4 cells and a unit test; applying a reversed range fails 3 cells and a unit test. Wave 3 2026-10-31 (#79, CPU path): the CPU ray cast runs its hits through a 24-bit depth buffer in drawing order (depth function, mask, test, range, polygon offset) when a candidate has a DepthMode; without one the nearest hit still wins in double. 58 of 58 cells match; ignoring DepthMode in the CPU path fails the cells. | Issue #51 2026-11-03 (PR #407): the main color pass applied a reversed depthRange; WebGL raises INVALID_OPERATION and keeps the default range. Before the fix the reversed world was 29870 pixels over 8 (11.395%) at MSAA 0 and 30076 (11.473%) at MSAA 4, largest delta 229; after it 0 pixels over 8. Status stays PARTIAL."
+   "notes": "REA batch 01; TwoSidedMaterial deprecation warning equal (rea_batch01 twosided-console); Wave 3 2026-10-31 (#79): GPU pointing applies DepthMode (X3DRenderObject.pointing, depthModeNode.enable). Rust defect fixed: a reversed depthRange (near > far) was applied; WebGL raises INVALID_OPERATION and keeps the default, so X_ITE ignores it. Negative checks: ignoring depthRange fails 4 cells and a unit test; applying a reversed range fails 3 cells and a unit test. Wave 3 2026-10-31 (#79, CPU path): the CPU ray cast runs its hits through a 24-bit depth buffer in drawing order (depth function, mask, test, range, polygon offset) when a candidate has a DepthMode; without one the nearest hit still wins in double. 58 of 58 cells match; ignoring DepthMode in the CPU path fails the cells. | Issue #51 2026-11-03 (PR #407): the main color pass applied a reversed depthRange; WebGL raises INVALID_OPERATION and keeps the default range. Before the fix the reversed world was 29870 pixels over 8 (11.395%) at MSAA 0 and 30076 (11.473%) at MSAA 4, largest delta 229; after it 0 pixels over 8. Status stays PARTIAL. | Issue #51 2026-11-04 (ledger audit): promoted PARTIAL to COMPLETE. The only listed gap, the main color pass with a reversed depthRange, was closed by PR #407 (9b3774eb): render_depthmode_reversed 0 pixels over 8 at MSAA 0 and 4. Re-run on master 59d7a31b with X3D_EVIDENCE=strict on the RTX 3060 Ti (Vulkan): render_depthmode_reversed, render_rea2, pointing_depthmode (7), depthmode_pick, rea_b23_depthmode_pick and rea_b23_depthmode_pick_cpu (58 cells each) pass."
   },
   {
    "id": "node:DiffuseTransmissionMaterialExtension",
@@ -7494,7 +7494,7 @@
     "crates/x3d-runtime/src/physics/bt/",
     "crates/x3d-viewer/src/pick_shapes.rs"
    ],
-   "status": "PARTIAL",
+   "status": "COMPLETE",
    "behavior": "",
    "tests": [
     "crates/x3d-runtime/tests/bullet_b08_engine.rs (37, tolerance 0)",
@@ -7505,11 +7505,11 @@
     "oracle/tools/rea_b06.py check (47)",
     "coverage.tsv (109 reached symbols tested)",
     "rea_b03_pick_vectors nested_compound_tree_culls_like_ammo (3)",
-    "physics_rem_fall (frames 1-7; full run ignored, open)"
+    "physics_rem_fall (45 frames within 2e-6, no ignore: P6 closed, a7f1b787)"
    ],
-   "missing": "the earlier rb-a substep difference at frame 8 was the harness measuring the frame rate from clock deltas; with currentFrameRate pinned to 1/DT (510f48fc) rb-a and rb-b equal pinned X_ITE at MSAA 4 (issue #60)",
+   "missing": "",
    "oracle": "",
-   "notes": "REA batch 08 (proposal 2026-10-18, pending local GPU gates): Ammo coverage table complete for dynamics; broadphase proxy-slot leak fixed; GJK ray rounding fixed. Remediation: picking fixed (nested compound dbvt cull, pick_shapes.rs): 20000 fresh cases at seeds 20261018, 1, 2, 3 show 0 differences; frame-rate matrix r24-r144 rates and stacks all pass. ALT: COMPLETE if the owner accepts the 3/20000 pick residue as a known limit. | Recovery audit 2026-10-25 (origin/master cdfbffc): rust path pick_shapes.rs is crates/x3d-viewer/src/pick_shapes.rs (git history has no crates/x3d-runtime/src/pick_shapes.rs). | Issue #60 2026-11-01: x_ite_two_canvases_rigid_bodies_msaa4 rerun on master 7375acdd (RTX 3060 Ti, Vulkan): 1 passed; X_ITE pair vs alone, Rust pair vs X_ITE pair, Rust alone vs X_ITE alone and Rust pair vs Rust alone are 0.00000 at frames 5, 20 and 40 for rb-a and rb-b. The float32 ulp explanation of the 0.579% was wrong. Multi-viewer threads, particles and sound cases are in PR #260. Status stays PARTIAL."
+   "notes": "REA batch 08 (proposal 2026-10-18, pending local GPU gates): Ammo coverage table complete for dynamics; broadphase proxy-slot leak fixed; GJK ray rounding fixed. Remediation: picking fixed (nested compound dbvt cull, pick_shapes.rs): 20000 fresh cases at seeds 20261018, 1, 2, 3 show 0 differences; frame-rate matrix r24-r144 rates and stacks all pass. ALT: COMPLETE if the owner accepts the 3/20000 pick residue as a known limit. | Recovery audit 2026-10-25 (origin/master cdfbffc): rust path pick_shapes.rs is crates/x3d-viewer/src/pick_shapes.rs (git history has no crates/x3d-runtime/src/pick_shapes.rs). | Issue #60 2026-11-01: x_ite_two_canvases_rigid_bodies_msaa4 rerun on master 7375acdd (RTX 3060 Ti, Vulkan): 1 passed; X_ITE pair vs alone, Rust pair vs X_ITE pair, Rust alone vs X_ITE alone and Rust pair vs Rust alone are 0.00000 at frames 5, 20 and 40 for rb-a and rb-b. The float32 ulp explanation of the 0.579% was wrong. Multi-viewer threads, particles and sound cases are in PR #260. Status stays PARTIAL. | Issue #51 2026-11-04 (ledger audit): promoted PARTIAL to COMPLETE. The only listed gap, rb-a one substep short at frame 8, was the harness frame rate (PR #8: 510f48fc pins currentFrameRate, a7f1b787 gates all 45 frames; issue #60). Re-run on master 59d7a31b with X3D_EVIDENCE=strict: bullet_b08_engine (37), bullet_dyn_scenes (66), physics_b08_lifecycle (5), physics_b06_baseline (48), physics_b06_lifecycle (6), rea_b03_pick_vectors (2), physics_rem_fall (45 frames), multi_viewer_b08 x_ite_two_canvases_rigid_bodies_msaa4 pass; oracle/tools/rea_b06.py check 47 of 47 worlds."
   },
   {
    "id": "sub:pointer.picking",
