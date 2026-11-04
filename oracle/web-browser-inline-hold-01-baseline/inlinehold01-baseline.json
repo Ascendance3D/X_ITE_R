@@ -1,0 +1,146 @@
+{
+ "pinned": "34cdf9f97",
+ "chrome": "156.0.8078.47",
+ "gl": "ANGLE (NVIDIA Corporation, NVIDIA GeForce RTX 3060 Ti/PCIe/SSE2, OpenGL ES 3.2)",
+ "runs": 5,
+ "identicalValues": true,
+ "pictures": {},
+ "values": {
+  "inlineHold.newerFirst": {
+   "steps": {
+    "world": {
+     "url": [
+      "http://test/tests/browser/worlds/inline-hold/a.wrl"
+     ],
+     "seq": [
+      "log: A initialize"
+     ],
+     "shown": "red"
+    },
+    "bHeld": {
+     "url": [
+      "http://test/hold/K/tests/browser/worlds/inline-hold/b.wrl"
+     ],
+     "seq": [],
+     "shown": "red"
+    },
+    "cArrived": {
+     "url": [
+      "http://test/tests/browser/worlds/inline-hold/c.wrl"
+     ],
+     "seq": [
+      "log: C initialize"
+     ],
+     "shown": "green"
+    },
+    "bReleased": {
+     "url": [
+      "http://test/tests/browser/worlds/inline-hold/c.wrl"
+     ],
+     "seq": [
+      "log: B initialize"
+     ],
+     "shown": "blue"
+    }
+   },
+   "served": [
+    "/tests/browser/worlds/inline-hold/a.wrl",
+    "/hold/K/tests/browser/worlds/inline-hold/b.wrl",
+    "/tests/browser/worlds/inline-hold/c.wrl"
+   ]
+  },
+  "inlineHold.olderFirst": {
+   "steps": {
+    "world": {
+     "url": [
+      "http://test/tests/browser/worlds/inline-hold/a.wrl"
+     ],
+     "seq": [
+      "log: A initialize"
+     ],
+     "shown": "red"
+    },
+    "bHeld": {
+     "url": [
+      "http://test/hold/K/tests/browser/worlds/inline-hold/b.wrl"
+     ],
+     "seq": [],
+     "shown": "red"
+    },
+    "cHeld": {
+     "url": [
+      "http://test/hold/K/tests/browser/worlds/inline-hold/c.wrl"
+     ],
+     "seq": [],
+     "shown": "red"
+    },
+    "bReleased": {
+     "url": [
+      "http://test/hold/K/tests/browser/worlds/inline-hold/c.wrl"
+     ],
+     "seq": [
+      "log: B initialize"
+     ],
+     "shown": "blue"
+    },
+    "cReleased": {
+     "url": [
+      "http://test/hold/K/tests/browser/worlds/inline-hold/c.wrl"
+     ],
+     "seq": [
+      "log: C initialize"
+     ],
+     "shown": "green"
+    }
+   },
+   "served": [
+    "/tests/browser/worlds/inline-hold/a.wrl",
+    "/hold/K/tests/browser/worlds/inline-hold/b.wrl",
+    "/hold/K/tests/browser/worlds/inline-hold/c.wrl"
+   ]
+  },
+  "inlineHold.backToA": {
+   "steps": {
+    "world": {
+     "url": [
+      "http://test/tests/browser/worlds/inline-hold/a.wrl"
+     ],
+     "seq": [
+      "log: A initialize"
+     ],
+     "shown": "red"
+    },
+    "bHeld": {
+     "url": [
+      "http://test/hold/K/tests/browser/worlds/inline-hold/b.wrl"
+     ],
+     "seq": [],
+     "shown": "red"
+    },
+    "aAgain": {
+     "url": [
+      "http://test/tests/browser/worlds/inline-hold/a.wrl"
+     ],
+     "seq": [
+      "log: A initialize"
+     ],
+     "shown": "red"
+    },
+    "bReleased": {
+     "url": [
+      "http://test/tests/browser/worlds/inline-hold/a.wrl"
+     ],
+     "seq": [
+      "log: B initialize"
+     ],
+     "shown": "blue"
+    }
+   },
+   "served": [
+    "/tests/browser/worlds/inline-hold/a.wrl",
+    "/hold/K/tests/browser/worlds/inline-hold/b.wrl",
+    "/tests/browser/worlds/inline-hold/a.wrl"
+   ]
+  }
+ }
+}
