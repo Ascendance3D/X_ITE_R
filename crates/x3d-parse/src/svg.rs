@@ -11,7 +11,7 @@
 //! `this .input` of the lexer, `null` attributes read as the text "null", a `stop` outside 0..1
 //! that leaks its style, `vectorEffect` never being read from the style, and so on.
 
-use crate::color::try_convert_color;
+use crate::color::try_convert_color_in;
 use crate::dom::{Element, XNode};
 use crate::formats::{create, push_child, set, set_node, set_numbers};
 use crate::svg_canvas::{self, GradientKind};
@@ -1733,7 +1733,7 @@ impl<'a> Svg<'a> {
         let parsed = if token.eq_ignore_ascii_case("currentcolor") {
             Some(DivColor::Current)
         } else {
-            try_convert_color(&token).map(DivColor::Color)
+            try_convert_color_in(&token, wrapper_color(default)).map(DivColor::Color)
         };
 
         if parsed.is_some() {
