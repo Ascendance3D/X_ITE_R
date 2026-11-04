@@ -12,11 +12,21 @@ use x3d_scene::*;
 
 type R<T> = Result<T, LoadError>;
 
+/// The error a format parser throws, as `String (error)` gives it: the JS parsers throw `new Error (message)`
+/// (STLAParser, PLYAParser, OBJParser, X3DExecutionContext.createNode), so the text starts with `Error: `; a message
+/// that already names its class (`RangeError: Offset is outside the bounds of the DataView`, a DataView read past
+/// the end) is kept. FileLoader.printError reports `String (error)`, so the callers that read `line == 0` and a class
+/// prefix (Browser.createX3DFromURL, Inline, createX3DFromString) pass it on unchanged; without the prefix they took
+/// the message for a VRMLParser error and reported `Error: ` with the text missing.
 fn error<T>(message: impl Into<String>) -> R<T> {
-    Err(LoadError::Parse(ParseError {
-        message: message.into(),
-        line: 0,
-    }))
+    let message = message.into();
+    let message = if message.starts_with("RangeError: ") || message.starts_with("TypeError: ") {
+        message
+    } else {
+        format!("Error: {message}")
+    };
+
+    Err(LoadError::Parse(ParseError { message, line: 0 }))
 }
 
 // --- scene API ------------------------------------------------------------------------------
@@ -1013,7 +1023,7 @@ impl<'a> Ply<'a> {
         let n = t.bytes();
 
         if offset + n > data.len() {
-            return error("Offset is outside the bounds of the DataView");
+            return error("RangeError: Offset is outside the bounds of the DataView");
         }
 
         let b = &data[offset..offset + n];
