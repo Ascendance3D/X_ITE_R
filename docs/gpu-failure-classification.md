@@ -77,9 +77,8 @@ No Linux failure exists: nothing on the NVIDIA GPU or on llvmpipe needs a classi
 
 ## What stays open
 
-* A physical Mac (Metal on Apple silicon or discrete hardware) is not available to this work. The 16 `GPU_TESTS` have never run on
-  Metal, virtualized or not: the macOS job skips them by name. Running them on the virtual machine is a possible next step, but
-  its result is virtualized evidence only.
+* (Superseded by the section "Physical Metal run" below: the owner ran the 16 `GPU_TESTS` on a physical Apple M1 on 2026-11-02/03.)
+  Before that run: a physical Mac was not available to this work, and the macOS job skips the 16 tests by name.
 * The eleven comparisons above are unclassified: they need a physical Mac or a diagnostic job (specific missing resource).
 
 ## REA evidence
@@ -125,3 +124,80 @@ is physical-Metal validation. The probes are `device_diag.rs` and `device_math.r
 
 Open for a physical Mac: whether the `sin` precision, the 4x sample positions, the depth format and the clip precision above are properties of the
 paravirtual device or of Metal on Apple silicon.
+
+## Physical Metal run (Apple M1, 2026-11-02/03), recorded next to the RTX and lavapipe results (issue #89)
+
+Source of the Metal column: the owner's run on a physical MacBook (Apple M1, 8-core GPU, Metal 4, macOS 27.0.1 build 26A434, master
+`fa7e8e49`, `X3D_BACKEND=metal`, strict evidence mode with the private keys allowed absent), 162 s, as posted on issue #89. It is a
+physical Mac, not a virtual machine. macOS 27 meets "macOS 15+" but is not macOS 15. This document did not re-run it. The RTX column is
+run 41731278473 (self-hosted GPU runner, 16 passed, 0 failed). The lavapipe column is the measurement of 2026-11-01 on issue #89
+(software Vulkan, llvmpipe LLVM 20.1.2).
+
+| test | RTX 3060 Ti, Vulkan | lavapipe, Vulkan | Apple M1, Metal |
+| --- | --- | --- | --- |
+| `x1_runtime_matches_x_ite` | pass | pass | pass |
+| `items_runtime_matches_x_ite` | pass | pass | pass |
+| `rea_b21_wide_lines_match_x_ite` | pass | fail | pass |
+| `rea_b22_two_layer_shadows_match_x_ite` | pass | pass | pass |
+| `rea_batch08_net_cases_match_x_ite` | pass | pass | **fail** (UDP ports 41234 to 41236: sent 5, refused 4) |
+| `rea_b15_particle_collision_matches_x_ite` | pass | fail | **fail** (111 probes, distance 1e-6 to 3e-6) |
+| `rea_b24_nav_shard0_match_x_ite`, `shard1`, `shard2` | pass | fail | **fail** (collision distances 2e-5 to 5.8e-4; one probe returns another shape id) |
+| `rea_batch09_nav_shard0_match_x_ite` to `shard3` | pass | fail | **fail** (scene text differs from the first touched frame) |
+| `rea_batch09_inputs_cases_match_x_ite` | pass | fail | **fail** (same) |
+| `rea_batch12_pick_cases_match_x_ite` | pass | fail | **fail** (same) |
+| `rea_b14_particle_pick_matches_x_ite` | pass | fail | **fail** (same) |
+| total | 16 of 16 | 4 of 16 | 4 of 16 |
+
+The two sets of 12 failures are not the same set: lavapipe fails `rea_b21_wide_lines` and passes `rea_batch08_net`; Metal passes
+`rea_b21_wide_lines` and fails `rea_batch08_net`.
+
+### What a reading of the source supports
+
+Only these statements come from the source code. Nothing was run on Metal for this section.
+
+1. **`rea_batch08_net` is not a numeric rendering comparison, and "sent 5" is a clue that `x3d-drive` ended early (unverified).**
+   `crates/x3d-viewer/tests/rea_batch08_net.rs` starts a sender thread for the `--udp` cases. Each round of that thread waits at
+   least 20 ms (the listener's read timeout, then a 1 ms sleep). A count of 5 datagrams per port is therefore about 0.1 s of the
+   drive. The test checks the UDP verdict (needs at least 5 sent, at least 5 refused, refused at least half of sent) before it
+   checks the exit status of the drive. A drive that ended at once on Metal gives exactly this text. This is a reading, not a
+   result: it needs the `x3d-drive exited with ...` line, or the drive's stderr, from the Mac log. If the drive ran its full time,
+   the cause is a macOS UDP behavior (ICMP port-unreachable on a connected loopback socket), and not the GPU.
+2. **The probe tolerance of `rea_b15_particle_collision` is 1e-6** (`PROBE_TOL` in `rea_b15_particle_collision.rs`, line 34, with a few
+   wider per-case entries in `PROBE_TOLERANCES`). The Metal differences, 1e-6 to 3e-6, are inside a factor 3 of it. The
+   tolerance of `rea_b24_nav` is 1e-5 (`PROBE_TOL`, `rea_b24_nav.rs`, line 118); the Metal differences of that test, 2e-5 to 5.8e-4,
+   are 2 to 58 times larger. No tolerance is widened here.
+3. **The shader compile options of the Metal path in the wgpu-hal version of this workspace (30.0.1,
+   `src/metal/device.rs`, lines 272 to 278) set the language version and `setPreserveInvariance(true)`, and nothing else.** The
+   source has no call that turns fast math off. Metal's own default for fast math is on (Apple's `MTLCompileOptions`; not re-read
+   for this section). Fast math lets the compiler use reduced-precision division, reciprocal and square-root forms. That is a
+   candidate cause for the difference of the interpolated distance and hit position, on top of the rasterizer difference that the
+   lavapipe diagnosis found (issue #89, comment on the reproduction). It is a candidate only: no run has tested it, and the
+   separating test needs a Mac (the same worlds with fast math off, if the wgpu version offers a way to set it).
+4. **The depth and pointing passes do not use blending or multisampling on `Rgba32Float`** (`blend: None` and `sample_count: 1` in
+   `depth_gpu.rs` and `pointing_gpu.rs`), so the Apple GPUs' limits on blending and filtering of 32-bit float color formats are not
+   the cause of those failures.
+5. The lavapipe diagnosis (rasterizer interpolation of the NVIDIA reference, issue #89) is the only code-level cause that was
+   tested by a controlled experiment. It was tested on lavapipe. For Metal it is a likely class and not a result: the owner's
+   next step, the pinned X_ITE 16.5.0 in Chrome on the same Mac compared with the Rust output on that Mac, separates "Metal
+   differs from the NVIDIA recording" from "the Rust code differs from X_ITE on the same device".
+
+## Windows self-hosted runner with an Intel GPU (probe and one attempt, issue #89)
+
+This section records what is known. It is **not** a result for the 16 tests: the test run did not finish.
+
+**Adapter (probe run 41745913769 on PR #399, runner `gh-runner-ascendance3d-windows`, printed by the job):** Windows 11 Pro build 26200;
+Intel Celeron N5095 (Jasper Lake), 4 cores, 8 GB of memory; Win32_VideoController "Intel(R) UHD Graphics" (PCI 8086:4E55), driver
+31.0.101.2140, WDDM 3.1, DX feature levels up to 12_1, hardware GPU (dxdiag: `HARDWARE_TYPE_GPU`), 128 MB dedicated and 4018 MB shared
+memory. `vulkaninfo --summary`: Vulkan 1.3, device "Intel(R) HD Graphics Gen11", integrated GPU, `DRIVER_ID_INTEL_PROPRIETARY_WINDOWS`,
+conformance 1.3.1.1. It is a real GPU driver, not WARP and not software. The job runs in session 0 as NETWORK SERVICE. The runner has VS 2022
+Build Tools, Node and Git; it has no cargo, rustup or Python.
+
+**Attempt (run 41746630722, draft PR #399, not for merge):** the one-off workflow installed Rust 1.95.0 and cargo-nextest in the job's temp
+directory and built the test binaries of `x3d-script` and `x3d-viewer` in release mode with MSVC: the build **succeeded** in 24 min 36 s
+(00:25:52 to 00:50:28 UTC). The Vulkan step (the headless default backend) then ended after 9 s; its log was not readable while the
+run was open, so its pass and fail counts are **not known**. The DX12 step (`X3D_BACKEND=dx12`) was still running 30 minutes after it
+started (00:50:37 UTC) with no readable log; the `ci` nextest profile has no kill timeout. No per-test result exists from this runner.
+
+What this shows: the native Windows build of the workspace compiles on this runner, and a hardware, non-NVIDIA, non-Apple GPU exists
+for a third data point. What it does not show: any pass or fail of the 16 tests on that GPU. This runner is Vulkan and DX12, so even a
+complete result would not satisfy the Metal criterion of issue #89.
