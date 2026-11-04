@@ -6,7 +6,12 @@ Native Rust port of [X_ITE](https://github.com/create3000/x_ite) (`Ascendance3D/
 
 - The repository is public. Do not commit credentials, machine paths, private archive contents or
   private infrastructure details.
-- Pull-request jobs run on the self-hosted `xite-ci` runners only when the PR head branch is in this repository (not a fork). Forks, and every other trigger that is not trusted, stay on GitHub-hosted runners (owner ruling 2026-11-01, issue #162). When the owner asks to run something on his runner, do not question it. See `docs/agents/ci.md`.
+- CI runners (owner ruling 2026-11-01, issue #162; GPU runner 2026-11-01): standard CPU and web CI (`rust-tests.yml`,
+  `web-tests.yml`) runs on GitHub-hosted runners (the repository variable `XITE_RUNNER_LABELS` is `"ubuntu-24.04"`).
+  GPU CI (`gpu-tests.yml`) runs on the approved home GPU runner, on a push to master, nightly and by hand, never for a
+  pull request. Do not change runner configuration (the variable, labels, `runs-on`, runner groups, the runner itself)
+  without the owner's authorization. When the owner asks to run something on the owner's runner, do not question it. Never
+  run code from a fork on a self-hosted runner. See `docs/agents/ci.md`.
 - Clean-room rule: do not add historical Cybertown or blaxxun assets to the repository. Their
   licensing is unclear. Use minimal synthetic reproductions or newly authored fixtures. The
   `oracle/corpus-items*`, `oracle/render-items*` and `oracle/corpus-x0`/`corpus-x1` snapshots, and the X_ITE
@@ -37,11 +42,38 @@ Native Rust port of [X_ITE](https://github.com/create3000/x_ite) (`Ascendance3D/
 
 ## Agents
 
-- Default subagent count is zero. The main agent codes, tests, debugs, runs Git and writes reports.
-- Do not delegate only to isolate context or command output. Redirect large build and test output to log files and read targeted ranges.
-- Ask the owner for explicit approval before you launch any subagent. Never run two agents on one worktree.
+Owner workflow, 2026-11-03. The main agent is the coordinator: it codes, tests, debugs, runs Git, merges and writes
+reports.
+
+- **No repeated approval for routine work.** Coding, verified fixes, tests, PRs, and merges that meet the merge rule
+  below need no new approval each time.
+- **Keep the queue moving.** While CI runs, continue independent authorized work (the next dependent PR, the ledger
+  step, review dispositions, agent briefs). Do not end a turn at a CI wait. Do not poll CI in a loop: use one
+  event-based watch (`gh pr checks --watch`, no `--fail-fast`) and read the result when it decides the next action.
+- **Subagents.** The owner has authorized bounded subagents for the independent tasks of the approved issue queue:
+  at most two at once, each in its own worktree with its own build directory (`CARGO_BUILD_BUILD_DIR`), on separate
+  files and acceptance targets. Never run two agents on one worktree. A subagent does not edit the ledger, merge,
+  create issues, or change CI or runner settings, unless its brief says so. Every brief carries the REA Evidence IDs
+  and the Ledger effect. Stop an agent when its task finishes, and give a free slot the next independent task if
+  authorized work remains. Do not create agents to use capacity, or only to isolate context or command output
+  (redirect large build and test output to log files and read targeted ranges). Work outside the authorized queue
+  needs the owner's approval before any agent starts.
 - Use Sonnet for routine work. Use Opus only for difficult reasoning.
-- Report CodeRabbit and MiniMax findings to the owner before you fix, reply to, or rerun a review. Do not merge without owner approval.
+- **Review findings** (CodeRabbit, MiniMax): check each finding against the code. Fix the real ones. Answer the false
+  ones in the PR with evidence (file, line, test). Rerun a review only when the head changed. Then merge.
+- **Merge rule.** Merge a PR when the required checks (`Rust tests result`, `Web tests result`) pass at the exact head
+  (`gh pr merge --match-head-commit <sha>`), the review findings are dispositioned, the diff is the PR's own files, and
+  a stacked PR's base has merged first. Check the master runs after the merge. A queued, skipped or no-adapter GPU
+  test is not a pass: say which tests skipped and whether they were required.
+- **Still needs the owner's authorization:** a new GitHub issue; a change to protected history (force-push, history
+  rewrite, the purge of issue #168); work outside the approved issue scope; a change to `tools/candidate.lock`,
+  `tools/verify-candidate.sh` or another frozen verifier; a change to runner configuration; a ledger status change
+  that the ledger rules reserve for the owner (a DIFFERENT entry).
+- Do not invoke any external AI service (Gemini, Antigravity, ChatGPT, or any other) without explicit owner approval
+  for that specific invocation. A general permission to use a service is not approval to invoke it. Do not send source
+  code, diffs, reports, logs or evidence to such a service without that approval. If an invocation stops, do not retry
+  it. The review actions that the repository's own workflows run (CodeRabbit, MiniMax) are set up by the owner and
+  are not an agent's invocation.
 
 ## Lane reports
 

@@ -22,34 +22,56 @@ The port follows one pinned upstream version, X_ITE 16.5.0. Tests compare the Ru
 
 The project is under active development. There is no stable release. It does not have full X_ITE compatibility.
 
-### Working
+This README keeps two things apart. **Implemented** means the code exists and runs. **Verified** means the result is
+compared with a recording of the pinned X_ITE 16.5.0, or with a reference decoder, by a test that fails when the result
+differs. A merged pull request does not make a feature complete. The coverage ledger (`ledger/ledger.json`, see the REA
+section) records the status of each upstream feature and what is still missing. Check it before you rely on a feature.
 
-- Parsing of VRML97, X3D classic encoding (`.x3dv`), X3D XML (`.x3d`) and gzip-compressed worlds (`.wrz`).
+### Implemented
+
+- Parsing of VRML97, X3D classic encoding (`.x3dv`), X3D XML (`.x3d`) and gzip-compressed worlds (`.wrz`), and glTF 2 and
+  GLB loading (Draco, meshopt and some texture extensions are not decoded: ledger `sub:parse.gltf2`).
 - Scene runtime: fields, ROUTEs, PROTO and EXTERNPROTO, Inline, TimeSensor animation, interpolators, sensors (touch, plane, key, string and others), and Script nodes (JavaScript through QuickJS).
-- Rendering with wgpu: geometry, materials, textures, lighting, shadows, particles, volume rendering, text and picking.
-- Navigation: EXAMINE, WALK, FLY and NONE, and viewpoint binding.
-- Audio: Sound and AudioClip, URL fallback and spatial attenuation, on the native viewer.
-- Browser build: `<x3d-canvas>` loads and draws a world, takes mouse, touch, wheel and keyboard input, and supports a subset of the X_ITE JavaScript API. [crates/x3d-web/web/API.md](crates/x3d-web/web/API.md) lists the supported and unsupported members.
+- Rendering with wgpu: geometry, materials, textures, lighting, shadows, particles, volume rendering, text, picking and Gaussian splats.
+- Navigation: EXAMINE, WALK, FLY, PLANE, LOOKAT and NONE, and viewpoint binding.
+- Audio: Sound and AudioClip, URL fallback and spatial attenuation, on a Rust port of the Web Audio graph (native viewer). In the browser the page's own `AudioContext` plays the sound.
+- Browser build: the `<x3d-canvas>` element (WebAssembly and WebGPU) with mouse, touch, wheel and keyboard input, a browser user interface (splash screen, timings, context menu) and a large subset of X_ITE's JavaScript API: scene creation, browser functions and options, the field classes and the X3D entry points. Each supported member is checked against the pinned X_ITE by a browser test. DOM integration is partial. [crates/x3d-web/web/API.md](crates/x3d-web/web/API.md) lists the supported members, the known differences and the members that are not implemented. It is the reference for the API, not this README.
 
-### Missing or incomplete
+### Verified compatibility and open work
 
-- Much of the browser JavaScript API: scene creation ([#134](https://github.com/Ascendance3D/X_ITE_R/issues/134)), browser context functions ([#135](https://github.com/Ascendance3D/X_ITE_R/issues/135)), browser options and properties ([#136](https://github.com/Ascendance3D/X_ITE_R/issues/136)), parts of the field API ([#137](https://github.com/Ascendance3D/X_ITE_R/issues/137)) and the X3D entry points ([#138](https://github.com/Ascendance3D/X_ITE_R/issues/138)).
-- MovieTexture frame decoding in the browser ([#139](https://github.com/Ascendance3D/X_ITE_R/issues/139)) and sound in the browser ([#140](https://github.com/Ascendance3D/X_ITE_R/issues/140)). MovieTexture audio is not implemented on any target.
-- HRTF spatial audio, full MIDI playback and CFF OpenType fonts.
-- WebXR ([#83](https://github.com/Ascendance3D/X_ITE_R/issues/83)) and the browser keyboard UI.
-- Some GPU picking precision and pointing-sensor cases ([#67](https://github.com/Ascendance3D/X_ITE_R/issues/67), [#79](https://github.com/Ascendance3D/X_ITE_R/issues/79)).
-- Release packages for all platforms.
+The measured state is in the ledger and in the open issues. In short:
 
-The REA section below gives the measured coverage.
+- **Compared with the pinned X_ITE:** most rendering, navigation, sensor, scripting and browser-API cases that the ledger marks COMPLETE (280 of 346 entries, see the REA section). The remaining entries are PARTIAL (44), DIFFERENT (21, recorded differences) or MISSING (1).
+- **GPU backends:** the pictures were recorded and compared on one NVIDIA GPU (Vulkan), and the GPU tests run on that machine class. A Metal run on a physical Apple M1 passed 4 of the 16 GPU tests and failed 12; the classification is in [docs/gpu-failure-classification.md](docs/gpu-failure-classification.md). Metal parity is not established ([#89](https://github.com/Ascendance3D/X_ITE_R/issues/89), [#69](https://github.com/Ascendance3D/X_ITE_R/issues/69)).
+- **GaussianSplats:** castShadow, picking, collision and the depth modes are compared with the pinned X_ITE. The sort is synchronous by an engineering decision, while X_ITE sorts in a worker ([#69](https://github.com/Ascendance3D/X_ITE_R/issues/69)).
+- **Keyboard and sound on macOS and Linux Wayland:** not verified by a person on that hardware ([#88](https://github.com/Ascendance3D/X_ITE_R/issues/88)). HRTF spatial audio is a recorded difference (ledger `node:SpatialSound`).
+- **Mobile browsers:** tested in desktop Chrome emulation only ([#143](https://github.com/Ascendance3D/X_ITE_R/issues/143)). WebGPU compatibility mode is not used ([#142](https://github.com/Ascendance3D/X_ITE_R/issues/142)).
+- **Release packages** for all platforms do not exist.
+
+### MovieTexture and codecs
+
+| format | native viewer and tests | browser build |
+| --- | --- | --- |
+| GIF, APNG | decoded in Rust. APNG frames between the first and the last are not compared with the pinned page (it runs APNG on the wall clock) | decoded in Rust |
+| WebM with VP8 or VP9 | decoded in Rust; pictures at fixed movie times are compared with the pinned page; Vorbis sound plays. Opus is not decoded | the page's `<video>` element plays it |
+| WebM with AV1 | decoded through the vendored rav1d, **only when built with the non-default `av1` feature** (`--features x3d-viewer/av1`). The pictures equal the libaom reference decoder plane by plane on six synthetic streams. A damaged file must not crash the process: tests run such files in child processes | the page's `<video>` element plays it |
+| MPEG-1 (video, and Systems audio Layer II and III) | decoded in Rust. The pinned page cannot play MPEG-1, so there is no recording to compare; the audio equals ffmpeg within 2e-4 | not implemented: the `<video>` element cannot play MPEG-1 |
+| MP4, Ogg | no frames: the file is assumed playable | the page's `<video>` element plays it |
+
+The ISO timing formulas of ISO/IEC 19775-1 18.4.2 (negative speed, seeking, pause and stop) are implemented for the native build and tested; the pinned X_ITE follows the browser's media clock instead. Details and the open items: [docs/movie-texture-timing.md](docs/movie-texture-timing.md), [docs/mpeg1-implementation.md](docs/mpeg1-implementation.md), [docs/decoder-admission.md](docs/decoder-admission.md). A decoder license or patent review is not a clearance: see the admission records. In the browser, the sound of a video does not go through the engine's audio graph (API.md).
+
+### WebXR
+
+Not complete. The renderer can draw a world once per view of an XR pose, and a test compares that with the pinned `X3DWebXRContext` on a mock session (`crates/x3d-render/src/xr.rs`). There is no XR session API in the `<x3d-canvas>` element and no native OpenXR runtime. The ledger entry `sub:browser.webxr` is MISSING. The choice of the runtime is open ([#83](https://github.com/Ascendance3D/X_ITE_R/issues/83), [docs/webxr-runtime-options.md](docs/webxr-runtime-options.md)).
 
 ## Targets
 
 | target | state |
 | --- | --- |
-| Browser: `wasm32-unknown-unknown` with WebGPU | Chrome or Edge 113 or later. CI tests it in headless Chromium. |
-| Linux x86_64 | Main development platform. CI builds and tests it without a GPU, on the project's self-hosted runners (GitHub-hosted for fork pull requests). |
-| Windows x86_64 | Cross-built from Linux. Tested with DX12 on one PC. No package. |
-| macOS | Not verified ([#87](https://github.com/Ascendance3D/X_ITE_R/issues/87)). |
+| Browser: `wasm32-unknown-unknown` with WebGPU | A browser with WebGPU (the docs name Chrome or Edge 113 or later). CI tests it in headless Chromium on software WebGPU (SwiftShader). Not tested on a real phone or tablet. |
+| Linux x86_64 | Main development platform. CI builds and tests it without a GPU on GitHub-hosted runners. The GPU tests run on the project's GPU runner after a push to master. |
+| Windows x86_64 | Cross-built from Linux. An earlier run on one PC used DX12. Not in CI, no package. |
+| macOS (arm64) | CI builds the workspace and runs the non-GPU tests on the hosted `macos-15` runner (a virtual machine, not a Metal result). A physical M1 run exists with failures (see above). Not verified on macOS 15 hardware ([#87](https://github.com/Ascendance3D/X_ITE_R/issues/87), [#88](https://github.com/Ascendance3D/X_ITE_R/issues/88)). |
 
 ## Requirements
 
@@ -122,26 +144,30 @@ Open <http://localhost:8000/example/> in Chrome or Edge. The page uses the eleme
 
 ## Test
 
-CI runs the workspace tests in its evidence mode. Some reference data (the answer keys in `oracle/answer-keys.tsv`) is not in the repository, and a runner without a GPU cannot run the GPU tests. In CI mode these tests skip by name, and each skip is logged:
+CI runs the workspace tests with cargo-nextest, then the doctests, in its evidence mode. Some reference data (the answer keys in `oracle/answer-keys.tsv`) is not in the repository, and a runner without a GPU cannot run the GPU tests. In CI mode a test may skip only for a reason in `X3D_EVIDENCE_ALLOW`, and each skip is logged. **A skip is not a pass.** A test that renders on a GPU returns at once on a runner without an adapter, and nextest shows it as passed; the evidence-skip log and the GPU workflow tell the difference. The exact commands, the environment and the list of GPU tests (`GPU_TESTS`) are in `.github/workflows/rust-tests.yml`:
 
 ```sh
 export X3D_EVIDENCE=ci
-export X3D_EVIDENCE_ALLOW=no-gpu-adapter,backend-absent,x_ite-text.json,items-baseline.json
+export X3D_EVIDENCE_ALLOW=no-gpu-adapter,backend-absent,x_ite-text.json,items-baseline.json,x0-baseline.json,x0-xml-baseline.json
 export X3D_EVIDENCE_LOG=$PWD/evidence-skips.tsv
-cargo test --workspace --release --no-fail-fast
+cargo nextest run --workspace --release --features x3d-runtime/av1,x3d-render/av1,x3d-viewer/av1 --profile ci --no-fail-fast
+cargo test --workspace --release --doc --no-fail-fast
 python3 -I -B tools/evidence_summary.py evidence-skips.tsv
 ```
 
-Without a GPU, also add the skip list of the `GPU_TESTS` variable in `.github/workflows/rust-tests.yml` after `--`.
+Without a GPU, also exclude the `GPU_TESTS` of `rust-tests.yml` with `-E 'not (...)'`. With a GPU, `X3D_ORACLE_KEYS=<evidence store> tools/strict-suite.sh` runs everything strict (a missing key or adapter fails). `docs/agents/ci.md` describes the runners, the browser shards and the GPU workflow.
 
-Reference and format checks (CI's "Fast checks" job):
+Reference and format checks (CI's "Fast checks" job; it also runs actionlint, `tools/ci_changes.py`, `tools/check_gpu_test_lists.py`, `tools/check_no_aac.py`, `tools/check_vendored_rav1d.py` and others, listed in `rust-tests.yml`):
 
 ```sh
 cargo fmt --all -- --check
 tools/verify-candidate.sh
 python3 -I -B tools/verify-reference-pin.py
 python3 -I -B tools/test_answer_keys.py
+python3 -I -B ledger/tools/verify_ledger.py
 ```
+
+The last command is not run by CI. Run it when you change `ledger/`.
 
 Browser tests:
 
@@ -161,7 +187,7 @@ The port measures compatibility against the pinned X_ITE source and its recorded
 - **Operations.** Find the real REA operations before you use them, and record the operations you ran. Read the pinned JavaScript source directly, and compare the Rust code separately.
 - **Runtime evidence.** Observable behavior is compared with recordings of the pinned X_ITE in `oracle/` (baselines, recorders in `oracle/*.mjs` and `oracle/tools/`). Run logs are in `evidence/`.
 - **Scope and limitations.** A REA no-match does not prove that a feature is absent. Static analysis does not prove Rust runtime behavior: only a runtime test against a recording does.
-- **Ledger.** The coverage ledger has one entry per upstream feature. The in-repository copy is `ledger/ledger.json`. On 2026-10-29 it held 346 entries: 249 COMPLETE, 71 PARTIAL, 25 DIFFERENT, 1 MISSING and 0 NOT_TESTED. Check it with `python3 -I -B ledger/tools/verify_ledger.py`. That run reported its promotion history as consistent and 0 missing evidence references. A test result does not change a ledger status by itself.
+- **Ledger.** The coverage ledger has one entry per upstream feature. The in-repository copy is `ledger/ledger.json`. On 2026-11-03 (master `2146bbd7`) it held 346 entries: 280 COMPLETE, 44 PARTIAL, 21 DIFFERENT, 1 MISSING and 0 NOT_TESTED. The counts change with each ledger step; run the checker for the current ones: `python3 -I -B ledger/tools/verify_ledger.py` (it reports the promotion history and the evidence references; on 2026-11-03: consistent, 0 missing). Each entry names its `tests` and its `oracle` recordings, and a PARTIAL entry says in `missing` what is open; read those fields instead of the status word alone. A merged pull request does not set a status. A test result does not change a ledger status by itself: a ledger step is a separate pull request made with a snapshot and a migration tool in `ledger/tools/`.
 - **Remaining differences.** The DIFFERENT entries are recorded differences. The PARTIAL and MISSING entries are open work, tracked in the [issues](https://github.com/Ascendance3D/X_ITE_R/issues).
 
 A pull request that changes compatibility behavior records the source identity, tool version, operations, evidence IDs, scope, limitations, runtime tests and remaining differences in its description.
@@ -179,7 +205,7 @@ A pull request that changes compatibility behavior records the source identity, 
 | `crates/x3d-oracle`, `x3d-evidence`, `r0-2-c-tests` | reference drivers, evidence policy and compatibility tests |
 | `oracle/` | pinned X_ITE sources, recordings, baselines and recording scripts |
 | `evidence/` | REA and test run logs |
-| `ledger/history/b08-recovery/`, `ledger/history/b09/` | REA batch records, including the coverage ledger |
+| `ledger/` | the coverage ledger (`ledger.json`), its snapshots and migration tools, and the REA batch records in `ledger/history/` |
 | `tools/` | build, packaging and reference-check scripts |
 | `docs/` | design notes, findings, agent guides and reports |
 
@@ -201,6 +227,6 @@ Bug reports and pull requests are welcome. For a large change, please open an [i
 - Link one issue in the pull request. Use `Refs #N` for partial work, and a closing keyword only when the issue is complete.
 - Do not change a pin, a baseline, a recording or an answer key to make a test pass.
 - Follow the REA rules above for compatibility changes.
-- A maintainer approves CI runs for pull requests from outside contributors. The required checks are `Rust tests result` and `Web tests result`.
+- A maintainer approves CI runs for pull requests from outside contributors. The required checks are `Rust tests result` and `Web tests result`. The CPU and web jobs run on GitHub-hosted runners; the GPU tests run on a GPU runner after a push to master, never for a pull request.
 
 CI: [GitHub Actions](https://github.com/Ascendance3D/X_ITE_R/actions).

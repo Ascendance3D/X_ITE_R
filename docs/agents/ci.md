@@ -34,6 +34,8 @@ When the NVIDIA shader disk cache is full, a changed shader is compiled again in
 
 ## Where the jobs run (issue #162)
 
+**Current setting (checked 2026-11-03).** The repository variable `XITE_RUNNER_LABELS` is `"ubuntu-24.04"` (set 2026-11-01), so the trusted runs of `rust-tests.yml` and `web-tests.yml` run on GitHub-hosted runners, like the runs of a fork. The self-hosted rule below describes what the workflows do when that variable is deleted; it is not the current routing. Today the organization has three online self-hosted runners: `gh-runner-ascendance3d` (`self-hosted, Linux, X64, proxmox, linux-proxmox`), `gh-runner-ascendance3d-gpu` (the GPU runner, see "GPU runner") and `gh-runner-ascendance3d-windows` (`self-hosted, X64, Windows`; no workflow uses it, and its graphics hardware is not checked). The `-2` and `-3` runners named below are not in that list. Do not change the variable, the labels or the runners without the owner's authorization (issue #162 is open for the runner host).
+
 Owner ruling 2026-11-01: the jobs of `rust-tests.yml` and `web-tests.yml` run on the self-hosted `xite-ci` runners (`gh-runner-ascendance3d-2` and `-3`, labels `self-hosted, Linux, X64`) when the run is trusted, and on GitHub-hosted `ubuntu-24.04` otherwise. `code-review.yml` and its external AI service are unchanged and stay on `ubuntu-latest`.
 
 - **Trusted** is: a pull request whose head repository is this repository, a push to master, and `workflow_dispatch`. A pull request from a fork is not trusted and stays on `ubuntu-24.04`.
