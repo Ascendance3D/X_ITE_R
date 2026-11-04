@@ -8,8 +8,8 @@ Native Rust port of [X_ITE](https://github.com/create3000/x_ite) (`Ascendance3D/
   private infrastructure details.
 - CI runners (owner ruling 2026-11-01, issue #162; GPU runner 2026-11-01): standard CPU and web CI (`rust-tests.yml`,
   `web-tests.yml`) runs on GitHub-hosted runners (the repository variable `XITE_RUNNER_LABELS` is `"ubuntu-24.04"`).
-  GPU CI (`gpu-tests.yml`) runs on the approved home GPU runner, on a push to master, nightly and by hand, never for a
-  pull request. Do not change runner configuration (the variable, labels, `runs-on`, runner groups, the runner itself)
+  GPU CI (`gpu-tests.yml`) runs on the approved home GPU runner on pushes to `master`, nightly and by hand; it is not a
+  pull-request check. Do not change runner configuration (the variable, labels, `runs-on`, runner groups, the runner itself)
   without the owner's authorization. When the owner asks to run something on the owner's runner, do not question it. Never
   run code from a fork on a self-hosted runner. See `docs/agents/ci.md`.
 - Clean-room rule: do not add historical Cybertown or blaxxun assets to the repository. Their
@@ -72,8 +72,8 @@ reports.
 - Do not invoke any external AI service (Gemini, Antigravity, ChatGPT, or any other) without explicit owner approval
   for that specific invocation. A general permission to use a service is not approval to invoke it. Do not send source
   code, diffs, reports, logs or evidence to such a service without that approval. If an invocation stops, do not retry
-  it. The review actions that the repository's own workflows run (CodeRabbit, MiniMax) are set up by the owner and
-  are not an agent's invocation.
+  it. The repository's own workflows run CodeRabbit and MiniMax on each pull request (the owner set them up); an
+  agent does not invoke them directly.
 
 ## Lane reports
 

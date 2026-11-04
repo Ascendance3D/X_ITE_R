@@ -69,7 +69,7 @@ Not complete. The renderer can draw a world once per view of an XR pose, and a t
 | target | state |
 | --- | --- |
 | Browser: `wasm32-unknown-unknown` with WebGPU | A browser with WebGPU (the docs name Chrome or Edge 113 or later). CI tests it in headless Chromium on software WebGPU (SwiftShader). Not tested on a real phone or tablet. |
-| Linux x86_64 | Main development platform. CI builds and tests it without a GPU on GitHub-hosted runners. The GPU tests run on the project's GPU runner after a push to master. |
+| Linux x86_64 | Main development platform. CI builds and tests it without a GPU on GitHub-hosted runners. GPU CI runs on the project's GPU runner on pushes to `master`, nightly and by hand; it is not a pull-request check. |
 | Windows x86_64 | Cross-built from Linux. An earlier run on one PC used DX12. Not in CI, no package. |
 | macOS (arm64) | CI builds the workspace and runs the non-GPU tests on the hosted `macos-15` runner (a virtual machine, not a Metal result). A physical M1 run exists with failures (see above). Not verified on macOS 15 hardware ([#87](https://github.com/Ascendance3D/X_ITE_R/issues/87), [#88](https://github.com/Ascendance3D/X_ITE_R/issues/88)). |
 
@@ -144,7 +144,7 @@ Open <http://localhost:8000/example/> in Chrome or Edge. The page uses the eleme
 
 ## Test
 
-CI runs the workspace tests with cargo-nextest, then the doctests, in its evidence mode. Some reference data (the answer keys in `oracle/answer-keys.tsv`) is not in the repository, and a runner without a GPU cannot run the GPU tests. In CI mode a test may skip only for a reason in `X3D_EVIDENCE_ALLOW`, and each skip is logged. **A skip is not a pass.** A test that renders on a GPU returns at once on a runner without an adapter, and nextest shows it as passed; the evidence-skip log and the GPU workflow tell the difference. The exact commands, the environment and the list of GPU tests (`GPU_TESTS`) are in `.github/workflows/rust-tests.yml`:
+CI runs the workspace tests with cargo-nextest, then the doctests, in its evidence mode. Some reference data (the answer keys in `oracle/answer-keys.tsv`) is not in the repository, and a runner without a GPU cannot run the GPU tests. In CI mode a test may skip only for a reason in `X3D_EVIDENCE_ALLOW`, and each skip is logged. **A skip is not a pass.** A test that renders on a GPU returns at once on a runner without an adapter, and nextest shows it as passed; the evidence-skip log and the GPU workflow tell the difference. The workflow `.github/workflows/rust-tests.yml` holds the full commands, the environment and the list of GPU tests (`GPU_TESTS`). The commands below are its commands without the `GPU_TESTS` filter, which a runner without a GPU adds (next paragraph). An allowed GPU skip gives a successful CI result, but a skipped test proves nothing about GPU compatibility: only a run on a GPU adapter does:
 
 ```sh
 export X3D_EVIDENCE=ci
@@ -227,6 +227,6 @@ Bug reports and pull requests are welcome. For a large change, please open an [i
 - Link one issue in the pull request. Use `Refs #N` for partial work, and a closing keyword only when the issue is complete.
 - Do not change a pin, a baseline, a recording or an answer key to make a test pass.
 - Follow the REA rules above for compatibility changes.
-- A maintainer approves CI runs for pull requests from outside contributors. The required checks are `Rust tests result` and `Web tests result`. The CPU and web jobs run on GitHub-hosted runners; the GPU tests run on a GPU runner after a push to master, never for a pull request.
+- A maintainer approves CI runs for pull requests from outside contributors. The required checks are `Rust tests result` and `Web tests result`. The CPU and web jobs run on GitHub-hosted runners; GPU CI runs on a GPU runner on pushes to `master`, nightly and by hand, never for a pull request.
 
 CI: [GitHub Actions](https://github.com/Ascendance3D/X_ITE_R/actions).
