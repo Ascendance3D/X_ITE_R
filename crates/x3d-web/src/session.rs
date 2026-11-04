@@ -128,13 +128,15 @@ fn parse_setup() {
 }
 
 /// GoldenGate.parseIntoScene's rejection when no parser handles a file: a data URL is not named. X3DScene.worldURL is
-/// a URL that a URL parser serialized, so its scheme is in lower case (`DATA:` is a data URL too).
+/// a URL that a URL parser serialized, so its scheme is in lower case (`DATA:` is a data URL too); another URL is named
+/// as it was given.
 fn no_handler(url: &str) -> String {
-    if url::Url::parse(url).is_ok_and(|u| u.scheme() == "data") {
-        "Error: Couldn't parse X3D. No suitable file handler found for 'data:' URL.".to_string()
-    } else {
-        format!("Error: Couldn't parse X3D. No suitable file handler found for '{url}'.")
-    }
+    let world_url = match url::Url::parse(url) {
+        Ok(u) if u.scheme() == "data" => u.to_string(),
+        _ => url.to_string(),
+    };
+
+    format!("Error: {}", x3d_parse::no_handler_message(&world_url))
 }
 
 impl Session {
