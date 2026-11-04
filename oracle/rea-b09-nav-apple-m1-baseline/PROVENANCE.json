@@ -1,0 +1,188 @@
+{
+ "angle_backend": "metal",
+ "cases": {
+  "fly-middle-pan-msaa0": {
+   "differs_from_nvidia_in": [
+    "poses"
+   ],
+   "run_sha256": [
+    "92d5761f9dfbb9a174946a954aad6bdc4e4547ff2de78d818a6a195c239b074e",
+    "92d5761f9dfbb9a174946a954aad6bdc4e4547ff2de78d818a6a195c239b074e",
+    "92d5761f9dfbb9a174946a954aad6bdc4e4547ff2de78d818a6a195c239b074e"
+   ]
+  },
+  "fly-wall-msaa0": {
+   "differs_from_nvidia_in": [
+    "collisionProbes"
+   ],
+   "run_sha256": [
+    "213150737f56fdd2271e856579f5272cf056e4eb25f346e58a9a45c2eb4f7093",
+    "213150737f56fdd2271e856579f5272cf056e4eb25f346e58a9a45c2eb4f7093",
+    "213150737f56fdd2271e856579f5272cf056e4eb25f346e58a9a45c2eb4f7093"
+   ]
+  },
+  "geo-touch-msaa0": {
+   "differs_from_nvidia_in": [
+    "vrml"
+   ],
+   "run_sha256": [
+    "9e2e2a4636b0f99e8c953167e273037f2840e5ee0b33bc4f89714231f8f3dfdc",
+    "9e2e2a4636b0f99e8c953167e273037f2840e5ee0b33bc4f89714231f8f3dfdc",
+    "9e2e2a4636b0f99e8c953167e273037f2840e5ee0b33bc4f89714231f8f3dfdc"
+   ]
+  },
+  "pick-hits-msaa0": {
+   "differs_from_nvidia_in": [
+    "pickProbes"
+   ],
+   "run_sha256": [
+    "6bc1e55625454280d65016769849e42bdc4080f4bc83be913a950b4d205e2638",
+    "6bc1e55625454280d65016769849e42bdc4080f4bc83be913a950b4d205e2638",
+    "6bc1e55625454280d65016769849e42bdc4080f4bc83be913a950b4d205e2638"
+   ]
+  },
+  "pick-instanced-msaa0": {
+   "differs_from_nvidia_in": [
+    "pickProbes"
+   ],
+   "run_sha256": [
+    "a983ca7254b3a85923a4de629490d96480f4efa8d935b3a784b482eea3922ef3",
+    "a983ca7254b3a85923a4de629490d96480f4efa8d935b3a784b482eea3922ef3",
+    "a983ca7254b3a85923a4de629490d96480f4efa8d935b3a784b482eea3922ef3"
+   ]
+  },
+  "sensors-msaa0": {
+   "differs_from_nvidia_in": [
+    "vrml"
+   ],
+   "run_sha256": [
+    "e46f33ee7f8fcc7ef22e57516d4372202cad5c2ae7d8533ab6403fb5e6762951",
+    "e46f33ee7f8fcc7ef22e57516d4372202cad5c2ae7d8533ab6403fb5e6762951",
+    "e46f33ee7f8fcc7ef22e57516d4372202cad5c2ae7d8533ab6403fb5e6762951"
+   ]
+  },
+  "sensors-msaa4": {
+   "differs_from_nvidia_in": [
+    "info",
+    "vrml"
+   ],
+   "run_sha256": [
+    "85584e6dd20dd56bebf9ef01631876eca8c017cb3a31ab0522c012a1657c6160",
+    "85584e6dd20dd56bebf9ef01631876eca8c017cb3a31ab0522c012a1657c6160",
+    "85584e6dd20dd56bebf9ef01631876eca8c017cb3a31ab0522c012a1657c6160"
+   ]
+  },
+  "touch-hit-events-msaa0": {
+   "differs_from_nvidia_in": [
+    "vrml"
+   ],
+   "run_sha256": [
+    "16917c1c54b2c789fd9200a30da53b6a35addf585825f65f9c8a79de017fae64",
+    "16917c1c54b2c789fd9200a30da53b6a35addf585825f65f9c8a79de017fae64",
+    "16917c1c54b2c789fd9200a30da53b6a35addf585825f65f9c8a79de017fae64"
+   ]
+  },
+  "touch-hit-events-msaa4": {
+   "differs_from_nvidia_in": [
+    "info",
+    "vrml"
+   ],
+   "run_sha256": [
+    "3b1813195f577d04943407e320c5935e8e3be24c496d87037265fedba87a695d",
+    "3b1813195f577d04943407e320c5935e8e3be24c496d87037265fedba87a695d",
+    "3b1813195f577d04943407e320c5935e8e3be24c496d87037265fedba87a695d"
+   ]
+  },
+  "walk-fall-then-walk-msaa0": {
+   "differs_from_nvidia_in": [
+    "collisionProbes"
+   ],
+   "run_sha256": [
+    "8b72967bfbb4f4c3ebed6a381ace0af756fd44b0b602d72e9784043c535e7443",
+    "8b72967bfbb4f4c3ebed6a381ace0af756fd44b0b602d72e9784043c535e7443",
+    "8b72967bfbb4f4c3ebed6a381ace0af756fd44b0b602d72e9784043c535e7443"
+   ]
+  },
+  "walk-instanced-steps-msaa0": {
+   "differs_from_nvidia_in": [
+    "collisionProbes",
+    "poses"
+   ],
+   "run_sha256": [
+    "d75aee42d315eb5f0542235baf50b4fdb8a2b7acb00f653a82ed76d2cf3891bd",
+    "d75aee42d315eb5f0542235baf50b4fdb8a2b7acb00f653a82ed76d2cf3891bd",
+    "d75aee42d315eb5f0542235baf50b4fdb8a2b7acb00f653a82ed76d2cf3891bd"
+   ]
+  },
+  "walk-pit-msaa0": {
+   "differs_from_nvidia_in": [
+    "collisionProbes"
+   ],
+   "run_sha256": [
+    "ec0f42daf5a13a5192153b7fca7f7af6143adf0bbc8bad6f83c4a5e696f8035a",
+    "ec0f42daf5a13a5192153b7fca7f7af6143adf0bbc8bad6f83c4a5e696f8035a",
+    "ec0f42daf5a13a5192153b7fca7f7af6143adf0bbc8bad6f83c4a5e696f8035a"
+   ]
+  },
+  "walk-ramp-msaa0": {
+   "differs_from_nvidia_in": [
+    "collisionProbes"
+   ],
+   "run_sha256": [
+    "0d87e33647c0134b770325d0ba2ef73ea882329433a61e2f91f7d187eb8c006e",
+    "0d87e33647c0134b770325d0ba2ef73ea882329433a61e2f91f7d187eb8c006e",
+    "0d87e33647c0134b770325d0ba2ef73ea882329433a61e2f91f7d187eb8c006e"
+   ]
+  },
+  "walk-small-avatar-msaa0": {
+   "differs_from_nvidia_in": [
+    "collisionProbes"
+   ],
+   "run_sha256": [
+    "83ab7307b971ea7162e1a456660c49f891e3a743a5bfdec41345e776a0a4645e",
+    "83ab7307b971ea7162e1a456660c49f891e3a743a5bfdec41345e776a0a4645e",
+    "83ab7307b971ea7162e1a456660c49f891e3a743a5bfdec41345e776a0a4645e"
+   ]
+  },
+  "walk-steps-msaa0": {
+   "differs_from_nvidia_in": [
+    "collisionProbes",
+    "poses"
+   ],
+   "run_sha256": [
+    "0e2d8c847f1fde1c514fb7acd6db6026edceee82589bdeddd509881f8015ea02",
+    "0e2d8c847f1fde1c514fb7acd6db6026edceee82589bdeddd509881f8015ea02",
+    "0e2d8c847f1fde1c514fb7acd6db6026edceee82589bdeddd509881f8015ea02"
+   ]
+  },
+  "walk-steps-msaa4": {
+   "differs_from_nvidia_in": [
+    "collisionProbes",
+    "info",
+    "poses"
+   ],
+   "run_sha256": [
+    "d63508b7f3bff69e4ac1787bef91749bc6f05aa8e449f05395466fc9cabdb46e",
+    "d63508b7f3bff69e4ac1787bef91749bc6f05aa8e449f05395466fc9cabdb46e",
+    "d63508b7f3bff69e4ac1787bef91749bc6f05aa8e449f05395466fc9cabdb46e"
+   ]
+  },
+  "walk-wall-msaa0": {
+   "differs_from_nvidia_in": [
+    "collisionProbes"
+   ],
+   "run_sha256": [
+    "f2975efde04b73517a59b1a13cab462004ee173d90276a98be9c00540aec80b1",
+    "f2975efde04b73517a59b1a13cab462004ee173d90276a98be9c00540aec80b1",
+    "f2975efde04b73517a59b1a13cab462004ee173d90276a98be9c00540aec80b1"
+   ]
+  }
+ },
+ "chrome": "Google Chrome 156.0.8078.79",
+ "hardware": "Apple M1, macOS 27.0.1",
+ "pinned_x_ite": "16.5.0 34cdf9f97",
+ "platform": "apple-m1",
+ "recorded": "2026-11-03",
+ "recorder": "oracle/x_ite-anim.mjs, oracle/x_ite-anim-msaa.mjs",
+ "rule": "3 identical runs; kept only where the NVIDIA recording differs"
+}

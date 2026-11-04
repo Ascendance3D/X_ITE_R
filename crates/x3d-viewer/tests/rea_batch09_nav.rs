@@ -130,8 +130,8 @@ fn compare_case(
     failures: &mut Vec<String>,
 ) {
     let dir = root.join(format!("oracle/rea-b09-nav-baseline/{name}-msaa{msaa}"));
-    let js: Value =
-        serde_json::from_str(&std::fs::read_to_string(dir.join("js.json")).unwrap()).unwrap();
+    let js_path = common::reference::js_json(root, "rea-b09-nav-baseline", name, msaa);
+    let js: Value = serde_json::from_str(&std::fs::read_to_string(&js_path).unwrap()).unwrap();
     let out =
         std::env::temp_dir().join(format!("rea-b09-{}-{name}-msaa{msaa}", std::process::id()));
     std::fs::create_dir_all(&out).unwrap();
@@ -143,7 +143,7 @@ fn compare_case(
         .arg("--out")
         .arg(&rs_json)
         .arg("--warmup-from")
-        .arg(dir.join("js.json"));
+        .arg(js_path);
 
     let images = gpu && dir.join("js").is_dir();
 

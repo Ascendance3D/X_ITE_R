@@ -1,0 +1,9 @@
+#X3D V4.0 utf8
+PROFILE Full
+# Points, a wide polyline and a thin rectangle seen by one plain perspective Viewpoint (no XR).
+Viewpoint { position 0.27 0.1 0.2 orientation 0 1 0 0.15 fieldOfView 1.3396 }
+NavigationInfo { headlight TRUE }
+Shape {
+  appearance Appearance { material Material { emissiveColor 1 0.3 0.5 } }
+  geometry IndexedLineSet { coord Coordinate { point [ -2 -0.9 -2, 2 -0.9 -2, 2 -0.9 -8, -2 -0.9 -8 ] } coordIndex [ 0 1 2 3 0 -1 ] }
+}

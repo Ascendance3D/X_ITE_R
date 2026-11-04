@@ -1,0 +1,9 @@
+#X3D V4.0 utf8
+PROFILE Full
+Viewpoint { position 0 0.8 1 orientation -1 0 0 0.15 }
+NavigationInfo { headlight FALSE }
+DirectionalLight { direction -0.4 -0.8 -0.5 intensity 1 ambientIntensity 0.2 shadows TRUE shadowIntensity 0.8 shadowMapSize 1024 }
+Transform { translation -1.0 -0.35 -3.5 children Shape { appearance Appearance { material Material { diffuseColor 0.9 0.5 0.3 specularColor 0.6 0.6 0.6 shininess 0.5 } } geometry Box { size 1 1 1 } } }
+Transform { translation 0.6 -0.2 -3 children Shape { appearance Appearance { material Material { diffuseColor 0.8 0.8 0.8 specularColor 0.8 0.8 0.8 shininess 0.8 } } geometry Sphere { radius 0.6 } } }
+Transform { translation 1.7 -0.4 -4 children Shape { appearance Appearance { material PhysicalMaterial { baseColor 0.8 0.3 0.2 metallic 0.2 roughness 0.4 } } geometry Cone { height 1 bottomRadius 0.5 } } }
+Transform { translation 0 -0.9 -3.5 children Shape { appearance Appearance { material Material { diffuseColor 0.7 0.7 0.7 } } geometry Box { size 8 0.1 6 } } }

@@ -2,7 +2,9 @@
  * XR oracle (issue #83): the pinned X_ITE 16.5.0 draws a world through its own WebXR context, driven by a mock
  * session (oracle/xr-shot.html, served inside the pinned src/), and the canvas is saved as PNG. No headset, no XR runtime.
  *
- *   node oracle/x_ite-xr-shot.mjs <xr-script.json> <out-dir> [--runs 3]
+ *   node oracle/x_ite-xr-shot.mjs <xr-script.json> <out-dir> [--runs 3] [--ms N]
+ *
+ * `--ms N` (default 0): X_ITE Multisampling N (page xr-shot.html?ms=N); 0 is antialiased=false.
  *
  * The XR script (oracle/synthetic-xr/NAME.json): the `world` (oracle/synthetic-xr/WORLD.x3dv), canvas `size`, `frames`, the viewer `pose` (matrix, inverse) and the
  * `views` (projectionMatrix, matrix, inverse, viewport [x, y, width, height]), all column-major as WebXR gives them.
@@ -34,9 +36,13 @@ const argv = process .argv .slice (2);
 const opt  = (name, def) => { const i = argv .indexOf (name); return i >= 0 ? argv [i + 1] : def; };
 const [ scriptArg, outArg ] = argv .filter ((a, i) => !a .startsWith ("--") && !argv [i - 1] ?.startsWith ("--"));
 const RUNS = Number (opt ("--runs", "3"));
+const MS   = Number (opt ("--ms", "0"));
+
+if (!Number .isInteger (MS) || MS < 0 || MS > 8)
+   throw new Error (`--ms must be an integer from 0 to 8, got ${opt ("--ms", "0")}`);
 
 if (!scriptArg || !outArg)
-   throw new Error ("usage: node oracle/x_ite-xr-shot.mjs <xr-script.json> <out-dir> [--runs 3]");
+   throw new Error ("usage: node oracle/x_ite-xr-shot.mjs <xr-script.json> <out-dir> [--runs 3] [--ms N (0 to 8)]");
 
 const script = JSON .parse (await readFile (resolve (scriptArg), "utf8"));
 const world  = join (dirname (resolve (scriptArg)), `${script .world ?? basename (scriptArg, ".json")}.x3dv`);
@@ -56,8 +62,10 @@ const server = createServer (async (req, res) =>
 
    try
    {
+      const data = await readFile (path === PAGE_URL ? PAGE_FILE : path);
+
       res .writeHead (200, { "Content-Type": TYPES [extname (path) .toLowerCase ()] ?? "model/x3d+vrml", "Cache-Control": "no-store" });
-      res .end (await readFile (path === PAGE_URL ? PAGE_FILE : path));
+      res .end (data);
    }
    catch { res .writeHead (404, { "Cache-Control": "no-store" }); res .end (); }
 });
@@ -102,9 +110,15 @@ async function once ()
 
    try
    {
-      await page .goto (`${base}/x_ite-pin/src/xr-shot.html`);
+      await page .goto (`${base}/x_ite-pin/src/xr-shot.html${MS ? `?ms=${MS}` : ""}`);
       await page .waitForFunction (() => window .ready, null, { timeout: 30000 });
       await page .evaluate (([w, h]) => window .setSize (w, h), [ W, H ]);
+
+      // The sample count that X_ITE applied (BrowserOptions.set_Multisampling__: antialiased="false" gives 0) must be the requested one.
+      const applied = await page .evaluate (() => document .getElementById ("c") .browser .getRenderingProperty ("Multisampling"));
+
+      if (applied !== MS)
+         throw new Error (`RenderingProperties.Multisampling is ${applied}, not the requested ${MS}`);
 
       const info = await page .evaluate (() =>
       {
@@ -170,7 +184,7 @@ await mkdir (outDir, { recursive: true });
 await writeFile (join (outDir, `${name}.png`), first .png);
 await writeFile (join (outDir, `${name}.json`), JSON .stringify ({
    pinned: (await readFile (join (ROOT, "x_ite-pin/PINNED_COMMIT"), "utf8")) .trim (),
-   world: relative (ROOT, world), script: relative (ROOT, resolve (scriptArg)), runs: RUNS,
+   world: relative (ROOT, world), script: relative (ROOT, resolve (scriptArg)), runs: RUNS, ms: MS,
    renderer: first .info .renderer, size: script .size,
    requests: first .r .requests, numViews: first .r .numViews, log: first .r .log,
    rgbaSha256: hashes [0], pngSha256: createHash ("sha256") .update (first .png) .digest ("hex"),

@@ -2,7 +2,8 @@
 //! X3DRenderObject.draw does with `browser .getPose ()`, and compared with the picture the pinned page draws through its
 //! own WebXR context (X3DWebXRContext) on a mock session. The page and the recorder: oracle/xr-shot.html,
 //! oracle/x_ite-xr-shot.mjs; the script with the pose and the views: oracle/synthetic-xr/NAME.json; the key:
-//! oracle/xr-shot-baseline/NAME.png (three identical runs, see NAME.json beside it).
+//! oracle/xr-shot-baseline/NAME.png (MSAA 0) and oracle/xr-shot-baseline-msaa4/NAME.png (Multisampling 4 per view);
+//! three identical runs each, see NAME.json beside the key.
 //!
 //! The bound is the one of `x3d-shot compare`: at most 0.5% of the pixels more than 8 off. A missing key fails the test.
 //! No headset and no XR runtime are involved; what a real session adds (the XRWebGLLayer or XRGPUBinding framebuffer,
@@ -22,7 +23,19 @@ const CASES: &[&str] = &[
     "stereo-pose",
     "stereo-lights",
     "stereo-fog-background",
+    "stereo-shadow-directional",
+    "stereo-shadow-spot",
+    "stereo-shadow-point",
+    "stereo-clipplane",
+    "stereo-points-lines",
 ];
+
+/// The sample counts of the keys and the directory of each: X_ITE `Multisampling` 0 and 4.
+const SAMPLES: &[(u32, &str)] = &[(0, "xr-shot-baseline"), (4, "xr-shot-baseline-msaa4")];
+
+fn baseline_dir(samples: u32) -> &'static str {
+    SAMPLES.iter().find(|s| s.0 == samples).unwrap().1
+}
 
 /// `XR_CASES=a,b`: other cases than CASES (for trying a script before it is added).
 fn cases() -> Vec<String> {
@@ -85,15 +98,26 @@ fn measure(
     g: &mut Gpu,
     root: &Path,
     name: &str,
+    samples: u32,
+    pose_for_rust: impl Fn(XrPose) -> XrPose,
+) -> (usize, f64, u8) {
+    measure_with(g, root, name, samples, samples, pose_for_rust)
+}
+
+/// Like `measure`, with the Rust views drawn at `render_samples` and the key of `samples`.
+fn measure_with(
+    g: &mut Gpu,
+    root: &Path,
+    name: &str,
+    samples: u32,
+    render_samples: u32,
     pose_for_rust: impl Fn(XrPose) -> XrPose,
 ) -> (usize, f64, u8) {
     let (json, pose) = script(root, name);
     let (w, h) = size(&json);
-    let (kw, kh, want) =
-        x3d_render::compare::load_png(&root.join(format!("xr-shot-baseline/{name}.png")))
-            .unwrap_or_else(|e| {
-                panic!("{name}: no answer key oracle/xr-shot-baseline/{name}.png: {e}")
-            });
+    let dir = baseline_dir(samples);
+    let (kw, kh, want) = x3d_render::compare::load_png(&root.join(format!("{dir}/{name}.png")))
+        .unwrap_or_else(|e| panic!("{name}: no answer key oracle/{dir}/{name}.png: {e}"));
 
     assert_eq!((kw, kh), (w, h), "{name}: the key's size");
 
@@ -101,6 +125,14 @@ fn measure(
         "synthetic-xr/{}.x3dv",
         json["world"].as_str().unwrap()
     ));
+
+    g.renderer.set_sample_count(render_samples);
+    g.renderer.set_gl_sample_orientation(render_samples > 1);
+    assert!(
+        render_samples <= 1 || g.renderer.sample_count() == render_samples,
+        "{render_samples}x not supported here"
+    );
+
     let shot = x3d_render::render_file_xr(g, root, &world, w, h, &pose_for_rust(pose)).unwrap();
     let rgba: Vec<u8> = shot
         .rgba
@@ -116,7 +148,7 @@ fn measure(
             .unwrap_or("t")
             .replace("::", "-");
         x3d_render::write_png(
-            &Path::new(&dir).join(format!("{name}-{tag}.png")),
+            &Path::new(&dir).join(format!("{name}-msaa{samples}-{tag}.png")),
             w,
             h,
             &rgba,
@@ -125,7 +157,7 @@ fn measure(
     }
 
     eprintln!(
-        "{name}: {} pixels over 8 ({:.3}%), max {}",
+        "{name} MSAA {samples} (drawn at {render_samples}): {} pixels over 8 ({:.3}%), max {}",
         s.pixels_over, s.pct_over, s.max_delta
     );
 
@@ -144,12 +176,16 @@ fn xr_views_match_x_ite() {
     let root = root();
     let mut failures = vec![];
 
-    for name in cases() {
-        let name = name.as_str();
-        let (_, pct, max) = measure(&mut g, &root, name, |p| p);
+    for &(samples, _) in SAMPLES {
+        for name in cases() {
+            let name = name.as_str();
+            let (_, pct, max) = measure(&mut g, &root, name, samples, |p| p);
 
-        if pct > 0.5 {
-            failures.push(format!("{name}: {pct:.3}% of the pixels over 8, max {max}"));
+            if pct > 0.5 {
+                failures.push(format!(
+                    "{name} MSAA {samples}: {pct:.3}% of the pixels over 8, max {max}"
+                ));
+            }
         }
     }
 
@@ -171,7 +207,7 @@ fn xr_views_with_a_part_of_the_pose_left_out_differ_from_x_ite() {
     // Both views drawn from the viewpoint: no eye offsets.
     results.push((
         "no eye offsets",
-        measure(&mut g, &root, "stereo-shapes", |mut p| {
+        measure(&mut g, &root, "stereo-shapes", 0, |mut p| {
             for v in &mut p.views {
                 v.view_matrix = identity;
             }
@@ -182,7 +218,7 @@ fn xr_views_with_a_part_of_the_pose_left_out_differ_from_x_ite() {
     // The views swapped.
     results.push((
         "swapped views",
-        measure(&mut g, &root, "stereo-shapes", |mut p| {
+        measure(&mut g, &root, "stereo-shapes", 0, |mut p| {
             let a = p.views[0].view_matrix;
             p.views[0].view_matrix = p.views[1].view_matrix;
             p.views[1].view_matrix = a;
@@ -193,7 +229,7 @@ fn xr_views_with_a_part_of_the_pose_left_out_differ_from_x_ite() {
     // The eyes' toe-in left out: their translations only.
     results.push((
         "no eye rotation",
-        measure(&mut g, &root, "stereo-toein", |mut p| {
+        measure(&mut g, &root, "stereo-toein", 0, |mut p| {
             for v in &mut p.views {
                 let t = [
                     v.view_matrix.0[12],
@@ -210,7 +246,7 @@ fn xr_views_with_a_part_of_the_pose_left_out_differ_from_x_ite() {
     // The viewer pose not put in front of the model-view matrices.
     results.push((
         "no pose in the model view",
-        measure(&mut g, &root, "stereo-pose-only", |mut p| {
+        measure(&mut g, &root, "stereo-pose-only", 0, |mut p| {
             p.view_matrix = identity;
             p
         })
@@ -219,7 +255,7 @@ fn xr_views_with_a_part_of_the_pose_left_out_differ_from_x_ite() {
     // The off-axis frusta replaced by the symmetric one of the first.
     results.push((
         "symmetric frusta",
-        measure(&mut g, &root, "stereo-offaxis", |mut p| {
+        measure(&mut g, &root, "stereo-offaxis", 0, |mut p| {
             p.views[1].projection = p.views[0].projection;
             p
         })
@@ -231,6 +267,73 @@ fn xr_views_with_a_part_of_the_pose_left_out_differ_from_x_ite() {
     }
 }
 
+/// The comparison has teeth for the cases of shadows, clip planes, points and lines, and for MSAA 4: the same controls
+/// (no eye offsets, swapped views, no pose in the model view), and the Rust views drawn at MSAA 0 against a key of MSAA 4.
+#[test]
+fn xr_views_of_the_added_cases_with_a_part_left_out_differ_from_x_ite() {
+    let Ok(mut g) = Gpu::new() else {
+        return x3d_evidence::no_gpu("no adapter");
+    };
+    let root = root();
+    let identity = Matrix4([
+        1., 0., 0., 0., 0., 1., 0., 0., 0., 0., 1., 0., 0., 0., 0., 1.,
+    ]);
+    let mut results = vec![];
+
+    for name in [
+        "stereo-shadow-directional",
+        "stereo-shadow-spot",
+        "stereo-shadow-point",
+        "stereo-clipplane",
+        "stereo-points-lines",
+    ] {
+        results.push((
+            format!("{name}: no eye offsets"),
+            measure(&mut g, &root, name, 0, |mut p| {
+                for v in &mut p.views {
+                    v.view_matrix = identity;
+                }
+                p
+            })
+            .1,
+        ));
+        results.push((
+            format!("{name}: swapped views"),
+            measure(&mut g, &root, name, 0, |mut p| {
+                let a = p.views[0].view_matrix;
+                p.views[0].view_matrix = p.views[1].view_matrix;
+                p.views[1].view_matrix = a;
+                p
+            })
+            .1,
+        ));
+        results.push((
+            format!("{name}: no pose in the model view"),
+            measure(&mut g, &root, name, 0, |mut p| {
+                p.view_matrix = identity;
+                p
+            })
+            .1,
+        ));
+    }
+
+    // The MSAA 4 key against pictures drawn without multisampling: the key is a multisampled one.
+    for name in ["stereo-shapes", "stereo-pose", "stereo-shadow-spot"] {
+        results.push((
+            format!("{name}: drawn at MSAA 0 against the MSAA 4 key"),
+            measure_with(&mut g, &root, name, 4, 0, |p| p).1,
+        ));
+    }
+
+    let weak: Vec<String> = results
+        .iter()
+        .filter(|(_, pct)| *pct <= 0.5)
+        .map(|(what, pct)| format!("{what}: {pct:.3}% over 8, not over the bound"))
+        .collect();
+
+    assert!(weak.is_empty(), "{}", weak.join("\n"));
+}
+
 /// An absent answer key fails; every case has its world, script and key.
 #[test]
 fn xr_keys_are_present() {
@@ -238,11 +341,14 @@ fn xr_keys_are_present() {
     let missing: Vec<String> = CASES
         .iter()
         .flat_map(|n| {
-            [
-                format!("synthetic-xr/{n}.json"),
-                format!("xr-shot-baseline/{n}.png"),
-                format!("xr-shot-baseline/{n}.json"),
-            ]
+            let mut files = vec![format!("synthetic-xr/{n}.json")];
+
+            for (_, dir) in SAMPLES {
+                files.push(format!("{dir}/{n}.png"));
+                files.push(format!("{dir}/{n}.json"));
+            }
+
+            files
         })
         .filter(|p| !root.join(p).is_file())
         .collect();
