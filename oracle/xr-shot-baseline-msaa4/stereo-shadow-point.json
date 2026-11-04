@@ -1,0 +1,23 @@
+{
+ "pinned": "34cdf9f97",
+ "world": "synthetic-xr/stereo-shadow-point.x3dv",
+ "script": "synthetic-xr/stereo-shadow-point.json",
+ "runs": 3,
+ "ms": 4,
+ "renderer": "ANGLE (NVIDIA Corporation, NVIDIA GeForce RTX 3060 Ti/PCIe/SSE2, OpenGL ES 3.2)",
+ "size": [
+  512,
+  256
+ ],
+ "requests": [
+  "supported:immersive-vr",
+  "supported:immersive-vr",
+  "session:immersive-vr",
+  "space:local",
+  "layer:{\"antialias\":false,\"alpha\":true,\"depth\":false,\"ignoreDepthValues\":true,\"framebufferScaleFactor\":1}"
+ ],
+ "numViews": 2,
+ "log": [],
+ "rgbaSha256": "ef23920b7e4ef463cfbf38a826875568bf05bb5f65be9a47de386c68b43fb833",
+ "pngSha256": "4b3619bd3595da927cf2b599220263ae2786600673e3a91494a645ecfedcec12"
+}
