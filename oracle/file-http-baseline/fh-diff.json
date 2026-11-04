@@ -1,0 +1,81 @@
+{
+  "ok": true,
+  "poses": {
+    "1": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "60": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    }
+  },
+  "vrml": {
+    "1": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nDEF OUT Script {\n  inputOutput MFString out [\n    \"0: REJ Couldn't load X3D file.\",\n    \"1: REJ Couldn't load X3D file.\",\n    \"2: REJ Couldn't load X3D file.\",\n    \"3: REJ Couldn't load X3D file.\"\n  ]\n\n  url \"ecmascript:\n    var CASES = [[\\\"/h/r-cross-nocors\\\"], [\\\"/h/s418\\\"], [\\\"/h/s-reason\\\"], [\\\"/h/s-reason-empty\\\"]];\n    var res = [];\n    function strip (s) { s = String (s); var o = '', k, e; while ((k = s .indexOf ('http://')) >= 0 && (e = s .indexOf ('/', k + 7)) >= 0) { o += s .substring (0, k); s = s .substring (e + 1); } return o + s; }\n    function put (i, v) { res [i] = i + ': ' + v; var o = []; for (var k = 0; k < CASES .length; ++ k) o .push (k in res ? res [k] : k + ': ...'); out = new MFString (... o); }\n    function title (t) { var q = String .fromCharCode (34), m = t .indexOf ('title ' + q); return m < 0 ? 'no title' : t .substring (m + 7, t .indexOf (q, m + 7)); }\n    function run (i) {\n      if (i >= CASES .length) return;\n      var p;\n      try { p = Browser .createX3DFromURL (new MFString (... CASES [i])); } catch (e) { put (i, 'THROW ' + strip (e .message)); run (i + 1); return; }\n      p .then (function (sc) { put (i, 'RES ' + strip (sc .worldURL) + ' title ' + title (sc .toVRMLString ())); run (i + 1); },\n               function (e) { put (i, 'REJ ' + strip (e && e .message)); run (i + 1); });\n    }\n    function initialize () { run (0); }\n  \"\n}\n",
+    "60": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nDEF OUT Script {\n  inputOutput MFString out [\n    \"0: REJ Couldn't load X3D file.\",\n    \"1: REJ Couldn't load X3D file.\",\n    \"2: REJ Couldn't load X3D file.\",\n    \"3: REJ Couldn't load X3D file.\"\n  ]\n\n  url \"ecmascript:\n    var CASES = [[\\\"/h/r-cross-nocors\\\"], [\\\"/h/s418\\\"], [\\\"/h/s-reason\\\"], [\\\"/h/s-reason-empty\\\"]];\n    var res = [];\n    function strip (s) { s = String (s); var o = '', k, e; while ((k = s .indexOf ('http://')) >= 0 && (e = s .indexOf ('/', k + 7)) >= 0) { o += s .substring (0, k); s = s .substring (e + 1); } return o + s; }\n    function put (i, v) { res [i] = i + ': ' + v; var o = []; for (var k = 0; k < CASES .length; ++ k) o .push (k in res ? res [k] : k + ': ...'); out = new MFString (... o); }\n    function title (t) { var q = String .fromCharCode (34), m = t .indexOf ('title ' + q); return m < 0 ? 'no title' : t .substring (m + 7, t .indexOf (q, m + 7)); }\n    function run (i) {\n      if (i >= CASES .length) return;\n      var p;\n      try { p = Browser .createX3DFromURL (new MFString (... CASES [i])); } catch (e) { put (i, 'THROW ' + strip (e .message)); run (i + 1); return; }\n      p .then (function (sc) { put (i, 'RES ' + strip (sc .worldURL) + ' title ' + title (sc .toVRMLString ())); run (i + 1); },\n               function (e) { put (i, 'REJ ' + strip (e && e .message)); run (i + 1); });\n    }\n    function initialize () { run (0); }\n  \"\n}\n"
+  },
+  "prints": [],
+  "log": [
+    "error: Script: Couldn't load URL 'http://oracle/h/r-cross-nocors'. TypeError: Failed to fetch",
+    "error: Script: Couldn't load URL 'http://oracle/h/s-reason'. Error: Gone Fishing",
+    "error: Script: Couldn't load URL 'http://oracle/h/s-reason-empty'. Error: 404",
+    "error: Script: Couldn't load URL 'http://oracle/h/s418'. Error: I'm a Teapot"
+  ],
+  "anchors": [],
+  "loadFrames": 3,
+  "warmupFrames": 8,
+  "geometry": {
+    "rect": [
+      0,
+      0,
+      512,
+      512
+    ],
+    "viewport": [
+      0,
+      0,
+      512,
+      512
+    ],
+    "scroll": [
+      0,
+      0
+    ]
+  }
+}

@@ -1,0 +1,811 @@
+{
+"chain20/0": {
+"headers": {
+"Location": "/h/chain20/1"
+},
+"status": 302
+},
+"chain20/1": {
+"headers": {
+"Location": "/h/chain20/2"
+},
+"status": 302
+},
+"chain20/10": {
+"headers": {
+"Location": "/h/chain20/11"
+},
+"status": 302
+},
+"chain20/11": {
+"headers": {
+"Location": "/h/chain20/12"
+},
+"status": 302
+},
+"chain20/12": {
+"headers": {
+"Location": "/h/chain20/13"
+},
+"status": 302
+},
+"chain20/13": {
+"headers": {
+"Location": "/h/chain20/14"
+},
+"status": 302
+},
+"chain20/14": {
+"headers": {
+"Location": "/h/chain20/15"
+},
+"status": 302
+},
+"chain20/15": {
+"headers": {
+"Location": "/h/chain20/16"
+},
+"status": 302
+},
+"chain20/16": {
+"headers": {
+"Location": "/h/chain20/17"
+},
+"status": 302
+},
+"chain20/17": {
+"headers": {
+"Location": "/h/chain20/18"
+},
+"status": 302
+},
+"chain20/18": {
+"headers": {
+"Location": "/h/chain20/19"
+},
+"status": 302
+},
+"chain20/19": {
+"headers": {
+"Location": "/h/chain20/20"
+},
+"status": 302
+},
+"chain20/2": {
+"headers": {
+"Location": "/h/chain20/3"
+},
+"status": 302
+},
+"chain20/20": {
+"body": "#VRML V2.0 utf8\nWorldInfo { title \"loaded\" }\nGroup { children Shape { geometry Box { size 1 2 3 } } }\n",
+"headers": {
+"Content-Type": "model/vrml"
+},
+"status": 200
+},
+"chain20/3": {
+"headers": {
+"Location": "/h/chain20/4"
+},
+"status": 302
+},
+"chain20/4": {
+"headers": {
+"Location": "/h/chain20/5"
+},
+"status": 302
+},
+"chain20/5": {
+"headers": {
+"Location": "/h/chain20/6"
+},
+"status": 302
+},
+"chain20/6": {
+"headers": {
+"Location": "/h/chain20/7"
+},
+"status": 302
+},
+"chain20/7": {
+"headers": {
+"Location": "/h/chain20/8"
+},
+"status": 302
+},
+"chain20/8": {
+"headers": {
+"Location": "/h/chain20/9"
+},
+"status": 302
+},
+"chain20/9": {
+"headers": {
+"Location": "/h/chain20/10"
+},
+"status": 302
+},
+"chain21/0": {
+"headers": {
+"Location": "/h/chain21/1"
+},
+"status": 302
+},
+"chain21/1": {
+"headers": {
+"Location": "/h/chain21/2"
+},
+"status": 302
+},
+"chain21/10": {
+"headers": {
+"Location": "/h/chain21/11"
+},
+"status": 302
+},
+"chain21/11": {
+"headers": {
+"Location": "/h/chain21/12"
+},
+"status": 302
+},
+"chain21/12": {
+"headers": {
+"Location": "/h/chain21/13"
+},
+"status": 302
+},
+"chain21/13": {
+"headers": {
+"Location": "/h/chain21/14"
+},
+"status": 302
+},
+"chain21/14": {
+"headers": {
+"Location": "/h/chain21/15"
+},
+"status": 302
+},
+"chain21/15": {
+"headers": {
+"Location": "/h/chain21/16"
+},
+"status": 302
+},
+"chain21/16": {
+"headers": {
+"Location": "/h/chain21/17"
+},
+"status": 302
+},
+"chain21/17": {
+"headers": {
+"Location": "/h/chain21/18"
+},
+"status": 302
+},
+"chain21/18": {
+"headers": {
+"Location": "/h/chain21/19"
+},
+"status": 302
+},
+"chain21/19": {
+"headers": {
+"Location": "/h/chain21/20"
+},
+"status": 302
+},
+"chain21/2": {
+"headers": {
+"Location": "/h/chain21/3"
+},
+"status": 302
+},
+"chain21/20": {
+"headers": {
+"Location": "/h/chain21/21"
+},
+"status": 302
+},
+"chain21/21": {
+"body": "#VRML V2.0 utf8\nWorldInfo { title \"loaded\" }\nGroup { children Shape { geometry Box { size 1 2 3 } } }\n",
+"headers": {
+"Content-Type": "model/vrml"
+},
+"status": 200
+},
+"chain21/3": {
+"headers": {
+"Location": "/h/chain21/4"
+},
+"status": 302
+},
+"chain21/4": {
+"headers": {
+"Location": "/h/chain21/5"
+},
+"status": 302
+},
+"chain21/5": {
+"headers": {
+"Location": "/h/chain21/6"
+},
+"status": 302
+},
+"chain21/6": {
+"headers": {
+"Location": "/h/chain21/7"
+},
+"status": 302
+},
+"chain21/7": {
+"headers": {
+"Location": "/h/chain21/8"
+},
+"status": 302
+},
+"chain21/8": {
+"headers": {
+"Location": "/h/chain21/9"
+},
+"status": 302
+},
+"chain21/9": {
+"headers": {
+"Location": "/h/chain21/10"
+},
+"status": 302
+},
+"ct-charset": {
+"body": "#VRML V2.0 utf8\nWorldInfo { title \"loaded\" }\nGroup { children Shape { geometry Box { size 1 2 3 } } }\n",
+"headers": {
+"Content-Type": "model/vrml; charset=utf-8"
+},
+"status": 200
+},
+"ct-garbage": {
+"body": "#VRML V2.0 utf8\nWorldInfo { title \"loaded\" }\nGroup { children Shape { geometry Box { size 1 2 3 } } }\n",
+"headers": {
+"Content-Type": "garbage"
+},
+"status": 200
+},
+"ct-html": {
+"body": "#VRML V2.0 utf8\nWorldInfo { title \"loaded\" }\nGroup { children Shape { geometry Box { size 1 2 3 } } }\n",
+"headers": {
+"Content-Type": "text/html"
+},
+"status": 200
+},
+"ct-model-vrml": {
+"body": "#VRML V2.0 utf8\nWorldInfo { title \"loaded\" }\nGroup { children Shape { geometry Box { size 1 2 3 } } }\n",
+"headers": {
+"Content-Type": "model/vrml"
+},
+"status": 200
+},
+"ct-none": {
+"body": "#VRML V2.0 utf8\nWorldInfo { title \"loaded\" }\nGroup { children Shape { geometry Box { size 1 2 3 } } }\n",
+"status": 200
+},
+"ct-octet": {
+"body": "#VRML V2.0 utf8\nWorldInfo { title \"loaded\" }\nGroup { children Shape { geometry Box { size 1 2 3 } } }\n",
+"headers": {
+"Content-Type": "application/octet-stream"
+},
+"status": 200
+},
+"ct-plain": {
+"body": "#VRML V2.0 utf8\nWorldInfo { title \"loaded\" }\nGroup { children Shape { geometry Box { size 1 2 3 } } }\n",
+"headers": {
+"Content-Type": "text/plain"
+},
+"status": 200
+},
+"ct-x3d-vrml": {
+"body": "#VRML V2.0 utf8\nWorldInfo { title \"loaded\" }\nGroup { children Shape { geometry Box { size 1 2 3 } } }\n",
+"headers": {
+"Content-Type": "model/x3d-vrml"
+},
+"status": 200
+},
+"ct-x3d-xml": {
+"body": "#VRML V2.0 utf8\nWorldInfo { title \"loaded\" }\nGroup { children Shape { geometry Box { size 1 2 3 } } }\n",
+"headers": {
+"Content-Type": "model/x3d+xml"
+},
+"status": 200
+},
+"ct-xhtml": {
+"body": "#VRML V2.0 utf8\nWorldInfo { title \"loaded\" }\nGroup { children Shape { geometry Box { size 1 2 3 } } }\n",
+"headers": {
+"Content-Type": "application/xhtml+xml"
+},
+"status": 200
+},
+"enc-bad": {
+"body": "#VRML V2.0 utf8\nWorldInfo { title \"loaded\" }\nGroup { children Shape { geometry Box { size 1 2 3 } } }\n",
+"headers": {
+"Content-Encoding": "gzip",
+"Content-Type": "model/vrml"
+},
+"status": 200
+},
+"enc-file-gzip": {
+"bodyHex": "1f8b08000000000002031589bb0e40401405fbfd8a137af168d41a91d090508bbdd864b9b256e211ff6e65aa99f1dbba2ad1c64188c38ea9e8d86859ac23e3815556133ccdbd24e9e115b9e163736398959686563473bf910b13f142d65cc8f874baab9b10214682f7477cc8853b7b66000000",
+"headers": {
+"Content-Type": "application/gzip"
+},
+"status": 200
+},
+"enc-gzip": {
+"bodyHex": "1f8b08000000000002031589bb0e40401405fbfd8a137af168d41a91d090508bbdd864b9b256e211ff6e65aa99f1dbba2ad1c64188c38ea9e8d86859ac23e3815556133ccdbd24e9e115b9e163736398959686563473bf910b13f142d65cc8f874baab9b10214682f7477cc8853b7b66000000",
+"headers": {
+"Content-Encoding": "gzip",
+"Content-Type": "model/vrml"
+},
+"status": 200
+},
+"enc-gzip-twice": {
+"bodyHex": "1f8b08000000000002030173008cff1f8b08000000000002031589bb0e40401405fbfd8a137af168d41a91d090508bbdd864b9b256e211ff6e65aa99f1dbba2ad1c64188c38ea9e8d86859ac23e3815556133ccdbd24e9e115b9e163736398959686563473bf910b13f142d65cc8f874baab9b10214682f7477cc8853b7b66000000e28f3e5573000000",
+"headers": {
+"Content-Encoding": "gzip",
+"Content-Type": "model/vrml"
+},
+"status": 200
+},
+"hdr-custom": {
+"body": "#VRML V2.0 utf8\nWorldInfo { title \"loaded\" }\nGroup { children Shape { geometry Box { size 1 2 3 } } }\n",
+"headers": {
+"Content-Type": "model/vrml",
+"X-Custom": "abc",
+"X-File-Size": "3",
+"X-Repeat": [
+"one",
+"two"
+]
+},
+"status": 200
+},
+"html": {
+"headers": {
+"Content-Type": "text/html"
+},
+"status": 200
+},
+"html-charset": {
+"headers": {
+"Content-Type": "text/html; charset=utf-8"
+},
+"status": 200
+},
+"html-cors": {
+"headers": {
+"Access-Control-Allow-Origin": "*",
+"Content-Type": "text/html"
+},
+"status": 200
+},
+"html-gzip": {
+"bodyHex": "1f8b080000000000020303000000000000000000",
+"headers": {
+"Content-Encoding": "gzip",
+"Content-Type": "text/html"
+},
+"status": 200
+},
+"html-none": {
+"body": "<!DOCTYPE html><html><body>page</body></html>\n",
+"status": 200
+},
+"html-plain": {
+"body": "<!DOCTYPE html><html><body>page</body></html>\n",
+"headers": {
+"Content-Type": "text/plain"
+},
+"status": 200
+},
+"html-space": {
+"body": "<!DOCTYPE html><html><body>page</body></html>\n",
+"headers": {
+"Content-Type": "text/html ;charset=utf-8"
+},
+"status": 200
+},
+"html-upper": {
+"body": "<!DOCTYPE html><html><body>page</body></html>\n",
+"headers": {
+"Content-Type": "TEXT/HTML"
+},
+"status": 200
+},
+"html-xhtml": {
+"headers": {
+"Content-Type": "application/xhtml+xml"
+},
+"status": 200
+},
+"loop-a": {
+"headers": {
+"Location": "/h/loop-b"
+},
+"status": 302
+},
+"loop-b": {
+"headers": {
+"Location": "/h/loop-a"
+},
+"status": 302
+},
+"ok": {
+"body": "#VRML V2.0 utf8\nWorldInfo { title \"loaded\" }\nGroup { children Shape { geometry Box { size 1 2 3 } } }\n",
+"headers": {
+"Content-Type": "model/vrml"
+},
+"status": 200
+},
+"ok-cors": {
+"body": "#VRML V2.0 utf8\nWorldInfo { title \"cors\" }\nGroup { children Shape { geometry Box { size 1 2 3 } } }\n",
+"headers": {
+"Access-Control-Allow-Origin": "*",
+"Content-Type": "model/vrml"
+},
+"status": 200
+},
+"other": {
+"body": "#VRML V2.0 utf8\nWorldInfo { title \"other\" }\nGroup { children Shape { geometry Box { size 1 2 3 } } }\n",
+"headers": {
+"Content-Type": "model/vrml"
+},
+"status": 200
+},
+"page.html": {
+"headers": {
+"Content-Type": "text/html"
+},
+"status": 200
+},
+"r-about": {
+"headers": {
+"Location": "about:blank"
+},
+"status": 302
+},
+"r-abs": {
+"headers": {
+"Location": "{origin}/h/other"
+},
+"status": 302
+},
+"r-badurl": {
+"headers": {
+"Location": "http://[::1"
+},
+"status": 302
+},
+"r-blob": {
+"headers": {
+"Location": "blob:http://127.0.0.1/none"
+},
+"status": 302
+},
+"r-chain": {
+"headers": {
+"Location": "/h/r-chain-b"
+},
+"status": 301
+},
+"r-chain-b": {
+"headers": {
+"Location": "/h/r-chain-c"
+},
+"status": 302
+},
+"r-chain-c": {
+"headers": {
+"Location": "/h/ok"
+},
+"status": 307
+},
+"r-creds": {
+"headers": {
+"Location": "http://user:pw@{hostport}/h/ok"
+},
+"status": 302
+},
+"r-creds-user": {
+"headers": {
+"Location": "http://user@{hostport}/h/ok"
+},
+"status": 302
+},
+"r-cross-cors": {
+"headers": {
+"Location": "{origin2}/h/ok-cors"
+},
+"status": 302
+},
+"r-cross-nocors": {
+"headers": {
+"Location": "{origin2}/h/other"
+},
+"status": 302
+},
+"r-data": {
+"headers": {
+"Location": "data:model/vrml,%23VRML%20V2.0%20utf8%0AWorldInfo%20%7B%20title%20%22data%22%20%7D%0A"
+},
+"status": 302
+},
+"r-ecmascript": {
+"headers": {
+"Location": "ecmascript:x"
+},
+"status": 302
+},
+"r-empty-location": {
+"headers": {
+"Location": ""
+},
+"status": 302
+},
+"r-file": {
+"headers": {
+"Location": "file:///nonexistent/x.wrl"
+},
+"status": 302
+},
+"r-fragment-only": {
+"headers": {
+"Location": "#Frag"
+},
+"status": 302
+},
+"r-ftp": {
+"headers": {
+"Location": "ftp://127.0.0.1/x.wrl"
+},
+"status": 302
+},
+"r-html": {
+"headers": {
+"Location": "/h/html"
+},
+"status": 302
+},
+"r-html-chain": {
+"headers": {
+"Location": "/h/r-html"
+},
+"status": 302
+},
+"r-html-cross": {
+"headers": {
+"Location": "{origin2}/h/html-cors"
+},
+"status": 302
+},
+"r-javascript": {
+"headers": {
+"Location": "javascript:x"
+},
+"status": 302
+},
+"r-nolocation": {
+"status": 301
+},
+"r-page-html": {
+"headers": {
+"Location": "/h/page.html"
+},
+"status": 302
+},
+"r-protocol-relative": {
+"headers": {
+"Location": "//{hostport}/h/other"
+},
+"status": 302
+},
+"r-query": {
+"headers": {
+"Location": "/h/ok?x=1#Frag"
+},
+"status": 302
+},
+"r-refused": {
+"headers": {
+"Location": "http://127.0.0.1:1/x.wrl"
+},
+"status": 302
+},
+"r-rel": {
+"headers": {
+"Location": "ok"
+},
+"status": 302
+},
+"r-rel-up": {
+"headers": {
+"Location": "../h/other"
+},
+"status": 302
+},
+"r-to-404": {
+"headers": {
+"Location": "/h/s404"
+},
+"status": 302
+},
+"r-to-500": {
+"headers": {
+"Location": "/h/s500"
+},
+"status": 302
+},
+"r-to-html": {
+"headers": {
+"Location": "/h/html"
+},
+"status": 302
+},
+"r-ws": {
+"headers": {
+"Location": "ws://{hostport}/h/ok"
+},
+"status": 302
+},
+"r300": {
+"headers": {
+"Location": "/h/ok"
+},
+"status": 300
+},
+"r301": {
+"headers": {
+"Location": "/h/ok"
+},
+"status": 301
+},
+"r302": {
+"headers": {
+"Location": "/h/ok"
+},
+"status": 302
+},
+"r303": {
+"headers": {
+"Location": "/h/ok"
+},
+"status": 303
+},
+"r304": {
+"headers": {
+"Location": "/h/ok"
+},
+"status": 304
+},
+"r307": {
+"headers": {
+"Location": "/h/ok"
+},
+"status": 307
+},
+"r308": {
+"headers": {
+"Location": "/h/ok"
+},
+"status": 308
+},
+"s-html-404": {
+"headers": {
+"Content-Type": "text/html"
+},
+"status": 404
+},
+"s-reason": {
+"headers": {
+"Content-Type": "text/plain"
+},
+"reason": "Gone Fishing",
+"status": 404
+},
+"s-reason-empty": {
+"headers": {
+"Content-Type": "text/plain"
+},
+"reason": "",
+"status": 404
+},
+"s200-empty": {
+"headers": {
+"Content-Type": "model/vrml"
+},
+"status": 200
+},
+"s201": {
+"body": "#VRML V2.0 utf8\nWorldInfo { title \"loaded\" }\nGroup { children Shape { geometry Box { size 1 2 3 } } }\n",
+"headers": {
+"Content-Type": "model/vrml"
+},
+"status": 201
+},
+"s204": {
+"status": 204
+},
+"s400": {
+"headers": {
+"Content-Type": "text/plain"
+},
+"status": 400
+},
+"s403": {
+"headers": {
+"Content-Type": "text/plain"
+},
+"status": 403
+},
+"s404": {
+"headers": {
+"Content-Type": "text/plain"
+},
+"status": 404
+},
+"s410": {
+"headers": {
+"Content-Type": "text/plain"
+},
+"status": 410
+},
+"s418": {
+"headers": {
+"Content-Type": "text/plain"
+},
+"status": 418
+},
+"s500": {
+"headers": {
+"Content-Type": "text/plain"
+},
+"status": 500
+},
+"s502": {
+"headers": {
+"Content-Type": "text/plain"
+},
+"status": 502
+},
+"s503": {
+"headers": {
+"Content-Type": "text/plain"
+},
+"status": 503
+},
+"self": {
+"headers": {
+"Location": "/h/self"
+},
+"status": 302
+},
+"vrml-named.html": {
+"body": "#VRML V2.0 utf8\nWorldInfo { title \"loaded\" }\nGroup { children Shape { geometry Box { size 1 2 3 } } }\n",
+"headers": {
+"Content-Type": "model/vrml"
+},
+"status": 200
+},
+"wire-hangup": {
+"hangup": true,
+"status": 200
+},
+"wire-truncated": {
+"body": "#VRML V2.0 utf8\nWorldInfo { title \"loaded\" }\nGroup { children Shape { geometry Box { size 1 2 3 } } }\n",
+"headers": {
+"Content-Type": "model/vrml"
+},
+"status": 200,
+"truncateTo": 20
+}
+}

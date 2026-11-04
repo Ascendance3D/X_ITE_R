@@ -1,0 +1,25 @@
+[package]
+name = "x3d-http"
+version = "0.1.0"
+edition.workspace = true
+license.workspace = true
+publish.workspace = true
+description = "HTTP and HTTPS Fetcher for the x3d-runtime FileLoader: redirects, status, headers, limits. Native builds only."
+
+[features]
+# `route_server`: a small local HTTP server (std only) that serves a table of routes, for tests. It is the counterpart of the
+# route handler of oracle/x_ite-anim.mjs, so that the pinned page and the port read the same table.
+test-server = ["dep:serde_json"]
+
+[dependencies]
+x3d-runtime = { path = "../x3d-runtime", default-features = false }
+url = "2"
+# The HTTP client (MIT OR Apache-2.0). Default features: rustls with the ring provider and the webpki-roots, so no system
+# package and no OpenSSL on Linux, macOS or Windows; gzip, because a browser decodes `Content-Encoding: gzip` before the page
+# sees the body. Redirects are NOT left to the client: `max_redirects (0)`, and this crate follows them (see `HttpFetcher`).
+ureq = "3"
+serde_json = { version = "1", optional = true }
+
+[dev-dependencies]
+x3d-http = { path = ".", features = ["test-server"] }
+flate2 = "1"

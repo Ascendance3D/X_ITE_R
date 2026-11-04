@@ -201,6 +201,44 @@ def datauri(text, mime="model/vrml", b64=False, charset=None):
 
 MIN = "#VRML V2.0 utf8\nGroup { }\n"
 
+# ---------------------------------------------------------------------------------------------------------------- malformed UTF-8 in a text data: URL
+# FileLoader's `dataAsString` branch runs `$.try (() => decodeURIComponent (data)) ?? data`: one malformed UTF-8 sequence makes
+# decodeURIComponent throw, and then the WHOLE string stays undecoded (every other escape too) and goes to the parsers. These URLs keep
+# the document on the header line when it stays encoded, so a decoder that replaces the malformed bytes (U+FFFD) and decodes the rest
+# loads a scene where the pinned page loads an empty one, and the other way round. Used by ff-data-utf8 (createX3DFromURL) and by
+# ff-inline-data (Inline).
+from urllib.parse import quote as _quote
+
+
+def _enc(text):
+    return _quote(text.encode("utf-8"), safe="")
+
+
+def _doc(label):
+    return "#VRML V2.0 utf8" + _enc("\nWorldInfo { title \"%s\" }\n" % label)
+
+
+_BOM3 = "\u00ef\u00bb\u00bf"
+BAD_UTF8 = [   # (name, url): the document is `_doc (name)`, then the tail
+    ("ok-4byte", "data:," + _doc("ok-4byte") + "%F0%9F%98%80"),
+    ("ok-2byte", "data:," + _doc("ok-2byte") + "%C3%A9"),
+    ("bad-ff", "data:," + _doc("bad-ff") + "%FF"),
+    ("bad-ff-first", "data:,%FF" + _doc("bad-ff-first")),
+    ("bad-lone-c3", "data:," + _doc("bad-lone-c3") + "%C3"),
+    ("bad-c3-28", "data:," + _doc("bad-c3-28") + "%C3%28"),
+    ("bad-e2-82", "data:," + _doc("bad-e2-82") + "%E2%82"),
+    ("bad-overlong", "data:," + _doc("bad-overlong") + "%C0%80"),
+    ("bad-surrogate", "data:," + _doc("bad-surrogate") + "%ED%A0%80"),
+    ("bad-f8", "data:," + _doc("bad-f8") + "%F8%88%80%80%80"),
+    ("bad-continuation", "data:," + _doc("bad-continuation") + "%80"),
+    ("bad-lower", "data:," + _doc("bad-lower") + "%ff"),
+    ("bom-then-bad", "data:,%EF%BB%BF" + _doc("bom-then-bad") + "%FF"),
+    ("latin1-bom-then-bad", "data:," + _BOM3 + _doc("latin1-bom-then-bad") + "%FF"),
+    ("mime-bad", "data:model/vrml," + _doc("mime-bad") + "%FF"),
+    ("charset-bad", "data:text/plain;charset=utf-8," + _doc("charset-bad") + "%FF"),
+    ("bad-then-bad-hex", "data:," + _doc("bad-then-bad-hex") + "%FF%zz"),
+]
+
 groups = {
     # content of the response: format sniffing, encodings, headers, gzip
     "ff-text": [[p] for p in [
@@ -285,6 +323,12 @@ groups = {
     "ff-host": [[u] for u in HOST_URLS] + [
         ["https://exa mple.invalid/x.wrl", "text/plain.wrl"], ["https://exa mple.invalid/x.wrl", "https://exa mple2.invalid/y.wrl"],
         ["https://exa mple.invalid/x.wrl", "https://[::1", "text/missing.wrl"], ["https://[::1", "https://exa mple.invalid/x.wrl"],
+    ],
+    # malformed UTF-8 in a text data URL (see BAD_UTF8), alone and as the first entry of a fallback list
+    "ff-data-utf8": [[u] for _, u in BAD_UTF8] + [
+        [BAD_UTF8[2][1], "data:," + _doc("second")], [BAD_UTF8[4][1], "data:," + _doc("second")], [BAD_UTF8[12][1], "data:," + _doc("second")],
+        [BAD_UTF8[13][1], "data:," + _doc("second")], [BAD_UTF8[0][1], "data:," + _doc("second")],
+        [BAD_UTF8[2][1], BAD_UTF8[4][1]], ["data:,%FF", "text/plain.wrl"],
     ],
     # Inline and EXTERNPROTO inside a loaded scene: the base is the loaded scene's world URL
     "ff-inline": [[p] for p in [
@@ -387,6 +431,10 @@ case("list-bom-then-plain", "data:,%EF%BB%BF%zz", "data:," + q(d("list-bom-then-
 case("list-latin1-first", "data:," + LATIN1_BOM + q(d("list-latin1-first")), "data:," + q(d("list-second")))
 case("list-pct-bom-first", "data:,%EF%BB%BF" + q(d("list-pct-bom-first")), "data:," + q(d("list-second")))
 case("list-both-bad", "data:," + LATIN1_BOM + "garbage", "data:,%EF%BB%BFgarbage")
+for _name, _url in BAD_UTF8:
+    case("utf8-" + _name, _url)
+case("utf8-list-bad-first", BAD_UTF8[2][1], "data:," + _doc("utf8-second"))
+case("utf8-list-bom-bad-first", BAD_UTF8[12][1], "data:," + _doc("utf8-second"))
 
 
 def vrml_string(text):
