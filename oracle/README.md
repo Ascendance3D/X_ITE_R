@@ -1353,6 +1353,13 @@ double click, WALK in a tilted Transform. `tools/rea_b24_nav.py record` records 
 (identical, no pictures) into `rea-b24-nav-baseline/`; `crates/x3d-viewer/tests/rea_b24_nav.rs` compares Rust with it.
 The item lists of the five navigation subsystems are in `docs/reports/NAV_ITEM_LISTS.md`.
 
+`synthetic-rea-gravity-layers/` (generator `tools/gen_rea_gravity_layers.py`) holds 12 cases for C17 and C18 of that list: a
+LayerSet of two Layers with a ground, a Viewpoint and a NavigationInfo each (active layer 0, 1 and 2, switched at run time by a
+Script, a switch in the middle of a fall, a walk toward walls that exist in one layer only) and a viewpoint transition that carries
+the eye through a Collision wall and over a drop (WorldInfo text counts the wall's isActive changes). `tools/rea_gravity_layers.py
+record` records each case from the pinned X_ITE three times (identical) into `rea-gravity-layers-baseline/NAME-msaa0.json` (one
+directory level); `crates/x3d-viewer/tests/rea_gravity_layers.rs` compares Rust with it, with the thresholds of `rea_b24_nav.rs`.
+
 ## Native keys 01 (issue #80)
 
 `node oracle/x_ite-native-keys-01.mjs oracle/native-keys-01-baseline --runs 3` records what the pinned X_ITE does for each
