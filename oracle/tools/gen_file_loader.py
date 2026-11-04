@@ -168,6 +168,28 @@ DEF OUT Script {
 """
 
 
+# hosts for ff-host: (a) a space, a character IDNA maps to a space, or a percent escape of a space; (b) other characters in a host
+HOST_URLS = [
+    "https://exa mple.invalid/x.wrl", "https://exa%20mple.invalid/x.wrl", "https://exa%2520mple.invalid/x.wrl", "https://exa  mple.invalid/x.wrl",
+    "https:// exa.invalid/x.wrl", "https://exa.invalid /x.wrl", "https://exa mple.invalid", "https://exa mple.invalid:8080/x.wrl", "https://exa mple.invalid:99999/x.wrl",
+    "https://exa mple.invalid?q=1", "https://exa mple.invalid#Frag", "https://user:pw@exa mple.invalid/x.wrl",
+    "https://exa\u00a0mple.invalid/x.wrl", "https://exa\u3000mple.invalid/x.wrl", "https://exa\u2003mple.invalid/x.wrl", "https://exa\u202fmple.invalid/x.wrl",
+    "https://ex\u00e4 mple.invalid/x.wrl", "https://exa mple.invalid/with space.wrl", "https://exa\tmple.invalid/x.wrl", "https://exa\nmple.invalid/x.wrl",
+    "//exa mple.invalid/x.wrl", "https:exa mple.invalid/x.wrl", "https:/exa mple.invalid/x.wrl",
+    "http://exa mple.invalid/x.wrl", "ftp://exa mple.invalid/x.wrl", "ws://exa mple.invalid/x.wrl", "wss://exa mple.invalid/x.wrl",
+    "file://exa mple/x.wrl", "file://exa mple.invalid/", "foo://exa mple.invalid/x.wrl", "blob:https://exa mple.invalid/none", "HTTPS://EXA MPLE.INVALID/X.WRL",
+    "https://exa*mple.invalid/x.wrl", "https://exa\"mple.invalid/x.wrl", "https://exa`mple.invalid/x.wrl", "https://exa{mple}.invalid/x.wrl",
+    "https://exa<mple.invalid/x.wrl", "https://exa>mple.invalid/x.wrl", "https://exa^mple.invalid/x.wrl", "https://exa|mple.invalid/x.wrl",
+    "https://exa[mple.invalid/x.wrl", "https://exa%mple.invalid/x.wrl", "https://exa%zzmple.invalid/x.wrl", "https://exa:mple.invalid/x.wrl",
+    "https://exa\u0001mple.invalid/x.wrl", "https://exa\u007fmple.invalid/x.wrl", "https://exa\u00admple.invalid/x.wrl", "https://exa_mple.invalid/x.wrl",
+    "https://\uff0aexa.invalid/x.wrl", "https://exa.invalid./x.wrl", "https://exa..invalid/x.wrl", "https://.invalid/x.wrl", "https:///x.wrl",
+    # user information (a request with credentials is rejected before it is sent)
+    "https://user:pw@exa.invalid/x.wrl", "https://user@exa.invalid/x.wrl", "https://:pw@exa.invalid/x.wrl", "https://us er:pw@exa.invalid/x.wrl",
+    "//user:pw@exa.invalid/x.wrl", "ftp://user:pw@exa.invalid/x.wrl", "ws://user:pw@exa.invalid/x.wrl", "file://user@host/x.wrl",
+    "foo://user:pw@exa.invalid/x.wrl", "https://user:pw@exa mple.invalid:8080/x.wrl?q=1#Frag",
+]
+
+
 def datauri(text, mime="model/vrml", b64=False, charset=None):
     raw = text if isinstance(text, bytes) else text.encode("utf-8")
     from urllib.parse import quote
@@ -256,6 +278,14 @@ groups = {
         ["text/" + "long-name-" * 30 + ".wrl"], ["text/" + "long-name-" * 30 + ".wrl", "text/" + "long-name-" * 30 + "2.wrl"],
         ["text/missing%20x.wrl"], ["text/missing x.wrl"], ["text/missing%.wrl"], ["text/missing%E0%A4%A.wrl"], ["text/missingé.wrl"], ["text/missing%C3%A9.wrl"],
     ],
+    # the host of an absolute URL: Chrome 156 escapes a space (and the characters that IDNA maps to a space) in the host of a special-scheme
+    # URL (`exa mple.invalid` -> `exa%20mple.invalid`), where the URL standard rejects it; `*` becomes `%2A`. The page aborts every request to
+    # another host, so a host that parses fails with `Failed to fetch`, and one that does not with `Failed to construct 'URL': Invalid URL`.
+    # The invalid hosts use https:// or another scheme, or sit in the middle of a line: see the note on the sorted log in oracle/README.md.
+    "ff-host": [[u] for u in HOST_URLS] + [
+        ["https://exa mple.invalid/x.wrl", "text/plain.wrl"], ["https://exa mple.invalid/x.wrl", "https://exa mple2.invalid/y.wrl"],
+        ["https://exa mple.invalid/x.wrl", "https://[::1", "text/missing.wrl"], ["https://[::1", "https://exa mple.invalid/x.wrl"],
+    ],
     # Inline and EXTERNPROTO inside a loaded scene: the base is the loaded scene's world URL
     "ff-inline": [[p] for p in [
         "sub/outer-missing-inline.wrl", "sub/outer-missing-inline-list.wrl", "sub/outer-inline-up.wrl", "sub/outer-inline-hash-missing.wrl",
@@ -275,7 +305,144 @@ for name, cases in groups.items():
         f.write(text)
     print(name, len(cases))
 
+# ---------------------------------------------------------------------------------------------------------------- ff-inline-data
+# A static world of DEF-named Inline nodes whose url is a `data:` URL that carries a byte order mark in one of its forms. FileLoader's
+# `dataAsString` branch (Inline is a FileLoader with the default options) percent-decodes a text data URL and removes a leading
+# `ï»¿` (the three Latin-1 characters of a UTF-8 BOM), not U+FEFF; a `;base64` URL is fetched, and its bytes are decoded as UTF-8.
+# The Script key `dumpInlines` records the scene text of each Inline, and the sorted log has the failures.
+from urllib.parse import quote
+LATIN1_BOM = "\u00ef\u00bb\u00bf"      # ï»¿
+FEFF = "\ufeff"
+
+
+def inline_doc(label):
+    return "#VRML V2.0 utf8\nWorldInfo { title \"%s\" }\n" % label
+
+
+def q(text):
+    return quote(text.encode("utf-8"), safe="")
+
+
+def b64(data):
+    return base64.b64encode(data).decode()
+
+
+XMLD = lambda label: '<?xml version="1.0" encoding="UTF-8"?>\n<X3D profile="Interchange" version="3.3"><Scene><WorldInfo title="%s"/></Scene></X3D>\n' % label
+JSOND = lambda label: json.dumps({"X3D": {"@profile": "Interchange", "@version": "4.0", "Scene": {"-children": [{"WorldInfo": {"@title": label}}]}}}) + "\n"
+X3DVD = lambda label: '#X3D V3.0 utf8\nPROFILE Interchange\nWorldInfo { title "%s" }\n' % label
+
+INLINE_DATA = []   # (name, [urls])
+
+
+def case(name, *urls):
+    INLINE_DATA.append((name, list(urls)))
+
+
+d = inline_doc
+case("plain", "data:," + q(d("plain")))
+case("pct-bom", "data:,%EF%BB%BF" + q(d("pct-bom")))
+case("pct-bom-lower", "data:,%ef%bb%bf" + q(d("pct-bom-lower")))
+case("pct-bom-mime", "data:model/vrml,%EF%BB%BF" + q(d("pct-bom-mime")))
+case("pct-bom-charset", "data:text/plain;charset=utf-8,%EF%BB%BF" + q(d("pct-bom-charset")))
+case("raw-latin1", "data:," + LATIN1_BOM + q(d("raw-latin1")))
+case("raw-latin1-mime", "data:model/vrml," + LATIN1_BOM + q(d("raw-latin1-mime")))
+case("raw-latin1-upper-scheme", "DATA:," + LATIN1_BOM + q(d("raw-latin1-upper-scheme")))
+case("raw-latin1-lead-space", " data:," + LATIN1_BOM + q(d("raw-latin1-lead-space")))
+case("raw-feff", "data:," + FEFF + q(d("raw-feff")))
+case("pct-latin1", "data:,%C3%AF%C2%BB%C2%BF" + q(d("pct-latin1")))
+case("pct-latin1-lower", "data:,%c3%af%c2%bb%c2%bf" + q(d("pct-latin1-lower")))
+case("pct-latin1-half", "data:,%C3%AF%C2%BB" + q(d("pct-latin1-half")))
+case("raw-latin1-twice", "data:," + LATIN1_BOM * 2 + q(d("raw-latin1-twice")))
+case("pct-bom-then-latin1", "data:,%EF%BB%BF" + LATIN1_BOM + q(d("pct-bom-then-latin1")))
+case("latin1-then-pct-bom", "data:," + LATIN1_BOM + "%EF%BB%BF" + q(d("latin1-then-pct-bom")))
+case("space-then-latin1", "data:, " + LATIN1_BOM + q(d("space-then-latin1")))
+case("newline-then-latin1", "data:,%0A" + LATIN1_BOM + q(d("newline-then-latin1")))
+case("latin1-after-header", "data:," + q("#VRML V2.0 utf8\n") + LATIN1_BOM + q("WorldInfo { title \"latin1-after-header\" }\n"))
+case("latin1-only", "data:," + LATIN1_BOM)
+case("pct-bom-only", "data:,%EF%BB%BF")
+case("raw-feff-only", "data:," + FEFF)
+case("bad-escape-after-bom", "data:,%EF%BB%BF%zz" + q(d("bad-escape-after-bom")))
+case("latin1-bad-escape", "data:," + LATIN1_BOM + d("latin1-bad-escape").replace("\n", "\n# 100%\n", 1))
+case("latin1-lone-percent", "data:," + LATIN1_BOM + "#VRML V2.0 utf8\nWorldInfo { title \"latin1-lone-percent\" } # 5%")
+case("latin1-raw-text", "data:," + LATIN1_BOM + d("latin1-raw-text"))
+case("raw-feff-raw-text", "data:," + FEFF + d("raw-feff-raw-text"))
+case("b64-bom", "data:model/vrml;base64," + b64(BOM + d("b64-bom").encode()))
+case("b64-plain", "data:model/vrml;base64," + b64(d("b64-plain").encode()))
+case("b64-latin1", "data:model/vrml;base64," + b64(LATIN1_BOM.encode("utf-8") + d("b64-latin1").encode()))
+case("b64-latin1-bytes", "data:model/vrml;base64," + b64(b"\xef\xbb\xbf" + d("b64-latin1-bytes").encode()))
+case("b64-bom-twice", "data:model/vrml;base64," + b64(BOM * 2 + d("b64-bom-twice").encode()))
+case("b64-bom-charset", "data:model/vrml;charset=utf-8;base64," + b64(BOM + d("b64-bom-charset").encode()))
+case("b64-upper", "data:model/vrml;BASE64," + b64(BOM + d("b64-upper").encode()))
+case("b64-gzip-bom", "data:application/gzip;base64," + b64(gzip.compress(BOM + d("b64-gzip-bom").encode(), mtime=0)))
+case("b64-utf16le-bom", "data:model/vrml;base64," + b64(b"\xff\xfe" + d("b64-utf16le-bom").encode("utf-16-le")))
+case("pct-bom-xml", "data:text/xml,%EF%BB%BF" + q(XMLD("pct-bom-xml")))
+case("latin1-xml", "data:text/xml," + LATIN1_BOM + q(XMLD("latin1-xml")))
+case("pct-bom-json", "data:application/json,%EF%BB%BF" + q(JSOND("pct-bom-json")))
+case("latin1-json", "data:application/json," + LATIN1_BOM + q(JSOND("latin1-json")))
+case("pct-bom-x3dv", "data:,%EF%BB%BF" + q(X3DVD("pct-bom-x3dv")))
+case("latin1-x3dv", "data:," + LATIN1_BOM + q(X3DVD("latin1-x3dv")))
+case("b64-bom-xml", "data:text/xml;base64," + b64(BOM + XMLD("b64-bom-xml").encode()))
+case("b64-bom-json", "data:application/json;base64," + b64(BOM + JSOND("b64-bom-json").encode()))
+case("list-bom-then-plain", "data:,%EF%BB%BF%zz", "data:," + q(d("list-bom-then-plain")))
+case("list-latin1-first", "data:," + LATIN1_BOM + q(d("list-latin1-first")), "data:," + q(d("list-second")))
+case("list-pct-bom-first", "data:,%EF%BB%BF" + q(d("list-pct-bom-first")), "data:," + q(d("list-second")))
+case("list-both-bad", "data:," + LATIN1_BOM + "garbage", "data:,%EF%BB%BFgarbage")
+
+
+def vrml_string(text):
+    return '"' + text.replace("\\", "\\\\").replace('"', '\\"') + '"'
+
+
+with open(os.path.join(out_dir, "ff-inline-data.wrl"), "w", encoding="utf-8") as f:
+    f.write("#VRML V2.0 utf8\n# Synthetic REA oracle world (generated by oracle/tools/gen_file_loader.py): ff-inline-data.\n"
+            "# DEF-named Inline nodes with data: URLs that carry a byte order mark in each of its forms; the scene text of each Inline is dumped.\n")
+    for name, urls in INLINE_DATA:
+        f.write("DEF I_%s Inline { url [ %s ] }\n" % (name.replace("-", "_"), " ".join(vrml_string(u) for u in urls)))
+
+# EXTERNPROTO is a FileLoader with the same options: the first candidate is a data URL with a byte order mark, the second a plain one; a
+# failed first candidate is a warning in the log, a loaded one is silent.
+EP_DOC = "#VRML V2.0 utf8\nPROTO P [ ] { Group { } }\n"
+EP_DATA = [
+    ("plain", "data:," + q(EP_DOC)),
+    ("pct-bom", "data:,%EF%BB%BF" + q(EP_DOC)),
+    ("raw-latin1", "data:," + LATIN1_BOM + q(EP_DOC)),
+    ("pct-latin1", "data:,%C3%AF%C2%BB%C2%BF" + q(EP_DOC)),
+    ("raw-feff", "data:," + FEFF + q(EP_DOC)),
+    ("b64-bom", "data:model/vrml;base64," + b64(BOM + EP_DOC.encode())),
+    ("b64-plain", "data:model/vrml;base64," + b64(EP_DOC.encode())),
+    ("raw-latin1-twice", "data:," + LATIN1_BOM * 2 + q(EP_DOC)),
+]
+
+with open(os.path.join(out_dir, "ff-inline-data.wrl"), "a", encoding="utf-8") as f:
+    for i, (name, url) in enumerate(EP_DATA):
+        f.write("# EXTERNPROTO %s\nEXTERNPROTO EP%d [ ] [ %s %s ]\nEP%d { }\n" % (name, i, vrml_string(url), vrml_string("data:," + q(EP_DOC.replace("P [", "P%d [" % i))), i))
+    # a file that no parser handles, behind a URL: GoldenGate names it (a data URL it does not)
+    f.write("# EXTERNPROTO of a file no parser handles\nEXTERNPROTO EP8 [ ] [ \"text/plain-words.txt\" %s ]\nEP8 { }\n" % vrml_string("data:," + q(EP_DOC.replace("P [", "P8 ["))))
+print("ff-inline-data", len(INLINE_DATA))
+
+# ---------------------------------------------------------------------------------------------------------------- ff-host-nodes
+# Nodes with a url field (Inline, Script, EXTERNPROTO, ImageTexture, AudioClip) whose url has a space in the host: each has its own
+# FileLoader (or the loader of its kind), and the sorted log has the failures (the node type names the line).
+with open(os.path.join(out_dir, "ff-host-nodes.wrl"), "w", encoding="utf-8") as f:
+    f.write("#VRML V2.0 utf8\n# Synthetic REA oracle world (generated by oracle/tools/gen_file_loader.py): ff-host-nodes.\n"
+            "# Nodes whose url has a space in the host (Chromium keeps it as %20): the failure text of each is in the sorted log.\n")
+    f.write('EXTERNPROTO EP [ ] [ "https://exa mple.invalid/p.wrl#EP" ]\nEP { }\n')
+    f.write('EXTERNPROTO EP2 [ ] [ "https://exa mple3.invalid/p.wrl#EP", "https://exa mple4.invalid/p.wrl#EP" ]\nEP2 { }\n')
+    f.write('EXTERNPROTO EP3 [ ] [ "gone/p.wrl#EP", "https://exa mple5.invalid/p.wrl#EP" ]\nEP3 { }\n')
+    f.write('Inline { url "https://exa mple.invalid/i.wrl" }\n')
+    f.write('Inline { url [ "https://exa mple.invalid/i.wrl" "https://exa mple2.invalid/i.wrl" ] }\n')
+    f.write('Inline { url [ "https://exa mple.invalid/i.wrl" "data:,%23VRML%20V2.0%20utf8%0AGroup%20%7B%7D" ] }\n')
+    f.write('Script { url "https://exa mple.invalid/s.js" }\n')
+    f.write('Script { url [ "https://exa mple.invalid/s.js" "https://exa mple2.invalid/s.js" ] }\n')
+    f.write('Shape { appearance Appearance { texture ImageTexture { url "https://exa mple.invalid/t.png" } } geometry Box { } }\n')
+    f.write('Shape { appearance Appearance { texture ImageTexture { url [ "https://exa mple.invalid/t.png" "https://exa mple2.invalid/t.png" ] } } geometry Box { } }\n')
+    f.write('Sound { source AudioClip { url "https://exa mple.invalid/a.wav" } }\n')
+    f.write('Shape { appearance Appearance { texture ImageTexture { url "https://exa<mple.invalid/t.png" } } geometry Box { } }\n')
+    f.write('Inline { url "https://exa<mple.invalid/i.wrl" }\n')
+
 script = {"size": [512, 512], "t0": 946684800, "dt": 1 / 60, "pinFrameRate": True, "settle": True, "frames": 60,
           "capture": [], "dump": [1, 60], "events": []}
 with open(os.path.join(out_dir, "ff.json"), "w") as f:
     json.dump(script, f)
+with open(os.path.join(out_dir, "ff-inline-data.json"), "w") as f:
+    json.dump(dict(script, dumpInlines=True), f)

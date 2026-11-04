@@ -10,6 +10,9 @@
 //! or the rejection in a field of its own, so the scene text of every dumped frame carries it. The loader's diagnostic for a failed
 //! candidate (`Couldn't load URL ..., Error: ...`, the warning when a later URL follows) is the sorted `log` (the first line of each).
 //! Compared like oracle/tools/x10_compare.py: the scene text of every dumped frame exact, the sorted log exact. No rendering, no GPU.
+//! Three groups (2026-11-04): `ff-inline-data` (the byte order mark in the `data:` URL of an Inline: the scene text of each Inline,
+//! script key `dumpInlines`), `ff-host` (a space in the host of an absolute URL, user information, other host characters) and
+//! `ff-host-nodes` (the same space in the url of Inline, Script, EXTERNPROTO, ImageTexture, AudioClip).
 //! Not compared: HTTP redirects, response headers and the foreign (`text/html`) hand-off, which the recorder's static server cannot
 //! produce or a headless page cannot follow.
 
@@ -42,6 +45,13 @@ fn groups(root: &Path) -> Vec<String> {
 fn compare_group(root: &Path, name: &str) -> Vec<String> {
     let baseline = root.join(format!("oracle/file-loader-baseline/{name}.json"));
     let js: Value = serde_json::from_str(&std::fs::read_to_string(&baseline).unwrap()).unwrap();
+    // A group with a script key of its own (`dumpInlines`) has a script file of its name.
+    let own = format!("oracle/synthetic-rea-file-loader/{name}.json");
+    let script = if root.join(&own).exists() {
+        own
+    } else {
+        "oracle/synthetic-rea-file-loader/ff.json".to_string()
+    };
     let out = std::env::temp_dir().join(format!("file-loader-{}-{name}", std::process::id()));
     std::fs::create_dir_all(&out).unwrap();
     let rs_json = out.join("rs.json");
@@ -49,7 +59,7 @@ fn compare_group(root: &Path, name: &str) -> Vec<String> {
         .current_dir(root)
         .args([
             &format!("oracle/synthetic-rea-file-loader/{name}.wrl"),
-            "oracle/synthetic-rea-file-loader/ff.json",
+            &script,
             "--oracle",
             "oracle",
         ])
@@ -83,8 +93,49 @@ fn compare_group(root: &Path, name: &str) -> Vec<String> {
         .unwrap();
     let text = frames[last].as_str().unwrap();
 
-    if text.contains(": ...\"") || !text.contains(": RES ") || !text.contains(": REJ ") {
-        fail(format!("the baseline's frame {last} is not a finished run"));
+    // A group of Inline nodes has no Script: its last frame must hold loaded and failed scenes (`null` = no scene).
+    if let Some(inlines) = js["inlines"].as_object() {
+        let scenes = inlines[last].as_object().unwrap();
+        let loaded = scenes.values().filter(|v| v.is_string()).count();
+
+        if loaded < 10 || loaded == scenes.len() || !frames.contains_key("1") {
+            fail(format!(
+                "the baseline's frame {last} is not a finished run ({loaded} of {} Inline scenes loaded)",
+                scenes.len()
+            ));
+        }
+    } else if text.contains("inputOutput MFString out") {
+        if text.contains(": ...\"") || !text.contains(": RES ") || !text.contains(": REJ ") {
+            fail(format!("the baseline's frame {last} is not a finished run"));
+        }
+    } else if js["log"].as_array().is_none_or(|l| l.len() < 10) {
+        // A world of nodes only: the failures of its nodes are the log.
+        fail("the baseline's log is nearly empty".to_string());
+    }
+
+    // `inlines`: the scene text of every DEF-named Inline in each dumped frame (or `null` while it has none).
+    if let Some(inlines) = js["inlines"].as_object() {
+        let mut bad: Vec<String> = vec![];
+
+        for (frame, scenes) in inlines {
+            for (inline, scene) in scenes.as_object().unwrap() {
+                let port = &rs["inlines"][frame][inline];
+
+                if port != scene {
+                    bad.push(format!(
+                        "frame {frame} {inline}:\n  pinned: {scene:.300}\n  port:   {port:.300}"
+                    ));
+                }
+            }
+        }
+
+        if !bad.is_empty() {
+            fail(format!(
+                "{} Inline scenes differ:\n{}",
+                bad.len(),
+                bad.join("\n")
+            ));
+        }
     }
 
     let mut bad = vec![];
@@ -167,8 +218,33 @@ fn file_loader_inline_urls_match_x_ite() {
     check("ff-inline");
 }
 
-/// The baseline directory holds exactly the three groups, so a new baseline cannot be left without a test.
+#[test]
+fn file_loader_inline_data_url_bom_matches_x_ite() {
+    check("ff-inline-data");
+}
+
+#[test]
+fn file_loader_host_characters_match_x_ite() {
+    check("ff-host");
+}
+
+#[test]
+fn file_loader_host_with_space_in_nodes_matches_x_ite() {
+    check("ff-host-nodes");
+}
+
+/// The baseline directory holds exactly the six groups, so a new baseline cannot be left without a test.
 #[test]
 fn file_loader_baseline_groups_are_the_tested_ones() {
-    assert_eq!(groups(&root()), ["ff-inline", "ff-text", "ff-url"]);
+    assert_eq!(
+        groups(&root()),
+        [
+            "ff-host",
+            "ff-host-nodes",
+            "ff-inline",
+            "ff-inline-data",
+            "ff-text",
+            "ff-url"
+        ]
+    );
 }

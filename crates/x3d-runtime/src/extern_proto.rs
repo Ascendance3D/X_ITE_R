@@ -664,7 +664,7 @@ impl Runtime {
                 };
             }
         };
-        let Ok(resolved) = crate::loader::join_url(&base, candidate) else {
+        let Ok(resolved) = self.resolve_candidate(&base, candidate) else {
             return Step::Failed {
                 error: "TypeError: Failed to construct 'URL': Invalid URL".into(),
                 resolved: None,
@@ -712,7 +712,12 @@ impl Runtime {
             }
         }
 
-        let data = match self.fetcher.fetch(&resolved) {
+        // A host with a space (Chromium's `%20`) is no host of any server: `fetch` rejects it.
+        let fetched = match self.url_rejection(&resolved) {
+            Some(rejection) => Err(rejection),
+            None => self.fetcher.fetch(&resolved),
+        };
+        let data = match fetched {
             Ok(d) => d,
             Err(error) => {
                 self.extern_cache_fail(key.as_deref(), &error, &resolved);
@@ -754,8 +759,19 @@ impl Runtime {
     ) -> Result<(), String> {
         self.sync_svg_quality();
 
-        let mut scene = x3d_parse::parse_bytes_gunzipped(data, url.as_str())
-            .map_err(|err| format!("Error: {err}"))?;
+        let mut scene = x3d_parse::parse_bytes_gunzipped(data, url.as_str()).map_err(|err| {
+            match err {
+                // GoldenGate.parseIntoScene names the url of a file that no parser handles (a data URL is not named).
+                x3d_parse::LoadError::NoHandler if url.scheme() == "data" => {
+                    "Error: Couldn't parse X3D. No suitable file handler found for 'data:' URL."
+                        .to_string()
+                }
+                x3d_parse::LoadError::NoHandler => format!(
+                    "Error: Couldn't parse X3D. No suitable file handler found for '{url}'."
+                ),
+                err => format!("Error: {err}"),
+            }
+        })?;
 
         for w in std::mem::take(&mut scene.warnings) {
             self.log_warn(w);
