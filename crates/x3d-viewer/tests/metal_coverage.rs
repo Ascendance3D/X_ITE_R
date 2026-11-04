@@ -99,7 +99,41 @@ fn metal_coverage_matches_the_pinned_page_on_the_same_m1() {
     }
 
     drop(gpu);
-    let table = root.join("oracle/metal-coverage-apple-m1-baseline/cases.txt");
+    let baseline = root.join("oracle/metal-coverage-apple-m1-baseline");
+
+    // The worlds are generated (they are not committed) and must be the bytes the recordings were made from.
+    let worlds = std::env::temp_dir().join(format!("metal-coverage-worlds-{}", std::process::id()));
+    let generated = Command::new("python3")
+        .arg("-I")
+        .arg(root.join("oracle/tools/gen_metal_coverage.py"))
+        .arg(&worlds)
+        .status()
+        .expect("python3");
+    assert!(generated.success(), "gen_metal_coverage.py failed");
+    let pinned = std::fs::read_to_string(baseline.join("worlds.sha256")).expect("worlds.sha256");
+    let mut pinned_names = vec![];
+
+    for line in pinned.lines().filter(|l| !l.trim().is_empty()) {
+        let (hash, name) = line.split_once("  ").expect("worlds.sha256 line");
+        let out = Command::new("sha256sum")
+            .arg(worlds.join(name))
+            .output()
+            .expect("sha256sum");
+        let got = String::from_utf8_lossy(&out.stdout);
+        assert!(
+            got.starts_with(hash),
+            "{name}: the generated world is not the one the recordings were made from (want {hash}, got {got})"
+        );
+        pinned_names.push(name.to_string());
+    }
+
+    assert_eq!(
+        std::fs::read_dir(&worlds).unwrap().count(),
+        pinned_names.len(),
+        "the generator wrote files that worlds.sha256 does not list"
+    );
+
+    let table = baseline.join("cases.txt");
     let cases = std::fs::read_to_string(&table).expect("cases.txt");
     let only = std::env::var("REA_ONLY").ok();
 
@@ -119,7 +153,14 @@ fn metal_coverage_matches_the_pinned_page_on_the_same_m1() {
                 f[2].to_string(),
             ]
         })
-        .filter(|p| !root.join(p).is_file())
+        .filter(|p| {
+            let path = if p.starts_with("oracle/synthetic-metal-coverage/") {
+                worlds.join(p.rsplit('/').next().unwrap())
+            } else {
+                root.join(p)
+            };
+            !path.is_file()
+        })
         .collect();
     assert!(
         missing.is_empty(),
@@ -144,9 +185,15 @@ fn metal_coverage_matches_the_pinned_page_on_the_same_m1() {
             "metal-coverage-{}-{name}-msaa{msaa}.json",
             std::process::id()
         ));
+        let (world, script) = (
+            worlds.join(world.rsplit('/').next().unwrap()),
+            worlds.join(script.rsplit('/').next().unwrap()),
+        );
         let mut cmd = Command::new(env!("CARGO_BIN_EXE_x3d-drive"));
         cmd.current_dir(&root)
-            .args([world, script, "--oracle", "oracle", "--out"])
+            .arg(&world)
+            .arg(&script)
+            .args(["--oracle", "oracle", "--out"])
             .arg(&out)
             .arg("--warmup-from")
             .arg(&reference);
@@ -272,6 +319,7 @@ fn metal_coverage_matches_the_pinned_page_on_the_same_m1() {
         checked += 1;
     }
 
+    let _ = std::fs::remove_dir_all(&worlds);
     assert!(only.is_some() || checked > 0, "no case");
     assert!(
         failures.is_empty(),
