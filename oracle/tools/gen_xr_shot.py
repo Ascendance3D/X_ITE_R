@@ -89,6 +89,14 @@ SCRIPTS = {
     # Lights with positions, a physical material; fog and a background: the same pose.
     "stereo-lights": script(SIZE, POSE, TOE_IN, OFF_AXIS, "stereo-lights", headlight=False),
     "stereo-fog-background": script(SIZE, POSE, TOE_IN, OFF_AXIS, "stereo-fog-background"),
+    # Shadow-casting lights (a shadow map per light, drawn once; the shadow matrix of each view is built from the view's own
+    # transform and the pose, X3DLight setGlobalVariables): the same pose, toe-in and frusta.
+    "stereo-shadow-directional": script(SIZE, POSE, TOE_IN, OFF_AXIS, "stereo-shadow-directional", headlight=False),
+    "stereo-shadow-spot": script(SIZE, POSE, TOE_IN, OFF_AXIS, "stereo-shadow-spot", headlight=False),
+    "stereo-shadow-point": script(SIZE, POSE, TOE_IN, OFF_AXIS, "stereo-shadow-point", headlight=False),
+    # Clip planes, and points and lines (screen-space geometry): the same pose, toe-in and frusta.
+    "stereo-clipplane": script(SIZE, POSE, TOE_IN, OFF_AXIS, "stereo-clipplane"),
+    "stereo-points-lines": script(SIZE, POSE, TOE_IN, OFF_AXIS, "stereo-points-lines"),
 }
 
 for name, s in SCRIPTS.items():

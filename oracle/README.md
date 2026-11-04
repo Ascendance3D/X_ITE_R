@@ -1493,9 +1493,14 @@ assets relative to the page) but is not a file of the pin (`tools/verify-candida
 python3 -I oracle/tools/gen_xr_shot.py                  # oracle/synthetic-xr/NAME.json: size, pose, views (column-major, as WebXR)
 XITE_TESTS=~/Projects/cybertown/X_ITE/x_ite-tests node oracle/x_ite-xr-shot.mjs oracle/synthetic-xr/NAME.json /tmp/xr-out --runs 3
 cp /tmp/xr-out/NAME.{png,json} oracle/xr-shot-baseline/  # written only when all runs are identical
+XITE_TESTS=... node oracle/x_ite-xr-shot.mjs oracle/synthetic-xr/NAME.json /tmp/xr-out4 --runs 3 --ms 4   # Multisampling 4 (page ?ms=4)
+cp /tmp/xr-out4/NAME.{png,json} oracle/xr-shot-baseline-msaa4/
 ```
 
-Keys `oracle/xr-shot-baseline/NAME.png` (synthetic worlds `oracle/synthetic-xr/*.x3dv`; the JSON beside each has the page's
+The recorder needs `oracle/x_ite-pin/node_modules` (see "Recording from a worktree"). `--ms N` (default 0, the page's `antialiased="false"`)
+sets X_ITE `Multisampling`; the JSON of a key has `ms`.
+
+Keys `oracle/xr-shot-baseline/NAME.png` (MSAA 0) and `oracle/xr-shot-baseline-msaa4/NAME.png` (MSAA 4) (synthetic worlds `oracle/synthetic-xr/*.x3dv`; the JSON beside each has the page's
 requests of the mock, the renderer and the hashes) are compared by `cargo nextest run -p x3d-render --test xr_views`. A missing
 key fails; no adapter fails in strict mode and records a skip otherwise. `XR_CASES=a,b` runs other cases, `XR_DUMP=dir` writes the
 Rust pictures.

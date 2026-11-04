@@ -13,16 +13,20 @@
 <script src="../node_modules/jpeg-js/lib/decoder.js"></script>
 <script src="../node_modules/OpenJPEG.js/dist/openJPEG-DynamicMemory-browser.js"></script>
 <!--
-   antialiased="false"             -> RenderingProperties.Multisampling 0 (plain RGBA8 + DEPTH24 framebuffer)
+   antialiased / multisampling     -> from ?ms=N (default 0): N = 0 gives RenderingProperties.Multisampling 0 (plain RGBA8 +
+                                      DEPTH24 framebuffer); N > 0 gives a MultiSampleFramebuffer of N samples per view, resolved by blitFramebuffer
    preserveDrawingBuffer="true"    -> the default framebuffer survives compositing, so readPixels works between frames
    splashScreen="false"            -> the canvas is never display:none while loading
    contentScale="1"                -> framebuffer is exactly the CSS size
    We read the WebGL drawing buffer with gl.readPixels, so DOM overlays (splash, notifications,
    context menu, timings) can never end up in the image, whatever their state.
 -->
-<x3d-canvas id="c" antialiased="false" preserveDrawingBuffer="true" splashScreen="false"
+<script>
+{ const q = new URLSearchParams (location .search), ms = q .get ("ms") ?? "0";
+document .write (`<x3d-canvas id="c" antialiased="${+ms > 0}" multisampling="${+ms > 0 ? ms : 4}" preserveDrawingBuffer="true" splashScreen="false"
    contextMenu="false" notifications="false" timings="false" contentScale="1"
-   style="display:block;width:512px;height:512px"></x3d-canvas>
+   style="display:block;width:512px;height:512px"></x3d-canvas>`); }
+</script>
 <script type="module">
 // Oracle page only (not X_ITE source). X_ITE's WebXR context is driven by a mock session: navigator.xr, XRWebGLLayer and
 // gl.makeXRCompatible are replaced, the views come from the script. The "layer" has no framebuffer of its own, so
