@@ -1117,6 +1117,8 @@ pub struct Frame {
     pub shadow_maps: Vec<ShadowMap>,
     /// The texture projectors of the frame (DrawItem.projectors).
     pub projectors: Vec<ProjectorParams>,
+    /// The FLY / WALK viewer's rubber band (X3DFlyViewer.display on displayFinishEvents), drawn over the finished frame.
+    pub rubber_band: Option<crate::rubber_band::RubberBand>,
 }
 
 pub const MAX_LIGHTS: usize = 8;
@@ -5060,6 +5062,7 @@ impl<'a> Builder<'a> {
         self.viewports = saved_viewports;
 
         Frame {
+            rubber_band: None,
             projection: perspective(std::f64::consts::FRAC_PI_2, near, far, 1.0, 1.0),
             view,
             items,
@@ -5306,6 +5309,7 @@ impl<'a> Builder<'a> {
         };
 
         let frame = Frame {
+            rubber_band: None,
             projection,
             view,
             items,
@@ -5369,6 +5373,7 @@ impl<'a> Builder<'a> {
                 .collect();
 
             Frame {
+                rubber_band: None,
                 projection: Matrix4::IDENTITY,
                 view: Matrix4::IDENTITY,
                 items: vec![],
@@ -5727,6 +5732,7 @@ impl<'a> Builder<'a> {
         self.local_projectors.clear();
 
         Frame {
+            rubber_band: None,
             projection,
             view,
             items,

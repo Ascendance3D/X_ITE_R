@@ -1607,7 +1607,7 @@ impl Runtime {
     /// response is not in, the result has `buffers_pending`, and the chain waits for it when the caller's `accept`
     /// rejects with no error (`await buffersArray`: the scene is built when the buffers are in).
     pub fn parse_candidate(&mut self, data: &[u8], url: &str) -> ParseBytesResult {
-        let parsed = parse_bytes_waiting(&*self.fetcher, data, url, self.accept_waits);
+        let parsed = parse_bytes_waiting(&*self.fetcher, data, url, self.accept_waits, true);
 
         if parsed.buffers_pending {
             self.buffers_pending = true;
@@ -1694,17 +1694,19 @@ impl Runtime {
 /// `x3d_parse::parse_bytes`, with GLTF2Parser / GLB2Parser loading the buffers of a glTF through
 /// `fetcher` (FileLoader resolves them against the scene's url).
 pub fn parse_bytes_with_fetcher(fetcher: &dyn Fetcher, data: &[u8], url: &str) -> ParseBytesResult {
-    parse_bytes_waiting(fetcher, data, url, false)
+    parse_bytes_waiting(fetcher, data, url, false, false)
 }
 
 /// [`parse_bytes_with_fetcher`]; with `wait`, a buffer whose response an asynchronous `fetcher` has not given yet
 /// is requested and the result has `buffers_pending`. Every buffer is asked for (`Promise .all`), so their
-/// requests go out together.
+/// requests go out together. `gunzipped`: `data` is what FileLoader's `$.gunzip` returned, so the parsers do not gunzip
+/// it again.
 pub(crate) fn parse_bytes_waiting(
     fetcher: &dyn Fetcher,
     data: &[u8],
     url: &str,
     wait: bool,
+    gunzipped: bool,
 ) -> ParseBytesResult {
     let wait = wait && fetcher.is_async();
     let pending = std::cell::RefCell::new(Vec::new());
@@ -1749,7 +1751,13 @@ pub(crate) fn parse_bytes_waiting(
         })
     };
 
-    let scene = x3d_parse::with_gltf_fetcher(&fetch, || x3d_parse::parse_bytes(data, url));
+    let scene = x3d_parse::with_gltf_fetcher(&fetch, || {
+        if gunzipped {
+            x3d_parse::parse_bytes_gunzipped(data, url)
+        } else {
+            x3d_parse::parse_bytes(data, url)
+        }
+    });
 
     let pending_buffers = pending.into_inner();
 

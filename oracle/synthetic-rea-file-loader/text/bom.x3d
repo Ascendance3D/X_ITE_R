@@ -1,0 +1,7 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<X3D profile="Interchange" version="3.3">
+  <Scene>
+    <WorldInfo title="xml"/>
+    <Shape><Cone bottomRadius="2"/></Shape>
+  </Scene>
+</X3D>

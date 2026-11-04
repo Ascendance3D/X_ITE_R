@@ -1,0 +1,94 @@
+{
+  "ok": true,
+  "poses": {
+    "1": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "60": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    }
+  },
+  "vrml": {
+    "1": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nDEF OUT Script {\n  inputOutput MFString out [\n    \"0: RES VRML/2.0/Interchange/1/0/0/0/0/0/synthetic-rea-file-loader/sub/outer-missing-inline.wrl\n#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT EnvironmentalSensor : 3\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Scripting : 1\nCOMPONENT Sound : 3\nCOMPONENT Text : 2\n\nInline {\n  global TRUE\n  url \\\"gone/x.wrl\\\"\n}\n\",\n    \"1: RES VRML/2.0/Interchange/1/0/0/0/0/0/synthetic-rea-file-loader/sub/outer-missing-inline-list.wrl\n#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT EnvironmentalSensor : 3\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Scripting : 1\nCOMPONENT Sound : 3\nCOMPONENT Text : 2\n\nInline {\n  global TRUE\n  url [\n    \\\"gone/a.wrl\\\",\n    \\\"../gone/b.wrl\\\",\n    \\\"/gone/c.wrl\\\",\n    \\\"data:,%23VRML%20V2.0%20utf8%0A%7D\\\"\n  ]\n}\n\",\n    \"2: RES VRML/2.0/Interchange/4/0/0/0/0/0/synthetic-rea-file-loader/sub/outer-inline-up.wrl\n#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT EnvironmentalSensor : 3\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Scripting : 1\nCOMPONENT Sound : 3\nCOMPONENT Text : 2\n\nInline {\n  global TRUE\n  url \\\"../text/plain.wrl\\\"\n}\n\nInline {\n  global TRUE\n  url \\\"dir/nested.wrl\\\"\n}\n\nInline {\n  global TRUE\n  url \\\"./dir/../dir/nested.wrl\\\"\n}\n\nInline {\n  global TRUE\n  url \\\"dir/nested.wrl#Frag\\\"\n}\n\",\n    \"3: RES VRML/2.0/Interchange/3/0/0/0/0/0/synthetic-rea-file-loader/sub/outer-inline-hash-missing.wrl\n#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT EnvironmentalSensor : 3\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Scripting : 1\nCOMPONENT Sound : 3\nCOMPONENT Text : 2\n\nInline {\n  global TRUE\n  url \\\"gone.wrl#Frag\\\"\n}\n\nInline {\n  global TRUE\n  url \\\"gone%20x.wrl?q=1\\\"\n}\n\nInline {\n  global TRUE\n  url \\\"égone.wrl\\\"\n}\n\",\n    \"4: RES VRML/2.0/Interchange/4/0/0/0/0/0/synthetic-rea-file-loader/sub/outer-inline-schemes.wrl\n#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT EnvironmentalSensor : 3\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Scripting : 1\nCOMPONENT Sound : 3\nCOMPONENT Text : 2\n\nInline {\n  global TRUE\n  url \\\"http://oracle2.invalid/x.wrl\\\"\n}\n\nInline {\n  global TRUE\n  url \\\"urn:synthetic:thing\\\"\n}\n\nInline {\n  global TRUE\n  url \\\"file:///nonexistent/x.wrl\\\"\n}\n\nInline {\n  global TRUE\n  url \\\"\\\"\n}\n\",\n    \"5: RES VRML/2.0/Interchange/1/0/1/0/0/0/synthetic-rea-file-loader/sub/outer-externproto.wrl\n#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT EnvironmentalSensor : 3\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Scripting : 1\nCOMPONENT Sound : 3\nCOMPONENT Text : 2\n\nEXTERNPROTO P [ ]\n[\n  \\\"gone/proto.wrl#P\\\",\n  \\\"../gone/proto2.wrl#P\\\"\n]\n\nP { }\n\",\n    \"6: RES VRML/2.0/Interchange/1/0/0/0/0/0/synthetic-rea-file-loader/sub/outer-inline-text-fail.wrl\n#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT EnvironmentalSensor : 3\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Scripting : 1\nCOMPONENT Sound : 3\nCOMPONENT Text : 2\n\nInline {\n  global TRUE\n  url [\n    \\\"../text/empty.wrl\\\",\n    \\\"../text/syntax-error.wrl\\\",\n    \\\"../text/plain.wrl\\\"\n  ]\n}\n\",\n    \"7: RES VRML/2.0/Interchange/2/0/0/0/0/0/synthetic-rea-file-loader/sub/outer-inline-gz.wrl\n#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT EnvironmentalSensor : 3\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Scripting : 1\nCOMPONENT Sound : 3\nCOMPONENT Text : 2\n\nInline {\n  global TRUE\n  url \\\"../gz/plain.wrl\\\"\n}\n\nInline {\n  global TRUE\n  url \\\"../gz/truncated.wrl\\\"\n}\n\",\n    \"8: RES VRML/2.0/Interchange/2/0/0/0/0/0/synthetic-rea-file-loader/sub/outer-inline-data.wrl\n#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT EnvironmentalSensor : 3\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Scripting : 1\nCOMPONENT Sound : 3\nCOMPONENT Text : 2\n\nInline {\n  global TRUE\n  url \\\"data:,%23VRML%20V2.0%20utf8%0AGroup%20%7B%7D\\\"\n}\n\nInline {\n  global TRUE\n  url \\\"data:model/vrml;base64,I1ZSTUwgVjIuMCB1dGY4CldvcmxkSW5mbyB7IHRpdGxlICJsb2FkZWQiIGluZm8gWyAiYSIgImIiIF0gfQpHcm91cCB7IGNoaWxkcmVuIFsgU2hhcGUgeyBnZW9tZXRyeSBCb3ggeyBzaXplIDEgMiAzIH0gfSBdIH0K\\\"\n}\n\",\n    \"9: REJ Couldn't load X3D file.\"\n  ]\n\n  url \"ecmascript:\n    var CASES = [[\\\"sub/outer-missing-inline.wrl\\\"], [\\\"sub/outer-missing-inline-list.wrl\\\"], [\\\"sub/outer-inline-up.wrl\\\"], [\\\"sub/outer-inline-hash-missing.wrl\\\"], [\\\"sub/outer-inline-schemes.wrl\\\"], [\\\"sub/outer-externproto.wrl\\\"], [\\\"sub/outer-inline-text-fail.wrl\\\"], [\\\"sub/outer-inline-gz.wrl\\\"], [\\\"sub/outer-inline-data.wrl\\\"], [\\\"sub/gone.wrl\\\"]];\n    var res = [];\n    function strip (s) { return String (s) .replace (/https?:\\\\/\\\\/[^\\\\/]+\\\\//g, ''); }\n    function put (i, v) { res [i] = i + ': ' + v; var o = []; for (var k = 0; k < CASES .length; ++ k) o .push (k in res ? res [k] : k + ': ...'); out = new MFString (... o); }\n    function run (i) {\n      if (i >= CASES .length) return;\n      var p;\n      try { p = Browser .createX3DFromURL (new MFString (... CASES [i])); } catch (e) { put (i, 'THROW ' + strip (e .message)); run (i + 1); return; }\n      p .then (function (sc) {\n        var head = [sc .encoding, sc .specificationVersion, sc .profile && sc .profile .name, sc .rootNodes .length, sc .protos .length, sc .externprotos .length, sc .routes .length, sc .importedNodes .length, sc .exportedNodes .length, strip (sc .worldURL)] .join ('/');\n        var text; try { text = sc .toVRMLString (); } catch (e) { text = 'PRINT ERR ' + e .message; }\n        put (i, 'RES ' + head + '\\\\n' + text);\n        run (i + 1);\n      }, function (e) { put (i, 'REJ ' + strip (e && e .message)); run (i + 1); });\n    }\n    function initialize () { run (0); }\n  \"\n}\n",
+    "60": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nDEF OUT Script {\n  inputOutput MFString out [\n    \"0: RES VRML/2.0/Interchange/1/0/0/0/0/0/synthetic-rea-file-loader/sub/outer-missing-inline.wrl\n#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT EnvironmentalSensor : 3\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Scripting : 1\nCOMPONENT Sound : 3\nCOMPONENT Text : 2\n\nInline {\n  global TRUE\n  url \\\"gone/x.wrl\\\"\n}\n\",\n    \"1: RES VRML/2.0/Interchange/1/0/0/0/0/0/synthetic-rea-file-loader/sub/outer-missing-inline-list.wrl\n#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT EnvironmentalSensor : 3\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Scripting : 1\nCOMPONENT Sound : 3\nCOMPONENT Text : 2\n\nInline {\n  global TRUE\n  url [\n    \\\"gone/a.wrl\\\",\n    \\\"../gone/b.wrl\\\",\n    \\\"/gone/c.wrl\\\",\n    \\\"data:,%23VRML%20V2.0%20utf8%0A%7D\\\"\n  ]\n}\n\",\n    \"2: RES VRML/2.0/Interchange/4/0/0/0/0/0/synthetic-rea-file-loader/sub/outer-inline-up.wrl\n#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT EnvironmentalSensor : 3\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Scripting : 1\nCOMPONENT Sound : 3\nCOMPONENT Text : 2\n\nInline {\n  global TRUE\n  url \\\"../text/plain.wrl\\\"\n}\n\nInline {\n  global TRUE\n  url \\\"dir/nested.wrl\\\"\n}\n\nInline {\n  global TRUE\n  url \\\"./dir/../dir/nested.wrl\\\"\n}\n\nInline {\n  global TRUE\n  url \\\"dir/nested.wrl#Frag\\\"\n}\n\",\n    \"3: RES VRML/2.0/Interchange/3/0/0/0/0/0/synthetic-rea-file-loader/sub/outer-inline-hash-missing.wrl\n#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT EnvironmentalSensor : 3\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Scripting : 1\nCOMPONENT Sound : 3\nCOMPONENT Text : 2\n\nInline {\n  global TRUE\n  url \\\"gone.wrl#Frag\\\"\n}\n\nInline {\n  global TRUE\n  url \\\"gone%20x.wrl?q=1\\\"\n}\n\nInline {\n  global TRUE\n  url \\\"égone.wrl\\\"\n}\n\",\n    \"4: RES VRML/2.0/Interchange/4/0/0/0/0/0/synthetic-rea-file-loader/sub/outer-inline-schemes.wrl\n#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT EnvironmentalSensor : 3\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Scripting : 1\nCOMPONENT Sound : 3\nCOMPONENT Text : 2\n\nInline {\n  global TRUE\n  url \\\"http://oracle2.invalid/x.wrl\\\"\n}\n\nInline {\n  global TRUE\n  url \\\"urn:synthetic:thing\\\"\n}\n\nInline {\n  global TRUE\n  url \\\"file:///nonexistent/x.wrl\\\"\n}\n\nInline {\n  global TRUE\n  url \\\"\\\"\n}\n\",\n    \"5: RES VRML/2.0/Interchange/1/0/1/0/0/0/synthetic-rea-file-loader/sub/outer-externproto.wrl\n#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT EnvironmentalSensor : 3\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Scripting : 1\nCOMPONENT Sound : 3\nCOMPONENT Text : 2\n\nEXTERNPROTO P [ ]\n[\n  \\\"gone/proto.wrl#P\\\",\n  \\\"../gone/proto2.wrl#P\\\"\n]\n\nP { }\n\",\n    \"6: RES VRML/2.0/Interchange/1/0/0/0/0/0/synthetic-rea-file-loader/sub/outer-inline-text-fail.wrl\n#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT EnvironmentalSensor : 3\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Scripting : 1\nCOMPONENT Sound : 3\nCOMPONENT Text : 2\n\nInline {\n  global TRUE\n  url [\n    \\\"../text/empty.wrl\\\",\n    \\\"../text/syntax-error.wrl\\\",\n    \\\"../text/plain.wrl\\\"\n  ]\n}\n\",\n    \"7: RES VRML/2.0/Interchange/2/0/0/0/0/0/synthetic-rea-file-loader/sub/outer-inline-gz.wrl\n#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT EnvironmentalSensor : 3\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Scripting : 1\nCOMPONENT Sound : 3\nCOMPONENT Text : 2\n\nInline {\n  global TRUE\n  url \\\"../gz/plain.wrl\\\"\n}\n\nInline {\n  global TRUE\n  url \\\"../gz/truncated.wrl\\\"\n}\n\",\n    \"8: RES VRML/2.0/Interchange/2/0/0/0/0/0/synthetic-rea-file-loader/sub/outer-inline-data.wrl\n#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT EnvironmentalSensor : 3\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Scripting : 1\nCOMPONENT Sound : 3\nCOMPONENT Text : 2\n\nInline {\n  global TRUE\n  url \\\"data:,%23VRML%20V2.0%20utf8%0AGroup%20%7B%7D\\\"\n}\n\nInline {\n  global TRUE\n  url \\\"data:model/vrml;base64,I1ZSTUwgVjIuMCB1dGY4CldvcmxkSW5mbyB7IHRpdGxlICJsb2FkZWQiIGluZm8gWyAiYSIgImIiIF0gfQpHcm91cCB7IGNoaWxkcmVuIFsgU2hhcGUgeyBnZW9tZXRyeSBCb3ggeyBzaXplIDEgMiAzIH0gfSBdIH0K\\\"\n}\n\",\n    \"9: REJ Couldn't load X3D file.\"\n  ]\n\n  url \"ecmascript:\n    var CASES = [[\\\"sub/outer-missing-inline.wrl\\\"], [\\\"sub/outer-missing-inline-list.wrl\\\"], [\\\"sub/outer-inline-up.wrl\\\"], [\\\"sub/outer-inline-hash-missing.wrl\\\"], [\\\"sub/outer-inline-schemes.wrl\\\"], [\\\"sub/outer-externproto.wrl\\\"], [\\\"sub/outer-inline-text-fail.wrl\\\"], [\\\"sub/outer-inline-gz.wrl\\\"], [\\\"sub/outer-inline-data.wrl\\\"], [\\\"sub/gone.wrl\\\"]];\n    var res = [];\n    function strip (s) { return String (s) .replace (/https?:\\\\/\\\\/[^\\\\/]+\\\\//g, ''); }\n    function put (i, v) { res [i] = i + ': ' + v; var o = []; for (var k = 0; k < CASES .length; ++ k) o .push (k in res ? res [k] : k + ': ...'); out = new MFString (... o); }\n    function run (i) {\n      if (i >= CASES .length) return;\n      var p;\n      try { p = Browser .createX3DFromURL (new MFString (... CASES [i])); } catch (e) { put (i, 'THROW ' + strip (e .message)); run (i + 1); return; }\n      p .then (function (sc) {\n        var head = [sc .encoding, sc .specificationVersion, sc .profile && sc .profile .name, sc .rootNodes .length, sc .protos .length, sc .externprotos .length, sc .routes .length, sc .importedNodes .length, sc .exportedNodes .length, strip (sc .worldURL)] .join ('/');\n        var text; try { text = sc .toVRMLString (); } catch (e) { text = 'PRINT ERR ' + e .message; }\n        put (i, 'RES ' + head + '\\\\n' + text);\n        run (i + 1);\n      }, function (e) { put (i, 'REJ ' + strip (e && e .message)); run (i + 1); });\n    }\n    function initialize () { run (0); }\n  \"\n}\n"
+  },
+  "prints": [],
+  "log": [
+    "error: Error: Unknown statement.",
+    "error: Inline: Couldn't load URL 'file:///nonexistent/x.wrl'. TypeError: Failed to fetch",
+    "error: Inline: Couldn't load URL 'http://oracle/synthetic-rea-file-loader/gz/truncated.wrl'. Error: Couldn't parse X3D. No suitable file handler found for 'http://oracle/synthetic-rea-file-loader/gz/truncated.wrl'.",
+    "error: Inline: Couldn't load URL 'http://oracle/synthetic-rea-file-loader/sub/gone x.wrl?q=1'. Error: Not Found",
+    "error: Inline: Couldn't load URL 'http://oracle/synthetic-rea-file-loader/sub/gone.wrl#Frag'. Error: Not Found",
+    "error: Inline: Couldn't load URL 'http://oracle/synthetic-rea-file-loader/sub/gone/x.wrl'. Error: Not Found",
+    "error: Inline: Couldn't load URL 'http://oracle/synthetic-rea-file-loader/sub/égone.wrl'. Error: Not Found",
+    "error: Inline: Couldn't load URL 'http://oracle2.invalid/x.wrl'. TypeError: Failed to fetch",
+    "error: Inline: Couldn't load URL 'urn:synthetic:thing'. TypeError: Failed to fetch",
+    "error: Inline: Couldn't load any of the 4 URLs, tried in this order:",
+    "error: Inline: Couldn't load empty URL. Error: Empty URL.",
+    "error: Script: Couldn't load URL 'http://oracle/synthetic-rea-file-loader/sub/gone.wrl'. Error: Not Found",
+    "error: X3DExternProtoDeclaration: Couldn't load any of the 2 URLs, tried in this order:",
+    "warn: Inline: Couldn't load URL 'http://oracle/gone/c.wrl', trying URL 4 of 4. Error: Not Found",
+    "warn: Inline: Couldn't load URL 'http://oracle/synthetic-rea-file-loader/gone/b.wrl', trying URL 3 of 4. Error: Not Found",
+    "warn: Inline: Couldn't load URL 'http://oracle/synthetic-rea-file-loader/sub/gone/a.wrl', trying URL 2 of 4. Error: Not Found",
+    "warn: X3DExternProtoDeclaration: Couldn't load URL 'http://oracle/synthetic-rea-file-loader/sub/gone/proto.wrl#P', trying URL 2 of 2. Error: Not Found"
+  ],
+  "anchors": [],
+  "loadFrames": 25,
+  "warmupFrames": 25,
+  "geometry": {
+    "rect": [
+      0,
+      0,
+      512,
+      512
+    ],
+    "viewport": [
+      0,
+      0,
+      512,
+      512
+    ],
+    "scroll": [
+      0,
+      0
+    ]
+  }
+}

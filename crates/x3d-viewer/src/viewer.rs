@@ -980,6 +980,11 @@ impl Viewer3d {
             viewport: self.layer_rect(self.home_layer()),
             // getStraightenHorizon (): the StraightenHorizon option, unless the host overrides it.
             straighten: self.straighten && self.rt.browser_options.straighten_horizon(),
+            rubberband: self
+                .rt
+                .browser_options
+                .get_option("Rubberband")
+                .is_some_and(|v| v.as_bool()),
         }
     }
 
@@ -3467,10 +3472,37 @@ impl Viewer3d {
         b.layer_cameras = cameras.into_iter().filter(|(k, _)| k.is_some()).collect();
         // X3DRenderingContext.reshape: the viewport, projection and ScreenGroup / ScreenText scale are in drawing-buffer pixels
         // (the canvas size × ContentScale).
-        let frame = b.build(width, height);
+        let mut frame = b.build(width, height);
+        frame.rubber_band = self.rubber_band(width, height);
 
         self.timings_count(&frame);
         frame
+    }
+
+    /// X3DFlyViewer.display: the rubber band of a FLY or WALK viewer while a button is held and the `Rubberband` option was on when
+    /// it went down. The viewer's pointer is in canvas (CSS) pixels; X_ITE's is in drawing-buffer pixels (`getPointerFromEvent`
+    /// scales it to the viewport), so the ends and the viewport are scaled by the buffer size over the canvas size. A Viewport node
+    /// of the layer maps the pointer to its own rectangle in X_ITE; here the pointer stays canvas based, as everywhere in the viewer.
+    fn rubber_band(&self, width: u32, height: u32) -> Option<x3d_render::rubber_band::RubberBand> {
+        let (from, to) = self.nav.rubber_band()?;
+        let (sx, sy) = (
+            width as f64 / self.width as f64,
+            height as f64 / self.height as f64,
+        );
+        let r = self.layer_rect(self.home_layer());
+        let content_scale = self
+            .rt
+            .browser_options
+            .rendering
+            .get("ContentScale")
+            .map_or(1.0, |v| v.as_f64());
+
+        Some(x3d_render::rubber_band::RubberBand {
+            from: [from[0] * sx, from[1] * sy],
+            to: [to[0] * sx, to[1] * sy],
+            content_scale,
+            viewport: [r[0] * sx, r[1] * sy, r[2] * sx, r[3] * sy],
+        })
     }
 
     /// The bound viewpoint's camera and the bindables of a layer for the renderer.

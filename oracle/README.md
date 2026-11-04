@@ -1531,6 +1531,32 @@ text does not. The scene text of every dumped frame and the sorted `log` (the lo
 exactly. A NaN coordinate in a binary STL is left out of the cases: the pinned page logs `RangeError: Maximum call stack size exceeded` for it
 (measured), an engine limit and not a parser result.
 
+## FileLoader at the createX3DFromURL level (sub:io.file-loader)
+
+`oracle/synthetic-rea-file-loader/` holds authored text inputs (VRML97, classic X3D, XML, JSON, byte order marks, UTF-16, Latin-1, bad UTF-8, CR and
+CRLF lines, headers, empty files, gzip and zlib variants) and three worlds made by `oracle/tools/gen_file_loader.py`: `ff-text` (what the response
+holds), `ff-url` (url resolution, schemes, `data:` and `ecmascript:` candidates, the MFString fallback order, the failure text) and `ff-inline`
+(Inline and EXTERNPROTO urls inside a loaded scene, which resolve against that scene). Like the GoldenGate worlds, a Script loads its lists one after
+the other with `Browser.createX3DFromURL`; the scene head and `toVRMLString`, or the rejection, are in the scene text, and the first line of every
+`console.error` / `console.warn` of FileLoader.printError is in the sorted `log`.
+
+```
+XITE_TESTS=... python3 -I oracle/tools/file_loader.py record   # three pinned recordings per world, written only when identical
+cargo nextest run -p x3d-viewer --test file_loader
+```
+
+The baselines are `oracle/file-loader-baseline/ff-*.json` (Chrome 156.0.8078.47). No GPU is used, so the test runs on a hosted runner.
+Left out on purpose:
+
+- `#`, `#Frag`, `?x` and a blank url resolve to the world itself, whose Script would load the same lists again without end.
+- HTTP redirects, response headers (`Content-Type`, `Content-Length`, `Content-Encoding`) and the foreign (`text/html`) hand-off of
+  `Browser.loadURL`: the recorder's static server answers by extension only, and a headless page opens no window.
+- `http://exa mple.invalid/x.wrl`: Chrome 156 parses a space in a host (`exa%20mple.invalid`) and the fetch then fails; the Rust `url` crate rejects it
+  (`Failed to construct 'URL': Invalid URL`). A URL-parser difference, not FileLoader logic (not fixed).
+- The sorted `log` is sorted in the page, where the server is `http://127.0.0.1:PORT`, before that is replaced by `http://oracle`. A case must not
+  create a log line that begins `http://` followed by a character between `1` and `o` (the invalid hosts use `https://`).
+- A malformed percent escape in a path (`text/missing%.wrl`) reaches the recorder's server, which answers 404 (`oracle/x_ite-anim.mjs` used to stop on it).
+
 ## Platform recordings of the pinned page (Apple M1, Metal)
 
 The pinned X_ITE 16.5.0 gives other pointing, collision and touch results on ANGLE Metal than on ANGLE/OpenGL on the NVIDIA host (owner
