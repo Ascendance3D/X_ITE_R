@@ -222,14 +222,16 @@ fn svg_css4_colors_match_x_ite() {
 
 /// CSS Color 5 relative colors as SVG paint through `SVGParser.colorValue` (the normal scene-loading
 /// path: the `Grammar.color` token, `convertColor`, the NaN channels, the scene text). 134 colors
-/// of `oracle/css5-relative-colors-baseline`, nested ones included, in 12 files.
+/// of `oracle/css5-relative-colors-baseline`, nested ones included, plus an inherited `color`, in 13
+/// files.
 /// Baseline: `XITE_TESTS=<x_ite-tests> node oracle/x_ite-svg.mjs oracle/synthetic-rea-css5-relative
-/// oracle/synthetic-rea-css5-relative/svg-baseline.json` (three identical recordings).
+/// oracle/css5-relative-svg-baseline/svg-baseline.json` (three identical recordings; the baseline sits
+/// in a `*-baseline` directory, one level, which the PR review gate excludes).
 #[test]
 fn svg_css5_relative_colors_match_x_ite() {
     check(
         "synthetic-rea-css5-relative",
-        "svg-baseline.json",
+        "../css5-relative-svg-baseline/svg-baseline.json",
         "CSS Color 5",
     );
 }
