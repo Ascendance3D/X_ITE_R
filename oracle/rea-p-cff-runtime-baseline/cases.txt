@@ -1,0 +1,5 @@
+pc-library oracle/synthetic-rea-p-cff-runtime/pc-library.wrl oracle/synthetic-rea-p-cff-runtime/pc-library.json
+pc-family-url oracle/synthetic-rea-p-cff-runtime/pc-family-url.wrl oracle/synthetic-rea-p-cff-runtime/pc-family-url.json
+pc-urls oracle/synthetic-rea-p-cff-runtime/pc-urls.wrl oracle/synthetic-rea-p-cff-runtime/pc-urls.json
+pc-dynamic oracle/synthetic-rea-p-cff-runtime/pc-dynamic.wrl oracle/synthetic-rea-p-cff-runtime/pc-dynamic.json
+pc-screen oracle/synthetic-rea-p-cff-runtime/pc-screen.wrl oracle/synthetic-rea-p-cff-runtime/pc-screen.json

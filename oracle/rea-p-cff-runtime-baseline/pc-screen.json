@@ -1,0 +1,32 @@
+{
+ "log": [],
+ "ok": true,
+ "poses": {
+  "44": {
+   "centerOfRotation": [
+    0,
+    0,
+    0
+   ],
+   "description": "",
+   "fieldOfViewScale": 1,
+   "orientation": [
+    0,
+    0,
+    1,
+    0
+   ],
+   "position": [
+    0,
+    0,
+    10
+   ],
+   "viewer": "EXAMINE",
+   "viewpoint": ""
+  }
+ },
+ "vrml": {
+  "44": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Full\n\nMETA \"title\" \"pc screen\"\n\nDEF L1 FontLibrary {\n  family \"CffLib\"\n  url \"../synthetic-rea-b24-cff/cff-basic.otf\"\n}\n\nShape {\n  geometry DEF T1 Text {\n    string [\n      \"ABAB BA OS\",\n      \"AB\"\n    ]\n    fontStyle ScreenFontStyle {\n      family \"CffLib\"\n      pointSize 24\n    }\n  }\n}\n\nShape {\n  geometry DEF T2 Text {\n    string [\n      \"HiFQ\",\n      \"AB O\"\n    ]\n    fontStyle ScreenFontStyle {\n      family \"CffLib\"\n      pointSize 16\n      spacing 1.5\n    }\n  }\n}\n\nShape {\n  geometry DEF T3 Text {\n    string [\n      \"AB OS\",\n      \"HiF\"\n    ]\n    fontStyle ScreenFontStyle {\n      family \"CffLib\"\n      pointSize 20\n      justify [\n        \"MIDDLE\",\n        \"MIDDLE\"\n      ]\n    }\n  }\n}\n\nShape {\n  geometry DEF T4 Text {\n    string [\n      \"ABO\",\n      \"SiHF\"\n    ]\n    fontStyle ScreenFontStyle {\n      family \"CffLib\"\n      leftToRight FALSE\n    }\n  }\n}\n\nShape {\n  geometry DEF T5 Text {\n    string \"ABOS HFQ\"\n    maxExtent 0.5\n    fontStyle ScreenFontStyle {\n      family \"CffLib\"\n      pointSize 24\n    }\n  }\n}\n\nShape {\n  geometry DEF T6 Text {\n    string [\n      \"ABO\",\n      \"SiH\"\n    ]\n    fontStyle ScreenFontStyle {\n      family \"CffLib\"\n      pointSize 18\n      horizontal FALSE\n    }\n  }\n}\n\nDEF P Script {\n  inputOutput MFString out [\n    \"000 T1.origin = SFVec3:-1 0 0 raw=-1 0 0\",\n    \"001 T1.textBounds = SFVec2:150 33 raw=150 33\",\n    \"002 T1.lineBounds = ArrayField:[\n  148.8 6.4,\n  18.56 1\n] raw=(148.8000030517578 6.400000095367432) (18.559999465942383 1)\",\n    \"003 T2.origin = SFVec3:-1 0 0 raw=-1 0 0\",\n    \"004 T2.textBounds = SFVec2:34 33 raw=34 33\",\n    \"005 T2.lineBounds = ArrayField:[\n  32.42667 4.266667,\n  30.72 1.5\n] raw=(32.426666259765625 4.266666889190674) (30.719999313354492 1.5)\",\n    \"006 T3.origin = SFVec3:-29 13 0 raw=-29 13 0\",\n    \"007 T3.textBounds = SFVec2:57 28 raw=57 28\",\n    \"008 T3.lineBounds = ArrayField:[\n  55.46667 5.333333,\n  27.2 1\n] raw=(55.46666717529297 5.333333492279053) (27.200000762939453 1)\",\n    \"009 T4.origin = SFVec3:-26 0 0 raw=-26 0 0\",\n    \"010 T4.textBounds = SFVec2:26 17 raw=26 17\",\n    \"011 T4.lineBounds = ArrayField:[\n  18 3.2,\n  24.32 1\n] raw=(18 3.200000047683716) (24.31999969482422 1)\",\n    \"012 T5.origin = SFVec3:-1 0 0 raw=-1 0 0\",\n    \"013 T5.textBounds = SFVec2:2 1 raw=2 1\",\n    \"014 T5.lineBounds = ArrayField:0.5 6.4 raw=(0.5 6.400000095367432)\",\n    \"015 T6.origin = SFVec3:-1 0 0 raw=-1 0 0\",\n    \"016 T6.textBounds = SFVec2:25 49 raw=25 49\",\n    \"017 T6.lineBounds = ArrayField:[\n  12 48,\n  24 48\n] raw=(12 48) (24 48)\"\n  ]\n\n  url \"ecmascript:\n\nvar R_ = [];\nfunction strip (s) { return String (s) .replace (/https?:\\\\/\\\\/[^\\\\/]+\\\\//g, ''); }\nfunction show (v, d) {\n  if (typeof v === 'number') return Object.is (v, -0) ? 'n:-0' : 'n:' + v;\n  if (typeof v === 'string') return 's:' + JSON.stringify (strip (v));\n  if (v === null || v === undefined) return String (v);\n  if (typeof v === 'function') return 'fn';\n  if (typeof v === 'boolean') return 'b:' + v;\n  if (Array.isArray (v)) return 'A[' + v .map (function (x) { return show (x); }) .join (',') + ']';\n  var c = v .constructor;\n  return (c && c .name || '?') + ':' + String (v) + raw (v);\n}\n// The components of a field object at full double precision (String () rounds floats).\nfunction raw (v) {\n  if (typeof v .getTypeName !== 'function' || !v [Symbol .iterator] || v .getTypeName () .indexOf ('MF') === 0 && !v .length) return '';\n  try { var a = Array .from (v, function (x) { return typeof x === 'object' && x && x [Symbol .iterator] ? '(' + Array .from (x, function (y) { return typeof y === 'object' && y && y [Symbol .iterator] ? '(' + Array .from (y) .join (' ') + ')' : y; }) .join (' ') + ')' : x; }); return ' raw=' + a .join (' '); } catch (e) { return ' raw=ERR'; }\n}\nfunction errText (e) {\n  var n = e && e .name;\n  if (n === 'TypeError' || n === 'ReferenceError' || n === 'SyntaxError') return 'ERR ' + n + ' (engine wording)';\n  return 'ERR ' + n + ': ' + strip (e && e .message);\n}\nfunction T (n, f) {\n  var r;\n  try { r = show (f ()); } catch (e) { r = errText (e); }\n  R_ .push ((R_ .length < 10 ? '00' : R_ .length < 100 ? '0' : '') + R_ .length + ' ' + n + ' = ' + r);\n}\nfunction flush_ () { out = new MFString (... R_); }\n\nvar SELF;\nvar F_ = 0;\nfunction N (n) { return Browser .currentScene .getNamedNode (n); }\nfunction RD (t, tag) { ['origin', 'textBounds', 'lineBounds'] .forEach (function (f) { T (t + tag + '.' + f, function () { return N (t) [f]; }); }); }\n\nfunction initialize () {\n  SELF = this;\n\n  flush_ ();\n}\nfunction prepareEvents () {\n  ++ F_;\n  if (F_ === 40) { RD ('T1', ''); RD ('T2', ''); RD ('T3', ''); RD ('T4', ''); RD ('T5', ''); RD ('T6', ''); flush_ (); }\n}\n\n  \"\n}\n"
+ },
+ "warmupFrames": 8
+}
