@@ -132,5 +132,8 @@ w += T("-3.8 -3.4 0", f"TouchSensor {{ }} Shape {{ appearance {MAT('0.8 0.8 0.8'
 write("it-pick", w)
 d = {"size": [SIZE, SIZE], "t0": 946684800, "dt": 1 / 30, "settle": True, "console": True, "frames": 12, "capture": [10], "dump": [10, 11],
      "events": [], "pickProbes": grid}
-json.dump(d, open(os.path.join(root, "it-pick.json"), "w"), indent=1)
+# One row of probes per line, so that the file stays small and a diff of it stays readable.
+rows = ",\n  ".join(json.dumps(grid[r * 51:(r + 1) * 51], separators=(",", ":"))[1:-1] for r in range(51))
+head = json.dumps({k: v for k, v in d.items() if k != "pickProbes"}, separators=(",", ":"))
+open(os.path.join(root, "it-pick.json"), "w").write(head[:-1] + ',"pickProbes":[\n  ' + rows + "\n]}\n")
 print("it-static, it-runtime, it-extra, it-pick")
