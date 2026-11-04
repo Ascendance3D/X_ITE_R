@@ -1,0 +1,18 @@
+#X3D V4.0 utf8
+PROFILE Full
+COMPONENT ParticleSystems:3
+COMPONENT Shape:5
+NavigationInfo { type "FLY" }
+Viewpoint { position 0 0 0 orientation 0 0 1 0 }
+Background { skyColor 0.1 0.1 0.2 }
+DEF RUN Collision { }
+DEF PS ParticleSystem {
+  geometryType "POINT"
+  maxParticles 20
+  particleLifetime 1.6
+  lifetimeVariation 0
+  particleSize 0.2 0.2
+  
+  emitter PointEmitter { position -0.8 -0.3 -0.7 direction 1 0 0.35 speed 0.9 variation 0 }
+  appearance Appearance { material Material { diffuseColor 1 1 1 } texture PixelTexture { image 2 2 3 0xff0000 0x00ff00 0x0000ff 0xffffff } pointProperties PointProperties { pointSizeScaleFactor 5 pointSizeMaxValue 8 } }
+}

@@ -762,14 +762,9 @@ impl Runtime {
         let mut scene = x3d_parse::parse_bytes_gunzipped(data, url.as_str()).map_err(|err| {
             match err {
                 // GoldenGate.parseIntoScene names the url of a file that no parser handles (a data URL is not named).
-                x3d_parse::LoadError::NoHandler if url.scheme() == "data" => {
-                    "Error: Couldn't parse X3D. No suitable file handler found for 'data:' URL."
-                        .to_string()
+                x3d_parse::LoadError::NoHandler => {
+                    format!("Error: {}", x3d_parse::no_handler_message(url.as_str()))
                 }
-                x3d_parse::LoadError::NoHandler => format!(
-                    "Error: Couldn't parse X3D. No suitable file handler found for '{}'.",
-                    url.url
-                ),
                 err => format!("Error: {err}"),
             }
         })?;

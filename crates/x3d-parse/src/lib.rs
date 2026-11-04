@@ -11,6 +11,7 @@ mod data_url;
 mod dom;
 mod formats;
 mod gltf2;
+mod golden_gate;
 mod html;
 mod html_support;
 mod json;
@@ -24,6 +25,10 @@ mod xml;
 
 pub use data_url::{chromium_url_input, decode_data_url, is_data_url};
 pub use gltf2::{default_fetch as gltf_default_fetch, with_fetcher as with_gltf_fetcher};
+pub use golden_gate::{
+    GoldenGate, GoldenGateParser, ParserInput, ParserRef, ParserRegistry, builtin,
+    no_handler_message, same_parser,
+};
 pub use html::parse_html_x3d;
 pub use parser::{
     ContextCall, ParseError, Parser, error_console_text, take_error_detail, take_error_warnings,
@@ -236,112 +241,7 @@ fn golden_gate_input(
     world_url: &str,
     options: &ParseOptions,
 ) -> Result<Scene, LoadError> {
-    let mut svg_root = None;
-
-    // createInput ("STRING"): undefined when bytes decode to nothing.
-    let string = (data.is_empty() || !text.is_empty()).then_some(text.as_str());
-
-    // XML: "" for blank input, markup only, $.parseXML must succeed, root must be <X3D>.
-    if let Some(s) = string {
-        let trimmed = s.trim_start_matches(|c: char| c.is_whitespace() || c == '\u{feff}');
-
-        if trimmed.is_empty() {
-            return Ok(xml::empty_scene(world_url));
-        }
-
-        if trimmed.starts_with('<') {
-            if let Ok(root) = dom::parse_document(s) {
-                if root.name == "X3D" {
-                    let mut scene =
-                        xml::parse_x3d_element(&root, world_url).map_err(LoadError::Parse)?;
-
-                    // DOMIntegration shows the element of an Inline's scene (`scene [_x3d]`): the page parses this text.
-                    scene.xml_source = Some(s.to_string());
-                    return Ok(scene);
-                }
-
-                // The same parsed document is SVGParser's input.
-                svg_root = Some(root);
-            }
-        }
-
-        if is_valid_vrml(s) {
-            return Parser::new(s, world_url).parse().map_err(LoadError::Parse);
-        }
-
-        if let Ok(value) = json::json_parse(s) {
-            if json::is_valid(&value) {
-                let root = json::to_x3d_element(&value)
-                    .map_err(|message| LoadError::Parse(ParseError { message, line: 0 }))?;
-                let mut scene =
-                    xml::parse_x3d_element(&root, world_url).map_err(LoadError::Parse)?;
-
-                scene.encoding = "JSON".into();
-                return Ok(scene);
-            }
-
-            // GLTF2Parser (same JSON.parse result).
-            if gltf2::is_valid_gltf(&value) {
-                return gltf2::parse_gltf(&value, world_url)
-                    .map_err(|message| LoadError::Parse(ParseError { message, line: 0 }));
-            }
-        }
-    }
-
-    // GLBParser (container versions 2 and 3)
-    if gltf2::is_valid_glb(&data) {
-        return gltf2::parse_glb(&data, world_url)
-            .map_err(|message| LoadError::Parse(ParseError { message, line: 0 }));
-    }
-
-    if let Some(s) = string {
-        if formats::is_obj(s) {
-            return formats::parse_obj(s, world_url);
-        }
-
-        if formats::is_stl_ascii(s) {
-            return formats::parse_stl_ascii(s, world_url);
-        }
-    }
-
-    if formats::is_stl_binary(&data) {
-        return formats::parse_stl_binary(&data, world_url);
-    }
-
-    if let Some(s) = string {
-        if formats::is_ply_ascii(s) {
-            return formats::parse_ply_ascii(s, world_url);
-        }
-    }
-
-    if formats::is_ply_binary(&data) {
-        return formats::parse_ply_binary(&data, world_url);
-    }
-
-    // SVGParser: the document element must be <svg>.
-    if let Some(root) = &svg_root {
-        if svg::is_valid(root) {
-            return svg::parse_svg(root, world_url);
-        }
-    }
-
-    // The VRML 1.0 extension parser (x_ite-vrml1-parser) is added to GoldenGate's list after the
-    // built-in ones (GoldenGate.addParsers), only when the application registers it. It is not a
-    // parser of the pinned X_ITE 16.5.0, which rejects `#VRML V1.0` without it.
-    #[cfg(feature = "vrml1")]
-    if let (true, Some(s)) = (options.vrml1, string) {
-        if x3d_vrml1::is_vrml1(s) {
-            return x3d_vrml1::parse_str(s, world_url).map_err(|e| {
-                LoadError::Parse(ParseError {
-                    message: format!("{} (column {})", e.message, e.column),
-                    line: e.line,
-                })
-            });
-        }
-    }
-
-    let _ = options;
-    Err(LoadError::NoHandler)
+    GoldenGate::snapshot().parse_input(&data, &text, world_url, options)
 }
 
 /// X3DBrowser.importJS: `new JSONParser (scene)` with the JSON text as its input, parsed into a new scene (no GoldenGate checks).

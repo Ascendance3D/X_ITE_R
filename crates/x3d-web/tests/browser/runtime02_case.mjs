@@ -10,6 +10,8 @@
 // The input is real: Playwright's mouse, wheel and keyboard, and Chrome DevTools touch events. The values are
 // plain JSON without origins, so the two engines compare. Numbers are rounded where float32 fields print them.
 
+import { installTouchLog, wholeDelivery } from "./touchdelivery.mjs";
+
 // --- page helpers (they run in the page) ------------------------------------------------------------------------
 
 // Load `url` with browser.loadURL and wait for its "load". Returns the browser events of the load.
@@ -125,12 +127,28 @@ function served (env, from)
 
 async function touch (page, type, points)
 {
-   const cdp = page .cdp ??= await page .context () .newCDPSession (page);
+   const cdp   = page .cdp ??= await page .context () .newCDPSession (page);
+   const judge = points .length > 1 && (type === "touchStart" || type === "touchMove");
+   const since = judge ? await page .evaluate (installTouchLog) : 0;
 
    await cdp .send ("Input.dispatchTouchEvent", {
       type,
       touchPoints: points .map (([ x, y ], id) => ({ x, y, id, radiusX: 1, radiusY: 1, force: 1 })),
    });
+
+   // A two-finger event that the page saw as two events is not the input of the case (touchdelivery.mjs): the harness runs the case again.
+   if (judge)
+   {
+      await frames (page, 2);
+
+      const seen = await page .evaluate (since => window .touchLog .slice (since), since);
+
+      if (!wholeDelivery (seen, type .toLowerCase (), points))
+      {
+         page .touchSplit = (page .touchSplit ?? 0) + 1;
+         page .log ?.push (`touch delivery split: ${type} ${JSON .stringify (points)} arrived as ${JSON .stringify (seen)}`);
+      }
+   }
 }
 
 // A page clock the test holds: while frozen, `Date .now ()` returns one value that only `advance` moves. X_ITE_R reads the

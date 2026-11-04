@@ -1,0 +1,1308 @@
+{
+ "ok": true,
+ "dt": 0.03333333333333333,
+ "t0": 946684800,
+ "frames": 45,
+ "warmup": 8,
+ "seed": 15000021,
+ "stride": 28,
+ "node": "PS",
+ "steps": [
+  {
+   "frame": 1,
+   "time": 946684800.0333333,
+   "randomSeed": 1773901824.5869813,
+   "numParticles": 0,
+   "deltaTime": 0.0022222222222222222,
+   "creationTime": 946684800,
+   "createParticles": true,
+   "isActive": true,
+   "maxParticles": 1,
+   "numForces": 0,
+   "forces": [],
+   "forceDraws": []
+  },
+  {
+   "frame": 2,
+   "time": 946684800.0666667,
+   "randomSeed": 831581419.8063824,
+   "numParticles": 0,
+   "deltaTime": 0.004296296296296296,
+   "creationTime": 946684800,
+   "createParticles": true,
+   "isActive": true,
+   "maxParticles": 1,
+   "numForces": 0,
+   "forces": [],
+   "forceDraws": []
+  },
+  {
+   "frame": 3,
+   "time": 946684800.1,
+   "randomSeed": 2482752913.421939,
+   "numParticles": 0,
+   "deltaTime": 0.006232098765432098,
+   "creationTime": 946684800,
+   "createParticles": true,
+   "isActive": true,
+   "maxParticles": 1,
+   "numForces": 0,
+   "forces": [],
+   "forceDraws": []
+  },
+  {
+   "frame": 4,
+   "time": 946684800.1333333,
+   "randomSeed": 4229877307.015155,
+   "numParticles": 0,
+   "deltaTime": 0.008038847736625514,
+   "creationTime": 946684800,
+   "createParticles": true,
+   "isActive": true,
+   "maxParticles": 1,
+   "numForces": 0,
+   "forces": [],
+   "forceDraws": []
+  },
+  {
+   "frame": 5,
+   "time": 946684800.1666666,
+   "randomSeed": 3291396143.233662,
+   "numParticles": 0,
+   "deltaTime": 0.009725146776406035,
+   "creationTime": 946684800,
+   "createParticles": true,
+   "isActive": true,
+   "maxParticles": 1,
+   "numForces": 0,
+   "forces": [],
+   "forceDraws": []
+  },
+  {
+   "frame": 6,
+   "time": 946684800.2,
+   "randomSeed": 52119851.987864904,
+   "numParticles": 0,
+   "deltaTime": 0.011299025880201187,
+   "creationTime": 946684800,
+   "createParticles": true,
+   "isActive": true,
+   "maxParticles": 1,
+   "numForces": 0,
+   "forces": [],
+   "forceDraws": []
+  },
+  {
+   "frame": 7,
+   "time": 946684800.2333333,
+   "randomSeed": 4202592564.0215077,
+   "numParticles": 0,
+   "deltaTime": 0.012767979710409997,
+   "creationTime": 946684800,
+   "createParticles": true,
+   "isActive": true,
+   "maxParticles": 1,
+   "numForces": 0,
+   "forces": [],
+   "forceDraws": []
+  },
+  {
+   "frame": 8,
+   "time": 946684800.2666667,
+   "randomSeed": 2811780830.345331,
+   "numParticles": 1,
+   "deltaTime": 0.014139003285271552,
+   "creationTime": 946684800.2666667,
+   "createParticles": true,
+   "isActive": true,
+   "maxParticles": 1,
+   "numForces": 0,
+   "forces": [],
+   "forceDraws": []
+  },
+  {
+   "frame": 9,
+   "time": 946684800.3,
+   "randomSeed": 1270251889.7042465,
+   "numParticles": 1,
+   "deltaTime": 0.01541862528847567,
+   "creationTime": 946684800.2666667,
+   "createParticles": true,
+   "isActive": true,
+   "maxParticles": 1,
+   "numForces": 0,
+   "forces": [],
+   "forceDraws": []
+  },
+  {
+   "frame": 10,
+   "time": 946684800.3333334,
+   "randomSeed": 3367966804.215834,
+   "numParticles": 1,
+   "deltaTime": 0.016612939158132847,
+   "creationTime": 946684800.2666667,
+   "createParticles": true,
+   "isActive": true,
+   "maxParticles": 1,
+   "numForces": 0,
+   "forces": [],
+   "forceDraws": []
+  },
+  {
+   "frame": 11,
+   "time": 946684800.3666667,
+   "randomSeed": 1283409480.7011828,
+   "numParticles": 1,
+   "deltaTime": 0.017727632103146214,
+   "creationTime": 946684800.2666667,
+   "createParticles": true,
+   "isActive": true,
+   "maxParticles": 1,
+   "numForces": 0,
+   "forces": [],
+   "forceDraws": []
+  },
+  {
+   "frame": 12,
+   "time": 946684800.4,
+   "randomSeed": 2343688754.4543176,
+   "numParticles": 1,
+   "deltaTime": 0.018768012185158688,
+   "creationTime": 946684800.2666667,
+   "createParticles": true,
+   "isActive": true,
+   "maxParticles": 1,
+   "numForces": 0,
+   "forces": [],
+   "forceDraws": []
+  },
+  {
+   "frame": 13,
+   "time": 946684800.4333333,
+   "randomSeed": 3174790522.2608113,
+   "numParticles": 1,
+   "deltaTime": 0.019739033595036995,
+   "creationTime": 946684800.2666667,
+   "createParticles": true,
+   "isActive": true,
+   "maxParticles": 1,
+   "numForces": 0,
+   "forces": [],
+   "forceDraws": []
+  },
+  {
+   "frame": 14,
+   "time": 946684800.4666667,
+   "randomSeed": 2907336699.323083,
+   "numParticles": 1,
+   "deltaTime": 0.020645320244256752,
+   "creationTime": 946684800.2666667,
+   "createParticles": true,
+   "isActive": true,
+   "maxParticles": 1,
+   "numForces": 0,
+   "forces": [],
+   "forceDraws": []
+  },
+  {
+   "frame": 15,
+   "time": 946684800.5,
+   "randomSeed": 2955199783.311939,
+   "numParticles": 1,
+   "deltaTime": 0.021491187783528525,
+   "creationTime": 946684800.2666667,
+   "createParticles": true,
+   "isActive": true,
+   "maxParticles": 1,
+   "numForces": 0,
+   "forces": [],
+   "forceDraws": []
+  },
+  {
+   "frame": 16,
+   "time": 946684800.5333333,
+   "randomSeed": 2445676896.4305716,
+   "numParticles": 1,
+   "deltaTime": 0.022280664153515515,
+   "creationTime": 946684800.2666667,
+   "createParticles": true,
+   "isActive": true,
+   "maxParticles": 1,
+   "numForces": 0,
+   "forces": [],
+   "forceDraws": []
+  },
+  {
+   "frame": 17,
+   "time": 946684800.5666667,
+   "randomSeed": 1377017988.679388,
+   "numParticles": 1,
+   "deltaTime": 0.023017508765503368,
+   "creationTime": 946684800.2666667,
+   "createParticles": true,
+   "isActive": true,
+   "maxParticles": 1,
+   "numForces": 0,
+   "forces": [],
+   "forceDraws": []
+  },
+  {
+   "frame": 18,
+   "time": 946684800.6,
+   "randomSeed": 265438630.93819776,
+   "numParticles": 1,
+   "deltaTime": 0.023705230403358698,
+   "creationTime": 946684800.2666667,
+   "createParticles": true,
+   "isActive": true,
+   "maxParticles": 1,
+   "numForces": 0,
+   "forces": [],
+   "forceDraws": []
+  },
+  {
+   "frame": 19,
+   "time": 946684800.6333333,
+   "randomSeed": 3570638245.168646,
+   "numParticles": 1,
+   "deltaTime": 0.024347103932023672,
+   "creationTime": 946684800.2666667,
+   "createParticles": true,
+   "isActive": true,
+   "maxParticles": 1,
+   "numForces": 0,
+   "forces": [],
+   "forceDraws": []
+  },
+  {
+   "frame": 20,
+   "time": 946684800.6666666,
+   "randomSeed": 2541446194.408273,
+   "numParticles": 1,
+   "deltaTime": 0.024946185892110985,
+   "creationTime": 946684800.2666667,
+   "createParticles": true,
+   "isActive": true,
+   "maxParticles": 1,
+   "numForces": 0,
+   "forces": [],
+   "forceDraws": []
+  },
+  {
+   "frame": 21,
+   "time": 946684800.7,
+   "randomSeed": 3687515726.1414332,
+   "numParticles": 1,
+   "deltaTime": 0.02550532905485914,
+   "creationTime": 946684800.2666667,
+   "createParticles": true,
+   "isActive": true,
+   "maxParticles": 1,
+   "numForces": 0,
+   "forces": [],
+   "forceDraws": []
+  },
+  {
+   "frame": 22,
+   "time": 946684800.7333333,
+   "randomSeed": 923449904.7849926,
+   "numParticles": 1,
+   "deltaTime": 0.02602719600675742,
+   "creationTime": 946684800.2666667,
+   "createParticles": true,
+   "isActive": true,
+   "maxParticles": 1,
+   "numForces": 0,
+   "forces": [],
+   "forceDraws": []
+  },
+  {
+   "frame": 23,
+   "time": 946684800.7666667,
+   "randomSeed": 1640903212.6179473,
+   "numParticles": 1,
+   "deltaTime": 0.026514271828529147,
+   "creationTime": 946684800.2666667,
+   "createParticles": true,
+   "isActive": true,
+   "maxParticles": 1,
+   "numForces": 0,
+   "forces": [],
+   "forceDraws": []
+  },
+  {
+   "frame": 24,
+   "time": 946684800.8,
+   "randomSeed": 3852856130.102937,
+   "numParticles": 1,
+   "deltaTime": 0.026968875928849428,
+   "creationTime": 946684800.2666667,
+   "createParticles": true,
+   "isActive": true,
+   "maxParticles": 1,
+   "numForces": 0,
+   "forces": [],
+   "forceDraws": []
+  },
+  {
+   "frame": 25,
+   "time": 946684800.8333334,
+   "randomSeed": 3134958215.270086,
+   "numParticles": 1,
+   "deltaTime": 0.027393173089148355,
+   "creationTime": 946684800.2666667,
+   "createParticles": true,
+   "isActive": true,
+   "maxParticles": 1,
+   "numForces": 0,
+   "forces": [],
+   "forceDraws": []
+  },
+  {
+   "frame": 26,
+   "time": 946684800.8666667,
+   "randomSeed": 3073388425.284421,
+   "numParticles": 1,
+   "deltaTime": 0.02778918377209402,
+   "creationTime": 946684800.2666667,
+   "createParticles": true,
+   "isActive": true,
+   "maxParticles": 1,
+   "numForces": 0,
+   "forces": [],
+   "forceDraws": []
+  },
+  {
+   "frame": 27,
+   "time": 946684800.9,
+   "randomSeed": 497899990.8840736,
+   "numParticles": 1,
+   "deltaTime": 0.028158793742843306,
+   "creationTime": 946684800.2666667,
+   "createParticles": true,
+   "isActive": true,
+   "maxParticles": 1,
+   "numForces": 0,
+   "forces": [],
+   "forceDraws": []
+  },
+  {
+   "frame": 28,
+   "time": 946684800.9333333,
+   "randomSeed": 1035776713.7588395,
+   "numParticles": 1,
+   "deltaTime": 0.028503763048875974,
+   "creationTime": 946684800.2666667,
+   "createParticles": true,
+   "isActive": true,
+   "maxParticles": 1,
+   "numForces": 0,
+   "forces": [],
+   "forceDraws": []
+  },
+  {
+   "frame": 29,
+   "time": 946684800.9666667,
+   "randomSeed": 790416365.8159668,
+   "numParticles": 1,
+   "deltaTime": 0.02882573440117313,
+   "creationTime": 946684800.2666667,
+   "createParticles": true,
+   "isActive": true,
+   "maxParticles": 1,
+   "numForces": 0,
+   "forces": [],
+   "forceDraws": []
+  },
+  {
+   "frame": 30,
+   "time": 946684801,
+   "randomSeed": 3713324696.135424,
+   "numParticles": 1,
+   "deltaTime": 0.029126240996650475,
+   "creationTime": 946684800.2666667,
+   "createParticles": true,
+   "isActive": true,
+   "maxParticles": 1,
+   "numForces": 0,
+   "forces": [],
+   "forceDraws": []
+  },
+  {
+   "frame": 31,
+   "time": 946684801.0333333,
+   "randomSeed": 3766390248.123069,
+   "numParticles": 1,
+   "deltaTime": 0.029406713819095997,
+   "creationTime": 946684800.2666667,
+   "createParticles": true,
+   "isActive": true,
+   "maxParticles": 1,
+   "numForces": 0,
+   "forces": [],
+   "forceDraws": []
+  },
+  {
+   "frame": 32,
+   "time": 946684801.0666667,
+   "randomSeed": 1990699231.5365043,
+   "numParticles": 1,
+   "deltaTime": 0.029668488453378487,
+   "creationTime": 946684800.2666667,
+   "createParticles": true,
+   "isActive": true,
+   "maxParticles": 1,
+   "numForces": 0,
+   "forces": [],
+   "forceDraws": []
+  },
+  {
+   "frame": 33,
+   "time": 946684801.1,
+   "randomSeed": 2938563533.3158126,
+   "numParticles": 1,
+   "deltaTime": 0.029912811445375477,
+   "creationTime": 946684800.2666667,
+   "createParticles": true,
+   "isActive": true,
+   "maxParticles": 1,
+   "numForces": 0,
+   "forces": [],
+   "forceDraws": []
+  },
+  {
+   "frame": 34,
+   "time": 946684801.1333333,
+   "randomSeed": 1102302231.7433503,
+   "numParticles": 1,
+   "deltaTime": 0.030140846237906003,
+   "creationTime": 946684800.2666667,
+   "createParticles": true,
+   "isActive": true,
+   "maxParticles": 1,
+   "numForces": 0,
+   "forces": [],
+   "forceDraws": []
+  },
+  {
+   "frame": 35,
+   "time": 946684801.1666666,
+   "randomSeed": 3257674785.2415133,
+   "numParticles": 1,
+   "deltaTime": 0.03035367871093449,
+   "creationTime": 946684800.2666667,
+   "createParticles": true,
+   "isActive": true,
+   "maxParticles": 1,
+   "numForces": 0,
+   "forces": [],
+   "forceDraws": []
+  },
+  {
+   "frame": 36,
+   "time": 946684801.2,
+   "randomSeed": 3442533172.198473,
+   "numParticles": 1,
+   "deltaTime": 0.030552322352427743,
+   "creationTime": 946684800.2666667,
+   "createParticles": true,
+   "isActive": true,
+   "maxParticles": 1,
+   "numForces": 0,
+   "forces": [],
+   "forceDraws": []
+  },
+  {
+   "frame": 37,
+   "time": 946684801.2333333,
+   "randomSeed": 3603280544.161046,
+   "numParticles": 1,
+   "deltaTime": 0.030737723084488116,
+   "creationTime": 946684800.2666667,
+   "createParticles": true,
+   "isActive": true,
+   "maxParticles": 1,
+   "numForces": 0,
+   "forces": [],
+   "forceDraws": []
+  },
+  {
+   "frame": 38,
+   "time": 946684801.2666667,
+   "randomSeed": 2624544182.3889256,
+   "numParticles": 1,
+   "deltaTime": 0.030910763767744466,
+   "creationTime": 946684800.2666667,
+   "createParticles": true,
+   "isActive": true,
+   "maxParticles": 1,
+   "numForces": 0,
+   "forces": [],
+   "forceDraws": []
+  },
+  {
+   "frame": 39,
+   "time": 946684801.3,
+   "randomSeed": 1828155162.5743494,
+   "numParticles": 1,
+   "deltaTime": 0.031072268405450392,
+   "creationTime": 946684800.2666667,
+   "createParticles": true,
+   "isActive": true,
+   "maxParticles": 1,
+   "numForces": 0,
+   "forces": [],
+   "forceDraws": []
+  },
+  {
+   "frame": 40,
+   "time": 946684801.3333334,
+   "randomSeed": 961232056.7761958,
+   "numParticles": 1,
+   "deltaTime": 0.031223006067309256,
+   "creationTime": 946684800.2666667,
+   "createParticles": true,
+   "isActive": true,
+   "maxParticles": 1,
+   "numForces": 0,
+   "forces": [],
+   "forceDraws": []
+  },
+  {
+   "frame": 41,
+   "time": 946684801.3666667,
+   "randomSeed": 2304445601.4634542,
+   "numParticles": 1,
+   "deltaTime": 0.03136369455171086,
+   "creationTime": 946684800.2666667,
+   "createParticles": true,
+   "isActive": true,
+   "maxParticles": 1,
+   "numForces": 0,
+   "forces": [],
+   "forceDraws": []
+  },
+  {
+   "frame": 42,
+   "time": 946684801.4,
+   "randomSeed": 1081406592.7482154,
+   "numParticles": 1,
+   "deltaTime": 0.031495003803819026,
+   "creationTime": 946684800.2666667,
+   "createParticles": true,
+   "isActive": true,
+   "maxParticles": 1,
+   "numForces": 0,
+   "forces": [],
+   "forceDraws": []
+  },
+  {
+   "frame": 43,
+   "time": 946684801.4333333,
+   "randomSeed": 879186403.7952985,
+   "numParticles": 1,
+   "deltaTime": 0.03161755910578665,
+   "creationTime": 946684800.2666667,
+   "createParticles": true,
+   "isActive": true,
+   "maxParticles": 1,
+   "numForces": 0,
+   "forces": [],
+   "forceDraws": []
+  },
+  {
+   "frame": 44,
+   "time": 946684801.4666667,
+   "randomSeed": 465142917.89170045,
+   "numParticles": 1,
+   "deltaTime": 0.03173194405428976,
+   "creationTime": 946684800.2666667,
+   "createParticles": true,
+   "isActive": true,
+   "maxParticles": 1,
+   "numForces": 0,
+   "forces": [],
+   "forceDraws": []
+  },
+  {
+   "frame": 45,
+   "time": 946684801.5,
+   "randomSeed": 1269390928.7044468,
+   "numParticles": 1,
+   "deltaTime": 0.03183870333955933,
+   "creationTime": 946684800.2666667,
+   "createParticles": true,
+   "isActive": true,
+   "maxParticles": 1,
+   "numForces": 0,
+   "forces": [],
+   "forceDraws": []
+  }
+ ],
+ "dumps": {
+  "15": {
+   "numParticles": 1,
+   "total": 1,
+   "offset": 0
+  },
+  "30": {
+   "numParticles": 1,
+   "total": 1,
+   "offset": 28
+  },
+  "45": {
+   "numParticles": 1,
+   "total": 1,
+   "offset": 56
+  }
+ },
+ "log": [],
+ "vrmlLoad": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Full\n\nCOMPONENT ParticleSystems : 3\nCOMPONENT Shape : 4\n\nNavigationInfo {\n  type \"FLY\"\n}\n\nViewpoint {\n  position 0 0 0\n}\n\nBackground {\n  skyColor 0.1 0.1 0.2\n}\n\nDEF RUN Collision { }\n\nDEF PS ParticleSystem {\n  geometryType \"POINT\"\n  maxParticles 1\n  particleLifetime 0.25\n  lifetimeVariation 0\n  particleSize 0.2 0.2\n  emitter PointEmitter {\n    position 0.3 -0.3 -0.5\n    variation 0\n  }\n  appearance Appearance {\n    pointProperties PointProperties {\n      pointSizeScaleFactor 20\n      pointSizeMaxValue 40\n    }\n    material Material {\n      diffuseColor 1 1 1\n    }\n  }\n}\n",
+ "init": {
+  "deltaTimeBeforeReset": 0.014139003285271552,
+  "numParticlesAfterLoad": 0,
+  "creationTimeAfterLoad": 946684800,
+  "explosive": false
+ },
+ "info": {
+  "geometryType": 0,
+  "maxParticles": 1,
+  "particleLifetime": 0.25,
+  "lifetimeVariation": 0,
+  "emitter": "PointEmitter",
+  "numForces": 0,
+  "boundedHierarchyRoot": -1,
+  "stride": 28
+ },
+ "collisionProbes": {
+  "5": {
+   "shapes": [],
+   "closest": [
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      0.5773502691896257,
+      -0.577350269189626,
+      -0.5773502691896257
+     ]
+    },
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      -0.5773502691896257,
+      -0.5773502691896257,
+      -0.5773502691896257
+     ]
+    },
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      -0.5773502691896257,
+      -0.577350269189626,
+      0.5773502691896257
+     ]
+    },
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      0.5773502691896256,
+      -0.5773502691896261,
+      -0.5773502691896256
+     ]
+    },
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      0.577350269189626,
+      -0.577350269189626,
+      0.5773502691896254
+     ]
+    },
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      0.5773502691896258,
+      -0.5773502691896256,
+      -0.5773502691896258
+     ]
+    },
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      0.5773502691896258,
+      -0.5773502691896256,
+      -0.5773502691896258
+     ]
+    },
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      0.11547005383792532,
+      -0.5773502691896256,
+      -0.8082903768654761
+     ]
+    },
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      0.5773502691896258,
+      -0.5773502691896255,
+      -0.5773502691896258
+     ]
+    }
+   ],
+   "constrained": [
+    [
+     0,
+     0,
+     -0.01
+    ],
+    [
+     0,
+     0,
+     -0.1
+    ],
+    [
+     0,
+     0,
+     -0.3
+    ],
+    [
+     0.2,
+     0,
+     -0.2
+    ],
+    [
+     -0.05,
+     0,
+     -0.04
+    ],
+    [
+     0,
+     0,
+     0.1
+    ]
+   ],
+   "pose": {
+    "position": [
+     0,
+     0,
+     0
+    ],
+    "orientation": [
+     0,
+     0,
+     1,
+     0
+    ],
+    "centerOfRotation": [
+     0,
+     0,
+     0
+    ],
+    "viewpoint": "",
+    "description": "",
+    "viewer": "FLY"
+   },
+   "positionOffset": [
+    0,
+    0,
+    0
+   ],
+   "collisions": {}
+  },
+  "15": {
+   "shapes": [
+    "PS"
+   ],
+   "closest": [
+    {
+     "id": 0,
+     "shape": "PS",
+     "distance": 0.29999992746284243,
+     "normal": [
+      -1.110223024625157e-16,
+      0,
+      1
+     ]
+    },
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      -0.5773502691896257,
+      -0.5773502691896257,
+      -0.5773502691896257
+     ]
+    },
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      -0.5773502691896257,
+      -0.577350269189626,
+      0.5773502691896257
+     ]
+    },
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      0.5773502691896256,
+      -0.5773502691896261,
+      -0.5773502691896256
+     ]
+    },
+    {
+     "id": 0,
+     "shape": "PS",
+     "distance": 0.29999992746284243,
+     "normal": [
+      0,
+      1.110223024625157e-16,
+      1
+     ]
+    },
+    {
+     "id": 0,
+     "shape": "PS",
+     "distance": 0.4999999231136416,
+     "normal": [
+      0,
+      0,
+      1
+     ]
+    },
+    {
+     "id": 0,
+     "shape": "PS",
+     "distance": 0.5799999397023898,
+     "normal": [
+      0,
+      0,
+      1
+     ]
+    },
+    {
+     "id": 0,
+     "shape": "PS",
+     "distance": 0.2199999108740942,
+     "normal": [
+      0,
+      0,
+      1
+     ]
+    },
+    {
+     "id": 0,
+     "shape": "PS",
+     "distance": 0.5799999397023898,
+     "normal": [
+      0,
+      0,
+      1
+     ]
+    }
+   ],
+   "constrained": [
+    [
+     0,
+     0,
+     -0.01
+    ],
+    [
+     0,
+     0,
+     -0.1
+    ],
+    [
+     0,
+     0,
+     0
+    ],
+    [
+     0.2,
+     0,
+     -0.2
+    ],
+    [
+     -0.05,
+     0,
+     -0.04
+    ],
+    [
+     0,
+     0,
+     0.1
+    ]
+   ],
+   "pose": {
+    "position": [
+     0,
+     0,
+     0
+    ],
+    "orientation": [
+     0,
+     0,
+     1,
+     0
+    ],
+    "centerOfRotation": [
+     0,
+     0,
+     0
+    ],
+    "viewpoint": "",
+    "description": "",
+    "viewer": "FLY"
+   },
+   "positionOffset": [
+    0,
+    0,
+    0
+   ],
+   "collisions": {}
+  },
+  "30": {
+   "shapes": [
+    "PS"
+   ],
+   "closest": [
+    {
+     "id": 0,
+     "shape": "PS",
+     "distance": 0.29999992746284243,
+     "normal": [
+      -1.110223024625157e-16,
+      0,
+      1
+     ]
+    },
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      -0.5773502691896257,
+      -0.5773502691896257,
+      -0.5773502691896257
+     ]
+    },
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      -0.5773502691896257,
+      -0.577350269189626,
+      0.5773502691896257
+     ]
+    },
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      0.5773502691896256,
+      -0.5773502691896261,
+      -0.5773502691896256
+     ]
+    },
+    {
+     "id": 0,
+     "shape": "PS",
+     "distance": 0.29999992746284243,
+     "normal": [
+      0,
+      1.110223024625157e-16,
+      1
+     ]
+    },
+    {
+     "id": 0,
+     "shape": "PS",
+     "distance": 0.4999999231136416,
+     "normal": [
+      0,
+      0,
+      1
+     ]
+    },
+    {
+     "id": 0,
+     "shape": "PS",
+     "distance": 0.5799999397023898,
+     "normal": [
+      0,
+      0,
+      1
+     ]
+    },
+    {
+     "id": 0,
+     "shape": "PS",
+     "distance": 0.2199999108740942,
+     "normal": [
+      0,
+      0,
+      1
+     ]
+    },
+    {
+     "id": 0,
+     "shape": "PS",
+     "distance": 0.5799999397023898,
+     "normal": [
+      0,
+      0,
+      1
+     ]
+    }
+   ],
+   "constrained": [
+    [
+     0,
+     0,
+     -0.01
+    ],
+    [
+     0,
+     0,
+     -0.1
+    ],
+    [
+     0,
+     0,
+     0
+    ],
+    [
+     0.2,
+     0,
+     -0.2
+    ],
+    [
+     -0.05,
+     0,
+     -0.04
+    ],
+    [
+     0,
+     0,
+     0.1
+    ]
+   ],
+   "pose": {
+    "position": [
+     0,
+     0,
+     0
+    ],
+    "orientation": [
+     0,
+     0,
+     1,
+     0
+    ],
+    "centerOfRotation": [
+     0,
+     0,
+     0
+    ],
+    "viewpoint": "",
+    "description": "",
+    "viewer": "FLY"
+   },
+   "positionOffset": [
+    0,
+    0,
+    0
+   ],
+   "collisions": {}
+  },
+  "45": {
+   "shapes": [
+    "PS"
+   ],
+   "closest": [
+    {
+     "id": 0,
+     "shape": "PS",
+     "distance": 0.29999992746284243,
+     "normal": [
+      -1.110223024625157e-16,
+      0,
+      1
+     ]
+    },
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      -0.5773502691896257,
+      -0.5773502691896257,
+      -0.5773502691896257
+     ]
+    },
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      -0.5773502691896257,
+      -0.577350269189626,
+      0.5773502691896257
+     ]
+    },
+    {
+     "id": -1,
+     "shape": null,
+     "distance": 3.200000047683716,
+     "normal": [
+      0.5773502691896256,
+      -0.5773502691896261,
+      -0.5773502691896256
+     ]
+    },
+    {
+     "id": 0,
+     "shape": "PS",
+     "distance": 0.29999992746284243,
+     "normal": [
+      0,
+      1.110223024625157e-16,
+      1
+     ]
+    },
+    {
+     "id": 0,
+     "shape": "PS",
+     "distance": 0.4999999231136416,
+     "normal": [
+      0,
+      0,
+      1
+     ]
+    },
+    {
+     "id": 0,
+     "shape": "PS",
+     "distance": 0.5799999397023898,
+     "normal": [
+      0,
+      0,
+      1
+     ]
+    },
+    {
+     "id": 0,
+     "shape": "PS",
+     "distance": 0.2199999108740942,
+     "normal": [
+      0,
+      0,
+      1
+     ]
+    },
+    {
+     "id": 0,
+     "shape": "PS",
+     "distance": 0.5799999397023898,
+     "normal": [
+      0,
+      0,
+      1
+     ]
+    }
+   ],
+   "constrained": [
+    [
+     0,
+     0,
+     -0.01
+    ],
+    [
+     0,
+     0,
+     -0.1
+    ],
+    [
+     0,
+     0,
+     0
+    ],
+    [
+     0.2,
+     0,
+     -0.2
+    ],
+    [
+     -0.05,
+     0,
+     -0.04
+    ],
+    [
+     0,
+     0,
+     0.1
+    ]
+   ],
+   "pose": {
+    "position": [
+     0,
+     0,
+     0
+    ],
+    "orientation": [
+     0,
+     0,
+     1,
+     0
+    ],
+    "centerOfRotation": [
+     0,
+     0,
+     0
+    ],
+    "viewpoint": "",
+    "description": "",
+    "viewer": "FLY"
+   },
+   "positionOffset": [
+    0,
+    0,
+    0
+   ],
+   "collisions": {}
+  }
+ },
+ "geometry": {
+  "numForces": 0
+ },
+ "vrmlEnd": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Full\n\nCOMPONENT ParticleSystems : 3\nCOMPONENT Shape : 4\n\nNavigationInfo {\n  type \"FLY\"\n}\n\nViewpoint {\n  position 0 0 0\n}\n\nBackground {\n  skyColor 0.1 0.1 0.2\n}\n\nDEF RUN Collision { }\n\nDEF PS ParticleSystem {\n  geometryType \"POINT\"\n  maxParticles 1\n  particleLifetime 0.25\n  lifetimeVariation 0\n  particleSize 0.2 0.2\n  emitter PointEmitter {\n    position 0.3 -0.3 -0.5\n    variation 0\n  }\n  appearance Appearance {\n    pointProperties PointProperties {\n      pointSizeScaleFactor 20\n      pointSizeMaxValue 40\n    }\n    material Material {\n      diffuseColor 1 1 1\n    }\n  }\n}\n",
+ "console": [],
+ "animateCalls": 45,
+ "fileF32": "js.f32"
+}
