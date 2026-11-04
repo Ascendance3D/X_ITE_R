@@ -17,6 +17,7 @@ import { dirname, join, normalize } from "node:path";
 import { fileURLToPath } from "node:url";
 import { chromium } from "playwright";
 import { compareImages } from "./api_case.mjs";
+import { TOUCH_ATTEMPTS } from "./touchdelivery.mjs";
 import { CASE_GROUPS as FALLBACK01_GROUPS } from "./fallback01_case.mjs";
 import { CASE_GROUPS as DATAURL01_GROUPS } from "./dataurl01_case.mjs";
 import { CASE_GROUPS as SCRIPTURL01_GROUPS } from "./scripturl01_case.mjs";
@@ -896,12 +897,28 @@ export function referenceCases (file, { skip = false } = { })
 
             test (key, { skip: (ONLY && ONLY !== key) || group .skipCases ?.[name] || false, timeout: group .timeout ?? CASE_TIMEOUT }, async () =>
             {
-               const page = await openPage (group .context);
+               let page = await openPage (group .context);
 
                try
                {
                   const pictures = { };
-                  const ours     = splitPictures (await run (page, env ()), key, pictures);
+                  let   result   = await run (page, env ());
+
+                  // Input that did not arrive as the case says (touchdelivery.mjs) is not a test of the viewer: run the case again in a
+                  // new page, and fail when every attempt had it, with the delivery in the message. A viewer difference never retries.
+                  for (let attempt = 1; page .touchSplit && attempt < TOUCH_ATTEMPTS; ++ attempt)
+                  {
+                     console .warn (`${key}: attempt ${attempt} had a split touch event, run again\n${page .log .filter (line => line .startsWith ("touch delivery split")) .join ("\n")}`);
+
+                     await page .context () .close ();
+
+                     page   = await openPage (group .context);
+                     result = await run (page, env ());
+                  }
+
+                  assert .ok (!page .touchSplit, `${key}: the touch events arrived split in ${TOUCH_ATTEMPTS} attempts\n${page .log .filter (line => line .startsWith ("touch delivery split")) .join ("\n")}`);
+
+                  const ours = splitPictures (result, key, pictures);
                   let   theirs   = reference .values [key];
 
                   assert .ok (theirs, `no X_ITE recording of ${key}`);
