@@ -1,3 +1,9 @@
+# Line endings. Every text file in the index uses LF (measured: 7589 text files i/lf, none i/crlf). The oracle tests compare scene
+# text, including the CR bytes inside Script url strings, with recordings made from LF files. A Windows checkout with the system
+# setting core.autocrlf=true wrote CRLF into every .wrl fixture, so every Windows comparison of scene text differed by "\r\n"
+# against "\n" (Windows runner, 2026-11-04). This rule gives the working tree LF on every platform, whatever core.autocrlf says.
+* text=auto eol=lf
+
 # GitHub Linguist (language statistics only; no effect on checkout, diff or merge).
 # Measured 2026-10-23 on master b7b34de: GitHub reports JavaScript 43.1 %, Rust 37.2 %. Almost all of that
 # JavaScript is reference material the port is checked against, not code this project maintains or ships.
