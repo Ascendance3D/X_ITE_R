@@ -267,7 +267,7 @@ const KNOWN_DIFFERENCES = {
    // FileLoader.createX3DFromURL returns, and that returns `loadDocument (...)`, which returns nothing, so the field is always
    // undefined, nothing is aborted, and the last response to arrive replaces the scene (B over C, B over A: the url field says C or A).
    // X_ITE_R never shows B: a result whose request is not the current one is dropped (`inline_request_is_current`, crates/x3d-runtime
-   // src/loader.rs and inline.rs; lifecycle safety, docs/adr/0014). Only the scene shown and its Script's print differ.
+   // src/loader.rs and inline.rs). Owner-approved difference, docs/adr/0014 section 5. Only the scene shown and its Script's print differ.
    "inlineHold.newerFirst": [
       [ [ "steps", "bReleased", "shown" ], "blue", "green" ],
       [ [ "steps", "bReleased", "seq" ], [ "log: B initialize" ], [ ] ],
