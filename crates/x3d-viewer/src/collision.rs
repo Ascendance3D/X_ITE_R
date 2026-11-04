@@ -8,10 +8,11 @@
 //!
 //! An active ParticleSystem is a collision shape too (X3DShapeNode.traverse COLLISION): each drawn particle is one
 //! collision shape under its instance matrix, the particles of a system one [`CShape`] with [`CShape::instances`]
-//! (consecutive shape indices) that the GPU draws at once. With the GPU its POINT particles are drawn as 1 px points like Depth2.vs does,
+//! (consecutive shape indices) that the GPU draws at once. With the GPU its POINT particles are drawn as 1 px points like Depth2.vs does
+//! (point sprites inside the round point mask when the appearance has PointProperties),
 //! and its LINE particles are rasterized here by GL's diamond-exit rule (a WebGPU line list covers other pixels) and
 //! merged into the read-back buffer. The CPU stand-in samples the triangles at the pixel centers, covers the pixel of
-//! each POINT particle like a 1 px gl.POINTS and draws the LINE particles with the same diamond-exit rasterization after
+//! each POINT particle like a 1 px gl.POINTS (a point sprite with PointProperties) and draws the LINE particles with the same diamond-exit rasterization after
 //! them; neither path draws the points and lines of PointSet and LineSet shapes. LINE particles wider than
 //! ALIASED_LINE_WIDTH_RANGE [1] are the triangles of the last DISPLAY pass instead (displaySimpleInstancedThick,
 //! `Viewer3d::collision_world`), drawn like other triangles; narrower gl.lineWidth lines stay 1 px (measured).
@@ -50,6 +51,10 @@ pub struct CShape {
     /// The particles of a ParticleSystem as consecutive collision shapes (`model_view` and `instance` are then the
     /// system's and unused): particle k is the shape under `matrices [k]`.
     pub instances: Option<CInstances>,
+    /// The PointProperties of the appearance of a POINT particle (Appearance.getStyleProperties (0)): the depth shader draws
+    /// its points as sprites of `getPointSize (vertex)` inside the round point mask (Depth2.vs / Depth2.fs with
+    /// X3D_STYLE_PROPERTIES), not as 1 px points. `None` otherwise.
+    pub point_style: Option<x3d_render::traverse::PointParams>,
     /// A GaussianSplats shape (`geometry` is empty) and the viewport of the display it was collected in: the collision
     /// depth buffer draws it with the splat program. There is no CPU stand-in for it.
     pub splats: Option<(Rc<x3d_render::splats::SplatDraw>, [f64; 4])>,
@@ -282,6 +287,83 @@ fn point_fragment(
     Some((x as usize, y as usize, (depth - near) / (far - near)))
 }
 
+/// gl_PointSize of Depth2.vs with X3D_STYLE_PROPERTIES (PointSize2.glsl getPointSize without X3D_TEXTURE: the depth shader has
+/// none): `vertex` is the particle's point in the model-view space of the viewpoint, the PointProperties' size clamped and,
+/// above one pixel, one pixel larger. Evaluated in f32 like the shader.
+fn depth_point_size(style: &x3d_render::traverse::PointParams, vertex: &Vector3) -> f32 {
+    let dl = (vertex.x * vertex.x + vertex.y * vertex.y + vertex.z * vertex.z).sqrt() as f32;
+    let [a0, a1, a2] = style.attenuation.map(|v| v as f32);
+    let mut size = style.scale_factor as f32;
+    size /= a0 + a1 * dl + a2 * (dl * dl);
+    // GLSL clamp (x, min, max) = min (max (x, min), max)
+    size = size.max(style.min_value as f32).min(style.max_value as f32);
+
+    size + 1.0 - if 1.0 < size { 0.0 } else { 1.0 }
+}
+
+/// The pixels (column, row, window z) a point sprite of `size` (the gl_PointSize and pointSize of Depth2.vs with
+/// X3D_STYLE_PROPERTIES) at `p` (camera space of the collision camera) covers in the 16x16 buffer, and keeps past Depth2.fs's
+/// round point mask: `getPointColor (vec4 (1.0), gl_PointCoord) .a >= 0.5`. The sprite is a square of `size` rounded down to
+/// 1/32 pixel and at least one pixel around the window position snapped to the sub-pixel grid (measured on the depth GPU,
+/// like the pointing buffer's: pointing.wgsl), the pixels whose center is inside it (left and bottom edges inside, as for a
+/// 1 px point: [`point_fragment`]); the point is clipped by its depth only, not by its center, so a sprite whose center is
+/// outside the buffer still covers the pixels it reaches. gl_PointCoord is (center - (position - size / 2)) / size.
+fn sprite_fragments(
+    p: &Vector3,
+    (l, r, bottom, t, near, far): (f64, f64, f64, f64, f64, f64),
+    size: f32,
+) -> Vec<(usize, usize, f64)> {
+    let depth = -p.z;
+
+    if !(near..=far).contains(&depth) {
+        return vec![];
+    }
+
+    let n = DEPTH_BUFFER_SIZE as f64;
+    let snap = |v: f64| (v * SUB_PIXELS).round_ties_even() / SUB_PIXELS;
+    let (cx, cy) = (
+        snap((p.x - l) / (r - l) * n),
+        snap((p.y - bottom) / (t - bottom) * n),
+    );
+    // ALIASED_POINT_SIZE_RANGE [1, 2047] of the oracle GPU
+    let raster = (((size as f64) * 32.0).floor() / 32.0).clamp(1.0, 2047.0);
+    let half = raster / 2.0;
+    let z = (depth - near) / (far - near);
+    let mut fragments = vec![];
+
+    for row in 0..DEPTH_BUFFER_SIZE {
+        let y = row as f64 + 0.5;
+
+        if !(cy - half <= y && y < cy + half) {
+            continue;
+        }
+
+        for column in 0..DEPTH_BUFFER_SIZE {
+            let x = column as f64 + 0.5;
+
+            if !(cx - half <= x && x < cx + half) {
+                continue;
+            }
+
+            // Point2.glsl getPointColor, f32 like the shader
+            let u = ((x - (cx - half)) / raster) as f32;
+            let v = ((y - (cy - half)) / raster) as f32;
+            let distance = ((u - 0.5) * (u - 0.5) + (v - 0.5) * (v - 0.5)).sqrt();
+            let alpha = if size > 1.0 {
+                (size * (0.5 - distance)).clamp(0.0, 1.0)
+            } else {
+                size
+            };
+
+            if alpha >= 0.5 {
+                fragments.push((column, row, z));
+            }
+        }
+    }
+
+    fragments
+}
+
 /// The 16x16 buffer of the CPU stand-in: per pixel the window z (an f32, like the float color attachment), the shape
 /// and its normal; cleared to window z 1 and no shape.
 struct DepthBuffer(Vec<(f32, Option<usize>, Vector3)>);
@@ -473,6 +555,7 @@ impl World {
                         .as_ref()
                         .map_or(0, |i| i.per_vertices as u32),
                     id: id as f32,
+                    point_style: s.point_style.filter(|_| s.particle && g.geometry_type == 0),
                     splat: s.splats.as_ref().map(|(d, v)| (d, *v)),
                 }
             })
@@ -645,7 +728,19 @@ impl World {
                         continue;
                     }
 
-                    if let Some((x, y, z)) = point_fragment(&p, bounds) {
+                    // PointProperties: a point sprite inside the round point mask (the size from the vertex in the viewpoint's
+                    // space, not the collision camera's); else a 1 px point.
+                    let fragments = match &shape.point_style {
+                        Some(style) => {
+                            let size =
+                                depth_point_size(style, &camera_point(shape, &shape.model_view, k));
+
+                            sprite_fragments(&p, bounds, size)
+                        }
+                        None => point_fragment(&p, bounds).into_iter().collect(),
+                    };
+
+                    for (x, y, z) in fragments {
                         buffer.draw(y * n + x, z, id, || flat(shape));
                     }
                 }
@@ -1189,6 +1284,7 @@ mod tests {
             clip_planes: Rc::new([]),
             collisions: Rc::new([]),
             instances: None,
+            point_style: None,
             splats: None,
         }
     }
@@ -1631,6 +1727,99 @@ mod tests {
                 .then(|| world.depth(&Matrix4::IDENTITY, BOUNDS));
             same(&format!("geometry {k}"), &edges, &fill);
         }
+    }
+
+    /// A POINT particle with PointProperties is a point sprite inside the round point mask of Depth2.fs: the pixels the GPU's
+    /// sprite covers (the pass's own buffer, not only its closest pixel) are those the CPU stand-in computes, for sizes
+    /// above and below one pixel, a mask that cuts the corners, attenuation, a sprite whose center is outside the buffer, a
+    /// size clamped by the maximum, and the two it discards (pointSize below 0.5). Positions avoid the exact pixel-center
+    /// ties of the sprite's edges, where the triangle rule of the GPU and the measured rule of a point differ.
+    #[test]
+    fn point_sprites_cover_what_the_cpu_stand_in_covers() {
+        let Some(gpu) = gpu() else { return };
+        let g = point();
+        let params = |scale: f64, min: f64, max: f64, attenuation: [f64; 3]| {
+            x3d_render::traverse::PointParams {
+                scale_factor: scale,
+                min_value: min,
+                max_value: max,
+                attenuation,
+            }
+        };
+        let plain = [1.0, 0.0, 0.0];
+        let cases = [
+            (params(5.0, 1.0, 8.0, plain), at(8.3, 7.9, 1.0)),
+            (params(2.0, 1.0, 8.0, plain), at(3.2, 11.7, 1.5)),
+            (params(9.0, 1.0, 12.0, plain), at(7.77, 8.13, 0.5)),
+            (params(20.0, 1.0, 5.0, plain), at(9.4, 6.6, 1.0)),
+            (params(8.0, 1.0, 16.0, [1.0, 0.8, 0.3]), at(5.55, 9.45, 1.9)),
+            (params(6.0, 1.0, 16.0, [0.5, 0.0, 0.0]), at(8.45, 8.55, 1.0)),
+            // pointSize 1: not widened, a pixel
+            (params(0.9, 0.0, 1.0, plain), at(4.6, 4.4, 1.0)),
+            // pointSize 0.6: covers the pixel of a 1 px point; 0.4 is discarded
+            (params(0.6, 0.0, 1.0, plain), at(6.3, 9.7, 1.0)),
+            (params(0.4, 0.0, 1.0, plain), at(6.3, 9.7, 1.0)),
+            // the center just outside the buffer
+            (params(12.0, 1.0, 16.0, plain), at(-0.3, 8.2, 1.0)),
+            (params(12.0, 1.0, 16.0, plain), at(16.3, 15.6, 1.0)),
+            (params(12.0, 1.0, 16.0, plain), at(8.1, 17.2, 1.0)),
+            // wider than the buffer
+            (params(40.0, 1.0, 64.0, plain), at(8.2, 7.7, 1.0)),
+            // outside near and far: nothing
+            (params(5.0, 1.0, 8.0, plain), at(8.3, 7.9, 2.1)),
+        ];
+        let mut ortho = Matrix4::IDENTITY;
+        Camera::ortho(-1.0, 1.0, -1.0, 1.0, 0.125, 2.0, &mut ortho);
+        let projection = ortho.0.map(|v| v as f32);
+
+        for (i, (style, position)) in cases.into_iter().enumerate() {
+            let shape = CShape {
+                point_style: Some(style),
+                ..particle(&g, position)
+            };
+            let world = World {
+                shapes: vec![shape.clone()],
+                ..Default::default()
+            };
+            let pixels = gpu
+                .borrow_mut()
+                .draw(&projection, &world.depth_shapes())
+                .expect("the depth pass");
+            let covered: Vec<usize> = (0..DEPTH_BUFFER_SIZE * DEPTH_BUFFER_SIZE)
+                .filter(|&p| pixels.data0[p][1] >= 0.0)
+                .collect();
+            let size = depth_point_size(&style, &position);
+            let mut expected: Vec<usize> = sprite_fragments(&position, BOUNDS, size)
+                .into_iter()
+                .map(|(x, y, _)| y * DEPTH_BUFFER_SIZE + x)
+                .collect();
+            expected.sort();
+
+            assert_eq!(
+                covered, expected,
+                "case {i} ({style:?} at {position:?}), size {size}"
+            );
+            assert_eq!(
+                world.depth_shapes()[0].point_style,
+                Some(style),
+                "case {i}: the GPU gets the style"
+            );
+
+            // The windowed values: the sprite's pixels all carry its own window z.
+            for &p in &covered {
+                let wz = (-position.z - 0.125) / (2.0 - 0.125);
+                assert!(
+                    (pixels.data0[p][0] as f64 - wz).abs() < 1e-6,
+                    "case {i}: pixel {p} z {}",
+                    pixels.data0[p][0]
+                );
+            }
+        }
+
+        // The cases cover something and something is cut by the mask: a 6 pixel disc is not its 6 x 6 square
+        let disc = sprite_fragments(&at(8.3, 7.9, 1.0), BOUNDS, 6.0);
+        assert!(disc.len() > 12 && disc.len() < 36, "{}", disc.len());
+        assert!(sprite_fragments(&at(6.3, 9.7, 1.0), BOUNDS, 0.4).is_empty());
     }
 
     /// The points of PointSet and LineSet shapes are not collision geometry on either path.
