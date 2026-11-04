@@ -653,7 +653,7 @@ half of them.
 
 The ParticleSystem shadow-culling baselines `rea-b25-particle-shadow-cull-baseline/` (MSAA 0 and 4 images of a SpotLight, a
 PointLight and a DirectionalLight over a floor, with a system whose bbox is outside the light's view volume) come from
-`tools/rea_b25_particle_shadow_cull.py record` (three identical runs per pass). Their worlds are
+`tools/rea_b25_particle_shadow_cull.py record` (three identical runs per pass; the record of a case is `NAME.js.json` beside the `NAME/` directory, so the Review gate's one-level `oracle/*-baseline/*.json` exclusion covers it). Their worlds are
 `synthetic-rea-b25-particle-shadow-cull/` (`tools/gen_rea_b25_particle_shadow_cull.py`), and
 `crates/x3d-viewer/tests/rea_b25_particle_shadow_cull.rs` compares the records and at most 8 pixels per image. The records
 of a system inside an Inline (`pr-inline-records*` in `synthetic-rea-b13-particles/`) are dumped by naming it with a path in

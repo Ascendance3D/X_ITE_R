@@ -5,7 +5,7 @@
 //! default bbox is its emitter's (a point for a PointEmitter), so a system whose emitter is outside a SpotLight's cone, or
 //! outside five of a PointLight's six faces, casts no shadow there although its particles pass through. The worlds and
 //! scripts are oracle/synthetic-rea-b25-particle-shadow-cull (oracle/tools/gen_rea_b25_particle_shadow_cull.py); a case's
-//! X_ITE baseline is oracle/rea-b25-particle-shadow-cull-baseline/NAME/ (`js.json`, `js.f32`, `png/<frame>.png`,
+//! X_ITE baseline is oracle/rea-b25-particle-shadow-cull-baseline/NAME.js.json and NAME/ (`js.f32`, `png/<frame>.png`,
 //! `msaa4/<frame>.png`), recorded by `oracle/tools/rea_b25_particle_shadow_cull.py record` (three identical runs per pass).
 //!
 //! Each case runs `x3d-particles-drive` with the baseline's seeds and compares:
@@ -176,7 +176,8 @@ fn run_case(root: &Path, name: &str) -> Vec<String> {
     let _ = std::fs::remove_dir_all(&out);
     std::fs::create_dir_all(&out).unwrap();
 
-    let js = match json(&base.join("js.json")) {
+    let js_path = base.with_file_name(format!("{name}.js.json"));
+    let js = match json(&js_path) {
         Ok(js) => js,
         Err(e) => return vec![e],
     };
@@ -186,7 +187,7 @@ fn run_case(root: &Path, name: &str) -> Vec<String> {
         cmd.arg(&world)
             .arg(&script)
             .arg("--seeds-from")
-            .arg(base.join("js.json"))
+            .arg(&js_path)
             .arg("--out")
             .arg(out.join(pass).join("rs.json"))
             .arg("--png-dir")

@@ -6,8 +6,8 @@
 runs `x3d-oracle particles` (default target/release/x3d-oracle) three times per image pass on
 oracle/synthetic-rea-b25-particle-shadow-cull/NAME.x3dv with scripts/NAME.json: `png` (antialiased="false") and `msaa4`
 (--ms 4), as rea_b13_particles.py does. Within a pass the three js.json and js.f32 must be identical and every PNG must
-decode to the same pixels. The first run of each pass is kept as oracle/rea-b25-particle-shadow-cull-baseline/NAME/
-(js.json, js.f32, png/, msaa4/). A baseline is never taken from Rust.
+decode to the same pixels. The first run of each pass is kept as oracle/rea-b25-particle-shadow-cull-baseline/NAME.js.json
+and NAME/ (js.f32, png/, msaa4/). A baseline is never taken from Rust.
 """
 import filecmp, os, shutil, subprocess, sys
 
@@ -55,8 +55,11 @@ def main():
     dest = os.path.join(root, "oracle", "rea-b25-particle-shadow-cull-baseline", name)
     shutil.rmtree(dest, ignore_errors=True)
     os.makedirs(dest)
-    for f in ("js.json", "js.f32"):
-        shutil.copy(os.path.join(kept["png"], f), dest)
+    if os.path.exists(dest + ".js.json"):
+        os.remove(dest + ".js.json")
+    shutil.copy(os.path.join(kept["png"], "js.f32"), dest)
+    # NAME.js.json sits beside NAME/ so the Review gate's one-level baseline exclusion covers it.
+    shutil.copy(os.path.join(kept["png"], "js.json"), dest + ".js.json")
     for image_pass, src in kept.items():
         shutil.copytree(os.path.join(src, image_pass), os.path.join(dest, image_pass))
 
