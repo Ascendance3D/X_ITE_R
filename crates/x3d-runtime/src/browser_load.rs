@@ -124,7 +124,7 @@ fn error_string(message: String) -> String {
 
 /// Whether FileLoader decoded this resolved data URL to text itself (`dataAsString`): the header before the first comma
 /// does not end with `;base64`, which is fetched instead.
-fn is_text_data_url(url: &url::Url) -> bool {
+pub(crate) fn is_text_data_url(url: &url::Url) -> bool {
     url.scheme() == "data"
         && url
             .path()

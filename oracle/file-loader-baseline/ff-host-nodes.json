@@ -1,0 +1,95 @@
+{
+  "ok": true,
+  "poses": {
+    "1": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "60": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    }
+  },
+  "vrml": {
+    "1": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT EnvironmentalSensor : 3\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Scripting : 1\nCOMPONENT Sound : 3\nCOMPONENT Text : 2\n\nEXTERNPROTO EP [ ]\n\"https://exa mple.invalid/p.wrl#EP\"\n\nEXTERNPROTO EP2 [ ]\n[\n  \"https://exa mple3.invalid/p.wrl#EP\",\n  \"https://exa mple4.invalid/p.wrl#EP\"\n]\n\nEXTERNPROTO EP3 [ ]\n[\n  \"gone/p.wrl#EP\",\n  \"https://exa mple5.invalid/p.wrl#EP\"\n]\n\nEP { }\n\nEP2 { }\n\nEP3 { }\n\nInline {\n  global TRUE\n  url \"https://exa mple.invalid/i.wrl\"\n}\n\nInline {\n  global TRUE\n  url [\n    \"https://exa mple.invalid/i.wrl\",\n    \"https://exa mple2.invalid/i.wrl\"\n  ]\n}\n\nInline {\n  global TRUE\n  url [\n    \"https://exa mple.invalid/i.wrl\",\n    \"data:,%23VRML%20V2.0%20utf8%0AGroup%20%7B%7D\"\n  ]\n}\n\nScript {\n  url \"https://exa mple.invalid/s.js\"\n}\n\nScript {\n  url [\n    \"https://exa mple.invalid/s.js\",\n    \"https://exa mple2.invalid/s.js\"\n  ]\n}\n\nShape {\n  appearance Appearance {\n    texture ImageTexture {\n      url \"https://exa mple.invalid/t.png\"\n    }\n  }\n  geometry Box { }\n}\n\nShape {\n  appearance Appearance {\n    texture ImageTexture {\n      url [\n        \"https://exa mple.invalid/t.png\",\n        \"https://exa mple2.invalid/t.png\"\n      ]\n    }\n  }\n  geometry Box { }\n}\n\nSound {\n  source AudioClip {\n    url \"https://exa mple.invalid/a.wav\"\n  }\n}\n\nShape {\n  appearance Appearance {\n    texture ImageTexture {\n      url \"https://exa<mple.invalid/t.png\"\n    }\n  }\n  geometry Box { }\n}\n\nInline {\n  global TRUE\n  url \"https://exa<mple.invalid/i.wrl\"\n}\n",
+    "60": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT EnvironmentalSensor : 3\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Scripting : 1\nCOMPONENT Sound : 3\nCOMPONENT Text : 2\n\nEXTERNPROTO EP [ ]\n\"https://exa mple.invalid/p.wrl#EP\"\n\nEXTERNPROTO EP2 [ ]\n[\n  \"https://exa mple3.invalid/p.wrl#EP\",\n  \"https://exa mple4.invalid/p.wrl#EP\"\n]\n\nEXTERNPROTO EP3 [ ]\n[\n  \"gone/p.wrl#EP\",\n  \"https://exa mple5.invalid/p.wrl#EP\"\n]\n\nEP { }\n\nEP2 { }\n\nEP3 { }\n\nInline {\n  global TRUE\n  url \"https://exa mple.invalid/i.wrl\"\n}\n\nInline {\n  global TRUE\n  url [\n    \"https://exa mple.invalid/i.wrl\",\n    \"https://exa mple2.invalid/i.wrl\"\n  ]\n}\n\nInline {\n  global TRUE\n  url [\n    \"https://exa mple.invalid/i.wrl\",\n    \"data:,%23VRML%20V2.0%20utf8%0AGroup%20%7B%7D\"\n  ]\n}\n\nScript {\n  url \"https://exa mple.invalid/s.js\"\n}\n\nScript {\n  url [\n    \"https://exa mple.invalid/s.js\",\n    \"https://exa mple2.invalid/s.js\"\n  ]\n}\n\nShape {\n  appearance Appearance {\n    texture ImageTexture {\n      url \"https://exa mple.invalid/t.png\"\n    }\n  }\n  geometry Box { }\n}\n\nShape {\n  appearance Appearance {\n    texture ImageTexture {\n      url [\n        \"https://exa mple.invalid/t.png\",\n        \"https://exa mple2.invalid/t.png\"\n      ]\n    }\n  }\n  geometry Box { }\n}\n\nSound {\n  source AudioClip {\n    url \"https://exa mple.invalid/a.wav\"\n  }\n}\n\nShape {\n  appearance Appearance {\n    texture ImageTexture {\n      url \"https://exa<mple.invalid/t.png\"\n    }\n  }\n  geometry Box { }\n}\n\nInline {\n  global TRUE\n  url \"https://exa<mple.invalid/i.wrl\"\n}\n"
+  },
+  "prints": [],
+  "log": [
+    "error: AudioClip: Couldn't load URL 'https://exa mple.invalid/a.wav'. TypeError: Failed to fetch",
+    "error: ImageTexture: Couldn't load URL 'https://exa mple.invalid/t.png'. TypeError: Failed to fetch",
+    "error: ImageTexture: Couldn't load URL 'https://exa<mple.invalid/t.png'. TypeError: Failed to construct 'URL': Invalid URL",
+    "error: ImageTexture: Couldn't load any of the 2 URLs, tried in this order:",
+    "error: Inline: Couldn't load URL 'https://exa mple.invalid/i.wrl'. TypeError: Failed to fetch",
+    "error: Inline: Couldn't load URL 'https://exa<mple.invalid/i.wrl'. TypeError: Failed to construct 'URL': Invalid URL",
+    "error: Inline: Couldn't load any of the 2 URLs, tried in this order:",
+    "error: Script: Couldn't load URL 'https://exa mple.invalid/s.js'. TypeError: Failed to fetch",
+    "error: Script: Couldn't load any of the 2 URLs, tried in this order:",
+    "error: X3DExternProtoDeclaration: Couldn't load URL 'https://exa mple.invalid/p.wrl#EP'. TypeError: Failed to fetch",
+    "error: X3DExternProtoDeclaration: Couldn't load any of the 2 URLs, tried in this order:",
+    "error: X3DExternProtoDeclaration: Couldn't load any of the 2 URLs, tried in this order:",
+    "warn: ImageTexture: Couldn't load URL 'https://exa mple.invalid/t.png', trying URL 2 of 2. TypeError: Failed to fetch",
+    "warn: Inline: Couldn't load URL 'https://exa mple.invalid/i.wrl', trying URL 2 of 2. TypeError: Failed to fetch",
+    "warn: Inline: Couldn't load URL 'https://exa mple.invalid/i.wrl', trying URL 2 of 2. TypeError: Failed to fetch",
+    "warn: Script: Couldn't load URL 'https://exa mple.invalid/s.js', trying URL 2 of 2. TypeError: Failed to fetch",
+    "warn: X3DExternProtoDeclaration: Couldn't load URL 'http://oracle/synthetic-rea-file-loader/gone/p.wrl#EP', trying URL 2 of 2. Error: Not Found",
+    "warn: X3DExternProtoDeclaration: Couldn't load URL 'https://exa mple3.invalid/p.wrl#EP', trying URL 2 of 2. TypeError: Failed to fetch"
+  ],
+  "anchors": [],
+  "loadFrames": 3,
+  "warmupFrames": 8,
+  "geometry": {
+    "rect": [
+      0,
+      0,
+      512,
+      512
+    ],
+    "viewport": [
+      0,
+      0,
+      512,
+      512
+    ],
+    "scroll": [
+      0,
+      0
+    ]
+  }
+}

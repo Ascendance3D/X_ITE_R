@@ -1,0 +1,148 @@
+{
+  "ok": true,
+  "poses": {
+    "1": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "60": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    }
+  },
+  "vrml": {
+    "1": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nDEF OUT Script {\n  inputOutput MFString out [\n    \"0: REJ Couldn't load X3D file.\",\n    \"1: REJ Couldn't load X3D file.\",\n    \"2: REJ Couldn't load X3D file.\",\n    \"3: REJ Couldn't load X3D file.\",\n    \"4: REJ Couldn't load X3D file.\",\n    \"5: REJ Couldn't load X3D file.\",\n    \"6: REJ Couldn't load X3D file.\",\n    \"7: REJ Couldn't load X3D file.\",\n    \"8: REJ Couldn't load X3D file.\",\n    \"9: REJ Couldn't load X3D file.\",\n    \"10: REJ Couldn't load X3D file.\",\n    \"11: REJ Couldn't load X3D file.\",\n    \"12: REJ Couldn't load X3D file.\",\n    \"13: REJ Couldn't load X3D file.\",\n    \"14: REJ Couldn't load X3D file.\",\n    \"15: REJ Couldn't load X3D file.\",\n    \"16: REJ Couldn't load X3D file.\",\n    \"17: REJ Couldn't load X3D file.\",\n    \"18: REJ Couldn't load X3D file.\",\n    \"19: REJ Couldn't load X3D file.\",\n    \"20: REJ Couldn't load X3D file.\",\n    \"21: REJ Couldn't load X3D file.\",\n    \"22: REJ Couldn't load X3D file.\",\n    \"23: REJ Couldn't load X3D file.\",\n    \"24: REJ Couldn't load X3D file.\",\n    \"25: REJ Couldn't load X3D file.\",\n    \"26: REJ Couldn't load X3D file.\",\n    \"27: REJ Couldn't load X3D file.\",\n    \"28: REJ Couldn't load X3D file.\",\n    \"29: REJ Couldn't load X3D file.\",\n    \"30: REJ Couldn't load X3D file.\",\n    \"31: REJ Couldn't load X3D file.\",\n    \"32: REJ Couldn't load X3D file.\",\n    \"33: REJ Couldn't load X3D file.\",\n    \"34: REJ Couldn't load X3D file.\",\n    \"35: REJ Couldn't load X3D file.\",\n    \"36: REJ Couldn't load X3D file.\",\n    \"37: REJ Couldn't load X3D file.\",\n    \"38: REJ Couldn't load X3D file.\",\n    \"39: REJ Couldn't load X3D file.\",\n    \"40: REJ Couldn't load X3D file.\",\n    \"41: REJ Couldn't load X3D file.\",\n    \"42: REJ Couldn't load X3D file.\",\n    \"43: REJ Couldn't load X3D file.\",\n    \"44: REJ Couldn't load X3D file.\",\n    \"45: REJ Couldn't load X3D file.\",\n    \"46: REJ Couldn't load X3D file.\",\n    \"47: REJ Couldn't load X3D file.\",\n    \"48: REJ Couldn't load X3D file.\",\n    \"49: REJ Couldn't load X3D file.\",\n    \"50: REJ Couldn't load X3D file.\",\n    \"51: REJ Couldn't load X3D file.\",\n    \"52: REJ Couldn't load X3D file.\",\n    \"53: REJ Couldn't load X3D file.\",\n    \"54: REJ Couldn't load X3D file.\",\n    \"55: REJ Couldn't load X3D file.\",\n    \"56: REJ Couldn't load X3D file.\",\n    \"57: REJ Couldn't load X3D file.\",\n    \"58: REJ Couldn't load X3D file.\",\n    \"59: REJ Couldn't load X3D file.\",\n    \"60: REJ Couldn't load X3D file.\",\n    \"61: REJ Couldn't load X3D file.\",\n    \"62: REJ Couldn't load X3D file.\",\n    \"63: RES VRML/2.0/Interchange/2/0/0/0/0/0/synthetic-rea-file-loader/text/plain.wrl\n#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT EnvironmentalSensor : 3\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Scripting : 1\nCOMPONENT Sound : 3\nCOMPONENT Text : 2\n\nWorldInfo {\n  title \\\"loaded\\\"\n  info [\n    \\\"a\\\",\n    \\\"b\\\"\n  ]\n}\n\nGroup {\n  children Shape {\n    geometry Box {\n      size 1 2 3\n    }\n  }\n}\n\",\n    \"64: REJ Couldn't load X3D file.\",\n    \"65: REJ Couldn't load X3D file.\",\n    \"66: REJ Couldn't load X3D file.\"\n  ]\n\n  url \"ecmascript:\n    var CASES = [[\\\"https://exa mple.invalid/x.wrl\\\"], [\\\"https://exa%20mple.invalid/x.wrl\\\"], [\\\"https://exa%2520mple.invalid/x.wrl\\\"], [\\\"https://exa  mple.invalid/x.wrl\\\"], [\\\"https:// exa.invalid/x.wrl\\\"], [\\\"https://exa.invalid /x.wrl\\\"], [\\\"https://exa mple.invalid\\\"], [\\\"https://exa mple.invalid:8080/x.wrl\\\"], [\\\"https://exa mple.invalid:99999/x.wrl\\\"], [\\\"https://exa mple.invalid?q=1\\\"], [\\\"https://exa mple.invalid#Frag\\\"], [\\\"https://user:pw@exa mple.invalid/x.wrl\\\"], [\\\"https://exa\\\\u00a0mple.invalid/x.wrl\\\"], [\\\"https://exa\\\\u3000mple.invalid/x.wrl\\\"], [\\\"https://exa\\\\u2003mple.invalid/x.wrl\\\"], [\\\"https://exa\\\\u202fmple.invalid/x.wrl\\\"], [\\\"https://ex\\\\u00e4 mple.invalid/x.wrl\\\"], [\\\"https://exa mple.invalid/with space.wrl\\\"], [\\\"https://exa\\\\tmple.invalid/x.wrl\\\"], [\\\"https://exa\\\\nmple.invalid/x.wrl\\\"], [\\\"//exa mple.invalid/x.wrl\\\"], [\\\"https:exa mple.invalid/x.wrl\\\"], [\\\"https:/exa mple.invalid/x.wrl\\\"], [\\\"http://exa mple.invalid/x.wrl\\\"], [\\\"ftp://exa mple.invalid/x.wrl\\\"], [\\\"ws://exa mple.invalid/x.wrl\\\"], [\\\"wss://exa mple.invalid/x.wrl\\\"], [\\\"file://exa mple/x.wrl\\\"], [\\\"file://exa mple.invalid/\\\"], [\\\"foo://exa mple.invalid/x.wrl\\\"], [\\\"blob:https://exa mple.invalid/none\\\"], [\\\"HTTPS://EXA MPLE.INVALID/X.WRL\\\"], [\\\"https://exa*mple.invalid/x.wrl\\\"], [\\\"https://exa\\\\\\\"mple.invalid/x.wrl\\\"], [\\\"https://exa`mple.invalid/x.wrl\\\"], [\\\"https://exa{mple}.invalid/x.wrl\\\"], [\\\"https://exa<mple.invalid/x.wrl\\\"], [\\\"https://exa>mple.invalid/x.wrl\\\"], [\\\"https://exa^mple.invalid/x.wrl\\\"], [\\\"https://exa|mple.invalid/x.wrl\\\"], [\\\"https://exa[mple.invalid/x.wrl\\\"], [\\\"https://exa%mple.invalid/x.wrl\\\"], [\\\"https://exa%zzmple.invalid/x.wrl\\\"], [\\\"https://exa:mple.invalid/x.wrl\\\"], [\\\"https://exa\\\\u0001mple.invalid/x.wrl\\\"], [\\\"https://exa\\\\u007fmple.invalid/x.wrl\\\"], [\\\"https://exa\\\\u00admple.invalid/x.wrl\\\"], [\\\"https://exa_mple.invalid/x.wrl\\\"], [\\\"https://\\\\uff0aexa.invalid/x.wrl\\\"], [\\\"https://exa.invalid./x.wrl\\\"], [\\\"https://exa..invalid/x.wrl\\\"], [\\\"https://.invalid/x.wrl\\\"], [\\\"https:///x.wrl\\\"], [\\\"https://user:pw@exa.invalid/x.wrl\\\"], [\\\"https://user@exa.invalid/x.wrl\\\"], [\\\"https://:pw@exa.invalid/x.wrl\\\"], [\\\"https://us er:pw@exa.invalid/x.wrl\\\"], [\\\"//user:pw@exa.invalid/x.wrl\\\"], [\\\"ftp://user:pw@exa.invalid/x.wrl\\\"], [\\\"ws://user:pw@exa.invalid/x.wrl\\\"], [\\\"file://user@host/x.wrl\\\"], [\\\"foo://user:pw@exa.invalid/x.wrl\\\"], [\\\"https://user:pw@exa mple.invalid:8080/x.wrl?q=1#Frag\\\"], [\\\"https://exa mple.invalid/x.wrl\\\", \\\"text/plain.wrl\\\"], [\\\"https://exa mple.invalid/x.wrl\\\", \\\"https://exa mple2.invalid/y.wrl\\\"], [\\\"https://exa mple.invalid/x.wrl\\\", \\\"https://[::1\\\", \\\"text/missing.wrl\\\"], [\\\"https://[::1\\\", \\\"https://exa mple.invalid/x.wrl\\\"]];\n    var res = [];\n    function strip (s) { return String (s) .replace (/https?:\\\\/\\\\/[^\\\\/]+\\\\//g, ''); }\n    function put (i, v) { res [i] = i + ': ' + v; var o = []; for (var k = 0; k < CASES .length; ++ k) o .push (k in res ? res [k] : k + ': ...'); out = new MFString (... o); }\n    function run (i) {\n      if (i >= CASES .length) return;\n      var p;\n      try { p = Browser .createX3DFromURL (new MFString (... CASES [i])); } catch (e) { put (i, 'THROW ' + strip (e .message)); run (i + 1); return; }\n      p .then (function (sc) {\n        var head = [sc .encoding, sc .specificationVersion, sc .profile && sc .profile .name, sc .rootNodes .length, sc .protos .length, sc .externprotos .length, sc .routes .length, sc .importedNodes .length, sc .exportedNodes .length, strip (sc .worldURL)] .join ('/');\n        var text; try { text = sc .toVRMLString (); } catch (e) { text = 'PRINT ERR ' + e .message; }\n        put (i, 'RES ' + head + '\\\\n' + text);\n        run (i + 1);\n      }, function (e) { put (i, 'REJ ' + strip (e && e .message)); run (i + 1); });\n    }\n    function initialize () { run (0); }\n  \"\n}\n",
+    "60": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nDEF OUT Script {\n  inputOutput MFString out [\n    \"0: REJ Couldn't load X3D file.\",\n    \"1: REJ Couldn't load X3D file.\",\n    \"2: REJ Couldn't load X3D file.\",\n    \"3: REJ Couldn't load X3D file.\",\n    \"4: REJ Couldn't load X3D file.\",\n    \"5: REJ Couldn't load X3D file.\",\n    \"6: REJ Couldn't load X3D file.\",\n    \"7: REJ Couldn't load X3D file.\",\n    \"8: REJ Couldn't load X3D file.\",\n    \"9: REJ Couldn't load X3D file.\",\n    \"10: REJ Couldn't load X3D file.\",\n    \"11: REJ Couldn't load X3D file.\",\n    \"12: REJ Couldn't load X3D file.\",\n    \"13: REJ Couldn't load X3D file.\",\n    \"14: REJ Couldn't load X3D file.\",\n    \"15: REJ Couldn't load X3D file.\",\n    \"16: REJ Couldn't load X3D file.\",\n    \"17: REJ Couldn't load X3D file.\",\n    \"18: REJ Couldn't load X3D file.\",\n    \"19: REJ Couldn't load X3D file.\",\n    \"20: REJ Couldn't load X3D file.\",\n    \"21: REJ Couldn't load X3D file.\",\n    \"22: REJ Couldn't load X3D file.\",\n    \"23: REJ Couldn't load X3D file.\",\n    \"24: REJ Couldn't load X3D file.\",\n    \"25: REJ Couldn't load X3D file.\",\n    \"26: REJ Couldn't load X3D file.\",\n    \"27: REJ Couldn't load X3D file.\",\n    \"28: REJ Couldn't load X3D file.\",\n    \"29: REJ Couldn't load X3D file.\",\n    \"30: REJ Couldn't load X3D file.\",\n    \"31: REJ Couldn't load X3D file.\",\n    \"32: REJ Couldn't load X3D file.\",\n    \"33: REJ Couldn't load X3D file.\",\n    \"34: REJ Couldn't load X3D file.\",\n    \"35: REJ Couldn't load X3D file.\",\n    \"36: REJ Couldn't load X3D file.\",\n    \"37: REJ Couldn't load X3D file.\",\n    \"38: REJ Couldn't load X3D file.\",\n    \"39: REJ Couldn't load X3D file.\",\n    \"40: REJ Couldn't load X3D file.\",\n    \"41: REJ Couldn't load X3D file.\",\n    \"42: REJ Couldn't load X3D file.\",\n    \"43: REJ Couldn't load X3D file.\",\n    \"44: REJ Couldn't load X3D file.\",\n    \"45: REJ Couldn't load X3D file.\",\n    \"46: REJ Couldn't load X3D file.\",\n    \"47: REJ Couldn't load X3D file.\",\n    \"48: REJ Couldn't load X3D file.\",\n    \"49: REJ Couldn't load X3D file.\",\n    \"50: REJ Couldn't load X3D file.\",\n    \"51: REJ Couldn't load X3D file.\",\n    \"52: REJ Couldn't load X3D file.\",\n    \"53: REJ Couldn't load X3D file.\",\n    \"54: REJ Couldn't load X3D file.\",\n    \"55: REJ Couldn't load X3D file.\",\n    \"56: REJ Couldn't load X3D file.\",\n    \"57: REJ Couldn't load X3D file.\",\n    \"58: REJ Couldn't load X3D file.\",\n    \"59: REJ Couldn't load X3D file.\",\n    \"60: REJ Couldn't load X3D file.\",\n    \"61: REJ Couldn't load X3D file.\",\n    \"62: REJ Couldn't load X3D file.\",\n    \"63: RES VRML/2.0/Interchange/2/0/0/0/0/0/synthetic-rea-file-loader/text/plain.wrl\n#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT EnvironmentalSensor : 3\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Scripting : 1\nCOMPONENT Sound : 3\nCOMPONENT Text : 2\n\nWorldInfo {\n  title \\\"loaded\\\"\n  info [\n    \\\"a\\\",\n    \\\"b\\\"\n  ]\n}\n\nGroup {\n  children Shape {\n    geometry Box {\n      size 1 2 3\n    }\n  }\n}\n\",\n    \"64: REJ Couldn't load X3D file.\",\n    \"65: REJ Couldn't load X3D file.\",\n    \"66: REJ Couldn't load X3D file.\"\n  ]\n\n  url \"ecmascript:\n    var CASES = [[\\\"https://exa mple.invalid/x.wrl\\\"], [\\\"https://exa%20mple.invalid/x.wrl\\\"], [\\\"https://exa%2520mple.invalid/x.wrl\\\"], [\\\"https://exa  mple.invalid/x.wrl\\\"], [\\\"https:// exa.invalid/x.wrl\\\"], [\\\"https://exa.invalid /x.wrl\\\"], [\\\"https://exa mple.invalid\\\"], [\\\"https://exa mple.invalid:8080/x.wrl\\\"], [\\\"https://exa mple.invalid:99999/x.wrl\\\"], [\\\"https://exa mple.invalid?q=1\\\"], [\\\"https://exa mple.invalid#Frag\\\"], [\\\"https://user:pw@exa mple.invalid/x.wrl\\\"], [\\\"https://exa\\\\u00a0mple.invalid/x.wrl\\\"], [\\\"https://exa\\\\u3000mple.invalid/x.wrl\\\"], [\\\"https://exa\\\\u2003mple.invalid/x.wrl\\\"], [\\\"https://exa\\\\u202fmple.invalid/x.wrl\\\"], [\\\"https://ex\\\\u00e4 mple.invalid/x.wrl\\\"], [\\\"https://exa mple.invalid/with space.wrl\\\"], [\\\"https://exa\\\\tmple.invalid/x.wrl\\\"], [\\\"https://exa\\\\nmple.invalid/x.wrl\\\"], [\\\"//exa mple.invalid/x.wrl\\\"], [\\\"https:exa mple.invalid/x.wrl\\\"], [\\\"https:/exa mple.invalid/x.wrl\\\"], [\\\"http://exa mple.invalid/x.wrl\\\"], [\\\"ftp://exa mple.invalid/x.wrl\\\"], [\\\"ws://exa mple.invalid/x.wrl\\\"], [\\\"wss://exa mple.invalid/x.wrl\\\"], [\\\"file://exa mple/x.wrl\\\"], [\\\"file://exa mple.invalid/\\\"], [\\\"foo://exa mple.invalid/x.wrl\\\"], [\\\"blob:https://exa mple.invalid/none\\\"], [\\\"HTTPS://EXA MPLE.INVALID/X.WRL\\\"], [\\\"https://exa*mple.invalid/x.wrl\\\"], [\\\"https://exa\\\\\\\"mple.invalid/x.wrl\\\"], [\\\"https://exa`mple.invalid/x.wrl\\\"], [\\\"https://exa{mple}.invalid/x.wrl\\\"], [\\\"https://exa<mple.invalid/x.wrl\\\"], [\\\"https://exa>mple.invalid/x.wrl\\\"], [\\\"https://exa^mple.invalid/x.wrl\\\"], [\\\"https://exa|mple.invalid/x.wrl\\\"], [\\\"https://exa[mple.invalid/x.wrl\\\"], [\\\"https://exa%mple.invalid/x.wrl\\\"], [\\\"https://exa%zzmple.invalid/x.wrl\\\"], [\\\"https://exa:mple.invalid/x.wrl\\\"], [\\\"https://exa\\\\u0001mple.invalid/x.wrl\\\"], [\\\"https://exa\\\\u007fmple.invalid/x.wrl\\\"], [\\\"https://exa\\\\u00admple.invalid/x.wrl\\\"], [\\\"https://exa_mple.invalid/x.wrl\\\"], [\\\"https://\\\\uff0aexa.invalid/x.wrl\\\"], [\\\"https://exa.invalid./x.wrl\\\"], [\\\"https://exa..invalid/x.wrl\\\"], [\\\"https://.invalid/x.wrl\\\"], [\\\"https:///x.wrl\\\"], [\\\"https://user:pw@exa.invalid/x.wrl\\\"], [\\\"https://user@exa.invalid/x.wrl\\\"], [\\\"https://:pw@exa.invalid/x.wrl\\\"], [\\\"https://us er:pw@exa.invalid/x.wrl\\\"], [\\\"//user:pw@exa.invalid/x.wrl\\\"], [\\\"ftp://user:pw@exa.invalid/x.wrl\\\"], [\\\"ws://user:pw@exa.invalid/x.wrl\\\"], [\\\"file://user@host/x.wrl\\\"], [\\\"foo://user:pw@exa.invalid/x.wrl\\\"], [\\\"https://user:pw@exa mple.invalid:8080/x.wrl?q=1#Frag\\\"], [\\\"https://exa mple.invalid/x.wrl\\\", \\\"text/plain.wrl\\\"], [\\\"https://exa mple.invalid/x.wrl\\\", \\\"https://exa mple2.invalid/y.wrl\\\"], [\\\"https://exa mple.invalid/x.wrl\\\", \\\"https://[::1\\\", \\\"text/missing.wrl\\\"], [\\\"https://[::1\\\", \\\"https://exa mple.invalid/x.wrl\\\"]];\n    var res = [];\n    function strip (s) { return String (s) .replace (/https?:\\\\/\\\\/[^\\\\/]+\\\\//g, ''); }\n    function put (i, v) { res [i] = i + ': ' + v; var o = []; for (var k = 0; k < CASES .length; ++ k) o .push (k in res ? res [k] : k + ': ...'); out = new MFString (... o); }\n    function run (i) {\n      if (i >= CASES .length) return;\n      var p;\n      try { p = Browser .createX3DFromURL (new MFString (... CASES [i])); } catch (e) { put (i, 'THROW ' + strip (e .message)); run (i + 1); return; }\n      p .then (function (sc) {\n        var head = [sc .encoding, sc .specificationVersion, sc .profile && sc .profile .name, sc .rootNodes .length, sc .protos .length, sc .externprotos .length, sc .routes .length, sc .importedNodes .length, sc .exportedNodes .length, strip (sc .worldURL)] .join ('/');\n        var text; try { text = sc .toVRMLString (); } catch (e) { text = 'PRINT ERR ' + e .message; }\n        put (i, 'RES ' + head + '\\\\n' + text);\n        run (i + 1);\n      }, function (e) { put (i, 'REJ ' + strip (e && e .message)); run (i + 1); });\n    }\n    function initialize () { run (0); }\n  \"\n}\n"
+  },
+  "prints": [],
+  "log": [
+    "error: Script: Couldn't load URL 'blob:https://exa mple.invalid/none'. TypeError: Failed to fetch",
+    "error: Script: Couldn't load URL 'file://exa mple.invalid/'. TypeError: Failed to fetch",
+    "error: Script: Couldn't load URL 'file://exa mple/x.wrl'. TypeError: Failed to fetch",
+    "error: Script: Couldn't load URL 'file://user@host/x.wrl'. TypeError: Failed to construct 'URL': Invalid URL",
+    "error: Script: Couldn't load URL 'foo://exa mple.invalid/x.wrl'. TypeError: Failed to construct 'URL': Invalid URL",
+    "error: Script: Couldn't load URL 'foo://user:pw@exa.invalid/x.wrl'. TypeError: Failed to execute 'fetch' on 'Window': Request cannot be constructed from a URL that includes credentials: foo://user:pw@exa.invalid/x.wrl",
+    "error: Script: Couldn't load URL 'ftp://exa mple.invalid/x.wrl'. TypeError: Failed to fetch",
+    "error: Script: Couldn't load URL 'ftp://user:pw@exa.invalid/x.wrl'. TypeError: Failed to execute 'fetch' on 'Window': Request cannot be constructed from a URL that includes credentials: ftp://user:pw@exa.invalid/x.wrl",
+    "error: Script: Couldn't load URL 'http://exa mple.invalid/x.wrl'. TypeError: Failed to fetch",
+    "error: Script: Couldn't load URL 'http://exa mple.invalid/x.wrl'. TypeError: Failed to fetch",
+    "error: Script: Couldn't load URL 'http://user:pw@exa.invalid/x.wrl'. TypeError: Failed to execute 'fetch' on 'Window': Request cannot be constructed from a URL that includes credentials: http://user:pw@exa.invalid/x.wrl",
+    "error: Script: Couldn't load URL 'https:// exa.invalid/x.wrl'. TypeError: Failed to fetch",
+    "error: Script: Couldn't load URL 'https://*exa.invalid/x.wrl'. TypeError: Failed to fetch",
+    "error: Script: Couldn't load URL 'https://.invalid/x.wrl'. TypeError: Failed to fetch",
+    "error: Script: Couldn't load URL 'https://:pw@exa.invalid/x.wrl'. TypeError: Failed to execute 'fetch' on 'Window': Request cannot be constructed from a URL that includes credentials: https://:pw@exa.invalid/x.wrl",
+    "error: Script: Couldn't load URL 'https://exa\u0001mple.invalid/x.wrl'. TypeError: Failed to construct 'URL': Invalid URL",
+    "error: Script: Couldn't load URL 'https://exa  mple.invalid/x.wrl'. TypeError: Failed to fetch",
+    "error: Script: Couldn't load URL 'https://exa mple.invalid/#Frag'. TypeError: Failed to fetch",
+    "error: Script: Couldn't load URL 'https://exa mple.invalid/'. TypeError: Failed to fetch",
+    "error: Script: Couldn't load URL 'https://exa mple.invalid/?q=1'. TypeError: Failed to fetch",
+    "error: Script: Couldn't load URL 'https://exa mple.invalid/X.WRL'. TypeError: Failed to fetch",
+    "error: Script: Couldn't load URL 'https://exa mple.invalid/with space.wrl'. TypeError: Failed to fetch",
+    "error: Script: Couldn't load URL 'https://exa mple.invalid/x.wrl'. TypeError: Failed to fetch",
+    "error: Script: Couldn't load URL 'https://exa mple.invalid/x.wrl'. TypeError: Failed to fetch",
+    "error: Script: Couldn't load URL 'https://exa mple.invalid/x.wrl'. TypeError: Failed to fetch",
+    "error: Script: Couldn't load URL 'https://exa mple.invalid/x.wrl'. TypeError: Failed to fetch",
+    "error: Script: Couldn't load URL 'https://exa mple.invalid/x.wrl'. TypeError: Failed to fetch",
+    "error: Script: Couldn't load URL 'https://exa mple.invalid/x.wrl'. TypeError: Failed to fetch",
+    "error: Script: Couldn't load URL 'https://exa mple.invalid/x.wrl'. TypeError: Failed to fetch",
+    "error: Script: Couldn't load URL 'https://exa mple.invalid/x.wrl'. TypeError: Failed to fetch",
+    "error: Script: Couldn't load URL 'https://exa mple.invalid:8080/x.wrl'. TypeError: Failed to fetch",
+    "error: Script: Couldn't load URL 'https://exa mple.invalid:99999/x.wrl'. TypeError: Failed to construct 'URL': Invalid URL",
+    "error: Script: Couldn't load URL 'https://exa\"mple.invalid/x.wrl'. TypeError: Failed to fetch",
+    "error: Script: Couldn't load URL 'https://exa%2520mple.invalid/x.wrl'. TypeError: Failed to construct 'URL': Invalid URL",
+    "error: Script: Couldn't load URL 'https://exa%mple.invalid/x.wrl'. TypeError: Failed to construct 'URL': Invalid URL",
+    "error: Script: Couldn't load URL 'https://exa%zzmple.invalid/x.wrl'. TypeError: Failed to construct 'URL': Invalid URL",
+    "error: Script: Couldn't load URL 'https://exa*mple.invalid/x.wrl'. TypeError: Failed to fetch",
+    "error: Script: Couldn't load URL 'https://exa..invalid/x.wrl'. TypeError: Failed to fetch",
+    "error: Script: Couldn't load URL 'https://exa.invalid /x.wrl'. TypeError: Failed to fetch",
+    "error: Script: Couldn't load URL 'https://exa.invalid./x.wrl'. TypeError: Failed to fetch",
+    "error: Script: Couldn't load URL 'https://exa:mple.invalid/x.wrl'. TypeError: Failed to construct 'URL': Invalid URL",
+    "error: Script: Couldn't load URL 'https://exa<mple.invalid/x.wrl'. TypeError: Failed to construct 'URL': Invalid URL",
+    "error: Script: Couldn't load URL 'https://exa>mple.invalid/x.wrl'. TypeError: Failed to construct 'URL': Invalid URL",
+    "error: Script: Couldn't load URL 'https://exa[mple.invalid/x.wrl'. TypeError: Failed to construct 'URL': Invalid URL",
+    "error: Script: Couldn't load URL 'https://exa^mple.invalid/x.wrl'. TypeError: Failed to construct 'URL': Invalid URL",
+    "error: Script: Couldn't load URL 'https://exa_mple.invalid/x.wrl'. TypeError: Failed to fetch",
+    "error: Script: Couldn't load URL 'https://exa`mple.invalid/x.wrl'. TypeError: Failed to fetch",
+    "error: Script: Couldn't load URL 'https://example.invalid/x.wrl'. TypeError: Failed to fetch",
+    "error: Script: Couldn't load URL 'https://example.invalid/x.wrl'. TypeError: Failed to fetch",
+    "error: Script: Couldn't load URL 'https://example.invalid/x.wrl'. TypeError: Failed to fetch",
+    "error: Script: Couldn't load URL 'https://exa{mple}.invalid/x.wrl'. TypeError: Failed to fetch",
+    "error: Script: Couldn't load URL 'https://exa|mple.invalid/x.wrl'. TypeError: Failed to construct 'URL': Invalid URL",
+    "error: Script: Couldn't load URL 'https://example.invalid/x.wrl'. TypeError: Failed to construct 'URL': Invalid URL",
+    "error: Script: Couldn't load URL 'https://us er:pw@exa.invalid/x.wrl'. TypeError: Failed to execute 'fetch' on 'Window': Request cannot be constructed from a URL that includes credentials: https://us%20er:pw@exa.invalid/x.wrl",
+    "error: Script: Couldn't load URL 'https://user:pw@exa mple.invalid/x.wrl'. TypeError: Failed to execute 'fetch' on 'Window': Request cannot be constructed from a URL that includes credentials: https://user:pw@exa%20mple.invalid/x.wrl",
+    "error: Script: Couldn't load URL 'https://user:pw@exa mple.invalid:8080/x.wrl?q=1#Frag'. TypeError: Failed to execute 'fetch' on 'Window': Request cannot be constructed from a URL that includes credentials: https://user:pw@exa%20mple.invalid:8080/x.wrl?q=1#Frag",
+    "error: Script: Couldn't load URL 'https://user:pw@exa.invalid/x.wrl'. TypeError: Failed to execute 'fetch' on 'Window': Request cannot be constructed from a URL that includes credentials: https://user:pw@exa.invalid/x.wrl",
+    "error: Script: Couldn't load URL 'https://user@exa.invalid/x.wrl'. TypeError: Failed to execute 'fetch' on 'Window': Request cannot be constructed from a URL that includes credentials: https://user@exa.invalid/x.wrl",
+    "error: Script: Couldn't load URL 'https://x.wrl/'. TypeError: Failed to fetch",
+    "error: Script: Couldn't load URL 'https://xn--ex mple-w2a.invalid/x.wrl'. TypeError: Failed to fetch",
+    "error: Script: Couldn't load URL 'ws://exa mple.invalid/x.wrl'. TypeError: Failed to fetch",
+    "error: Script: Couldn't load URL 'ws://user:pw@exa.invalid/x.wrl'. TypeError: Failed to execute 'fetch' on 'Window': Request cannot be constructed from a URL that includes credentials: ws://user:pw@exa.invalid/x.wrl",
+    "error: Script: Couldn't load URL 'wss://exa mple.invalid/x.wrl'. TypeError: Failed to fetch",
+    "error: Script: Couldn't load any of the 2 URLs, tried in this order:",
+    "error: Script: Couldn't load any of the 2 URLs, tried in this order:",
+    "error: Script: Couldn't load any of the 3 URLs, tried in this order:",
+    "warn: Script: Couldn't load URL 'https://[::1', trying URL 2 of 2. TypeError: Failed to construct 'URL': Invalid URL",
+    "warn: Script: Couldn't load URL 'https://[::1', trying URL 3 of 3. TypeError: Failed to construct 'URL': Invalid URL",
+    "warn: Script: Couldn't load URL 'https://exa mple.invalid/x.wrl', trying URL 2 of 2. TypeError: Failed to fetch",
+    "warn: Script: Couldn't load URL 'https://exa mple.invalid/x.wrl', trying URL 2 of 2. TypeError: Failed to fetch",
+    "warn: Script: Couldn't load URL 'https://exa mple.invalid/x.wrl', trying URL 2 of 3. TypeError: Failed to fetch"
+  ],
+  "anchors": [],
+  "loadFrames": 11,
+  "warmupFrames": 11,
+  "geometry": {
+    "rect": [
+      0,
+      0,
+      512,
+      512
+    ],
+    "viewport": [
+      0,
+      0,
+      512,
+      512
+    ],
+    "scroll": [
+      0,
+      0
+    ]
+  }
+}
