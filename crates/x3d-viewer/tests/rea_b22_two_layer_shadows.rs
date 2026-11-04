@@ -16,13 +16,22 @@
 //! tl-second-w24) differ in at most 1 pixel per layer and frame, the shared 6 px lines (tl-shared-w6, the gl.lineWidth
 //! quad emulation) in at most 12, and the second layer of the shared 24 px cases in 22 to 923.
 //!
+//! With `X3D_REFERENCE_PLATFORM=apple-m1` the pictures of `tl-shared-w6` come from
+//! oracle/rea-b22-two-layer-shadows-apple-m1-baseline/ (ANGLE Metal draws the 6 px lines as triangles, see
+//! docs/metal-reference-variation.md); every rule and limit is the same.
+//!
 //! The test is skipped without an adapter (the shadow pass needs a GPU). `REA_ONLY=<substring>` restricts the cases.
+
+mod common;
 
 use serde_json::Value;
 use std::path::{Path, PathBuf};
 use std::process::Command;
 
 const STRIDE: usize = 28;
+
+/// The NVIDIA recording; the platform recordings are `oracle/rea-b22-two-layer-shadows-<platform>-baseline/`.
+const BASELINE: &str = "rea-b22-two-layer-shadows-baseline";
 
 /// Pixels more than 8 off allowed in one layer's half of an image.
 const LAYER_PIXELS: usize = 16;
@@ -124,12 +133,14 @@ fn compare_records(frame: &str, js: &[f32], rs: &[f32], fail: &mut dyn FnMut(Str
 }
 
 /// rea_b18_particle_lines.rs compare_images over the whole image, then [`LAYER_PIXELS`] for each layer's half.
-fn compare_images(js_dir: &Path, rs_dir: &Path, frames: &[String], fail: &mut dyn FnMut(String)) {
+fn compare_images(
+    js_picture: &dyn Fn(&str) -> PathBuf,
+    rs_dir: &Path,
+    frames: &[String],
+    fail: &mut dyn FnMut(String),
+) {
     for frame in frames {
-        let (js, rs) = (
-            js_dir.join(format!("{frame}.png")),
-            rs_dir.join(format!("{frame}.png")),
-        );
+        let (js, rs) = (js_picture(frame), rs_dir.join(format!("{frame}.png")));
 
         match (
             x3d_render::compare::load_png(&js),
@@ -174,9 +185,22 @@ fn compare_images(js_dir: &Path, rs_dir: &Path, frames: &[String], fail: &mut dy
 /// Runs one case and returns its failures.
 fn run_case(root: &Path, name: &str) -> Vec<String> {
     let mut found = vec![];
-    let base = root
-        .join("oracle/rea-b22-two-layer-shadows-baseline")
-        .join(name);
+    // js.json and js.f32 come from the platform recording when X3D_REFERENCE_PLATFORM names one (common/reference.rs). So does a
+    // picture, but only where the platform's page draws it differently from the NVIDIA page (record_platform_particles.py keeps
+    // <case>.<frame>.png then). Nothing else changes with the platform: the rules and limits are the same.
+    let base = common::reference::pair_dir(root, BASELINE, name);
+    let png_base = root.join("oracle").join(BASELINE).join(name);
+    let platform_dir = common::reference::platform().map(|p| {
+        root.join("oracle")
+            .join(common::reference::platform_base(BASELINE, &p))
+    });
+    let picture = |frame: &str| {
+        platform_dir
+            .as_ref()
+            .map(|d| d.join(format!("{name}.{frame}.png")))
+            .filter(|f| f.is_file())
+            .unwrap_or_else(|| png_base.join("png").join(format!("{frame}.png")))
+    };
     let world = root
         .join("oracle/synthetic-rea-b22-two-layer-shadows")
         .join(format!("{name}.x3dv"));
@@ -262,7 +286,7 @@ fn run_case(root: &Path, name: &str) -> Vec<String> {
         (a, b) => fail(format!("{:?} {:?}", a.err(), b.err())),
     }
 
-    compare_images(&base.join("png"), &out.join("png"), &frames, &mut fail);
+    compare_images(&picture, &out.join("png"), &frames, &mut fail);
 
     let _ = std::fs::remove_dir_all(&out);
     found

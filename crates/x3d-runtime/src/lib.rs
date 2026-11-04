@@ -1804,7 +1804,7 @@ impl Runtime {
                     self.log_warn(w);
                 }
 
-                self.log_error(format!("Error: {}", e.message));
+                self.log_error(x3d_parse::error_console_text(&e.message));
                 return Err(
                     x3d_parse::take_error_detail().unwrap_or_else(|| format!("Error: \n{e}"))
                 );

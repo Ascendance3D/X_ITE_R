@@ -3,6 +3,8 @@
 //! The worlds and scripts are oracle/synthetic-rea-b16-bounded (oracle/tools/gen_rea_b16_bounded.py). A case's X_ITE
 //! baseline is oracle/rea-b16-bounded-baseline/NAME/ (`js.json`, `js.f32`: every frame's transform feedback
 //! buffer), recorded by `oracle/tools/rea_b16_bounded.py record` with `x3d-oracle particles` (three identical runs).
+//! The cases bp-ts-* and bp-tick-* change the geometry from a Script that a TimeSensor runs, at a time the Script chooses;
+//! their js.json is flat (NAME.js.json beside NAME/js.f32).
 //! Each case is replayed through the real runtime with the baseline's seeds and its field events
 //! (particles_b06_common::replay) and compared with the batch 06R tolerances (compare_steps, compare_dumps).
 
@@ -16,8 +18,16 @@ fn run_case(name: &str) {
     big(move || {
         let o = oracle();
         let dir = o.join("rea-b16-bounded-baseline").join(&name);
+        // The Script cases (bp-ts-*, bp-tick-*) keep js.json flat: NAME.js.json beside the directory NAME/ (js.f32).
+        let flat = o
+            .join("rea-b16-bounded-baseline")
+            .join(format!("{name}.js.json"));
         let base = Baseline {
-            js: json(&dir.join("js.json")),
+            js: json(&if flat.exists() {
+                flat
+            } else {
+                dir.join("js.json")
+            }),
             dir,
         };
         let script = json(
@@ -77,6 +87,17 @@ cases! {
     enabled_late => "bp-enabled-late",
     rebuild => "bp-rebuild",
     replace => "bp-replace",
+    ts_rebuild => "bp-ts-rebuild",
+    ts_replace => "bp-ts-replace",
+    ts_file_rebuild => "bp-ts-file-rebuild",
+    ts_hit => "bp-ts-hit",
+    ts_miss => "bp-ts-miss",
+    tick_rebuild => "bp-tick-rebuild",
+    tick_replace => "bp-tick-replace",
+    tick_repeat => "bp-tick-repeat",
+    tick_create => "bp-tick-create",
+    tick_hit => "bp-tick-hit",
+    tick_miss => "bp-tick-miss",
 }
 
 /// The particle state of `frames` steps of a loaded case (every particle of every frame).

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Platform recordings of the pinned X_ITE for the ParticleSystem pointing and collision tests (rea_b14, rea_b15, rea_b21).
+"""Platform recordings of the pinned X_ITE for the ParticleSystem pointing and collision tests (rea_b14, rea_b15, rea_b21, rea_b22).
 
 Like record_platform_baseline.py (read it for the rules), for the baselines recorded by `x3d-oracle particles`: every case of the base is
 recorded three times ON THE TARGET MACHINE; `js.json` and `js.f32` of the three runs must be identical (else the case is listed in
@@ -17,13 +17,22 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from rea_b18_particle_lines import pixels  # noqa: E402
 
 
-def over_8(a, b):
-    """The picture rule of rea_b18_particle_lines / rea_b21_wide_lines: pixels with a channel more than 8 apart, of all pixels."""
+LAYER_PIXELS = 16  # rea_b22_two_layer_shadows.rs: pixels over 8 allowed in one layer's half (left half: layer 1, right half: layer 2)
+
+
+def picture_differs(a, b, two_layers=False):
+    """True where the platform picture `b` differs from the NVIDIA picture `a` by more than the test allows.
+
+    The rule of rea_b18_particle_lines / rea_b21_wide_lines: more than 0.5% of all pixels with a channel more than 8 apart. For the
+    two-layer base (rea_b22) also the rule of that test: more than LAYER_PIXELS such pixels in the left or in the right half."""
     (w, h, bpp, x), (w2, h2, bpp2, y) = pixels(a), pixels(b)
     if (w, h, bpp) != (w2, h2, bpp2):
-        return 1.0
-    n = sum(1 for i in range(0, len(x), bpp) if any(abs(x[i + c] - y[i + c]) > 8 for c in range(3)))
-    return n / (w * h)
+        return True
+    halves = [0, 0]
+    for k, i in enumerate(range(0, len(x), bpp)):
+        if any(abs(x[i + c] - y[i + c]) > 8 for c in range(3)):
+            halves[int(k % w >= w // 2)] += 1
+    return sum(halves) / (w * h) > 0.005 or (two_layers and max(halves) > LAYER_PIXELS)
 
 
 root = os.path.normpath(os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", ".."))
@@ -32,7 +41,7 @@ opt = lambda n, d=None: args[args.index(n) + 1] if n in args else d
 platform, base, hardware, only = opt("--platform"), opt("--base"), opt("--hardware", ""), opt("--only")
 oracle = opt("--oracle", os.path.join(root, "target", "release", "x3d-oracle"))
 SYNTH = {"rea-b14-particle-pick-baseline": "synthetic-rea-b14-particle-pick", "rea-b15-particle-collision-baseline": "synthetic-rea-b15-particle-collision",
-         "rea-b21-wide-lines-baseline": "synthetic-rea-b21-wide-lines"}
+         "rea-b21-wide-lines-baseline": "synthetic-rea-b21-wide-lines", "rea-b22-two-layer-shadows-baseline": "synthetic-rea-b22-two-layer-shadows"}
 assert platform and base in SYNTH, "--platform and --base (one of %s) are required" % sorted(SYNTH)
 assert os.environ.get("X3D_ORACLE_CHROME") and os.environ.get("X3D_ORACLE_ANGLE"), "set X3D_ORACLE_CHROME and X3D_ORACLE_ANGLE"
 
@@ -57,13 +66,13 @@ for name in names:
         continue
     # The pictures (the png/ directory of the case, wide-line cases only): the platform picture of a frame is kept, as
     # <case>.<frame>.png beside the json, only when its three runs decode to the same pixels and it differs from the NVIDIA picture by
-    # more than the test's rule (0.5% of the pixels more than 8 apart). The test then compares Rust with it instead.
+    # more than the test's rule (0.5% of the pixels more than 8 apart; rea_b22 also LAYER_PIXELS in one half). The test then compares Rust with it instead.
     if os.path.isdir(os.path.join(src, name, "png")):
         for png in sorted(os.listdir(os.path.join(runs[0], "png"))):
             mine = os.path.join(runs[0], "png", png)
             if not all(pixels(mine) == pixels(os.path.join(b, "png", png)) for b in runs[1:]):
                 unstable.append(f"{name}/{png}: the three pictures differ")
-            elif over_8(os.path.join(src, name, "png", png), mine) > 0.005:
+            elif picture_differs(os.path.join(src, name, "png", png), mine, base.startswith("rea-b22-")):
                 os.makedirs(dest, exist_ok=True)
                 shutil.copyfile(mine, os.path.join(dest, f"{name}.{png}"))
                 prov.setdefault(name, {})[png] = sha(mine)
@@ -84,7 +93,7 @@ if kept or pictures:
     chrome = subprocess.run([os.environ["X3D_ORACLE_CHROME"], "--version"], capture_output=True, text=True).stdout.strip()
     cur.update(platform=platform, hardware=hardware, chrome=chrome, angle_backend=os.environ["X3D_ORACLE_ANGLE"], pinned_x_ite="16.5.0 " + pinned,
                recorder="x3d-oracle particles", recorded=datetime.date.today().isoformat(),
-               rule="3 identical runs; kept only where the NVIDIA recording differs (a picture: where it differs by more than 0.5% of the pixels over 8)")
+               rule="3 identical runs; kept only where the NVIDIA recording differs (a picture: where it differs by more than 0.5% of the pixels over 8; rea_b22: or more than 16 in one layer half)")
     cur["cases"].update(prov)
     json.dump(cur, open(pfile, "w"), indent=1, sort_keys=True)
 if unstable:

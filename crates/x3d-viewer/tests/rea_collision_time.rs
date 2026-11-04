@@ -17,6 +17,11 @@
 //! more than 8 off (not widened). The pointing and collision passes of a GPU-less run are the CPU ray cast and depth stand-in and are
 //! not bit-exact, so the test is skipped without an adapter (`x3d_evidence::no_gpu`; hosted CI).
 //!
+//! ct-wall-pick, ct-nested-pick and ct-bb-ctl-pick are ct-wall, ct-nested and ct-bb-ctl with pickProbes: the avatar ends 0.27 to 0.38
+//! from a surface that fills the picture, so the pointing buffer's hit point (view space, 32-bit floats) is bit for bit the page's only if
+//! the avatar stops at the same position. Before #423 (the walk on the page's millisecond clock) Rust stopped 2.2e-7 short (z 4.4736009 against
+//! 4.4736011) and every probe's hit point z differed by 2.4e-7 (normal 0.99999994 against 1); the pose bound of 1e-4 hid it.
+//!
 //! The cases are split over `SHARDS` tests so that they run side by side. `REA_ONLY=<substring>` restricts the cases.
 
 mod common;
