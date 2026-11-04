@@ -1506,7 +1506,7 @@ impl<'a> Walker<'a> {
                 {
                     if self.lod.is_some()
                         && geometry_type == 1
-                        && l.width > x3d_render::gpu::MAX_LINE_WIDTH
+                        && l.width > x3d_render::gpu::max_line_width()
                         && sg.bool(n, "visible", true)
                     {
                         let viewport = self.viewport();

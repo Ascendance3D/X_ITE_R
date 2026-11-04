@@ -21,6 +21,8 @@
 //!
 //! The GPU test is skipped without an adapter. `REA_ONLY=<substring>` restricts the cases.
 
+mod common;
+
 use serde_json::Value;
 use std::path::{Path, PathBuf};
 use std::process::Command;
@@ -52,6 +54,11 @@ const TRANSFORMED_PICK: &str = "transformed particle lines: the same hits; X_ITE
                                 float32, the port emulates it in float32 but not bit for bit: hit points up to 1.4e-6 \
                                 off";
 
+/// Transformed slanted particle lines in the pointing pass.
+const SLANT_PICK: &str = "transformed slanted particle lines: the same hits, hit points up to 1.6e-5 off: the float32 emulation of \
+         the row cases, and overlapping lines at one depth (every particle lies in z = 0), where the triangle that \
+         wins the tie gives the value; a double inverse of the instance matrix does not change it";
+
 /// (case, part: "pick values" or "collision values", why Rust differs).
 const KNOWN_GAPS: &[(&str, &str, &str)] = &[
     ("pw-col-w1", "collision values", ONE_PX_COLLISION),
@@ -67,19 +74,31 @@ const KNOWN_GAPS: &[(&str, &str, &str)] = &[
     ("pw-pick-row-w11", "pick values", TRANSFORMED_PICK),
     ("pw-pick-row-w24", "pick values", TRANSFORMED_PICK),
     ("pw-pick-row-w24-steady", "pick values", TRANSFORMED_PICK),
-    (
-        "pw-pick-slant-w24",
-        "pick values",
-        "transformed slanted particle lines: the same hits, hit points up to 1.6e-5 off: the float32 emulation of \
-         the row cases, and overlapping lines at one depth (every particle lies in z = 0), where the triangle that \
-         wins the tie gives the value; a double inverse of the instance matrix does not change it",
-    ),
+    ("pw-pick-slant-w24", "pick values", SLANT_PICK),
 ];
 
 /// The CPU stand-in samples triangles at the pixel centers (rea_b15 CPU_TRIANGLES) instead of rasterizing them.
 const CPU_TRIANGLES: &str = "transformed lines through the CPU stand-in: their triangles, thinner than a pixel of the \
                              16 x 16 buffer, are sampled at the pixel centers (rea_b15 CPU_TRIANGLES); the hit states \
                              match, distances and translations differ (up to 8.3e-2); the GPU run matches X_ITE";
+
+/// KNOWN_GAPS against the recordings of the physical M1 (X3D_REFERENCE_PLATFORM=apple-m1, ANGLE Metal: ALIASED_LINE_WIDTH_RANGE
+/// is [1, 1], so the pinned page makes triangles of every line wider than 1 and the port does the same on a Metal device).
+/// Measured on the M1: 1 px pick rows are exact (hit points bit for bit), the 6 and 10 px rows are transformed lines
+/// (1.13e-6 off like the others), and the 6 px collision case equals the page.
+const KNOWN_GAPS_APPLE_M1: &[(&str, &str, &str)] = &[
+    ("pw-col-w1", "collision values", ONE_PX_COLLISION),
+    ("pw-pick-row-w6", "pick values", TRANSFORMED_PICK),
+    ("pw-pick-row-w10", "pick values", TRANSFORMED_PICK),
+    ("pw-pick-row-w11", "pick values", TRANSFORMED_PICK),
+    ("pw-pick-row-w24", "pick values", TRANSFORMED_PICK),
+    ("pw-pick-row-w24-steady", "pick values", TRANSFORMED_PICK),
+    (
+        "pw-pick-slant-w24",
+        "pick values",
+        "transformed slanted particle lines: the same hits, hit points up to 1.7e-5 off (measured on the M1): see SLANT_PICK",
+    ),
+];
 
 /// (case, part, why the CPU depth stand-in differs) of the `--cpu-pointing` runs.
 const CPU_KNOWN_GAPS: &[(&str, &str, &str)] = &[
@@ -90,7 +109,25 @@ const CPU_KNOWN_GAPS: &[(&str, &str, &str)] = &[
     ("pw-col-w24-steady", "collision values", CPU_TRIANGLES),
 ];
 
+/// CPU_KNOWN_GAPS against the M1 recordings: the 6 px collision case equals the page (see KNOWN_GAPS_APPLE_M1).
+const CPU_KNOWN_GAPS_APPLE_M1: &[(&str, &str, &str)] = &[
+    ("pw-col-w1", "collision values", ONE_PX_COLLISION),
+    ("pw-col-w11", "collision values", CPU_TRIANGLES),
+    ("pw-col-w24", "collision values", CPU_TRIANGLES),
+    ("pw-col-w24-steady", "collision values", CPU_TRIANGLES),
+];
+
 type Gaps = &'static [(&'static str, &'static str, &'static str)];
+
+/// The known gaps of the reference in use: the NVIDIA recordings, or the M1's.
+fn gaps(cpu: bool) -> Gaps {
+    match (common::reference::platform().as_deref(), cpu) {
+        (Some("apple-m1"), false) => KNOWN_GAPS_APPLE_M1,
+        (Some("apple-m1"), true) => CPU_KNOWN_GAPS_APPLE_M1,
+        (_, false) => KNOWN_GAPS,
+        (_, true) => CPU_KNOWN_GAPS,
+    }
+}
 
 fn json(path: &Path) -> Result<Value, String> {
     serde_json::from_str(
@@ -348,12 +385,14 @@ fn compare_collision(want: &Value, got: &Value) -> (Vec<String>, Vec<String>) {
 }
 
 /// rea_b18_particle_lines.rs compare_images: at most 0.5% of the pixels more than 8 off.
-fn compare_images(js_dir: &Path, rs_dir: &Path, frames: &[String], fail: &mut dyn FnMut(String)) {
+fn compare_images(
+    js_picture: &dyn Fn(&str) -> PathBuf,
+    rs_dir: &Path,
+    frames: &[String],
+    fail: &mut dyn FnMut(String),
+) {
     for frame in frames {
-        let (js, rs) = (
-            js_dir.join(format!("{frame}.png")),
-            rs_dir.join(format!("{frame}.png")),
-        );
+        let (js, rs) = (js_picture(frame), rs_dir.join(format!("{frame}.png")));
 
         match (
             x3d_render::compare::load_png(&js),
@@ -382,7 +421,24 @@ fn compare_images(js_dir: &Path, rs_dir: &Path, frames: &[String], fail: &mut dy
 /// "collision values", "png").
 fn run_case(root: &Path, name: &str, cpu: bool) -> Vec<(&'static str, String)> {
     let found: std::cell::RefCell<Vec<(&'static str, String)>> = Default::default();
-    let base = root.join("oracle/rea-b21-wide-lines-baseline").join(name);
+    // js.json and js.f32 come from the platform recording when X3D_REFERENCE_PLATFORM names one (common/reference.rs). So does a
+    // picture, but only where the platform's page draws it differently from the NVIDIA page (record_platform_particles.py keeps
+    // <case>.<frame>.png then): the line width limit of ANGLE Metal turns a 6 px line into triangles.
+    let base = common::reference::pair_dir(root, "rea-b21-wide-lines-baseline", name);
+    let png_base = root.join("oracle/rea-b21-wide-lines-baseline").join(name);
+    let platform_dir = common::reference::platform().map(|p| {
+        root.join("oracle").join(common::reference::platform_base(
+            "rea-b21-wide-lines-baseline",
+            &p,
+        ))
+    });
+    let picture = |frame: &str| {
+        platform_dir
+            .as_ref()
+            .map(|d| d.join(format!("{name}.{frame}.png")))
+            .filter(|f| f.is_file())
+            .unwrap_or_else(|| png_base.join("png").join(format!("{frame}.png")))
+    };
     let world = root
         .join("oracle/synthetic-rea-b21-wide-lines")
         .join(format!("{name}.x3dv"));
@@ -414,6 +470,11 @@ fn run_case(root: &Path, name: &str, cpu: bool) -> Vec<(&'static str, String)> {
 
     if cpu {
         cmd.arg("--cpu-pointing").arg("--png-size").arg(SIZE);
+
+        // No device to read the backend from: the line width limit of the GPU the recording was made on.
+        if common::reference::platform().as_deref() == Some("apple-m1") {
+            cmd.arg("--aliased-line-width-max").arg("1");
+        }
     } else {
         cmd.arg("--png-dir").arg(out.join("png"));
     }
@@ -556,9 +617,7 @@ fn run_case(root: &Path, name: &str, cpu: bool) -> Vec<(&'static str, String)> {
         }
 
         if !cpu {
-            compare_images(&base.join("png"), &out.join("png"), &frames, &mut |w| {
-                fail("png", w)
-            });
+            compare_images(&picture, &out.join("png"), &frames, &mut |w| fail("png", w));
         }
     }
 
@@ -654,11 +713,11 @@ fn rea_b21_wide_lines_match_x_ite() {
     }
 
     // Four drives at a time, like rea_b14_particle_pick (each holds a GPU device).
-    check_all(false, KNOWN_GAPS, 4, |_| true);
+    check_all(false, gaps(false), 4, |_| true);
 }
 
 /// The collision cases through the CPU depth stand-in: runs without an adapter.
 #[test]
 fn rea_b21_wide_lines_cpu_collision_match_x_ite() {
-    check_all(true, CPU_KNOWN_GAPS, 8, |n| n.starts_with("pw-col-"));
+    check_all(true, gaps(true), 8, |n| n.starts_with("pw-col-"));
 }

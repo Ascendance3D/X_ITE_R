@@ -30,6 +30,8 @@ struct Uniforms {
     clip_planes: array<vec4<f32>, 6>,
     // X3D_GEOMETRY_0D or X3D_GEOMETRY_1D
     flags: vec4<f32>,
+    // x: 1 on a Metal device (the point sprite rule of ANGLE on Metal)
+    backend: vec4<f32>,
     // x: 1 when the instance matrices come from `instances`, y: the first, z: vertices per instance (0: one instance
     // per instance_index), w: the draw's first vertex.
     instancing: vec4<u32>,
@@ -59,6 +61,8 @@ struct VertexOut {
     @location(5) @interpolate(linear) point_coord: vec2<f32>,
     // x3d_Id of the shape, its particle's with instances.
     @location(6) @interpolate(flat) id: f32,
+    // Metal point sprites: the lower left of the sprite in window pixels and its size (the pixel centre then gives gl_PointCoord).
+    @location(7) @interpolate(flat) sprite: vec4<f32>,
 }
 
 // PointSize2.glsl getPointSize
@@ -107,6 +111,7 @@ fn vs_main(
     out.point = vec3<f32>(0.0);
     out.raster = 0.0;
     out.point_coord = vec2<f32>((in.offset.x + 1.0) * 0.5, (1.0 - in.offset.y) * 0.5);
+    out.sprite = vec4<f32>(0.0);
 
     if u.id.y == 1.0 {
         // gl_PointSize = pointSize = max (getPointSize (vertex), 2.0) with X3D_STYLE_PROPERTIES, else 2.0
@@ -116,16 +121,46 @@ fn vs_main(
             size = max(get_point_size(out.vertex), 2.0);
         }
 
-        // The oracle GPU rasterizes gl_PointSize in steps of 1/32 pixel, rounded down (measured from gl_PointCoord);
-        // the shader's own pointSize varying keeps the exact value.
-        let raster = floor(size * 32.0) / 32.0;
-        // The window position of the point snapped to the rasterizer's 1/256 pixel grid (also measured from gl_PointCoord).
         let ndc = clip.xy / clip.w;
-        let window = round((u.viewport.xy + (ndc + 1.0) * 0.5 * u.viewport.zw) * 256.0) / 256.0;
-        let snapped = (window - u.viewport.xy) / u.viewport.zw * 2.0 - 1.0;
-        out.point = vec3<f32>(window, size);
-        out.raster = raster;
-        clip = vec4<f32>((snapped + in.offset * raster / u.viewport.zw) * clip.w, clip.z, clip.w);
+        let centre = u.viewport.xy + (ndc + 1.0) * 0.5 * u.viewport.zw;
+
+        if u.backend.x != 0.0 {
+            // ANGLE on Metal (measured on the physical M1 against the pinned page, oracle/synthetic-metal-coverage): the sprite is
+            // the rectangle between the corners centre -+ size / 2, each corner rounded to 1/256 pixel (to nearest, ties to
+            // even); a pixel is covered when its centre lies in it (and passes the round point mask). gl_PointCoord is
+            // (pixel centre - origin) / (rounded size) with the origin centre - size / 2 rounded to 1/256 pixel and the size
+            // the difference of the corners rounded to 1/16 pixel.
+            // gl_PointSize is clamped to ALIASED_POINT_SIZE_RANGE [1], 511 on Metal (2047 on the NVIDIA host); the
+            // fragment shader's own pointSize varying (the round point mask) is not.
+            let raster = min(size, 511.0);
+            let low = centre - 0.5 * raster;
+            let high = centre + 0.5 * raster;
+            let low_q = round(low * 16.0) / 16.0;
+            let high_q = round(high * 16.0) / 16.0;
+            let origin = round(low * 256.0) / 256.0;
+            let corner = mix(low_q, high_q, (in.offset + 1.0) * 0.5);
+            let coord = (corner - origin) / (high_q - low_q);
+            // The covered rectangle: its corners at the rasterizer's 1/256 pixel grid. Measured: a size 2 point (no PointProperties,
+            // so no round mask) covers exactly the pixel centres between the 1/256 corners, where 1/16 corners are wrong for 76
+            // of the 1024 pixels it covers (ml-sprite-two); with a mask the 1/16 and 1/256 corners cover the same pixels.
+            let rect_low = round(low * 256.0) / 256.0;
+            let rect_high = round(high * 256.0) / 256.0;
+            let rect_corner = mix(rect_low, rect_high, (in.offset + 1.0) * 0.5);
+            out.point = vec3<f32>(centre, size);
+            out.point_coord = vec2<f32>(coord.x, 1.0 - coord.y);
+            out.sprite = vec4<f32>(origin, high_q - low_q);
+            clip = vec4<f32>(((rect_corner - u.viewport.xy) / u.viewport.zw * 2.0 - 1.0) * clip.w, clip.z, clip.w);
+        } else {
+            // The oracle GPU rasterizes gl_PointSize in steps of 1/32 pixel, rounded down (measured from gl_PointCoord);
+            // the shader's own pointSize varying keeps the exact value.
+            let raster = floor(size * 32.0) / 32.0;
+            // The window position of the point snapped to the rasterizer's 1/256 pixel grid (also measured from gl_PointCoord).
+            let window = round(centre * 256.0) / 256.0;
+            let snapped = (window - u.viewport.xy) / u.viewport.zw * 2.0 - 1.0;
+            out.point = vec3<f32>(window, size);
+            out.raster = raster;
+            clip = vec4<f32>((snapped + in.offset * raster / u.viewport.zw) * clip.w, clip.z, clip.w);
+        }
     } else if u.id.y == 2.0 {
         clip = vec4<f32>(clip.xy + in.offset * 2.0 / u.viewport.zw * clip.w, clip.z, clip.w);
     }
@@ -161,7 +196,16 @@ fn fragment(in: VertexOut) -> vec4<f32> {
 
     if u.id.y == 1.0 && u.id.z != 0.0 {
         let size = in.point.z;
-        let coord = in.point_coord;
+        var coord = in.point_coord;
+        var metal_y = 0.0;
+
+        if u.backend.x != 0.0 {
+            // The pixel centre (0.5, 0.5) of the 1x1 buffer against the sprite: one division, as the hardware does it.
+            let s = in.sprite;
+            coord.x = (0.5 - s.x) / s.z;
+            metal_y = (0.5 - s.y) / s.w;
+            coord.y = 1.0 - metal_y;
+        }
 
         if u.point.w == 0.0 {
             var alpha = 1.0;
@@ -177,7 +221,7 @@ fn fragment(in: VertexOut) -> vec4<f32> {
             }
         }
 
-        tex_coord = vec4<f32>(coord.x, 1.0 - coord.y, 0.0, 1.0);
+        tex_coord = vec4<f32>(coord.x, select(1.0 - coord.y, metal_y, u.backend.x != 0.0), 0.0, 1.0);
     }
 
     return tex_coord;
