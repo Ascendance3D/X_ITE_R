@@ -21,26 +21,25 @@ Mac is open until its cause is shown.
 | class | cases |
 | --- | --- |
 | PASS against the M1 recording; REFERENCE VARIATION (NVIDIA and M1 recordings differ reproducibly, Rust equals the M1 one) | 24: fly-middle-pan, fly-wall, geo-touch, pick-hits, pick-instanced, pk-overlap, pk-points, sensors, sensors-drag, sensors-touch, touch-hit-events, walk-ceiling-block, walk-ceiling-pass, walk-fall-then-walk, walk-pit, walk-radius-large, walk-ramp, walk-small-avatar, walk-step-above-limit, walk-step-below-limit, walk-step-large, walk-step-zero, walk-tilted-forward, walk-wall |
-| FIXED: a Rust defect on Metal, shown with synthetic worlds recorded on the same M1, now PASS against the M1 recording | 2: pk-lines, pk-points-style (see the last section) |
-| OPEN: Rust differs from the pinned page on the same Mac (not shown to be a Rust defect, not shown to be variation) | 3: walk-steps, walk-instanced-steps, pk-events |
+| FIXED: a Rust defect on Metal, shown with synthetic worlds recorded on the same M1, now PASS against the M1 recording | 3: pk-lines, pk-points-style, pk-events (see the last section) |
+| OPEN: Rust differs from the pinned page on the same Mac (not shown to be a Rust defect, not shown to be variation) | 2: walk-steps, walk-instanced-steps |
 | UNVERIFIED | none of the 29; `gs-empty` and `gs-visible-false` time out on both platforms |
 
 ## ParticleSystem pointing and collision (`rea_b14`, `rea_b15`)
 
 Recorded on the M1 with `x3d-oracle particles` (`X3D_ORACLE_ANGLE=metal`, `oracle/tools/record_platform_particles.py`), three identical runs per case, 0 unstable. Stored flat as `oracle/rea-b14-particle-pick-apple-m1-baseline/NAME.json` + `NAME.f32` (23 of 24 cases differ from the NVIDIA recording) and `oracle/rea-b15-particle-collision-apple-m1-baseline/` (12 of 14).
 * `rea_b15_particle_collision_matches_x_ite`: **PASS** against the M1 recordings (14 cases); it failed on Metal against the NVIDIA recordings (111 differences).
-* `rea_b14_particle_pick_matches_x_ite`: 22 of 24 cases pass (21 at the first campaign; `pp-slant-point-props` and the sprite coverage of `pp-row-point` pass since the Metal point-sprite rule, last section); **OPEN**: `pp-row-point-props` (6 values, 1 ulp allowed) and `pp-slant-line` (8 values, 0 ulps allowed): the float32 steps of gl_PointCoord and of a 1 px line's hit point. It failed on 21 cases against the NVIDIA recordings.
+* `rea_b14_particle_pick_matches_x_ite`: 23 of 24 cases match the M1 recordings (21 at the first campaign; `pp-slant-point-props` and the sprite coverage of `pp-row-point` pass since the Metal point-sprite rule, `pp-slant-line` and `pp-row-line` since the Metal line primitive, last section; `pp-row-line` is now 0 ulps off on the M1, its 3 ulp allowance is the NVIDIA recording's); the 24th, `pp-row-point-props`, is a **KNOWN UNRESOLVED DIFFERENCE**, pinned in `M1_KNOWN_DIFFS` of the test (see the last section), and the test passes with it pinned. It failed on 21 cases against the NVIDIA recordings.
 
-With the particle tests the full run on the M1 (`X3D_REFERENCE_PLATFORM=apple-m1`, 11 tests of 6 files): 7 passed, 4 failed (`rea_batch09_nav` shards 0 and 3, `rea_batch12`, `rea_b14`), no skip recorded.
+With the particle tests the full run on the M1 (`X3D_REFERENCE_PLATFORM=apple-m1`, 11 tests of 6 files) before the line change: 7 passed, 4 failed (`rea_batch09_nav` shards 0 and 3, `rea_batch12`, `rea_b14`), no skip recorded.
 
-## The three open cases (same Mac, Rust vs the M1 recording)
+## The open cases (same Mac, Rust vs the M1 recording)
 
 * **walk-steps** (MSAA 0 and 4): 63 of 64 collision probes within 4e-7 of the pinned distance; probe 46 differs by 4.14e-5 (0.12766 vs 0.12762). Limit 1e-6.
 * **walk-instanced-steps** (MSAA 0): all probes within 1.3e-6; probe 15 is 1.28e-6 over the 1e-6 limit.
-* **pk-events** (MSAA 0 and 4): scene text differs at frames 41, 85, 86 in one printed line hit point, `0.4126096` vs `0.4126097` and `0.3964289` vs `0.396429` (one float32 ulp).
-* **pk-lines** and **pk-points-style**: no longer open, see the next section.
+* **pk-lines**, **pk-points-style** and **pk-events**: no longer open, see the next section.
 
-Common to the open cases: a probe at the edge of a depth step, or a printed float32, where one float32 step decides. Next: `walk-steps` probe 46.
+Common to the open cases: a probe at the edge of a depth step, where one float32 step decides. Next: `walk-steps` probe 46.
 
 ## Line and point-sprite coverage on Metal (issue #89, `pk-lines`, `pk-points-style`)
 
@@ -55,10 +54,9 @@ Both cases were open in the earlier campaign; each cause is now measured on the 
   `lineWidth` > 1 line of the world, which the page drew as triangles and Rust as a `gl.lineWidth` line. Rust now takes the limit from the
   adapter backend (`gpu::max_line_width()`: 1 on Metal, 10 elsewhere, set when a renderer or a pointing buffer takes its device); the
   NVIDIA/Vulkan path is the same branch with the same constant. 1 px lines cover the same pixels on the M1 and on the NVIDIA host (the
-  same probes hit in both recordings: `ml-lines-a`, `ml-lines-b`), so there is no Metal rule for them; the remaining difference to Rust there
-  is the pre-existing end/tie gap of the quad emulation of GL's diamond-exit rule (27 and 38 probes of 8449 and 8705, recorded in
-  `LINE_ID_GAPS`, the same on both platforms). After the change `pk-lines` passes on the M1: no hit/miss flip, 407 of 2583 probes differ in the hit point by at most 243 float32 ulps (before: 184 probes, 14 flips,
-  up to 45,784 ulps; the existing allowance is 398).
+  same probes hit in both recordings: `ml-lines-a`, `ml-lines-b`); what differed from Rust there is in the 1 px line bullet below. After the change `pk-lines` passes on the M1: no hit/miss flip, 407 of 2583 probes differ in the hit point by at most 243 float32 ulps (before: 184 probes, 14 flips,
+  up to 45,784 ulps; the existing allowance is 398). With the 1 px line primitive of the bullet below, the 311 hits that still differ in `pk-lines` at MSAA 0 (of 1280, at most 243 ulps, no hit/miss gap)
+  are all on the two lines the page draws as triangles (`linewidthScaleFactor` 14: 127 hits, 243 ulps; 5: 184 hits, 50 ulps); every 1 px line hit is bit for bit.
 * **pk-points-style, cause: the Metal point-sprite rule.** The rasterizer covers the pixel centres between the corners `centre -+ size / 2`
   rounded to 1/256 pixel (inside the round point mask where there is one; a plain `PointSet`, gl_PointSize 2, has none), and gl_PointCoord is
   `(pixel centre - origin) / size`, with `origin` = `centre - size / 2` rounded to 1/256 pixel and `size` the difference of the corners
@@ -72,6 +70,23 @@ Both cases were open in the earlier campaign; each cause is now measured on the 
   pictures of `pw-shadow-w6-behind`, which the page draws as triangles on Metal) are used with `X3D_REFERENCE_PLATFORM=apple-m1`; the known-gap
   tables of the test have an M1 variant (`KNOWN_GAPS_APPLE_M1`). Both tests pass on the M1. The CPU depth stand-in has no device to read the
   limit from, so the test passes `--aliased-line-width-max 1` to `x3d-particles-drive` for the M1 recordings.
-* **Still open on the M1:** `rea_b14` `pp-row-point-props` (6 values, 1 ulp allowed; the page's gl_PointCoord is up to 2 ulps from the correctly rounded
-  division, and none of the float32 formulas tried (division, reciprocal product, interpolation between the corners) reproduces it bit for bit) and `pp-slant-line` (8 values, 0 ulps allowed; the
-  1 px line end/tie gap above); `pk-events` (the printed ulp above).
+* **1 px lines (`pk-events`, `pp-slant-line`, `pp-row-line`, `ml-lines-*`), cause: Rust drew them as two triangles on Metal.** The page's
+  `gl.LINES` are Metal line primitives, so Metal's own rasterizer decides which pixels a line covers and how the varyings are interpolated
+  along it. Rust emulated GL's diamond-exit rule with a quad of two triangles, a different path in the same hardware. Measured on the M1
+  with `ml-lines-a` and `ml-lines-b` (2755 hits): the emulation missed 65 hit/miss probes (27 and 38) and 49 of the 2724 common hits were
+  1 or 2 float32 ulps off in the point; the printed `0.4126096` vs `0.4126097` of `pk-events` is the same effect. With a real line primitive in
+  the pointing pass on a Metal device (`gpu::metal_native_lines()`, a branch decided by the backend, set where `max_line_width` is; Vulkan and
+  the others keep the emulation) the two worlds are bit for bit in id, point and normal: 0 hit/miss gaps, 0 differing hit points. The same
+  change makes `pk-events` (scene text, MSAA 0 and 4), `pp-slant-line` (8 values of 0 ulps allowed before) and `pp-row-line` (0 ulps) match.
+  `metal_coverage.rs` now requires the lines exact (its `LINE_ID_GAPS` table is gone). Particle LINE draws take the same branch (two
+  vertices per segment instead of six).
+* **`pp-row-point-props`: KNOWN UNRESOLVED DIFFERENCE, pinned (`M1_KNOWN_DIFFS` of `rea_b14_particle_pick.rs`).** Ids, hit points and normals
+  are bit for bit. Of the 216 hits' texCoord numbers 300 are 1 to 3 ulps off (294 at 1 ulp), and 6 probes (5 at 2 ulps, 1 at 3 ulps) are more
+  than the 1 ulp the case allows. The page's gl_PointCoord is a function of (pixel centre - origin) and the size alone (in the 3760 sprite
+  coordinates of `ml-sprite-size`, 1 of 1475 (difference, size) groups has two page values), but it is not the correctly rounded quotient
+  (2370 of 3760 equal it), and none of the float32 formulas tried reproduces it: the quotient and the product with the reciprocal
+  rounded to nearest, down, up or toward zero (best 2736), the same with a per-size best reciprocal (fails for every size that is not a power of 2: 4.0 is exact, 3.0 matches 17 of 29), fused and unfused
+  `p * r - o * r`, perspective-correct forms with w = 10, and corner interpolation by the two triangles of the sprite quad with the
+  hardware doing the interpolation (2485 of 3760, a different error pattern, not exact). It is the interpolation arithmetic of the
+  GPU, not a rule that is known. The test fails when the 6 probes or the 3 ulps change, including when they become exact.
+* **Still open on the M1:** `walk-steps` and `walk-instanced-steps` (above).

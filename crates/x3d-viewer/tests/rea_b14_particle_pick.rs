@@ -62,6 +62,21 @@ const PICK_ULPS: &[(&str, u64, &str)] = &[
     ),
 ];
 
+/// Known unresolved differences to the pinned page recorded on the physical Apple M1 (`X3D_REFERENCE_PLATFORM=apple-m1`; issues
+/// #69 and #89): (case, probes with a number more than PICK_ULPS apart, the largest distance of any of them in float32 ulps, why).
+/// Not a match and not a tolerance: the test pins what was measured and fails when the count or the distance changes in either
+/// direction, including when the case becomes exact (then the entry is stale and the difference is fixed).
+const M1_KNOWN_DIFFS: &[(&str, usize, u64, &str)] = &[(
+    "pp-row-point-props",
+    6,
+    3,
+    "POINT particles with PointProperties on Metal: ids, hit points and normals are bit for bit; of the 216 hits' texCoord numbers \
+     300 are 1 to 3 ulps off, 294 of them by 1 ulp and the 6 pinned probes by 2 ulps (5) and 3 ulps (1). gl_PointCoord is a function of (pixel centre - origin) and the size alone (1 of 1475 \
+     groups of the Metal coverage worlds disagrees), but not the correctly rounded quotient, and none of about twenty float32 \
+     formulas (division, reciprocal products with every rounding of the reciprocal, fused and unfused offsets, perspective-\
+     correct forms, corner interpolation by the sprite's two triangles) reproduces it: the hardware's interpolation arithmetic",
+)];
+
 fn json(path: &Path) -> Value {
     serde_json::from_str(
         &std::fs::read_to_string(path).unwrap_or_else(|e| panic!("{}: {e}", path.display())),
@@ -95,6 +110,7 @@ fn compare_probes(
     max_ulps: u64,
     seen: &mut u64,
     soft: Option<f64>,
+    failed_max: &mut u64,
 ) -> (usize, usize, Option<String>) {
     let (mut values, mut selections, mut first) = (0, 0, None);
     let mut seen_abs = 0.0;
@@ -130,6 +146,8 @@ fn compare_probes(
                 selections += 1;
             } else {
                 values += 1;
+                // The probe's largest distance over all of its numbers (no limit, so no early exit).
+                within_ulps(p, q, u64::MAX, failed_max);
             }
 
             first.get_or_insert(format!("frame {frame} #{i}: X_ITE {p} / Rust {q}"));
@@ -225,15 +243,21 @@ fn run_case(root: &Path, name: &str, failures: &mut Vec<String>) {
         .find(|(case, ..)| *case == name)
         .map_or(0, |(_, ulps, _)| *ulps);
     let mut seen = 0;
+    let mut failed_max = 0;
     let (values, selections, first) = compare_probes(
         want,
         &rs["pickProbesReference"],
         max_ulps,
         &mut seen,
         *SOFT.get().unwrap_or(&None),
+        &mut failed_max,
     );
     let (own_values, own_selections, own_first) =
-        compare_probes(want, &rs["pickProbes"], 0, &mut 0, None);
+        compare_probes(want, &rs["pickProbes"], 0, &mut 0, None, &mut 0);
+    let known = common::reference::platform()
+        .as_deref()
+        .filter(|p| *p == "apple-m1")
+        .and_then(|_| M1_KNOWN_DIFFS.iter().find(|(case, ..)| *case == name));
 
     if max_ulps > 0 {
         eprintln!(
@@ -252,11 +276,24 @@ fn run_case(root: &Path, name: &str, failures: &mut Vec<String>) {
         ));
     }
 
-    if selections + values > 0 {
-        fail(format!(
+    match known {
+        Some(&(_, count, ulps, _)) => {
+            eprintln!(
+                "{name}: KNOWN UNRESOLVED DIFFERENCE on the M1: {values} probes with a number more than {max_ulps} ulps off, at most {failed_max} ulps (pinned: {count}, {ulps})"
+            );
+
+            if selections != 0 || values != count || failed_max != ulps {
+                fail(format!(
+                    "the known M1 difference changed: pinned {count} probes at most {ulps} ulps off, measured {values} at most {failed_max} ulps and {selections} hit differences; first {}",
+                    first.unwrap_or_default()
+                ));
+            }
+        }
+        None if selections + values > 0 => fail(format!(
             "X_ITE records: {selections} hit and {values} value differences (allowed {max_ulps} float32 ulps); first {}",
             first.unwrap_or_default()
-        ));
+        )),
+        None => {}
     }
 
     let _ = std::fs::remove_dir_all(&out);
@@ -296,6 +333,13 @@ fn rea_b14_particle_pick_matches_x_ite() {
         assert!(
             only.is_some() || names.iter().any(|n| n == gap),
             "PICK_ULPS names {gap}, which has no baseline"
+        );
+    }
+
+    for (gap, ..) in M1_KNOWN_DIFFS {
+        assert!(
+            only.is_some() || names.iter().any(|n| n == gap),
+            "M1_KNOWN_DIFFS names {gap}, which has no baseline"
         );
     }
 

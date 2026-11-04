@@ -1112,7 +1112,8 @@ fn particle_draw(
     // particle's own.
     if g.geometry_type == 1 {
         let segments = g.vertex_count() / 2;
-        let per = 6 * segments;
+        // Six vertices per segment (two triangles), two for a line primitive (Metal, 1 px).
+        let per = if native_line_list(s) { 2 } else { 6 } * segments;
         let mut draw = PointingTriangle {
             vertices: Vec::with_capacity(per * run.len()),
             normals: Vec::with_capacity(per * run.len()),
@@ -1168,6 +1169,16 @@ fn particle_draw(
         per_instance_vertices: 0,
         ..pointing_draw(s, g, &prims, cam, x, y, id)
     })
+}
+
+/// Whether the lines of `s` are drawn as line primitives in the pointing pass: a 1 px line (not one the page makes triangles
+/// of, see [`x3d_render::gpu::max_line_width`]) on a Metal device ([`x3d_render::gpu::metal_native_lines`]).
+fn native_line_list(s: &ShapeInst) -> bool {
+    let width = line_width(s.style.as_ref());
+
+    x3d_render::gpu::metal_native_lines()
+        && width <= x3d_render::gpu::max_line_width()
+        && width.round() <= 1.0
 }
 
 /// One shape's draw in the pointing pass: its candidate primitives as the pointing shader receives them.
@@ -1295,6 +1306,28 @@ fn pointing_draw(
                     vertices,
                     normals: corners.iter().map(|&j| norm(j)).collect(),
                     tex_coords: corners.iter().map(|_| [0.0, 0.0, 0.0, 1.0]).collect(),
+                    offsets: vec![],
+                    constant_tex_coord: true,
+                    ..pointing_draw_base(s, cam, x, y, id)
+                };
+            }
+
+            if native_line_list(s) {
+                // A 1 px line on Metal: a real line primitive, as ANGLE's gl.LINES is (see `metal_native_lines`).
+                return PointingTriangle {
+                    primitive: PointingPrimitive::Lines,
+                    vertices: segments
+                        .iter()
+                        .flat_map(|&k| [vert(2 * k), vert(2 * k + 1)])
+                        .collect(),
+                    normals: segments
+                        .iter()
+                        .flat_map(|&k| [norm(2 * k), norm(2 * k + 1)])
+                        .collect(),
+                    tex_coords: segments
+                        .iter()
+                        .flat_map(|&k| [tex(2 * k), tex(2 * k + 1)])
+                        .collect(),
                     offsets: vec![],
                     constant_tex_coord: true,
                     ..pointing_draw_base(s, cam, x, y, id)
