@@ -13,10 +13,13 @@ use x3d_runtime::{FetchPoll, Fetcher, Runtime, ScriptCall, ScriptError, ScriptHo
 const BASE: &str = "http://example.test/w.wrl";
 const A: &str = "http://example.test/a.wrl";
 const B: &str = "http://example.test/b.wrl";
+const C: &str = "http://example.test/c.wrl";
 
 #[derive(Default)]
 struct Net {
     responses: HashMap<String, Option<Vec<u8>>>,
+    /// Every url the runtime polled, in order.
+    polled: Vec<String>,
 }
 
 #[derive(Clone, Default)]
@@ -45,6 +48,8 @@ impl Fetcher for TestFetcher {
 
     fn poll(&self, url: &url::Url) -> FetchPoll {
         let mut net = self.0.borrow_mut();
+
+        net.polled.push(url.to_string());
 
         match net.responses.get(url.as_str()) {
             None => {
@@ -136,5 +141,43 @@ fn a_url_set_back_to_a_loaded_scene_while_another_is_held_initializes_its_script
     net.respond(B, &scene_text("B"));
     settle(&mut rt);
     assert_eq!(count(&sources, "A"), 2, "{:?}", sources.borrow());
+    assert_eq!(count(&sources, "B"), 0, "{:?}", sources.borrow());
+}
+
+/// Two requests held at once: each asks for the url it was made with, never the node's newer url (the request
+/// that was made for B keeps polling B after the url is set to C).
+#[test]
+fn each_held_request_keeps_the_url_it_was_made_with() {
+    let text = format!("#VRML V2.0 utf8\nDEF Inl Inline {{ url \"{A}\" }}\n");
+    let scene = x3d_parse::parse_bytes(text.as_bytes(), BASE).unwrap();
+    let net = TestFetcher::default();
+    let sources = Sources::default();
+    let mut rt = Runtime::new(scene, Box::new(net.clone()));
+
+    rt.script_host = Some(Box::new(CountHost(sources.clone())));
+    rt.load_world();
+    settle(&mut rt);
+    net.respond(A, &scene_text("A"));
+    settle(&mut rt);
+
+    set_url(&mut rt, B);
+    set_url(&mut rt, C);
+    net.0.borrow_mut().polled.clear();
+    settle(&mut rt);
+
+    let polled = net.0.borrow().polled.clone();
+    assert!(
+        polled.iter().any(|u| u == B),
+        "the B request no longer polls B: {polled:?}"
+    );
+    assert!(polled.iter().any(|u| u == C), "{polled:?}");
+    assert!(polled.iter().all(|u| u == B || u == C), "{polled:?}");
+
+    // C completes: only C's Scripts initialize; B, still held, is never shown.
+    net.respond(C, &scene_text("C"));
+    settle(&mut rt);
+    net.respond(B, &scene_text("B"));
+    settle(&mut rt);
+    assert_eq!(count(&sources, "C"), 1, "{:?}", sources.borrow());
     assert_eq!(count(&sources, "B"), 0, "{:?}", sources.borrow());
 }

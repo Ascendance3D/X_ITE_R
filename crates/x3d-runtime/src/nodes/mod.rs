@@ -108,9 +108,10 @@ pub struct UrlState {
     /// The `url` of the last load request (requestImmediateLoad set IN_PROGRESS_STATE): what an
     /// ImageTexture shows. A url change without a load (LoadUrlObjects FALSE) keeps it.
     pub requested_url: Option<Vec<String>>,
-    /// The `url` an Inline's FileLoader was created with, and the request it belongs to ([`UrlState::generation`]):
+    /// The `url` each Inline FileLoader was created with, per request ([`UrlState::generation`]):
     /// Inline.loadData hands its FileLoader a copy of `url`, so a later set of `url` is not that request's.
-    pub fetch_urls: Option<(u64, Vec<String>)>,
+    /// One entry per started request; the load of that request removes it.
+    pub fetch_urls: Vec<(u64, Vec<String>)>,
 }
 
 /// X3DCast-like test against the X3D abstract type hierarchy for the types the runtime handles.

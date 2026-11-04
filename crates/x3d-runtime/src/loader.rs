@@ -1291,6 +1291,11 @@ impl Runtime {
                 self.inline_load(node, generation);
             }
 
+            // The task of this request is done, run or not: its url snapshot goes.
+            if let Some(s) = self.url_state_mut(node) {
+                s.fetch_urls.retain(|(g, _)| *g != generation);
+            }
+
             return;
         }
 

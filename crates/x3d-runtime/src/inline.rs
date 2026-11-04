@@ -321,7 +321,7 @@ impl Runtime {
         )
     }
 
-    fn url_state_mut(&mut self, node: NodeId) -> Option<&mut nodes::UrlState> {
+    pub(crate) fn url_state_mut(&mut self, node: NodeId) -> Option<&mut nodes::UrlState> {
         match &mut self.nrt_mut(node).state {
             nodes::State::UrlObject(s) => Some(s),
             _ => None,
@@ -337,7 +337,7 @@ impl Runtime {
             let urls = self.url_strings(node);
 
             if let Some(s) = self.url_state_mut(node) {
-                s.fetch_urls = Some((generation, urls));
+                s.fetch_urls.push((generation, urls));
             }
 
             generation
@@ -405,10 +405,13 @@ impl Runtime {
     /// with the `loadData` event that follows) keeps asking for its own files.
     pub(crate) fn inline_request_urls(&self, node: NodeId, generation: u64) -> Vec<String> {
         match self.nrt(node).map(|n| &n.state) {
-            Some(nodes::State::UrlObject(s)) => match &s.fetch_urls {
-                Some((g, urls)) if *g == generation => urls.clone(),
-                _ => self.url_strings(node),
-            },
+            Some(nodes::State::UrlObject(s)) => {
+                match s.fetch_urls.iter().find(|(g, _)| *g == generation) {
+                    Some((_, urls)) => urls.clone(),
+                    // Not started by url_start_load: the node's `url` is the request's.
+                    None => self.url_strings(node),
+                }
+            }
             _ => self.url_strings(node),
         }
     }
