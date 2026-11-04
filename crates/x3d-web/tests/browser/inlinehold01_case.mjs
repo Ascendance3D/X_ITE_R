@@ -102,6 +102,8 @@ async function scenario (page, env, name)
 
    await snapshot ("world");
 
+   // A failed step must not leave a held response open: the server's close () would wait for it.
+   try {
    switch (name)
    {
       // The request for B is held, then C is made and arrives, then B is released.
@@ -141,6 +143,10 @@ async function scenario (page, env, name)
          env .server .release (key ("b"));
          await snapshot ("bReleased");
          break;
+   }
+   } finally {
+      for (const letter of ["b", "c"])
+         env .server .release (key (letter));
    }
 
    const served = env .server .requests .slice (from)
