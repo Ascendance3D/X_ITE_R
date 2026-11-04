@@ -17,7 +17,19 @@
 //! allocation ([`same_parser`], `Arc::ptr_eq` on the data pointer). A clone of a `ParserRef` is the same parser; a second
 //! `Arc::new` of an equal value is a different one, as a second class with the same body is in JavaScript. The
 //! built-in parsers are process-wide singletons ([`builtin::xml`] ...), so `removeParsers (XMLParser)` is
-//! `GoldenGate::remove_parsers([builtin::xml()])`.
+//! `GoldenGate::remove_parsers([&builtin::xml()])` (`remove_parsers` borrows, `add_parsers` takes the `Arc`):
+//!
+//! ```
+//! use x3d_parse::{builtin, ParserRegistry};
+//!
+//! let mut registry = ParserRegistry::default();
+//! let before = registry.get_parsers().len();
+//!
+//! registry.remove_parsers([&builtin::xml()]);
+//! assert_eq!(registry.get_parsers().len(), before - 1);
+//! registry.add_parsers([builtin::xml()]);
+//! assert_eq!(registry.get_parsers().len(), before);
+//! ```
 //!
 //! # Exceptions
 //!
@@ -30,7 +42,8 @@ use std::sync::{Arc, LazyLock, PoisonError, RwLock};
 use x3d_scene::Scene;
 
 /// What GoldenGate hands a parser: the converted inputs of `GoldenGate.getInput` (lines 87-156), computed on first use
-/// and shared by every parser of one call like `#inputs`.
+/// and shared by the built-in parsers of one call like `#inputs`. A parser outside this crate reads the public inputs
+/// ([`ParserInput::string`] and [`ParserInput::bytes`]); the parsed DOM and JSON values are crate types and stay private.
 pub struct ParserInput<'a> {
     data: &'a [u8],
     text: &'a str,
@@ -117,6 +130,9 @@ pub trait GoldenGateParser: Send + Sync {
 pub type ParserRef = Arc<dyn GoldenGateParser>;
 
 /// Whether two references are the same parser (JavaScript `===` on the class).
+// The data pointers are compared, not `Arc::ptr_eq`: for a `dyn` pointer that also compares the vtable, which the
+// compiler may duplicate or merge between codegen units (clippy `vtable_address_comparisons`), so one parser could
+// compare unequal to itself.
 pub fn same_parser(a: &ParserRef, b: &ParserRef) -> bool {
     std::ptr::eq(Arc::as_ptr(a) as *const (), Arc::as_ptr(b) as *const ())
 }
