@@ -30,7 +30,9 @@ def write(name, text):
 def script(name, frames, events, capture):
     d = {"settle": True, "console": True, "size": [512, 512], "t0": 946684800, "dt": 1 / 30, "frames": frames, "capture": capture,
          "dump": sorted(set(capture + [frames - 1])), "events": sorted(events, key=lambda e: e["frame"])}
-    json.dump(d, open(os.path.join(root, name + ".json"), "w"), indent=1)
+    with open(os.path.join(root, name + ".json"), "w") as f:
+        json.dump(d, f, indent=1)
+        f.write("\n")
 
 
 def T(tr, body):

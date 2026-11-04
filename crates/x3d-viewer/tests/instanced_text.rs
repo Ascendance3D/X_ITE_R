@@ -18,6 +18,7 @@
 use serde_json::Value;
 use std::path::{Path, PathBuf};
 use std::process::Command;
+use std::sync::atomic::{AtomicUsize, Ordering};
 
 /// (case name, MSAA, why Rust differs).
 const KNOWN_GAPS: &[(&str, u32, &str)] = &[];
@@ -66,10 +67,14 @@ fn compare_case(
     let baseline = base.join(format!("{name}-msaa{msaa}.json"));
     let pictures = base.join(format!("png/{name}-msaa{msaa}"));
     let js: Value = serde_json::from_str(&std::fs::read_to_string(&baseline).unwrap()).unwrap();
+    // One directory for each call: the two tests run in threads of one process under `cargo test`, and both run the same case.
+    static RUN: AtomicUsize = AtomicUsize::new(0);
     let out = std::env::temp_dir().join(format!(
-        "instanced-text-{}-{name}-msaa{msaa}",
-        std::process::id()
+        "instanced-text-{}-{}-{name}-msaa{msaa}",
+        std::process::id(),
+        RUN.fetch_add(1, Ordering::Relaxed)
     ));
+    let _cleanup = TempDir(out.clone());
     std::fs::create_dir_all(&out).unwrap();
     let rs_json = out.join("rs.json");
     let png_dir = out.join("rs");
@@ -102,8 +107,12 @@ fn compare_case(
 
     // Both ways: a frame that only one side has is a difference too.
     let (js_vrml, rs_vrml) = (
-        js["vrml"].as_object().unwrap(),
-        rs["vrml"].as_object().unwrap(),
+        js["vrml"]
+            .as_object()
+            .expect("the baseline has no vrml object"),
+        rs["vrml"]
+            .as_object()
+            .expect("the Rust output has no vrml object"),
     );
 
     for k in js_vrml
@@ -152,8 +161,12 @@ fn compare_case(
     }
 
     let (js_poses, rs_poses) = (
-        js["poses"].as_object().unwrap(),
-        rs["poses"].as_object().unwrap(),
+        js["poses"]
+            .as_object()
+            .expect("the baseline has no poses object"),
+        rs["poses"]
+            .as_object()
+            .expect("the Rust output has no poses object"),
     );
 
     for k in rs_poses.keys().filter(|k| !js_poses.contains_key(*k)) {
@@ -218,10 +231,35 @@ fn compare_case(
     }
 
     {
-        let mut count = 0;
+        // The pictures are the captures of the script, on both sides and no others.
+        let names = |dir: &Path| -> Vec<String> {
+            let mut v: Vec<String> = std::fs::read_dir(dir)
+                .map(|d| {
+                    d.filter_map(|e| e.ok())
+                        .map(|e| e.file_name().to_string_lossy().to_string())
+                        .collect()
+                })
+                .unwrap_or_default();
+            v.sort();
+            v
+        };
+        let script_json: Value =
+            serde_json::from_str(&std::fs::read_to_string(root.join(script)).unwrap()).unwrap();
+        let wanted = script_json["capture"].as_array().map_or(0, |c| c.len());
+        let (have, made) = (names(&pictures), names(&png_dir));
+
+        if have.len() != wanted {
+            fail(format!(
+                "the baseline has {} pictures, the script captures {wanted}",
+                have.len()
+            ));
+        }
+
+        if made != have {
+            fail(format!("pictures: baseline {have:?}, Rust {made:?}"));
+        }
 
         for entry in std::fs::read_dir(&pictures).unwrap() {
-            count += 1;
             let p = entry.unwrap().path();
             let file = p.file_name().unwrap().to_string_lossy().to_string();
             let (w, h, want) = x3d_render::compare::load_png(&p).unwrap();
@@ -245,13 +283,16 @@ fn compare_case(
                 Err(e) => fail(format!("{file}: {e}")),
             }
         }
-
-        if count == 0 {
-            fail("the baseline has no picture".to_string());
-        }
     }
+}
 
-    let _ = std::fs::remove_dir_all(&out);
+/// Removes its directory when dropped, also after an early return.
+struct TempDir(PathBuf);
+
+impl Drop for TempDir {
+    fn drop(&mut self) {
+        let _ = std::fs::remove_dir_all(&self.0);
+    }
 }
 
 /// Runs every case at MSAA 0 and 4.
@@ -356,6 +397,7 @@ fn instanced_text_negative_controls_fail() {
         .canonicalize()
         .unwrap();
     let tmp = std::env::temp_dir().join(format!("instanced-text-control-{}", std::process::id()));
+    let _cleanup = TempDir(tmp.clone());
     std::fs::create_dir_all(&tmp).unwrap();
 
     for (i, (name, from, to, expect)) in CONTROLS.iter().enumerate() {
@@ -382,6 +424,4 @@ fn instanced_text_negative_controls_fail() {
             "control {i} ({name}: `{from}` -> `{to}`) must fail with `{expect}`, got {failures:?}"
         );
     }
-
-    let _ = std::fs::remove_dir_all(&tmp);
 }
