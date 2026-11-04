@@ -6362,7 +6362,8 @@ const STIPPLE_FLOATS_PER_VERTEX: usize = FLOATS_PER_VERTEX + 4;
 
 /// ALIASED_LINE_WIDTH_RANGE [1] of the oracle GPU (ANGLE on OpenGL, NVIDIA): wider lines are
 /// transformed into triangles (LineProperties.transformLines), narrower ones use gl.lineWidth. This is the value of every
-/// backend but Metal; see [`max_line_width`].
+/// backend but Metal; see [`max_line_width`]. Not the limit of the backend in use: a rendering decision calls
+/// [`max_line_width`] (the tests use this constant for a line wider than the NVIDIA limit).
 pub const MAX_LINE_WIDTH: f64 = 10.0;
 
 /// ALIASED_LINE_WIDTH_RANGE [1] of ANGLE on Metal, measured on the physical M1 (Chrome 156): Metal has no wide lines, so
@@ -6376,6 +6377,9 @@ static MAX_LINE_WIDTH_BITS: std::sync::atomic::AtomicU64 =
 /// page reads `gl.getParameter (gl.ALIASED_LINE_WIDTH_RANGE) [1]`, a property of the GPU and the ANGLE backend, so this
 /// is a property of the adapter backend: [`MAX_LINE_WIDTH`] (10) except on Metal ([`MAX_LINE_WIDTH_METAL`], 1). It is set
 /// by [`note_line_width_backend`] when a renderer or a pointing buffer takes its device.
+///
+/// The value is process-global: a process draws and picks on one adapter (the viewer and the drive binaries), so one limit
+/// serves the renderer and the pointing buffer; two devices of different backends in one process are not supported.
 pub fn max_line_width() -> f64 {
     f64::from_bits(MAX_LINE_WIDTH_BITS.load(std::sync::atomic::Ordering::Relaxed))
 }
@@ -6390,8 +6394,13 @@ pub fn max_line_width_of(backend: wgpu::Backend) -> f64 {
 }
 
 /// Sets [`max_line_width`] directly: for a run without a device (the CPU depth stand-in) that stands for a given backend,
-/// e.g. `--aliased-line-width-max 1` of the drive binaries for the M1 recordings.
+/// e.g. `--aliased-line-width-max 1` of the drive binaries for the M1 recordings. A limit is at least 1 (the smallest
+/// ALIASED_LINE_WIDTH_RANGE) and finite: anything else is a bug of the caller and panics.
 pub fn set_max_line_width(width: f64) {
+    assert!(
+        width.is_finite() && width >= 1.0,
+        "line width limit {width} is not a finite number >= 1"
+    );
     MAX_LINE_WIDTH_BITS.store(width.to_bits(), std::sync::atomic::Ordering::Relaxed);
 }
 
