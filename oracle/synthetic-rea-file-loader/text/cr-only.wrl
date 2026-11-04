@@ -1,0 +1,1 @@
+#VRML V2.0 utf8WorldInfo { title "loaded" info [ "a" "b" ] }Group { children [ Shape { geometry Box { size 1 2 3 } } ] }

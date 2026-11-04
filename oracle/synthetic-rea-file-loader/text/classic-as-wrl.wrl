@@ -1,0 +1,4 @@
+#X3D V3.0 utf8
+PROFILE Interchange
+WorldInfo { title "classic" }
+Group { children Shape { geometry Sphere { radius 2 } } }
