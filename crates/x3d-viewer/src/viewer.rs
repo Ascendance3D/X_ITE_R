@@ -360,6 +360,20 @@ fn geom_of(
     g
 }
 
+/// What [`set_fetcher_wrap`] installed.
+#[cfg(feature = "script")]
+type FetcherWrap = Box<dyn Fn(LocalFetcher) -> Box<dyn x3d_runtime::Fetcher> + Send + Sync>;
+
+#[cfg(feature = "script")]
+static FETCHER_WRAP: std::sync::OnceLock<FetcherWrap> = std::sync::OnceLock::new();
+
+/// Makes every later `Viewer3d::load*` of this process build its fetcher from the oracle's `LocalFetcher` with `wrap`
+/// (once per process; a second call is ignored). `x3d-drive` uses it to send the routes of a local test server over HTTP.
+#[cfg(feature = "script")]
+pub fn set_fetcher_wrap(wrap: FetcherWrap) {
+    let _ = FETCHER_WRAP.set(wrap);
+}
+
 impl Viewer3d {
     /// Load a world like the oracle's FileLoader (parse, setup, loads) but live, then bind the
     /// first bindables (X3DBrowser.replaceWorld → X3DWorld.bindBindables).
@@ -456,10 +470,15 @@ impl Viewer3d {
             .replace('\\', "/");
         let url = format!("{ORACLE_PREFIX}{}", encode_path(&rel));
         let data = std::fs::read(&file).map_err(|e| format!("{}: {e}", file.display()))?;
-        let fetcher = Box::new(LocalFetcher {
+        let local = LocalFetcher {
             root: root.to_path_buf(),
             prefix: ORACLE_PREFIX.to_string(),
-        });
+        };
+        // `x3d-drive --http-map` wraps it: the requests under the routes of a local test server go to HTTP.
+        let fetcher: Box<dyn x3d_runtime::Fetcher> = match FETCHER_WRAP.get() {
+            Some(wrap) => wrap(local),
+            None => Box::new(local),
+        };
         // glTF buffers and images of a top-level world come through the runtime fetcher, as in x3d-render's load.rs.
         let scene = x3d_runtime::parse_bytes_with_fetcher(&*fetcher, &data, &url)
             .scene

@@ -1694,3 +1694,50 @@ native build differs only by the pinned `shutdown ()` lines (owner-approved, ISO
 console in a table (`PINS`), so any other line, a missing or a moved `shutdown` line fails. `X3D_PRINT_PINS=1 cargo nextest run ... --no-capture`
 prints the table. Four scenarios of `synthetic-inline-reload-known.tsv` differ for another reason (`c07`, `c09`, `c29`, `c35`); the test lists them
 by name, so a fifth cannot be added unnoticed.
+
+## FileLoader over HTTP: the Fetcher response contract (sub:io.file-loader)
+
+`Fetcher::fetch_response` (crates/x3d-runtime/src/loader.rs) gives FileLoader the parts of a fetch `Response` that the pinned `FileLoader.js` reads:
+final URL, status, reason text, headers, redirected flag and body. The default is `fetch` with status 200 and no header, so a fetcher that has only `fetch`
+still works. `Content-Type` of the response decides the hand-off of `Browser.loadURL` and Anchor: `text/html` and `application/xhtml+xml` (exact text before
+the first `;`) go to `foreign (resolvedURL.href, target)`, and the href is the URL that was requested, not `response.url` after a redirect. The HTTP and
+HTTPS fetcher is the crate `x3d-http` (ureq with rustls; docs/http-client-admission.md). It follows redirects itself, at most 20, and refuses a redirect to
+a scheme other than `http` and `https` and to a URL with credentials; it has limits for the body size and for time that a browser does not have.
+
+`oracle/synthetic-rea-file-http/` holds `routes.json`, a table of routes for a local HTTP server, and four worlds, all made by
+`oracle/tools/gen_file_http.py`. The recorder `oracle/x_ite-anim.mjs` serves the table from Node on two ports of 127.0.0.1 (script key `httpRoutes`; the
+second port is a second origin) and the test serves the same table from `x3d_http::route_server` (std only). `x3d-drive --http-map http://oracle=ORIGIN`
+sends the requests under `/h/` to that server over HTTP. The recorder also records the hand-off (script key `foreign`: `window .open` is replaced, the
+`navigate` event of `location = href` is recorded and cancelled), as `foreign` in the result, and `x3d-drive` writes the same key.
+
+| group | content |
+| --- | --- |
+| `fh-redirect` | 301, 302, 303, 307, 308; relative, absolute, protocol-relative and query `Location`; chains; a loop; 20 and 21 hops; a 3xx with no or an empty `Location`; 300 and 304; redirects to `file:`, `data:`, `ftp:`, `javascript:`, `ecmascript:`, `blob:`, `about:`, `ws:`, a URL with credentials, a bad URL, a closed port; a redirect across origins with CORS headers; fragments; fallback lists |
+| `fh-status` | 400, 403, 404, 410, 500, 502, 503, 204, 201, an empty 200; eleven content types; custom and repeated headers; `Content-Encoding: gzip` once, twice and wrongly; a gzip file; a cut body; a closed connection |
+| `fh-foreign` | `loadURL` with `text/html`, `application/xhtml+xml`, a charset, `TEXT/HTML`, a space before the `;`, no type, gzip, a `.html` URL, redirects to HTML, a `target` parameter, fallback lists, fragments |
+| `fh-diff` | the cases where the port differs (below) |
+
+```
+XITE_TESTS=... python3 -I oracle/tools/file_http.py record     # three pinned recordings per world, written only when identical
+cargo nextest run -p x3d-viewer --test file_http
+cargo nextest run -p x3d-http -p x3d-runtime --test http_fetcher --test fetcher_response
+```
+
+The baselines are `oracle/file-http-baseline/fh-*.json` (Chrome 156.0.8078.47). No GPU is used. What the recordings showed, and the port matches:
+
+- The world URL, and the base of the relative URLs in the loaded scene, is the requested URL, not the URL after the redirects.
+- An empty `Location` is no redirect (`Error: Found`). A redirect to `#Frag` is a loop and fails. 20 redirects are followed, the 21st fails.
+- A body that cannot be read to its end (cut off, or `Content-Encoding: gzip` on a body that is not gzip) rejects with `TypeError: network error`; a
+  closed connection before the response head rejects with `TypeError: Failed to fetch`.
+- A response with an unread body keeps the recorder's request counter above zero (`settle` would wait for ever), so the routes that are handed off
+  or that fail have empty bodies, and a body that is read must not parse (an empty body is an empty scene, and `loadURL` would replace the world).
+
+Known differences, pinned by `known_differences_are_pinned` (a change of either side fails it):
+
+- The page refuses a redirect to another origin when the answer has no `Access-Control-Allow-Origin`. A native program has no origin, so the port follows.
+- The page shows the reason phrase that the server sent (`Error: Gone Fishing`, `Error: 404` for an empty phrase, `Error: I'm a Teapot`). The HTTP client
+  keeps no phrase, so the port shows the canonical phrase of the status.
+
+Not compared: `Content-Encoding` values other than gzip (the port asks for gzip only), the progress fractions that `X-File-Size` and `Content-Length`
+feed, a body above the size limit and the time limits (the page has none; `crates/x3d-http/tests/http_fetcher.rs` tests them), HTTPS and a certificate
+failure (the recorder has no TLS server), and the web build, whose `WebFetcher` does not report the headers of the page's `fetch` (no hand-off by content type there).

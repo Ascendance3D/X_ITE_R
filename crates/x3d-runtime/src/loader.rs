@@ -14,6 +14,16 @@ pub trait Fetcher {
     /// `fetch (url)` + `checkResponse`: the body bytes, or `String (error)` of the rejection.
     fn fetch(&self, url: &url::Url) -> Result<Vec<u8>, String>;
 
+    /// `fetch (url)` + `checkResponse`, with the parts of the response that FileLoader reads besides the body: the final URL,
+    /// the status, the headers (`Content-Type` decides the foreign hand-off of [`LoadHooks::foreign`]). The error is the
+    /// same text as [`Fetcher::fetch`] gives: a network failure, or `Error: <statusText>` of a status outside 200 to 299.
+    /// A fetcher with no HTTP (the default) answers a fetched body as status 200 with no headers, so existing
+    /// implementations keep working; an HTTP fetcher (crate `x3d-http`) overrides this and implements [`Fetcher::fetch`]
+    /// with it.
+    fn fetch_response(&self, url: &url::Url) -> Result<Response, String> {
+        self.fetch(url).map(|body| Response::ok(url.clone(), body))
+    }
+
     /// The error message of a failed request, or `None` when the request succeeded. The default
     /// calls [`Fetcher::fetch`], so for a successful request it copies the body and drops it.
     /// A fetcher that holds a response cache overrides this to answer from the cached state
@@ -51,6 +61,78 @@ pub trait Fetcher {
     /// A response that arrived or is in flight stays. EXTERNPROTO keeps its failure (X_ITE's scene cache holds it for
     /// good), so only the Inline's own url set calls this.
     fn forget_failure(&self, _url: &url::Url) {}
+}
+
+/// The mime types that `FileLoader.js` hands to `foreign` instead of reading them (`FOREIGN_MIME_TYPES`).
+pub const FOREIGN_MIME_TYPES: [&str; 2] = ["text/html", "application/xhtml+xml"];
+
+/// A fetch response that passed `checkResponse`: what FileLoader.js reads of the `Response` object.
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub struct Response {
+    /// `response.url`: the URL of the last request, after the redirects. FileLoader.js does not use it: the scene's world
+    /// URL and the base of its relative URLs are the URL that was requested.
+    pub url: url::Url,
+    /// `response.status`.
+    pub status: u16,
+    /// `response.statusText`.
+    pub status_text: String,
+    /// `response.headers`: the names are lower case, in the order received; a repeated name is a repeated entry.
+    pub headers: Vec<(String, String)>,
+    /// `response.redirected`: at least one redirect was followed.
+    pub redirected: bool,
+    /// The body, after the transfer decoding and the content decoding of the transport (`Content-Encoding`).
+    pub body: Vec<u8>,
+}
+
+impl Response {
+    /// A response of status 200 with no header and no redirect.
+    pub fn ok(url: url::Url, body: Vec<u8>) -> Response {
+        Response {
+            url,
+            status: 200,
+            status_text: "OK".into(),
+            headers: vec![],
+            redirected: false,
+            body,
+        }
+    }
+
+    /// `response.ok`.
+    pub fn is_ok(&self) -> bool {
+        (200..300).contains(&self.status)
+    }
+
+    /// `checkResponse`: `Error: <statusText>`, or `Error: <status>` when the text is empty, for a response that is not ok.
+    pub fn check(self) -> Result<Response, String> {
+        if self.is_ok() {
+            return Ok(self);
+        }
+
+        if self.status_text.is_empty() {
+            Err(format!("Error: {}", self.status))
+        } else {
+            Err(format!("Error: {}", self.status_text))
+        }
+    }
+
+    /// `response.headers.get (name)`: the values of a repeated header are joined with `, `; `None` without the header.
+    pub fn header(&self, name: &str) -> Option<String> {
+        let values: Vec<&str> = self
+            .headers
+            .iter()
+            .filter(|(n, _)| n.eq_ignore_ascii_case(name))
+            .map(|(_, v)| v.as_str())
+            .collect();
+
+        (!values.is_empty()).then(|| values.join(", "))
+    }
+
+    /// `response.headers.get ("Content-Type") ?.replace (/;.*$/, "")`: the text before the first `;`, as sent (the case is
+    /// not changed, and `FOREIGN_MIME_TYPES` is compared exactly).
+    pub fn mime_type(&self) -> Option<String> {
+        self.header("content-type")
+            .map(|v| v.split(';').next().unwrap_or_default().to_string())
+    }
 }
 
 /// The state of a URL at an asynchronous [`Fetcher`].
@@ -598,7 +680,24 @@ impl Runtime {
                 let data = if loader.type_name == "ShaderPart" && r.scheme() == "data" {
                     x3d_parse::decode_data_url(candidate).map_err(Some)?
                 } else {
-                    self.fetcher.fetch(&r).map_err(Some)?
+                    // `checkResponse (await fetch (this .resolvedURL, options))`, then the Content-Type of the response:
+                    // `FOREIGN_MIME_TYPES` go to `foreign (this .resolvedURL .href, this .target)` and are not read.
+                    // The href is the requested URL, not `response .url` after a redirect.
+                    let response = self.fetcher.fetch_response(&r).map_err(Some)?;
+
+                    if hooks.foreign
+                        && response
+                            .mime_type()
+                            .is_some_and(|m| FOREIGN_MIME_TYPES.contains(&m.as_str()))
+                    {
+                        special = Some(LoadResult::Foreign(
+                            r.as_str().to_string(),
+                            loader_target(&hooks.parameters),
+                        ));
+                        return Ok(());
+                    }
+
+                    response.body
                 };
 
                 self.buffers_pending = false;
