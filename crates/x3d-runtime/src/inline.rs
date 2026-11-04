@@ -330,7 +330,14 @@ impl Runtime {
     /// Only an Inline has a request identity; the other nodes that fetch keep generation 0.
     fn url_start_load(&mut self, node: NodeId) {
         let generation = if self.is_scene_loader(node) {
-            self.inline_abort(node)
+            let generation = self.inline_abort(node);
+            let urls = self.url_strings(node);
+
+            if let Some(s) = self.url_state_mut(node) {
+                s.fetch_urls = Some((generation, urls));
+            }
+
+            generation
         } else {
             0
         };
@@ -378,6 +385,19 @@ impl Runtime {
         }
 
         generation
+    }
+
+    /// The url list of the request `generation` of an Inline: the one its FileLoader was created with (Inline.loadData),
+    /// not the `url` the node has now. A request that is still in flight when `url` is set again (the new request starts
+    /// with the `loadData` event that follows) keeps asking for its own files.
+    pub(crate) fn inline_request_urls(&self, node: NodeId, generation: u64) -> Vec<String> {
+        match self.nrt(node).map(|n| &n.state) {
+            Some(nodes::State::UrlObject(s)) => match &s.fetch_urls {
+                Some((g, urls)) if *g == generation => urls.clone(),
+                _ => self.url_strings(node),
+            },
+            _ => self.url_strings(node),
+        }
     }
 
     /// Is `generation` the request the node is waiting for? A disabled, replaced, cancelled or
@@ -499,7 +519,7 @@ impl Runtime {
             base: self.base_url(node),
             data_as_string: true,
         };
-        let urls = self.url_strings(node);
+        let urls = self.inline_request_urls(node, generation);
 
         self.allow_fetch_wait();
 

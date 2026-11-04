@@ -1050,13 +1050,19 @@ impl Runtime {
 
         // `world`: the parameters of a loadURL or Anchor load, whose foreign targets are never fetched.
         let (base, mut urls, world) = match *task {
-            Task::UrlLoad(node, _) => {
+            Task::UrlLoad(node, generation) => {
                 if node as usize >= self.scene.nodes.len() || self.scene.free_nodes.contains(&node)
                 {
                     return true;
                 }
 
-                (self.base_url(node), self.url_strings(node), None)
+                let urls = if self.is_scene_loader(node) {
+                    self.inline_request_urls(node, generation)
+                } else {
+                    self.url_strings(node)
+                };
+
+                (self.base_url(node), urls, None)
             }
             Task::ExternLoad(e, request) => match self.extern_pending_candidates(e, request) {
                 Some((base, urls)) => (base, urls, None),

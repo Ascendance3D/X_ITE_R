@@ -276,14 +276,11 @@ const KNOWN_DIFFERENCES = {
       [ [ "steps", "bReleased", "shown" ], "blue", "red" ],
       [ [ "steps", "bReleased", "seq" ], [ "log: B initialize" ], [ ] ],
    ],
-   // The same, and two differences that do not come from the held request: X_ITE asks for a.wrl again when the url is set to it (the
-   // Inline's FileLoader does not cache), X_ITE_R takes the file it already fetched (served); and X_ITE_R's Script of a.wrl printed
-   // twice in that step while B was held (the second print has no explanation yet: it is not there when no request is held, or when
-   // a url with a query makes X_ITE_R fetch).
+   // The same, and a difference that does not come from the held request: X_ITE asks for a.wrl again when the url is set to it (the
+   // Inline's FileLoader does not cache), X_ITE_R takes the file it already fetched (served).
    "inlineHold.backToA": [
       [ [ "steps", "bReleased", "shown" ], "blue", "red" ],
       [ [ "steps", "bReleased", "seq" ], [ "log: B initialize" ], [ ] ],
-      [ [ "steps", "aAgain", "seq" ], [ "log: A initialize" ], [ "log: A initialize", "log: A initialize" ] ],
       [ [ "served" ],
         [ "/tests/browser/worlds/inline-hold/a.wrl", "/hold/K/tests/browser/worlds/inline-hold/b.wrl", "/tests/browser/worlds/inline-hold/a.wrl" ],
         [ "/tests/browser/worlds/inline-hold/a.wrl", "/hold/K/tests/browser/worlds/inline-hold/b.wrl" ] ],
