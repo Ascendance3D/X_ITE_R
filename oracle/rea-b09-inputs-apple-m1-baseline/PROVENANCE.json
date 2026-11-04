@@ -1,0 +1,32 @@
+{
+ "angle_backend": "metal",
+ "cases": {
+  "sensors-drag-msaa0": {
+   "differs_from_nvidia_in": [
+    "vrml"
+   ],
+   "run_sha256": [
+    "d94bcb9c5a8328c47dd5b431315fcbcce79e81eaef2f4ceaaf8b0f328a78a1b1",
+    "d94bcb9c5a8328c47dd5b431315fcbcce79e81eaef2f4ceaaf8b0f328a78a1b1",
+    "d94bcb9c5a8328c47dd5b431315fcbcce79e81eaef2f4ceaaf8b0f328a78a1b1"
+   ]
+  },
+  "sensors-touch-msaa0": {
+   "differs_from_nvidia_in": [
+    "vrml"
+   ],
+   "run_sha256": [
+    "a6d513afc0f09bc22f2362d31639fa623e209ced6ec6a2c33055e708c5d707cb",
+    "a6d513afc0f09bc22f2362d31639fa623e209ced6ec6a2c33055e708c5d707cb",
+    "a6d513afc0f09bc22f2362d31639fa623e209ced6ec6a2c33055e708c5d707cb"
+   ]
+  }
+ },
+ "chrome": "Google Chrome 156.0.8078.79",
+ "hardware": "Apple M1, macOS 27.0.1",
+ "pinned_x_ite": "16.5.0 34cdf9f97",
+ "platform": "apple-m1",
+ "recorded": "2026-11-03",
+ "recorder": "oracle/x_ite-anim.mjs, oracle/x_ite-anim-msaa.mjs",
+ "rule": "3 identical runs; kept only where the NVIDIA recording differs"
+}
