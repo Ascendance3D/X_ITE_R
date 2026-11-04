@@ -275,6 +275,12 @@ impl Box2 {
     }
 }
 
+/// `text ._lineBounds [l] = lineBound`: the field holds a Float32Array, so a later read (`extent`, the charSpacing
+/// correction, `*= s`) sees the single precision value.
+fn f32_pair(v: [f64; 2]) -> [f64; 2] {
+    [f64::from(v[0] as f32), f64::from(v[1] as f32)]
+}
+
 /// PolygonText.getGlyphExtents: (min, max) of the glyph's triangles, (0, 0) for an empty glyph.
 fn glyph_extents(font: &Font, glyph: u16, quality: PrimitiveQuality) -> ([f64; 2], [f64; 2]) {
     let v = font.glyph_geometry(glyph, quality);
@@ -462,7 +468,7 @@ impl State<'_> {
             } else {
                 1.0
             };
-            self.line_bounds[l as usize] = line_bound;
+            self.line_bounds[l as usize] = f32_pair(line_bound);
 
             let t = match major {
                 Alignment::Begin | Alignment::First => [0.0, -(ll as f64) * spacing],
@@ -516,7 +522,7 @@ impl State<'_> {
                 }
 
                 for lb in self.line_bounds.iter_mut() {
-                    lb[0] *= s;
+                    lb[0] = f64::from((lb[0] * s) as f32);
                 }
 
                 bbox.mult_right([s, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0]);
@@ -654,7 +660,7 @@ impl State<'_> {
             } else {
                 1.0
             };
-            self.line_bounds[lu] = line_bound;
+            self.line_bounds[lu] = f32_pair(line_bound);
 
             let ls = line_number as f64 * spacing;
             let (translation1, translation2) = match major {
@@ -731,7 +737,7 @@ impl State<'_> {
                 }
 
                 for lb in self.line_bounds.iter_mut() {
-                    lb[1] *= s;
+                    lb[1] = f64::from((lb[1] * s) as f32);
                 }
 
                 bbox.mult_right([1.0, 0.0, 0.0, 0.0, s, 0.0, 0.0, 0.0, 0.0]);
