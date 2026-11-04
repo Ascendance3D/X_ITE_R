@@ -210,9 +210,7 @@ fn compare_frame(want: &Value, got: &Value, tol: f64) -> (Vec<String>, Vec<Strin
 }
 
 fn run_case(root: &Path, name: &str, cpu: bool, gaps: Gaps, failures: &mut Vec<String>) {
-    let base = root
-        .join("oracle/rea-b15-particle-collision-baseline")
-        .join(name);
+    let base = common::reference::pair_dir(root, "rea-b15-particle-collision-baseline", name);
     let world = root
         .join("oracle/synthetic-rea-b15-particle-collision")
         .join(format!("{name}.x3dv"));

@@ -1,0 +1,60 @@
+{
+ "angle_backend": "metal",
+ "cases": {
+  "pc-clip-plane": {
+   "js.f32": "cfd99d18cdab35fb042faff1d6e70a03746a0968883f0abee0d89a1f6dbdfbe5",
+   "js.json": "38a6bf573e8b99f80f49ec9160fc21d6a477ecd72af4d4082ad845d83678b3a6"
+  },
+  "pc-collision-node": {
+   "js.f32": "d1328b5db7923f90ed9a5c2d1425353d42c792b26c83d741a16c62a25ba51638",
+   "js.json": "07d6c68a8f78e9f25e4f5d9f08ec958df492598a3c08ada80f38dfee0eba788d"
+  },
+  "pc-constrain": {
+   "js.f32": "cfd99d18cdab35fb042faff1d6e70a03746a0968883f0abee0d89a1f6dbdfbe5",
+   "js.json": "2045ebc6ce1f1403860a7601444630ecd7781932a99ec1ae29adb8497c02e825"
+  },
+  "pc-disabled": {
+   "js.f32": "1dccfdc7155812c968442eb4d0c2bce4b8f275001876b23b64927d1d49b5d528",
+   "js.json": "2ccd29ea515c3333144116f0a8558c61fd210114d61eff0d622770efb52a6970"
+  },
+  "pc-geometry": {
+   "js.f32": "5d21e2b5a9a6ef0b57c04466724cc09d7c4977a36e98542ae33db5fd8d5c546e",
+   "js.json": "cdd0ca5a902a85905fb3d7b32e6da9de188ceba331080b05758586cd3c1063b2"
+  },
+  "pc-hidden": {
+   "js.f32": "cfd99d18cdab35fb042faff1d6e70a03746a0968883f0abee0d89a1f6dbdfbe5",
+   "js.json": "c37d80cdddf4b390c7f13fd04336c0a98b662b67e9582233096a5984013fef11"
+  },
+  "pc-line": {
+   "js.f32": "2262fe97067d648bf06bf84b73d25ea347be8bd4ba47bd47096dd510e24406af",
+   "js.json": "d7395ab47b87b3dde317eac7e0f7004ac42bc4f7c07bf29e849bed9533ef7391"
+  },
+  "pc-max-particles": {
+   "js.f32": "0b144445ec22ad24187ce00eff6fd97f3eef8f2b0598070ca70e07e15cd98a8a",
+   "js.json": "c9f913866c5a1e2069bcaf5c74d9600b6b780ea8634204e7ab367ccfbe74b70c"
+  },
+  "pc-quad-wall": {
+   "js.f32": "cfd99d18cdab35fb042faff1d6e70a03746a0968883f0abee0d89a1f6dbdfbe5",
+   "js.json": "2716fc3cd9143e7ea79a5ca4e3882d354c75012a6482433b64ed35908a098020"
+  },
+  "pc-sprite": {
+   "js.f32": "a53f09bbff07e4e05a2a7289f48371b7c7032e1531b91bdb6e43b626bb01fdee",
+   "js.json": "0b331ebb7ecb41631fc9da337af4a43459cb404dfa8d44220e3d01c020834f2e"
+  },
+  "pc-transform": {
+   "js.f32": "43c04a050cefa4d7feebd21af99331abac2684988cf342a613f5bb116667aa19",
+   "js.json": "7f270941089ae3e46e58ab0ea85cbc418a6bce9ba2f381b8349aad325b97b5dc"
+  },
+  "pc-walk-gravity": {
+   "js.f32": "a42cb6ccfb5a352f6d9a810a5602f4dfb6986b85791d9081b13a261fe0923330",
+   "js.json": "7a3442dd1909082ac0f4302f7141023b2c871810ec3b2224653980755c86d5db"
+  }
+ },
+ "chrome": "Google Chrome 156.0.8078.79",
+ "hardware": "Apple M1, macOS 27.0.1",
+ "pinned_x_ite": "16.5.0 34cdf9f97",
+ "platform": "apple-m1",
+ "recorded": "2026-11-03",
+ "recorder": "x3d-oracle particles",
+ "rule": "3 identical runs; kept only where the NVIDIA recording differs"
+}
