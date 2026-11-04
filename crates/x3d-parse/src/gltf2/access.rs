@@ -696,7 +696,7 @@ impl<'j, 's> P<'j, 's> {
             FieldValue::MFString(
                 medias
                     .iter()
-                    .map(|m| m.1.clone().unwrap_or_default())
+                    .map(|m| m.1.clone().unwrap_or_else(|| UNDEFINED_URI.to_string()))
                     .collect(),
             ),
         );
@@ -730,6 +730,10 @@ impl<'j, 's> P<'j, 's> {
         Ok(Some(node))
     }
 }
+
+/// `textureNode ._url = medias .map (image => image .uri)` (GLTF2Parser.js:1027, :422): an image with neither `uri` nor a
+/// `bufferView` has `uri === undefined`, which the MFString assignment turns into the string `undefined`.
+pub(super) const UNDEFINED_URI: &str = "undefined";
 
 fn js_min(a: f64, b: f64) -> f64 {
     x3d_fields::jsmath::js_min(a, b)

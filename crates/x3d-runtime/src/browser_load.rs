@@ -174,7 +174,7 @@ impl Runtime {
         if let Err(e) =
             self.browser_scene(id, req.script, req.parent, Input::Text(&req.text), &world)
         {
-            self.browser_settle(id, Err(e));
+            self.browser_settle(id, Err(e.unwrap_or_default()));
         }
     }
 
@@ -331,8 +331,12 @@ impl Runtime {
 
         self.allow_fetch_wait();
 
-        let result =
-            self.load_document_hooks(&loader, &req.urls, &LoadHooks::default(), |rt, loaded| {
+        let result = self.load_document_from_opt(
+            &loader,
+            &req.urls,
+            &LoadHooks::default(),
+            0,
+            |rt, _, loaded| {
                 // The text of a `data:` or script url reaches the parsers as a string: no byte order mark removal
                 // (`$.decodeText` leaves a string alone). The bytes of a fetch are decoded.
                 match loaded {
@@ -365,8 +369,9 @@ impl Runtime {
                         url.as_str(),
                     ),
                 }
-                .map_err(error_string)
-            });
+                .map_err(|e| e.map(error_string))
+            },
+        );
 
         // The request goes on when the response of the next candidate is in.
         if result == LoadResult::Suspended {
@@ -381,6 +386,9 @@ impl Runtime {
     }
 
     /// FileLoader.createX3DFromString for the browser: parse into a new X3DScene, set up its nodes and wait for its loadCount.
+    ///
+    /// An `Err (None)` is a rejection with no error, which FileLoader.printError does not log: a glTF whose buffers are
+    /// not in yet, and one whose buffer FileLoader failed (FileLoader.js:26, `reject ()`; GLTF2Parser.js:600 `Promise .all`).
     fn browser_scene(
         &mut self,
         id: u64,
@@ -388,25 +396,25 @@ impl Runtime {
         parent: CtxId,
         input: Input<'_>,
         url: &str,
-    ) -> Result<(), String> {
+    ) -> Result<(), Option<String>> {
         self.sync_svg_quality();
 
+        let mut buffer_errors = vec![];
         let parsed = match input {
             Input::Bytes(data) => {
-                let parsed = crate::loader::parse_bytes_waiting(
-                    &*self.fetcher,
-                    data,
-                    url,
-                    self.accept_waits,
-                    true,
-                );
+                let mut parsed = self.parse_candidate(data, url);
+
+                // `Promise .all` rejects at the first buffer that failed, also while others are in flight (issue #128).
+                if let Some(thrown) = self.gltf_buffer_failed_first(&mut parsed) {
+                    return Err(thrown);
+                }
 
                 // `await buffersArray`: the scene is built when the buffers are in.
                 if parsed.buffers_pending {
-                    self.buffers_pending = true;
-                    return Err(String::new());
+                    return Err(None);
                 }
 
+                buffer_errors = std::mem::take(&mut parsed.buffer_errors);
                 parsed.scene
             }
             Input::Text(text) => x3d_parse::parse_string(text, url),
@@ -420,7 +428,12 @@ impl Runtime {
                         .iter()
                         .any(|p| e.message.starts_with(p)) =>
             {
-                return Err(e.message);
+                // The buffer FileLoaders log their own failures; the candidate's FileLoader logs nothing for them.
+                if let Some(thrown) = self.gltf_buffer_rejection(buffer_errors, &e.message) {
+                    return Err(thrown);
+                }
+
+                return Err(Some(e.message));
             }
             Err(x3d_parse::LoadError::Parse(e)) => {
                 for w in x3d_parse::take_error_warnings() {
@@ -429,21 +442,21 @@ impl Runtime {
 
                 // VRMLParser (DEVELOPMENT) prints the original error before it is rethrown with the line of the input.
                 self.log_error(format!("Error: {}", e.message));
-                return Err(
-                    x3d_parse::take_error_detail().unwrap_or_else(|| format!("Error: \n{e}"))
-                );
+                return Err(Some(
+                    x3d_parse::take_error_detail().unwrap_or_else(|| format!("Error: \n{e}")),
+                ));
             }
             // GoldenGate.parseIntoScene.
             Err(x3d_parse::LoadError::NoHandler) => {
                 // `worldURL .startsWith ("data:")`: a data URL is not named.
-                return Err(if url.starts_with("data:") {
+                return Err(Some(if url.starts_with("data:") {
                     "Couldn't parse X3D. No suitable file handler found for 'data:' URL."
                         .to_string()
                 } else {
                     format!("Couldn't parse X3D. No suitable file handler found for '{url}'.")
-                });
+                }));
             }
-            Err(e) => return Err(format!("Error: {e}")),
+            Err(e) => return Err(Some(format!("Error: {e}"))),
         };
 
         self.browser_attach(id, script, parent, scene);
@@ -746,7 +759,7 @@ impl Runtime {
 
         self.allow_fetch_wait();
 
-        let result = self.load_document_hooks(&loader, &req.urls, &hooks, |rt, loaded| {
+        let result = self.load_document_from_opt(&loader, &req.urls, &hooks, 0, |rt, _, loaded| {
             let (data, url) = match loaded {
                 Loaded::Script(source) => (
                     source.into_bytes(),
@@ -760,7 +773,7 @@ impl Runtime {
             };
 
             rt.browser_scene(id, req.script, req.parent, Input::Bytes(&data), &url)
-                .map_err(error_string)
+                .map_err(|e| e.map(error_string))
         });
 
         match result {

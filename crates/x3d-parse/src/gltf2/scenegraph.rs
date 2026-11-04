@@ -141,7 +141,10 @@ impl<'j, 's> P<'j, 's> {
                         texture,
                         "url",
                         FieldValue::MFString(match &image {
-                            Some(im) => vec![im.1.clone().unwrap_or_default()],
+                            Some(im) => vec![
+                                im.1.clone()
+                                    .unwrap_or_else(|| super::access::UNDEFINED_URI.to_string()),
+                            ],
                             None => vec![],
                         }),
                     );
