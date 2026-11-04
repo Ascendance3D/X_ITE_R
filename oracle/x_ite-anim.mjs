@@ -88,10 +88,15 @@ const server = createServer (async (req, res) =>
 await new Promise (r => server .listen (0, "127.0.0.1", r));
 
 const base    = `http://127.0.0.1:${server .address () .port}`;
+// XITE_CHROME and XITE_ANGLE_BACKEND let another machine record: the physical M1 Mac uses
+// "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome" and "metal" (docs/gpu-failure-classification.md). Unset, the
+// recording is the one of the NVIDIA host (system Chrome, ANGLE on OpenGL).
 const browser = await chromium .launch ({
-   executablePath: "/usr/bin/google-chrome",
+   executablePath: process .env .XITE_CHROME ?? "/usr/bin/google-chrome",
    headless: true,
-   args: [ "--headless=new", "--no-sandbox", "--use-gl=angle", "--use-angle=gl", "--enable-gpu", "--ignore-gpu-blocklist" ],
+   args: [ "--headless=new", "--no-sandbox",
+      ...(process .env .XITE_ANGLE_BACKEND ? [ `--use-angle=${process .env .XITE_ANGLE_BACKEND}` ] : [ "--use-gl=angle", "--use-angle=gl" ]),
+      "--enable-gpu", "--ignore-gpu-blocklist" ],
 });
 
 const CRC = new Int32Array (256) .map ((_, n) => { let c = n; for (let k = 0; k < 8; ++ k) c = c & 1 ? 0xedb88320 ^ (c >>> 1) : c >>> 1; return c; });

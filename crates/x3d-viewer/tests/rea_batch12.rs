@@ -158,7 +158,7 @@ fn compare_case(
     gpu: bool,
     failures: &mut Vec<String>,
 ) {
-    let dir = root.join(format!("oracle/rea-b12-baseline/{name}-msaa{msaa}"));
+    let dir = common::reference::case_dir(root, "rea-b12-baseline", name, msaa);
     let js: Value =
         serde_json::from_str(&std::fs::read_to_string(dir.join("js.json")).unwrap()).unwrap();
     let out =
