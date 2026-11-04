@@ -1064,7 +1064,7 @@ pub struct Fly {
     from_vector: Vector3,
     to_vector: Vector3,
     direction: Vector3,
-    /// Date.now () of the last fly / pan step, 0 when not flying.
+    /// Date.now () (milliseconds, the clock the page reads) of the last fly / pan step, 0 when not flying.
     start_time: f64,
     fly_active: bool,
     pan_active: bool,
@@ -1281,7 +1281,7 @@ impl Fly {
         }
 
         self.fly_active = true;
-        self.start_time = cx.env.date_now;
+        self.start_time = cx.env.date_now * 1000.0;
     }
 
     fn add_pan(&mut self, cx: &Cx) {
@@ -1291,7 +1291,7 @@ impl Fly {
 
         self.disconnect();
         self.pan_active = true;
-        self.start_time = cx.env.date_now;
+        self.start_time = cx.env.date_now * 1000.0;
     }
 
     /// X3DFlyViewer.display: the two ends of the rubber band in viewport pixels while it is connected to displayFinishEvents.
@@ -1312,8 +1312,8 @@ impl Fly {
 
     /// X3DFlyViewer.fly.
     fn fly(&mut self, cx: &mut Cx) {
-        let now = cx.env.date_now;
-        let dt = now - self.start_time;
+        let now = cx.env.date_now * 1000.0;
+        let dt = (now - self.start_time) / 1000.0;
 
         let axis_back = Vector3::new(0.0, 0.0, 1.0);
         let mut rubber = if self.direction.z > 0.0 {
@@ -1360,8 +1360,8 @@ impl Fly {
 
     /// X3DFlyViewer.pan.
     fn pan(&mut self, cx: &mut Cx) {
-        let now = cx.env.date_now;
-        let dt = now - self.start_time;
+        let now = cx.env.date_now * 1000.0;
+        let dt = (now - self.start_time) / 1000.0;
         let up = cx.base.up_vector(cx.vp, false);
 
         let direction = self.constrain_pan_direction(self.direction);

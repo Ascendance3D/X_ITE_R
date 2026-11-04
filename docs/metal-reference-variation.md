@@ -22,7 +22,8 @@ Mac is open until its cause is shown.
 | --- | --- |
 | PASS against the M1 recording; REFERENCE VARIATION (NVIDIA and M1 recordings differ reproducibly, Rust equals the M1 one) | 24: fly-middle-pan, fly-wall, geo-touch, pick-hits, pick-instanced, pk-overlap, pk-points, sensors, sensors-drag, sensors-touch, touch-hit-events, walk-ceiling-block, walk-ceiling-pass, walk-fall-then-walk, walk-pit, walk-radius-large, walk-ramp, walk-small-avatar, walk-step-above-limit, walk-step-below-limit, walk-step-large, walk-step-zero, walk-tilted-forward, walk-wall |
 | FIXED: a Rust defect on Metal, shown with synthetic worlds recorded on the same M1, now PASS against the M1 recording | 3: pk-lines, pk-points-style, pk-events (see the last section) |
-| OPEN: Rust differs from the pinned page on the same Mac (not shown to be a Rust defect, not shown to be variation) | 2: walk-steps, walk-instanced-steps |
+| FIXED: a Rust defect that is not specific to Metal (the viewer clock), now PASS against the M1 recording | 2: walk-steps, walk-instanced-steps (see "The two walk cases") |
+| OPEN: Rust differs from the pinned page on the same Mac (not shown to be a Rust defect, not shown to be variation) | 0 |
 | UNVERIFIED | none of the 29; `gs-empty` and `gs-visible-false` time out on both platforms |
 
 ## ParticleSystem pointing and collision (`rea_b14`, `rea_b15`)
@@ -33,13 +34,32 @@ Recorded on the M1 with `x3d-oracle particles` (`X3D_ORACLE_ANGLE=metal`, `oracl
 
 With the particle tests the full run on the M1 (`X3D_REFERENCE_PLATFORM=apple-m1`, 11 tests of 6 files) before the line change: 7 passed, 4 failed (`rea_batch09_nav` shards 0 and 3, `rea_batch12`, `rea_b14`), no skip recorded.
 
-## The open cases (same Mac, Rust vs the M1 recording)
+## The two walk cases (same Mac, Rust vs the M1 recording)
 
-* **walk-steps** (MSAA 0 and 4): 63 of 64 collision probes within 4e-7 of the pinned distance; probe 46 differs by 4.14e-5 (0.12766 vs 0.12762). Limit 1e-6.
-* **walk-instanced-steps** (MSAA 0): all probes within 1.3e-6; probe 15 is 1.28e-6 over the 1e-6 limit.
-* **pk-lines**, **pk-points-style** and **pk-events**: no longer open, see the next section.
+Before the fix: **walk-steps** (MSAA 0 and 4) had 63 of 64 collision probes within 4e-7 of the pinned distance and probe 46 at 4.14e-5
+(0.12766 vs 0.12762); **walk-instanced-steps** (MSAA 0) had probe 15 at 1.28e-6. Limit 1e-6. Both were probes at the edge of a depth step.
 
-Common to the open cases: a probe at the edge of a depth step, where one float32 step decides. Next: `walk-steps` probe 46.
+Cause, measured on the M1 (the pinned page and Rust, same pose probes, `oracle/x_ite-anim.mjs` extended with a read of the 16x16 depth
+texture and of the uniform matrices of each probe's draws, scratch copy, nothing committed):
+
+1. With the **page's own uniform matrices** (x3d_ProjectionMatrix and x3d_ModelViewMatrix of each probe, captured from the page) fed to the
+   Rust depth pass, all 64 probes of `walk-steps` are **bit for bit** the page's: 16,384 depth values and 64 distances, 0 differences. The
+   Rust depth shader, the Metal rasterization and the read-back are therefore not the cause. (162 reformulations of the vertex arithmetic,
+   fused and unfused, were no closer to the page than the shader as it is.)
+2. The matrices Rust fed were not the page's: every model-view matrix (640 of 640) and 25 of 64 projections were one float32 step off in
+   an element. The avatar pose differed from the page's by up to 1e-7 from the first walking frame (frame 41) on, identically on the
+   RTX (Rust on RTX and on the M1 have the same poses) and independent of the GPU (the page's own poses are the same on NVIDIA and on
+   the M1). A pixel on the near-plane clip edge of a stair face turns a 1e-9 pose difference into 4e-5 in the probe.
+3. The pose difference was the viewer clock. X3DFlyViewer takes `dt = (Date .now () - startTime) / 1000` of two **millisecond**
+   numbers (`Date .now ()` is `(t0 + k * dt) * 1000`, about 9.5e11, one float64 step 1.2e-4 ms). The Rust viewer subtracted two
+   **seconds** numbers (about 9.5e8, one step 1.2e-7 s) that round differently, so each step was off by up to 1.2e-7 s of
+   walking. `nav.rs` now keeps `startTime` and `now` in milliseconds like the page. `rea_batch09_nav_clock` pins the poses of
+   `walk-steps` (frames 35 to 100) to the page's to 1e-13 without a GPU.
+
+After the fix on the M1: `walk-steps` largest probe difference 2.84e-7 (34 of 64 probes exact), `walk-instanced-steps` 1.89e-7 (43 of 64
+exact); both within the existing 1e-6 limit, no tolerance changed. They are not bit for bit: from frame 116 on (the stair step-up reads
+the f32 depth) the poses differ again by up to 3e-7, and the page's depth values at the probes differ from Rust's by up to a few hundred
+float32 ulps in single pixels. That residue stays inside the limit.
 
 ## Line and point-sprite coverage on Metal (issue #89, `pk-lines`, `pk-points-style`)
 
@@ -89,4 +109,4 @@ Both cases were open in the earlier campaign; each cause is now measured on the 
   `p * r - o * r`, perspective-correct forms with w = 10, and corner interpolation by the two triangles of the sprite quad with the
   hardware doing the interpolation (2485 of 3760, a different error pattern, not exact). It is the interpolation arithmetic of the
   GPU, not a rule that is known. The test fails when the 6 probes or the 3 ulps change, including when they become exact.
-* **Still open on the M1:** `walk-steps` and `walk-instanced-steps` (above).
+* **Still open on the M1:** nothing of the 29 cases; the pinned known differences are the point-sprite coordinate of `pp-row-point-props` and the nine tie sprites (above).
