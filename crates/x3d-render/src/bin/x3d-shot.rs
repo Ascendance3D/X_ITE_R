@@ -1,4 +1,4 @@
-//! x3d-shot <file.wrl> <out.png> [--size 512x512] [--oracle <dir>]
+//! x3d-shot <file.wrl> <out.png> [--size 512x512] [--oracle <dir>] [--msaa N] [--oit]
 //! x3d-shot batch <corpus-dir> <out-dir> [--size 512x512] [--only <substring>]
 //! x3d-shot compare <baseline-dir> <rust-dir> [--threshold 8] [--max-pct 0.5] [--diff-dir /tmp/x3d-diff] [--json out.json]
 //! x3d-shot info
@@ -38,7 +38,7 @@ fn main() -> ExitCode {
             Some(file) if args.len() >= 3 && !file.starts_with("--") => single(file, &args[2], w, h, opt("--oracle")),
             _ => {
                 eprintln!(
-                    "usage: x3d-shot <file.wrl> <out.png> [--size WxH] [--oracle dir] [--msaa N]\n       x3d-shot batch <corpus-dir> <out-dir> [--size WxH] [--only s] [--msaa N]\n       x3d-shot compare <baseline-dir> <rust-dir> [--threshold N] [--max-pct P] [--diff-dir d] [--json f]\n       x3d-shot info"
+                    "usage: x3d-shot <file.wrl> <out.png> [--size WxH] [--oracle dir] [--msaa N] [--oit]\n       x3d-shot batch <corpus-dir> <out-dir> [--size WxH] [--only s] [--msaa N]\n       x3d-shot compare <baseline-dir> <rust-dir> [--threshold N] [--max-pct P] [--diff-dir d] [--json f]\n       x3d-shot info"
                 );
                 2
             }
@@ -77,6 +77,10 @@ fn gpu() -> Gpu {
             {
                 g.renderer.set_depth_mode(m);
             }
+
+            // `--oit`: X_ITE's OrderIndependentTransparency browser option (oracle: x_ite-shot.mjs --oit).
+            g.renderer
+                .set_order_independent_transparency(std::env::args().any(|a| a == "--oit"));
 
             // `--gl-samples`: mirror the draw so the MSAA sample pattern matches the GL oracle's.
             g.renderer

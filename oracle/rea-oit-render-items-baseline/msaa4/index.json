@@ -1,0 +1,162 @@
+{
+ "pinned": "34cdf9f97",
+ "chrome": "156.0.8078.47",
+ "oit": true,
+ "ms": "4",
+ "size": [
+  512,
+  512
+ ],
+ "frames": 10,
+ "settleMs": 400,
+ "gl": {
+  "vendor": "Google Inc. (NVIDIA Corporation)",
+  "renderer": "ANGLE (NVIDIA Corporation, NVIDIA GeForce RTX 3060 Ti/PCIe/SSE2, OpenGL ES 3.2)",
+  "version": "WebGL 2.0 (OpenGL ES 3.0 Chromium)",
+  "contextAttributes": {
+   "alpha": true,
+   "antialias": false,
+   "depth": true,
+   "desynchronized": false,
+   "failIfMajorPerformanceCaveat": false,
+   "powerPreference": "default",
+   "premultipliedAlpha": true,
+   "preserveDrawingBuffer": true,
+   "stencil": false,
+   "xrCompatible": false
+  },
+  "multisampling": 4,
+  "antialiased": true,
+  "splashVisible": false,
+  "canvasDisplay": "inline",
+  "drawingBuffer": [
+   512,
+   512
+  ],
+  "maxSamples": 8,
+  "x_ite": "16.5.0"
+ },
+ "results": [
+  {
+   "file": "oit-alpha.wrl",
+   "ok": true,
+   "log": [],
+   "width": 512,
+   "height": 512,
+   "rgbaSha256": "b6227e4dafb84a94157d9265e013ae04d34d13b9062f0bb475ff3944cb81b556",
+   "pngSha256": "ccd62d8955a00e996598cdd32bd8ec3cb8883fd0415dbebf0bcce64dd69161be",
+   "splashVisible": false,
+   "canvasDisplay": "block"
+  },
+  {
+   "file": "oit-fog.wrl",
+   "ok": true,
+   "log": [],
+   "width": 512,
+   "height": 512,
+   "rgbaSha256": "1461d6025cb757e373dd1a70284ccd87cd8cb53ef1db3e2028da30f25b1ec0fb",
+   "pngSha256": "d17514fa6bf16f53ba812e0a60c65d9c22e2b14ee1c28bf0b1aaa82f96b5d21e",
+   "splashVisible": false,
+   "canvasDisplay": "block"
+  },
+  {
+   "file": "oit-intersect.wrl",
+   "ok": true,
+   "log": [],
+   "width": 512,
+   "height": 512,
+   "rgbaSha256": "a4fbacdbc9d38e357131a8706b43e3e6a32a657208b695bb975c84802b21a8d0",
+   "pngSha256": "851840d2c921120a08e43ed5d50423c456453a309128a70a92b7e75fd1247c72",
+   "splashVisible": false,
+   "canvasDisplay": "block"
+  },
+  {
+   "file": "oit-layers.wrl",
+   "ok": true,
+   "log": [],
+   "width": 512,
+   "height": 512,
+   "rgbaSha256": "4c93ecb0a264fe532337e7753b5518513a42040fe1cfa3a3244e3bc07bc263d9",
+   "pngSha256": "a54b6395a423da180c473c7aa7b5542eff19cd922977f8063d57aa1ae4becc64",
+   "splashVisible": false,
+   "canvasDisplay": "block"
+  },
+  {
+   "file": "oit-many.wrl",
+   "ok": true,
+   "log": [],
+   "width": 512,
+   "height": 512,
+   "rgbaSha256": "8ca8f8515507673caaa78e28a061b37a638c9b5593c09e890f81f2eb86b9e2e9",
+   "pngSha256": "5965b66ba4612de8cd82d7cf8e23448cf1e2b71fac7c993c4341bc70e84ea814",
+   "splashVisible": false,
+   "canvasDisplay": "block"
+  },
+  {
+   "file": "oit-opaque.wrl",
+   "ok": true,
+   "log": [],
+   "width": 512,
+   "height": 512,
+   "rgbaSha256": "59ddbdd4ca8e69c193e2dbfa2f8f9952bbb161ecb2a7994ddbe5a31a42c64ae8",
+   "pngSha256": "44a8f547891c7cdddd7172bcd9b138be31ddaf810f6260649860c6cbaeb378bf",
+   "splashVisible": false,
+   "canvasDisplay": "block"
+  },
+  {
+   "file": "oit-order.wrl",
+   "ok": true,
+   "log": [],
+   "width": 512,
+   "height": 512,
+   "rgbaSha256": "453c1f3d190741a39cffcfe9dc8cb5aa6f26a1b9ee22d2ed6b984ea2ae457648",
+   "pngSha256": "b47d17a4716ba8eea340621302b26e64ebd22491b28367f3a2d506d2a5e55285",
+   "splashVisible": false,
+   "canvasDisplay": "block"
+  },
+  {
+   "file": "oit-ortho.wrl",
+   "ok": true,
+   "log": [],
+   "width": 512,
+   "height": 512,
+   "rgbaSha256": "a47a8f929a595eb58e73d556365037130342f4f4885512391ea1c14c2fd470c4",
+   "pngSha256": "970c0fe3c0c2e0e15ae9efc48821a16d1834b9203da6988f8f23a80f5d39d240",
+   "splashVisible": false,
+   "canvasDisplay": "block"
+  },
+  {
+   "file": "oit-physical.wrl",
+   "ok": true,
+   "log": [],
+   "width": 512,
+   "height": 512,
+   "rgbaSha256": "8e8114dda3718cb2a085fa761dc12da582e982f36b4c504befe05a4b243ca222",
+   "pngSha256": "8c2c23c2bdb505d43f7e510956578884f34fe96e86505d517f801a6e9f2f58fa",
+   "splashVisible": false,
+   "canvasDisplay": "block"
+  },
+  {
+   "file": "oit-primitives.wrl",
+   "ok": true,
+   "log": [],
+   "width": 512,
+   "height": 512,
+   "rgbaSha256": "2b8c4f252acdace00bc71d24f692a5462c5b8a1bfeca56ae6afe13f828c1ad85",
+   "pngSha256": "43ea050bee13a012fa1806c59930e2402898496ae509d9c394a07a90e78c83c5",
+   "splashVisible": false,
+   "canvasDisplay": "block"
+  },
+  {
+   "file": "oit-textured.wrl",
+   "ok": true,
+   "log": [],
+   "width": 512,
+   "height": 512,
+   "rgbaSha256": "5ebec4705a97c268f82b0ac9d11cfefa7e67b4781a30d759a2fc87a8cf4bd977",
+   "pngSha256": "357c54fe61288cb7e8836f0c4a65772ca5745be46c7fba9cc480483fdfefd466",
+   "splashVisible": false,
+   "canvasDisplay": "block"
+  }
+ ]
+}

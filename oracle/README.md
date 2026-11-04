@@ -1329,6 +1329,17 @@ only when the three runs are identical and no world logs an error. A world whose
 no MSAA 4 picture and is listed in `msaa4/unstable.json` (`fg-transparent`, `tr-many`, `tr-ortho`). `crates/x3d-render/tests/render_rea_i92_items.rs`
 replays every world and fails on a missing reference, an error log or a picture over the bound (8 per channel, 0.5% of pixels).
 
+## Order independent transparency (sub:render.transparency-sorting)
+
+`oracle/synthetic-rea-oit-render-items/` holds 11 synthetic worlds (`oit-*`: listing order, opaque shapes in between, depth-intersecting
+shapes, textures, PhysicalMaterial, the alpha range, ten to twenty layers, points, lines and other primitives, Fog, an OrthoViewpoint, a
+LayerSet), written by `oracle/tools/gen_rea_oit_render_items.py`. `oracle/tools/rea_i92_render_items.py shots --oit` records each one three
+times per pass with the pinned X_ITE (`x_ite-shot.mjs --oit` at MSAA 0, `x_ite-shot-msaa.mjs --oit` at MSAA 4: the `OrderIndependentTransparency`
+browser option set with `setBrowserOption` before the world loads) and writes `oracle/rea-oit-render-items-baseline/{png,msaa4}` only when the
+three runs are identical and no world logs an error; a world whose multisampled output differs between X_ITE's own runs has no MSAA 4 picture
+and is listed in `msaa4/unstable.json`. `crates/x3d-render/tests/render_rea_oit_items.rs` replays every world with the option on (bound: 8 per
+channel, 0.5% of pixels) and, as the negative control, with the option off (every world must then be over the bound).
+
 ## decodeAudioData lane (2026-10-31, issue #98): MP3, Ogg, FLAC, Opus, WAV
 
 - `x_ite-audio-decode.mjs` decodes the files of `synthetic-rea-b24-audio/` (ffmpeg sine plus seeded noise, 0.3 s;

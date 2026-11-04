@@ -7,12 +7,18 @@ shoots oracle/synthetic-rea-i92-render-items/*.wrl (oracle/tools/gen_rea_i92_ren
 x_ite-shot.mjs (`png`, antialiased="false") and x_ite-shot-msaa.mjs (`msaa4`, Multisampling 4). Every world's raw RGBA
 sha256 must be identical in the three runs, and no run may log an error; the first run is kept as
 oracle/rea-i92-render-items-baseline/{png,msaa4}/ (with its index.json). A baseline is never taken from Rust.
+
+  XITE_PLAYWRIGHT=<x_ite-tests>/node_modules python3 -I -B oracle/tools/rea_i92_render_items.py shots --oit
+
+records oracle/synthetic-rea-oit-render-items/*.wrl (oracle/tools/gen_rea_oit_render_items.py) the same way with the
+`orderIndependentTransparency` browser option on (`--oit` of both tools) into oracle/rea-oit-render-items-baseline/.
 """
 import json, os, shutil, subprocess, sys
 
 root = os.path.normpath(os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", ".."))
-worlds = os.path.join(root, "oracle", "synthetic-rea-i92-render-items")
-dest = os.path.join(root, "oracle", "rea-i92-render-items-baseline")
+oit = "--oit" in sys.argv
+worlds = os.path.join(root, "oracle", "synthetic-rea-oit-render-items" if oit else "synthetic-rea-i92-render-items")
+dest = os.path.join(root, "oracle", "rea-oit-render-items-baseline" if oit else "rea-i92-render-items-baseline")
 env = dict(os.environ, NODE_PATH=os.environ.get("XITE_PLAYWRIGHT", ""))
 if sys.argv[1:2] != ["shots"] or not env["NODE_PATH"]:
     sys.exit(__doc__)
@@ -21,10 +27,10 @@ bad = 0
 for name, tool in (("png", "x_ite-shot.mjs"), ("msaa4", "x_ite-shot-msaa.mjs")):
     runs = []
     for i in (1, 2, 3):
-        out = f"/tmp/lane92-record/{name}-{i}"
+        out = f"/tmp/lane92-record{'-oit' if oit else ''}/{name}-{i}"
         shutil.rmtree(out, ignore_errors=True)
         os.makedirs(out)
-        cmd = ["node", os.path.join(root, "oracle", tool), worlds, out] + (["--only", only] if only else [])
+        cmd = ["node", os.path.join(root, "oracle", tool), worlds, out] + (["--only", only] if only else []) + (["--oit"] if oit else [])
         subprocess.run(cmd, check=True, cwd=root, env=env, timeout=1800, stdout=subprocess.DEVNULL)
         runs.append(out)
     index = [{r["file"]: r for r in json.load(open(os.path.join(o, "index.json")))["results"]} for o in runs]

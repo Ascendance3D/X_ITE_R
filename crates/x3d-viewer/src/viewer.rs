@@ -34,6 +34,8 @@ pub struct RenderingChanges {
     /// bound viewpoint's getLogarithmicDepthBuffer (GeoViewpoint).
     pub log_depth: Option<bool>,
     pub shading: Option<x3d_render::gpu::ShadingMode>,
+    /// The OrderIndependentTransparency browser option (X3DRenderObject.set_renderKey__).
+    pub order_independent_transparency: Option<bool>,
     /// The LogarithmicDepthBuffer rendering property alone (getMaxFarValue reads it).
     pub property_log_depth: bool,
 }
@@ -57,11 +59,15 @@ impl RenderingChanges {
         if let Some(s) = self.shading {
             renderer.set_shading(s);
         }
+
+        if let Some(on) = self.order_independent_transparency {
+            renderer.set_order_independent_transparency(on);
+        }
     }
 }
 
-/// Samples, logarithmic depth (`geo`: a GeoViewpoint is bound) and Shading.
-fn rendering_state(rt: &Runtime, geo: bool) -> (u32, bool, String) {
+/// Samples, logarithmic depth (`geo`: a GeoViewpoint is bound), Shading and OrderIndependentTransparency.
+fn rendering_state(rt: &Runtime, geo: bool) -> (u32, bool, String, bool) {
     let b = &rt.browser_options;
     (
         b.multisampling(),
@@ -70,6 +76,7 @@ fn rendering_state(rt: &Runtime, geo: bool) -> (u32, bool, String) {
             .get("Shading")
             .map(|v| v.as_str().to_string())
             .unwrap_or_default(),
+        b.order_independent_transparency(),
     )
 }
 
@@ -217,9 +224,9 @@ pub struct Viewer3d {
     /// `currentFrameRate` still returns the wall-clock rate of the page's own early frames, so
     /// oracle/x_ite-anim*.mjs pin that property for scripts with `"pinFrameRate": true`.
     pub pinned_frame_rate: Option<f64>,
-    /// The RenderingProperties Multisampling, LogarithmicDepthBuffer and Shading the renderer
+    /// The RenderingProperties Multisampling, LogarithmicDepthBuffer and Shading and the OrderIndependentTransparency option the renderer
     /// was last told about ([`Viewer3d::take_rendering_changes`]).
-    synced_rendering: (u32, bool, String),
+    synced_rendering: (u32, bool, String, bool),
     /// The LogarithmicDepthBuffer rendering property the camera last used.
     camera_log_depth: bool,
     geom_cache: HashMap<(Vec<NodeId>, NodeId), Option<Rc<Geometry>>>,
@@ -808,6 +815,7 @@ impl Viewer3d {
             log_depth: (now.1 != old.1).then_some(now.1),
             shading: (now.2 != old.2)
                 .then(|| x3d_render::gpu::ShadingMode::from_rendering_property(&now.2)),
+            order_independent_transparency: (now.3 != old.3).then_some(now.3),
             property_log_depth: self.rt.browser_options.logarithmic_depth_buffer(),
         }
     }
@@ -822,6 +830,7 @@ impl Viewer3d {
             shading: Some(x3d_render::gpu::ShadingMode::from_rendering_property(
                 &now.2,
             )),
+            order_independent_transparency: Some(now.3),
             property_log_depth: self.rt.browser_options.logarithmic_depth_buffer(),
         }
     }
