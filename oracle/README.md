@@ -1531,6 +1531,42 @@ text does not. The scene text of every dumped frame and the sorted `log` (the lo
 exactly. A NaN coordinate in a binary STL is left out of the cases: the pinned page logs `RangeError: Maximum call stack size exceeded` for it
 (measured), an engine limit and not a parser result.
 
+## glTF and GLB resource failures at the createX3DFromURL level (sub:parse.gltf2, sub:parse.glb2)
+
+`oracle/synthetic-rea-gltf-fetch/` holds authored glTF and GLB files (one triangle, a 2 x 2 PNG made with zlib; nothing third-party) whose external
+buffers (`buf/`), images (`img/`) or `EXT_texture_video` sources (`vid/`) are missing, empty, malformed or fine, and three worlds, `gf-buffer`,
+`gf-image` and `gf-video`, made by `oracle/tools/gen_gltf_fetch.py`. Like the GoldenGate worlds, a Script loads its URL lists one after the other with
+`Browser.createX3DFromURL` and records the scene head and `toVRMLString`, or the rejection. Two things differ from them:
+
+- The loads start from a TimeSensor event after the first frame past the frozen load time. A glTF buffer that fails to load is never removed from the
+  loading objects of the world in the pinned X_ITE, so the world's own `loadURL` never settles if the load starts during it (the recorder then waits
+  for ever).
+- The decoded-image error names a blob URL with a random UUID in the pinned page (`Couldn't load image 'blob:http://oracle/<uuid>': error.`). The
+  recorder compares its three recordings with the UUID replaced, and the test does the same.
+
+```
+XITE_TESTS=... python3 -I oracle/tools/gltf_fetch.py record   # three pinned recordings per world, written only when identical (run the groups one after the other: they share /tmp/gltf-fetch)
+cargo nextest run -p x3d-viewer --test gltf_fetch
+```
+
+The baselines are `oracle/gltf-fetch-baseline/gf-*.json`. The scene text of every dumped frame and the sorted `log` are compared exactly. Measured in the
+pinned page (also pinned in the test):
+
+- A glTF or GLB whose buffer fails (404, bad base64, a data URL, an invalid URL, a directory) rejects `createX3DFromURL` with `Couldn't load X3D file.`.
+  Each failing buffer logs its own `Couldn't load URL '<buffer>'. Error: Not Found` (`Couldn't load data URL. TypeError: Failed to fetch` for a data URL),
+  and the candidate's FileLoader logs nothing for it: the rejection has no error (`FileLoader.loadDocument`, `reject ()`, and `printError (undefined)`
+  returns). It does not count as an attempt, so a later failing candidate says `trying URL 3 of 3` where the list has four entries
+  (`gf-buffer` 35). An invalid buffer URL is the exception: `new URL` throws before any fetch and the candidate logs `TypeError: Failed to construct 'URL'`.
+- An image or video that fails to load does not fail the scene: the `ImageTexture` / `MovieTexture` logs its own error afterwards (`ImageTexture: Couldn't
+  load URL ...`, `Error loading movie ...`).
+- An image with neither `uri` nor `bufferView` gets the url `"undefined"` (JavaScript turns `undefined` into a string), also for `EXT_lights_image_based`
+  faces and `EXT_texture_video` sources.
+- A texture with `EXT_texture_video` but no `images` array rejects with `TypeError: Cannot read properties of undefined (reading 'undefined')`.
+- A `MovieTexture` whose video url is a PNG file (a 200 response that is no video) leaves `createX3DFromURL` unsettled for the whole 120 frames, with nothing logged (measured once, alone in its world); it is left out of the cases because a later list would wait behind it.
+
+Known difference, pinned and not passed (`KNOWN_UNBLOBBED` in `crates/x3d-viewer/tests/gltf_fetch.rs`): where the pinned page names the blob URL of a decoded image that
+fails, the engine names the file or data URL itself, as it has no blob URL. The test fails when the engine prints any other name.
+
 ## FileLoader at the createX3DFromURL level (sub:io.file-loader)
 
 `oracle/synthetic-rea-file-loader/` holds authored text inputs (VRML97, classic X3D, XML, JSON, byte order marks, UTF-16, Latin-1, bad UTF-8, CR and
