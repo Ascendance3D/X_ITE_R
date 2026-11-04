@@ -45,6 +45,17 @@ def ps(geometry_type, emitter, size="0.2 0.2", lifetime=0.25, max_particles=1, e
             f'  emitter {emitter}\n  appearance {appearance}\n}}\n')
 
 
+# POINT particles along a line that crosses the collision camera's view box (X3DRenderObject.getClosestObject: ortho
+# +-collisionRadius = 0.25 wide, so a pixel is 0.031) in the -Z probe and the two slanted ones, rising toward the avatar so that
+# the closest depth tells which particle a point sprite reaches; and the same line farther away for the attenuation.
+WIDE_ROW = "PointEmitter { position -0.8 -0.3 -0.7 direction 1 0 0.35 speed 0.9 variation 0 }"
+SLOPED_ROW = "PointEmitter { position -0.8 -0.3 -1.6 direction 1 0 0.35 speed 0.9 variation 0 }"
+
+
+def points(props, extra=""):
+    return f"Appearance {{ material Material {{ diffuseColor 1 1 1 }} {extra} pointProperties PointProperties {{ {props} }} }}"
+
+
 WALL = ps("QUAD", still("0 0 -0.3"), size="2 2")
 
 DIRECTIONS = [[1, 0, 0], [0, 1, 0], [0, 0, 1], [-1, 0, 0], [0, -1, 0], [0, 0, -1],
@@ -93,6 +104,34 @@ CASES = {
                      + ps("QUAD", still("0 0 0"), size="0.5 0.5") + "] }\n", {}),
     # the wall cut by a ClipPlane: only x > 0.1 is left
     "pc-clip-plane": (view() + "Group { children [ ClipPlane { plane 1 0 0 -0.1 }\n" + WALL + "] }\n", {}),
+    # POINT particles with PointProperties: the depth shader (Depth2.vs/.fs, X3D_STYLE_PROPERTIES) draws gl.POINTS of
+    # gl_PointSize = getPointSize (vertex) and discards the fragments outside the round point mask (getPointColor), so a
+    # point covers a disc of pixels, not one. Appearance.getStyleProperties (0) gives the PointProperties. The row
+    # crosses the whole 16 x 16 buffer.
+    "pc-point-props-size": (view() + ps("POINT", WIDE_ROW, lifetime=1.6, max_particles=20,
+                                        appearance=points("pointSizeScaleFactor 5 pointSizeMaxValue 8")), {}),
+    # pointSizeMinValue lifts the size, pointSizeMaxValue caps it
+    "pc-point-props-min": (view() + ps("POINT", WIDE_ROW, lifetime=1.6, max_particles=20,
+                                       appearance=points("pointSizeScaleFactor 1 pointSizeMinValue 3 pointSizeMaxValue 8")), {}),
+    "pc-point-props-max": (view() + ps("POINT", WIDE_ROW, lifetime=1.6, max_particles=20,
+                                       appearance=points("pointSizeScaleFactor 20 pointSizeMaxValue 4")), {}),
+    # attenuation: the size falls with the distance of the vertex (length in the collision camera's space)
+    "pc-point-props-atten": (view() + ps("POINT", SLOPED_ROW, lifetime=1.6, max_particles=20,
+                                         appearance=points("pointSizeScaleFactor 12 pointSizeMaxValue 16 attenuation 1 0.4 0.1")), {}),
+    # sizes of one pixel and less: pointSize <= 1 is not widened, and its alpha is pointSize (below 0.5 discards)
+    "pc-point-props-sub": (view() + ps("POINT", WIDE_ROW, lifetime=1.6, max_particles=20,
+                                       appearance=points("pointSizeScaleFactor 0.6 pointSizeMinValue 0 pointSizeMaxValue 1")), {}),
+    "pc-point-props-faint": (view() + ps("POINT", WIDE_ROW, lifetime=1.6, max_particles=20,
+                                         appearance=points("pointSizeScaleFactor 0.4 pointSizeMinValue 0 pointSizeMaxValue 1")), {}),
+    # a texture on the appearance: the depth shader has no X3D_TEXTURE, so the round mask and the size stay
+    "pc-point-props-texture": (view() + ps("POINT", WIDE_ROW, lifetime=1.6, max_particles=20,
+                                           appearance=points("pointSizeScaleFactor 5 pointSizeMaxValue 8",
+                                                             "texture PixelTexture { image 2 2 3 0xff0000 0x00ff00 0x0000ff 0xffffff }")), {}),
+    # a large sprite whose center lies just outside the view box (0.3 > 0.25) in the -Z probe
+    "pc-point-props-edge": (view() + ps("POINT", still("0.3 -0.3 -0.5"), lifetime=0.25, max_particles=1,
+                                        appearance=points("pointSizeScaleFactor 20 pointSizeMaxValue 40")), {}),
+    # control: the same row without PointProperties, 1 px points
+    "pc-point-props-none": (view() + ps("POINT", WIDE_ROW, lifetime=1.6, max_particles=20), {}),
 }
 
 
