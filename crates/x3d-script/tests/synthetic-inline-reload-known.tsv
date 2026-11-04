@@ -3,9 +3,11 @@
 # Every line is a deliberate difference (IMPLEMENTATION_SAFETY). The Rust behavior in these steps is
 # asserted directly by the tests of crates/x3d-script/tests/inline_reload_safety.rs.
 #
-# An older request that finishes after a newer one was made replaces the result for a frame in X_ITE
-# (B is shown, then C). Rust drops the older result: B is never shown, A stays until C completes.
-c07-overlap-frames	5	6	console,inlines,loadCount	older request must not replace the newer one
+# Step 5 of c07: B (the older request) arrived before C was requested and is applied at the end of the
+# frame in both engines (ADR 0014, section 4). X_ITE's Inline.js then sets B's state COMPLETE and removes
+# the loading object, so the parent shows loadCount 0 and the Inline COMPLETE. Rust keeps the state of the
+# newer request C (IN_PROGRESS, loadCount 1) until C completes at step 6.
+c07-overlap-frames	5	5	inlines,loadCount	the state of the newer request is not changed by the older result (rule 4)
 # `load` set to FALSE while a request is in flight: X_ITE still shows the scene when the request
 # completes (B, live, with load FALSE). Rust keeps the Inline NOT_STARTED and empty.
 c09-disable-while-loading	5	16	console,inlines	a disabled Inline must not accept a late result
@@ -23,6 +25,8 @@ c02-url-replace	5	5	console	Script.shutdown () runs when its scene is disposed (
 c03b-fallback-runtime	5	5	console	Script.shutdown () runs when its scene is disposed (4.12.3); X_ITE never calls it
 c05-load-toggle	4	4	console	Script.shutdown () runs when its scene is disposed (4.12.3); X_ITE never calls it
 c06-url-while-load-off	3	3	console	Script.shutdown () runs when its scene is disposed (4.12.3); X_ITE never calls it
+c07-overlap-frames	5	5	console	Script.shutdown () runs when its scene is disposed (4.12.3); X_ITE never calls it
+c07-overlap-frames	6	6	console	Script.shutdown () runs when its scene is disposed (4.12.3); X_ITE never calls it
 c08-overlap-same-frame	5	5	console	Script.shutdown () runs when its scene is disposed (4.12.3); X_ITE never calls it
 c10-nested	7	7	console	Script.shutdown () runs when its scene is disposed (4.12.3); X_ITE never calls it
 c10-nested	11	11	console	Script.shutdown () runs when its scene is disposed (4.12.3); X_ITE never calls it

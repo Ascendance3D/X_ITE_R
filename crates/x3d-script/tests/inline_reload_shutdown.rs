@@ -9,7 +9,7 @@
 //! else exactly. See `inline_common::check_shutdown_rule`.
 //!
 //! * The browser build (`Runtime::replace_skips_shutdown`) equals X_ITE in every step, apart from the four
-//!   scenarios of `synthetic-inline-reload-known.tsv` that differ for another reason, and prints no `shutdown`.
+//!   scenarios of `synthetic-inline-reload-known.tsv` that differ for another reason (c07 in step 5 only), and prints no `shutdown`.
 //! * The native build differs only by the pinned `shutdown` lines.
 
 mod inline_common;
@@ -47,16 +47,17 @@ const PINS: &[Pin] = &[
         "c07-overlap-frames",
         5,
         &[
-            "log: B shutdown",
+            "log: B fraction 0",
             "log: parent tick 2",
             "log: A fraction 5",
+            "log: A shutdown",
             "log: C initialize",
         ],
     ),
     (
         "c07-overlap-frames",
         6,
-        &["log: C fraction 0", "log: A fraction 6", "log: A shutdown"],
+        &["log: C fraction 0", "log: B fraction 2", "log: B shutdown"],
     ),
     (
         "c08-overlap-same-frame",
