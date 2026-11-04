@@ -1,0 +1,22 @@
+{
+ "pinned": "34cdf9f97",
+ "world": "synthetic-xr/stereo-fog-background.x3dv",
+ "script": "synthetic-xr/stereo-fog-background.json",
+ "runs": 3,
+ "renderer": "ANGLE (NVIDIA Corporation, NVIDIA GeForce RTX 3060 Ti/PCIe/SSE2, OpenGL ES 3.2)",
+ "size": [
+  512,
+  256
+ ],
+ "requests": [
+  "supported:immersive-vr",
+  "supported:immersive-vr",
+  "session:immersive-vr",
+  "space:local",
+  "layer:{\"antialias\":false,\"alpha\":true,\"depth\":false,\"ignoreDepthValues\":true,\"framebufferScaleFactor\":1}"
+ ],
+ "numViews": 2,
+ "log": [],
+ "rgbaSha256": "e74fc047e4fd4a3ece20d173c66525d3b49f91f3f725e76edecff31009e23240",
+ "pngSha256": "4528f288992a5c71c4a73992224361270b78e958f120a586ea1653f38f16f758"
+}

@@ -177,6 +177,34 @@ fn a_resume_continues_the_sound_at_the_movie_time_of_the_pause() {
     assert!((offset - paused_at).abs() < 1e-9, "{offset} vs {paused_at}");
 }
 
+/// A seek moves the sound to the movie time: forward from there, or (negative speed) backwards from there.
+#[test]
+fn a_seek_moves_the_sound_to_the_movie_time() {
+    let mut rt = load("startTime 102 loop TRUE");
+    let m = movie(&rt);
+    let duration = rt.get_f64(m, "duration_changed");
+
+    at(&mut rt, 102.1);
+    assert_eq!(rt.movie_seek(m, 0.25), Some(0.25));
+
+    let (rate, offset, _) = playing(&mut rt).expect("a sound is playing");
+
+    assert_eq!(rate, 1.0);
+    assert!((offset - 0.25).abs() < 1e-9, "{offset}");
+    assert_eq!(rt.movie_seek(m, 100.0), Some(duration));
+
+    let mut rt = load("startTime 102 speed -1 loop TRUE");
+    let m = movie(&rt);
+
+    at(&mut rt, 102.1);
+    assert_eq!(rt.movie_seek(m, 0.25), Some(0.25));
+
+    let (rate, offset, _) = playing(&mut rt).expect("a sound is playing");
+
+    assert_eq!(rate, -1.0);
+    assert!((offset - 0.25).abs() < 1e-9, "{offset}");
+}
+
 /// The pinned behavior is unchanged: a negative rate plays the sound at 1, forward.
 #[test]
 fn pinned_timing_still_plays_the_sound_of_a_negative_speed_at_one() {

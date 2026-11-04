@@ -71,6 +71,19 @@ In ISO mode the element is never played. Each frame the engine decides the media
 - `Runtime::video_frame` (the pinned `videoFrame` push) is ignored in ISO mode; the pinned mode still plays the element,
   sends `Rate` (a negative rate goes to the element as 1, Chrome rejecting it) and `videoFrame`.
 
+## Seeking (`Runtime::movie_seek`, ISO timing)
+
+`movie_seek (node, t)` clamps `t` to [0, duration] (a NaN is refused with a diagnostic) and returns the time set. The engine
+chooses every picture, so every media with pictures can seek (a GIF too; the pinned GifMedia cannot).
+
+- Active or paused: the origin of the formula moves. `elapsedTime` is unchanged; the formula is applied to `elapsedTime + shift`
+  with `shift = t / rate - elapsed` (forward) or `(duration - t) / |rate| - elapsed` (backward), so the movie time of this
+  instant is `t` and the play goes on at the frozen rate. `loop` wraps; without `loop` the node ends after what is left of the
+  movie; `stopTime` and `pauseTime` work as before; a pause keeps the seeked picture and a resume continues from it.
+- Inactive: the picture of `t` is shown and stays; the next start begins at the start of the movie (shift 0).
+- Speed 0: the formula does not move, so `t` is the held picture (until the next start).
+- Sound: its offset is the movie time (a negative rate reads backwards from there). `<video>`: a `VideoOp::Seek` for `t`.
+
 ## Pinned versus ISO
 
 | Case | Pinned (X_ITE 16.5.0) | ISO (default) |
@@ -110,7 +123,7 @@ In ISO mode the element is never played. Each frame the engine decides the media
   a time); a frame of lag at most per seek.
 - The clause's `t` is a cycle time (see the formulas); a reading with `t` taken literally as movie time differs only for
   `|speed| != 1`.
-- `Runtime::movie_seek` (the earlier seek API of PR #361) keeps its pinned behavior and is not wired into the ISO formulas.
+- `Runtime::movie_seek` follows the formulas in ISO timing (see "Seeking"); in pinned timing it keeps the behavior of PR #361 (only a decoded WebM can seek).
 - A stop by `stopTime` or a pause by `pauseTime` keeps the picture of the movie time of the instant of the event (the timer fires between frames; `movie_iso_freeze`), not of the last frame before it.
 - MPEG-1 is the format the clause names; it is not decoded here (step 11 of the plan).
 - The browser tests (`movie01`) could not be run in this lane's environment; the CI Web job runs them.

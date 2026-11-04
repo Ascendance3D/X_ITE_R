@@ -50,6 +50,7 @@ pub mod transfer;
 pub mod traverse;
 pub mod volume;
 pub mod volume_gpu;
+pub mod xr;
 
 use std::path::Path;
 
@@ -76,6 +77,51 @@ pub fn render_file(
     rt.rendered_textures_settled();
     let frame = traverse::Builder::new(&rt).build(width, height);
     let rgba = gpu.render(&frame, width, height);
+    Ok(Shot {
+        width,
+        height,
+        rgba,
+        unsupported: frame.unsupported.into_iter().collect(),
+        log: rt.log.clone(),
+    })
+}
+
+#[cfg(feature = "script")]
+/// Like `render_file`, once per view of an XR pose into the view's viewport (see `xr`). The picture is the whole
+/// target; what no view covers stays transparent black.
+pub fn render_file_xr(
+    gpu: &mut gpu::Gpu,
+    oracle_root: &Path,
+    file: &Path,
+    width: u32,
+    height: u32,
+    pose: &xr::XrPose,
+) -> Result<Shot, String> {
+    let mut rt = load::load_world(oracle_root, file, true)?;
+    rt.rendered_textures_settled();
+    let frame = traverse::Builder::new(&rt).build(width, height);
+    let mut rgba = vec![0u8; (width * height * 4) as usize];
+
+    for view in pose.drawn_views() {
+        let (view_frame, eye) = xr::view_frame(&frame, pose, view);
+
+        gpu.renderer.set_xr_eye(Some(eye));
+
+        let part = gpu.render(&view_frame, width, height);
+
+        gpu.renderer.set_xr_eye(None);
+        let [vx, vy, vw, vh] = view.viewport;
+
+        // The viewport is y up, the picture top row first.
+        for row in 0..vh.min(height) {
+            let y = height - (vy + row) - 1;
+            let at = ((y * width + vx) * 4) as usize;
+            let n = (vw.min(width - vx) * 4) as usize;
+
+            rgba[at..at + n].copy_from_slice(&part[at..at + n]);
+        }
+    }
+
     Ok(Shot {
         width,
         height,

@@ -1,0 +1,10 @@
+#X3D V4.0 utf8
+PROFILE Full
+Viewpoint { position 0 0.2 1 }
+NavigationInfo { headlight TRUE visibilityLimit 0 }
+Background { skyColor [ 0.1 0.2 0.6, 0.6 0.7 0.9 ] skyAngle 1.5 groundColor [ 0.2 0.15 0.1, 0.4 0.3 0.2 ] groundAngle 1.5 }
+Fog { color 0.7 0.7 0.75 visibilityRange 9 fogType "LINEAR" }
+Transform { translation -1.2 0 -4 children Shape { appearance Appearance { material Material { diffuseColor 0.9 0.2 0.2 } } geometry Box { size 1 1 1 } } }
+Transform { translation 0 0.2 -7 children Shape { appearance Appearance { material Material { diffuseColor 0.2 0.8 0.3 } } geometry Sphere { radius 0.8 } } }
+Transform { translation 1.3 -0.2 -3 children Shape { appearance Appearance { material Material { diffuseColor 0.2 0.3 0.9 } } geometry Cone { bottomRadius 0.6 height 1.2 } } }
+Transform { translation 0 -0.9 -5 children Shape { appearance Appearance { material Material { diffuseColor 0.8 0.8 0.3 } } geometry Box { size 8 0.1 10 } } }
