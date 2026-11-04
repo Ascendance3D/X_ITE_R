@@ -35,6 +35,7 @@ C = {
    "tests": addlist(
      "crates/x3d-parse/tests/classic_edge.rs (oracle/classic-edge-baseline/classic-edge.json, 2157 cases, three identical pinned recordings)",
      "crates/vrml97/tests/classic_edge_facade.rs (the same cases through the vrml97 facade)"),
+   "oracle": (lambda old: (old + "; " if old else "") + "pinned X_ITE 16.5.0 (34cdf9f97): oracle/classic-edge-baseline/classic-edge.json (2157 cases, three identical recordings)"),
   }, "Issue #51 2026-11-04 (PR #427): 2157 authored classic-encoding edge cases against the pinned parser; four parser defects fixed. The status stays PARTIAL; a status change is the owner's while the 6 resource-load log differences and the Annotation decision stand."),
  "node:ShaderPart": (None, {
    "missing": swap("only MSAA 0 recorded for the new cases; ", ""),
