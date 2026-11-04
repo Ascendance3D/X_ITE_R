@@ -18,17 +18,21 @@
 //!   coordinates). Chrome computes those in 32-bit floats with its own transfer functions. The
 //!   port computes them in 64-bit floats, so a number can differ in its last printed digit or
 //!   two. Each number must agree within a tolerance of the larger of the value and 1: 5e-6
-//!   (`CONVERTED_TOLERANCE`, half a unit of the sixth printed digit; the measured maximum over 900
-//!   channels is 4.6e-6) and, only for the 15 values read from a `color(srgb-linear ...)` origin,
+//!   (`CONVERTED_TOLERANCE`, the measured limit over 900 channels: maximum 4.6e-6) and, only for the 15 values read from a `color(srgb-linear ...)` origin,
 //!   1e-4 (`SRGB_LINEAR_ORIGIN_TOLERANCE`, measured maximum 5.8e-5). The test prints how many are
 //!   exact and the worst difference of each group.
 
 use serde_json::Value;
 
-/// Relative to `max(|chrome|, 1)`. Chrome serializes a computed color with six significant digits
-/// and the port prints the same way, so two correct results can differ by half a unit of the sixth
-/// digit (5e-6). Measured over the 900 finite channels outside the group below: maximum 4.6e-6,
-/// 13 channels above 2e-6, none above 5e-6.
+/// Relative to `max(|chrome|, 1)`. This is the measured limit, not a derived bound. Chrome
+/// serializes a computed color with six significant digits and the port rounds the same way
+/// (`sig6`), and Chrome converts in 32-bit floats while the port uses 64-bit floats. Of the 900
+/// finite channels outside the group below, 776 are identical and 124 differ: 117 of those by at
+/// most one unit of the sixth digit, 7 by more (2 to 5 units for six values near 0.03 to 0.09, and
+/// two values near 1e-8 that Chrome does not round to zero: 32-bit noise, absolute error below
+/// 5e-7). The largest error relative to `max(|chrome|, 1)` is 4.6e-6; one unit of the sixth digit
+/// alone can reach 1e-5 relative to a value that starts with a 1, so 5e-6 is only as safe as
+/// these measurements and the test would show a larger difference.
 const CONVERTED_TOLERANCE: f64 = 5e-6;
 
 /// Only for a value whose origin is `color(srgb-linear ...)` (15 values of the 317). Chrome's

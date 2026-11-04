@@ -13,6 +13,21 @@
 //! one unit of the sixth significant digit Chrome prints; see `tests/rea_css5_relative_color.rs`.
 
 use super::{NAMED, hex, unparsed_function};
+use std::cell::Cell;
+
+thread_local! {
+    /// What `currentcolor` means as an origin: the color of the wrapper element
+    /// `X3DParser.convertColor` sets (white for a direct call, the inherited color in an SVG).
+    static CURRENT: Cell<[f64; 4]> = const { Cell::new([1.0, 1.0, 1.0, 1.0]) };
+}
+
+/// Runs `f` with `currentcolor` resolving to `current` (`[r, g, b, a]` in [0, 1]).
+pub(super) fn with_current<T>(current: [f64; 4], f: impl FnOnce() -> T) -> T {
+    let before = CURRENT.with(|c| c.replace(current));
+    let result = f();
+    CURRENT.with(|c| c.set(before));
+    result
+}
 
 #[derive(Clone, Copy, PartialEq, Debug)]
 enum Space {
@@ -1073,8 +1088,7 @@ fn origin(text: &str) -> Option<Col> {
     };
 
     if text == "currentcolor" {
-        // The wrapper `X3DParser.convertColor` sets is white.
-        return Some(srgb([1.0, 1.0, 1.0, 1.0]));
+        return Some(srgb(CURRENT.with(Cell::get)));
     }
     if text == "transparent" {
         return Some(srgb([0.0, 0.0, 0.0, 0.0]));
