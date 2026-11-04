@@ -1,0 +1,40 @@
+{
+ "log": [
+  "error: FontLibrary: Couldn't load URL 'http://oracle/synthetic-rea-b24-cff/cff-bare.cff'. Error: Unsupported OpenType signature \u0001\u0000\u0004\u0002",
+  "error: FontLibrary: Couldn't load URL 'http://oracle/synthetic-rea-b24-cff/nofont.otf'. Error: Not Found",
+  "warn: Couldn't find font family 'BareOnly' with style 'PLAIN'.",
+  "warn: Couldn't find font family 'CffLib2' with style 'PLAIN'.",
+  "warn: Couldn't find font family 'Missing' with style 'PLAIN'.",
+  "warn: Error loading font 'http://oracle/synthetic-rea-b24-cff/cff-bare.cff':",
+  "warn: Error loading font 'http://oracle/synthetic-rea-b24-cff/nofont.otf':"
+ ],
+ "ok": true,
+ "poses": {
+  "44": {
+   "centerOfRotation": [
+    0,
+    0,
+    0
+   ],
+   "description": "",
+   "fieldOfViewScale": 1,
+   "orientation": [
+    0,
+    0,
+    1,
+    0
+   ],
+   "position": [
+    0,
+    0,
+    10
+   ],
+   "viewer": "EXAMINE",
+   "viewpoint": ""
+  }
+ },
+ "vrml": {
+  "44": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Full\n\nMETA \"title\" \"pc urls\"\n\nDEF L1 FontLibrary {\n  family \"BareFirst\"\n  url [\n    \"../synthetic-rea-b24-cff/cff-bare.cff\",\n    \"../synthetic-rea-b24-cff/cff-basic.otf\"\n  ]\n}\n\nDEF L2 FontLibrary {\n  family \"BareOnly\"\n  url \"../synthetic-rea-b24-cff/cff-bare.cff\"\n}\n\nDEF L3 FontLibrary {\n  family \"Missing\"\n  url \"../synthetic-rea-b24-cff/nofont.otf\"\n}\n\nShape {\n  geometry DEF T1 Text {\n    string \"ABAB BA OS\"\n    fontStyle FontStyle {\n      family \"BareFirst\"\n    }\n  }\n}\n\nShape {\n  geometry DEF T2 Text {\n    string \"ABAB\"\n    fontStyle FontStyle {\n      family [\n        \"BareOnly\",\n        \"CffLib2\"\n      ]\n    }\n  }\n}\n\nShape {\n  geometry DEF T3 Text {\n    string \"ABAB\"\n    fontStyle FontStyle {\n      family [\n        \"Missing\",\n        \"BareFirst\"\n      ]\n      size 0.5\n    }\n  }\n}\n\nShape {\n  geometry DEF T4 Text {\n    string \"ABAB\"\n    fontStyle FontStyle { }\n  }\n}\n\nDEF P Script {\n  inputOutput MFString out [\n    \"000 T1.origin = SFVec3:0 0.7 0 raw=0 0.7000000000000001 0\",\n    \"001 T1.textBounds = SFVec2:5.21 0.7 raw=5.21 0.7000000000000001\",\n    \"002 T1.lineBounds = ArrayField:5.21 0.9 raw=(5.210000038146973 0.8999999761581421)\",\n    \"003 T2.origin = SFVec3:0 0.7138672 0 raw=0 0.7138671875 0\",\n    \"004 T2.textBounds = SFVec2:2.636719 0.7138672 raw=2.63671875 0.7138671875\",\n    \"005 T2.lineBounds = ArrayField:2.636719 1.006836 raw=(2.63671875 1.0068359375)\",\n    \"006 T3.origin = SFVec3:0 0.35 0 raw=0 0.35000000000000003 0\",\n    \"007 T3.textBounds = SFVec2:1.075 0.35 raw=1.075 0.35000000000000003\",\n    \"008 T3.lineBounds = ArrayField:1.075 0.8 raw=(1.0750000476837158 0.800000011920929)\",\n    \"009 T4.origin = SFVec3:0 0.7138672 0 raw=0 0.7138671875 0\",\n    \"010 T4.textBounds = SFVec2:2.636719 0.7138672 raw=2.63671875 0.7138671875\",\n    \"011 T4.lineBounds = ArrayField:2.636719 1.006836 raw=(2.63671875 1.0068359375)\"\n  ]\n\n  url \"ecmascript:\n\nvar R_ = [];\nfunction strip (s) { return String (s) .replace (/https?:\\\\/\\\\/[^\\\\/]+\\\\//g, ''); }\nfunction show (v, d) {\n  if (typeof v === 'number') return Object.is (v, -0) ? 'n:-0' : 'n:' + v;\n  if (typeof v === 'string') return 's:' + JSON.stringify (strip (v));\n  if (v === null || v === undefined) return String (v);\n  if (typeof v === 'function') return 'fn';\n  if (typeof v === 'boolean') return 'b:' + v;\n  if (Array.isArray (v)) return 'A[' + v .map (function (x) { return show (x); }) .join (',') + ']';\n  var c = v .constructor;\n  return (c && c .name || '?') + ':' + String (v) + raw (v);\n}\n// The components of a field object at full double precision (String () rounds floats).\nfunction raw (v) {\n  if (typeof v .getTypeName !== 'function' || !v [Symbol .iterator] || v .getTypeName () .indexOf ('MF') === 0 && !v .length) return '';\n  try { var a = Array .from (v, function (x) { return typeof x === 'object' && x && x [Symbol .iterator] ? '(' + Array .from (x, function (y) { return typeof y === 'object' && y && y [Symbol .iterator] ? '(' + Array .from (y) .join (' ') + ')' : y; }) .join (' ') + ')' : x; }); return ' raw=' + a .join (' '); } catch (e) { return ' raw=ERR'; }\n}\nfunction errText (e) {\n  var n = e && e .name;\n  if (n === 'TypeError' || n === 'ReferenceError' || n === 'SyntaxError') return 'ERR ' + n + ' (engine wording)';\n  return 'ERR ' + n + ': ' + strip (e && e .message);\n}\nfunction T (n, f) {\n  var r;\n  try { r = show (f ()); } catch (e) { r = errText (e); }\n  R_ .push ((R_ .length < 10 ? '00' : R_ .length < 100 ? '0' : '') + R_ .length + ' ' + n + ' = ' + r);\n}\nfunction flush_ () { out = new MFString (... R_); }\n\nvar SELF;\nvar F_ = 0;\nfunction N (n) { return Browser .currentScene .getNamedNode (n); }\nfunction RD (t, tag) { ['origin', 'textBounds', 'lineBounds'] .forEach (function (f) { T (t + tag + '.' + f, function () { return N (t) [f]; }); }); }\n\nfunction initialize () {\n  SELF = this;\n\n  flush_ ();\n}\nfunction prepareEvents () {\n  ++ F_;\n  if (F_ === 40) { RD ('T1', ''); RD ('T2', ''); RD ('T3', ''); RD ('T4', ''); flush_ (); }\n}\n\n  \"\n}\n"
+ },
+ "warmupFrames": 8
+}

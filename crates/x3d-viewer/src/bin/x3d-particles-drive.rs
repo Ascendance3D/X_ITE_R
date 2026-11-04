@@ -69,8 +69,14 @@ fn main() {
 
     // `--aliased-line-width-max N`: ALIASED_LINE_WIDTH_RANGE [1] of the GPU the baseline was recorded on (1 on ANGLE Metal), for
     // a run without a device (`--cpu-pointing`); with a device it is the backend's.
-    if let Some(w) = opt("--aliased-line-width-max").and_then(|w| w.parse::<f64>().ok()) {
-        x3d_render::gpu::set_max_line_width(w);
+    if let Some(w) = opt("--aliased-line-width-max") {
+        match w.parse::<f64>() {
+            Ok(w) if w.is_finite() && w >= 1.0 => x3d_render::gpu::set_max_line_width(w),
+            _ => {
+                eprintln!("--aliased-line-width-max: {w:?} is not a finite number >= 1");
+                std::process::exit(2);
+            }
+        }
     }
 
     let world = PathBuf::from(&args[1]);

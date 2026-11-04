@@ -25,6 +25,7 @@ assert platform, "--platform is required"
 assert os.environ.get("XITE_CHROME") and os.environ.get("XITE_ANGLE_BACKEND"), "set XITE_CHROME and XITE_ANGLE_BACKEND"
 
 synth = os.path.join(root, "oracle", "synthetic-metal-coverage")
+subprocess.run([sys.executable, "-I", os.path.join(root, "oracle", "tools", "gen_metal_coverage.py"), synth], check=True)
 dest = os.path.join(root, "oracle", f"metal-coverage-{platform}-baseline")
 names = sorted(f[:-4] for f in os.listdir(synth) if f.endswith(".wrl") and (not only or only in f))
 view = lambda p: {k: v for k, v in json.load(open(p)).items() if k != "loadFrames"}

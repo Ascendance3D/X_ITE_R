@@ -49,7 +49,7 @@ impl Runtime {
     }
 
     /// set_pickTarget__: the inner nodes of `pickTarget` that are an Inline, a Shape or an
-    /// X3DGroupingNode.
+    /// X3DGroupingNode (an InstancedShape and a ParticleSystem are X3DShapeNode only).
     pub fn pick_sensor_targets(&self, node: NodeId) -> HashSet<NodeId> {
         let Some(FieldValue::MFNode(v)) = self.pre_value(node, "pickTarget").cloned() else {
             return HashSet::new();
@@ -63,6 +63,7 @@ impl Runtime {
                     t == "Inline"
                         || t == "Shape"
                         || (t != "ParticleSystem"
+                            && t != "InstancedShape"
                             && crate::nodes::transform_sensor::is_grouping_or_shape(t))
                 })
             })

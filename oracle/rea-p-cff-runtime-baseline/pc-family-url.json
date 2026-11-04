@@ -1,0 +1,37 @@
+{
+ "log": [
+  "warn: Couldn't find font family '../synthetic-rea-b24-cff/cff-bare.cff' with style 'PLAIN'.",
+  "warn: Couldn't find font family 'NOSUCH' with style 'PLAIN'.",
+  "warn: Loading a font file via family field is deprecated, please use new FontLibrary node instead.",
+  "warn: Loading a font file via family field is deprecated, please use new FontLibrary node instead."
+ ],
+ "ok": true,
+ "poses": {
+  "44": {
+   "centerOfRotation": [
+    0,
+    0,
+    0
+   ],
+   "description": "",
+   "fieldOfViewScale": 1,
+   "orientation": [
+    0,
+    0,
+    1,
+    0
+   ],
+   "position": [
+    0,
+    0,
+    10
+   ],
+   "viewer": "EXAMINE",
+   "viewpoint": ""
+  }
+ },
+ "vrml": {
+  "44": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Full\n\nMETA \"title\" \"pc family url\"\n\nShape {\n  geometry DEF T1 Text {\n    string [\n      \"ABAB BA OS\",\n      \"AB\"\n    ]\n    fontStyle FontStyle {\n      family \"../synthetic-rea-b24-cff/cff-basic.otf\"\n    }\n  }\n}\n\nShape {\n  geometry DEF T2 Text {\n    string [\n      \"WVWV\",\n      \"AWV V\"\n    ]\n    fontStyle FontStyle {\n      family [\n        \"NOSUCH\",\n        \"../synthetic-rea-b24-cff/cff-basic.otf\"\n      ]\n      size 2\n    }\n  }\n}\n\nShape {\n  geometry DEF T3 Text {\n    string \"ABO\"\n    fontStyle FontStyle {\n      family \"../synthetic-rea-b24-cff/cff-bare.cff\"\n    }\n  }\n}\n\nDEF P Script {\n  inputOutput MFString out [\n    \"000 T1.origin = SFVec3:0 0.7 0 raw=0 0.7000000000000002 0\",\n    \"001 T1.textBounds = SFVec2:5.21 1.7 raw=5.21 1.7000000000000002\",\n    \"002 T1.lineBounds = ArrayField:[\n  5.21 0.9,\n  1.045 1\n] raw=(5.210000038146973 0.8999999761581421) (1.0449999570846558 1)\",\n    \"003 T2.origin = SFVec3:0 1 0 raw=0 1 0\",\n    \"004 T2.textBounds = SFVec2:4.48 3 raw=4.48 3\",\n    \"005 T2.lineBounds = ArrayField:[\n  3.9 0.9,\n  4.48 1\n] raw=(3.9000000953674316 0.8999999761581421) (4.480000019073486 1)\",\n    \"006 T3.origin = SFVec3:0 0.7250977 0 raw=0 0.72509765625 0\",\n    \"007 T3.textBounds = SFVec2:2.043945 0.7348633 raw=2.0439453125 0.73486328125\",\n    \"008 T3.lineBounds = ArrayField:2.043945 1.018066 raw=(2.0439453125 1.01806640625)\"\n  ]\n\n  url \"ecmascript:\n\nvar R_ = [];\nfunction strip (s) { return String (s) .replace (/https?:\\\\/\\\\/[^\\\\/]+\\\\//g, ''); }\nfunction show (v, d) {\n  if (typeof v === 'number') return Object.is (v, -0) ? 'n:-0' : 'n:' + v;\n  if (typeof v === 'string') return 's:' + JSON.stringify (strip (v));\n  if (v === null || v === undefined) return String (v);\n  if (typeof v === 'function') return 'fn';\n  if (typeof v === 'boolean') return 'b:' + v;\n  if (Array.isArray (v)) return 'A[' + v .map (function (x) { return show (x); }) .join (',') + ']';\n  var c = v .constructor;\n  return (c && c .name || '?') + ':' + String (v) + raw (v);\n}\n// The components of a field object at full double precision (String () rounds floats).\nfunction raw (v) {\n  if (typeof v .getTypeName !== 'function' || !v [Symbol .iterator] || v .getTypeName () .indexOf ('MF') === 0 && !v .length) return '';\n  try { var a = Array .from (v, function (x) { return typeof x === 'object' && x && x [Symbol .iterator] ? '(' + Array .from (x, function (y) { return typeof y === 'object' && y && y [Symbol .iterator] ? '(' + Array .from (y) .join (' ') + ')' : y; }) .join (' ') + ')' : x; }); return ' raw=' + a .join (' '); } catch (e) { return ' raw=ERR'; }\n}\nfunction errText (e) {\n  var n = e && e .name;\n  if (n === 'TypeError' || n === 'ReferenceError' || n === 'SyntaxError') return 'ERR ' + n + ' (engine wording)';\n  return 'ERR ' + n + ': ' + strip (e && e .message);\n}\nfunction T (n, f) {\n  var r;\n  try { r = show (f ()); } catch (e) { r = errText (e); }\n  R_ .push ((R_ .length < 10 ? '00' : R_ .length < 100 ? '0' : '') + R_ .length + ' ' + n + ' = ' + r);\n}\nfunction flush_ () { out = new MFString (... R_); }\n\nvar SELF;\nvar F_ = 0;\nfunction N (n) { return Browser .currentScene .getNamedNode (n); }\nfunction RD (t, tag) { ['origin', 'textBounds', 'lineBounds'] .forEach (function (f) { T (t + tag + '.' + f, function () { return N (t) [f]; }); }); }\n\nfunction initialize () {\n  SELF = this;\n\n  flush_ ();\n}\nfunction prepareEvents () {\n  ++ F_;\n  if (F_ === 40) { RD ('T1', ''); RD ('T2', ''); RD ('T3', ''); flush_ (); }\n}\n\n  \"\n}\n"
+ },
+ "warmupFrames": 8
+}
