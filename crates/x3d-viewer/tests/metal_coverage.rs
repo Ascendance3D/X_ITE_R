@@ -94,6 +94,30 @@ fn metal_coverage_matches_the_pinned_page_on_the_same_m1() {
     let table = root.join("oracle/metal-coverage-apple-m1-baseline/cases.txt");
     let cases = std::fs::read_to_string(&table).expect("cases.txt");
     let only = std::env::var("REA_ONLY").ok();
+
+    // Every listed case has its recording, its world and its script: a missing file is a failure, never a skipped case.
+    let missing: Vec<String> = cases
+        .lines()
+        .filter(|l| !l.trim().is_empty())
+        .flat_map(|l| {
+            let f: Vec<&str> = l.split_whitespace().collect();
+            assert!(f.len() == 4, "cases.txt: malformed line {l:?}");
+            vec![
+                format!(
+                    "oracle/metal-coverage-apple-m1-baseline/{}-msaa{}.json",
+                    f[0], f[3]
+                ),
+                f[1].to_string(),
+                f[2].to_string(),
+            ]
+        })
+        .filter(|p| !root.join(p).is_file())
+        .collect();
+    assert!(
+        missing.is_empty(),
+        "cases.txt lists files that are not in the repository: {missing:?}"
+    );
+
     let mut failures = vec![];
     let mut checked = 0;
 
@@ -133,8 +157,18 @@ fn metal_coverage_matches_the_pinned_page_on_the_same_m1() {
         }
 
         let want: Value =
-            serde_json::from_str(&std::fs::read_to_string(&reference).unwrap()).unwrap();
-        let got: Value = serde_json::from_str(&std::fs::read_to_string(&out).unwrap()).unwrap();
+            serde_json::from_str(&std::fs::read_to_string(&reference).expect("recording"))
+                .expect("recording is JSON");
+        let got: Value = match std::fs::read_to_string(&out)
+            .ok()
+            .and_then(|t| serde_json::from_str(&t).ok())
+        {
+            Some(v) => v,
+            None => {
+                failures.push(format!("{name} MSAA {msaa}: x3d-drive wrote no result"));
+                continue;
+            }
+        };
         let _ = std::fs::remove_file(&out);
         let (want, got) = (probes(&want), probes(&got));
         let ties: &[(usize, usize)] = SPRITE_TIES
