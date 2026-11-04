@@ -60,7 +60,7 @@ for (name, world, script, msaa), out, same, n, ok in results:
     d = os.path.join(dest_dir, f"{name}-msaa{msaa}")
     shutil.rmtree(d, ignore_errors=True)
     os.makedirs(d)
-    shutil.copy(os.path.join(out, "js.json"), d)
+    shutil.copy(os.path.join(out, "js.json"), d + ".json")
     shutil.copytree(os.path.join(out, "js"), os.path.join(d, "js"))
     lines[(name, msaa)] = " ".join([name, world, script, msaa])
 open(cpath, "w").write("\n".join(lines[k] for k in sorted(lines)) + "\n")

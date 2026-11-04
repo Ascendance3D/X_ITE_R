@@ -139,8 +139,10 @@ fn compare_case(
     let dir = root.join(format!(
         "oracle/rea-collision-time-baseline/{name}-msaa{msaa}"
     ));
-    let js: Value =
-        serde_json::from_str(&std::fs::read_to_string(dir.join("js.json")).unwrap()).unwrap();
+    // The recording is stored flat (`NAME-msaaN.json`, one directory level: the review gate's recorded-baseline pattern); the pictures
+    // are in `NAME-msaaN/js/`.
+    let js_path = dir.with_extension("json");
+    let js: Value = serde_json::from_str(&std::fs::read_to_string(&js_path).unwrap()).unwrap();
     let out = std::env::temp_dir().join(format!(
         "rea-collision-time-{}-{name}-msaa{msaa}",
         std::process::id()
@@ -154,7 +156,7 @@ fn compare_case(
         .arg("--out")
         .arg(&rs_json)
         .arg("--warmup-from")
-        .arg(dir.join("js.json"));
+        .arg(js_path);
 
     let images = gpu && dir.join("js").is_dir();
 
