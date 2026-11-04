@@ -3,7 +3,7 @@
 
 mod common;
 
-use common::reference::case_dir_for;
+use common::reference::js_json_for;
 use std::path::Path;
 
 fn make(root: &Path, dir: &str) {
@@ -20,24 +20,24 @@ fn a_platform_recording_is_used_only_when_the_platform_is_named_and_the_case_has
     make(&root, "oracle/base/b-msaa0");
     make(&root, "oracle/base-apple-m1/b-msaa0");
 
-    let nvidia = |n: &str| root.join(format!("oracle/base/{n}-msaa0"));
-    let m1 = |n: &str| root.join(format!("oracle/base-apple-m1/{n}-msaa0"));
+    let nvidia = |n: &str| root.join(format!("oracle/base/{n}-msaa0/js.json"));
+    let m1 = |n: &str| root.join(format!("oracle/base-apple-m1/{n}-msaa0/js.json"));
 
     // No platform: always the NVIDIA recording, also for a case that has a platform recording.
-    assert_eq!(case_dir_for(&root, "base", "b", 0, None), nvidia("b"));
+    assert_eq!(js_json_for(&root, "base", "b", 0, None), nvidia("b"));
     // The platform is named: the platform recording where it exists, the NVIDIA recording for the other cases.
     assert_eq!(
-        case_dir_for(&root, "base", "b", 0, Some("apple-m1")),
+        js_json_for(&root, "base", "b", 0, Some("apple-m1")),
         m1("b")
     );
     assert_eq!(
-        case_dir_for(&root, "base", "a", 0, Some("apple-m1")),
+        js_json_for(&root, "base", "a", 0, Some("apple-m1")),
         nvidia("a")
     );
     // Another MSAA level has its own directory name: no platform recording there.
     assert_eq!(
-        case_dir_for(&root, "base", "b", 4, Some("apple-m1")),
-        root.join("oracle/base/b-msaa4")
+        js_json_for(&root, "base", "b", 4, Some("apple-m1")),
+        root.join("oracle/base/b-msaa4/js.json")
     );
 
     std::fs::remove_dir_all(&root).unwrap();

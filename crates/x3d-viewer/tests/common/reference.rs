@@ -1,4 +1,4 @@
-//! Where the pinned X_ITE recording of a case lives (owner decision 2026-11-04, issues #69 and #89).
+//! Which pinned X_ITE recording a test reads (owner decision 2026-11-04, issues #69 and #89).
 //!
 //! `oracle/<base>/<name>-msaa<N>` holds the recording made on the NVIDIA host. It stays the reference of every test
 //! unless `X3D_REFERENCE_PLATFORM` names another platform. Pointing, collision and touch results of the pinned page
@@ -8,6 +8,9 @@
 //! identical runs on that machine. A case without such a recording keeps the NVIDIA recording (it matched there).
 //! The platform recording replaces nothing: the NVIDIA recordings are never overwritten, and Rust is never compared with
 //! a recording that Rust made.
+//!
+//! Only `js.json` (poses, probes, text) can come from a platform recording. The pictures of the case (`js/*.png`) always
+//! come from the NVIDIA recording, so the image comparison of a case never changes with the platform.
 
 use std::path::{Path, PathBuf};
 
@@ -28,23 +31,23 @@ pub fn platform() -> Option<String> {
     Some(p)
 }
 
-/// `case_dir` with the platform given by the caller (the tests of this module use it without the environment).
-pub fn case_dir_for(
+/// The `js.json` of a case, with the platform given by the caller (the tests of this module use it without the environment).
+pub fn js_json_for(
     root: &Path,
     base: &str,
     name: &str,
     msaa: u32,
     platform: Option<&str>,
 ) -> PathBuf {
-    let own = root.join(format!("oracle/{base}/{name}-msaa{msaa}"));
+    let own = root.join(format!("oracle/{base}/{name}-msaa{msaa}/js.json"));
 
     let Some(p) = platform else {
         return own;
     };
 
-    let over = root.join(format!("oracle/{base}-{p}/{name}-msaa{msaa}"));
+    let over = root.join(format!("oracle/{base}-{p}/{name}-msaa{msaa}/js.json"));
 
-    if over.join("js.json").is_file() {
+    if over.is_file() {
         eprintln!("reference: {name} MSAA {msaa} uses the {p} recording");
         over
     } else {
@@ -52,6 +55,6 @@ pub fn case_dir_for(
     }
 }
 
-pub fn case_dir(root: &Path, base: &str, name: &str, msaa: u32) -> PathBuf {
-    case_dir_for(root, base, name, msaa, platform().as_deref())
+pub fn js_json(root: &Path, base: &str, name: &str, msaa: u32) -> PathBuf {
+    js_json_for(root, base, name, msaa, platform().as_deref())
 }
