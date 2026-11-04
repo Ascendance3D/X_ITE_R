@@ -1784,3 +1784,11 @@ Known differences, pinned by `known_differences_are_pinned` (a change of either 
 Not compared: `Content-Encoding` values other than gzip (the port asks for gzip only), the progress fractions that `X-File-Size` and `Content-Length`
 feed, a body above the size limit and the time limits (the page has none; `crates/x3d-http/tests/http_fetcher.rs` tests them), HTTPS and a certificate
 failure (the recorder has no TLS server), and the web build, whose `WebFetcher` does not report the headers of the page's `fetch` (no hand-off by content type there).
+
+### Malformed UTF-8 in a text `data:` URL (`ff-data-utf8`, and 19 cases of `ff-inline-data`)
+
+FileLoader runs `$.try (() => decodeURIComponent (data)) ?? data`: one malformed sequence (`%FF`, a lone `%C3`, `%C3%28`, an overlong `%C0%80`, a
+surrogate `%ED%A0%80`, a five-byte `%F8...`, a continuation byte `%80`) makes `decodeURIComponent` throw, and then the whole string stays undecoded, every
+other escape too. The recordings confirm it for `createX3DFromURL` (`ff-data-utf8`: 24 lists, also as the first entry of a fallback list) and for Inline
+(`ff-inline-data`, cases `utf8-*`), with and without a byte order mark before the malformed sequence. The port matches (`decode_uri_component` returns
+`None`, and `data_url_text` keeps the string); it needed no change. A decoder that replaces the malformed bytes by U+FFFD fails both tests.

@@ -113,7 +113,7 @@ pub trait ScriptHost {
 #[derive(Clone, Debug)]
 pub struct CandidateError {
     pub candidate: String,
-    pub resolved: Option<url::Url>,
+    pub resolved: Option<crate::loader::ResolvedCandidate>,
     pub error: String,
 }
 
@@ -237,7 +237,7 @@ impl Runtime {
                 return;
             };
 
-            let fail = |error: String, resolved: Option<url::Url>| {
+            let fail = |error: String, resolved: Option<crate::loader::ResolvedCandidate>| {
                 Some(Box::new(CandidateError {
                     candidate: candidate.clone(),
                     resolved,
@@ -313,7 +313,7 @@ impl Runtime {
         let Some(resolved) = self.url_strings(node).get(index).and_then(|candidate| {
             url::Url::parse(&loader.base)
                 .ok()
-                .and_then(|b| crate::loader::join_url(&b, candidate).ok())
+                .and_then(|b| self.resolve_candidate(&b, candidate).ok())
         }) else {
             return true;
         };
@@ -334,7 +334,7 @@ impl Runtime {
         };
         let Some(resolved) = url::Url::parse(&loader.base)
             .ok()
-            .and_then(|b| crate::loader::join_url(&b, &candidate).ok())
+            .and_then(|b| self.resolve_candidate(&b, &candidate).ok())
         else {
             return;
         };
@@ -368,7 +368,7 @@ impl Runtime {
         index: usize,
         candidate: &str,
         source: &str,
-        resolved: Option<url::Url>,
+        resolved: Option<crate::loader::ResolvedCandidate>,
     ) {
         match self.script_initialize_source(node, source) {
             Ok(()) => self.set_load_state(node, nodes::LoadState::Complete),

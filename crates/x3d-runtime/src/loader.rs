@@ -446,6 +446,39 @@ pub struct SpaceHostUrl {
     pub href: String,
 }
 
+/// What `new URL (candidate, base)` of FileLoader.loadDocumentAsync gave for one candidate, with the facts that the `url` crate
+/// cannot hold. [`Runtime::resolve_candidate`] makes it, and it goes with the candidate through the FileLoader chain, EXTERNPROTO and
+/// Script loading, so that no later step has to look the URL up by its text: a candidate whose text equals the stand-in URL of
+/// another candidate is an ordinary URL (`space_host` is false).
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub struct ResolvedCandidate {
+    /// The URL to fetch from and to resolve against. For a host with a space it is the stand-in URL of [`SpaceHostUrl`].
+    pub url: url::Url,
+    /// The `href` Chromium gives (`url .as_str ()` unless `space_host`).
+    pub href: String,
+    /// The host holds a space: Chromium parses the URL, no server has such a host, and `fetch` rejects it.
+    pub space_host: bool,
+}
+
+impl ResolvedCandidate {
+    /// An ordinary URL: Chromium's `href` is the one of the `url` crate.
+    pub fn plain(url: url::Url) -> ResolvedCandidate {
+        ResolvedCandidate {
+            href: url.as_str().to_string(),
+            url,
+            space_host: false,
+        }
+    }
+}
+
+impl std::ops::Deref for ResolvedCandidate {
+    type Target = url::Url;
+
+    fn deref(&self) -> &url::Url {
+        &self.url
+    }
+}
+
 /// The characters that IDNA (UTS 46, without the STD3 rules) maps to U+0020.
 fn is_idna_space(c: char) -> bool {
     matches!(
@@ -760,7 +793,7 @@ impl Runtime {
 
         for (i, candidate) in urls.iter().enumerate().skip(start) {
             let remaining = urls.len() - i - 1;
-            let mut resolved: Option<url::Url> = None;
+            let mut resolved: Option<ResolvedCandidate> = None;
             let mut not_in = false;
 
             let result: Result<(), Option<String>> = (|| {
@@ -783,7 +816,7 @@ impl Runtime {
                 // `if (this .dataAsString)`: a data URL that is not base64 is decoded here and handed to the callback as text.
                 if loader.data_as_string {
                     if let Some(text) = data_url_text(candidate) {
-                        return accept(self, i, Loaded::Data(text.into_bytes(), r));
+                        return accept(self, i, Loaded::Data(text.into_bytes(), r.url.clone()));
                     }
                 }
 
@@ -814,7 +847,7 @@ impl Runtime {
                 if hooks.foreign {
                     let target = loader_target(&hooks.parameters);
 
-                    let href = self.chromium_href(&r).to_string();
+                    let href = r.href.clone();
 
                     if !target.is_empty() && target != "_self" {
                         special = Some(LoadResult::Foreign(href, target));
@@ -887,7 +920,11 @@ impl Runtime {
 
                 self.buffers_pending = false;
                 let outer = std::mem::replace(&mut self.accept_waits, wait.is_some());
-                let accepted = accept(self, i, Loaded::Data(x3d_parse::gunzip(&data), r));
+                let accepted = accept(
+                    self,
+                    i,
+                    Loaded::Data(x3d_parse::gunzip(&data), r.url.clone()),
+                );
                 self.accept_waits = outer;
                 accepted
             })();
@@ -938,7 +975,7 @@ impl Runtime {
                         self.print_load_error(
                             &world,
                             &b.candidate,
-                            b.resolved.as_ref(),
+                            b.resolved.clone().map(ResolvedCandidate::plain).as_ref(),
                             &b.error,
                             1,
                             0,
@@ -1034,64 +1071,51 @@ impl Runtime {
     }
 
     /// `new URL (candidate, base)` of FileLoader.loadDocumentAsync: [`join_url`], and for a host with a space (which
-    /// Chromium parses and the `url` crate does not) the stand-in URL of [`space_host_url`], remembered with Chromium's
-    /// `href` ([`Runtime::chromium_href`], [`Runtime::url_rejection`]).
+    /// Chromium parses and the `url` crate does not) the stand-in URL of [`space_host_url`] with Chromium's `href`
+    /// ([`ResolvedCandidate`]). Nothing is remembered in the runtime: the answer carries the facts.
     pub(crate) fn resolve_candidate(
-        &mut self,
+        &self,
         base: &url::Url,
         candidate: &str,
-    ) -> Result<url::Url, url::ParseError> {
+    ) -> Result<ResolvedCandidate, url::ParseError> {
         match join_url(base, candidate) {
-            Ok(r) => Ok(r),
-            Err(error) => {
-                let Some(space_host) = space_host_url(base, candidate) else {
-                    return Err(error);
-                };
-
-                self.space_hosts
-                    .insert(space_host.stand_in.as_str().to_string(), space_host.href);
-                Ok(space_host.stand_in)
-            }
+            Ok(r) => Ok(ResolvedCandidate::plain(r)),
+            Err(error) => match space_host_url(base, candidate) {
+                Some(space_host) => Ok(ResolvedCandidate {
+                    url: space_host.stand_in,
+                    href: space_host.href,
+                    space_host: true,
+                }),
+                None => Err(error),
+            },
         }
     }
 
-    /// The `href` Chromium gives `resolved`, which is a stand-in for a host with a space.
-    pub(crate) fn chromium_href<'a>(&'a self, resolved: &'a url::Url) -> &'a str {
-        self.space_hosts
-            .get(resolved.as_str())
-            .map_or(resolved.as_str(), String::as_str)
-    }
-
-    /// What `fetch` rejects with before any [`Fetcher`] runs: a stand-in URL (no server has a host with a space), or a URL with
+    /// What `fetch` rejects with before any [`Fetcher`] runs: a host with a space (no server has one), or a URL with
     /// a user name or a password (the `Request` constructor of the browser refuses it, whatever the scheme except `data`).
     /// `None` for any other URL. The check is here, not in one [`Fetcher`], so that every fetcher has the same rule.
-    pub(crate) fn url_rejection(&self, resolved: &url::Url) -> Option<String> {
-        if let Some(href) = self.space_hosts.get(resolved.as_str()) {
-            return Some(fetch_rejection(resolved, href));
+    pub(crate) fn url_rejection(&self, resolved: &ResolvedCandidate) -> Option<String> {
+        if resolved.space_host {
+            return Some(fetch_rejection(&resolved.url, &resolved.href));
         }
 
         if resolved.scheme() != "data"
             && (!resolved.username().is_empty() || resolved.password().is_some())
         {
-            return Some(fetch_rejection(resolved, resolved.as_str()));
+            return Some(fetch_rejection(&resolved.url, resolved.url.as_str()));
         }
 
         None
     }
 
-    /// `href`: Chromium's `href` of `resolved` when it is a stand-in ([`Runtime::chromium_href`]).
+    /// The subject of FileLoader.printError: the candidate's `href` as Chromium gives it ([`ResolvedCandidate::href`]).
     pub(crate) fn format_load_subject(
         candidate: &str,
-        resolved: Option<&url::Url>,
-        href: Option<&str>,
+        resolved: Option<&ResolvedCandidate>,
     ) -> String {
         let data_url = resolved.is_some_and(|r| r.scheme() == "data");
         let resolved_text = match resolved {
-            Some(r) if !data_url => {
-                let href = href.unwrap_or_else(|| r.as_str());
-
-                decode_uri(href).unwrap_or_else(|| href.to_string())
-            }
+            Some(r) if !data_url => decode_uri(&r.href).unwrap_or_else(|| r.href.clone()),
             _ => String::new(),
         };
         if candidate.is_empty() {
@@ -1111,13 +1135,12 @@ impl Runtime {
         &mut self,
         loader: &FileLoader,
         candidate: &str,
-        resolved: Option<&url::Url>,
+        resolved: Option<&ResolvedCandidate>,
         error: &str,
         attempts: usize,
         remaining: usize,
     ) {
-        let href = resolved.and_then(|r| self.space_hosts.get(r.as_str()).cloned());
-        let subject = Self::format_load_subject(candidate, resolved, href.as_deref());
+        let subject = Self::format_load_subject(candidate, resolved);
         let prefix = if loader.type_name.is_empty() {
             String::new()
         } else {
@@ -1565,7 +1588,7 @@ impl Runtime {
                     self.print_load_error(
                         &loader,
                         &p.candidate,
-                        Some(&p.resolved),
+                        Some(&ResolvedCandidate::plain(p.resolved.clone())),
                         &error,
                         p.attempts + 1,
                         p.rest.len(),
@@ -2021,7 +2044,14 @@ impl Runtime {
             if self.fetcher.poll(&resolved) == FetchPoll::Pending {
                 self.followed_buffers.push((candidate, resolved));
             } else if let Some(e) = self.fetcher.fetch_error(&resolved) {
-                self.print_load_error(&world, &candidate, Some(&resolved), &e, 1, 0);
+                self.print_load_error(
+                    &world,
+                    &candidate,
+                    Some(&ResolvedCandidate::plain(resolved)),
+                    &e,
+                    1,
+                    0,
+                );
             }
         }
 
@@ -2140,7 +2170,7 @@ mod tests {
             ("data:text/plain,a", false),
         ] {
             let url = url::Url::parse(url).unwrap();
-            let got = rt.url_rejection(&url);
+            let got = rt.url_rejection(&ResolvedCandidate::plain(url.clone()));
 
             assert_eq!(got.is_some(), rejected, "{url}");
 
@@ -2148,6 +2178,66 @@ mod tests {
                 assert!(got.unwrap().contains("includes credentials"), "{url}");
             }
         }
+    }
+
+    /// A candidate with a space in its host and, later, a candidate that is exactly the stand-in URL of the first: the first is a
+    /// space host (rejected before any fetcher), the second is an ordinary URL that reaches the fetcher. The runtime keeps no
+    /// table of stand-in URLs, so the second cannot be taken for the first (PR #434 review).
+    #[test]
+    fn a_candidate_equal_to_a_stand_in_url_is_an_ordinary_candidate() {
+        use std::cell::RefCell;
+        use std::rc::Rc;
+
+        struct Records(Rc<RefCell<Vec<String>>>);
+
+        impl Fetcher for Records {
+            fn fetch(&self, url: &url::Url) -> Result<Vec<u8>, String> {
+                self.0.borrow_mut().push(url.to_string());
+                Err("Error: Not Found".into())
+            }
+        }
+
+        let fetched = Rc::new(RefCell::new(vec![]));
+        let scene = x3d_parse::parse_bytes(b"#VRML V2.0 utf8\n", "http://oracle/t.wrl").unwrap();
+        let mut rt = Runtime::new(scene, Box::new(Records(fetched.clone())));
+        let base = url::Url::parse("http://oracle/t.wrl").unwrap();
+        let spaced = rt
+            .resolve_candidate(&base, "https://exa mple.invalid/x.wrl")
+            .unwrap();
+
+        assert!(spaced.space_host);
+        assert_eq!(spaced.href, "https://exa%20mple.invalid/x.wrl");
+        assert!(rt.url_rejection(&spaced).is_some());
+
+        // The text of the stand-in URL, as a candidate of its own.
+        let same_text = rt.resolve_candidate(&base, spaced.url.as_str()).unwrap();
+
+        assert_eq!(same_text.url, spaced.url);
+        assert!(!same_text.space_host);
+        assert_eq!(same_text.href, same_text.url.as_str());
+        assert_eq!(rt.url_rejection(&same_text), None);
+
+        // Through the FileLoader chain: the first candidate never reaches the fetcher, the second does.
+        let loader = FileLoader {
+            type_name: String::new(),
+            base: base.to_string(),
+            data_as_string: true,
+        };
+        let urls = vec![
+            "https://exa mple.invalid/x.wrl".to_string(),
+            spaced.url.to_string(),
+        ];
+
+        rt.load_document(&loader, &urls, |_, _| Ok(()));
+        assert_eq!(*fetched.borrow(), [spaced.url.to_string()]);
+        // The log names Chromium's href for the first.
+        assert!(
+            rt.log
+                .iter()
+                .any(|l| l.contains("URL 'https://exa mple.invalid/x.wrl', trying URL 2 of 2")),
+            "{:?}",
+            rt.log
+        );
     }
 
     /// Chromium 156.0.8078.47 `new URL (input, "http://127.0.0.1:8000/a/b.wrl") .href` for a space in the host (measured with

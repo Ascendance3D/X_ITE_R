@@ -545,9 +545,6 @@ pub struct Runtime {
     /// Where the fallback chain of a waiting load goes on (an asynchronous [`Fetcher`]): the candidate whose
     /// response it waits for. See [`loader::FetchResume`].
     pub fetch_resume: HashMap<loader::FetchKey, loader::FetchResume>,
-    /// The stand-in URLs of hosts with a space (`as_str` of the stand-in) and Chromium's `href` of each
-    /// ([`loader::SpaceHostUrl`], [`Runtime::resolve_candidate`]).
-    pub space_hosts: HashMap<String, String>,
     /// The calls for the page's `<video>` elements that MovieTextures made ([`Runtime::take_video_ops`]).
     pub video_ops: Vec<nodes::movie_texture::VideoOp>,
     /// ISO 19775-1 18.4.2 time (the default) or the pinned X_ITE 16.5.0 behavior (docs/movie-texture-timing.md).
@@ -830,7 +827,6 @@ impl Runtime {
             pending_videos: HashMap::new(),
             mpeg1_unplayable: false,
             fetch_resume: HashMap::new(),
-            space_hosts: HashMap::new(),
             running_fetch: None,
             fetch_suspended: false,
             fetch_wait: None,

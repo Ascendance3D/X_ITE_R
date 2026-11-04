@@ -80,7 +80,7 @@ pub struct PendingExtern {
     /// The internal node that owns the scene's `loadCount` field.
     pub scene_node: NodeId,
     /// The resolved URL (with its fragment).
-    pub url: url::Url,
+    pub url: crate::loader::ResolvedCandidate,
     /// The scene cache key (URL without fragment); `None` when the URL has a query.
     pub key: Option<String>,
 }
@@ -89,7 +89,7 @@ pub struct PendingExtern {
 #[derive(Debug)]
 pub enum CacheEntry {
     /// Being fetched; declarations that asked for the same URL wait here.
-    Pending(Vec<(ExternId, u64, url::Url)>),
+    Pending(Vec<(ExternId, u64, crate::loader::ResolvedCandidate)>),
     /// Fully loaded: root context of the merged scene, and the generation of its slot when it was
     /// cached. An entry whose context slot was released since names nothing (R0.3-E).
     Ready(CtxId, u32),
@@ -104,7 +104,7 @@ enum Step {
     /// The candidate failed (X_ITE logs it and tries the next one).
     Failed {
         error: String,
-        resolved: Option<url::Url>,
+        resolved: Option<crate::loader::ResolvedCandidate>,
     },
 }
 
@@ -592,7 +592,7 @@ impl Runtime {
         e: ExternId,
         request: u64,
         error: String,
-        resolved: Option<url::Url>,
+        resolved: Option<crate::loader::ResolvedCandidate>,
     ) -> bool {
         if !self.extern_fetch_is(e, request) {
             return false;
@@ -673,7 +673,7 @@ impl Runtime {
 
         // Cached scenes: not for a URL with a query, nor with the `Cache` option off; the key has no fragment.
         let key = if resolved.query().is_none() && self.browser_options.cache() {
-            let mut k = resolved.clone();
+            let mut k = resolved.url.clone();
 
             k.set_fragment(None);
             Some(k.to_string())
@@ -754,7 +754,7 @@ impl Runtime {
         e: ExternId,
         request: u64,
         data: &[u8],
-        url: &url::Url,
+        url: &crate::loader::ResolvedCandidate,
         key: Option<String>,
     ) -> Result<(), String> {
         self.sync_svg_quality();
@@ -767,7 +767,8 @@ impl Runtime {
                         .to_string()
                 }
                 x3d_parse::LoadError::NoHandler => format!(
-                    "Error: Couldn't parse X3D. No suitable file handler found for '{url}'."
+                    "Error: Couldn't parse X3D. No suitable file handler found for '{}'.",
+                    url.url
                 ),
                 err => format!("Error: {err}"),
             }
@@ -854,10 +855,10 @@ impl Runtime {
         e: ExternId,
         request: u64,
         ctx: CtxId,
-        url: &url::Url,
+        url: &crate::loader::ResolvedCandidate,
         cached: bool,
     ) -> Step {
-        match self.extern_set_internal_scene(e, request, Some((ctx, url, cached))) {
+        match self.extern_set_internal_scene(e, request, Some((ctx, &url.url, cached))) {
             Ok(()) => Step::Done,
             Err(error) => Step::Failed {
                 error,
@@ -1033,7 +1034,11 @@ impl Runtime {
     }
 
     /// `cacheResolve (scene)`: the entry is ready; the waiting declarations are returned.
-    fn extern_cache_ready(&mut self, key: &str, ctx: CtxId) -> Vec<(ExternId, u64, url::Url)> {
+    fn extern_cache_ready(
+        &mut self,
+        key: &str,
+        ctx: CtxId,
+    ) -> Vec<(ExternId, u64, crate::loader::ResolvedCandidate)> {
         let generation = self.scene.ctx_slots.generation(ctx);
 
         match self.extern_cache.iter_mut().find(|(k, _)| k == key) {
@@ -1057,7 +1062,12 @@ impl Runtime {
 
     /// The fetch of a cached URL failed: the entry is dropped (X_ITE would keep the failure), and
     /// the declarations that waited for it fail the same candidate.
-    fn extern_cache_fail(&mut self, key: Option<&str>, error: &str, resolved: &url::Url) {
+    fn extern_cache_fail(
+        &mut self,
+        key: Option<&str>,
+        error: &str,
+        resolved: &crate::loader::ResolvedCandidate,
+    ) {
         let Some(key) = key else {
             return;
         };
