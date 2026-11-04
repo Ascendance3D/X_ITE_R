@@ -1,7 +1,7 @@
 #X3D V3.3 utf8
 PROFILE Immersive
 COMPONENT KeyDeviceSensor:2
-# Manual keyboard check (issue #88): every KeySensor and StringSensor event is printed, one line each, so the same keys
+# Manual keyboard check (issue #88): the KeySensor key and modifier events and the StringSensor text events are printed, one line each, so the same keys
 # typed into pinned X_ITE 16.5.0 and into x3d-view can be compared line by line. Newly authored; no historical content.
 DEF KS KeySensor { }
 DEF SS StringSensor { deletionAllowed TRUE }
