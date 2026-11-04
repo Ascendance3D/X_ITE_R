@@ -2,6 +2,7 @@ examine-cor-pan oracle/synthetic-rea-b24-nav/nav-examine-cor.wrl oracle/syntheti
 examine-cor-rotate oracle/synthetic-rea-b24-nav/nav-examine-cor.wrl oracle/synthetic-rea-b24-nav/scripts/examine-cor-rotate.json 0
 examine-cor-spin oracle/synthetic-rea-b24-nav/nav-examine-cor.wrl oracle/synthetic-rea-b24-nav/scripts/examine-cor-spin.json 0
 examine-cor-wheel oracle/synthetic-rea-b24-nav/nav-examine-cor.wrl oracle/synthetic-rea-b24-nav/scripts/examine-cor-wheel.json 0
+examine-cor-wheel-mac oracle/synthetic-rea-b24-nav/nav-examine-cor.wrl oracle/synthetic-rea-b24-nav/scripts/examine-cor-wheel-mac.json 0
 examine-ortho-pan oracle/synthetic-rea-b24-nav/nav-examine-ortho.wrl oracle/synthetic-rea-b24-nav/scripts/examine-ortho-pan.json 0
 examine-ortho-rotate-wheel oracle/synthetic-rea-b24-nav/nav-examine-ortho.wrl oracle/synthetic-rea-b24-nav/scripts/examine-ortho-rotate-wheel.json 0
 examine-spin-wheel oracle/synthetic-rea-b09-nav/nav-examine.wrl oracle/synthetic-rea-b24-nav/scripts/examine-spin-wheel.json 0
@@ -11,10 +12,13 @@ fly-ctrl-look-no-straighten oracle/synthetic-rea-b24-nav/nav-fly-trackball.wrl o
 fly-ctrl-look-pole oracle/synthetic-rea-b09-nav/nav-fly.wrl oracle/synthetic-rea-b24-nav/scripts/fly-ctrl-look-pole.json 0
 fly-speed-1-shift oracle/synthetic-rea-b24-nav/nav-speed-fly-1.wrl oracle/synthetic-rea-b24-nav/scripts/fly-speed-1-shift.json 0
 fly-turn-no-straighten oracle/synthetic-rea-b24-nav/nav-fly-trackball.wrl oracle/synthetic-rea-b24-nav/scripts/fly-turn-no-straighten.json 0
+fly-wheel-roll-mac oracle/synthetic-rea-b09-nav/nav-fly.wrl oracle/synthetic-rea-b24-nav/scripts/fly-wheel-roll-mac.json 0
 lookat-cor-drag oracle/synthetic-rea-b24-nav/nav-lookat-cor.wrl oracle/synthetic-rea-b24-nav/scripts/lookat-cor-drag.json 0
 lookat-cor-wheel oracle/synthetic-rea-b24-nav/nav-lookat-cor.wrl oracle/synthetic-rea-b24-nav/scripts/lookat-cor-wheel.json 0
+lookat-cor-wheel-mac oracle/synthetic-rea-b24-nav/nav-lookat-cor.wrl oracle/synthetic-rea-b24-nav/scripts/lookat-cor-wheel-mac.json 0
 plane-dblclick oracle/synthetic-rea-b09-nav/nav-plane.wrl oracle/synthetic-rea-b24-nav/scripts/plane-dblclick.json 0
 plane-dblclick-alt oracle/synthetic-rea-b09-nav/nav-plane.wrl oracle/synthetic-rea-b24-nav/scripts/plane-dblclick-alt.json 0
+plane-wheel-mac oracle/synthetic-rea-b09-nav/nav-plane.wrl oracle/synthetic-rea-b24-nav/scripts/plane-wheel-mac.json 0
 plane-zoom-in-limit oracle/synthetic-rea-b09-nav/nav-plane.wrl oracle/synthetic-rea-b24-nav/scripts/plane-zoom-in-limit.json 0
 walk-avatar-size-empty oracle/synthetic-rea-b24-nav/nav-avatar-empty.wrl oracle/synthetic-rea-b24-nav/scripts/walk-avatar-size-empty.json 0
 walk-avatar-size-negative oracle/synthetic-rea-b24-nav/nav-avatar-negative.wrl oracle/synthetic-rea-b24-nav/scripts/walk-avatar-size-negative.json 0
@@ -38,3 +42,4 @@ walk-tall-pop oracle/synthetic-rea-b24-nav/nav-tall.wrl oracle/synthetic-rea-b24
 walk-tilted-fall oracle/synthetic-rea-b24-nav/nav-tilted.wrl oracle/synthetic-rea-b24-nav/scripts/walk-tilted-fall.json 0
 walk-tilted-forward oracle/synthetic-rea-b24-nav/nav-tilted.wrl oracle/synthetic-rea-b24-nav/scripts/walk-tilted-forward.json 0
 walk-turn-no-straighten oracle/synthetic-rea-b24-nav/nav-walk-trackball.wrl oracle/synthetic-rea-b24-nav/scripts/walk-turn-no-straighten.json 0
+walk-wheel-roll-mac oracle/synthetic-rea-b09-nav/nav-walk.wrl oracle/synthetic-rea-b24-nav/scripts/walk-wheel-roll-mac.json 0

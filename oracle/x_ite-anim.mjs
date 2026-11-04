@@ -142,7 +142,10 @@ const consoleLines = [ ];
 // which a file fetched at run time arrives depends on the wall clock.
 let inFlight = 0;
 
-const context = await browser .newContext ({ viewport: { width: W, height: H }, deviceScaleFactor: 1 });
+// Script key "userAgent": the page's navigator .userAgent (X_ITE's SLOW_SCROLL test in the navigation viewers reads it when its
+// module loads); x3d-drive takes the same key.
+const context = await browser .newContext ({ viewport: { width: W, height: H }, deviceScaleFactor: 1,
+                                             ... (script .userAgent ? { userAgent: script .userAgent } : { }) });
 await context .route (url => !url .href .startsWith (base), route => route .abort ());
 
 const page = await context .newPage ();

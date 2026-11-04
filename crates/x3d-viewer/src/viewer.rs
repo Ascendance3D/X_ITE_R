@@ -216,6 +216,9 @@ pub struct Viewer3d {
     pub ctrl: bool,
     pub alt: bool,
     pub straighten: bool,
+    /// X_ITE's SLOW_SCROLL (`nav::slow_scroll_user_agent`): on by default in the macOS build, as a macOS browser's user
+    /// agent; a host sets it from its own user agent.
+    pub slow_scroll: bool,
     /// X3DTimeContext.advanceOnlyTime on pointer events (a real clock); off for scripted runs.
     pub advance_only_time: bool,
     /// `browser .currentFrameRate` as the scene's followers (X3DDamperNode tau) read it. `None`: the
@@ -525,6 +528,7 @@ impl Viewer3d {
             ctrl: false,
             alt: false,
             straighten: true,
+            slow_scroll: cfg!(target_os = "macos"),
             advance_only_time: false,
             pinned_frame_rate: None,
             geom_cache: HashMap::new(),
@@ -994,6 +998,7 @@ impl Viewer3d {
                 .browser_options
                 .get_option("Rubberband")
                 .is_some_and(|v| v.as_bool()),
+            slow_scroll: self.slow_scroll,
         }
     }
 
