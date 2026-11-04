@@ -213,7 +213,10 @@ impl Session {
                     log(format!("warn: {w}"));
                 }
 
-                log(format!("error: Error: {}", e.message));
+                log(format!(
+                    "error: {}",
+                    x3d_parse::error_console_text(&e.message)
+                ));
                 return Err(format!("Error: \n{e}"));
             }
             // GoldenGate.parseIntoScene names the url of a file that no parser handles.

@@ -1,0 +1,12 @@
+# Known differences of tests/classic_edge.rs against oracle/classic-edge-baseline/classic-edge.json.
+# Format: <case><TAB><field or *><TAB>fnv1a-64 of the port output<TAB>cause. The test fails when the port output changes and when the case matches (stale entry).
+# `*` is the whole case: the hash covers every differing part (field NUL text NUL, in the order of the test).
+# The first six differ because X_ITE loads a node's resource after the parse (Inline, AudioClip, Script url, the import of an Inline) and prints that result; the loads run in x3d-runtime (inline.rs, the script and sound loaders), and this test parses only. The port's log is empty here (hash of the empty string).
+err-090	log	cbf29ce484222325	Inline url "": X_ITE prints "Inline: Couldn't load empty URL. Error: Empty URL." when the Inline loads (x3d-runtime inline.rs); a parse-only run prints nothing
+err-107	log	cbf29ce484222325	AudioClip url "a.wav": the 404 of the load is printed by the sound loader of x3d-runtime, not by the parse
+field-054	log	cbf29ce484222325	Script url "x" (set_url alias): the failed load is printed by the Script loader of x3d-runtime, not by the parse
+field-055	log	cbf29ce484222325	Script url "x" (url_changed alias): the failed load is printed by the Script loader of x3d-runtime, not by the parse
+route-import-inline	log	cbf29ce484222325	ROUTE from an IMPORTed node of an Inline with no url: X_ITE warns "AggregateError: Couldn't connect route." when the Inline finishes loading (x3d-runtime inline.rs line 1508)
+str-script-url-list	log	cbf29ce484222325	Script url list: X_ITE evaluates ecmascript: candidates and loads x.js after the parse (x3d-runtime script loader); a parse-only run runs no Script
+sweep-annotation-1	*	1ff94fb418697882	COMPONENT Annotation:1: the node table of the pinned source has the Annotation component but SupportedComponents.js has it commented out, so the pinned parser throws "Component 'Annotation' at level '1' is not supported."; the port supports the component (owner decision of REA batch 04, crates/x3d-scene/src/nodes.rs)
+sweep-annotation-2	*	18e9f501ee01a302	COMPONENT Annotation:2: same as sweep-annotation-1
