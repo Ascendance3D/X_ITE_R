@@ -1,0 +1,22 @@
+﻿{
+ "X3D": {
+  "@profile": "Interchange",
+  "@version": "4.0",
+  "Scene": {
+   "-children": [
+    {
+     "WorldInfo": {
+      "@title": "json"
+     }
+    },
+    {
+     "Shape": {
+      "Cylinder": {
+       "@radius": 3
+      }
+     }
+    }
+   ]
+  }
+ }
+}
