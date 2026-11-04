@@ -1,0 +1,34 @@
+{
+ "angle_backend": "metal",
+ "cases": {
+  "tl-shared-w6": {
+   "10.png": "6c5f199b053f7f5895e248d61d26ef0a8b4a4f3ef7f6db8772c98444b5d22f24",
+   "11.png": "37db9c22ca391af40a7b779d41ef9ef10a72abcc362f650bad010e664969630f",
+   "12.png": "b602df6cce5c904785a7d9a496d0a83981ae48e2a53d85b7a766aa395286c57b",
+   "13.png": "e69e65ab6ad28c2d1630e32760ce393c8bfef80499c11d1fe9fe490fe157ebe7",
+   "14.png": "6d2c16fa7171b8743005e7939b763d0d5bb83d5a49e81e65395fc1cdbf729ecb",
+   "15.png": "c0b1662454cb434e14f67033e4349b8748dc6616a4b0c594f628a4b4359f9db6",
+   "16.png": "91670fc227a6031ea6ca43ea22240e1d7f3710b41839e50124cda9f5b2310bd1",
+   "17.png": "6ffce475f646ebbb87fb39b904bd9f66d8bfad3bdfb22f8be0228dafbbee8cc4",
+   "18.png": "321d2df6d9ba83c6447a13064f600fde14ab77e705892c2312bbb86399bafc85",
+   "19.png": "d7eee8b372a20e9abe052d0863553ef02713bf9257338c023f5885ce07acf675",
+   "20.png": "5b3c6db3ee5a816d5fba941f00ed73eca051c06a80ec14690ca59d072ea302f9",
+   "3.png": "90d20cb85d34afc532a0951eb0711a387ddaf1a210bee18e6a36d72c3da52b05",
+   "30.png": "f707d64504ee589160ca3a1ecf6052542e63c72a5db2291f32c6d81988776193",
+   "4.png": "02fc54c8032e07da64aab77c96fa5df2a4e47ea6a299035b57fa050523cbd6b1",
+   "45.png": "7f994beca2e17904b1c3fc640ba35a5b5e92b385f924faf078d106d7c1db51f7",
+   "5.png": "111e7cab5cc499173f158f690a119263d2f7280def83b4005fc67d588421198c",
+   "6.png": "63859cd34f1befb365b64c2131178e3e823bd19739f7b04b521e5946d33abf49",
+   "7.png": "8feb2f3ca960b3f4fad43b9de218c00f0c797685eeb0a1ae83b43f253c358c7b",
+   "8.png": "3ba398d9d4aa7769fe3579495886ee0d95568b4421d6a6b92ff854cd49b974c0",
+   "9.png": "66a82a785ec1de7573e99f2cadba9ac60ec586883ff39eb70d6d40357db18897"
+  }
+ },
+ "chrome": "Google Chrome 156.0.8078.79",
+ "hardware": "Apple M1, macOS 27.0.1",
+ "pinned_x_ite": "16.5.0 34cdf9f97",
+ "platform": "apple-m1",
+ "recorded": "2026-11-04",
+ "recorder": "x3d-oracle particles",
+ "rule": "3 identical runs; kept only where the NVIDIA recording differs (a picture: where it differs by more than 0.5% of the pixels over 8; rea_b22: or more than 16 in one layer half)"
+}

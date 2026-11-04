@@ -1613,6 +1613,8 @@ from the NVIDIA recording. An unknown platform name stops the test. Rust is neve
 Exceptions to "the pictures always come from the NVIDIA recording": `oracle/rea-b21-wide-lines-apple-m1-baseline/` also holds
 `<case>.<frame>.png`, the M1 page's picture of a frame where it differs from the NVIDIA picture by more than the test's rule
 (`record_platform_particles.py` keeps it only then, after three identical runs); `rea_b21_wide_lines` compares Rust with it on the M1.
+`oracle/rea-b22-two-layer-shadows-apple-m1-baseline/` is the same for `rea_b22_two_layer_shadows` (its rule: more than 0.5% of the pixels
+over 8, or more than 16 in one layer's half): 20 pictures of `tl-shared-w6`, no `js.json`/`js.f32` (the six M1 records equal the NVIDIA ones).
 
 `oracle/synthetic-metal-coverage/` (made by `oracle/tools/gen_metal_coverage.py`, not committed: about 2 MB that the Review gate cannot cover, so the test and
 the recorder generate it and `worlds.sha256` beside the recordings pins the bytes) holds minimal newly authored worlds whose probes sit on pixel
