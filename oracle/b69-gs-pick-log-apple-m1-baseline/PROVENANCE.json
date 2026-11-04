@@ -25,12 +25,6 @@
   "gs-pick-mixed-msaa4": {
    "js.json": "cbf23761ef8fac5f2e227d1f9f7c342fa8efc147c99dbafc2f7d02def7fb7a51"
   },
-  "gs-pick-ortho-msaa0": {
-   "js.json": "e98e540b23250a38e9e093fbb2148059be9bda312c22cb4165bead8404d4fe44"
-  },
-  "gs-pick-ortho-msaa4": {
-   "js.json": "e98e540b23250a38e9e093fbb2148059be9bda312c22cb4165bead8404d4fe44"
-  },
   "gs-pick-xform-msaa0": {
    "js.json": "f3ff14664bb6bd882122e978933a2998834c4e851c119e0c7be203bcb14fd00c"
   },
@@ -44,5 +38,6 @@
  "platform": "apple-m1",
  "recorded": "2026-11-04",
  "recorder": "x3d-oracle particles (oracle/tools/b69_gs_pick_record.py platform)",
- "rule": "3 byte-identical runs; kept only where the NVIDIA recording differs"
+ "rule": "3 byte-identical runs; kept only where the NVIDIA recording differs",
+ "not_kept": "gs-pick-ortho is not kept as a platform recording (owner decision 2026-11-04, issue #69): the pinned page inverts the projection matrix with the driver's GLSL inverse() (GaussianSplats.vs.js:344); ANGLE Metal gives f32 cofactor rounding, NVIDIA matches the f64 inverse that Rust computes on the CPU (splats_gpu.rs inverse_f32). With the OrthoViewpoint far 1e4 the hit distance differs by about 1.7e-4. The case is compared with the NVIDIA recording and DISTANCE_TOL_MACOS. M1 recording sha256 of gs-pick-ortho js.json (3 identical runs): e98e540b23250a38e9e093fbb2148059be9bda312c22cb4165bead8404d4fe44."
 }

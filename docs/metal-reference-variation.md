@@ -123,3 +123,19 @@ Both cases were open in the earlier campaign; each cause is now measured on the 
   hardware doing the interpolation (2485 of 3760, a different error pattern, not exact). It is the interpolation arithmetic of the
   GPU, not a rule that is known. The test fails when the 6 probes or the 3 ulps change, including when they become exact.
 * **Still open on the M1:** nothing of the 29 cases; the pinned known differences are the point-sprite coordinate of `pp-row-point-props` and the nine tie sprites (above).
+
+## GaussianSplats picking (`b69_gs_pick`, issue #69)
+
+The pinned page was recorded on the Apple M1 (Chrome 156, ANGLE Metal), 3 byte-identical runs, 6 cases at MSAA 0 and 4, plain and
+logarithmic depth (`oracle/tools/b69_gs_pick_record.py platform apple-m1`). Against the NVIDIA recording, every hit or miss is equal,
+and five cases differ by at most 7.1e-5. In gs-pick-ortho the hit distance differs by up to 4.1e-4 (304 of 433 hits over 1e-4).
+
+Cause: `GaussianSplats.vs.js:344` computes `inverse (x3d_ProjectionMatrix) * clipSplatCenter` with the driver's GLSL `inverse ()`.
+ANGLE Metal's result equals an f32 cofactor inverse. NVIDIA's equals the f64 inverse that Rust computes on the CPU
+(`crates/x3d-render/src/splats_gpu.rs`, `inverse_f32`). With the OrthoViewpoint far value 1e4 the distance is a difference of two
+terms near 5000, so the rounding of the inverse shows as about 1.7e-4. A shader cofactor inverse made Rust equal the M1 page bit for bit and
+then differ from the NVIDIA page by 1.68e-4 (experiment, not kept).
+
+Owner decision 2026-11-04: Rust keeps the CPU inverse. Under `X3D_REFERENCE_PLATFORM=apple-m1` the five other cases are compared
+with the M1 recordings at 1e-4 on every component (Rust on Metal: at most 2.2e-5 plain, 1.9e-6 log). gs-pick-ortho has no M1 file:
+it is compared with the NVIDIA recording and `DISTANCE_TOL_MACOS` (3e-4) on macOS (measured worst 2.43e-4).

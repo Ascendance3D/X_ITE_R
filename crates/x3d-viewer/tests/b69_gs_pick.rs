@@ -15,7 +15,10 @@
 //! oracle/b69-gs-pick-apple-m1-baseline/NAME-msaaN.json and oracle/b69-gs-pick-log-apple-m1-baseline/ (`oracle/tools/b69_gs_pick_record.py
 //! platform apple-m1`, three byte-identical runs), with VALUE_TOL on every component. The M1 page's hit distances of gs-pick-ortho
 //! differ from the NVIDIA page's by up to 4.1e-4 (304 hits); every other value by at most 7.1e-5, every hit or miss equal
-//! (docs/metal-reference-variation.md).
+//! (docs/metal-reference-variation.md). gs-pick-ortho has no M1 file (owner decision 2026-11-04, issue #69): the page inverts
+//! the projection with the driver's GLSL `inverse ()` (GaussianSplats.vs.js:344), which rounds differently on ANGLE Metal and on
+//! NVIDIA; Rust keeps its CPU f64 inverse, equal to the NVIDIA page, so that case is compared with the NVIDIA recording and
+//! DISTANCE_TOL_MACOS on macOS (measured on the M1: 1.68e-4 to 1.69e-4 from the M1 page, at most 2.43e-4 from the NVIDIA page).
 
 mod common;
 
@@ -95,12 +98,12 @@ fn only_the_distance_gets_the_macos_limit() {
     }
 }
 
-/// Negative control of the M1 recording: a hit distance of gs-pick-ortho moved by 2e-4 is rejected under the limit that applies
+/// Negative control of the M1 recording: a hit distance of gs-pick-default moved by 2e-4 is rejected under the limit that applies
 /// to a platform recording, on every platform.
 #[test]
 fn a_moved_distance_fails_against_the_m1_recording() {
     let path = root().join(format!(
-        "oracle/{}/gs-pick-ortho-msaa0.json",
+        "oracle/{}/gs-pick-default-msaa0.json",
         common::reference::platform_base(BASELINE, "apple-m1")
     ));
     let want: Vec<Probe> = json(path)["pickProbes"]["3"]
@@ -236,6 +239,7 @@ fn splat_picks(log: bool) {
         let script = json(dir.join(format!("scripts/{name}.json")));
         let points = script["pickProbes"]["points"].as_array().unwrap().clone();
         let base = if log { LOG_BASELINE } else { BASELINE };
+        // gs-pick-ortho has no platform file on purpose (module documentation).
         let (path0, platform) = want_path(base, name, 0);
         let (path4, platform4) = want_path(base, name, 4);
 
