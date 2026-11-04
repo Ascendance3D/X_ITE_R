@@ -1,0 +1,1410 @@
+{
+  "ok": true,
+  "poses": {
+    "1": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "2": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "3": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "4": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "5": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "6": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "7": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "8": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "9": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "10": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "11": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "12": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "13": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "14": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "15": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "16": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "17": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "18": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "19": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "20": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "21": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "22": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "23": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "24": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "25": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "26": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "27": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "28": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "29": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "30": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "31": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "32": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "33": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "34": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "35": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "36": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "37": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "38": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "39": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "40": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "41": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "42": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "43": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "44": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "45": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "46": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "47": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "48": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "49": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "50": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "51": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "52": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "53": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "54": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "55": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "56": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "57": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "58": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "59": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "60": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    }
+  },
+  "vrml": {
+    "1": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nViewpoint { }\n\nTransform {\n  translation -2.5 0 0\n  children [\n    DEF PL PlaneSensor { }\n    Shape {\n      geometry Box {\n        size 1.5 1.5 1.5\n      }\n    }\n  ]\n}\n\nTransform {\n  children [\n    DEF SP SphereSensor { }\n    Shape {\n      geometry Box {\n        size 1.5 1.5 1.5\n      }\n    }\n  ]\n}\n\nTransform {\n  translation 2.5 0 0\n  children [\n    DEF CY CylinderSensor { }\n    Shape {\n      geometry Box {\n        size 1.5 1.5 1.5\n      }\n    }\n  ]\n}\n\nDEF OBS Script {\n  inputOutput SFBool     plOver FALSE\n  inputOutput SFBool     plActive FALSE\n  inputOutput SFVec3f    plTrans 0 0 0\n  inputOutput SFVec3f    plTrack 0 0 0\n  inputOutput SFBool     spOver FALSE\n  inputOutput SFBool     spActive FALSE\n  inputOutput SFRotation spRot 0 0 1 0\n  inputOutput SFVec3f    spTrack 0 0 0\n  inputOutput SFBool     cyOver FALSE\n  inputOutput SFBool     cyActive FALSE\n  inputOutput SFRotation cyRot 0 0 1 0\n  inputOutput SFVec3f    cyTrack 0 0 0\n\n  url \"ecmascript:\nfunction noop () { }\n\"\n}\n\nROUTE PL.isOver TO OBS.set_plOver\nROUTE PL.isActive TO OBS.set_plActive\nROUTE PL.translation_changed TO OBS.set_plTrans\nROUTE PL.trackPoint_changed TO OBS.set_plTrack\nROUTE SP.isOver TO OBS.set_spOver\nROUTE SP.isActive TO OBS.set_spActive\nROUTE SP.rotation_changed TO OBS.set_spRot\nROUTE SP.trackPoint_changed TO OBS.set_spTrack\nROUTE CY.isOver TO OBS.set_cyOver\nROUTE CY.isActive TO OBS.set_cyActive\nROUTE CY.rotation_changed TO OBS.set_cyRot\nROUTE CY.trackPoint_changed TO OBS.set_cyTrack\n",
+    "2": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nViewpoint { }\n\nTransform {\n  translation -2.5 0 0\n  children [\n    DEF PL PlaneSensor { }\n    Shape {\n      geometry Box {\n        size 1.5 1.5 1.5\n      }\n    }\n  ]\n}\n\nTransform {\n  children [\n    DEF SP SphereSensor { }\n    Shape {\n      geometry Box {\n        size 1.5 1.5 1.5\n      }\n    }\n  ]\n}\n\nTransform {\n  translation 2.5 0 0\n  children [\n    DEF CY CylinderSensor { }\n    Shape {\n      geometry Box {\n        size 1.5 1.5 1.5\n      }\n    }\n  ]\n}\n\nDEF OBS Script {\n  inputOutput SFBool     plOver FALSE\n  inputOutput SFBool     plActive FALSE\n  inputOutput SFVec3f    plTrans 0 0 0\n  inputOutput SFVec3f    plTrack 0 0 0\n  inputOutput SFBool     spOver FALSE\n  inputOutput SFBool     spActive FALSE\n  inputOutput SFRotation spRot 0 0 1 0\n  inputOutput SFVec3f    spTrack 0 0 0\n  inputOutput SFBool     cyOver FALSE\n  inputOutput SFBool     cyActive FALSE\n  inputOutput SFRotation cyRot 0 0 1 0\n  inputOutput SFVec3f    cyTrack 0 0 0\n\n  url \"ecmascript:\nfunction noop () { }\n\"\n}\n\nROUTE PL.isOver TO OBS.set_plOver\nROUTE PL.isActive TO OBS.set_plActive\nROUTE PL.translation_changed TO OBS.set_plTrans\nROUTE PL.trackPoint_changed TO OBS.set_plTrack\nROUTE SP.isOver TO OBS.set_spOver\nROUTE SP.isActive TO OBS.set_spActive\nROUTE SP.rotation_changed TO OBS.set_spRot\nROUTE SP.trackPoint_changed TO OBS.set_spTrack\nROUTE CY.isOver TO OBS.set_cyOver\nROUTE CY.isActive TO OBS.set_cyActive\nROUTE CY.rotation_changed TO OBS.set_cyRot\nROUTE CY.trackPoint_changed TO OBS.set_cyTrack\n",
+    "3": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nViewpoint { }\n\nTransform {\n  translation -2.5 0 0\n  children [\n    DEF PL PlaneSensor { }\n    Shape {\n      geometry Box {\n        size 1.5 1.5 1.5\n      }\n    }\n  ]\n}\n\nTransform {\n  children [\n    DEF SP SphereSensor { }\n    Shape {\n      geometry Box {\n        size 1.5 1.5 1.5\n      }\n    }\n  ]\n}\n\nTransform {\n  translation 2.5 0 0\n  children [\n    DEF CY CylinderSensor { }\n    Shape {\n      geometry Box {\n        size 1.5 1.5 1.5\n      }\n    }\n  ]\n}\n\nDEF OBS Script {\n  inputOutput SFBool     plOver FALSE\n  inputOutput SFBool     plActive FALSE\n  inputOutput SFVec3f    plTrans 0 0 0\n  inputOutput SFVec3f    plTrack 0 0 0\n  inputOutput SFBool     spOver FALSE\n  inputOutput SFBool     spActive FALSE\n  inputOutput SFRotation spRot 0 0 1 0\n  inputOutput SFVec3f    spTrack 0 0 0\n  inputOutput SFBool     cyOver FALSE\n  inputOutput SFBool     cyActive FALSE\n  inputOutput SFRotation cyRot 0 0 1 0\n  inputOutput SFVec3f    cyTrack 0 0 0\n\n  url \"ecmascript:\nfunction noop () { }\n\"\n}\n\nROUTE PL.isOver TO OBS.set_plOver\nROUTE PL.isActive TO OBS.set_plActive\nROUTE PL.translation_changed TO OBS.set_plTrans\nROUTE PL.trackPoint_changed TO OBS.set_plTrack\nROUTE SP.isOver TO OBS.set_spOver\nROUTE SP.isActive TO OBS.set_spActive\nROUTE SP.rotation_changed TO OBS.set_spRot\nROUTE SP.trackPoint_changed TO OBS.set_spTrack\nROUTE CY.isOver TO OBS.set_cyOver\nROUTE CY.isActive TO OBS.set_cyActive\nROUTE CY.rotation_changed TO OBS.set_cyRot\nROUTE CY.trackPoint_changed TO OBS.set_cyTrack\n",
+    "4": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nViewpoint { }\n\nTransform {\n  translation -2.5 0 0\n  children [\n    DEF PL PlaneSensor { }\n    Shape {\n      geometry Box {\n        size 1.5 1.5 1.5\n      }\n    }\n  ]\n}\n\nTransform {\n  children [\n    DEF SP SphereSensor { }\n    Shape {\n      geometry Box {\n        size 1.5 1.5 1.5\n      }\n    }\n  ]\n}\n\nTransform {\n  translation 2.5 0 0\n  children [\n    DEF CY CylinderSensor { }\n    Shape {\n      geometry Box {\n        size 1.5 1.5 1.5\n      }\n    }\n  ]\n}\n\nDEF OBS Script {\n  inputOutput SFBool     plOver FALSE\n  inputOutput SFBool     plActive FALSE\n  inputOutput SFVec3f    plTrans 0 0 0\n  inputOutput SFVec3f    plTrack 0 0 0\n  inputOutput SFBool     spOver FALSE\n  inputOutput SFBool     spActive FALSE\n  inputOutput SFRotation spRot 0 0 1 0\n  inputOutput SFVec3f    spTrack 0 0 0\n  inputOutput SFBool     cyOver FALSE\n  inputOutput SFBool     cyActive FALSE\n  inputOutput SFRotation cyRot 0 0 1 0\n  inputOutput SFVec3f    cyTrack 0 0 0\n\n  url \"ecmascript:\nfunction noop () { }\n\"\n}\n\nROUTE PL.isOver TO OBS.set_plOver\nROUTE PL.isActive TO OBS.set_plActive\nROUTE PL.translation_changed TO OBS.set_plTrans\nROUTE PL.trackPoint_changed TO OBS.set_plTrack\nROUTE SP.isOver TO OBS.set_spOver\nROUTE SP.isActive TO OBS.set_spActive\nROUTE SP.rotation_changed TO OBS.set_spRot\nROUTE SP.trackPoint_changed TO OBS.set_spTrack\nROUTE CY.isOver TO OBS.set_cyOver\nROUTE CY.isActive TO OBS.set_cyActive\nROUTE CY.rotation_changed TO OBS.set_cyRot\nROUTE CY.trackPoint_changed TO OBS.set_cyTrack\n",
+    "5": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nViewpoint { }\n\nTransform {\n  translation -2.5 0 0\n  children [\n    DEF PL PlaneSensor { }\n    Shape {\n      geometry Box {\n        size 1.5 1.5 1.5\n      }\n    }\n  ]\n}\n\nTransform {\n  children [\n    DEF SP SphereSensor { }\n    Shape {\n      geometry Box {\n        size 1.5 1.5 1.5\n      }\n    }\n  ]\n}\n\nTransform {\n  translation 2.5 0 0\n  children [\n    DEF CY CylinderSensor { }\n    Shape {\n      geometry Box {\n        size 1.5 1.5 1.5\n      }\n    }\n  ]\n}\n\nDEF OBS Script {\n  inputOutput SFBool     plOver TRUE\n  inputOutput SFBool     plActive FALSE\n  inputOutput SFVec3f    plTrans 0 0 0\n  inputOutput SFVec3f    plTrack 0 0 0\n  inputOutput SFBool     spOver FALSE\n  inputOutput SFBool     spActive FALSE\n  inputOutput SFRotation spRot 0 0 1 0\n  inputOutput SFVec3f    spTrack 0 0 0\n  inputOutput SFBool     cyOver FALSE\n  inputOutput SFBool     cyActive FALSE\n  inputOutput SFRotation cyRot 0 0 1 0\n  inputOutput SFVec3f    cyTrack 0 0 0\n\n  url \"ecmascript:\nfunction noop () { }\n\"\n}\n\nROUTE PL.isOver TO OBS.set_plOver\nROUTE PL.isActive TO OBS.set_plActive\nROUTE PL.translation_changed TO OBS.set_plTrans\nROUTE PL.trackPoint_changed TO OBS.set_plTrack\nROUTE SP.isOver TO OBS.set_spOver\nROUTE SP.isActive TO OBS.set_spActive\nROUTE SP.rotation_changed TO OBS.set_spRot\nROUTE SP.trackPoint_changed TO OBS.set_spTrack\nROUTE CY.isOver TO OBS.set_cyOver\nROUTE CY.isActive TO OBS.set_cyActive\nROUTE CY.rotation_changed TO OBS.set_cyRot\nROUTE CY.trackPoint_changed TO OBS.set_cyTrack\n",
+    "6": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nViewpoint { }\n\nTransform {\n  translation -2.5 0 0\n  children [\n    DEF PL PlaneSensor { }\n    Shape {\n      geometry Box {\n        size 1.5 1.5 1.5\n      }\n    }\n  ]\n}\n\nTransform {\n  children [\n    DEF SP SphereSensor { }\n    Shape {\n      geometry Box {\n        size 1.5 1.5 1.5\n      }\n    }\n  ]\n}\n\nTransform {\n  translation 2.5 0 0\n  children [\n    DEF CY CylinderSensor { }\n    Shape {\n      geometry Box {\n        size 1.5 1.5 1.5\n      }\n    }\n  ]\n}\n\nDEF OBS Script {\n  inputOutput SFBool     plOver TRUE\n  inputOutput SFBool     plActive TRUE\n  inputOutput SFVec3f    plTrans 0 0 0\n  inputOutput SFVec3f    plTrack 0.1801619 0 0.75\n  inputOutput SFBool     spOver FALSE\n  inputOutput SFBool     spActive FALSE\n  inputOutput SFRotation spRot 0 0 1 0\n  inputOutput SFVec3f    spTrack 0 0 0\n  inputOutput SFBool     cyOver FALSE\n  inputOutput SFBool     cyActive FALSE\n  inputOutput SFRotation cyRot 0 0 1 0\n  inputOutput SFVec3f    cyTrack 0 0 0\n\n  url \"ecmascript:\nfunction noop () { }\n\"\n}\n\nROUTE PL.isOver TO OBS.set_plOver\nROUTE PL.isActive TO OBS.set_plActive\nROUTE PL.translation_changed TO OBS.set_plTrans\nROUTE PL.trackPoint_changed TO OBS.set_plTrack\nROUTE SP.isOver TO OBS.set_spOver\nROUTE SP.isActive TO OBS.set_spActive\nROUTE SP.rotation_changed TO OBS.set_spRot\nROUTE SP.trackPoint_changed TO OBS.set_spTrack\nROUTE CY.isOver TO OBS.set_cyOver\nROUTE CY.isActive TO OBS.set_cyActive\nROUTE CY.rotation_changed TO OBS.set_cyRot\nROUTE CY.trackPoint_changed TO OBS.set_cyTrack\n",
+    "7": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nViewpoint { }\n\nTransform {\n  translation -2.5 0 0\n  children [\n    DEF PL PlaneSensor { }\n    Shape {\n      geometry Box {\n        size 1.5 1.5 1.5\n      }\n    }\n  ]\n}\n\nTransform {\n  children [\n    DEF SP SphereSensor { }\n    Shape {\n      geometry Box {\n        size 1.5 1.5 1.5\n      }\n    }\n  ]\n}\n\nTransform {\n  translation 2.5 0 0\n  children [\n    DEF CY CylinderSensor { }\n    Shape {\n      geometry Box {\n        size 1.5 1.5 1.5\n      }\n    }\n  ]\n}\n\nDEF OBS Script {\n  inputOutput SFBool     plOver TRUE\n  inputOutput SFBool     plActive TRUE\n  inputOutput SFVec3f    plTrans 0.05986679 0 0\n  inputOutput SFVec3f    plTrack 0.2400287 0 0.75\n  inputOutput SFBool     spOver FALSE\n  inputOutput SFBool     spActive FALSE\n  inputOutput SFRotation spRot 0 0 1 0\n  inputOutput SFVec3f    spTrack 0 0 0\n  inputOutput SFBool     cyOver FALSE\n  inputOutput SFBool     cyActive FALSE\n  inputOutput SFRotation cyRot 0 0 1 0\n  inputOutput SFVec3f    cyTrack 0 0 0\n\n  url \"ecmascript:\nfunction noop () { }\n\"\n}\n\nROUTE PL.isOver TO OBS.set_plOver\nROUTE PL.isActive TO OBS.set_plActive\nROUTE PL.translation_changed TO OBS.set_plTrans\nROUTE PL.trackPoint_changed TO OBS.set_plTrack\nROUTE SP.isOver TO OBS.set_spOver\nROUTE SP.isActive TO OBS.set_spActive\nROUTE SP.rotation_changed TO OBS.set_spRot\nROUTE SP.trackPoint_changed TO OBS.set_spTrack\nROUTE CY.isOver TO OBS.set_cyOver\nROUTE CY.isActive TO OBS.set_cyActive\nROUTE CY.rotation_changed TO OBS.set_cyRot\nROUTE CY.trackPoint_changed TO OBS.set_cyTrack\n",
+    "8": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nViewpoint { }\n\nTransform {\n  translation -2.5 0 0\n  children [\n    DEF PL PlaneSensor { }\n    Shape {\n      geometry Box {\n        size 1.5 1.5 1.5\n      }\n    }\n  ]\n}\n\nTransform {\n  children [\n    DEF SP SphereSensor { }\n    Shape {\n      geometry Box {\n        size 1.5 1.5 1.5\n      }\n    }\n  ]\n}\n\nTransform {\n  translation 2.5 0 0\n  children [\n    DEF CY CylinderSensor { }\n    Shape {\n      geometry Box {\n        size 1.5 1.5 1.5\n      }\n    }\n  ]\n}\n\nDEF OBS Script {\n  inputOutput SFBool     plOver TRUE\n  inputOutput SFBool     plActive TRUE\n  inputOutput SFVec3f    plTrans 0.1197336 0 0\n  inputOutput SFVec3f    plTrack 0.2998955 0 0.75\n  inputOutput SFBool     spOver FALSE\n  inputOutput SFBool     spActive FALSE\n  inputOutput SFRotation spRot 0 0 1 0\n  inputOutput SFVec3f    spTrack 0 0 0\n  inputOutput SFBool     cyOver FALSE\n  inputOutput SFBool     cyActive FALSE\n  inputOutput SFRotation cyRot 0 0 1 0\n  inputOutput SFVec3f    cyTrack 0 0 0\n\n  url \"ecmascript:\nfunction noop () { }\n\"\n}\n\nROUTE PL.isOver TO OBS.set_plOver\nROUTE PL.isActive TO OBS.set_plActive\nROUTE PL.translation_changed TO OBS.set_plTrans\nROUTE PL.trackPoint_changed TO OBS.set_plTrack\nROUTE SP.isOver TO OBS.set_spOver\nROUTE SP.isActive TO OBS.set_spActive\nROUTE SP.rotation_changed TO OBS.set_spRot\nROUTE SP.trackPoint_changed TO OBS.set_spTrack\nROUTE CY.isOver TO OBS.set_cyOver\nROUTE CY.isActive TO OBS.set_cyActive\nROUTE CY.rotation_changed TO OBS.set_cyRot\nROUTE CY.trackPoint_changed TO OBS.set_cyTrack\n",
+    "9": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nViewpoint { }\n\nTransform {\n  translation -2.5 0 0\n  children [\n    DEF PL PlaneSensor { }\n    Shape {\n      geometry Box {\n        size 1.5 1.5 1.5\n      }\n    }\n  ]\n}\n\nTransform {\n  children [\n    DEF SP SphereSensor { }\n    Shape {\n      geometry Box {\n        size 1.5 1.5 1.5\n      }\n    }\n  ]\n}\n\nTransform {\n  translation 2.5 0 0\n  children [\n    DEF CY CylinderSensor { }\n    Shape {\n      geometry Box {\n        size 1.5 1.5 1.5\n      }\n    }\n  ]\n}\n\nDEF OBS Script {\n  inputOutput SFBool     plOver TRUE\n  inputOutput SFBool     plActive TRUE\n  inputOutput SFVec3f    plTrans 0.1796004 0 0\n  inputOutput SFVec3f    plTrack 0.3597623 0 0.75\n  inputOutput SFBool     spOver FALSE\n  inputOutput SFBool     spActive FALSE\n  inputOutput SFRotation spRot 0 0 1 0\n  inputOutput SFVec3f    spTrack 0 0 0\n  inputOutput SFBool     cyOver FALSE\n  inputOutput SFBool     cyActive FALSE\n  inputOutput SFRotation cyRot 0 0 1 0\n  inputOutput SFVec3f    cyTrack 0 0 0\n\n  url \"ecmascript:\nfunction noop () { }\n\"\n}\n\nROUTE PL.isOver TO OBS.set_plOver\nROUTE PL.isActive TO OBS.set_plActive\nROUTE PL.translation_changed TO OBS.set_plTrans\nROUTE PL.trackPoint_changed TO OBS.set_plTrack\nROUTE SP.isOver TO OBS.set_spOver\nROUTE SP.isActive TO OBS.set_spActive\nROUTE SP.rotation_changed TO OBS.set_spRot\nROUTE SP.trackPoint_changed TO OBS.set_spTrack\nROUTE CY.isOver TO OBS.set_cyOver\nROUTE CY.isActive TO OBS.set_cyActive\nROUTE CY.rotation_changed TO OBS.set_cyRot\nROUTE CY.trackPoint_changed TO OBS.set_cyTrack\n",
+    "10": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nViewpoint { }\n\nTransform {\n  translation -2.5 0 0\n  children [\n    DEF PL PlaneSensor { }\n    Shape {\n      geometry Box {\n        size 1.5 1.5 1.5\n      }\n    }\n  ]\n}\n\nTransform {\n  children [\n    DEF SP SphereSensor { }\n    Shape {\n      geometry Box {\n        size 1.5 1.5 1.5\n      }\n    }\n  ]\n}\n\nTransform {\n  translation 2.5 0 0\n  children [\n    DEF CY CylinderSensor { }\n    Shape {\n      geometry Box {\n        size 1.5 1.5 1.5\n      }\n    }\n  ]\n}\n\nDEF OBS Script {\n  inputOutput SFBool     plOver TRUE\n  inputOutput SFBool     plActive TRUE\n  inputOutput SFVec3f    plTrans 0.2394672 0 0\n  inputOutput SFVec3f    plTrack 0.419629 0 0.75\n  inputOutput SFBool     spOver FALSE\n  inputOutput SFBool     spActive FALSE\n  inputOutput SFRotation spRot 0 0 1 0\n  inputOutput SFVec3f    spTrack 0 0 0\n  inputOutput SFBool     cyOver FALSE\n  inputOutput SFBool     cyActive FALSE\n  inputOutput SFRotation cyRot 0 0 1 0\n  inputOutput SFVec3f    cyTrack 0 0 0\n\n  url \"ecmascript:\nfunction noop () { }\n\"\n}\n\nROUTE PL.isOver TO OBS.set_plOver\nROUTE PL.isActive TO OBS.set_plActive\nROUTE PL.translation_changed TO OBS.set_plTrans\nROUTE PL.trackPoint_changed TO OBS.set_plTrack\nROUTE SP.isOver TO OBS.set_spOver\nROUTE SP.isActive TO OBS.set_spActive\nROUTE SP.rotation_changed TO OBS.set_spRot\nROUTE SP.trackPoint_changed TO OBS.set_spTrack\nROUTE CY.isOver TO OBS.set_cyOver\nROUTE CY.isActive TO OBS.set_cyActive\nROUTE CY.rotation_changed TO OBS.set_cyRot\nROUTE CY.trackPoint_changed TO OBS.set_cyTrack\n",
+    "11": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nViewpoint { }\n\nTransform {\n  translation -2.5 0 0\n  children [\n    DEF PL PlaneSensor { }\n    Shape {\n      geometry Box {\n        size 1.5 1.5 1.5\n      }\n    }\n  ]\n}\n\nTransform {\n  children [\n    DEF SP SphereSensor { }\n    Shape {\n      geometry Box {\n        size 1.5 1.5 1.5\n      }\n    }\n  ]\n}\n\nTransform {\n  translation 2.5 0 0\n  children [\n    DEF CY CylinderSensor { }\n    Shape {\n      geometry Box {\n        size 1.5 1.5 1.5\n      }\n    }\n  ]\n}\n\nDEF OBS Script {\n  inputOutput SFBool     plOver TRUE\n  inputOutput SFBool     plActive TRUE\n  inputOutput SFVec3f    plTrans 0.299334 0 0\n  inputOutput SFVec3f    plTrack 0.4794958 0 0.75\n  inputOutput SFBool     spOver FALSE\n  inputOutput SFBool     spActive FALSE\n  inputOutput SFRotation spRot 0 0 1 0\n  inputOutput SFVec3f    spTrack 0 0 0\n  inputOutput SFBool     cyOver FALSE\n  inputOutput SFBool     cyActive FALSE\n  inputOutput SFRotation cyRot 0 0 1 0\n  inputOutput SFVec3f    cyTrack 0 0 0\n\n  url \"ecmascript:\nfunction noop () { }\n\"\n}\n\nROUTE PL.isOver TO OBS.set_plOver\nROUTE PL.isActive TO OBS.set_plActive\nROUTE PL.translation_changed TO OBS.set_plTrans\nROUTE PL.trackPoint_changed TO OBS.set_plTrack\nROUTE SP.isOver TO OBS.set_spOver\nROUTE SP.isActive TO OBS.set_spActive\nROUTE SP.rotation_changed TO OBS.set_spRot\nROUTE SP.trackPoint_changed TO OBS.set_spTrack\nROUTE CY.isOver TO OBS.set_cyOver\nROUTE CY.isActive TO OBS.set_cyActive\nROUTE CY.rotation_changed TO OBS.set_cyRot\nROUTE CY.trackPoint_changed TO OBS.set_cyTrack\n",
+    "12": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nViewpoint { }\n\nTransform {\n  translation -2.5 0 0\n  children [\n    DEF PL PlaneSensor { }\n    Shape {\n      geometry Box {\n        size 1.5 1.5 1.5\n      }\n    }\n  ]\n}\n\nTransform {\n  children [\n    DEF SP SphereSensor { }\n    Shape {\n      geometry Box {\n        size 1.5 1.5 1.5\n      }\n    }\n  ]\n}\n\nTransform {\n  translation 2.5 0 0\n  children [\n    DEF CY CylinderSensor { }\n    Shape {\n      geometry Box {\n        size 1.5 1.5 1.5\n      }\n    }\n  ]\n}\n\nDEF OBS Script {\n  inputOutput SFBool     plOver TRUE\n  inputOutput SFBool     plActive TRUE\n  inputOutput SFVec3f    plTrans 0.3592007 0 0\n  inputOutput SFVec3f    plTrack 0.5393626 0 0.75\n  inputOutput SFBool     spOver FALSE\n  inputOutput SFBool     spActive FALSE\n  inputOutput SFRotation spRot 0 0 1 0\n  inputOutput SFVec3f    spTrack 0 0 0\n  inputOutput SFBool     cyOver FALSE\n  inputOutput SFBool     cyActive FALSE\n  inputOutput SFRotation cyRot 0 0 1 0\n  inputOutput SFVec3f    cyTrack 0 0 0\n\n  url \"ecmascript:\nfunction noop () { }\n\"\n}\n\nROUTE PL.isOver TO OBS.set_plOver\nROUTE PL.isActive TO OBS.set_plActive\nROUTE PL.translation_changed TO OBS.set_plTrans\nROUTE PL.trackPoint_changed TO OBS.set_plTrack\nROUTE SP.isOver TO OBS.set_spOver\nROUTE SP.isActive TO OBS.set_spActive\nROUTE SP.rotation_changed TO OBS.set_spRot\nROUTE SP.trackPoint_changed TO OBS.set_spTrack\nROUTE CY.isOver TO OBS.set_cyOver\nROUTE CY.isActive TO OBS.set_cyActive\nROUTE CY.rotation_changed TO OBS.set_cyRot\nROUTE CY.trackPoint_changed TO OBS.set_cyTrack\n",
+    "13": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nViewpoint { }\n\nTransform {\n  translation -2.5 0 0\n  children [\n    DEF PL PlaneSensor { }\n    Shape {\n      geometry Box {\n        size 1.5 1.5 1.5\n      }\n    }\n  ]\n}\n\nTransform {\n  children [\n    DEF SP SphereSensor { }\n    Shape {\n      geometry Box {\n        size 1.5 1.5 1.5\n      }\n    }\n  ]\n}\n\nTransform {\n  translation 2.5 0 0\n  children [\n    DEF CY CylinderSensor { }\n    Shape {\n      geometry Box {\n        size 1.5 1.5 1.5\n      }\n    }\n  ]\n}\n\nDEF OBS Script {\n  inputOutput SFBool     plOver TRUE\n  inputOutput SFBool     plActive TRUE\n  inputOutput SFVec3f    plTrans 0.4190675 0 0\n  inputOutput SFVec3f    plTrack 0.5992294 0 0.75\n  inputOutput SFBool     spOver FALSE\n  inputOutput SFBool     spActive FALSE\n  inputOutput SFRotation spRot 0 0 1 0\n  inputOutput SFVec3f    spTrack 0 0 0\n  inputOutput SFBool     cyOver FALSE\n  inputOutput SFBool     cyActive FALSE\n  inputOutput SFRotation cyRot 0 0 1 0\n  inputOutput SFVec3f    cyTrack 0 0 0\n\n  url \"ecmascript:\nfunction noop () { }\n\"\n}\n\nROUTE PL.isOver TO OBS.set_plOver\nROUTE PL.isActive TO OBS.set_plActive\nROUTE PL.translation_changed TO OBS.set_plTrans\nROUTE PL.trackPoint_changed TO OBS.set_plTrack\nROUTE SP.isOver TO OBS.set_spOver\nROUTE SP.isActive TO OBS.set_spActive\nROUTE SP.rotation_changed TO OBS.set_spRot\nROUTE SP.trackPoint_changed TO OBS.set_spTrack\nROUTE CY.isOver TO OBS.set_cyOver\nROUTE CY.isActive TO OBS.set_cyActive\nROUTE CY.rotation_changed TO OBS.set_cyRot\nROUTE CY.trackPoint_changed TO OBS.set_cyTrack\n",
+    "14": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nViewpoint { }\n\nTransform {\n  translation -2.5 0 0\n  children [\n    DEF PL PlaneSensor { }\n    Shape {\n      geometry Box {\n        size 1.5 1.5 1.5\n      }\n    }\n  ]\n}\n\nTransform {\n  children [\n    DEF SP SphereSensor { }\n    Shape {\n      geometry Box {\n        size 1.5 1.5 1.5\n      }\n    }\n  ]\n}\n\nTransform {\n  translation 2.5 0 0\n  children [\n    DEF CY CylinderSensor { }\n    Shape {\n      geometry Box {\n        size 1.5 1.5 1.5\n      }\n    }\n  ]\n}\n\nDEF OBS Script {\n  inputOutput SFBool     plOver TRUE\n  inputOutput SFBool     plActive TRUE\n  inputOutput SFVec3f    plTrans 0.4789343 0 0\n  inputOutput SFVec3f    plTrack 0.6590962 0 0.75\n  inputOutput SFBool     spOver FALSE\n  inputOutput SFBool     spActive FALSE\n  inputOutput SFRotation spRot 0 0 1 0\n  inputOutput SFVec3f    spTrack 0 0 0\n  inputOutput SFBool     cyOver FALSE\n  inputOutput SFBool     cyActive FALSE\n  inputOutput SFRotation cyRot 0 0 1 0\n  inputOutput SFVec3f    cyTrack 0 0 0\n\n  url \"ecmascript:\nfunction noop () { }\n\"\n}\n\nROUTE PL.isOver TO OBS.set_plOver\nROUTE PL.isActive TO OBS.set_plActive\nROUTE PL.translation_changed TO OBS.set_plTrans\nROUTE PL.trackPoint_changed TO OBS.set_plTrack\nROUTE SP.isOver TO OBS.set_spOver\nROUTE SP.isActive TO OBS.set_spActive\nROUTE SP.rotation_changed TO OBS.set_spRot\nROUTE SP.trackPoint_changed TO OBS.set_spTrack\nROUTE CY.isOver TO OBS.set_cyOver\nROUTE CY.isActive TO OBS.set_cyActive\nROUTE CY.rotation_changed TO OBS.set_cyRot\nROUTE CY.trackPoint_changed TO OBS.set_cyTrack\n",
+    "15": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nViewpoint { }\n\nTransform {\n  translation -2.5 0 0\n  children [\n    DEF PL PlaneSensor { }\n    Shape {\n      geometry Box {\n        size 1.5 1.5 1.5\n      }\n    }\n  ]\n}\n\nTransform {\n  children [\n    DEF SP SphereSensor { }\n    Shape {\n      geometry Box {\n        size 1.5 1.5 1.5\n      }\n    }\n  ]\n}\n\nTransform {\n  translation 2.5 0 0\n  children [\n    DEF CY CylinderSensor { }\n    Shape {\n      geometry Box {\n        size 1.5 1.5 1.5\n      }\n    }\n  ]\n}\n\nDEF OBS Script {\n  inputOutput SFBool     plOver TRUE\n  inputOutput SFBool     plActive TRUE\n  inputOutput SFVec3f    plTrans 0.5388011 0 0\n  inputOutput SFVec3f    plTrack 0.718963 0 0.75\n  inputOutput SFBool     spOver FALSE\n  inputOutput SFBool     spActive FALSE\n  inputOutput SFRotation spRot 0 0 1 0\n  inputOutput SFVec3f    spTrack 0 0 0\n  inputOutput SFBool     cyOver FALSE\n  inputOutput SFBool     cyActive FALSE\n  inputOutput SFRotation cyRot 0 0 1 0\n  inputOutput SFVec3f    cyTrack 0 0 0\n\n  url \"ecmascript:\nfunction noop () { }\n\"\n}\n\nROUTE PL.isOver TO OBS.set_plOver\nROUTE PL.isActive TO OBS.set_plActive\nROUTE PL.translation_changed TO OBS.set_plTrans\nROUTE PL.trackPoint_changed TO OBS.set_plTrack\nROUTE SP.isOver TO OBS.set_spOver\nROUTE SP.isActive TO OBS.set_spActive\nROUTE SP.rotation_changed TO OBS.set_spRot\nROUTE SP.trackPoint_changed TO OBS.set_spTrack\nROUTE CY.isOver TO OBS.set_cyOver\nROUTE CY.isActive TO OBS.set_cyActive\nROUTE CY.rotation_changed TO OBS.set_cyRot\nROUTE CY.trackPoint_changed TO OBS.set_cyTrack\n",
+    "16": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nViewpoint { }\n\nTransform {\n  translation -2.5 0 0\n  children [\n    DEF PL PlaneSensor { }\n    Shape {\n      geometry Box {\n        size 1.5 1.5 1.5\n      }\n    }\n  ]\n}\n\nTransform {\n  children [\n    DEF SP SphereSensor { }\n    Shape {\n      geometry Box {\n        size 1.5 1.5 1.5\n      }\n    }\n  ]\n}\n\nTransform {\n  translation 2.5 0 0\n  children [\n    DEF CY CylinderSensor { }\n    Shape {\n      geometry Box {\n        size 1.5 1.5 1.5\n      }\n    }\n  ]\n}\n\nDEF OBS Script {\n  inputOutput SFBool     plOver TRUE\n  inputOutput SFBool     plActive TRUE\n  inputOutput SFVec3f    plTrans 0.5986679 0 0\n  inputOutput SFVec3f    plTrack 0.7788298 0 0.75\n  inputOutput SFBool     spOver FALSE\n  inputOutput SFBool     spActive FALSE\n  inputOutput SFRotation spRot 0 0 1 0\n  inputOutput SFVec3f    spTrack 0 0 0\n  inputOutput SFBool     cyOver FALSE\n  inputOutput SFBool     cyActive FALSE\n  inputOutput SFRotation cyRot 0 0 1 0\n  inputOutput SFVec3f    cyTrack 0 0 0\n\n  url \"ecmascript:\nfunction noop () { }\n\"\n}\n\nROUTE PL.isOver TO OBS.set_plOver\nROUTE PL.isActive TO OBS.set_plActive\nROUTE PL.translation_changed TO OBS.set_plTrans\nROUTE PL.trackPoint_changed TO OBS.set_plTrack\nROUTE SP.isOver TO OBS.set_spOver\nROUTE SP.isActive TO OBS.set_spActive\nROUTE SP.rotation_changed TO OBS.set_spRot\nROUTE SP.trackPoint_changed TO OBS.set_spTrack\nROUTE CY.isOver TO OBS.set_cyOver\nROUTE CY.isActive TO OBS.set_cyActive\nROUTE CY.rotation_changed TO OBS.set_cyRot\nROUTE CY.trackPoint_changed TO OBS.set_cyTrack\n",
+    "17": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nViewpoint { }\n\nTransform {\n  translation -2.5 0 0\n  children [\n    DEF PL PlaneSensor {\n      offset 0.5986679 0 0\n    }\n    Shape {\n      geometry Box {\n        size 1.5 1.5 1.5\n      }\n    }\n  ]\n}\n\nTransform {\n  children [\n    DEF SP SphereSensor { }\n    Shape {\n      geometry Box {\n        size 1.5 1.5 1.5\n      }\n    }\n  ]\n}\n\nTransform {\n  translation 2.5 0 0\n  children [\n    DEF CY CylinderSensor { }\n    Shape {\n      geometry Box {\n        size 1.5 1.5 1.5\n      }\n    }\n  ]\n}\n\nDEF OBS Script {\n  inputOutput SFBool     plOver TRUE\n  inputOutput SFBool     plActive FALSE\n  inputOutput SFVec3f    plTrans 0.5986679 0 0\n  inputOutput SFVec3f    plTrack 0.7788298 0 0.75\n  inputOutput SFBool     spOver FALSE\n  inputOutput SFBool     spActive FALSE\n  inputOutput SFRotation spRot 0 0 1 0\n  inputOutput SFVec3f    spTrack 0 0 0\n  inputOutput SFBool     cyOver FALSE\n  inputOutput SFBool     cyActive FALSE\n  inputOutput SFRotation cyRot 0 0 1 0\n  inputOutput SFVec3f    cyTrack 0 0 0\n\n  url \"ecmascript:\nfunction noop () { }\n\"\n}\n\nROUTE PL.isOver TO OBS.set_plOver\nROUTE PL.isActive TO OBS.set_plActive\nROUTE PL.translation_changed TO OBS.set_plTrans\nROUTE PL.trackPoint_changed TO OBS.set_plTrack\nROUTE SP.isOver TO OBS.set_spOver\nROUTE SP.isActive TO OBS.set_spActive\nROUTE SP.rotation_changed TO OBS.set_spRot\nROUTE SP.trackPoint_changed TO OBS.set_spTrack\nROUTE CY.isOver TO OBS.set_cyOver\nROUTE CY.isActive TO OBS.set_cyActive\nROUTE CY.rotation_changed TO OBS.set_cyRot\nROUTE CY.trackPoint_changed TO OBS.set_cyTrack\n",
+    "18": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nViewpoint { }\n\nTransform {\n  translation -2.5 0 0\n  children [\n    DEF PL PlaneSensor {\n      offset 0.5986679 0 0\n    }\n    Shape {\n      geometry Box {\n        size 1.5 1.5 1.5\n      }\n    }\n  ]\n}\n\nTransform {\n  children [\n    DEF SP SphereSensor { }\n    Shape {\n      geometry Box {\n        size 1.5 1.5 1.5\n      }\n    }\n  ]\n}\n\nTransform {\n  translation 2.5 0 0\n  children [\n    DEF CY CylinderSensor { }\n    Shape {\n      geometry Box {\n        size 1.5 1.5 1.5\n      }\n    }\n  ]\n}\n\nDEF OBS Script {\n  inputOutput SFBool     plOver TRUE\n  inputOutput SFBool     plActive FALSE\n  inputOutput SFVec3f    plTrans 0.5986679 0 0\n  inputOutput SFVec3f    plTrack 0.7788298 0 0.75\n  inputOutput SFBool     spOver FALSE\n  inputOutput SFBool     spActive FALSE\n  inputOutput SFRotation spRot 0 0 1 0\n  inputOutput SFVec3f    spTrack 0 0 0\n  inputOutput SFBool     cyOver FALSE\n  inputOutput SFBool     cyActive FALSE\n  inputOutput SFRotation cyRot 0 0 1 0\n  inputOutput SFVec3f    cyTrack 0 0 0\n\n  url \"ecmascript:\nfunction noop () { }\n\"\n}\n\nROUTE PL.isOver TO OBS.set_plOver\nROUTE PL.isActive TO OBS.set_plActive\nROUTE PL.translation_changed TO OBS.set_plTrans\nROUTE PL.trackPoint_changed TO OBS.set_plTrack\nROUTE SP.isOver TO OBS.set_spOver\nROUTE SP.isActive TO OBS.set_spActive\nROUTE SP.rotation_changed TO OBS.set_spRot\nROUTE SP.trackPoint_changed TO OBS.set_spTrack\nROUTE CY.isOver TO OBS.set_cyOver\nROUTE CY.isActive TO OBS.set_cyActive\nROUTE CY.rotation_changed TO OBS.set_cyRot\nROUTE CY.trackPoint_changed TO OBS.set_cyTrack\n",
+    "19": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nViewpoint { }\n\nTransform {\n  translation -2.5 0 0\n  children [\n    DEF PL PlaneSensor {\n      offset 0.5986679 0 0\n    }\n    Shape {\n      geometry Box {\n        size 1.5 1.5 1.5\n      }\n    }\n  ]\n}\n\nTransform {\n  children [\n    DEF SP SphereSensor { }\n    Shape {\n      geometry Box {\n        size 1.5 1.5 1.5\n      }\n    }\n  ]\n}\n\nTransform {\n  translation 2.5 0 0\n  children [\n    DEF CY CylinderSensor { }\n    Shape {\n      geometry Box {\n        size 1.5 1.5 1.5\n      }\n    }\n  ]\n}\n\nDEF OBS Script {\n  inputOutput SFBool     plOver TRUE\n  inputOutput SFBool     plActive FALSE\n  inputOutput SFVec3f    plTrans 0.5986679 0 0\n  inputOutput SFVec3f    plTrack 0.7788298 0 0.75\n  inputOutput SFBool     spOver FALSE\n  inputOutput SFBool     spActive FALSE\n  inputOutput SFRotation spRot 0 0 1 0\n  inputOutput SFVec3f    spTrack 0 0 0\n  inputOutput SFBool     cyOver FALSE\n  inputOutput SFBool     cyActive FALSE\n  inputOutput SFRotation cyRot 0 0 1 0\n  inputOutput SFVec3f    cyTrack 0 0 0\n\n  url \"ecmascript:\nfunction noop () { }\n\"\n}\n\nROUTE PL.isOver TO OBS.set_plOver\nROUTE PL.isActive TO OBS.set_plActive\nROUTE PL.translation_changed TO OBS.set_plTrans\nROUTE PL.trackPoint_changed TO OBS.set_plTrack\nROUTE SP.isOver TO OBS.set_spOver\nROUTE SP.isActive TO OBS.set_spActive\nROUTE SP.rotation_changed TO OBS.set_spRot\nROUTE SP.trackPoint_changed TO OBS.set_spTrack\nROUTE CY.isOver TO OBS.set_cyOver\nROUTE CY.isActive TO OBS.set_cyActive\nROUTE CY.rotation_changed TO OBS.set_cyRot\nROUTE CY.trackPoint_changed TO OBS.set_cyTrack\n",
+    "20": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nViewpoint { }\n\nTransform {\n  translation -2.5 0 0\n  children [\n    DEF PL PlaneSensor {\n      offset 0.5986679 0 0\n    }\n    Shape {\n      geometry Box {\n        size 1.5 1.5 1.5\n      }\n    }\n  ]\n}\n\nTransform {\n  children [\n    DEF SP SphereSensor { }\n    Shape {\n      geometry Box {\n        size 1.5 1.5 1.5\n      }\n    }\n  ]\n}\n\nTransform {\n  translation 2.5 0 0\n  children [\n    DEF CY CylinderSensor { }\n    Shape {\n      geometry Box {\n        size 1.5 1.5 1.5\n      }\n    }\n  ]\n}\n\nDEF OBS Script {\n  inputOutput SFBool     plOver FALSE\n  inputOutput SFBool     plActive FALSE\n  inputOutput SFVec3f    plTrans 0.5986679 0 0\n  inputOutput SFVec3f    plTrack 0.7788298 0 0.75\n  inputOutput SFBool     spOver TRUE\n  inputOutput SFBool     spActive FALSE\n  inputOutput SFRotation spRot 0 0 1 0\n  inputOutput SFVec3f    spTrack 0 0 0\n  inputOutput SFBool     cyOver FALSE\n  inputOutput SFBool     cyActive FALSE\n  inputOutput SFRotation cyRot 0 0 1 0\n  inputOutput SFVec3f    cyTrack 0 0 0\n\n  url \"ecmascript:\nfunction noop () { }\n\"\n}\n\nROUTE PL.isOver TO OBS.set_plOver\nROUTE PL.isActive TO OBS.set_plActive\nROUTE PL.translation_changed TO OBS.set_plTrans\nROUTE PL.trackPoint_changed TO OBS.set_plTrack\nROUTE SP.isOver TO OBS.set_spOver\nROUTE SP.isActive TO OBS.set_spActive\nROUTE SP.rotation_changed TO OBS.set_spRot\nROUTE SP.trackPoint_changed TO OBS.set_spTrack\nROUTE CY.isOver TO OBS.set_cyOver\nROUTE CY.isActive TO OBS.set_cyActive\nROUTE CY.rotation_changed TO OBS.set_cyRot\nROUTE CY.trackPoint_changed TO OBS.set_cyTrack\n",
+    "21": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nViewpoint { }\n\nTransform {\n  translation -2.5 0 0\n  children [\n    DEF PL PlaneSensor {\n      offset 0.5986679 0 0\n    }\n    Shape {\n      geometry Box {\n        size 1.5 1.5 1.5\n      }\n    }\n  ]\n}\n\nTransform {\n  children [\n    DEF SP SphereSensor { }\n    Shape {\n      geometry Box {\n        size 1.5 1.5 1.5\n      }\n    }\n  ]\n}\n\nTransform {\n  translation 2.5 0 0\n  children [\n    DEF CY CylinderSensor { }\n    Shape {\n      geometry Box {\n        size 1.5 1.5 1.5\n      }\n    }\n  ]\n}\n\nDEF OBS Script {\n  inputOutput SFBool     plOver FALSE\n  inputOutput SFBool     plActive FALSE\n  inputOutput SFVec3f    plTrans 0.5986679 0 0\n  inputOutput SFVec3f    plTrack 0.7788298 0 0.75\n  inputOutput SFBool     spOver TRUE\n  inputOutput SFBool     spActive TRUE\n  inputOutput SFRotation spRot 0.707106781186359 -0.707106781186359 0 0.0141103156704523\n  inputOutput SFVec3f    spTrack 0 0 0.7500747\n  inputOutput SFBool     cyOver FALSE\n  inputOutput SFBool     cyActive FALSE\n  inputOutput SFRotation cyRot 0 0 1 0\n  inputOutput SFVec3f    cyTrack 0 0 0\n\n  url \"ecmascript:\nfunction noop () { }\n\"\n}\n\nROUTE PL.isOver TO OBS.set_plOver\nROUTE PL.isActive TO OBS.set_plActive\nROUTE PL.translation_changed TO OBS.set_plTrans\nROUTE PL.trackPoint_changed TO OBS.set_plTrack\nROUTE SP.isOver TO OBS.set_spOver\nROUTE SP.isActive TO OBS.set_spActive\nROUTE SP.rotation_changed TO OBS.set_spRot\nROUTE SP.trackPoint_changed TO OBS.set_spTrack\nROUTE CY.isOver TO OBS.set_cyOver\nROUTE CY.isActive TO OBS.set_cyActive\nROUTE CY.rotation_changed TO OBS.set_cyRot\nROUTE CY.trackPoint_changed TO OBS.set_cyTrack\n",
+    "22": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nViewpoint { }\n\nTransform {\n  translation -2.5 0 0\n  children [\n    DEF PL PlaneSensor {\n      offset 0.5986679 0 0\n    }\n    Shape {\n      geometry Box {\n        size 1.5 1.5 1.5\n      }\n    }\n  ]\n}\n\nTransform {\n  children [\n    DEF SP SphereSensor { }\n    Shape {\n      geometry Box {\n        size 1.5 1.5 1.5\n      }\n    }\n  ]\n}\n\nTransform {\n  translation 2.5 0 0\n  children [\n    DEF CY CylinderSensor { }\n    Shape {\n      geometry Box {\n        size 1.5 1.5 1.5\n      }\n    }\n  ]\n}\n\nDEF OBS Script {\n  inputOutput SFBool     plOver FALSE\n  inputOutput SFBool     plActive FALSE\n  inputOutput SFVec3f    plTrans 0.5986679 0 0\n  inputOutput SFVec3f    plTrack 0.7788298 0 0.75\n  inputOutput SFBool     spOver TRUE\n  inputOutput SFBool     spActive TRUE\n  inputOutput SFRotation spRot -0.989961107338219 -0.140888898459652 0.011283804696629 0.0706485833336567\n  inputOutput SFVec3f    spTrack 0 0.0598818 0.7476805\n  inputOutput SFBool     cyOver FALSE\n  inputOutput SFBool     cyActive FALSE\n  inputOutput SFRotation cyRot 0 0 1 0\n  inputOutput SFVec3f    cyTrack 0 0 0\n\n  url \"ecmascript:\nfunction noop () { }\n\"\n}\n\nROUTE PL.isOver TO OBS.set_plOver\nROUTE PL.isActive TO OBS.set_plActive\nROUTE PL.translation_changed TO OBS.set_plTrans\nROUTE PL.trackPoint_changed TO OBS.set_plTrack\nROUTE SP.isOver TO OBS.set_spOver\nROUTE SP.isActive TO OBS.set_spActive\nROUTE SP.rotation_changed TO OBS.set_spRot\nROUTE SP.trackPoint_changed TO OBS.set_spTrack\nROUTE CY.isOver TO OBS.set_cyOver\nROUTE CY.isActive TO OBS.set_cyActive\nROUTE CY.rotation_changed TO OBS.set_cyRot\nROUTE CY.trackPoint_changed TO OBS.set_cyTrack\n",
+    "23": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nViewpoint { }\n\nTransform {\n  translation -2.5 0 0\n  children [\n    DEF PL PlaneSensor {\n      offset 0.5986679 0 0\n    }\n    Shape {\n      geometry Box {\n        size 1.5 1.5 1.5\n      }\n    }\n  ]\n}\n\nTransform {\n  children [\n    DEF SP SphereSensor { }\n    Shape {\n      geometry Box {\n        size 1.5 1.5 1.5\n      }\n    }\n  ]\n}\n\nTransform {\n  translation 2.5 0 0\n  children [\n    DEF CY CylinderSensor { }\n    Shape {\n      geometry Box {\n        size 1.5 1.5 1.5\n      }\n    }\n  ]\n}\n\nDEF OBS Script {\n  inputOutput SFBool     plOver FALSE\n  inputOutput SFBool     plActive FALSE\n  inputOutput SFVec3f    plTrans 0.5986679 0 0\n  inputOutput SFVec3f    plTrack 0.7788298 0 0.75\n  inputOutput SFBool     spOver TRUE\n  inputOutput SFBool     spActive TRUE\n  inputOutput SFRotation spRot -0.99779314603188 -0.0655458773840253 0.0106101691692204 0.150831910720822\n  inputOutput SFVec3f    spTrack 0 0.1198574 0.7404365\n  inputOutput SFBool     cyOver FALSE\n  inputOutput SFBool     cyActive FALSE\n  inputOutput SFRotation cyRot 0 0 1 0\n  inputOutput SFVec3f    cyTrack 0 0 0\n\n  url \"ecmascript:\nfunction noop () { }\n\"\n}\n\nROUTE PL.isOver TO OBS.set_plOver\nROUTE PL.isActive TO OBS.set_plActive\nROUTE PL.translation_changed TO OBS.set_plTrans\nROUTE PL.trackPoint_changed TO OBS.set_plTrack\nROUTE SP.isOver TO OBS.set_spOver\nROUTE SP.isActive TO OBS.set_spActive\nROUTE SP.rotation_changed TO OBS.set_spRot\nROUTE SP.trackPoint_changed TO OBS.set_spTrack\nROUTE CY.isOver TO OBS.set_cyOver\nROUTE CY.isActive TO OBS.set_cyActive\nROUTE CY.rotation_changed TO OBS.set_cyRot\nROUTE CY.trackPoint_changed TO OBS.set_cyTrack\n",
+    "24": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nViewpoint { }\n\nTransform {\n  translation -2.5 0 0\n  children [\n    DEF PL PlaneSensor {\n      offset 0.5986679 0 0\n    }\n    Shape {\n      geometry Box {\n        size 1.5 1.5 1.5\n      }\n    }\n  ]\n}\n\nTransform {\n  children [\n    DEF SP SphereSensor { }\n    Shape {\n      geometry Box {\n        size 1.5 1.5 1.5\n      }\n    }\n  ]\n}\n\nTransform {\n  translation 2.5 0 0\n  children [\n    DEF CY CylinderSensor { }\n    Shape {\n      geometry Box {\n        size 1.5 1.5 1.5\n      }\n    }\n  ]\n}\n\nDEF OBS Script {\n  inputOutput SFBool     plOver FALSE\n  inputOutput SFBool     plActive FALSE\n  inputOutput SFVec3f    plTrans 0.5986679 0 0\n  inputOutput SFVec3f    plTrack 0.7788298 0 0.75\n  inputOutput SFBool     spOver TRUE\n  inputOutput SFBool     spActive TRUE\n  inputOutput SFRotation spRot -0.999062895683348 -0.0420168849313024 0.0103880628357753 0.232607411039188\n  inputOutput SFVec3f    spTrack 0 0.1800246 0.7281505\n  inputOutput SFBool     cyOver FALSE\n  inputOutput SFBool     cyActive FALSE\n  inputOutput SFRotation cyRot 0 0 1 0\n  inputOutput SFVec3f    cyTrack 0 0 0\n\n  url \"ecmascript:\nfunction noop () { }\n\"\n}\n\nROUTE PL.isOver TO OBS.set_plOver\nROUTE PL.isActive TO OBS.set_plActive\nROUTE PL.translation_changed TO OBS.set_plTrans\nROUTE PL.trackPoint_changed TO OBS.set_plTrack\nROUTE SP.isOver TO OBS.set_spOver\nROUTE SP.isActive TO OBS.set_spActive\nROUTE SP.rotation_changed TO OBS.set_spRot\nROUTE SP.trackPoint_changed TO OBS.set_spTrack\nROUTE CY.isOver TO OBS.set_cyOver\nROUTE CY.isActive TO OBS.set_cyActive\nROUTE CY.rotation_changed TO OBS.set_cyRot\nROUTE CY.trackPoint_changed TO OBS.set_cyTrack\n",
+    "25": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nViewpoint { }\n\nTransform {\n  translation -2.5 0 0\n  children [\n    DEF PL PlaneSensor {\n      offset 0.5986679 0 0\n    }\n    Shape {\n      geometry Box {\n        size 1.5 1.5 1.5\n      }\n    }\n  ]\n}\n\nTransform {\n  children [\n    DEF SP SphereSensor { }\n    Shape {\n      geometry Box {\n        size 1.5 1.5 1.5\n      }\n    }\n  ]\n}\n\nTransform {\n  translation 2.5 0 0\n  children [\n    DEF CY CylinderSensor { }\n    Shape {\n      geometry Box {\n        size 1.5 1.5 1.5\n      }\n    }\n  ]\n}\n\nDEF OBS Script {\n  inputOutput SFBool     plOver FALSE\n  inputOutput SFBool     plActive FALSE\n  inputOutput SFVec3f    plTrans 0.5986679 0 0\n  inputOutput SFVec3f    plTrack 0.7788298 0 0.75\n  inputOutput SFBool     spOver TRUE\n  inputOutput SFBool     spActive TRUE\n  inputOutput SFRotation spRot -0.999486264623295 -0.0303580567057649 0.0102759536014776 0.316560133503686\n  inputOutput SFVec3f    spTrack 0 0.2404904 0.7104762\n  inputOutput SFBool     cyOver FALSE\n  inputOutput SFBool     cyActive FALSE\n  inputOutput SFRotation cyRot 0 0 1 0\n  inputOutput SFVec3f    cyTrack 0 0 0\n\n  url \"ecmascript:\nfunction noop () { }\n\"\n}\n\nROUTE PL.isOver TO OBS.set_plOver\nROUTE PL.isActive TO OBS.set_plActive\nROUTE PL.translation_changed TO OBS.set_plTrans\nROUTE PL.trackPoint_changed TO OBS.set_plTrack\nROUTE SP.isOver TO OBS.set_spOver\nROUTE SP.isActive TO OBS.set_spActive\nROUTE SP.rotation_changed TO OBS.set_spRot\nROUTE SP.trackPoint_changed TO OBS.set_spTrack\nROUTE CY.isOver TO OBS.set_cyOver\nROUTE CY.isActive TO OBS.set_cyActive\nROUTE CY.rotation_changed TO OBS.set_cyRot\nROUTE CY.trackPoint_changed TO OBS.set_cyTrack\n",
+    "26": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nViewpoint { }\n\nTransform {\n  translation -2.5 0 0\n  children [\n    DEF PL PlaneSensor {\n      offset 0.5986679 0 0\n    }\n    Shape {\n      geometry Box {\n        size 1.5 1.5 1.5\n      }\n    }\n  ]\n}\n\nTransform {\n  children [\n    DEF SP SphereSensor { }\n    Shape {\n      geometry Box {\n        size 1.5 1.5 1.5\n      }\n    }\n  ]\n}\n\nTransform {\n  translation 2.5 0 0\n  children [\n    DEF CY CylinderSensor { }\n    Shape {\n      geometry Box {\n        size 1.5 1.5 1.5\n      }\n    }\n  ]\n}\n\nDEF OBS Script {\n  inputOutput SFBool     plOver FALSE\n  inputOutput SFBool     plActive FALSE\n  inputOutput SFVec3f    plTrans 0.5986679 0 0\n  inputOutput SFVec3f    plTrack 0.7788298 0 0.75\n  inputOutput SFBool     spOver TRUE\n  inputOutput SFBool     spActive TRUE\n  inputOutput SFRotation spRot -0.999677276690618 -0.0232628105151601 0.0102070620340482 0.40361604384382\n  inputOutput SFVec3f    spTrack 0 0.301377 0.6868653\n  inputOutput SFBool     cyOver FALSE\n  inputOutput SFBool     cyActive FALSE\n  inputOutput SFRotation cyRot 0 0 1 0\n  inputOutput SFVec3f    cyTrack 0 0 0\n\n  url \"ecmascript:\nfunction noop () { }\n\"\n}\n\nROUTE PL.isOver TO OBS.set_plOver\nROUTE PL.isActive TO OBS.set_plActive\nROUTE PL.translation_changed TO OBS.set_plTrans\nROUTE PL.trackPoint_changed TO OBS.set_plTrack\nROUTE SP.isOver TO OBS.set_spOver\nROUTE SP.isActive TO OBS.set_spActive\nROUTE SP.rotation_changed TO OBS.set_spRot\nROUTE SP.trackPoint_changed TO OBS.set_spTrack\nROUTE CY.isOver TO OBS.set_cyOver\nROUTE CY.isActive TO OBS.set_cyActive\nROUTE CY.rotation_changed TO OBS.set_cyRot\nROUTE CY.trackPoint_changed TO OBS.set_cyTrack\n",
+    "27": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nViewpoint { }\n\nTransform {\n  translation -2.5 0 0\n  children [\n    DEF PL PlaneSensor {\n      offset 0.5986679 0 0\n    }\n    Shape {\n      geometry Box {\n        size 1.5 1.5 1.5\n      }\n    }\n  ]\n}\n\nTransform {\n  children [\n    DEF SP SphereSensor { }\n    Shape {\n      geometry Box {\n        size 1.5 1.5 1.5\n      }\n    }\n  ]\n}\n\nTransform {\n  translation 2.5 0 0\n  children [\n    DEF CY CylinderSensor { }\n    Shape {\n      geometry Box {\n        size 1.5 1.5 1.5\n      }\n    }\n  ]\n}\n\nDEF OBS Script {\n  inputOutput SFBool     plOver FALSE\n  inputOutput SFBool     plActive FALSE\n  inputOutput SFVec3f    plTrans 0.5986679 0 0\n  inputOutput SFVec3f    plTrack 0.7788298 0 0.75\n  inputOutput SFBool     spOver TRUE\n  inputOutput SFBool     spActive TRUE\n  inputOutput SFRotation spRot -0.999779428811506 -0.0183815348003408 0.0101593751640137 0.495024031476562\n  inputOutput SFVec3f    spTrack 0 0.3628324 0.656479\n  inputOutput SFBool     cyOver FALSE\n  inputOutput SFBool     cyActive FALSE\n  inputOutput SFRotation cyRot 0 0 1 0\n  inputOutput SFVec3f    cyTrack 0 0 0\n\n  url \"ecmascript:\nfunction noop () { }\n\"\n}\n\nROUTE PL.isOver TO OBS.set_plOver\nROUTE PL.isActive TO OBS.set_plActive\nROUTE PL.translation_changed TO OBS.set_plTrans\nROUTE PL.trackPoint_changed TO OBS.set_plTrack\nROUTE SP.isOver TO OBS.set_spOver\nROUTE SP.isActive TO OBS.set_spActive\nROUTE SP.rotation_changed TO OBS.set_spRot\nROUTE SP.trackPoint_changed TO OBS.set_spTrack\nROUTE CY.isOver TO OBS.set_cyOver\nROUTE CY.isActive TO OBS.set_cyActive\nROUTE CY.rotation_changed TO OBS.set_cyRot\nROUTE CY.trackPoint_changed TO OBS.set_cyTrack\n",
+    "28": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nViewpoint { }\n\nTransform {\n  translation -2.5 0 0\n  children [\n    DEF PL PlaneSensor {\n      offset 0.5986679 0 0\n    }\n    Shape {\n      geometry Box {\n        size 1.5 1.5 1.5\n      }\n    }\n  ]\n}\n\nTransform {\n  children [\n    DEF SP SphereSensor { }\n    Shape {\n      geometry Box {\n        size 1.5 1.5 1.5\n      }\n    }\n  ]\n}\n\nTransform {\n  translation 2.5 0 0\n  children [\n    DEF CY CylinderSensor { }\n    Shape {\n      geometry Box {\n        size 1.5 1.5 1.5\n      }\n    }\n  ]\n}\n\nDEF OBS Script {\n  inputOutput SFBool     plOver FALSE\n  inputOutput SFBool     plActive FALSE\n  inputOutput SFVec3f    plTrans 0.5986679 0 0\n  inputOutput SFVec3f    plTrack 0.7788298 0 0.75\n  inputOutput SFBool     spOver TRUE\n  inputOutput SFBool     spActive TRUE\n  inputOutput SFRotation spRot -0.999840413377554 -0.0147194997464763 0.0101234432984269 0.592558143238378\n  inputOutput SFVec3f    spTrack 0 0.4250469 0.6180187\n  inputOutput SFBool     cyOver FALSE\n  inputOutput SFBool     cyActive FALSE\n  inputOutput SFRotation cyRot 0 0 1 0\n  inputOutput SFVec3f    cyTrack 0 0 0\n\n  url \"ecmascript:\nfunction noop () { }\n\"\n}\n\nROUTE PL.isOver TO OBS.set_plOver\nROUTE PL.isActive TO OBS.set_plActive\nROUTE PL.translation_changed TO OBS.set_plTrans\nROUTE PL.trackPoint_changed TO OBS.set_plTrack\nROUTE SP.isOver TO OBS.set_spOver\nROUTE SP.isActive TO OBS.set_spActive\nROUTE SP.rotation_changed TO OBS.set_spRot\nROUTE SP.trackPoint_changed TO OBS.set_spTrack\nROUTE CY.isOver TO OBS.set_cyOver\nROUTE CY.isActive TO OBS.set_cyActive\nROUTE CY.rotation_changed TO OBS.set_cyRot\nROUTE CY.trackPoint_changed TO OBS.set_cyTrack\n",
+    "29": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nViewpoint { }\n\nTransform {\n  translation -2.5 0 0\n  children [\n    DEF PL PlaneSensor {\n      offset 0.5986679 0 0\n    }\n    Shape {\n      geometry Box {\n        size 1.5 1.5 1.5\n      }\n    }\n  ]\n}\n\nTransform {\n  children [\n    DEF SP SphereSensor { }\n    Shape {\n      geometry Box {\n        size 1.5 1.5 1.5\n      }\n    }\n  ]\n}\n\nTransform {\n  translation 2.5 0 0\n  children [\n    DEF CY CylinderSensor { }\n    Shape {\n      geometry Box {\n        size 1.5 1.5 1.5\n      }\n    }\n  ]\n}\n\nDEF OBS Script {\n  inputOutput SFBool     plOver FALSE\n  inputOutput SFBool     plActive FALSE\n  inputOutput SFVec3f    plTrans 0.5986679 0 0\n  inputOutput SFVec3f    plTrack 0.7788298 0 0.75\n  inputOutput SFBool     spOver TRUE\n  inputOutput SFBool     spActive TRUE\n  inputOutput SFRotation spRot -0.999879768603317 -0.0117707757194792 0.0100944131448475 0.698961141709315\n  inputOutput SFVec3f    spTrack 0 0.4882865 0.5693754\n  inputOutput SFBool     cyOver FALSE\n  inputOutput SFBool     cyActive FALSE\n  inputOutput SFRotation cyRot 0 0 1 0\n  inputOutput SFVec3f    cyTrack 0 0 0\n\n  url \"ecmascript:\nfunction noop () { }\n\"\n}\n\nROUTE PL.isOver TO OBS.set_plOver\nROUTE PL.isActive TO OBS.set_plActive\nROUTE PL.translation_changed TO OBS.set_plTrans\nROUTE PL.trackPoint_changed TO OBS.set_plTrack\nROUTE SP.isOver TO OBS.set_spOver\nROUTE SP.isActive TO OBS.set_spActive\nROUTE SP.rotation_changed TO OBS.set_spRot\nROUTE SP.trackPoint_changed TO OBS.set_spTrack\nROUTE CY.isOver TO OBS.set_cyOver\nROUTE CY.isActive TO OBS.set_cyActive\nROUTE CY.rotation_changed TO OBS.set_cyRot\nROUTE CY.trackPoint_changed TO OBS.set_cyTrack\n",
+    "30": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nViewpoint { }\n\nTransform {\n  translation -2.5 0 0\n  children [\n    DEF PL PlaneSensor {\n      offset 0.5986679 0 0\n    }\n    Shape {\n      geometry Box {\n        size 1.5 1.5 1.5\n      }\n    }\n  ]\n}\n\nTransform {\n  children [\n    DEF SP SphereSensor { }\n    Shape {\n      geometry Box {\n        size 1.5 1.5 1.5\n      }\n    }\n  ]\n}\n\nTransform {\n  translation 2.5 0 0\n  children [\n    DEF CY CylinderSensor { }\n    Shape {\n      geometry Box {\n        size 1.5 1.5 1.5\n      }\n    }\n  ]\n}\n\nDEF OBS Script {\n  inputOutput SFBool     plOver FALSE\n  inputOutput SFBool     plActive FALSE\n  inputOutput SFVec3f    plTrans 0.5986679 0 0\n  inputOutput SFVec3f    plTrack 0.7788298 0 0.75\n  inputOutput SFBool     spOver TRUE\n  inputOutput SFBool     spActive TRUE\n  inputOutput SFRotation spRot -0.999906717612442 -0.00922848716775012 0.0100693146790926 0.819010484232396\n  inputOutput SFVec3f    spTrack 0 0.5529676 0.5067927\n  inputOutput SFBool     cyOver FALSE\n  inputOutput SFBool     cyActive FALSE\n  inputOutput SFRotation cyRot 0 0 1 0\n  inputOutput SFVec3f    cyTrack 0 0 0\n\n  url \"ecmascript:\nfunction noop () { }\n\"\n}\n\nROUTE PL.isOver TO OBS.set_plOver\nROUTE PL.isActive TO OBS.set_plActive\nROUTE PL.translation_changed TO OBS.set_plTrans\nROUTE PL.trackPoint_changed TO OBS.set_plTrack\nROUTE SP.isOver TO OBS.set_spOver\nROUTE SP.isActive TO OBS.set_spActive\nROUTE SP.rotation_changed TO OBS.set_spRot\nROUTE SP.trackPoint_changed TO OBS.set_spTrack\nROUTE CY.isOver TO OBS.set_cyOver\nROUTE CY.isActive TO OBS.set_cyActive\nROUTE CY.rotation_changed TO OBS.set_cyRot\nROUTE CY.trackPoint_changed TO OBS.set_cyTrack\n",
+    "31": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nViewpoint { }\n\nTransform {\n  translation -2.5 0 0\n  children [\n    DEF PL PlaneSensor {\n      offset 0.5986679 0 0\n    }\n    Shape {\n      geometry Box {\n        size 1.5 1.5 1.5\n      }\n    }\n  ]\n}\n\nTransform {\n  children [\n    DEF SP SphereSensor { }\n    Shape {\n      geometry Box {\n        size 1.5 1.5 1.5\n      }\n    }\n  ]\n}\n\nTransform {\n  translation 2.5 0 0\n  children [\n    DEF CY CylinderSensor { }\n    Shape {\n      geometry Box {\n        size 1.5 1.5 1.5\n      }\n    }\n  ]\n}\n\nDEF OBS Script {\n  inputOutput SFBool     plOver FALSE\n  inputOutput SFBool     plActive FALSE\n  inputOutput SFVec3f    plTrans 0.5986679 0 0\n  inputOutput SFVec3f    plTrack 0.7788298 0 0.75\n  inputOutput SFBool     spOver TRUE\n  inputOutput SFBool     spActive TRUE\n  inputOutput SFRotation spRot -0.999926116164665 -0.00684439435316297 0.0100457193763672 0.962771361607468\n  inputOutput SFVec3f    spTrack 0 0.6198746 0.4223357\n  inputOutput SFBool     cyOver FALSE\n  inputOutput SFBool     cyActive FALSE\n  inputOutput SFRotation cyRot 0 0 1 0\n  inputOutput SFVec3f    cyTrack 0 0 0\n\n  url \"ecmascript:\nfunction noop () { }\n\"\n}\n\nROUTE PL.isOver TO OBS.set_plOver\nROUTE PL.isActive TO OBS.set_plActive\nROUTE PL.translation_changed TO OBS.set_plTrans\nROUTE PL.trackPoint_changed TO OBS.set_plTrack\nROUTE SP.isOver TO OBS.set_spOver\nROUTE SP.isActive TO OBS.set_spActive\nROUTE SP.rotation_changed TO OBS.set_spRot\nROUTE SP.trackPoint_changed TO OBS.set_spTrack\nROUTE CY.isOver TO OBS.set_cyOver\nROUTE CY.isActive TO OBS.set_cyActive\nROUTE CY.rotation_changed TO OBS.set_cyRot\nROUTE CY.trackPoint_changed TO OBS.set_cyTrack\n",
+    "32": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nViewpoint { }\n\nTransform {\n  translation -2.5 0 0\n  children [\n    DEF PL PlaneSensor {\n      offset 0.5986679 0 0\n    }\n    Shape {\n      geometry Box {\n        size 1.5 1.5 1.5\n      }\n    }\n  ]\n}\n\nTransform {\n  children [\n    DEF SP SphereSensor {\n      offset -0.999926116164665 -0.00684439435316297 0.0100457193763672 0.962771361607468\n    }\n    Shape {\n      geometry Box {\n        size 1.5 1.5 1.5\n      }\n    }\n  ]\n}\n\nTransform {\n  translation 2.5 0 0\n  children [\n    DEF CY CylinderSensor { }\n    Shape {\n      geometry Box {\n        size 1.5 1.5 1.5\n      }\n    }\n  ]\n}\n\nDEF OBS Script {\n  inputOutput SFBool     plOver FALSE\n  inputOutput SFBool     plActive FALSE\n  inputOutput SFVec3f    plTrans 0.5986679 0 0\n  inputOutput SFVec3f    plTrack 0.7788298 0 0.75\n  inputOutput SFBool     spOver TRUE\n  inputOutput SFBool     spActive FALSE\n  inputOutput SFRotation spRot -0.999926116164665 -0.00684439435316297 0.0100457193763672 0.962771361607468\n  inputOutput SFVec3f    spTrack 0 0.6198746 0.4223357\n  inputOutput SFBool     cyOver FALSE\n  inputOutput SFBool     cyActive FALSE\n  inputOutput SFRotation cyRot 0 0 1 0\n  inputOutput SFVec3f    cyTrack 0 0 0\n\n  url \"ecmascript:\nfunction noop () { }\n\"\n}\n\nROUTE PL.isOver TO OBS.set_plOver\nROUTE PL.isActive TO OBS.set_plActive\nROUTE PL.translation_changed TO OBS.set_plTrans\nROUTE PL.trackPoint_changed TO OBS.set_plTrack\nROUTE SP.isOver TO OBS.set_spOver\nROUTE SP.isActive TO OBS.set_spActive\nROUTE SP.rotation_changed TO OBS.set_spRot\nROUTE SP.trackPoint_changed TO OBS.set_spTrack\nROUTE CY.isOver TO OBS.set_cyOver\nROUTE CY.isActive TO OBS.set_cyActive\nROUTE CY.rotation_changed TO OBS.set_cyRot\nROUTE CY.trackPoint_changed TO OBS.set_cyTrack\n",
+    "33": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nViewpoint { }\n\nTransform {\n  translation -2.5 0 0\n  children [\n    DEF PL PlaneSensor {\n      offset 0.5986679 0 0\n    }\n    Shape {\n      geometry Box {\n        size 1.5 1.5 1.5\n      }\n    }\n  ]\n}\n\nTransform {\n  children [\n    DEF SP SphereSensor {\n      offset -0.999926116164665 -0.00684439435316297 0.0100457193763672 0.962771361607468\n    }\n    Shape {\n      geometry Box {\n        size 1.5 1.5 1.5\n      }\n    }\n  ]\n}\n\nTransform {\n  translation 2.5 0 0\n  children [\n    DEF CY CylinderSensor { }\n    Shape {\n      geometry Box {\n        size 1.5 1.5 1.5\n      }\n    }\n  ]\n}\n\nDEF OBS Script {\n  inputOutput SFBool     plOver FALSE\n  inputOutput SFBool     plActive FALSE\n  inputOutput SFVec3f    plTrans 0.5986679 0 0\n  inputOutput SFVec3f    plTrack 0.7788298 0 0.75\n  inputOutput SFBool     spOver TRUE\n  inputOutput SFBool     spActive FALSE\n  inputOutput SFRotation spRot -0.999926116164665 -0.00684439435316297 0.0100457193763672 0.962771361607468\n  inputOutput SFVec3f    spTrack 0 0.6198746 0.4223357\n  inputOutput SFBool     cyOver FALSE\n  inputOutput SFBool     cyActive FALSE\n  inputOutput SFRotation cyRot 0 0 1 0\n  inputOutput SFVec3f    cyTrack 0 0 0\n\n  url \"ecmascript:\nfunction noop () { }\n\"\n}\n\nROUTE PL.isOver TO OBS.set_plOver\nROUTE PL.isActive TO OBS.set_plActive\nROUTE PL.translation_changed TO OBS.set_plTrans\nROUTE PL.trackPoint_changed TO OBS.set_plTrack\nROUTE SP.isOver TO OBS.set_spOver\nROUTE SP.isActive TO OBS.set_spActive\nROUTE SP.rotation_changed TO OBS.set_spRot\nROUTE SP.trackPoint_changed TO OBS.set_spTrack\nROUTE CY.isOver TO OBS.set_cyOver\nROUTE CY.isActive TO OBS.set_cyActive\nROUTE CY.rotation_changed TO OBS.set_cyRot\nROUTE CY.trackPoint_changed TO OBS.set_cyTrack\n",
+    "34": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nViewpoint { }\n\nTransform {\n  translation -2.5 0 0\n  children [\n    DEF PL PlaneSensor {\n      offset 0.5986679 0 0\n    }\n    Shape {\n      geometry Box {\n        size 1.5 1.5 1.5\n      }\n    }\n  ]\n}\n\nTransform {\n  children [\n    DEF SP SphereSensor {\n      offset -0.999926116164665 -0.00684439435316297 0.0100457193763672 0.962771361607468\n    }\n    Shape {\n      geometry Box {\n        size 1.5 1.5 1.5\n      }\n    }\n  ]\n}\n\nTransform {\n  translation 2.5 0 0\n  children [\n    DEF CY CylinderSensor { }\n    Shape {\n      geometry Box {\n        size 1.5 1.5 1.5\n      }\n    }\n  ]\n}\n\nDEF OBS Script {\n  inputOutput SFBool     plOver FALSE\n  inputOutput SFBool     plActive FALSE\n  inputOutput SFVec3f    plTrans 0.5986679 0 0\n  inputOutput SFVec3f    plTrack 0.7788298 0 0.75\n  inputOutput SFBool     spOver TRUE\n  inputOutput SFBool     spActive FALSE\n  inputOutput SFRotation spRot -0.999926116164665 -0.00684439435316297 0.0100457193763672 0.962771361607468\n  inputOutput SFVec3f    spTrack 0 0.6198746 0.4223357\n  inputOutput SFBool     cyOver FALSE\n  inputOutput SFBool     cyActive FALSE\n  inputOutput SFRotation cyRot 0 0 1 0\n  inputOutput SFVec3f    cyTrack 0 0 0\n\n  url \"ecmascript:\nfunction noop () { }\n\"\n}\n\nROUTE PL.isOver TO OBS.set_plOver\nROUTE PL.isActive TO OBS.set_plActive\nROUTE PL.translation_changed TO OBS.set_plTrans\nROUTE PL.trackPoint_changed TO OBS.set_plTrack\nROUTE SP.isOver TO OBS.set_spOver\nROUTE SP.isActive TO OBS.set_spActive\nROUTE SP.rotation_changed TO OBS.set_spRot\nROUTE SP.trackPoint_changed TO OBS.set_spTrack\nROUTE CY.isOver TO OBS.set_cyOver\nROUTE CY.isActive TO OBS.set_cyActive\nROUTE CY.rotation_changed TO OBS.set_cyRot\nROUTE CY.trackPoint_changed TO OBS.set_cyTrack\n",
+    "35": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nViewpoint { }\n\nTransform {\n  translation -2.5 0 0\n  children [\n    DEF PL PlaneSensor {\n      offset 0.5986679 0 0\n    }\n    Shape {\n      geometry Box {\n        size 1.5 1.5 1.5\n      }\n    }\n  ]\n}\n\nTransform {\n  children [\n    DEF SP SphereSensor {\n      offset -0.999926116164665 -0.00684439435316297 0.0100457193763672 0.962771361607468\n    }\n    Shape {\n      geometry Box {\n        size 1.5 1.5 1.5\n      }\n    }\n  ]\n}\n\nTransform {\n  translation 2.5 0 0\n  children [\n    DEF CY CylinderSensor { }\n    Shape {\n      geometry Box {\n        size 1.5 1.5 1.5\n      }\n    }\n  ]\n}\n\nDEF OBS Script {\n  inputOutput SFBool     plOver FALSE\n  inputOutput SFBool     plActive FALSE\n  inputOutput SFVec3f    plTrans 0.5986679 0 0\n  inputOutput SFVec3f    plTrack 0.7788298 0 0.75\n  inputOutput SFBool     spOver FALSE\n  inputOutput SFBool     spActive FALSE\n  inputOutput SFRotation spRot -0.999926116164665 -0.00684439435316297 0.0100457193763672 0.962771361607468\n  inputOutput SFVec3f    spTrack 0 0.6198746 0.4223357\n  inputOutput SFBool     cyOver TRUE\n  inputOutput SFBool     cyActive FALSE\n  inputOutput SFRotation cyRot 0 0 1 0\n  inputOutput SFVec3f    cyTrack 0 0 0\n\n  url \"ecmascript:\nfunction noop () { }\n\"\n}\n\nROUTE PL.isOver TO OBS.set_plOver\nROUTE PL.isActive TO OBS.set_plActive\nROUTE PL.translation_changed TO OBS.set_plTrans\nROUTE PL.trackPoint_changed TO OBS.set_plTrack\nROUTE SP.isOver TO OBS.set_spOver\nROUTE SP.isActive TO OBS.set_spActive\nROUTE SP.rotation_changed TO OBS.set_spRot\nROUTE SP.trackPoint_changed TO OBS.set_spTrack\nROUTE CY.isOver TO OBS.set_cyOver\nROUTE CY.isActive TO OBS.set_cyActive\nROUTE CY.rotation_changed TO OBS.set_cyRot\nROUTE CY.trackPoint_changed TO OBS.set_cyTrack\n",
+    "36": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nViewpoint { }\n\nTransform {\n  translation -2.5 0 0\n  children [\n    DEF PL PlaneSensor {\n      offset 0.5986679 0 0\n    }\n    Shape {\n      geometry Box {\n        size 1.5 1.5 1.5\n      }\n    }\n  ]\n}\n\nTransform {\n  children [\n    DEF SP SphereSensor {\n      offset -0.999926116164665 -0.00684439435316297 0.0100457193763672 0.962771361607468\n    }\n    Shape {\n      geometry Box {\n        size 1.5 1.5 1.5\n      }\n    }\n  ]\n}\n\nTransform {\n  translation 2.5 0 0\n  children [\n    DEF CY CylinderSensor { }\n    Shape {\n      geometry Box {\n        size 1.5 1.5 1.5\n      }\n    }\n  ]\n}\n\nDEF OBS Script {\n  inputOutput SFBool     plOver FALSE\n  inputOutput SFBool     plActive FALSE\n  inputOutput SFVec3f    plTrans 0.5986679 0 0\n  inputOutput SFVec3f    plTrack 0.7788298 0 0.75\n  inputOutput SFBool     spOver FALSE\n  inputOutput SFBool     spActive FALSE\n  inputOutput SFRotation spRot -0.999926116164665 -0.00684439435316297 0.0100457193763672 0.962771361607468\n  inputOutput SFVec3f    spTrack 0 0.6198746 0.4223357\n  inputOutput SFBool     cyOver TRUE\n  inputOutput SFBool     cyActive TRUE\n  inputOutput SFRotation cyRot 0 0 1 0\n  inputOutput SFVec3f    cyTrack -0.179746 0 0.7483363\n\n  url \"ecmascript:\nfunction noop () { }\n\"\n}\n\nROUTE PL.isOver TO OBS.set_plOver\nROUTE PL.isActive TO OBS.set_plActive\nROUTE PL.translation_changed TO OBS.set_plTrans\nROUTE PL.trackPoint_changed TO OBS.set_plTrack\nROUTE SP.isOver TO OBS.set_spOver\nROUTE SP.isActive TO OBS.set_spActive\nROUTE SP.rotation_changed TO OBS.set_spRot\nROUTE SP.trackPoint_changed TO OBS.set_spTrack\nROUTE CY.isOver TO OBS.set_cyOver\nROUTE CY.isActive TO OBS.set_cyActive\nROUTE CY.rotation_changed TO OBS.set_cyRot\nROUTE CY.trackPoint_changed TO OBS.set_cyTrack\n",
+    "37": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nViewpoint { }\n\nTransform {\n  translation -2.5 0 0\n  children [\n    DEF PL PlaneSensor {\n      offset 0.5986679 0 0\n    }\n    Shape {\n      geometry Box {\n        size 1.5 1.5 1.5\n      }\n    }\n  ]\n}\n\nTransform {\n  children [\n    DEF SP SphereSensor {\n      offset -0.999926116164665 -0.00684439435316297 0.0100457193763672 0.962771361607468\n    }\n    Shape {\n      geometry Box {\n        size 1.5 1.5 1.5\n      }\n    }\n  ]\n}\n\nTransform {\n  translation 2.5 0 0\n  children [\n    DEF CY CylinderSensor { }\n    Shape {\n      geometry Box {\n        size 1.5 1.5 1.5\n      }\n    }\n  ]\n}\n\nDEF OBS Script {\n  inputOutput SFBool     plOver FALSE\n  inputOutput SFBool     plActive FALSE\n  inputOutput SFVec3f    plTrans 0.5986679 0 0\n  inputOutput SFVec3f    plTrack 0.7788298 0 0.75\n  inputOutput SFBool     spOver FALSE\n  inputOutput SFBool     spActive FALSE\n  inputOutput SFRotation spRot -0.999926116164665 -0.00684439435316297 0.0100457193763672 0.962771361607468\n  inputOutput SFVec3f    spTrack 0 0.6198746 0.4223357\n  inputOutput SFBool     cyOver TRUE\n  inputOutput SFBool     cyActive TRUE\n  inputOutput SFRotation cyRot 0 1.00000000000013 0 0.0566462032586544\n  inputOutput SFVec3f    cyTrack -0.1370899 0 0.7573125\n\n  url \"ecmascript:\nfunction noop () { }\n\"\n}\n\nROUTE PL.isOver TO OBS.set_plOver\nROUTE PL.isActive TO OBS.set_plActive\nROUTE PL.translation_changed TO OBS.set_plTrans\nROUTE PL.trackPoint_changed TO OBS.set_plTrack\nROUTE SP.isOver TO OBS.set_spOver\nROUTE SP.isActive TO OBS.set_spActive\nROUTE SP.rotation_changed TO OBS.set_spRot\nROUTE SP.trackPoint_changed TO OBS.set_spTrack\nROUTE CY.isOver TO OBS.set_cyOver\nROUTE CY.isActive TO OBS.set_cyActive\nROUTE CY.rotation_changed TO OBS.set_cyRot\nROUTE CY.trackPoint_changed TO OBS.set_cyTrack\n",
+    "38": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nViewpoint { }\n\nTransform {\n  translation -2.5 0 0\n  children [\n    DEF PL PlaneSensor {\n      offset 0.5986679 0 0\n    }\n    Shape {\n      geometry Box {\n        size 1.5 1.5 1.5\n      }\n    }\n  ]\n}\n\nTransform {\n  children [\n    DEF SP SphereSensor {\n      offset -0.999926116164665 -0.00684439435316297 0.0100457193763672 0.962771361607468\n    }\n    Shape {\n      geometry Box {\n        size 1.5 1.5 1.5\n      }\n    }\n  ]\n}\n\nTransform {\n  translation 2.5 0 0\n  children [\n    DEF CY CylinderSensor { }\n    Shape {\n      geometry Box {\n        size 1.5 1.5 1.5\n      }\n    }\n  ]\n}\n\nDEF OBS Script {\n  inputOutput SFBool     plOver FALSE\n  inputOutput SFBool     plActive FALSE\n  inputOutput SFVec3f    plTrans 0.5986679 0 0\n  inputOutput SFVec3f    plTrack 0.7788298 0 0.75\n  inputOutput SFBool     spOver FALSE\n  inputOutput SFBool     spActive FALSE\n  inputOutput SFRotation spRot -0.999926116164665 -0.00684439435316297 0.0100457193763672 0.962771361607468\n  inputOutput SFVec3f    spTrack 0 0.6198746 0.4223357\n  inputOutput SFBool     cyOver TRUE\n  inputOutput SFBool     cyActive TRUE\n  inputOutput SFRotation cyRot 0 0.999999999999979 0 0.11350524362704\n  inputOutput SFVec3f    cyTrack -0.0938315 0 0.7638792\n\n  url \"ecmascript:\nfunction noop () { }\n\"\n}\n\nROUTE PL.isOver TO OBS.set_plOver\nROUTE PL.isActive TO OBS.set_plActive\nROUTE PL.translation_changed TO OBS.set_plTrans\nROUTE PL.trackPoint_changed TO OBS.set_plTrack\nROUTE SP.isOver TO OBS.set_spOver\nROUTE SP.isActive TO OBS.set_spActive\nROUTE SP.rotation_changed TO OBS.set_spRot\nROUTE SP.trackPoint_changed TO OBS.set_spTrack\nROUTE CY.isOver TO OBS.set_cyOver\nROUTE CY.isActive TO OBS.set_cyActive\nROUTE CY.rotation_changed TO OBS.set_cyRot\nROUTE CY.trackPoint_changed TO OBS.set_cyTrack\n",
+    "39": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nViewpoint { }\n\nTransform {\n  translation -2.5 0 0\n  children [\n    DEF PL PlaneSensor {\n      offset 0.5986679 0 0\n    }\n    Shape {\n      geometry Box {\n        size 1.5 1.5 1.5\n      }\n    }\n  ]\n}\n\nTransform {\n  children [\n    DEF SP SphereSensor {\n      offset -0.999926116164665 -0.00684439435316297 0.0100457193763672 0.962771361607468\n    }\n    Shape {\n      geometry Box {\n        size 1.5 1.5 1.5\n      }\n    }\n  ]\n}\n\nTransform {\n  translation 2.5 0 0\n  children [\n    DEF CY CylinderSensor { }\n    Shape {\n      geometry Box {\n        size 1.5 1.5 1.5\n      }\n    }\n  ]\n}\n\nDEF OBS Script {\n  inputOutput SFBool     plOver FALSE\n  inputOutput SFBool     plActive FALSE\n  inputOutput SFVec3f    plTrans 0.5986679 0 0\n  inputOutput SFVec3f    plTrack 0.7788298 0 0.75\n  inputOutput SFBool     spOver FALSE\n  inputOutput SFBool     spActive FALSE\n  inputOutput SFRotation spRot -0.999926116164665 -0.00684439435316297 0.0100457193763672 0.962771361607468\n  inputOutput SFVec3f    spTrack 0 0.6198746 0.4223357\n  inputOutput SFBool     cyOver TRUE\n  inputOutput SFBool     cyActive TRUE\n  inputOutput SFRotation cyRot 0 1 0 0.170766529086914\n  inputOutput SFVec3f    cyTrack -0.04996091 0 0.7679972\n\n  url \"ecmascript:\nfunction noop () { }\n\"\n}\n\nROUTE PL.isOver TO OBS.set_plOver\nROUTE PL.isActive TO OBS.set_plActive\nROUTE PL.translation_changed TO OBS.set_plTrans\nROUTE PL.trackPoint_changed TO OBS.set_plTrack\nROUTE SP.isOver TO OBS.set_spOver\nROUTE SP.isActive TO OBS.set_spActive\nROUTE SP.rotation_changed TO OBS.set_spRot\nROUTE SP.trackPoint_changed TO OBS.set_spTrack\nROUTE CY.isOver TO OBS.set_cyOver\nROUTE CY.isActive TO OBS.set_cyActive\nROUTE CY.rotation_changed TO OBS.set_cyRot\nROUTE CY.trackPoint_changed TO OBS.set_cyTrack\n",
+    "40": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nViewpoint { }\n\nTransform {\n  translation -2.5 0 0\n  children [\n    DEF PL PlaneSensor {\n      offset 0.5986679 0 0\n    }\n    Shape {\n      geometry Box {\n        size 1.5 1.5 1.5\n      }\n    }\n  ]\n}\n\nTransform {\n  children [\n    DEF SP SphereSensor {\n      offset -0.999926116164665 -0.00684439435316297 0.0100457193763672 0.962771361607468\n    }\n    Shape {\n      geometry Box {\n        size 1.5 1.5 1.5\n      }\n    }\n  ]\n}\n\nTransform {\n  translation 2.5 0 0\n  children [\n    DEF CY CylinderSensor { }\n    Shape {\n      geometry Box {\n        size 1.5 1.5 1.5\n      }\n    }\n  ]\n}\n\nDEF OBS Script {\n  inputOutput SFBool     plOver FALSE\n  inputOutput SFBool     plActive FALSE\n  inputOutput SFVec3f    plTrans 0.5986679 0 0\n  inputOutput SFVec3f    plTrack 0.7788298 0 0.75\n  inputOutput SFBool     spOver FALSE\n  inputOutput SFBool     spActive FALSE\n  inputOutput SFRotation spRot -0.999926116164665 -0.00684439435316297 0.0100457193763672 0.962771361607468\n  inputOutput SFVec3f    spTrack 0 0.6198746 0.4223357\n  inputOutput SFBool     cyOver TRUE\n  inputOutput SFBool     cyActive TRUE\n  inputOutput SFRotation cyRot 0 1.00000000000001 0 0.228631682422259\n  inputOutput SFVec3f    cyTrack -0.005461806 0 0.7696012\n\n  url \"ecmascript:\nfunction noop () { }\n\"\n}\n\nROUTE PL.isOver TO OBS.set_plOver\nROUTE PL.isActive TO OBS.set_plActive\nROUTE PL.translation_changed TO OBS.set_plTrans\nROUTE PL.trackPoint_changed TO OBS.set_plTrack\nROUTE SP.isOver TO OBS.set_spOver\nROUTE SP.isActive TO OBS.set_spActive\nROUTE SP.rotation_changed TO OBS.set_spRot\nROUTE SP.trackPoint_changed TO OBS.set_spTrack\nROUTE CY.isOver TO OBS.set_cyOver\nROUTE CY.isActive TO OBS.set_cyActive\nROUTE CY.rotation_changed TO OBS.set_cyRot\nROUTE CY.trackPoint_changed TO OBS.set_cyTrack\n",
+    "41": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nViewpoint { }\n\nTransform {\n  translation -2.5 0 0\n  children [\n    DEF PL PlaneSensor {\n      offset 0.5986679 0 0\n    }\n    Shape {\n      geometry Box {\n        size 1.5 1.5 1.5\n      }\n    }\n  ]\n}\n\nTransform {\n  children [\n    DEF SP SphereSensor {\n      offset -0.999926116164665 -0.00684439435316297 0.0100457193763672 0.962771361607468\n    }\n    Shape {\n      geometry Box {\n        size 1.5 1.5 1.5\n      }\n    }\n  ]\n}\n\nTransform {\n  translation 2.5 0 0\n  children [\n    DEF CY CylinderSensor { }\n    Shape {\n      geometry Box {\n        size 1.5 1.5 1.5\n      }\n    }\n  ]\n}\n\nDEF OBS Script {\n  inputOutput SFBool     plOver FALSE\n  inputOutput SFBool     plActive FALSE\n  inputOutput SFVec3f    plTrans 0.5986679 0 0\n  inputOutput SFVec3f    plTrack 0.7788298 0 0.75\n  inputOutput SFBool     spOver FALSE\n  inputOutput SFBool     spActive FALSE\n  inputOutput SFRotation spRot -0.999926116164665 -0.00684439435316297 0.0100457193763672 0.962771361607468\n  inputOutput SFVec3f    spTrack 0 0.6198746 0.4223357\n  inputOutput SFBool     cyOver TRUE\n  inputOutput SFBool     cyActive TRUE\n  inputOutput SFRotation cyRot 0 1 0 0.287321546815402\n  inputOutput SFVec3f    cyTrack 0.03968946 0 0.7685965\n\n  url \"ecmascript:\nfunction noop () { }\n\"\n}\n\nROUTE PL.isOver TO OBS.set_plOver\nROUTE PL.isActive TO OBS.set_plActive\nROUTE PL.translation_changed TO OBS.set_plTrans\nROUTE PL.trackPoint_changed TO OBS.set_plTrack\nROUTE SP.isOver TO OBS.set_spOver\nROUTE SP.isActive TO OBS.set_spActive\nROUTE SP.rotation_changed TO OBS.set_spRot\nROUTE SP.trackPoint_changed TO OBS.set_spTrack\nROUTE CY.isOver TO OBS.set_cyOver\nROUTE CY.isActive TO OBS.set_cyActive\nROUTE CY.rotation_changed TO OBS.set_cyRot\nROUTE CY.trackPoint_changed TO OBS.set_cyTrack\n",
+    "42": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nViewpoint { }\n\nTransform {\n  translation -2.5 0 0\n  children [\n    DEF PL PlaneSensor {\n      offset 0.5986679 0 0\n    }\n    Shape {\n      geometry Box {\n        size 1.5 1.5 1.5\n      }\n    }\n  ]\n}\n\nTransform {\n  children [\n    DEF SP SphereSensor {\n      offset -0.999926116164665 -0.00684439435316297 0.0100457193763672 0.962771361607468\n    }\n    Shape {\n      geometry Box {\n        size 1.5 1.5 1.5\n      }\n    }\n  ]\n}\n\nTransform {\n  translation 2.5 0 0\n  children [\n    DEF CY CylinderSensor { }\n    Shape {\n      geometry Box {\n        size 1.5 1.5 1.5\n      }\n    }\n  ]\n}\n\nDEF OBS Script {\n  inputOutput SFBool     plOver FALSE\n  inputOutput SFBool     plActive FALSE\n  inputOutput SFVec3f    plTrans 0.5986679 0 0\n  inputOutput SFVec3f    plTrack 0.7788298 0 0.75\n  inputOutput SFBool     spOver FALSE\n  inputOutput SFBool     spActive FALSE\n  inputOutput SFRotation spRot -0.999926116164665 -0.00684439435316297 0.0100457193763672 0.962771361607468\n  inputOutput SFVec3f    spTrack 0 0.6198746 0.4223357\n  inputOutput SFBool     cyOver TRUE\n  inputOutput SFBool     cyActive TRUE\n  inputOutput SFRotation cyRot 0 1 0 0.347084994413704\n  inputOutput SFVec3f    cyTrack 0.08552524 0 0.7648537\n\n  url \"ecmascript:\nfunction noop () { }\n\"\n}\n\nROUTE PL.isOver TO OBS.set_plOver\nROUTE PL.isActive TO OBS.set_plActive\nROUTE PL.translation_changed TO OBS.set_plTrans\nROUTE PL.trackPoint_changed TO OBS.set_plTrack\nROUTE SP.isOver TO OBS.set_spOver\nROUTE SP.isActive TO OBS.set_spActive\nROUTE SP.rotation_changed TO OBS.set_spRot\nROUTE SP.trackPoint_changed TO OBS.set_spTrack\nROUTE CY.isOver TO OBS.set_cyOver\nROUTE CY.isActive TO OBS.set_cyActive\nROUTE CY.rotation_changed TO OBS.set_cyRot\nROUTE CY.trackPoint_changed TO OBS.set_cyTrack\n",
+    "43": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nViewpoint { }\n\nTransform {\n  translation -2.5 0 0\n  children [\n    DEF PL PlaneSensor {\n      offset 0.5986679 0 0\n    }\n    Shape {\n      geometry Box {\n        size 1.5 1.5 1.5\n      }\n    }\n  ]\n}\n\nTransform {\n  children [\n    DEF SP SphereSensor {\n      offset -0.999926116164665 -0.00684439435316297 0.0100457193763672 0.962771361607468\n    }\n    Shape {\n      geometry Box {\n        size 1.5 1.5 1.5\n      }\n    }\n  ]\n}\n\nTransform {\n  translation 2.5 0 0\n  children [\n    DEF CY CylinderSensor { }\n    Shape {\n      geometry Box {\n        size 1.5 1.5 1.5\n      }\n    }\n  ]\n}\n\nDEF OBS Script {\n  inputOutput SFBool     plOver FALSE\n  inputOutput SFBool     plActive FALSE\n  inputOutput SFVec3f    plTrans 0.5986679 0 0\n  inputOutput SFVec3f    plTrack 0.7788298 0 0.75\n  inputOutput SFBool     spOver FALSE\n  inputOutput SFBool     spActive FALSE\n  inputOutput SFRotation spRot -0.999926116164665 -0.00684439435316297 0.0100457193763672 0.962771361607468\n  inputOutput SFVec3f    spTrack 0 0.6198746 0.4223357\n  inputOutput SFBool     cyOver TRUE\n  inputOutput SFBool     cyActive TRUE\n  inputOutput SFRotation cyRot 0 1 0 0.408210626206837\n  inputOutput SFVec3f    cyTrack 0.1320886 0 0.7582008\n\n  url \"ecmascript:\nfunction noop () { }\n\"\n}\n\nROUTE PL.isOver TO OBS.set_plOver\nROUTE PL.isActive TO OBS.set_plActive\nROUTE PL.translation_changed TO OBS.set_plTrans\nROUTE PL.trackPoint_changed TO OBS.set_plTrack\nROUTE SP.isOver TO OBS.set_spOver\nROUTE SP.isActive TO OBS.set_spActive\nROUTE SP.rotation_changed TO OBS.set_spRot\nROUTE SP.trackPoint_changed TO OBS.set_spTrack\nROUTE CY.isOver TO OBS.set_cyOver\nROUTE CY.isActive TO OBS.set_cyActive\nROUTE CY.rotation_changed TO OBS.set_cyRot\nROUTE CY.trackPoint_changed TO OBS.set_cyTrack\n",
+    "44": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nViewpoint { }\n\nTransform {\n  translation -2.5 0 0\n  children [\n    DEF PL PlaneSensor {\n      offset 0.5986679 0 0\n    }\n    Shape {\n      geometry Box {\n        size 1.5 1.5 1.5\n      }\n    }\n  ]\n}\n\nTransform {\n  children [\n    DEF SP SphereSensor {\n      offset -0.999926116164665 -0.00684439435316297 0.0100457193763672 0.962771361607468\n    }\n    Shape {\n      geometry Box {\n        size 1.5 1.5 1.5\n      }\n    }\n  ]\n}\n\nTransform {\n  translation 2.5 0 0\n  children [\n    DEF CY CylinderSensor { }\n    Shape {\n      geometry Box {\n        size 1.5 1.5 1.5\n      }\n    }\n  ]\n}\n\nDEF OBS Script {\n  inputOutput SFBool     plOver FALSE\n  inputOutput SFBool     plActive FALSE\n  inputOutput SFVec3f    plTrans 0.5986679 0 0\n  inputOutput SFVec3f    plTrack 0.7788298 0 0.75\n  inputOutput SFBool     spOver FALSE\n  inputOutput SFBool     spActive FALSE\n  inputOutput SFRotation spRot -0.999926116164665 -0.00684439435316297 0.0100457193763672 0.962771361607468\n  inputOutput SFVec3f    spTrack 0 0.6198746 0.4223357\n  inputOutput SFBool     cyOver TRUE\n  inputOutput SFBool     cyActive TRUE\n  inputOutput SFRotation cyRot 0 1 0 0.47104309130531\n  inputOutput SFVec3f    cyTrack 0.1794362 0 0.7484106\n\n  url \"ecmascript:\nfunction noop () { }\n\"\n}\n\nROUTE PL.isOver TO OBS.set_plOver\nROUTE PL.isActive TO OBS.set_plActive\nROUTE PL.translation_changed TO OBS.set_plTrans\nROUTE PL.trackPoint_changed TO OBS.set_plTrack\nROUTE SP.isOver TO OBS.set_spOver\nROUTE SP.isActive TO OBS.set_spActive\nROUTE SP.rotation_changed TO OBS.set_spRot\nROUTE SP.trackPoint_changed TO OBS.set_spTrack\nROUTE CY.isOver TO OBS.set_cyOver\nROUTE CY.isActive TO OBS.set_cyActive\nROUTE CY.rotation_changed TO OBS.set_cyRot\nROUTE CY.trackPoint_changed TO OBS.set_cyTrack\n",
+    "45": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nViewpoint { }\n\nTransform {\n  translation -2.5 0 0\n  children [\n    DEF PL PlaneSensor {\n      offset 0.5986679 0 0\n    }\n    Shape {\n      geometry Box {\n        size 1.5 1.5 1.5\n      }\n    }\n  ]\n}\n\nTransform {\n  children [\n    DEF SP SphereSensor {\n      offset -0.999926116164665 -0.00684439435316297 0.0100457193763672 0.962771361607468\n    }\n    Shape {\n      geometry Box {\n        size 1.5 1.5 1.5\n      }\n    }\n  ]\n}\n\nTransform {\n  translation 2.5 0 0\n  children [\n    DEF CY CylinderSensor { }\n    Shape {\n      geometry Box {\n        size 1.5 1.5 1.5\n      }\n    }\n  ]\n}\n\nDEF OBS Script {\n  inputOutput SFBool     plOver FALSE\n  inputOutput SFBool     plActive FALSE\n  inputOutput SFVec3f    plTrans 0.5986679 0 0\n  inputOutput SFVec3f    plTrack 0.7788298 0 0.75\n  inputOutput SFBool     spOver FALSE\n  inputOutput SFBool     spActive FALSE\n  inputOutput SFRotation spRot -0.999926116164665 -0.00684439435316297 0.0100457193763672 0.962771361607468\n  inputOutput SFVec3f    spTrack 0 0.6198746 0.4223357\n  inputOutput SFBool     cyOver TRUE\n  inputOutput SFBool     cyActive TRUE\n  inputOutput SFRotation cyRot 0 1 0 0.536006936103091\n  inputOutput SFVec3f    cyTrack 0.2276431 0 0.7351832\n\n  url \"ecmascript:\nfunction noop () { }\n\"\n}\n\nROUTE PL.isOver TO OBS.set_plOver\nROUTE PL.isActive TO OBS.set_plActive\nROUTE PL.translation_changed TO OBS.set_plTrans\nROUTE PL.trackPoint_changed TO OBS.set_plTrack\nROUTE SP.isOver TO OBS.set_spOver\nROUTE SP.isActive TO OBS.set_spActive\nROUTE SP.rotation_changed TO OBS.set_spRot\nROUTE SP.trackPoint_changed TO OBS.set_spTrack\nROUTE CY.isOver TO OBS.set_cyOver\nROUTE CY.isActive TO OBS.set_cyActive\nROUTE CY.rotation_changed TO OBS.set_cyRot\nROUTE CY.trackPoint_changed TO OBS.set_cyTrack\n",
+    "46": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nViewpoint { }\n\nTransform {\n  translation -2.5 0 0\n  children [\n    DEF PL PlaneSensor {\n      offset 0.5986679 0 0\n    }\n    Shape {\n      geometry Box {\n        size 1.5 1.5 1.5\n      }\n    }\n  ]\n}\n\nTransform {\n  children [\n    DEF SP SphereSensor {\n      offset -0.999926116164665 -0.00684439435316297 0.0100457193763672 0.962771361607468\n    }\n    Shape {\n      geometry Box {\n        size 1.5 1.5 1.5\n      }\n    }\n  ]\n}\n\nTransform {\n  translation 2.5 0 0\n  children [\n    DEF CY CylinderSensor { }\n    Shape {\n      geometry Box {\n        size 1.5 1.5 1.5\n      }\n    }\n  ]\n}\n\nDEF OBS Script {\n  inputOutput SFBool     plOver FALSE\n  inputOutput SFBool     plActive FALSE\n  inputOutput SFVec3f    plTrans 0.5986679 0 0\n  inputOutput SFVec3f    plTrack 0.7788298 0 0.75\n  inputOutput SFBool     spOver FALSE\n  inputOutput SFBool     spActive FALSE\n  inputOutput SFRotation spRot -0.999926116164665 -0.00684439435316297 0.0100457193763672 0.962771361607468\n  inputOutput SFVec3f    spTrack 0 0.6198746 0.4223357\n  inputOutput SFBool     cyOver TRUE\n  inputOutput SFBool     cyActive TRUE\n  inputOutput SFRotation cyRot 0 1 0 0.603643178946056\n  inputOutput SFVec3f    cyTrack 0.2768098 0 0.7181171\n\n  url \"ecmascript:\nfunction noop () { }\n\"\n}\n\nROUTE PL.isOver TO OBS.set_plOver\nROUTE PL.isActive TO OBS.set_plActive\nROUTE PL.translation_changed TO OBS.set_plTrans\nROUTE PL.trackPoint_changed TO OBS.set_plTrack\nROUTE SP.isOver TO OBS.set_spOver\nROUTE SP.isActive TO OBS.set_spActive\nROUTE SP.rotation_changed TO OBS.set_spRot\nROUTE SP.trackPoint_changed TO OBS.set_spTrack\nROUTE CY.isOver TO OBS.set_cyOver\nROUTE CY.isActive TO OBS.set_cyActive\nROUTE CY.rotation_changed TO OBS.set_cyRot\nROUTE CY.trackPoint_changed TO OBS.set_cyTrack\n",
+    "47": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nViewpoint { }\n\nTransform {\n  translation -2.5 0 0\n  children [\n    DEF PL PlaneSensor {\n      offset 0.5986679 0 0\n    }\n    Shape {\n      geometry Box {\n        size 1.5 1.5 1.5\n      }\n    }\n  ]\n}\n\nTransform {\n  children [\n    DEF SP SphereSensor {\n      offset -0.999926116164665 -0.00684439435316297 0.0100457193763672 0.962771361607468\n    }\n    Shape {\n      geometry Box {\n        size 1.5 1.5 1.5\n      }\n    }\n  ]\n}\n\nTransform {\n  translation 2.5 0 0\n  children [\n    DEF CY CylinderSensor {\n      offset 0.6036432\n    }\n    Shape {\n      geometry Box {\n        size 1.5 1.5 1.5\n      }\n    }\n  ]\n}\n\nDEF OBS Script {\n  inputOutput SFBool     plOver FALSE\n  inputOutput SFBool     plActive FALSE\n  inputOutput SFVec3f    plTrans 0.5986679 0 0\n  inputOutput SFVec3f    plTrack 0.7788298 0 0.75\n  inputOutput SFBool     spOver FALSE\n  inputOutput SFBool     spActive FALSE\n  inputOutput SFRotation spRot -0.999926116164665 -0.00684439435316297 0.0100457193763672 0.962771361607468\n  inputOutput SFVec3f    spTrack 0 0.6198746 0.4223357\n  inputOutput SFBool     cyOver TRUE\n  inputOutput SFBool     cyActive FALSE\n  inputOutput SFRotation cyRot 0 1 0 0.603643178946056\n  inputOutput SFVec3f    cyTrack 0.2768098 0 0.7181171\n\n  url \"ecmascript:\nfunction noop () { }\n\"\n}\n\nROUTE PL.isOver TO OBS.set_plOver\nROUTE PL.isActive TO OBS.set_plActive\nROUTE PL.translation_changed TO OBS.set_plTrans\nROUTE PL.trackPoint_changed TO OBS.set_plTrack\nROUTE SP.isOver TO OBS.set_spOver\nROUTE SP.isActive TO OBS.set_spActive\nROUTE SP.rotation_changed TO OBS.set_spRot\nROUTE SP.trackPoint_changed TO OBS.set_spTrack\nROUTE CY.isOver TO OBS.set_cyOver\nROUTE CY.isActive TO OBS.set_cyActive\nROUTE CY.rotation_changed TO OBS.set_cyRot\nROUTE CY.trackPoint_changed TO OBS.set_cyTrack\n",
+    "48": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nViewpoint { }\n\nTransform {\n  translation -2.5 0 0\n  children [\n    DEF PL PlaneSensor {\n      offset 0.5986679 0 0\n    }\n    Shape {\n      geometry Box {\n        size 1.5 1.5 1.5\n      }\n    }\n  ]\n}\n\nTransform {\n  children [\n    DEF SP SphereSensor {\n      offset -0.999926116164665 -0.00684439435316297 0.0100457193763672 0.962771361607468\n    }\n    Shape {\n      geometry Box {\n        size 1.5 1.5 1.5\n      }\n    }\n  ]\n}\n\nTransform {\n  translation 2.5 0 0\n  children [\n    DEF CY CylinderSensor {\n      offset 0.6036432\n    }\n    Shape {\n      geometry Box {\n        size 1.5 1.5 1.5\n      }\n    }\n  ]\n}\n\nDEF OBS Script {\n  inputOutput SFBool     plOver FALSE\n  inputOutput SFBool     plActive FALSE\n  inputOutput SFVec3f    plTrans 0.5986679 0 0\n  inputOutput SFVec3f    plTrack 0.7788298 0 0.75\n  inputOutput SFBool     spOver FALSE\n  inputOutput SFBool     spActive FALSE\n  inputOutput SFRotation spRot -0.999926116164665 -0.00684439435316297 0.0100457193763672 0.962771361607468\n  inputOutput SFVec3f    spTrack 0 0.6198746 0.4223357\n  inputOutput SFBool     cyOver TRUE\n  inputOutput SFBool     cyActive FALSE\n  inputOutput SFRotation cyRot 0 1 0 0.603643178946056\n  inputOutput SFVec3f    cyTrack 0.2768098 0 0.7181171\n\n  url \"ecmascript:\nfunction noop () { }\n\"\n}\n\nROUTE PL.isOver TO OBS.set_plOver\nROUTE PL.isActive TO OBS.set_plActive\nROUTE PL.translation_changed TO OBS.set_plTrans\nROUTE PL.trackPoint_changed TO OBS.set_plTrack\nROUTE SP.isOver TO OBS.set_spOver\nROUTE SP.isActive TO OBS.set_spActive\nROUTE SP.rotation_changed TO OBS.set_spRot\nROUTE SP.trackPoint_changed TO OBS.set_spTrack\nROUTE CY.isOver TO OBS.set_cyOver\nROUTE CY.isActive TO OBS.set_cyActive\nROUTE CY.rotation_changed TO OBS.set_cyRot\nROUTE CY.trackPoint_changed TO OBS.set_cyTrack\n",
+    "49": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nViewpoint { }\n\nTransform {\n  translation -2.5 0 0\n  children [\n    DEF PL PlaneSensor {\n      offset 0.5986679 0 0\n    }\n    Shape {\n      geometry Box {\n        size 1.5 1.5 1.5\n      }\n    }\n  ]\n}\n\nTransform {\n  children [\n    DEF SP SphereSensor {\n      offset -0.999926116164665 -0.00684439435316297 0.0100457193763672 0.962771361607468\n    }\n    Shape {\n      geometry Box {\n        size 1.5 1.5 1.5\n      }\n    }\n  ]\n}\n\nTransform {\n  translation 2.5 0 0\n  children [\n    DEF CY CylinderSensor {\n      offset 0.6036432\n    }\n    Shape {\n      geometry Box {\n        size 1.5 1.5 1.5\n      }\n    }\n  ]\n}\n\nDEF OBS Script {\n  inputOutput SFBool     plOver FALSE\n  inputOutput SFBool     plActive FALSE\n  inputOutput SFVec3f    plTrans 0.5986679 0 0\n  inputOutput SFVec3f    plTrack 0.7788298 0 0.75\n  inputOutput SFBool     spOver FALSE\n  inputOutput SFBool     spActive FALSE\n  inputOutput SFRotation spRot -0.999926116164665 -0.00684439435316297 0.0100457193763672 0.962771361607468\n  inputOutput SFVec3f    spTrack 0 0.6198746 0.4223357\n  inputOutput SFBool     cyOver TRUE\n  inputOutput SFBool     cyActive FALSE\n  inputOutput SFRotation cyRot 0 1 0 0.603643178946056\n  inputOutput SFVec3f    cyTrack 0.2768098 0 0.7181171\n\n  url \"ecmascript:\nfunction noop () { }\n\"\n}\n\nROUTE PL.isOver TO OBS.set_plOver\nROUTE PL.isActive TO OBS.set_plActive\nROUTE PL.translation_changed TO OBS.set_plTrans\nROUTE PL.trackPoint_changed TO OBS.set_plTrack\nROUTE SP.isOver TO OBS.set_spOver\nROUTE SP.isActive TO OBS.set_spActive\nROUTE SP.rotation_changed TO OBS.set_spRot\nROUTE SP.trackPoint_changed TO OBS.set_spTrack\nROUTE CY.isOver TO OBS.set_cyOver\nROUTE CY.isActive TO OBS.set_cyActive\nROUTE CY.rotation_changed TO OBS.set_cyRot\nROUTE CY.trackPoint_changed TO OBS.set_cyTrack\n",
+    "50": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nViewpoint { }\n\nTransform {\n  translation -2.5 0 0\n  children [\n    DEF PL PlaneSensor {\n      offset 0.5986679 0 0\n    }\n    Shape {\n      geometry Box {\n        size 1.5 1.5 1.5\n      }\n    }\n  ]\n}\n\nTransform {\n  children [\n    DEF SP SphereSensor {\n      offset -0.999926116164665 -0.00684439435316297 0.0100457193763672 0.962771361607468\n    }\n    Shape {\n      geometry Box {\n        size 1.5 1.5 1.5\n      }\n    }\n  ]\n}\n\nTransform {\n  translation 2.5 0 0\n  children [\n    DEF CY CylinderSensor {\n      offset 0.6036432\n    }\n    Shape {\n      geometry Box {\n        size 1.5 1.5 1.5\n      }\n    }\n  ]\n}\n\nDEF OBS Script {\n  inputOutput SFBool     plOver FALSE\n  inputOutput SFBool     plActive FALSE\n  inputOutput SFVec3f    plTrans 0.5986679 0 0\n  inputOutput SFVec3f    plTrack 0.7788298 0 0.75\n  inputOutput SFBool     spOver FALSE\n  inputOutput SFBool     spActive FALSE\n  inputOutput SFRotation spRot -0.999926116164665 -0.00684439435316297 0.0100457193763672 0.962771361607468\n  inputOutput SFVec3f    spTrack 0 0.6198746 0.4223357\n  inputOutput SFBool     cyOver TRUE\n  inputOutput SFBool     cyActive FALSE\n  inputOutput SFRotation cyRot 0 1 0 0.603643178946056\n  inputOutput SFVec3f    cyTrack 0.2768098 0 0.7181171\n\n  url \"ecmascript:\nfunction noop () { }\n\"\n}\n\nROUTE PL.isOver TO OBS.set_plOver\nROUTE PL.isActive TO OBS.set_plActive\nROUTE PL.translation_changed TO OBS.set_plTrans\nROUTE PL.trackPoint_changed TO OBS.set_plTrack\nROUTE SP.isOver TO OBS.set_spOver\nROUTE SP.isActive TO OBS.set_spActive\nROUTE SP.rotation_changed TO OBS.set_spRot\nROUTE SP.trackPoint_changed TO OBS.set_spTrack\nROUTE CY.isOver TO OBS.set_cyOver\nROUTE CY.isActive TO OBS.set_cyActive\nROUTE CY.rotation_changed TO OBS.set_cyRot\nROUTE CY.trackPoint_changed TO OBS.set_cyTrack\n",
+    "51": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nViewpoint { }\n\nTransform {\n  translation -2.5 0 0\n  children [\n    DEF PL PlaneSensor {\n      offset 0.5986679 0 0\n    }\n    Shape {\n      geometry Box {\n        size 1.5 1.5 1.5\n      }\n    }\n  ]\n}\n\nTransform {\n  children [\n    DEF SP SphereSensor {\n      offset -0.999926116164665 -0.00684439435316297 0.0100457193763672 0.962771361607468\n    }\n    Shape {\n      geometry Box {\n        size 1.5 1.5 1.5\n      }\n    }\n  ]\n}\n\nTransform {\n  translation 2.5 0 0\n  children [\n    DEF CY CylinderSensor {\n      offset 0.6036432\n    }\n    Shape {\n      geometry Box {\n        size 1.5 1.5 1.5\n      }\n    }\n  ]\n}\n\nDEF OBS Script {\n  inputOutput SFBool     plOver FALSE\n  inputOutput SFBool     plActive FALSE\n  inputOutput SFVec3f    plTrans 0.5986679 0 0\n  inputOutput SFVec3f    plTrack 0.7788298 0 0.75\n  inputOutput SFBool     spOver FALSE\n  inputOutput SFBool     spActive FALSE\n  inputOutput SFRotation spRot -0.999926116164665 -0.00684439435316297 0.0100457193763672 0.962771361607468\n  inputOutput SFVec3f    spTrack 0 0.6198746 0.4223357\n  inputOutput SFBool     cyOver TRUE\n  inputOutput SFBool     cyActive FALSE\n  inputOutput SFRotation cyRot 0 1 0 0.603643178946056\n  inputOutput SFVec3f    cyTrack 0.2768098 0 0.7181171\n\n  url \"ecmascript:\nfunction noop () { }\n\"\n}\n\nROUTE PL.isOver TO OBS.set_plOver\nROUTE PL.isActive TO OBS.set_plActive\nROUTE PL.translation_changed TO OBS.set_plTrans\nROUTE PL.trackPoint_changed TO OBS.set_plTrack\nROUTE SP.isOver TO OBS.set_spOver\nROUTE SP.isActive TO OBS.set_spActive\nROUTE SP.rotation_changed TO OBS.set_spRot\nROUTE SP.trackPoint_changed TO OBS.set_spTrack\nROUTE CY.isOver TO OBS.set_cyOver\nROUTE CY.isActive TO OBS.set_cyActive\nROUTE CY.rotation_changed TO OBS.set_cyRot\nROUTE CY.trackPoint_changed TO OBS.set_cyTrack\n",
+    "52": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nViewpoint { }\n\nTransform {\n  translation -2.5 0 0\n  children [\n    DEF PL PlaneSensor {\n      offset 0.5986679 0 0\n    }\n    Shape {\n      geometry Box {\n        size 1.5 1.5 1.5\n      }\n    }\n  ]\n}\n\nTransform {\n  children [\n    DEF SP SphereSensor {\n      offset -0.999926116164665 -0.00684439435316297 0.0100457193763672 0.962771361607468\n    }\n    Shape {\n      geometry Box {\n        size 1.5 1.5 1.5\n      }\n    }\n  ]\n}\n\nTransform {\n  translation 2.5 0 0\n  children [\n    DEF CY CylinderSensor {\n      offset 0.6036432\n    }\n    Shape {\n      geometry Box {\n        size 1.5 1.5 1.5\n      }\n    }\n  ]\n}\n\nDEF OBS Script {\n  inputOutput SFBool     plOver FALSE\n  inputOutput SFBool     plActive FALSE\n  inputOutput SFVec3f    plTrans 0.5986679 0 0\n  inputOutput SFVec3f    plTrack 0.7788298 0 0.75\n  inputOutput SFBool     spOver FALSE\n  inputOutput SFBool     spActive FALSE\n  inputOutput SFRotation spRot -0.999926116164665 -0.00684439435316297 0.0100457193763672 0.962771361607468\n  inputOutput SFVec3f    spTrack 0 0.6198746 0.4223357\n  inputOutput SFBool     cyOver TRUE\n  inputOutput SFBool     cyActive FALSE\n  inputOutput SFRotation cyRot 0 1 0 0.603643178946056\n  inputOutput SFVec3f    cyTrack 0.2768098 0 0.7181171\n\n  url \"ecmascript:\nfunction noop () { }\n\"\n}\n\nROUTE PL.isOver TO OBS.set_plOver\nROUTE PL.isActive TO OBS.set_plActive\nROUTE PL.translation_changed TO OBS.set_plTrans\nROUTE PL.trackPoint_changed TO OBS.set_plTrack\nROUTE SP.isOver TO OBS.set_spOver\nROUTE SP.isActive TO OBS.set_spActive\nROUTE SP.rotation_changed TO OBS.set_spRot\nROUTE SP.trackPoint_changed TO OBS.set_spTrack\nROUTE CY.isOver TO OBS.set_cyOver\nROUTE CY.isActive TO OBS.set_cyActive\nROUTE CY.rotation_changed TO OBS.set_cyRot\nROUTE CY.trackPoint_changed TO OBS.set_cyTrack\n",
+    "53": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nViewpoint { }\n\nTransform {\n  translation -2.5 0 0\n  children [\n    DEF PL PlaneSensor {\n      offset 0.5986679 0 0\n    }\n    Shape {\n      geometry Box {\n        size 1.5 1.5 1.5\n      }\n    }\n  ]\n}\n\nTransform {\n  children [\n    DEF SP SphereSensor {\n      offset -0.999926116164665 -0.00684439435316297 0.0100457193763672 0.962771361607468\n    }\n    Shape {\n      geometry Box {\n        size 1.5 1.5 1.5\n      }\n    }\n  ]\n}\n\nTransform {\n  translation 2.5 0 0\n  children [\n    DEF CY CylinderSensor {\n      offset 0.6036432\n    }\n    Shape {\n      geometry Box {\n        size 1.5 1.5 1.5\n      }\n    }\n  ]\n}\n\nDEF OBS Script {\n  inputOutput SFBool     plOver FALSE\n  inputOutput SFBool     plActive FALSE\n  inputOutput SFVec3f    plTrans 0.5986679 0 0\n  inputOutput SFVec3f    plTrack 0.7788298 0 0.75\n  inputOutput SFBool     spOver FALSE\n  inputOutput SFBool     spActive FALSE\n  inputOutput SFRotation spRot -0.999926116164665 -0.00684439435316297 0.0100457193763672 0.962771361607468\n  inputOutput SFVec3f    spTrack 0 0.6198746 0.4223357\n  inputOutput SFBool     cyOver TRUE\n  inputOutput SFBool     cyActive FALSE\n  inputOutput SFRotation cyRot 0 1 0 0.603643178946056\n  inputOutput SFVec3f    cyTrack 0.2768098 0 0.7181171\n\n  url \"ecmascript:\nfunction noop () { }\n\"\n}\n\nROUTE PL.isOver TO OBS.set_plOver\nROUTE PL.isActive TO OBS.set_plActive\nROUTE PL.translation_changed TO OBS.set_plTrans\nROUTE PL.trackPoint_changed TO OBS.set_plTrack\nROUTE SP.isOver TO OBS.set_spOver\nROUTE SP.isActive TO OBS.set_spActive\nROUTE SP.rotation_changed TO OBS.set_spRot\nROUTE SP.trackPoint_changed TO OBS.set_spTrack\nROUTE CY.isOver TO OBS.set_cyOver\nROUTE CY.isActive TO OBS.set_cyActive\nROUTE CY.rotation_changed TO OBS.set_cyRot\nROUTE CY.trackPoint_changed TO OBS.set_cyTrack\n",
+    "54": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nViewpoint { }\n\nTransform {\n  translation -2.5 0 0\n  children [\n    DEF PL PlaneSensor {\n      offset 0.5986679 0 0\n    }\n    Shape {\n      geometry Box {\n        size 1.5 1.5 1.5\n      }\n    }\n  ]\n}\n\nTransform {\n  children [\n    DEF SP SphereSensor {\n      offset -0.999926116164665 -0.00684439435316297 0.0100457193763672 0.962771361607468\n    }\n    Shape {\n      geometry Box {\n        size 1.5 1.5 1.5\n      }\n    }\n  ]\n}\n\nTransform {\n  translation 2.5 0 0\n  children [\n    DEF CY CylinderSensor {\n      offset 0.6036432\n    }\n    Shape {\n      geometry Box {\n        size 1.5 1.5 1.5\n      }\n    }\n  ]\n}\n\nDEF OBS Script {\n  inputOutput SFBool     plOver FALSE\n  inputOutput SFBool     plActive FALSE\n  inputOutput SFVec3f    plTrans 0.5986679 0 0\n  inputOutput SFVec3f    plTrack 0.7788298 0 0.75\n  inputOutput SFBool     spOver FALSE\n  inputOutput SFBool     spActive FALSE\n  inputOutput SFRotation spRot -0.999926116164665 -0.00684439435316297 0.0100457193763672 0.962771361607468\n  inputOutput SFVec3f    spTrack 0 0.6198746 0.4223357\n  inputOutput SFBool     cyOver TRUE\n  inputOutput SFBool     cyActive FALSE\n  inputOutput SFRotation cyRot 0 1 0 0.603643178946056\n  inputOutput SFVec3f    cyTrack 0.2768098 0 0.7181171\n\n  url \"ecmascript:\nfunction noop () { }\n\"\n}\n\nROUTE PL.isOver TO OBS.set_plOver\nROUTE PL.isActive TO OBS.set_plActive\nROUTE PL.translation_changed TO OBS.set_plTrans\nROUTE PL.trackPoint_changed TO OBS.set_plTrack\nROUTE SP.isOver TO OBS.set_spOver\nROUTE SP.isActive TO OBS.set_spActive\nROUTE SP.rotation_changed TO OBS.set_spRot\nROUTE SP.trackPoint_changed TO OBS.set_spTrack\nROUTE CY.isOver TO OBS.set_cyOver\nROUTE CY.isActive TO OBS.set_cyActive\nROUTE CY.rotation_changed TO OBS.set_cyRot\nROUTE CY.trackPoint_changed TO OBS.set_cyTrack\n",
+    "55": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nViewpoint { }\n\nTransform {\n  translation -2.5 0 0\n  children [\n    DEF PL PlaneSensor {\n      offset 0.5986679 0 0\n    }\n    Shape {\n      geometry Box {\n        size 1.5 1.5 1.5\n      }\n    }\n  ]\n}\n\nTransform {\n  children [\n    DEF SP SphereSensor {\n      offset -0.999926116164665 -0.00684439435316297 0.0100457193763672 0.962771361607468\n    }\n    Shape {\n      geometry Box {\n        size 1.5 1.5 1.5\n      }\n    }\n  ]\n}\n\nTransform {\n  translation 2.5 0 0\n  children [\n    DEF CY CylinderSensor {\n      offset 0.6036432\n    }\n    Shape {\n      geometry Box {\n        size 1.5 1.5 1.5\n      }\n    }\n  ]\n}\n\nDEF OBS Script {\n  inputOutput SFBool     plOver FALSE\n  inputOutput SFBool     plActive FALSE\n  inputOutput SFVec3f    plTrans 0.5986679 0 0\n  inputOutput SFVec3f    plTrack 0.7788298 0 0.75\n  inputOutput SFBool     spOver FALSE\n  inputOutput SFBool     spActive FALSE\n  inputOutput SFRotation spRot -0.999926116164665 -0.00684439435316297 0.0100457193763672 0.962771361607468\n  inputOutput SFVec3f    spTrack 0 0.6198746 0.4223357\n  inputOutput SFBool     cyOver TRUE\n  inputOutput SFBool     cyActive FALSE\n  inputOutput SFRotation cyRot 0 1 0 0.603643178946056\n  inputOutput SFVec3f    cyTrack 0.2768098 0 0.7181171\n\n  url \"ecmascript:\nfunction noop () { }\n\"\n}\n\nROUTE PL.isOver TO OBS.set_plOver\nROUTE PL.isActive TO OBS.set_plActive\nROUTE PL.translation_changed TO OBS.set_plTrans\nROUTE PL.trackPoint_changed TO OBS.set_plTrack\nROUTE SP.isOver TO OBS.set_spOver\nROUTE SP.isActive TO OBS.set_spActive\nROUTE SP.rotation_changed TO OBS.set_spRot\nROUTE SP.trackPoint_changed TO OBS.set_spTrack\nROUTE CY.isOver TO OBS.set_cyOver\nROUTE CY.isActive TO OBS.set_cyActive\nROUTE CY.rotation_changed TO OBS.set_cyRot\nROUTE CY.trackPoint_changed TO OBS.set_cyTrack\n",
+    "56": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nViewpoint { }\n\nTransform {\n  translation -2.5 0 0\n  children [\n    DEF PL PlaneSensor {\n      offset 0.5986679 0 0\n    }\n    Shape {\n      geometry Box {\n        size 1.5 1.5 1.5\n      }\n    }\n  ]\n}\n\nTransform {\n  children [\n    DEF SP SphereSensor {\n      offset -0.999926116164665 -0.00684439435316297 0.0100457193763672 0.962771361607468\n    }\n    Shape {\n      geometry Box {\n        size 1.5 1.5 1.5\n      }\n    }\n  ]\n}\n\nTransform {\n  translation 2.5 0 0\n  children [\n    DEF CY CylinderSensor {\n      offset 0.6036432\n    }\n    Shape {\n      geometry Box {\n        size 1.5 1.5 1.5\n      }\n    }\n  ]\n}\n\nDEF OBS Script {\n  inputOutput SFBool     plOver FALSE\n  inputOutput SFBool     plActive FALSE\n  inputOutput SFVec3f    plTrans 0.5986679 0 0\n  inputOutput SFVec3f    plTrack 0.7788298 0 0.75\n  inputOutput SFBool     spOver FALSE\n  inputOutput SFBool     spActive FALSE\n  inputOutput SFRotation spRot -0.999926116164665 -0.00684439435316297 0.0100457193763672 0.962771361607468\n  inputOutput SFVec3f    spTrack 0 0.6198746 0.4223357\n  inputOutput SFBool     cyOver TRUE\n  inputOutput SFBool     cyActive FALSE\n  inputOutput SFRotation cyRot 0 1 0 0.603643178946056\n  inputOutput SFVec3f    cyTrack 0.2768098 0 0.7181171\n\n  url \"ecmascript:\nfunction noop () { }\n\"\n}\n\nROUTE PL.isOver TO OBS.set_plOver\nROUTE PL.isActive TO OBS.set_plActive\nROUTE PL.translation_changed TO OBS.set_plTrans\nROUTE PL.trackPoint_changed TO OBS.set_plTrack\nROUTE SP.isOver TO OBS.set_spOver\nROUTE SP.isActive TO OBS.set_spActive\nROUTE SP.rotation_changed TO OBS.set_spRot\nROUTE SP.trackPoint_changed TO OBS.set_spTrack\nROUTE CY.isOver TO OBS.set_cyOver\nROUTE CY.isActive TO OBS.set_cyActive\nROUTE CY.rotation_changed TO OBS.set_cyRot\nROUTE CY.trackPoint_changed TO OBS.set_cyTrack\n",
+    "57": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nViewpoint { }\n\nTransform {\n  translation -2.5 0 0\n  children [\n    DEF PL PlaneSensor {\n      offset 0.5986679 0 0\n    }\n    Shape {\n      geometry Box {\n        size 1.5 1.5 1.5\n      }\n    }\n  ]\n}\n\nTransform {\n  children [\n    DEF SP SphereSensor {\n      offset -0.999926116164665 -0.00684439435316297 0.0100457193763672 0.962771361607468\n    }\n    Shape {\n      geometry Box {\n        size 1.5 1.5 1.5\n      }\n    }\n  ]\n}\n\nTransform {\n  translation 2.5 0 0\n  children [\n    DEF CY CylinderSensor {\n      offset 0.6036432\n    }\n    Shape {\n      geometry Box {\n        size 1.5 1.5 1.5\n      }\n    }\n  ]\n}\n\nDEF OBS Script {\n  inputOutput SFBool     plOver FALSE\n  inputOutput SFBool     plActive FALSE\n  inputOutput SFVec3f    plTrans 0.5986679 0 0\n  inputOutput SFVec3f    plTrack 0.7788298 0 0.75\n  inputOutput SFBool     spOver FALSE\n  inputOutput SFBool     spActive FALSE\n  inputOutput SFRotation spRot -0.999926116164665 -0.00684439435316297 0.0100457193763672 0.962771361607468\n  inputOutput SFVec3f    spTrack 0 0.6198746 0.4223357\n  inputOutput SFBool     cyOver TRUE\n  inputOutput SFBool     cyActive FALSE\n  inputOutput SFRotation cyRot 0 1 0 0.603643178946056\n  inputOutput SFVec3f    cyTrack 0.2768098 0 0.7181171\n\n  url \"ecmascript:\nfunction noop () { }\n\"\n}\n\nROUTE PL.isOver TO OBS.set_plOver\nROUTE PL.isActive TO OBS.set_plActive\nROUTE PL.translation_changed TO OBS.set_plTrans\nROUTE PL.trackPoint_changed TO OBS.set_plTrack\nROUTE SP.isOver TO OBS.set_spOver\nROUTE SP.isActive TO OBS.set_spActive\nROUTE SP.rotation_changed TO OBS.set_spRot\nROUTE SP.trackPoint_changed TO OBS.set_spTrack\nROUTE CY.isOver TO OBS.set_cyOver\nROUTE CY.isActive TO OBS.set_cyActive\nROUTE CY.rotation_changed TO OBS.set_cyRot\nROUTE CY.trackPoint_changed TO OBS.set_cyTrack\n",
+    "58": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nViewpoint { }\n\nTransform {\n  translation -2.5 0 0\n  children [\n    DEF PL PlaneSensor {\n      offset 0.5986679 0 0\n    }\n    Shape {\n      geometry Box {\n        size 1.5 1.5 1.5\n      }\n    }\n  ]\n}\n\nTransform {\n  children [\n    DEF SP SphereSensor {\n      offset -0.999926116164665 -0.00684439435316297 0.0100457193763672 0.962771361607468\n    }\n    Shape {\n      geometry Box {\n        size 1.5 1.5 1.5\n      }\n    }\n  ]\n}\n\nTransform {\n  translation 2.5 0 0\n  children [\n    DEF CY CylinderSensor {\n      offset 0.6036432\n    }\n    Shape {\n      geometry Box {\n        size 1.5 1.5 1.5\n      }\n    }\n  ]\n}\n\nDEF OBS Script {\n  inputOutput SFBool     plOver FALSE\n  inputOutput SFBool     plActive FALSE\n  inputOutput SFVec3f    plTrans 0.5986679 0 0\n  inputOutput SFVec3f    plTrack 0.7788298 0 0.75\n  inputOutput SFBool     spOver FALSE\n  inputOutput SFBool     spActive FALSE\n  inputOutput SFRotation spRot -0.999926116164665 -0.00684439435316297 0.0100457193763672 0.962771361607468\n  inputOutput SFVec3f    spTrack 0 0.6198746 0.4223357\n  inputOutput SFBool     cyOver TRUE\n  inputOutput SFBool     cyActive FALSE\n  inputOutput SFRotation cyRot 0 1 0 0.603643178946056\n  inputOutput SFVec3f    cyTrack 0.2768098 0 0.7181171\n\n  url \"ecmascript:\nfunction noop () { }\n\"\n}\n\nROUTE PL.isOver TO OBS.set_plOver\nROUTE PL.isActive TO OBS.set_plActive\nROUTE PL.translation_changed TO OBS.set_plTrans\nROUTE PL.trackPoint_changed TO OBS.set_plTrack\nROUTE SP.isOver TO OBS.set_spOver\nROUTE SP.isActive TO OBS.set_spActive\nROUTE SP.rotation_changed TO OBS.set_spRot\nROUTE SP.trackPoint_changed TO OBS.set_spTrack\nROUTE CY.isOver TO OBS.set_cyOver\nROUTE CY.isActive TO OBS.set_cyActive\nROUTE CY.rotation_changed TO OBS.set_cyRot\nROUTE CY.trackPoint_changed TO OBS.set_cyTrack\n",
+    "59": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nViewpoint { }\n\nTransform {\n  translation -2.5 0 0\n  children [\n    DEF PL PlaneSensor {\n      offset 0.5986679 0 0\n    }\n    Shape {\n      geometry Box {\n        size 1.5 1.5 1.5\n      }\n    }\n  ]\n}\n\nTransform {\n  children [\n    DEF SP SphereSensor {\n      offset -0.999926116164665 -0.00684439435316297 0.0100457193763672 0.962771361607468\n    }\n    Shape {\n      geometry Box {\n        size 1.5 1.5 1.5\n      }\n    }\n  ]\n}\n\nTransform {\n  translation 2.5 0 0\n  children [\n    DEF CY CylinderSensor {\n      offset 0.6036432\n    }\n    Shape {\n      geometry Box {\n        size 1.5 1.5 1.5\n      }\n    }\n  ]\n}\n\nDEF OBS Script {\n  inputOutput SFBool     plOver FALSE\n  inputOutput SFBool     plActive FALSE\n  inputOutput SFVec3f    plTrans 0.5986679 0 0\n  inputOutput SFVec3f    plTrack 0.7788298 0 0.75\n  inputOutput SFBool     spOver FALSE\n  inputOutput SFBool     spActive FALSE\n  inputOutput SFRotation spRot -0.999926116164665 -0.00684439435316297 0.0100457193763672 0.962771361607468\n  inputOutput SFVec3f    spTrack 0 0.6198746 0.4223357\n  inputOutput SFBool     cyOver TRUE\n  inputOutput SFBool     cyActive FALSE\n  inputOutput SFRotation cyRot 0 1 0 0.603643178946056\n  inputOutput SFVec3f    cyTrack 0.2768098 0 0.7181171\n\n  url \"ecmascript:\nfunction noop () { }\n\"\n}\n\nROUTE PL.isOver TO OBS.set_plOver\nROUTE PL.isActive TO OBS.set_plActive\nROUTE PL.translation_changed TO OBS.set_plTrans\nROUTE PL.trackPoint_changed TO OBS.set_plTrack\nROUTE SP.isOver TO OBS.set_spOver\nROUTE SP.isActive TO OBS.set_spActive\nROUTE SP.rotation_changed TO OBS.set_spRot\nROUTE SP.trackPoint_changed TO OBS.set_spTrack\nROUTE CY.isOver TO OBS.set_cyOver\nROUTE CY.isActive TO OBS.set_cyActive\nROUTE CY.rotation_changed TO OBS.set_cyRot\nROUTE CY.trackPoint_changed TO OBS.set_cyTrack\n",
+    "60": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nViewpoint { }\n\nTransform {\n  translation -2.5 0 0\n  children [\n    DEF PL PlaneSensor {\n      offset 0.5986679 0 0\n    }\n    Shape {\n      geometry Box {\n        size 1.5 1.5 1.5\n      }\n    }\n  ]\n}\n\nTransform {\n  children [\n    DEF SP SphereSensor {\n      offset -0.999926116164665 -0.00684439435316297 0.0100457193763672 0.962771361607468\n    }\n    Shape {\n      geometry Box {\n        size 1.5 1.5 1.5\n      }\n    }\n  ]\n}\n\nTransform {\n  translation 2.5 0 0\n  children [\n    DEF CY CylinderSensor {\n      offset 0.6036432\n    }\n    Shape {\n      geometry Box {\n        size 1.5 1.5 1.5\n      }\n    }\n  ]\n}\n\nDEF OBS Script {\n  inputOutput SFBool     plOver FALSE\n  inputOutput SFBool     plActive FALSE\n  inputOutput SFVec3f    plTrans 0.5986679 0 0\n  inputOutput SFVec3f    plTrack 0.7788298 0 0.75\n  inputOutput SFBool     spOver FALSE\n  inputOutput SFBool     spActive FALSE\n  inputOutput SFRotation spRot -0.999926116164665 -0.00684439435316297 0.0100457193763672 0.962771361607468\n  inputOutput SFVec3f    spTrack 0 0.6198746 0.4223357\n  inputOutput SFBool     cyOver TRUE\n  inputOutput SFBool     cyActive FALSE\n  inputOutput SFRotation cyRot 0 1 0 0.603643178946056\n  inputOutput SFVec3f    cyTrack 0.2768098 0 0.7181171\n\n  url \"ecmascript:\nfunction noop () { }\n\"\n}\n\nROUTE PL.isOver TO OBS.set_plOver\nROUTE PL.isActive TO OBS.set_plActive\nROUTE PL.translation_changed TO OBS.set_plTrans\nROUTE PL.trackPoint_changed TO OBS.set_plTrack\nROUTE SP.isOver TO OBS.set_spOver\nROUTE SP.isActive TO OBS.set_spActive\nROUTE SP.rotation_changed TO OBS.set_spRot\nROUTE SP.trackPoint_changed TO OBS.set_spTrack\nROUTE CY.isOver TO OBS.set_cyOver\nROUTE CY.isActive TO OBS.set_cyActive\nROUTE CY.rotation_changed TO OBS.set_cyRot\nROUTE CY.trackPoint_changed TO OBS.set_cyTrack\n"
+  },
+  "prints": [],
+  "log": [],
+  "anchors": [],
+  "loadFrames": 3,
+  "warmupFrames": 8,
+  "geometry": {
+    "rect": [
+      0,
+      0,
+      512,
+      512
+    ],
+    "viewport": [
+      0,
+      0,
+      512,
+      512
+    ],
+    "scroll": [
+      0,
+      0
+    ]
+  }
+}

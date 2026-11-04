@@ -1,0 +1,104 @@
+{
+ "angle_backend": "metal",
+ "cases": {
+  "pp-bbox-culled": {
+   "js.f32": "e2a450978cd7afcf5f0c286215e04ed4a3282997c7a750b65f84b7f594c5575c",
+   "js.json": "76a38c217dc7716734ce4fb2f57a1c767de346ae0787bced9ded26cb69570376"
+  },
+  "pp-behind-box": {
+   "js.f32": "24981ea51da98475fcf70c71a25855af16d65978ae54fe3c1c6974c53f6399fa",
+   "js.json": "71b34226017f626298ebf7685761f9b04b6ad4f729161a4256a147ef35688c2b"
+  },
+  "pp-cone-geometry": {
+   "js.f32": "dfd01e508fc21cca66af0c8e1c2ae8bd8c5c819558cae0123df64840d286e9de",
+   "js.json": "3f0de8158c7de5cf70eff7df96d20bba2dbe4c47810c008c961d846252502656"
+  },
+  "pp-cone-geometry-sphere": {
+   "js.f32": "0e745b316b9fe6b9d0fed6371f67bcda479db696163478f3b3d7d879ac7c12f1",
+   "js.json": "c604bab018e52f735325a517c24131e75c4b1842f146f5f9ecc193632abe6787"
+  },
+  "pp-cone-quad": {
+   "js.f32": "27369d0853a4e5f67afbf94633369c174b219c5061f318d7b73002d75c69903a",
+   "js.json": "e77a8762a9cfee6bc36377762a3b04767fdc4624291e2c9ea092c7c0a68224b7"
+  },
+  "pp-cone-quad-textured": {
+   "js.f32": "0f8e03feac1af4407df22375bb25968bc1ffe39ce5f2a1d383904f23a9be601b",
+   "js.json": "127c3a6334e41421cae7f175d6d5a336ee7ad029fdd8952892e8083bfdca52bf"
+  },
+  "pp-cone-sprite": {
+   "js.f32": "0146b8ff2564c601f00cfc98ede35d276a20454e43bcebd49118941840f89203",
+   "js.json": "259eff1d3434cd9078d5367a98af2bcccd06dcc632a796de94cffb0c77338c95"
+  },
+  "pp-cone-triangle": {
+   "js.f32": "520983e5ca22ce750f5166572b038f9ece423f3ef821376ef79ec7ef2f32064c",
+   "js.json": "ad022cf41029415d6d80fe996f7398cdc6b4ddf2bc5bfa8f5ebf8aaaec0622d3"
+  },
+  "pp-disable": {
+   "js.f32": "637139bec6c87884eb67e081149d357d5cbb4d812596a34cb162eccd096f9042",
+   "js.json": "b5d5dc5cedcfd7883196db7fe893627e6b74f31507dcc2e10fb523166985f7be"
+  },
+  "pp-invisible": {
+   "js.f32": "828cca80abe6caecc35ad6a45b3ebbac0c93077b837f52d34dd85804f25723fd",
+   "js.json": "88c0ed612a4a9eab07f1b0b7d7080f8c8274d3965ed098e34619dcc6ca67bf58"
+  },
+  "pp-max-particles": {
+   "js.f32": "30e48dba1918e631e9f1c57f8e327fb915d43459138587beec4b0e0167110d1c",
+   "js.json": "d87d16d1e5b2827f03861df4cc9b7d9600d5dffa0600dfb7b6d75d95bb2503cd"
+  },
+  "pp-one-geometry": {
+   "js.f32": "a53f09bbff07e4e05a2a7289f48371b7c7032e1531b91bdb6e43b626bb01fdee",
+   "js.json": "6d385e851e2ef5f58c9ad47b3a57f71391c8be7d06dba1ca852ad45b323e5652"
+  },
+  "pp-one-quad": {
+   "js.f32": "43c04a050cefa4d7feebd21af99331abac2684988cf342a613f5bb116667aa19",
+   "js.json": "283f895a5ebef44b3375e98f39cf5c93b9ad1d7b57bf6272ca76110b2a96accb"
+  },
+  "pp-overlap-equal-depth": {
+   "js.f32": "faa1d92323aed3d4b68ad96acf4469bb4c329dc3edaa43b244d9b5a1a037a921",
+   "js.json": "417c7c37fc7a060f1e2c39d8990d3c1cc2203c456a4ebfe062e9c6241a22f093"
+  },
+  "pp-pointer-events": {
+   "js.f32": "cbd08fc53bd3278eccb30ee1104a924e9f75479d8a86c2aaabff6a48e653282a",
+   "js.json": "e7052a40d907d5401a5bba859ede03cb18b591b7db55142bc7c58212ad5951ea"
+  },
+  "pp-row-line": {
+   "js.f32": "8a1a44e57b8019ee6382f024a20504b2395405ce1c95cf043e202ba1a6c8b6b3",
+   "js.json": "c3aed6afd22023ab3f209db9cf3ef55e5c5270dbb0176dd4fba3e12c0d485d16"
+  },
+  "pp-row-point": {
+   "js.f32": "7d7f841c90fff3088b597cf0f417df27ab11f7bc4e42b544eaa8a85d1535ef0c",
+   "js.json": "f86b6db7dc4ef7a4ed1b37fef014812449f1a617fcb3875435bba4287a59a1bd"
+  },
+  "pp-row-point-props": {
+   "js.f32": "7d7f841c90fff3088b597cf0f417df27ab11f7bc4e42b544eaa8a85d1535ef0c",
+   "js.json": "c45a53cb38d8456483c9fc64aa6931ab2497dc1e989c40ef39f5ee562a3dc8e8"
+  },
+  "pp-slant-line": {
+   "js.f32": "f6f164bf2de7bff16ca219a866feed48c972f4601f568d87c000e83b22a0fcd9",
+   "js.json": "580c2008344d261a7e402d6d3129226ce9edb7758fef1bed12e9285727b1ddcb"
+  },
+  "pp-slant-point-props": {
+   "js.f32": "ac062b1dbe583c76bd7461749a688a2b2ff55c45354376bddeafef72a26731ef",
+   "js.json": "03f9247c2ffdfffdbe07d499fe8ec99c43fcfbc78f4083b85b33ff8531023701"
+  },
+  "pp-stack-equal-depth": {
+   "js.f32": "939a74c0226596969dd2549c8249c7f2a484e92eafd833e9d0d0538757cc1360",
+   "js.json": "4018b105dbea313bcee5079816a85adba8aa8562ba4186ff7a543874ba6d00a9"
+  },
+  "pp-transform": {
+   "js.f32": "dda0463a9d02d11190d13763cde6fe4849395c763c12b79b1c21a5fa8d9d46d5",
+   "js.json": "9ab03e48c95a97b15970e3a4a4c5cd6f81b0b06b3fae0f454a23c209cd16c38f"
+  },
+  "pp-two-systems": {
+   "js.f32": "07e99e6a175e82ba864cd94faca6c8ae2037fe9c58112b779e6ef4998f0be3c2",
+   "js.json": "0cc31b83021497f8b1445003b67efe0a78c0e92f56bb5f51706020d95114e7b1"
+  }
+ },
+ "chrome": "Google Chrome 156.0.8078.79",
+ "hardware": "Apple M1, macOS 27.0.1",
+ "pinned_x_ite": "16.5.0 34cdf9f97",
+ "platform": "apple-m1",
+ "recorded": "2026-11-03",
+ "recorder": "x3d-oracle particles",
+ "rule": "3 identical runs; kept only where the NVIDIA recording differs"
+}
