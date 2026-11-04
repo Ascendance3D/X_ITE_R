@@ -160,7 +160,7 @@ fn compare_case(
 ) {
     let dir = root.join(format!("oracle/rea-b12-baseline/{name}-msaa{msaa}"));
     let js_path = common::reference::js_json(root, "rea-b12-baseline", name, msaa);
-    let js: Value = serde_json::from_str(&std::fs::read_to_string(js_path).unwrap()).unwrap();
+    let js: Value = serde_json::from_str(&std::fs::read_to_string(&js_path).unwrap()).unwrap();
     let out =
         std::env::temp_dir().join(format!("rea-b12-{}-{name}-msaa{msaa}", std::process::id()));
     std::fs::create_dir_all(&out).unwrap();
