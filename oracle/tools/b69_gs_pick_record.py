@@ -70,9 +70,17 @@ def platform(args):
     plat = args[0] if args else ""
     opt = lambda n, d=None: args[args.index(n) + 1] if n in args else d
     hardware, oracle = opt("--hardware", ""), opt("--oracle", os.path.join(root, "target", "release", "x3d-oracle"))
-    assert plat in PLATFORMS, f"platform must be one of {PLATFORMS}"
-    assert hardware.strip(), "--hardware TEXT is required (the machine, GPU and OS of the recording)"
-    assert os.environ.get("X3D_ORACLE_CHROME") and os.environ.get("X3D_ORACLE_ANGLE"), "set X3D_ORACLE_CHROME and X3D_ORACLE_ANGLE"
+    # Explicit checks, not assert: they must also hold under python3 -O.
+    if plat not in PLATFORMS:
+        sys.exit(f"platform must be one of {PLATFORMS}")
+    if not hardware.strip():
+        sys.exit("--hardware TEXT is required (the machine, GPU and OS of the recording)")
+    if not (os.environ.get("X3D_ORACLE_CHROME") and os.environ.get("X3D_ORACLE_ANGLE")):
+        sys.exit("set X3D_ORACLE_CHROME and X3D_ORACLE_ANGLE (x3d-oracle starts that Chrome with that ANGLE backend: crates/x3d-oracle/src/main.rs, chrome.rs)")
+    # The platform must be the machine that records: apple-m1 is macOS on arm64 with ANGLE Metal.
+    import platform as host
+    if plat == "apple-m1" and not (sys.platform == "darwin" and host.machine() == "arm64" and os.environ["X3D_ORACLE_ANGLE"] == "metal"):
+        sys.exit(f"apple-m1 needs macOS on arm64 and X3D_ORACLE_ANGLE=metal (this host: {sys.platform} {host.machine()}, ANGLE {os.environ['X3D_ORACLE_ANGLE']})")
     def sha(p):
         with open(p, "rb") as f:
             return hashlib.sha256(f.read()).hexdigest()
@@ -128,10 +136,18 @@ def platform(args):
         with open(os.path.join(dest, "PROVENANCE.json"), "w") as f:
             json.dump(prov, f, indent=1, sort_keys=True)
         old = final + ".old"
+        # An interrupted earlier run can have left only <final>.old: put it back before the swap.
+        if not os.path.exists(final) and os.path.exists(old):
+            os.rename(old, final)
         shutil.rmtree(old, ignore_errors=True)
         if os.path.exists(final):
             os.rename(final, old)
-        os.rename(dest, final)
+        try:
+            os.rename(dest, final)
+        except BaseException:
+            if os.path.exists(old) and not os.path.exists(final):
+                os.rename(old, final)
+            raise
         shutil.rmtree(old, ignore_errors=True)
     shutil.rmtree(tmp, ignore_errors=True)
     print(f"b69-gs-pick/{plat}: {len(keep) + len(same)} recordings made three times; {len(keep)} kept, {len(same)} equal to the NVIDIA recording")
@@ -140,5 +156,6 @@ def platform(args):
 
 
 mode, rest = sys.argv[1], sys.argv[2:]
-assert mode in ("record", "platform"), "record NAME MSAA [X3D_ORACLE] | platform PLATFORM --hardware TEXT [--oracle X3D_ORACLE]"
+if mode not in ("record", "platform"):
+    sys.exit("record NAME MSAA [X3D_ORACLE] | platform PLATFORM --hardware TEXT [--oracle X3D_ORACLE]")
 (record if mode == "record" else platform)(rest)
