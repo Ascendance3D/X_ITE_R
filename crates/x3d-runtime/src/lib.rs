@@ -1592,10 +1592,12 @@ impl Runtime {
     /// is an AudioClip until `setArrayBuffer` has decoded a candidate (which `has_unfinished_loads` covers while it
     /// is IN_PROGRESS). Returns whether a FontStyle load is outstanding, or a decode that the next prepareEvents
     /// resolves. A decode held by `defer_audio_decodes` is the driver's to flush, so the load does not wait for it.
-    /// Only with an asynchronous [`Fetcher`] (the page): a native load does not wait for a font, so a Text builds once
-    /// without it in the first frame (oracle/synthetic-rea-b11-text/warm-stamp-fs.wrl).
+    /// The native load waits too, as the page does: X_ITE's scene goes live, and builds its Texts a second time, only after the
+    /// FontStyles' fonts have arrived (oracle/synthetic-rea-q-screen-cff: a ScreenText with a CFF font is laid out with the
+    /// charstring widths its first build made known). The Text's first build, in frame 1, still has no font
+    /// (oracle/synthetic-rea-b11-text/warm-stamp-fs.wrl).
     fn has_held_url_objects(&self) -> bool {
-        (self.fetcher.is_async() && !self.font_style_loads.is_empty())
+        !self.font_style_loads.is_empty()
             || !self.pending_font_styles.is_empty()
             || !self.font_fetch_waits.is_empty()
             || (!self.defer_audio_decodes && !self.pending_audio_decodes.is_empty())
@@ -1679,9 +1681,9 @@ impl Runtime {
 
             self.load_frames += 1;
 
-            // The frame of a page: the `sleep (0)` timers of the FontStyle loads fire first, and their continuations
+            // The frame of a load: the `sleep (0)` timers of the FontStyle loads fire first, and their continuations
             // (a font file is fetched) run after it.
-            let fonts = self.fetcher.is_async() && !self.font_style_loads.is_empty();
+            let fonts = !self.font_style_loads.is_empty();
 
             if fonts {
                 self.font_style_timers();
