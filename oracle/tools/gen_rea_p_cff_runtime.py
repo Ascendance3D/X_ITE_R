@@ -123,9 +123,10 @@ nodes = (
 )
 world("pc-screen", nodes, [f"T{i}" for i in range(1, 7)])
 
-# Open, generated and never baselined: the same ScreenFontStyle with W and V, the glyphs whose charstring width differs from hmtx (the
-# opentype.js advance quirk, see gen_cff_fonts.py). X_ITE lays "WVWV" out with the charstring widths (textBounds 38 1, lineBounds 36.26667) because the
-# glyph paths exist from an earlier build; the Rust layout, run once with the library font, still uses hmtx (33 1, 31.57333).
+# Generated for reference, not baselined here: the same ScreenFontStyle with W and V, the glyphs whose charstring width differs from hmtx (the
+# opentype.js advance quirk, see gen_cff_fonts.py). X_ITE lays "WVWV" out with the charstring widths (textBounds 38 1, lineBounds 36.26667), because
+# its scene is built a second time after the font arrived. The Rust runtime does the same since oracle/synthetic-rea-q-screen-cff (qs-library T1 is
+# this text) and is compared by crates/x3d-viewer/tests/rea_q_screen_cff.rs.
 nodes = (
     f'DEF L1 FontLibrary {{ family "CffLib" url "{BASIC}" }}\n'
     'Shape { geometry DEF T1 Text { string [ "WVWV" ] fontStyle ScreenFontStyle { family "CffLib" pointSize 16 } } }\n'

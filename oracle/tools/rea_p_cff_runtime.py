@@ -3,7 +3,7 @@
 
   python3 -I oracle/tools/rea_p_cff_runtime.py record
       Every case of oracle/rea-p-cff-runtime-baseline/cases.txt runs through the pinned X_ITE 16.5.0 (oracle/x_ite-anim.mjs) three times. The
-      compared view (scene text at the dumped frame, poses, log, ok, warmupFrames) must be identical in all three; the first run is kept as
+      recorded view (scene text at the dumped frame, poses, log, ok, warmupFrames) must be identical in all three (the test compares the scene text, the sorted log and ok); the first run is kept as
       oracle/rea-p-cff-runtime-baseline/<case>.json and the sha256 of each run's view is printed. A baseline is never taken from Rust.
       Needs the ignored link oracle/x_ite-pin/node_modules (see oracle/README.md) and XITE_TESTS for playwright where it is not the sibling.
 """

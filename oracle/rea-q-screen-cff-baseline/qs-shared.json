@@ -1,0 +1,32 @@
+{
+ "log": [],
+ "ok": true,
+ "poses": {
+  "44": {
+   "centerOfRotation": [
+    0,
+    0,
+    0
+   ],
+   "description": "",
+   "fieldOfViewScale": 1,
+   "orientation": [
+    0,
+    0,
+    1,
+    0
+   ],
+   "position": [
+    0,
+    0,
+    10
+   ],
+   "viewer": "EXAMINE",
+   "viewpoint": ""
+  }
+ },
+ "vrml": {
+  "44": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Full\n\nMETA \"title\" \"qs shared\"\n\nDEF L1 FontLibrary {\n  family \"CffA\"\n  url \"../synthetic-rea-b24-cff/cff-basic.otf\"\n}\n\nDEF L2 FontLibrary {\n  family \"CffB\"\n  url \"../synthetic-rea-b24-cff/cff-basic.otf\"\n}\n\nShape {\n  geometry DEF T1 Text {\n    string \"WVWV\"\n    fontStyle FontStyle {\n      family \"CffA\"\n    }\n  }\n}\n\nShape {\n  geometry DEF T2 Text {\n    string \"WVWV\"\n    fontStyle ScreenFontStyle {\n      family \"CffA\"\n      pointSize 16\n    }\n  }\n}\n\nShape {\n  geometry DEF T3 Text {\n    string \"WVWV\"\n    fontStyle ScreenFontStyle {\n      family \"CffB\"\n      pointSize 16\n    }\n  }\n}\n\nShape {\n  geometry DEF T4 Text {\n    string [\n      \"WVWV\",\n      \"VW\"\n    ]\n    fontStyle ScreenFontStyle {\n      family \"CffA\"\n      pointSize 16\n      spacing 2\n    }\n  }\n}\n\nDEF P Script {\n  inputOutput MFString out [\n    \"000 T1.origin = SFVec3:0 0.5 0 raw=0 0.5 0\",\n    \"001 T1.textBounds = SFVec2:1.95 0.5 raw=1.95 0.5\",\n    \"002 T1.lineBounds = ArrayField:1.95 0.7 raw=(1.9500000476837158 0.699999988079071)\",\n    \"003 T2.origin = SFVec3:-1 0 0 raw=-1 0 0\",\n    \"004 T2.textBounds = SFVec2:38 1 raw=38 1\",\n    \"005 T2.lineBounds = ArrayField:36.26667 4.266667 raw=(36.266666412353516 4.266666889190674)\",\n    \"006 T3.origin = SFVec3:-1 0 0 raw=-1 0 0\",\n    \"007 T3.textBounds = SFVec2:38 1 raw=38 1\",\n    \"008 T3.lineBounds = ArrayField:36.26667 4.266667 raw=(36.266666412353516 4.266666889190674)\",\n    \"009 T4.origin = SFVec3:-1 0 0 raw=-1 0 0\",\n    \"010 T4.textBounds = SFVec2:38 44 raw=38 44\",\n    \"011 T4.lineBounds = ArrayField:[\n  36.26667 4.266667,\n  8.533334 2\n] raw=(36.266666412353516 4.266666889190674) (8.533333778381348 2)\"\n  ]\n\n  url \"ecmascript:\n\nvar R_ = [];\nfunction strip (s) { return String (s) .replace (/https?:\\\\/\\\\/[^\\\\/]+\\\\//g, ''); }\nfunction show (v, d) {\n  if (typeof v === 'number') return Object.is (v, -0) ? 'n:-0' : 'n:' + v;\n  if (typeof v === 'string') return 's:' + JSON.stringify (strip (v));\n  if (v === null || v === undefined) return String (v);\n  if (typeof v === 'function') return 'fn';\n  if (typeof v === 'boolean') return 'b:' + v;\n  if (Array.isArray (v)) return 'A[' + v .map (function (x) { return show (x); }) .join (',') + ']';\n  var c = v .constructor;\n  return (c && c .name || '?') + ':' + String (v) + raw (v);\n}\n// The components of a field object at full double precision (String () rounds floats).\nfunction raw (v) {\n  if (typeof v .getTypeName !== 'function' || !v [Symbol .iterator] || v .getTypeName () .indexOf ('MF') === 0 && !v .length) return '';\n  try { var a = Array .from (v, function (x) { return typeof x === 'object' && x && x [Symbol .iterator] ? '(' + Array .from (x, function (y) { return typeof y === 'object' && y && y [Symbol .iterator] ? '(' + Array .from (y) .join (' ') + ')' : y; }) .join (' ') + ')' : x; }); return ' raw=' + a .join (' '); } catch (e) { return ' raw=ERR'; }\n}\nfunction errText (e) {\n  var n = e && e .name;\n  if (n === 'TypeError' || n === 'ReferenceError' || n === 'SyntaxError') return 'ERR ' + n + ' (engine wording)';\n  return 'ERR ' + n + ': ' + strip (e && e .message);\n}\nfunction T (n, f) {\n  var r;\n  try { r = show (f ()); } catch (e) { r = errText (e); }\n  R_ .push ((R_ .length < 10 ? '00' : R_ .length < 100 ? '0' : '') + R_ .length + ' ' + n + ' = ' + r);\n}\nfunction flush_ () { out = new MFString (... R_); }\n\nvar SELF;\nvar F_ = 0;\nfunction N (n) { return Browser .currentScene .getNamedNode (n); }\nfunction RD (t, tag) { ['origin', 'textBounds', 'lineBounds'] .forEach (function (f) { T (t + tag + '.' + f, function () { return N (t) [f]; }); }); }\n\nfunction initialize () {\n  SELF = this;\n\n  flush_ ();\n}\nfunction prepareEvents () {\n  ++ F_;\n  if (F_ === 40) { RD ('T1', ''); RD ('T2', ''); RD ('T3', ''); RD ('T4', ''); flush_ (); }\n}\n\n  \"\n}\n"
+ },
+ "warmupFrames": 8
+}
