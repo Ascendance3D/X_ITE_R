@@ -46,3 +46,11 @@ jobs:
         shell: cmd
         run: |
           powershell -NoProfile -Command "$out = Join-Path $env:RUNNER_TEMP 'dxdiag.txt'; Start-Process -FilePath dxdiag.exe -ArgumentList '/whql:off','/t',$out -Wait -NoNewWindow; $d = (Get-Date).AddSeconds(90); while (-not (Test-Path $out) -and (Get-Date) -lt $d) { Start-Sleep -Seconds 2 }; if (Test-Path $out) { $t = Get-Content $out; $s = ($t | Select-String -Pattern '^Display Devices' | Select-Object -First 1).LineNumber; if ($s) { $t[($s - 1)..([Math]::Min($s + 40, $t.Count - 1))] } else { 'no Display Devices section' }; Remove-Item $out -Force } else { 'dxdiag wrote no file' }"
+      - name: Vulkan summary, build tools, disk
+        if: always()
+        shell: cmd
+        run: |
+          vulkaninfo --summary
+          if exist "%ProgramFiles(x86)%\Microsoft Visual Studio\Installer\vswhere.exe" ("%ProgramFiles(x86)%\Microsoft Visual Studio\Installer\vswhere.exe" -latest -products * -property installationPath) else (echo vswhere: not found)
+          powershell -NoProfile -Command "Get-PSDrive C | Select-Object Used, Free | Format-List; (Get-CimInstance Win32_OperatingSystem).FreePhysicalMemory; Get-CimInstance Win32_Processor | Select-Object Name, NumberOfCores | Format-List"
+          exit /b 0
