@@ -1,0 +1,33 @@
+#X3D V4.0 utf8
+PROFILE Immersive
+COMPONENT Shape:5
+COMPONENT Rendering:5
+COMPONENT Geometry2D:2
+COMPONENT X_ITE:1
+# Synthetic, newly authored (issue #51, ledger node:DepthMode): does the main color pass apply a reversed depthRange?
+# Six pairs of unlit rectangles seen from z 40. In every pair the NEAR rectangle (z 10) is nearer to the viewer than the FAR
+# rectangle (z -20); both are scaled so that they overlap on the screen. With the default depth range the near one must win
+# the overlap. WebGL rejects gl.depthRange (near, far) with near > far (INVALID_OPERATION) and keeps the range in force, so a
+# reversed range on the far rectangle changes nothing; a valid range (0 0.1) pulls it in front of the near one.
+# Row y = +6: the far rectangle is drawn first. Row y = -6: the near rectangle is drawn first.
+Viewpoint { position 0 0 40 }
+NavigationInfo { type "NONE" headlight FALSE }
+Background { skyColor 0.15 0.15 0.2 }
+# row 0 pair 0: depthRange 0.9 0.1
+Transform { translation -13.0 12 -20 children Shape { appearance Appearance { material UnlitMaterial { emissiveColor 0.9 0.1 0.1 } depthMode DepthMode { depthRange 0.9 0.1 } } geometry Rectangle2D { size 10 10 } } }
+Transform { translation -8 6 10 children Shape { appearance Appearance { material UnlitMaterial { emissiveColor 0 0.8 0.2 } } geometry Rectangle2D { size 5 5 } } }
+# row 0 pair 1: depthRange 1 0
+Transform { translation 3.0 12 -20 children Shape { appearance Appearance { material UnlitMaterial { emissiveColor 0.9 0.1 0.1 } depthMode DepthMode { depthRange 1 0 } } geometry Rectangle2D { size 10 10 } } }
+Transform { translation 0 6 10 children Shape { appearance Appearance { material UnlitMaterial { emissiveColor 0 0.8 0.2 } } geometry Rectangle2D { size 5 5 } } }
+# row 0 pair 2: depthRange 0 0.1
+Transform { translation 19.0 12 -20 children Shape { appearance Appearance { material UnlitMaterial { emissiveColor 0.9 0.1 0.1 } depthMode DepthMode { depthRange 0 0.1 } } geometry Rectangle2D { size 10 10 } } }
+Transform { translation 8 6 10 children Shape { appearance Appearance { material UnlitMaterial { emissiveColor 0 0.8 0.2 } } geometry Rectangle2D { size 5 5 } } }
+# row 1 pair 0: depthRange 0.9 0.1
+Transform { translation -8 -6 10 children Shape { appearance Appearance { material UnlitMaterial { emissiveColor 0 0.8 0.2 } } geometry Rectangle2D { size 5 5 } } }
+Transform { translation -13.0 -12 -20 children Shape { appearance Appearance { material UnlitMaterial { emissiveColor 0.9 0.1 0.1 } depthMode DepthMode { depthRange 0.9 0.1 } } geometry Rectangle2D { size 10 10 } } }
+# row 1 pair 1: depthRange 1 0
+Transform { translation 0 -6 10 children Shape { appearance Appearance { material UnlitMaterial { emissiveColor 0 0.8 0.2 } } geometry Rectangle2D { size 5 5 } } }
+Transform { translation 3.0 -12 -20 children Shape { appearance Appearance { material UnlitMaterial { emissiveColor 0.9 0.1 0.1 } depthMode DepthMode { depthRange 1 0 } } geometry Rectangle2D { size 10 10 } } }
+# row 1 pair 2: depthRange 0 0.1
+Transform { translation 8 -6 10 children Shape { appearance Appearance { material UnlitMaterial { emissiveColor 0 0.8 0.2 } } geometry Rectangle2D { size 5 5 } } }
+Transform { translation 19.0 -12 -20 children Shape { appearance Appearance { material UnlitMaterial { emissiveColor 0.9 0.1 0.1 } depthMode DepthMode { depthRange 0 0.1 } } geometry Rectangle2D { size 10 10 } } }
