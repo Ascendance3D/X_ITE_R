@@ -9,8 +9,8 @@
 //!   mask when there is one); gl_PointCoord is relative to `centre - size / 2` rounded to 1/256 pixel and divided by the
 //!   difference of the corners rounded to 1/16 pixel (the oracle GPU of the NVIDIA recordings floors the size to 1/32 pixel
 //!   instead). A size above ALIASED_POINT_SIZE_RANGE [1], 511, is drawn as 511 (ml-sprite-clamp). Ids, hit points and normals
-//!   are bit for bit; the texCoord within SPRITE_TEX_ABS, except the probes of the sprites that sit on a rounding tie (see
-//!   SPRITE_TIES).
+//!   are bit for bit; the texCoord within SPRITE_TEX_ABS, except the probes of the sprites that sit on a rounding tie: those are a
+//!   known unresolved difference, pinned as measured in TIE_DIFFS (see SPRITE_TIES), never accepted by a tolerance.
 //! * `ml-lines-*`: 1 px lines. The page covers on Metal exactly the pixels the NVIDIA recording covers (measured: the same
 //!   probes hit in both), which the quad emulation of `pointing.wgsl` reproduces except at the ends of a line and at a few ties
 //!   (GL's diamond-exit rule): LINE_ID_GAPS is that number per case, and the test fails when it changes.
@@ -29,10 +29,9 @@ use std::process::Command;
 const SPRITE_TEX_ABS: f64 = 1.3e-7;
 
 /// A sprite whose `centre - size / 2` lies within float32 noise of a rounding tie of the 1/256 pixel origin grid: the page and
-/// Rust pick the neighbouring grid value, so every probe of the sprite may differ by one grid step of the texCoord, which is
-/// 1 / (256 * size) (at most 2.0e-3 for the smallest size, 2) and, at the rim of the round point mask, by its hit.
-const SPRITE_TIE_ABS: f64 = 2.0e-3;
-
+/// Rust pick the neighbouring grid value. These probes are a KNOWN UNRESOLVED DIFFERENCE, not a match and not within a
+/// tolerance: the test pins what was measured (TIE_DIFFS) and fails when it changes in either direction, including when the
+/// probes become exact (then the entry is stale and the difference is fixed).
 /// (case, probe index ranges (first, last) of the sprites on a rounding tie), measured on the M1: 2 of the 256 sprites of
 /// ml-sprite-size, 1 of ml-sprite-low and 6 of ml-sprite-pos; every other sprite of every case is exact.
 const SPRITE_TIES: &[(&str, &[(usize, usize)])] = &[
@@ -49,6 +48,15 @@ const SPRITE_TIES: &[(&str, &[(usize, usize)])] = &[
             (9920, 9983),
         ],
     ),
+];
+
+/// (case, MSAA, probes of the tie sprites that differ in any field, of them probes that hit in only one of page and Rust, the
+/// largest texCoord difference, the largest point or normal difference), measured on the M1.
+const TIE_DIFFS: &[(&str, &str, usize, usize, f64, f64)] = &[
+    ("ml-sprite-low", "0", 4, 0, 1.3297498226165771e-3, 0.0),
+    ("ml-sprite-pos", "0", 43, 1, 9.765625e-4, 0.0),
+    ("ml-sprite-size", "0", 13, 0, 1.0080933570861816e-3, 0.0),
+    ("ml-sprite-size", "4", 13, 0, 1.0080933570861816e-3, 0.0),
 ];
 
 /// (case, probes that hit in the recording and not in Rust or the other way round).
@@ -180,7 +188,9 @@ fn metal_coverage_matches_the_pinned_page_on_the_same_m1() {
             .find(|(n, _)| *n == name)
             .map(|(_, g)| *g);
         let on_tie = |i: usize| ties.iter().any(|&(a, b)| (a..=b).contains(&i));
-        let (mut id_gaps, mut worst, mut worst_tie) = (0, 0.0f64, 0.0f64);
+        let (mut id_gaps, mut worst) = (0, 0.0f64);
+        let (mut tie_diffs, mut tie_id_gaps, mut tie_tex, mut tie_rest) =
+            (0usize, 0usize, 0.0f64, 0.0f64);
 
         if want.len() != got.len() {
             failures.push(format!(
@@ -195,7 +205,10 @@ fn metal_coverage_matches_the_pinned_page_on_the_same_m1() {
             if a["id"] != b["id"] {
                 id_gaps += 1;
 
-                if line_gap.is_none() && !on_tie(i) {
+                if on_tie(i) {
+                    tie_id_gaps += 1;
+                    tie_diffs += 1;
+                } else if line_gap.is_none() {
                     failures.push(format!(
                         "{name} MSAA {msaa}: probe {i}: page {a} / Rust {b}"
                     ));
@@ -215,7 +228,12 @@ fn metal_coverage_matches_the_pinned_page_on_the_same_m1() {
                 // The hit point of a 1 px line is interpolated by the rasterizer: float32 steps (pk-lines allows 398 ulps).
                 worst = worst.max(rest);
             } else if on_tie(i) {
-                worst_tie = worst_tie.max(tex);
+                if tex != 0.0 || rest != 0.0 {
+                    tie_diffs += 1;
+                }
+
+                tie_tex = tie_tex.max(tex);
+                tie_rest = tie_rest.max(rest);
             } else if rest != 0.0 || tex > SPRITE_TEX_ABS {
                 failures.push(format!(
                     "{name} MSAA {msaa}: probe {i}: page {a} / Rust {b} (texCoord {tex:e}, rest {rest:e})"
@@ -231,14 +249,24 @@ fn metal_coverage_matches_the_pinned_page_on_the_same_m1() {
             }
         }
 
-        if worst_tie > SPRITE_TIE_ABS {
-            failures.push(format!(
-                "{name} MSAA {msaa}: a tie sprite differs by {worst_tie:e}"
-            ));
+        if !ties.is_empty() {
+            let measured = (tie_diffs, tie_id_gaps, tie_tex, tie_rest);
+            let known = TIE_DIFFS.iter().find(|k| k.0 == name && k.1 == msaa);
+
+            match known {
+                Some(k) if (k.2, k.3, k.4, k.5) == measured => {}
+                Some(k) => failures.push(format!(
+                    "{name} MSAA {msaa}: the known tie differences changed: recorded {:?}, measured {measured:?}",
+                    (k.2, k.3, k.4, k.5)
+                )),
+                None => failures.push(format!(
+                    "{name} MSAA {msaa}: no recorded tie differences; measured {measured:?}"
+                )),
+            }
         }
 
         eprintln!(
-            "{name} MSAA {msaa}: {} probes, {id_gaps} hit/miss gaps, hit point up to {worst:e} off, tie sprites up to {worst_tie:e}",
+            "{name} MSAA {msaa}: {} probes, {id_gaps} hit/miss gaps, hit point up to {worst:e} off, tie sprites: {tie_diffs} differing probes ({tie_id_gaps} hit/miss), texCoord up to {tie_tex:e}, point/normal up to {tie_rest:e}",
             want.len()
         );
         checked += 1;
