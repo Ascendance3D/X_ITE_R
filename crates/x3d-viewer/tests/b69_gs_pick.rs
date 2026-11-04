@@ -10,6 +10,12 @@
 //! compares: hit or miss exactly, the values within VALUE_TOL (the two GPUs and their drivers round the splat quad differently).
 //! A GaussianSplats shape has no CPU ray cast, so the pass is the only way to pick it. Skipped without an adapter (hosted CI),
 //! through `x3d_evidence::no_gpu`.
+//!
+//! With `X3D_REFERENCE_PLATFORM=apple-m1` a case is compared with the pinned page recorded on the M1 (ANGLE Metal),
+//! oracle/b69-gs-pick-apple-m1-baseline/NAME-msaaN.json and oracle/b69-gs-pick-log-apple-m1-baseline/ (`oracle/tools/b69_gs_pick_record.py
+//! platform apple-m1`, three byte-identical runs), with VALUE_TOL on every component. The M1 page's hit distances of gs-pick-ortho
+//! differ from the NVIDIA page's by up to 4.1e-4 (304 hits); every other value by at most 7.1e-5, every hit or miss equal
+//! (docs/metal-reference-variation.md).
 
 mod common;
 
@@ -23,20 +29,25 @@ const T0: f64 = 946684800.0;
 /// Largest difference of a hit value (point, normal, texCoord) that still counts as equal.
 const VALUE_TOL: f64 = 1e-4;
 
-/// The limit of the hit distance (the z of the hit point, index 2 of a probe) on macOS (issue #89), fixed before the run that
-/// uses it. The hosted macOS 15 runner is a virtual machine with a paravirtual graphics device, not a physical GPU; its first
-/// run (PR #342) differed from the pinned baselines by 1.7e-4 to 1.9e-4 in the hit distance of gs-pick-ortho (about 10.7
-/// units, depth buffer rounding), with every hit or miss and every other component equal. Only the distance gets this limit;
-/// every other component (x, y, the normal, the texture coordinate) keeps VALUE_TOL on every platform. A physical Mac is not
-/// validated by it.
+/// The limit of the hit distance (the z of the hit point, index 2 of a probe) on macOS against the NVIDIA recording (issue #89),
+/// fixed before the run that uses it. The hosted macOS 15 runner is a virtual machine with a paravirtual graphics device, not a
+/// physical GPU; its first run (PR #342) differed from the pinned baselines by 1.7e-4 to 1.9e-4 in the hit distance of
+/// gs-pick-ortho (about 10.7 units, depth buffer rounding), with every hit or miss and every other component equal. Only the
+/// distance gets this limit; every other component (x, y, the normal, the texture coordinate) keeps VALUE_TOL on every platform.
+/// It applies only where a case is compared with the NVIDIA recording: a case read from a platform recording
+/// (`X3D_REFERENCE_PLATFORM`, see [`want_path`]) keeps VALUE_TOL on every component.
 const DISTANCE_TOL_MACOS: f64 = 3e-4;
 
 /// Index of the hit distance in a probe (`flat`: point x, y, z, normal, texCoord).
 const DISTANCE: usize = 2;
 
-/// The limit of component `i` of a probe.
-fn tol_of(i: usize) -> f64 {
-    if i == DISTANCE && cfg!(target_os = "macos") {
+/// The NVIDIA recordings; the platform recordings are `oracle/b69-gs-pick[-log]-<platform>-baseline/NAME-msaaN.json`.
+const BASELINE: &str = "b69-gs-pick-baseline";
+const LOG_BASELINE: &str = "b69-gs-pick-log-baseline";
+
+/// The limit of component `i` of a probe; `platform` is true when the case is read from a platform recording.
+fn tol_of(i: usize, platform: bool) -> f64 {
+    if i == DISTANCE && cfg!(target_os = "macos") && !platform {
         DISTANCE_TOL_MACOS
     } else {
         VALUE_TOL
@@ -44,7 +55,7 @@ fn tol_of(i: usize) -> f64 {
 }
 
 /// The first component of two equal-hit probes that is outside its limit, and the largest difference of all.
-fn compare_probe(w: &[f64; 10], g: &[f64; 10]) -> (bool, f64) {
+fn compare_probe(w: &[f64; 10], g: &[f64; 10], platform: bool) -> (bool, f64) {
     let mut worst = 0f64;
     let mut ok = true;
 
@@ -52,7 +63,7 @@ fn compare_probe(w: &[f64; 10], g: &[f64; 10]) -> (bool, f64) {
         let d = (a - b).abs();
 
         worst = worst.max(d);
-        ok &= d <= tol_of(i);
+        ok &= d <= tol_of(i, platform);
     }
 
     (ok, worst)
@@ -62,24 +73,70 @@ fn compare_probe(w: &[f64; 10], g: &[f64; 10]) -> (bool, f64) {
 fn only_the_distance_gets_the_macos_limit() {
     let base = [0.0f64; 10];
 
-    for i in 0..10 {
-        let mut off = base;
+    for platform in [false, true] {
+        for i in 0..10 {
+            let mut off = base;
 
-        off[i] = 2e-4;
-        let (ok, _) = compare_probe(&base, &off);
+            off[i] = 2e-4;
+            let (ok, _) = compare_probe(&base, &off, platform);
 
-        assert_eq!(
-            ok,
-            i == DISTANCE && cfg!(target_os = "macos"),
-            "component {i} off by 2e-4"
-        );
+            assert_eq!(
+                ok,
+                i == DISTANCE && cfg!(target_os = "macos") && !platform,
+                "component {i} off by 2e-4 (platform recording: {platform})"
+            );
 
-        off[i] = 4e-4;
-        assert!(
-            !compare_probe(&base, &off).0,
-            "component {i} off by 4e-4 is never accepted"
-        );
+            off[i] = 4e-4;
+            assert!(
+                !compare_probe(&base, &off, platform).0,
+                "component {i} off by 4e-4 is never accepted"
+            );
+        }
     }
+}
+
+/// Negative control of the M1 recording: a hit distance of gs-pick-ortho moved by 2e-4 is rejected under the limit that applies
+/// to a platform recording, on every platform.
+#[test]
+fn a_moved_distance_fails_against_the_m1_recording() {
+    let path = root().join(format!(
+        "oracle/{}/gs-pick-ortho-msaa0.json",
+        common::reference::platform_base(BASELINE, "apple-m1")
+    ));
+    let want: Vec<Probe> = json(path)["pickProbes"]["3"]
+        .as_array()
+        .unwrap()
+        .iter()
+        .map(want_of)
+        .collect();
+    let w = want.iter().flatten().next().expect("a hit");
+    let mut g = *w;
+
+    assert!(compare_probe(w, &g, true).0);
+    g[DISTANCE] += 2e-4;
+    assert!(!compare_probe(w, &g, true).0);
+}
+
+/// The baseline of a case: the platform recording `oracle/<stem>-<platform>-baseline/NAME-msaaN.json` when
+/// `X3D_REFERENCE_PLATFORM` names a platform and the file exists (common/reference.rs), else the NVIDIA recording
+/// `oracle/<base>/msaaN/NAME/js.json`. The flag is true for a platform recording.
+fn want_path(base: &str, name: &str, msaa: u32) -> (PathBuf, bool) {
+    if let Some(p) = common::reference::platform() {
+        let over = root().join(format!(
+            "oracle/{}/{name}-msaa{msaa}.json",
+            common::reference::platform_base(base, &p)
+        ));
+
+        if over.is_file() {
+            eprintln!("reference: {name} MSAA {msaa} uses the {p} recording");
+            return (over, true);
+        }
+    }
+
+    (
+        root().join(format!("oracle/{base}/msaa{msaa}/{name}/js.json")),
+        false,
+    )
 }
 
 const CASES: &[&str] = &[
@@ -178,22 +235,16 @@ fn splat_picks(log: bool) {
         let world = dir.join(format!("{name}.x3dv"));
         let script = json(dir.join(format!("scripts/{name}.json")));
         let points = script["pickProbes"]["points"].as_array().unwrap().clone();
-        let base0 = json(root().join(format!(
-            "oracle/{}/msaa0/{name}/js.json",
-            if log {
-                "b69-gs-pick-log-baseline"
-            } else {
-                "b69-gs-pick-baseline"
-            }
-        )));
-        let base4 = json(root().join(format!(
-            "oracle/{}/msaa4/{name}/js.json",
-            if log {
-                "b69-gs-pick-log-baseline"
-            } else {
-                "b69-gs-pick-baseline"
-            }
-        )));
+        let base = if log { LOG_BASELINE } else { BASELINE };
+        let (path0, platform) = want_path(base, name, 0);
+        let (path4, platform4) = want_path(base, name, 4);
+
+        assert_eq!(
+            platform, platform4,
+            "{name}: one platform recording for both MSAA levels"
+        );
+
+        let (base0, base4) = (json(path0), json(path4));
         let want: Vec<Probe> = base0["pickProbes"]["3"]
             .as_array()
             .unwrap()
@@ -253,7 +304,7 @@ fn splat_picks(log: bool) {
                 (Some(w), Some(g)) => {
                     hits += 1;
                     case_hits += 1;
-                    let (within, diff) = compare_probe(w, g);
+                    let (within, diff) = compare_probe(w, g, platform);
 
                     exact += (diff == 0.0) as usize;
                     case_worst = case_worst.max(diff);
