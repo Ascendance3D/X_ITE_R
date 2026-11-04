@@ -1,0 +1,4 @@
+qs-library oracle/synthetic-rea-q-screen-cff/qs-library.wrl oracle/synthetic-rea-q-screen-cff/qs-library.json
+qs-family-url oracle/synthetic-rea-q-screen-cff/qs-family-url.wrl oracle/synthetic-rea-q-screen-cff/qs-family-url.json
+qs-shared oracle/synthetic-rea-q-screen-cff/qs-shared.wrl oracle/synthetic-rea-q-screen-cff/qs-shared.json
+qs-late oracle/synthetic-rea-q-screen-cff/qs-late.wrl oracle/synthetic-rea-q-screen-cff/qs-late.json

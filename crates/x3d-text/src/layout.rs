@@ -953,10 +953,11 @@ fn screen_box(
 ) -> ([f64; 2], [f64; 2], [f64; 2]) {
     let offset = 1.0;
 
-    // text ._textBounds is an SFVec2f: its components are single precision.
+    // `text ._textBounds` is an SFVec2f: X_ITE keeps it as a Vector2 of doubles (only an MFVec2f such as `_lineBounds` is a
+    // Float32Array), so `Math .ceil (text ._textBounds .x)` sees the double: a width of 3.00000002 is 4, not the 3 of its float32.
     let bounds = [
-        (text_bounds[0] as f32).ceil() as f64 + offset,
-        (text_bounds[1] as f32).ceil() as f64 + offset,
+        text_bounds[0].ceil() + offset,
+        text_bounds[1].ceil() + offset,
     ];
     let (mut min, mut max) = (min, max);
 
