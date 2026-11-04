@@ -229,6 +229,8 @@ fn an_origin_map_maps_http_origins_only() {
     assert!(x3d_http::OriginMap::parse("http://oracle=http://127.0.0.1:1").is_ok());
     assert!(x3d_http::OriginMap::parse("http://oracle=file:///tmp").is_err());
     assert!(x3d_http::OriginMap::parse("ftp://oracle=http://127.0.0.1:1").is_err());
+    assert!(x3d_http::OriginMap::parse("http://oracle=http://127.0.0.1:1/sub/").is_err());
+    assert!(x3d_http::OriginMap::parse("http://oracle/?q=http://127.0.0.1:1").is_err());
 }
 
 /// A redirect never leaves HTTP and HTTPS: every other scheme fails the request, and the target is never read.
@@ -643,4 +645,55 @@ fn a_protocol_relative_redirect_keeps_the_scheme() {
         .unwrap();
 
     assert_eq!(response.body, b"pr");
+}
+
+/// The body limit is the decoded size (review of #438): a gzip body that is larger on the wire than the limit and smaller
+/// decoded is read; the same bytes without `Content-Encoding` are counted as they are, and refused.
+#[test]
+fn the_body_limit_counts_decoded_bytes_not_wire_bytes() {
+    use std::io::Write;
+
+    // Bytes that do not compress (an xorshift stream), so the gzip body is longer than the data.
+    let mut x = 0x2545_f491_4f6c_dd1du64;
+    let data: Vec<u8> = (0..1000)
+        .map(|_| {
+            x ^= x << 13;
+            x ^= x >> 7;
+            x ^= x << 17;
+            x as u8
+        })
+        .collect();
+    let mut e = flate2::write::GzEncoder::new(vec![], flate2::Compression::best());
+
+    e.write_all(&data).unwrap();
+
+    let gz = e.finish().unwrap();
+    let max = 1010u64;
+
+    assert!(
+        gz.len() as u64 > max && (data.len() as u64) <= max,
+        "{} wire bytes",
+        gz.len()
+    );
+
+    let hex: String = gz.iter().map(|b| format!("{b:02x}")).collect();
+    let server = RouteServer::start(
+        x3d_http::route_server::parse_routes(&format!(
+            r#"{{ "enc": {{ "headers": {{ "Content-Encoding": "gzip" }}, "bodyHex": "{hex}" }},
+                  "raw": {{ "headers": {{ "Content-Type": "application/gzip" }}, "bodyHex": "{hex}" }} }}"#
+        ))
+        .unwrap(),
+    );
+    let fetcher = HttpFetcher::new(HttpOptions {
+        max_body_bytes: max,
+        ..options()
+    });
+
+    assert_eq!(fetcher.fetch(&url(&server, "/h/enc")).unwrap(), data);
+    assert_eq!(
+        fetcher.fetch(&url(&server, "/h/raw")),
+        Err(format!(
+            "Error: The response body is larger than {max} bytes"
+        ))
+    );
 }

@@ -112,8 +112,14 @@ impl OriginMap {
         let parse = |s: &str| {
             let url = url::Url::parse(s).map_err(|e| format!("{s}: {e}"))?;
 
-            if is_http(&url) {
+            if is_http(&url)
+                && url.path() == "/"
+                && url.query().is_none()
+                && url.fragment().is_none()
+            {
                 Ok(url)
+            } else if is_http(&url) {
+                Err(format!("{s}: an origin has no path, query or fragment"))
             } else {
                 Err(format!(
                     "{s}: an origin map maps http and https origins only"
@@ -290,12 +296,19 @@ impl HttpFetcher {
                     .and_then(|v| v.to_str().ok())
                     .and_then(|v| v.trim().parse::<u64>().ok());
 
-                if declared.is_some_and(|n| n > max) {
+                let encoded = response.headers().contains_key("content-encoding");
+
+                // `Content-Length` is the decoded size only without a content encoding (a gzip body is counted on the wire).
+                if !encoded && declared.is_some_and(|n| n > max) {
                     return Err(HttpError::BodyTooLarge(max));
                 }
 
                 // The decoded body is limited: a small gzip body can be very large when it is decoded.
-                let mut reader = response.into_body().into_with_config().limit(max).reader();
+                let mut reader = response
+                    .into_body()
+                    .into_with_config()
+                    .limit(u64::MAX)
+                    .reader();
                 let mut buffer = vec![0u8; 64 * 1024];
 
                 loop {
@@ -307,7 +320,7 @@ impl HttpFetcher {
 
                     body.extend_from_slice(&buffer[..n]);
 
-                    // The client's own limit counts the bytes before the content decoding.
+                    // The limit is the decoded size (the client's own limit, 10 MB by default, is turned off above).
                     if body.len() as u64 > max {
                         return Err(HttpError::BodyTooLarge(max));
                     }
