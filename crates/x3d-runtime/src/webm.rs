@@ -513,6 +513,22 @@ fn av1_error(e: av1::Av1Error) -> WebmError {
 }
 
 #[cfg(feature = "av1")]
+/// The YUV to RGB matrix of an AV1 picture. `layout` is the dav1d pixel layout (0 = I400, 1 = I420, 2 = I422, 3 = I444).
+/// ISO/IEC 23091-4 matrix_coefficients: 5 and 6 are BT.601 and 1 is BT.709. An untagged picture (2) is converted by the
+/// pinned page (Chrome) with BT.709 for 8 bit 4:2:0 and with BT.601 for every other layout and for samples of more than
+/// 8 bits (measured with the synthetic av1-10bit and av1-444 streams of oracle/movie-video-av1-baseline: pure colors
+/// come out with BT.601, with BT.709 up to 90 levels off).
+fn av1_matrix(matrix: u32, layout: u8, bit_depth: u8) -> Matrix {
+    let untagged_601 = matrix == 2 && (layout != 1 || bit_depth > 8);
+
+    if matches!(matrix, 5 | 6) || untagged_601 {
+        BT601
+    } else {
+        BT709
+    }
+}
+
+#[cfg(feature = "av1")]
 /// The AV1 temporal units of a file (rav1d, `crate::av1`). The sequence header of the CodecPrivate is fed first, as
 /// the Matroska mapping allows a key frame to omit it. A unit the decoder refuses ends the decode with an error.
 fn decode_av1(data: &[u8], blocks: &[Block], max_bytes: u64) -> Result<Video, WebmError> {
@@ -562,16 +578,20 @@ fn decode_av1(data: &[u8], blocks: &[Block], max_bytes: u64) -> Result<Video, We
                 2 => (true, false),
                 _ => (false, false),
             };
-            // ISO/IEC 23091-4 matrix_coefficients: 5 and 6 are BT.601; 1 and 2 (unspecified) are BT.709, which a
-            // browser applies to an untagged picture.
-            let matrix = if matches!(p.matrix, 5 | 6) {
-                BT601
-            } else {
-                BT709
-            };
+            let matrix = av1_matrix(p.matrix, p.layout, p.bit_depth);
 
             frames.push(VideoFrame {
-                rgba: yuv_to_rgba(p.width, p.height, sx, sy, &y, &u, &v, matrix),
+                rgba: yuv_to_rgba_with(
+                    p.width,
+                    p.height,
+                    sx,
+                    sy,
+                    &y,
+                    &u,
+                    &v,
+                    matrix,
+                    p.bit_depth == 8,
+                ),
                 time_ms: times.next().unwrap_or(0.0),
             });
         }
@@ -786,6 +806,22 @@ fn yuv_to_rgba(
     v: &[u8],
     m: Matrix,
 ) -> Vec<u8> {
+    yuv_to_rgba_with(w, h, sx, sy, y, u, v, m, true)
+}
+
+/// [`yuv_to_rgba`] with the chroma taken from the nearest sample (`linear` false) instead of interpolated.
+#[allow(clippy::too_many_arguments)]
+fn yuv_to_rgba_with(
+    w: usize,
+    h: usize,
+    sx: bool,
+    sy: bool,
+    y: &[u8],
+    u: &[u8],
+    v: &[u8],
+    m: Matrix,
+    linear: bool,
+) -> Vec<u8> {
     let cw = if sx { w.div_ceil(2) } else { w };
     let ch = if sy { h.div_ceil(2) } else { h };
     let mut out = Vec::with_capacity(w * h * 4);
@@ -793,6 +829,12 @@ fn yuv_to_rgba(
 
     // The chroma plane `p` at luma position (i, j), bilinear between the chroma sample centers.
     let chroma = |p: &[u8], i: usize, j: usize| -> f32 {
+        if !linear {
+            let (xi, yi) = (if sx { i / 2 } else { i }, if sy { j / 2 } else { j });
+
+            return p[yi.min(ch - 1) * cw + xi.min(cw - 1)] as f32;
+        }
+
         let fx = if sx {
             (i as f32 + 0.5) / 2.0 - 0.5
         } else {
@@ -1889,6 +1931,35 @@ mod tests {
                 .all(|w| (w[1].time_ms - w[0].time_ms - 100.0).abs() < 1e-6)
         );
         assert!(v.frames[0].rgba.chunks(4).any(|p| p[0] != p[1]));
+    }
+
+    /// The matrix of an AV1 picture, apart from the oracle comparison: layout 1 is I420 (dav1d_pixel_layout), so an
+    /// untagged 8 bit 4:2:0 picture is BT.709 and every other untagged picture is BT.601; a tagged one follows its tag.
+    #[cfg(feature = "av1")]
+    #[test]
+    fn the_matrix_of_an_av1_picture_follows_its_tag_and_the_untagged_rule() {
+        // (matrix, layout, bit depth, want BT.601)
+        let cases = [
+            (2, 1, 8, false),  // untagged 8 bit 4:2:0: BT.709
+            (2, 1, 10, true),  // untagged 10 bit 4:2:0
+            (2, 2, 8, true),   // untagged 4:2:2
+            (2, 3, 8, true),   // untagged 8 bit 4:4:4
+            (2, 3, 10, true),  // untagged 10 bit 4:4:4
+            (1, 3, 10, false), // tagged BT.709 keeps BT.709
+            (5, 1, 8, true),   // tagged BT.470BG
+            (6, 1, 8, true),   // tagged SMPTE 170M
+        ];
+
+        for (matrix, layout, depth, want_601) in cases {
+            let got = av1_matrix(matrix, layout, depth);
+
+            assert_eq!(
+                got == BT601,
+                want_601,
+                "matrix {matrix}, layout {layout}, depth {depth}"
+            );
+            assert!(got == BT601 || got == BT709);
+        }
     }
 
     /// BR1.8 for AV1, truncation: every cut of a file gives pictures or an error, never a panic.
