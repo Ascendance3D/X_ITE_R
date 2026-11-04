@@ -755,7 +755,7 @@ impl Runtime {
                 }
 
                 // A host with a space (Chromium's `%20`) is no host of any server: `fetch` rejects it.
-                if let Some(rejection) = self.space_host_rejection(&r) {
+                if let Some(rejection) = self.url_rejection(&r) {
                     return Err(Some(rejection));
                 }
 
@@ -936,7 +936,7 @@ impl Runtime {
 
     /// `new URL (candidate, base)` of FileLoader.loadDocumentAsync: [`join_url`], and for a host with a space (which
     /// Chromium parses and the `url` crate does not) the stand-in URL of [`space_host_url`], remembered with Chromium's
-    /// `href` ([`Runtime::chromium_href`], [`Runtime::space_host_rejection`]).
+    /// `href` ([`Runtime::chromium_href`], [`Runtime::url_rejection`]).
     pub(crate) fn resolve_candidate(
         &mut self,
         base: &url::Url,
@@ -963,11 +963,21 @@ impl Runtime {
             .map_or(resolved.as_str(), String::as_str)
     }
 
-    /// What `fetch` rejects with for a stand-in URL (no server has a host with a space), or `None` for any other URL.
-    pub(crate) fn space_host_rejection(&self, resolved: &url::Url) -> Option<String> {
-        self.space_hosts
-            .get(resolved.as_str())
-            .map(|href| fetch_rejection(resolved, href))
+    /// What `fetch` rejects with before any [`Fetcher`] runs: a stand-in URL (no server has a host with a space), or a URL with
+    /// a user name or a password (the `Request` constructor of the browser refuses it, whatever the scheme except `data`).
+    /// `None` for any other URL. The check is here, not in one [`Fetcher`], so that every fetcher has the same rule.
+    pub(crate) fn url_rejection(&self, resolved: &url::Url) -> Option<String> {
+        if let Some(href) = self.space_hosts.get(resolved.as_str()) {
+            return Some(fetch_rejection(resolved, href));
+        }
+
+        if resolved.scheme() != "data"
+            && (!resolved.username().is_empty() || resolved.password().is_some())
+        {
+            return Some(fetch_rejection(resolved, resolved.as_str()));
+        }
+
+        None
     }
 
     /// `href`: Chromium's `href` of `resolved` when it is a stand-in ([`Runtime::chromium_href`]).
@@ -2007,6 +2017,39 @@ pub(crate) fn parse_bytes_waiting(
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    /// The credential rule is the runtime's, not one fetcher's: a fetcher that must not run for a URL with a user name or a
+    /// password is not called (PR #434 review). `data:` URLs have no credentials to refuse.
+    #[test]
+    fn url_rejection_refuses_credentials_before_any_fetcher_runs() {
+        struct Panics;
+
+        impl Fetcher for Panics {
+            fn fetch(&self, _: &url::Url) -> Result<Vec<u8>, String> {
+                panic!("the fetcher ran");
+            }
+        }
+
+        let scene = x3d_parse::parse_bytes(b"#VRML V2.0 utf8\n", "http://oracle/t.wrl").unwrap();
+        let rt = Runtime::new(scene, Box::new(Panics));
+
+        for (url, rejected) in [
+            ("https://user:pw@example.invalid/x", true),
+            ("https://user@example.invalid/x", true),
+            ("foo://:pw@example.invalid/x", true),
+            ("https://example.invalid/x", false),
+            ("data:text/plain,a", false),
+        ] {
+            let url = url::Url::parse(url).unwrap();
+            let got = rt.url_rejection(&url);
+
+            assert_eq!(got.is_some(), rejected, "{url}");
+
+            if rejected {
+                assert!(got.unwrap().contains("includes credentials"), "{url}");
+            }
+        }
+    }
 
     /// Chromium 156.0.8078.47 `new URL (input, "http://127.0.0.1:8000/a/b.wrl") .href` for a space in the host (measured with
     /// the browser of the pinned recordings): the `url` crate rejects each of these.

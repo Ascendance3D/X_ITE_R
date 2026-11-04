@@ -713,7 +713,7 @@ impl Runtime {
         }
 
         // A host with a space (Chromium's `%20`) is no host of any server: `fetch` rejects it.
-        let fetched = match self.space_host_rejection(&resolved) {
+        let fetched = match self.url_rejection(&resolved) {
             Some(rejection) => Err(rejection),
             None => self.fetcher.fetch(&resolved),
         };

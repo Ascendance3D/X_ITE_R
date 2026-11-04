@@ -271,7 +271,7 @@ impl Runtime {
             }
 
             // A host with a space (Chromium's `%20`) is no host of any server: `fetch` rejects it at once.
-            if let Some(rejection) = self.space_host_rejection(&resolved) {
+            if let Some(rejection) = self.url_rejection(&resolved) {
                 self.tasks.push_back(Task::ScriptCandidate(
                     node,
                     index + 1,
