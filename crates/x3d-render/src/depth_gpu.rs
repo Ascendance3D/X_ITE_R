@@ -3,8 +3,11 @@
 //! 24 bit depth texture). The collision shapes are drawn through the same pipeline so the
 //! rasterizer's clipping and vertex snapping decide the depth, as they do in X_ITE; the caller
 //! reads the closest pixel back like TextureBuffer.readDepth. A geometry of `geometry_type` 0 is drawn as gl.POINTS
-//! (1 px, Depth2.vs `gl_PointSize = 1.0`) through a point list pipeline. Lines are not drawn here: a WebGPU line list
-//! does not cover GL's pixels (the diamond-exit rule), so the caller rasterizes them and passes them as `empty`.
+//! (1 px, Depth2.vs `gl_PointSize = 1.0`) through a point list pipeline; a POINT particle whose appearance has a
+//! PointProperties (X3D_STYLE_PROPERTIES) is a point sprite of `gl_PointSize = getPointSize (vertex)` inside the round
+//! point mask of Depth2.fs, which WebGPU lacks, so it is expanded into two triangles (`vs_sprite`, `fs_sprite`). Lines are
+//! not drawn here: a WebGPU line list does not cover GL's pixels (the diamond-exit rule), so the caller rasterizes them and
+//! passes them as `empty`.
 
 use crate::geometry::Geometry;
 use bytemuck::{Pod, Zeroable};
@@ -44,6 +47,9 @@ struct Draw {
     /// x: 1 when the instance matrices come from `instances`, y: the first, z: vertices per instance (0: one
     /// instance per gl_InstanceID).
     instancing: [u32; 4],
+    /// x3d_PointProperties: pointSizeScaleFactor, pointSizeMinValue, pointSizeMaxValue; attenuation.
+    point: [f32; 4],
+    attenuation: [f32; 4],
 }
 
 #[repr(C)]
@@ -77,6 +83,10 @@ pub struct DepthShape<'a> {
     pub per_instance_vertices: u32,
     /// x3d_Id: the shape's index among the collision shapes (of its first particle).
     pub id: f32,
+    /// The PointProperties of the appearance of a POINT particle (Appearance.getStyleProperties (0), X3D_STYLE_PROPERTIES of
+    /// the depth shader): its particles are point sprites. `None` for the 1 px points of Depth2.vs without it. Other geometry
+    /// ignores it.
+    pub point_style: Option<crate::traverse::PointParams>,
     /// A GaussianSplats shape (`geometry` is empty): the splat program draws it into the pass, with the viewport of the
     /// display it was collected in (renderContext .viewport, which the quads' size is computed from).
     pub splat: Option<(&'a Rc<crate::splats::SplatDraw>, [f64; 4])>,
@@ -148,8 +158,8 @@ struct Buffer {
 pub struct DepthGpu {
     device: wgpu::Device,
     queue: wgpu::Queue,
-    /// Triangle and point list (geometryType 2 and 3, 0).
-    pipelines: [wgpu::RenderPipeline; 2],
+    /// Triangle list (geometryType 2 and 3), point list (0) and the point sprites of POINT particles with PointProperties.
+    pipelines: [wgpu::RenderPipeline; 3],
     layout: wgpu::BindGroupLayout,
     targets: [wgpu::Texture; 2],
     views: [wgpu::TextureView; 2],
@@ -243,44 +253,62 @@ impl DepthGpu {
                 write_mask: wgpu::ColorWrites::ALL,
             })
         };
-        let pipeline = |topology| {
-            device.create_render_pipeline(&wgpu::RenderPipelineDescriptor {
-                label: Some("depth"),
-                layout: Some(&pipeline_layout),
-                vertex: wgpu::VertexState {
-                    module: &module,
-                    entry_point: Some("vs_main"),
-                    compilation_options: Default::default(),
-                    buffers: &buffers,
-                },
-                // gl .disable (gl .CULL_FACE)
-                primitive: wgpu::PrimitiveState {
-                    topology,
-                    cull_mode: None,
-                    ..Default::default()
-                },
-                // X3DRenderingContext: gl .enable (gl .DEPTH_TEST), gl .depthFunc (gl .LEQUAL)
-                depth_stencil: Some(wgpu::DepthStencilState {
-                    format: wgpu::TextureFormat::Depth24Plus,
-                    depth_write_enabled: Some(true),
-                    depth_compare: Some(wgpu::CompareFunction::LessEqual),
-                    stencil: Default::default(),
-                    bias: Default::default(),
-                }),
-                multisample: wgpu::MultisampleState::default(),
-                fragment: Some(wgpu::FragmentState {
-                    module: &module,
-                    entry_point: Some("fs_main"),
-                    compilation_options: Default::default(),
-                    targets: &[target(), target()],
-                }),
-                multiview_mask: None,
-                cache: None,
-            })
-        };
+        let pipeline =
+            |topology, vs: &str, fs: &str, buffers: &[Option<wgpu::VertexBufferLayout>]| {
+                device.create_render_pipeline(&wgpu::RenderPipelineDescriptor {
+                    label: Some("depth"),
+                    layout: Some(&pipeline_layout),
+                    vertex: wgpu::VertexState {
+                        module: &module,
+                        entry_point: Some(vs),
+                        compilation_options: Default::default(),
+                        buffers,
+                    },
+                    // gl .disable (gl .CULL_FACE)
+                    primitive: wgpu::PrimitiveState {
+                        topology,
+                        cull_mode: None,
+                        ..Default::default()
+                    },
+                    // X3DRenderingContext: gl .enable (gl .DEPTH_TEST), gl .depthFunc (gl .LEQUAL)
+                    depth_stencil: Some(wgpu::DepthStencilState {
+                        format: wgpu::TextureFormat::Depth24Plus,
+                        depth_write_enabled: Some(true),
+                        depth_compare: Some(wgpu::CompareFunction::LessEqual),
+                        stencil: Default::default(),
+                        bias: Default::default(),
+                    }),
+                    multisample: wgpu::MultisampleState::default(),
+                    fragment: Some(wgpu::FragmentState {
+                        module: &module,
+                        entry_point: Some(fs),
+                        compilation_options: Default::default(),
+                        targets: &[target(), target()],
+                    }),
+                    multiview_mask: None,
+                    cache: None,
+                })
+            };
         let pipelines = [
-            pipeline(wgpu::PrimitiveTopology::TriangleList),
-            pipeline(wgpu::PrimitiveTopology::PointList),
+            pipeline(
+                wgpu::PrimitiveTopology::TriangleList,
+                "vs_main",
+                "fs_main",
+                &buffers,
+            ),
+            pipeline(
+                wgpu::PrimitiveTopology::PointList,
+                "vs_main",
+                "fs_main",
+                &buffers,
+            ),
+            // The point sprites take no vertex buffer: the particle's point is the origin (`vs_sprite`).
+            pipeline(
+                wgpu::PrimitiveTopology::TriangleList,
+                "vs_sprite",
+                "fs_sprite",
+                &[],
+            ),
         ];
         let make = |i: u32| {
             device.create_texture(&wgpu::TextureDescriptor {
@@ -674,6 +702,22 @@ impl DepthGpu {
                         0.0,
                     ],
                     instancing,
+                    point: s.point_style.map_or([0.0; 4], |p| {
+                        [
+                            p.scale_factor as f32,
+                            p.min_value as f32,
+                            p.max_value as f32,
+                            0.0,
+                        ]
+                    }),
+                    attenuation: s.point_style.map_or([0.0; 4], |p| {
+                        [
+                            p.attenuation[0] as f32,
+                            p.attenuation[1] as f32,
+                            p.attenuation[2] as f32,
+                            0.0,
+                        ]
+                    }),
                 };
                 let o = (q * shapes.len() + i) * STRIDE as usize;
                 blob[o..o + std::mem::size_of::<Draw>()].copy_from_slice(bytemuck::bytes_of(&draw));
@@ -805,7 +849,13 @@ impl DepthGpu {
                         s.geometry.geometry_type != 1,
                         "lines are drawn by the caller"
                     );
-                    let pipeline = usize::from(s.geometry.geometry_type == 0);
+                    // A POINT particle with PointProperties: a point sprite per particle (six vertices each, no vertex buffer).
+                    let sprites = s.geometry.geometry_type == 0 && s.point_style.is_some();
+                    let pipeline = if sprites {
+                        2
+                    } else {
+                        usize::from(s.geometry.geometry_type == 0)
+                    };
 
                     if pipeline != bound {
                         pass.set_pipeline(&self.pipelines[pipeline]);
@@ -825,6 +875,12 @@ impl DepthGpu {
 
                     let block = (q * shapes.len() + i) as u64 * STRIDE;
                     pass.set_bind_group(0, group, &[block as u32]);
+
+                    if sprites {
+                        pass.draw(0..6, 0..instances);
+                        continue;
+                    }
+
                     pass.set_vertex_buffer(0, b.buffer.slice(..));
                     pass.draw(0..b.count, 0..instances);
                 }

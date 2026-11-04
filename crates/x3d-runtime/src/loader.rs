@@ -139,11 +139,41 @@ impl Fetcher for LocalFetcher {
             return Err("Error: Forbidden".into());
         }
 
+        // The oracle server reads a case-sensitive file system: `PLAIN.wrl` is not `plain.wrl`, also where this one ignores case
+        // (macOS APFS, Windows NTFS).
+        if !exact_case(&self.root, &path) {
+            return Err("Error: Not Found".into());
+        }
+
         match std::fs::read(&path) {
             Ok(data) => Ok(data),
             Err(_) => Err("Error: Not Found".into()),
         }
     }
+}
+
+/// Does every component of `path` below `root` exist under exactly that name (byte for byte), as on a case-sensitive file
+/// system? A missing component is false.
+fn exact_case(root: &std::path::Path, path: &std::path::Path) -> bool {
+    let Ok(rest) = path.strip_prefix(root) else {
+        return false;
+    };
+    let mut dir = root.to_path_buf();
+
+    for part in rest.components() {
+        let name = part.as_os_str();
+        let Ok(entries) = std::fs::read_dir(&dir) else {
+            return false;
+        };
+
+        if !entries.flatten().any(|e| e.file_name() == name) {
+            return false;
+        }
+
+        dir.push(name);
+    }
+
+    true
 }
 
 /// MovieTexture.loadData takes a GIF or a PNG file (by its path, or a `data:image/gif` or `data:image/png` URL) as an image
@@ -2023,6 +2053,35 @@ pub(crate) fn parse_bytes_waiting(
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    /// LocalFetcher answers as the case-sensitive oracle server on every file system: a name that differs only in case is
+    /// "Not Found", in a file name and in a directory name (macOS run of PR #435: `text/PLAIN.wrl` was read as `plain.wrl`).
+    #[test]
+    fn local_fetcher_names_are_case_sensitive() {
+        let root =
+            std::env::temp_dir().join(format!("x3d-localfetcher-case-{}", std::process::id()));
+        let _ = std::fs::remove_dir_all(&root);
+        std::fs::create_dir_all(root.join("text")).unwrap();
+        std::fs::write(root.join("text/plain.wrl"), b"#VRML V2.0 utf8\n").unwrap();
+
+        let fetcher = LocalFetcher {
+            root: root.clone(),
+            prefix: "http://oracle/".into(),
+        };
+        let get = |p: &str| fetcher.fetch(&url::Url::parse(&format!("http://oracle/{p}")).unwrap());
+        let results = (
+            get("text/plain.wrl"),
+            get("text/PLAIN.wrl"),
+            get("TEXT/plain.wrl"),
+            get("text/missing.wrl"),
+        );
+
+        std::fs::remove_dir_all(&root).unwrap();
+        assert_eq!(results.0, Ok(b"#VRML V2.0 utf8\n".to_vec()));
+        assert_eq!(results.1, Err("Error: Not Found".to_string()));
+        assert_eq!(results.2, Err("Error: Not Found".to_string()));
+        assert_eq!(results.3, Err("Error: Not Found".to_string()));
+    }
 
     /// The credential rule is the runtime's, not one fetcher's: a fetcher that must not run for a URL with a user name or a
     /// password is not called (PR #434 review). `data:` URLs have no credentials to refuse.

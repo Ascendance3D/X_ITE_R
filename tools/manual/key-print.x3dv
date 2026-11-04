@@ -1,0 +1,39 @@
+#X3D V3.3 utf8
+PROFILE Immersive
+COMPONENT KeyDeviceSensor:2
+# Manual keyboard check (issue #88): the KeySensor key and modifier events and the StringSensor text events are printed, one line each, so the same keys
+# typed into pinned X_ITE 16.5.0 and into x3d-view can be compared line by line. Newly authored; no historical content.
+DEF KS KeySensor { }
+DEF SS StringSensor { deletionAllowed TRUE }
+DEF OUT Script {
+  inputOnly SFString keyPress
+  inputOnly SFString keyRelease
+  inputOnly SFInt32  actionKeyPress
+  inputOnly SFInt32  actionKeyRelease
+  inputOnly SFBool   shiftKey
+  inputOnly SFBool   controlKey
+  inputOnly SFBool   altKey
+  inputOnly SFString enteredText
+  inputOnly SFString finalText
+  url "ecmascript:
+    function code (s) { var r = []; for (var i = 0; i < s .length; ++ i) r .push (s .charCodeAt (i)); return r .join (','); }
+    function keyPress (v)         { print ('keyPress ' + code (v)); }
+    function keyRelease (v)       { print ('keyRelease ' + code (v)); }
+    function actionKeyPress (v)   { print ('actionKeyPress ' + v); }
+    function actionKeyRelease (v) { print ('actionKeyRelease ' + v); }
+    function shiftKey (v)         { print ('shiftKey ' + v); }
+    function controlKey (v)       { print ('controlKey ' + v); }
+    function altKey (v)           { print ('altKey ' + v); }
+    function enteredText (v)      { print ('enteredText ' + code (v)); }
+    function finalText (v)        { print ('finalText ' + code (v)); }
+  "
+}
+ROUTE KS.keyPress TO OUT.keyPress
+ROUTE KS.keyRelease TO OUT.keyRelease
+ROUTE KS.actionKeyPress TO OUT.actionKeyPress
+ROUTE KS.actionKeyRelease TO OUT.actionKeyRelease
+ROUTE KS.shiftKey TO OUT.shiftKey
+ROUTE KS.controlKey TO OUT.controlKey
+ROUTE KS.altKey TO OUT.altKey
+ROUTE SS.enteredText TO OUT.enteredText
+ROUTE SS.finalText TO OUT.finalText
