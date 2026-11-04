@@ -1369,6 +1369,12 @@ the eye through a Collision wall and over a drop (WorldInfo text counts the wall
 record` records each case from the pinned X_ITE three times (identical) into `rea-gravity-layers-baseline/NAME-msaa0.json` (one
 directory level); `crates/x3d-viewer/tests/rea_gravity_layers.rs` compares Rust with it, with the thresholds of `rea_b24_nav.rs`.
 
+`synthetic-rea-collision-time/` (generator `tools/gen_rea_collision_time.py`, recorder `tools/rea_collision_time.py`, test
+`crates/x3d-viewer/tests/rea_collision_time.rs`) also holds `ct-wall-pick`, `ct-nested-pick` and `ct-bb-ctl-pick` (2026-11-04): the worlds
+ct-wall, ct-nested and ct-bb-ctl with a 16 x 16 `pickProbes` grid, three identical recordings at MSAA 0 and 4. The pointing buffer's hit
+points (0.27 to 0.38 from the surface) equal the page's bit for bit; the 3.05e-7 once measured there was the avatar's stop position
+(before #423), not float32 depth.
+
 ## Native keys 01 (issue #80)
 
 `node oracle/x_ite-native-keys-01.mjs oracle/native-keys-01-baseline --runs 3` records what the pinned X_ITE does for each
