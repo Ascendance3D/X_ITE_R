@@ -3050,7 +3050,7 @@ impl<'a> Builder<'a> {
                     .copied()
                     .collect();
 
-                if line_width > crate::gpu::MAX_LINE_WIDTH {
+                if line_width > crate::gpu::max_line_width() {
                     if let Some(lines) = self.particle_thick_lines_before_layer(sg, n) {
                         out.push(DepthItem {
                             geometry: Rc::new(Geometry {

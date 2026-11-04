@@ -6,7 +6,8 @@
 use crate::*;
 use x3d_fields::math::{Matrix4, Rotation4, Vector3};
 
-/// X3DGroupingNode and X3DShapeNode types (X3DCast of `targetObject`).
+/// X3DGroupingNode and X3DShapeNode types (X3DCast of `targetObject`): Shape, InstancedShape and ParticleSystem are the
+/// X3DShapeNode nodes.
 pub(crate) fn is_grouping_or_shape(name: &str) -> bool {
     matches!(
         name,
@@ -33,6 +34,7 @@ pub(crate) fn is_grouping_or_shape(name: &str) -> bool {
             | "HAnimSegment"
             | "HAnimSite"
             | "Shape"
+            | "InstancedShape"
             | "ParticleSystem"
     )
 }
