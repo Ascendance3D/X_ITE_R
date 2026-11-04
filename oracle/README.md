@@ -1512,6 +1512,25 @@ requests of the mock, the renderer and the hashes) are compared by `cargo nextes
 key fails; no adapter fails in strict mode and records a skip otherwise. `XR_CASES=a,b` runs other cases, `XR_DUMP=dir` writes the
 Rust pictures.
 
+## GoldenGate binary dispatch (sub:parse.golden-gate)
+
+`oracle/synthetic-rea-golden-gate-binary/` holds authored binary inputs (binary STL, binary PLY little and big endian, GLB, each a few triangles
+at most, plus malformed variants) and four worlds (`gg-stl`, `gg-ply`, `gg-glb`, `gg-dispatch`), all made by `oracle/tools/gen_golden_gate_binary.py`.
+A Script in each world loads its URL lists one after the other with `Browser.createX3DFromURL` and records the scene head and `toVRMLString`,
+or the rejection, in a field of its own. `gg-dispatch` has the same bytes under other extensions (`.wrl`, `.txt`, `.json`, none, a `.stl` that is a
+PLY), gzipped binaries, bytes no parser takes, an empty file and URL lists whose first entries fail.
+
+```
+XITE_TESTS=... python3 -I oracle/tools/golden_gate_binary.py record   # three pinned recordings per world, written only when identical
+cargo nextest run -p x3d-viewer --test golden_gate_binary
+```
+
+The baselines are `oracle/golden-gate-binary-baseline/gg-*.json`. "Identical" means every key but `warmupFrames` and `loadFrames`: the number of real
+frames the pinned page runs before the scripted frames start varies from run to run (10 or 11 for `gg-stl`, 23 or 26 for `gg-dispatch`); the scene
+text does not. The scene text of every dumped frame and the sorted `log` (the loader's `Couldn't load URL ...` lines with the parser's error) are compared
+exactly. A NaN coordinate in a binary STL is left out of the cases: the pinned page logs `RangeError: Maximum call stack size exceeded` for it
+(measured), an engine limit and not a parser result.
+
 ## Platform recordings of the pinned page (Apple M1, Metal)
 
 The pinned X_ITE 16.5.0 gives other pointing, collision and touch results on ANGLE Metal than on ANGLE/OpenGL on the NVIDIA host (owner
