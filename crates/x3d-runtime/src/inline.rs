@@ -33,7 +33,9 @@
 //! * Load identity. Every request has a generation (`UrlState::generation`), as the EXTERNPROTO
 //!   declarations of R0.3-B. A scene that finishes for an older generation (a slower earlier request,
 //!   or a request cancelled by `load` FALSE) is discarded; X_ITE lets it replace the current result
-//!   or show a disabled Inline.
+//!   or show a disabled Inline. One case is applied as in X_ITE (ADR 0014, section 4): a scene that
+//!   arrived before a newer request was made is shown while that request is pending, without
+//!   changing its load state; a newer request that completed, failed or was cancelled drops it.
 //! * A scene that is disposed takes its nested Inlines with it: their scenes are not live (a load that is
 //!   already in flight is not cancelled, as in X_ITE, issue #58), the Scripts in them stop receiving `prepareEvents` and `eventsProcessed`.
 //!   X_ITE leaves all of that running.
@@ -330,7 +332,8 @@ impl Runtime {
     /// Only an Inline has a request identity; the other nodes that fetch keep generation 0.
     fn url_start_load(&mut self, node: NodeId) {
         let generation = if self.is_scene_loader(node) {
-            self.inline_abort(node)
+            let keep = self.builtin_name(node) == Some("Inline");
+            self.inline_abort(node, keep)
         } else {
             0
         };
@@ -347,13 +350,23 @@ impl Runtime {
     }
 
     /// FileLoader.abort () of the node's current request: whatever that request still delivers is
-    /// recognized as old and dropped. A scene it already fetched and parsed is discarded now.
-    /// Returns the identity of the request that follows.
-    fn inline_abort(&mut self, node: NodeId) -> u64 {
+    /// recognized as old and dropped. Returns the identity of the request that follows.
+    ///
+    /// `keep_arrived`: a new request of an Inline (`Inline.loadData`). `abort ()` only cancels the fetch
+    /// (FileLoader.js:74-78); a scene that already arrived waits for its `loadCount` and the next frame
+    /// (`set_loadCount__`, FileLoader.js:146) and is still applied at the end of that frame
+    /// (ADR 0014, section 4). It is kept here, and [`Runtime::inline_result_may_apply`] decides when it
+    /// may be applied. Without it (`load` FALSE, an InlineGeometry) a scene it already fetched and parsed
+    /// is discarded now.
+    fn inline_abort(&mut self, node: NodeId, keep_arrived: bool) -> u64 {
         let generation = self.url_state_mut(node).map_or(0, |s| {
             s.generation += 1;
             s.generation
         });
+
+        if keep_arrived {
+            return generation;
+        }
 
         for p in self
             .pending_scenes
@@ -388,6 +401,21 @@ impl Runtime {
         current
     }
 
+    /// May the scene that request `generation` delivered be applied now? Yes for the current request
+    /// (`inline_request_is_current`). An Inline also takes the scene of an older request that arrived
+    /// before the newer one was made, while the newer request is still pending (IN_PROGRESS, not
+    /// disabled): X_ITE applies it at the end of its frame and the newer scene replaces it later
+    /// (ADR 0014, section 4, rules 1 to 3). A newer request that completed, failed or was cancelled
+    /// by `load` FALSE leaves no state IN_PROGRESS, so the older result is dropped.
+    pub(crate) fn inline_result_may_apply(&self, node: NodeId, generation: u64) -> bool {
+        if self.inline_request_is_current(node, generation) {
+            return true;
+        }
+
+        self.builtin_name(node) == Some("Inline")
+            && matches!(self.nrt(node).map(|n| &n.state), Some(nodes::State::UrlObject(s)) if s.generation > generation && s.load_state == LoadState::InProgress)
+    }
+
     /// X3DUrlObject.requestUnload.
     fn request_unload(&mut self, node: NodeId) {
         let state = self.url_load_state(node);
@@ -405,12 +433,12 @@ impl Runtime {
     fn unload_data(&mut self, node: NodeId) {
         match self.builtin_name(node) {
             Some("Inline") => {
-                self.inline_abort(node);
+                self.inline_abort(node, false);
                 self.set_internal_scene(node, SceneArg::Default);
             }
             // InlineGeometry.unloadData: `fileLoader ?.abort ()`, `unlockGeometry ()`, `setInternalScene (null)`.
             Some("InlineGeometry") => {
-                self.inline_abort(node);
+                self.inline_abort(node, false);
                 self.set_internal_scene(node, SceneArg::None);
             }
             Some("Script") => self.script_unload_data(node),
@@ -778,7 +806,7 @@ impl Runtime {
             (Some(i), _) => {
                 let p = self.pending_scenes.remove(i);
 
-                if self.inline_request_is_current(p.node, p.generation) {
+                if self.inline_result_may_apply(p.node, p.generation) {
                     self.frame_waiters.push(FrameWaiter {
                         node: p.node,
                         generation: p.generation,
@@ -801,6 +829,10 @@ impl Runtime {
         for w in std::mem::take(&mut self.frame_waiters) {
             if self.inline_request_is_current(w.node, w.generation) {
                 self.set_internal_scene(w.node, SceneArg::Scene(w.ctx));
+            } else if self.inline_result_may_apply(w.node, w.generation) {
+                // Rule 4: the scene of an older request belongs to the Inline for now; the state of the
+                // newer request (IN_PROGRESS, its loadCount) is not touched.
+                self.show_older_scene(w.node, w.ctx);
             } else {
                 // The request was replaced, disabled or its Inline disposed while the scene waited.
                 self.dispose_scene(w.ctx);
@@ -821,6 +853,24 @@ impl Runtime {
 
         // The end of a frame: nothing is being processed, and the scenes disposed during it are over.
         self.release_disposed();
+    }
+
+    /// Inline.setInternalScene for the scene of an older request while a newer one is pending: the same
+    /// scene change (the previous scene is disposed, the new one is attached and live), but the
+    /// load state belongs to the newer request and is not written (ADR 0014, section 4, rules 2 and 4).
+    fn show_older_scene(&mut self, node: NodeId, ctx: CtxId) {
+        if let Some(old) = self.inline_scenes.remove(&node) {
+            self.dispose_scene(old);
+        }
+
+        self.inline_scenes.insert(node, ctx);
+        self.inline_live.insert(ctx, true);
+        self.refresh_live();
+
+        let home = self.scene.node(node).ctx;
+
+        self.ctx_event(home, ctx_events::CtxField::SceneGraph, 1);
+        self.ctx_event(home, ctx_events::CtxField::BBox, 1);
     }
 
     /// Inline.setInternalScene.
@@ -1178,7 +1228,7 @@ impl Runtime {
             return;
         }
 
-        self.inline_abort(node);
+        self.inline_abort(node, false);
 
         // An Inline whose container (a scene, a PROTO instance body) is disposed: X_ITE disposes neither its nodes
         // nor its scene's Scripts, so the browser build calls no `shutdown ()` in it (`replace_skips_shutdown`).
