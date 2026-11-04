@@ -83,12 +83,13 @@ jobs:
       - name: GPU tests, Vulkan (Intel driver)
         id: vulkan
         continue-on-error: true
+        timeout-minutes: 60
         run: |
           X3D_EVIDENCE_ALLOW="$(awk -F'\t' '!/^#/ && NF >= 4 { printf "%s%s", sep, $1; sep = "," }' oracle/answer-keys.tsv)"
           export X3D_EVIDENCE_ALLOW
           export X3D_EVIDENCE_LOG="$GITHUB_WORKSPACE/evidence-skips-vulkan.tsv"
           rm -f "$X3D_EVIDENCE_LOG"
-          cargo nextest run -p x3d-script -p x3d-viewer --release --profile ci --no-fail-fast -j 2 -E "$GPU_TESTS" 2>&1 | tee gpu-vulkan.log
+          cargo nextest run -p x3d-script -p x3d-viewer --release --profile ci --no-fail-fast -j 2 --status-level all --final-status-level all -E "$GPU_TESTS" 2>&1 | tee gpu-vulkan.log
           test "${PIPESTATUS[0]}" -eq 0
 
       - name: Counts, Vulkan
@@ -101,13 +102,14 @@ jobs:
         id: dx12
         if: always()
         continue-on-error: true
+        timeout-minutes: 90
         run: |
           export X3D_BACKEND=dx12 X3D_POINTING_BACKEND=dx12
           X3D_EVIDENCE_ALLOW="$(awk -F'\t' '!/^#/ && NF >= 4 { printf "%s%s", sep, $1; sep = "," }' oracle/answer-keys.tsv)"
           export X3D_EVIDENCE_ALLOW
           export X3D_EVIDENCE_LOG="$GITHUB_WORKSPACE/evidence-skips-dx12.tsv"
           rm -f "$X3D_EVIDENCE_LOG"
-          cargo nextest run -p x3d-script -p x3d-viewer --release --profile ci --no-fail-fast -j 2 -E "$GPU_TESTS" 2>&1 | tee gpu-dx12.log
+          cargo nextest run -p x3d-script -p x3d-viewer --release --profile ci --no-fail-fast -j 2 --status-level all --final-status-level all -E "$GPU_TESTS" 2>&1 | tee gpu-dx12.log
           test "${PIPESTATUS[0]}" -eq 0
 
       - name: Counts, DX12
@@ -115,6 +117,20 @@ jobs:
         run: |
           grep -E '^ *Summary \[' gpu-dx12.log | tail -1 | sed 's/^ *//' || true
           grep -E '^ +(PASS|FAIL|SIGSEGV|SIGABRT|TIMEOUT) ' gpu-dx12.log | sed 's/^ *//' | sort -u || true
+
+      # The logs of the first run were lost when the runner lost contact during the DX12 step; keep them as an artifact.
+      - name: Upload the logs
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: gpu-windows-logs
+          path: |
+            gpu-vulkan.log
+            gpu-dx12.log
+            evidence-skips-vulkan.tsv
+            evidence-skips-dx12.tsv
+            build.log
+          if-no-files-found: warn
 
       - name: Delete the toolchain and the build
         if: always()
