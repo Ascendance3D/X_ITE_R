@@ -1,0 +1,2 @@
+sensors-drag oracle/synthetic-rea-verify/drag-sensors.wrl oracle/synthetic-rea-verify/scripts/drag-sensors.json 0
+sensors-touch oracle/synthetic-rea-verify/touch-sensor.wrl oracle/synthetic-rea-verify/scripts/touch-sensor.json 0
