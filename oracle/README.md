@@ -603,8 +603,14 @@ against them.
 The BoundedPhysicsModel replay baselines `rea-b16-bounded-baseline/` (every frame's transform feedback buffer)
 come from `tools/rea_b16_bounded.py record` (three identical runs). Their worlds are `synthetic-rea-b16-bounded/`
 (`tools/gen_rea_b16_bounded.py`), and `crates/x3d-viewer/tests/rea_b16_bounded_physics.rs` replays them through
-particles_b06_common with the batch 06R tolerances. A Script there is run by a field event on its input: one started
-by a TimeSensor (startTime between two frames) did not run under this protocol, in X_ITE or in Rust.
+particles_b06_common with the batch 06R tolerances. `bp-rebuild` and `bp-replace` run their Script by a field event.
+The `bp-ts-*` and `bp-tick-*` cases run it from a TimeSensor, at a time the Script chooses (a TimeSensor `isActive`,
+or a looping TimeSensor's `time` that the Script tests). Measured on the pinned page: X_ITE 16.5.0 schedules a start
+timeout only for a `startTime` event, not for the value read from the file, so a future `startTime` in the file never
+starts the sensor (`bp-ts-file-rebuild`; this, not the oracle protocol, is why the first attempt saw no Script run).
+The `bp-ts-*` cases set `startTime` by an event at frame 1 and use the page's virtual timers; such a timer fires in the
+first step at or after its `startTime` (`bp-ts-hit` 22.9 frames, `bp-ts-miss` 23.1 frames). The records of these cases
+are flat: `rea-b16-bounded-baseline/NAME.js.json` and `NAME/js.f32`.
 
 The wide and stippled instanced line baselines `rea-b18-particle-lines-baseline/` (ParticleSystem LINE particles
 and InstancedShape IndexedLineSets with LineProperties) come from `tools/rea_b18_particle_lines.py record`: three runs
