@@ -233,6 +233,24 @@ fn an_origin_map_maps_http_origins_only() {
     assert!(x3d_http::OriginMap::parse("http://oracle/?q=http://127.0.0.1:1").is_err());
 }
 
+/// `with_origin_map` takes origins only, as `OriginMap::parse` does: an entry with a path, query or fragment would never
+/// match a request and is refused.
+#[test]
+fn with_origin_map_refuses_what_is_not_an_origin() {
+    let u = |s: &str| url::Url::parse(s).unwrap();
+    let take = |from: &str, to: &str| {
+        let map = vec![(u(from), u(to))];
+
+        std::panic::catch_unwind(|| HttpFetcher::new(options()).with_origin_map(map)).is_ok()
+    };
+
+    assert!(take("http://oracle/", "http://127.0.0.1:1/"));
+    assert!(!take("http://oracle/h/", "http://127.0.0.1:1/"));
+    assert!(!take("http://oracle/", "http://127.0.0.1:1/?q"));
+    assert!(!take("http://oracle/#f", "http://127.0.0.1:1/"));
+    assert!(!take("http://oracle/", "file:///tmp/"));
+}
+
 /// A redirect never leaves HTTP and HTTPS: every other scheme fails the request, and the target is never read.
 #[test]
 fn a_redirect_to_another_scheme_fails_without_a_second_request() {

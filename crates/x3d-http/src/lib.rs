@@ -112,11 +112,7 @@ impl OriginMap {
         let parse = |s: &str| {
             let url = url::Url::parse(s).map_err(|e| format!("{s}: {e}"))?;
 
-            if is_http(&url)
-                && url.path() == "/"
-                && url.query().is_none()
-                && url.fragment().is_none()
-            {
+            if is_origin(&url) {
                 Ok(url)
             } else if is_http(&url) {
                 Err(format!("{s}: an origin has no path, query or fragment"))
@@ -152,11 +148,17 @@ impl OriginMap {
 pub struct HttpFetcher {
     agent: ureq::Agent,
     pub options: HttpOptions,
-    pub origin_map: OriginMap,
+    /// Set only through [`HttpFetcher::with_origin_map`], which checks it.
+    origin_map: OriginMap,
 }
 
 fn is_http(url: &url::Url) -> bool {
     matches!(url.scheme(), "http" | "https") && url.host().is_some()
+}
+
+/// An http or https origin: no path (other than `/`), no query, no fragment.
+fn is_origin(url: &url::Url) -> bool {
+    is_http(url) && url.path() == "/" && url.query().is_none() && url.fragment().is_none()
 }
 
 fn has_credentials(url: &url::Url) -> bool {
@@ -189,13 +191,18 @@ impl HttpFetcher {
         }
     }
 
-    /// Panics when an origin of `map` is not `http` or `https` ([`OriginMap::parse`] gives the error instead): a request
-    /// never leaves HTTP and HTTPS. Panics too when two entries share a source or a destination origin: the map must be
+    /// Panics when an entry of `map` is not an `http` or `https` origin, or has a path, query or fragment
+    /// ([`OriginMap::parse`] gives the error instead): a request never leaves HTTP and HTTPS. Panics too when two entries share a source or a destination origin: the map must be
     /// one to one, so that a response URL maps back to the one origin it came from.
     pub fn with_origin_map(mut self, map: Vec<(url::Url, url::Url)>) -> HttpFetcher {
         assert!(
             map.iter().all(|(from, to)| is_http(from) && is_http(to)),
             "an origin map maps http and https origins only"
+        );
+        assert!(
+            map.iter()
+                .all(|(from, to)| is_origin(from) && is_origin(to)),
+            "an origin has no path, query or fragment"
         );
         for (i, (from, to)) in map.iter().enumerate() {
             assert!(
