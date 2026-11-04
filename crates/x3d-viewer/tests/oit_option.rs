@@ -82,6 +82,14 @@ fn the_renderer_takes_the_option_and_draws_with_it() {
     let (w, h) = v.framebuffer_size();
     let on = gpu.render(&frame, w, h);
 
+    // The timestamp query of a frame begins in the first pass and ends in the compose pass (two index writes in two
+    // passes): a frame with the option on still reports a time.
+    if gpu.renderer.gpu_timing_available() {
+        let ms = gpu.renderer.gpu_time_ms(true);
+
+        assert!(ms.is_some_and(|t| t > 0.0), "{ms:?}");
+    }
+
     v.set_browser_option("OrderIndependentTransparency", OptionValue::Bool(false));
     v.take_rendering_changes().apply(&mut gpu.renderer);
     assert!(!gpu.renderer.order_independent_transparency());

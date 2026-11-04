@@ -1061,7 +1061,8 @@ struct PassTarget {
     more: bool,
 }
 
-/// GPU time of the render pass, from timestamp queries (needs `Features::TIMESTAMP_QUERY` on
+/// GPU time of the render passes of a frame (with OrderIndependentTransparency from the start of the color pass to the end of
+/// the compose pass), from timestamp queries (needs `Features::TIMESTAMP_QUERY` on
 /// the host's device).
 struct GpuTimer {
     queries: wgpu::QuerySet,
@@ -1489,19 +1490,27 @@ impl Renderer {
 
         if self.oit && !self.debug_ids {
             // OrderIndependentTransparency (crate::oit_gpu): the shaders of the shapes drawn into the accumulation targets.
-            let oit = crate::oit_gpu::patch_shader(&src);
-            self.oit_shader_3d = Some(self.device.create_shader_module(
-                wgpu::ShaderModuleDescriptor {
-                    label: Some("x3d.wgsl OIT (3D)"),
-                    source: wgpu::ShaderSource::Wgsl(volume_shader(&oit).into()),
-                },
-            ));
-            self.oit_shader = Some(self.device.create_shader_module(
-                wgpu::ShaderModuleDescriptor {
-                    label: Some("x3d.wgsl OIT"),
-                    source: wgpu::ShaderSource::Wgsl(oit.into()),
-                },
-            ));
+            match crate::oit_gpu::patch_shader(&src) {
+                Ok(oit) => {
+                    self.oit_shader_3d = Some(self.device.create_shader_module(
+                        wgpu::ShaderModuleDescriptor {
+                            label: Some("x3d.wgsl OIT (3D)"),
+                            source: wgpu::ShaderSource::Wgsl(volume_shader(&oit).into()),
+                        },
+                    ));
+                    self.oit_shader = Some(self.device.create_shader_module(
+                        wgpu::ShaderModuleDescriptor {
+                            label: Some("x3d.wgsl OIT"),
+                            source: wgpu::ShaderSource::Wgsl(oit.into()),
+                        },
+                    ));
+                }
+                Err(why) => {
+                    // The frames are drawn sorted, without the option.
+                    eprintln!("{why}; drawing without it");
+                    self.oit = false;
+                }
+            }
         }
 
         if plain {

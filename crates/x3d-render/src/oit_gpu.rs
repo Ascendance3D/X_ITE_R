@@ -67,15 +67,22 @@ fn oit_colors(color: vec4<f32>, z: f32) -> array<vec4<f32>, 2> {
 /// `x3d.wgsl` (with the patches of a depth variant) with its fragment entry `fs_main` turned into `shade_main` and the
 /// entry `fs_oit` added: the two color outputs of OIT2.js `oit`. The logarithmic depth variant keeps its `frag_depth`
 /// (Fragment2.glsl.js calls `logarithmic` after `oit`).
-pub fn patch_shader(src: &str) -> String {
+///
+/// `Err` when the source has no `fs_main` entry of either known form (the shader changed without this patch): the caller
+/// draws without OIT instead of failing a frame.
+pub fn patch_shader(src: &str) -> Result<String, String> {
     let plain = "@fragment\nfn fs_main(in: VOut, @builtin(front_facing) front_facing: bool) -> @location(0) vec4<f32> {";
     let log =
         "@fragment\nfn fs_main(in: VOut, @builtin(front_facing) front_facing: bool) -> FOut {";
     let (head, logarithmic) = if src.matches(plain).count() == 1 {
         (plain, false)
-    } else {
-        assert_eq!(src.matches(log).count(), 1, "OIT shader anchor");
+    } else if src.matches(log).count() == 1 {
         (log, true)
+    } else {
+        return Err(
+            "OrderIndependentTransparency: the fragment entry fs_main of x3d.wgsl was not found"
+                .into(),
+        );
     };
     let mut out = src.replacen(
         head,
@@ -122,7 +129,7 @@ fn fs_oit(in: VOut, @builtin(front_facing) front_facing: bool) -> OitOut {
         );
     }
 
-    out
+    Ok(out)
 }
 
 /// The accumulation targets of one target size and sample count.
@@ -345,5 +352,23 @@ impl Oit {
         pass.set_pipeline(&self.pipelines[&(format, samples)]);
         pass.set_bind_group(0, &t.group, &[]);
         pass.draw(0..6, 0..1);
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::patch_shader;
+
+    #[test]
+    fn a_source_without_the_fragment_entry_is_an_error_not_a_panic() {
+        assert!(patch_shader("fn other() {}").is_err());
+    }
+
+    #[test]
+    fn the_shipped_shader_patches() {
+        let out = patch_shader(include_str!("x3d.wgsl")).unwrap();
+
+        assert!(out.contains("fn fs_oit("));
+        assert!(!out.contains("fn fs_main("));
     }
 }

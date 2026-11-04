@@ -38,7 +38,7 @@ fn main() -> ExitCode {
             Some(file) if args.len() >= 3 && !file.starts_with("--") => single(file, &args[2], w, h, opt("--oracle")),
             _ => {
                 eprintln!(
-                    "usage: x3d-shot <file.wrl> <out.png> [--size WxH] [--oracle dir] [--msaa N] [--oit]\n       x3d-shot batch <corpus-dir> <out-dir> [--size WxH] [--only s] [--msaa N]\n       x3d-shot compare <baseline-dir> <rust-dir> [--threshold N] [--max-pct P] [--diff-dir d] [--json f]\n       x3d-shot info"
+                    "usage: x3d-shot <file.wrl> <out.png> [--size WxH] [--oracle dir] [--msaa N] [--oit]\n       x3d-shot batch <corpus-dir> <out-dir> [--size WxH] [--only s] [--msaa N] [--oit]\n       x3d-shot compare <baseline-dir> <rust-dir> [--threshold N] [--max-pct P] [--diff-dir d] [--json f]\n       x3d-shot info"
                 );
                 2
             }
@@ -78,7 +78,8 @@ fn gpu() -> Gpu {
                 g.renderer.set_depth_mode(m);
             }
 
-            // `--oit`: X_ITE's OrderIndependentTransparency browser option (oracle: x_ite-shot.mjs --oit).
+            // `--oit`: X_ITE's OrderIndependentTransparency browser option (oracle: x_ite-shot.mjs --oit). A flag without a
+            // value like `--gl-samples`, set here for every mode (single, batch, info), so `opt` (which reads a value) is not used.
             g.renderer
                 .set_order_independent_transparency(std::env::args().any(|a| a == "--oit"));
 
