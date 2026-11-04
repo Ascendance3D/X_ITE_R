@@ -697,3 +697,32 @@ fn the_body_limit_counts_decoded_bytes_not_wire_bytes() {
         ))
     );
 }
+
+/// An origin map is one to one (review of #438): two sources for one destination would make the response URL of the
+/// second map back to the first, and two destinations for one source would depend on the entry order.
+#[test]
+fn an_origin_map_is_one_to_one() {
+    let u = |s: &str| url::Url::parse(s).unwrap();
+    let build = |map: Vec<(url::Url, url::Url)>| {
+        std::panic::catch_unwind(|| HttpFetcher::new(options()).with_origin_map(map)).is_ok()
+    };
+
+    assert!(build(vec![
+        (u("http://a"), u("http://127.0.0.1:9000")),
+        (u("http://b"), u("http://127.0.0.1:9001")),
+    ]));
+    assert!(!build(vec![
+        (u("http://a"), u("http://127.0.0.1:9000")),
+        (u("http://b"), u("http://127.0.0.1:9000")),
+    ]));
+    assert!(!build(vec![
+        (u("http://a"), u("http://127.0.0.1:9000")),
+        (u("http://a"), u("http://127.0.0.1:9001")),
+    ]));
+}
+
+#[test]
+fn body_hex_is_whole_bytes() {
+    assert!(x3d_http::route_server::parse_routes(r#"{ "x": { "bodyHex": "0a0b" } }"#).is_ok());
+    assert!(x3d_http::route_server::parse_routes(r#"{ "x": { "bodyHex": "0a0" } }"#).is_err());
+}

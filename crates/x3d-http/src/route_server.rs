@@ -72,6 +72,12 @@ impl Route {
         }
 
         if let Some(hex) = value["bodyHex"].as_str() {
+            if hex.len() % 2 != 0 || !hex.is_ascii() {
+                return Err(format!(
+                    "bodyHex: {} is not whole bytes of hexadecimal digits",
+                    hex.len()
+                ));
+            }
             route.body = (0..hex.len() / 2)
                 .map(|i| u8::from_str_radix(&hex[2 * i..2 * i + 2], 16).map_err(|e| e.to_string()))
                 .collect::<Result<_, _>>()?;

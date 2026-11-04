@@ -190,12 +190,21 @@ impl HttpFetcher {
     }
 
     /// Panics when an origin of `map` is not `http` or `https` ([`OriginMap::parse`] gives the error instead): a request
-    /// never leaves HTTP and HTTPS.
+    /// never leaves HTTP and HTTPS. Panics too when two entries share a source or a destination origin: the map must be
+    /// one to one, so that a response URL maps back to the one origin it came from.
     pub fn with_origin_map(mut self, map: Vec<(url::Url, url::Url)>) -> HttpFetcher {
         assert!(
             map.iter().all(|(from, to)| is_http(from) && is_http(to)),
             "an origin map maps http and https origins only"
         );
+        for (i, (from, to)) in map.iter().enumerate() {
+            assert!(
+                map[..i]
+                    .iter()
+                    .all(|(f, t)| f.origin() != from.origin() && t.origin() != to.origin()),
+                "an origin map is one to one: {from} or {to} is in two entries"
+            );
+        }
         self.origin_map = OriginMap(map);
         self
     }
