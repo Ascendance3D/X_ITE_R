@@ -61,10 +61,10 @@ jobs:
         run: |
           set -eux
           export RUSTUP_HOME="$RUNNER_TEMP\\rustup" CARGO_HOME="$RUNNER_TEMP\\cargo"
-          echo "RUSTUP_HOME=$RUSTUP_HOME" >> "$GITHUB_ENV"
-          echo "CARGO_HOME=$CARGO_HOME" >> "$GITHUB_ENV"
-          echo "CARGO_TARGET_DIR=$RUNNER_TEMP\\target" >> "$GITHUB_ENV"
-          echo "$CARGO_HOME\\bin" >> "$GITHUB_PATH"
+          {
+            printf '%s\n' "RUSTUP_HOME=$RUSTUP_HOME" "CARGO_HOME=$CARGO_HOME" "CARGO_TARGET_DIR=$RUNNER_TEMP\\target"
+          } >> "$GITHUB_ENV"
+          printf '%s\n' "$CARGO_HOME\\bin" >> "$GITHUB_PATH"
           curl -sSfL -o "$RUNNER_TEMP/rustup-init.exe" https://static.rust-lang.org/rustup/dist/x86_64-pc-windows-msvc/rustup-init.exe
           "$RUNNER_TEMP/rustup-init.exe" -y --profile minimal --default-toolchain 1.95.0 --no-modify-path
           mkdir -p "$(cygpath -u "$CARGO_HOME")/bin"
@@ -84,7 +84,8 @@ jobs:
         id: vulkan
         continue-on-error: true
         run: |
-          export X3D_EVIDENCE_ALLOW="$(awk -F'\t' '!/^#/ && NF >= 4 { printf "%s%s", sep, $1; sep = "," }' oracle/answer-keys.tsv)"
+          X3D_EVIDENCE_ALLOW="$(awk -F'\t' '!/^#/ && NF >= 4 { printf "%s%s", sep, $1; sep = "," }' oracle/answer-keys.tsv)"
+          export X3D_EVIDENCE_ALLOW
           export X3D_EVIDENCE_LOG="$GITHUB_WORKSPACE/evidence-skips-vulkan.tsv"
           rm -f "$X3D_EVIDENCE_LOG"
           cargo nextest run -p x3d-script -p x3d-viewer --release --profile ci --no-fail-fast -j 2 -E "$GPU_TESTS" 2>&1 | tee gpu-vulkan.log
@@ -102,7 +103,8 @@ jobs:
         continue-on-error: true
         run: |
           export X3D_BACKEND=dx12 X3D_POINTING_BACKEND=dx12
-          export X3D_EVIDENCE_ALLOW="$(awk -F'\t' '!/^#/ && NF >= 4 { printf "%s%s", sep, $1; sep = "," }' oracle/answer-keys.tsv)"
+          X3D_EVIDENCE_ALLOW="$(awk -F'\t' '!/^#/ && NF >= 4 { printf "%s%s", sep, $1; sep = "," }' oracle/answer-keys.tsv)"
+          export X3D_EVIDENCE_ALLOW
           export X3D_EVIDENCE_LOG="$GITHUB_WORKSPACE/evidence-skips-dx12.tsv"
           rm -f "$X3D_EVIDENCE_LOG"
           cargo nextest run -p x3d-script -p x3d-viewer --release --profile ci --no-fail-fast -j 2 -E "$GPU_TESTS" 2>&1 | tee gpu-dx12.log
