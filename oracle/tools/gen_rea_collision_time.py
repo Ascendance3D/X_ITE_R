@@ -17,15 +17,17 @@ y measured from the bottom, same script format as batch 24 (oracle/tools/gen_rea
                 at from an oblique start; PageDown binds a second Viewpoint and the walk repeats. Billboard.traverse
                 (COLLISION) rotates towards the collision camera, the DISPLAY pass towards the viewer.
   ct-bb-ctl     the same with a Group instead of the Billboard (control)
+  ct-*-pick     ct-wall, ct-nested and ct-bb-ctl again, with pickProbes (the hit point 0.27 to 0.38 from the surface)
   ct-bb-head-*  Collision > Billboard (y, f) or Group (ctl) with the panel centered on the first walk's line
 
 Every script has collisionProbes (getClosestObject along 44 directions) and, except where noted, pickProbes (a 16 x 16
 pointing-buffer grid, compared bit for bit).
 
-NOTE: ct-wall, ct-nested and ct-bb-ctl end with the avatar 0.27 to 0.38 from a surface that fills the picture. There the pointing
-buffer's hit point of the two renderers differs by float32 depth quantization (measured 3.05e-7 at 0.27 from the near plane 0.125,
-all 256 probes; the normal 1.0 against 0.99999994 in either direction). Everything else of those cases is identical, but the bit for
-bit pick comparison would fail, so these three scripts have no pickProbes; a tolerance would hide it.
+NOTE: ct-wall, ct-nested and ct-bb-ctl end with the avatar 0.27 to 0.38 from a surface that fills the picture. When they were
+written, the pointing buffer's hit point of the two renderers was measured to differ there by 3.05e-7 (all 256 probes), so they have
+no pickProbes. On the current Rust that no longer reproduces (issue #94 / node:Collision, 2026-11-04): ct-wall-pick, ct-nested-pick and
+ct-bb-ctl-pick are the same worlds with the 16 x 16 pickProbes grid, bit for bit equal at MSAA 0 and 4. The three originals and their
+recordings are unchanged.
 
   python3 -I -B oracle/tools/gen_rea_collision_time.py
 """
@@ -128,6 +130,9 @@ START = [vp("0 1.6 12", "start")]
 world("ct-wall", FLOOR + "\nDEF C1 Collision { children [\n" + WALL() + "\n] }\n" + LANDMARKS, START, ["C1"])
 script("ct-wall", 200, IN_OUT_IN, [30, 75, 125, 195], pick=False)  # no pickProbes: see NOTE
 case("ct-wall")
+world("ct-wall-pick", FLOOR + "\nDEF C1 Collision { children [\n" + WALL() + "\n] }\n" + LANDMARKS, START, ["C1"])
+script("ct-wall-pick", 200, IN_OUT_IN, [195])
+case("ct-wall-pick")
 
 world("ct-disabled", FLOOR + "\nDEF C1 Collision { enabled FALSE children [\n" + WALL() + "\n] }\n" + LANDMARKS, START, ["C1"])
 script("ct-disabled", 130, hold(FWD, 2, 120), [30, 75, 130])
@@ -146,6 +151,10 @@ world("ct-nested", FLOOR + "\nDEF C1 Collision { children [\nDEF C2 Collision { 
       + box(0, 1.5, -20, 4, 3, 0.4, "0.3 0.8 0.3") + "\n] }\n] }\n" + LANDMARKS, START, ["C1", "C2", "C3"])
 script("ct-nested", 200, IN_OUT_IN, [30, 75, 125, 195], pick=False)
 case("ct-nested")
+world("ct-nested-pick", FLOOR + "\nDEF C1 Collision { children [\nDEF C2 Collision { children [\n" + WALL() + "\n] }\nDEF C3 Collision { children [\n"
+      + box(0, 1.5, -20, 4, 3, 0.4, "0.3 0.8 0.3") + "\n] }\n] }\n" + LANDMARKS, START, ["C1", "C2", "C3"])
+script("ct-nested-pick", 200, IN_OUT_IN, [195])
+case("ct-nested-pick")
 
 
 def side_walls(name, left, right):
@@ -193,6 +202,9 @@ for kind in ("cb", "bc", "ab", "cab"):
 world("ct-bb-ctl", FLOOR + "\n" + billboard("cb", None) + "\n" + LANDMARKS, BB_START, ["C1"])
 script("ct-bb-ctl", 150, BB_WALK, [20, 60, 76, 84, 100, 140], pick=False)
 case("ct-bb-ctl")
+world("ct-bb-ctl-pick", FLOOR + "\n" + billboard("cb", None) + "\n" + LANDMARKS, BB_START, ["C1"])
+script("ct-bb-ctl-pick", 150, BB_WALK, [140])
+case("ct-bb-ctl-pick")
 
 # head-on: the panel centered on the first walk's line (x = 1.5)
 for n, axis in (("ct-bb-head-y", "0 1 0"), ("ct-bb-head-f", "0 0 0"), ("ct-bb-head-ctl", None)):
