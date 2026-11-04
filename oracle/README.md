@@ -1381,6 +1381,20 @@ ct-wall, ct-nested and ct-bb-ctl with a 16 x 16 `pickProbes` grid, three identic
 points (0.27 to 0.38 from the surface) equal the page's bit for bit; the 3.05e-7 once measured there was the avatar's stop position
 (before #423), not float32 depth.
 
+## ShaderPart at MSAA 4 (issue #95, 2026-11-04)
+
+`rea-b24-shaderpart-baseline/` holds the 16 stepped ShaderPart cases at MSAA 0 (`NAME-msaa0/js.json` and pictures) and at MSAA 4
+(`NAME-msaa4.json` flat, so that the review gate leaves it out, and pictures in `NAME-msaa4/js/`). `python3 -I -B
+oracle/tools/rea_b24_shaderpart.py record NAME 3 --msaa 4` runs `x_ite-anim-msaa.mjs --ms 4` three times; only identical runs
+(record and every picture hash) are kept. Prepare the worktree as in "Recording from a worktree". The MSAA 4 records equal the MSAA 0
+records in scene text and log (only `info` differs); the pictures are the new evidence. Rust matches scene text, log (KNOWN
+table as at MSAA 0), poses and every picture within 1 per channel. All of these fragment sources say `precision mediump float`,
+and the pinned page on the RTX 3060 Ti (ANGLE, NVIDIA driver) runs mediump in half precision: `vec4 (0.9, 0.7, 0.2, 1.0)` is
+(229, 179, 51) there and (229, 178, 51) in Rust (0.7 is 0.70019531 in half precision). With `highp` in both renderers
+include-Fog, select-steps, url-steps and vertex-steps differ by 0 pixels at MSAA 4. The `PINNED` table of
+`crates/x3d-viewer/tests/rea_b24_shaderpart.rs` holds the measured pixel counts per case; a change in either direction fails, on an adapter named RTX 3060 Ti (the measured one); on any other adapter the picture bounds apply only.
+The test skips the MSAA 4 cases without a GPU adapter.
+
 ## Native keys 01 (issue #80)
 
 `node oracle/x_ite-native-keys-01.mjs oracle/native-keys-01-baseline --runs 3` records what the pinned X_ITE does for each
@@ -1603,13 +1617,42 @@ cargo nextest run -p x3d-viewer --test file_loader
 ```
 
 The baselines are `oracle/file-loader-baseline/ff-*.json` (Chrome 156.0.8078.47). No GPU is used, so the test runs on a hosted runner.
+
+Three more groups (2026-11-04, agent D2, sub:io.file-loader; each recorded three times, identical):
+
+- `ff-inline-data` (static world, 48 DEF-named Inline nodes, script key `dumpInlines`): `data:` URLs with a byte order mark in each form (`%EF%BB%BF`,
+  the three Latin-1 characters `ï»¿` raw and as `%C3%AF%C2%BB%C2%BF`, U+FEFF, in base64, gzip, UTF-16, XML, JSON, classic, twice, after a space, after a
+  header line, in a fallback list), and 9 EXTERNPROTOs with a data URL first and a plain one second (a failed first candidate is a warning in the log;
+  one of them is a file no parser handles, behind a URL, whose message names the URL). The scene text of every Inline and the log are compared. Pinned page: FileLoader `dataAsString` percent-decodes
+  the text and removes only a leading `ï»¿` (`data.replace (/^ï»¿/, "")`, three characters, not U+FEFF), and hands the STRING to the parsers, so a real
+  U+FEFF at the start of a text data URL is no `#VRML` header (`No suitable file handler found for 'data:' URL.`) and the next candidate is tried;
+  a base64 URL is fetched, and the decoded bytes lose a BOM. A U+FEFF alone is an empty scene (`PROFILE Full`).
+- `ff-host` (67 `createX3DFromURL` lists): a space in the host of an absolute URL. Chrome parses it (`https://exa mple.invalid/x.wrl` has the host
+  `exa%20mple.invalid`; also for U+00A0, U+2000 to U+200A, U+202F, U+205F and U+3000, which IDNA maps to a space, and for a `%20` escape), so the
+  fetch fails with `TypeError: Failed to fetch`, where the URL standard (the Rust `url` crate) rejects the host. The log names the URL with the
+  escape decoded (`decodeURI`). Other host characters, the user information (any scheme: `Request cannot be constructed from a URL that includes
+  credentials: <href>`), `foo://` (opaque host: Invalid URL) and the characters both parsers reject are in the group too.
+- `ff-host-nodes` (static world): the same space in the url of Inline, Script, EXTERNPROTO, ImageTexture and AudioClip (the log).
+  MovieTexture is left out: its failure text comes from a `<video>` element, which x3d-drive has no equivalent of. Two EXTERNPROTOs with the same
+  first url make the pinned page log `Cannot read properties of null (reading 'setWorldURL')` (its scene cache holds a null promise) or hang; not compared.
+
+Chrome measurements behind the host rules (Chrome 156.0.8078.47, a sweep of U+0000 to U+007F in the host of `http`, `foo`, `file` and `ws` URLs against the
+`url` crate 2.5.8): the only differences are the space (accepted as `%20`; also from IDNA), `*` (becomes `%2A`; the crate keeps it), and `#` or `?` in
+the host of a `file:` URL (Chrome: Invalid URL; the crate starts the fragment or query). The last two are pinned in
+`crates/x3d-runtime/src/loader.rs` (`host_differences_that_are_not_fixed_are_pinned`). A label with a space and other non-ASCII characters is
+encoded after the space became `%20` (`exä mple` is `xn--ex%20mple-w2a`); with a space that IDNA maps (U+00A0) and another non-ASCII character
+Chrome's punycode differs (`a<U+00A0>ä` is `xn--a%20-wia`, `a ä` is `xn--a%20-ooa`): not reproduced (`Invalid URL`), pinned by a unit test.
+
 Left out on purpose:
 
 - `#`, `#Frag`, `?x` and a blank url resolve to the world itself, whose Script would load the same lists again without end.
 - HTTP redirects, response headers (`Content-Type`, `Content-Length`, `Content-Encoding`) and the foreign (`text/html`) hand-off of
-  `Browser.loadURL`: the recorder's static server answers by extension only, and a headless page opens no window.
-- `http://exa mple.invalid/x.wrl`: Chrome 156 parses a space in a host (`exa%20mple.invalid`) and the fetch then fails; the Rust `url` crate rejects it
-  (`Failed to construct 'URL': Invalid URL`). A URL-parser difference, not FileLoader logic (not fixed).
+  `Browser.loadURL`: the recorder's static server answers by extension only, and a headless page opens no window. Still open (2026-11-04): the Rust
+  `Fetcher` returns bytes or an error text only, and the workspace has no HTTP client, so a redirecting server with headers needs a design decision
+  (extend `Fetcher` with a response; add a client or a route table) before it can be measured on both sides.
+- `GoldenGate.addParsers` / `removeParsers`: the port has only the per-call `x3d_parse::ParseOptions { vrml1 }`, no registration API of parsers
+  (neither in the SAI nor in the Script API), so there is nothing to compare yet.
+- `http://exa mple.invalid/x.wrl`: fixed (see `ff-host`).
 - The sorted `log` is sorted in the page, where the server is `http://127.0.0.1:PORT`, before that is replaced by `http://oracle`. A case must not
   create a log line that begins `http://` followed by a character between `1` and `o` (the invalid hosts use `https://`).
 - A malformed percent escape in a path (`text/missing%.wrl`) reaches the recorder's server, which answers 404 (`oracle/x_ite-anim.mjs` used to stop on it).

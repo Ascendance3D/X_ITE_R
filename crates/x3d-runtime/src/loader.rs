@@ -161,6 +161,19 @@ pub(crate) fn strip_script_scheme(candidate: &str) -> Option<(&'static str, &str
     None
 }
 
+/// What `fetch (url)` rejects with before it sends a request: a URL with a user name or a password
+/// (`Request cannot be constructed from a URL that includes credentials`), else `Failed to fetch`. `href` is the `href`
+/// of the URL as Chromium prints it.
+pub(crate) fn fetch_rejection(url: &url::Url, href: &str) -> String {
+    if url.username().is_empty() && url.password().is_none() {
+        "TypeError: Failed to fetch".to_string()
+    } else {
+        format!(
+            "TypeError: Failed to execute 'fetch' on 'Window': Request cannot be constructed from a URL that includes credentials: {href}"
+        )
+    }
+}
+
 /// Serves `<prefix><path>` from `root/<path>` like oracle/x_ite-dump.mjs's server.
 pub struct LocalFetcher {
     pub root: PathBuf,
@@ -175,6 +188,11 @@ impl Fetcher for LocalFetcher {
         // `fetch (dataURL)` needs no server: the browser decodes the URL itself.
         if url.scheme() == "data" {
             return x3d_parse::decode_data_url(href);
+        }
+
+        // The Request constructor rejects a URL with credentials, of any scheme, before a request is sent.
+        if !url.username().is_empty() || url.password().is_some() {
+            return Err(fetch_rejection(url, href));
         }
 
         if !href.starts_with(&self.prefix) {
@@ -415,6 +433,166 @@ pub fn join_url(base: &url::Url, candidate: &str) -> Result<url::Url, url::Parse
     base.join(&x3d_parse::chromium_url_input(candidate))
 }
 
+/// A URL that Chromium's `new URL (candidate, base)` parses and the `url` crate cannot represent: a space in the host
+/// of a URL with a special scheme (`http`, `https`, `ws`, `wss`, `ftp`, `file`). The URL standard rejects it; Chromium
+/// keeps it as `%20` (`https://exa mple.invalid/` is `https://exa%20mple.invalid/`), also for the characters that
+/// IDNA maps to a space (U+00A0, U+2000 to U+200A, U+202F, U+205F, U+3000) and for a `%20` escape. No server has such a
+/// host, so a fetch of it fails.
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub struct SpaceHostUrl {
+    /// The URL with a placeholder character in the host where the space is. Its host is no host to fetch from.
+    pub stand_in: url::Url,
+    /// The `href` of Chromium's URL.
+    pub href: String,
+}
+
+/// The characters that IDNA (UTS 46, without the STD3 rules) maps to U+0020.
+fn is_idna_space(c: char) -> bool {
+    matches!(
+        c,
+        ' ' | '\u{a0}' | '\u{2000}'..='\u{200a}' | '\u{202f}' | '\u{205f}' | '\u{3000}'
+    )
+}
+
+/// [`SpaceHostUrl`] for `candidate` resolved against `base`, when [`join_url`] fails only because the host holds a
+/// space; `None` for every other failure and for a URL that [`join_url`] parses.
+pub fn space_host_url(base: &url::Url, candidate: &str) -> Option<SpaceHostUrl> {
+    // The URL standard strips C0 controls and spaces around the input and removes every tab and newline.
+    let input: String = x3d_parse::chromium_url_input(candidate)
+        .trim_matches(|c: char| c <= ' ')
+        .chars()
+        .filter(|c| !matches!(c, '\t' | '\n' | '\r'))
+        .collect();
+    let slash = |c: char| c == '/' || c == '\\';
+
+    // Where the authority starts, in `input`: after the scheme and its slashes, or after the slashes of a scheme-relative URL.
+    let scheme_end = input.find(':').filter(|&i| {
+        input[..i].starts_with(|c: char| c.is_ascii_alphabetic())
+            && input[..i]
+                .chars()
+                .all(|c| c.is_ascii_alphanumeric() || matches!(c, '+' | '-' | '.'))
+    });
+    let (scheme, rest, prefix) = match scheme_end {
+        Some(i) => (
+            input[..i].to_ascii_lowercase(),
+            &input[i + 1..],
+            &input[..=i],
+        ),
+        None => (base.scheme().to_string(), input.as_str(), ""),
+    };
+
+    if !["http", "https", "ws", "wss", "ftp", "file"].contains(&scheme.as_str()) {
+        return None;
+    }
+
+    let slashes = rest.chars().take_while(|&c| slash(c)).count();
+    let authority_follows = if scheme == "file" {
+        slashes == 2
+    } else if scheme_end.is_some() && scheme == base.scheme() {
+        // "special relative or authority state": `https:x` and `https:/x` are relative to the base.
+        slashes >= 2
+    } else if scheme_end.is_some() {
+        true
+    } else {
+        slashes >= 2
+    };
+
+    if !authority_follows {
+        return None;
+    }
+
+    let after = &rest[slashes..];
+    let authority_len = after
+        .find(|c: char| slash(c) || c == '?' || c == '#')
+        .unwrap_or(after.len());
+    let authority = &after[..authority_len];
+    let host_port = authority.rsplit_once('@').map_or(authority, |(_, h)| h);
+    let userinfo = &authority[..authority.len() - host_port.len()];
+
+    if host_port.starts_with('[') {
+        return None;
+    }
+
+    let host_len = host_port.find(':').unwrap_or(host_port.len());
+    let (host, port) = host_port.split_at(host_len);
+
+    // URL host parsing percent-decodes the host first (a `%20` is a space), then IDNA maps the characters.
+    let decoded = percent_encoding::percent_decode_str(host)
+        .decode_utf8()
+        .ok()?;
+
+    if !decoded.chars().any(is_idna_space) {
+        return None;
+    }
+
+    // Chromium encodes a label with other non-ASCII characters differently when its space is a character that IDNA maps to a
+    // space (`a<U+00A0>ä` is `xn--a%20-wia`, `a ä` is `xn--a%20-ooa`; measured). Not reproduced: `Invalid URL`.
+    if decoded.chars().any(|c| c != ' ' && is_idna_space(c))
+        && decoded.chars().any(|c| !c.is_ascii() && !is_idna_space(c))
+    {
+        return None;
+    }
+
+    // The forbidden host code points and the controls of the standard stay errors (`%2F`, `%25`, `%00` ...).
+    if decoded.chars().any(|c| {
+        c <= '\u{1f}'
+            || c == '\u{7f}'
+            || matches!(
+                c,
+                '#' | '/' | ':' | '<' | '>' | '?' | '@' | '[' | '\\' | ']' | '^' | '|' | '%'
+            )
+    }) {
+        return None;
+    }
+
+    // A placeholder that the `url` crate keeps in a host, that the input does not use, and that the base does not hold.
+    let placeholder = ['_', '~', '!', '$', '&', '\'', '(', ')', '+', ',', ';', '=']
+        .into_iter()
+        .find(|&c| !input.contains(c) && !base.as_str().contains(c))?;
+    // Chromium escapes the space to `%20` before it encodes the label (`exä mple` is `xn--ex%20mple-w2a`), so the label
+    // holds three characters where the space was: the punycode of the other characters depends on their number.
+    let marked: String = decoded
+        .chars()
+        .map(|c| {
+            if is_idna_space(c) {
+                placeholder.to_string().repeat(3)
+            } else {
+                c.to_string()
+            }
+        })
+        .collect();
+    let stand_in_input = format!(
+        "{prefix}{}{userinfo}{marked}{port}{}",
+        &rest[..slashes],
+        &after[authority_len..]
+    );
+    let stand_in = base.join(&stand_in_input).ok()?;
+    let host = stand_in.host_str()?;
+    let href = stand_in.as_str();
+
+    // The host of the stand-in starts after `scheme://` and the user information, if any.
+    let authority_start = href.find("://")? + 3;
+    let host_start = if stand_in.username().is_empty() && stand_in.password().is_none() {
+        authority_start
+    } else {
+        authority_start + href[authority_start..].find('@')? + 1
+    };
+
+    if !href[host_start..].starts_with(host) {
+        return None;
+    }
+
+    let host_end = host_start + host.len();
+    let href = format!(
+        "{}{}{}",
+        &href[..host_start],
+        host.replace(&placeholder.to_string().repeat(3), "%20"),
+        &href[host_end..]
+    );
+
+    Some(SpaceHostUrl { stand_in, href })
+}
+
 /// The decoded fragment of `candidate` if FileLoader's `bindViewpoint` branch takes it: a URL that, resolved against
 /// `base`, differs from the referring document only by a non-empty fragment.
 pub fn viewpoint_fragment(base: &str, candidate: &str, hooks: &LoadHooks) -> Option<String> {
@@ -597,8 +775,8 @@ impl Runtime {
 
                 let base =
                     url::Url::parse(&loader.base).map_err(|e| Some(format!("TypeError: {e}")))?;
-                let r = join_url(&base, candidate).map_err(|_| {
-                    Some(format!("TypeError: Failed to construct 'URL': Invalid URL"))
+                let r = self.resolve_candidate(&base, candidate).map_err(|_| {
+                    Some("TypeError: Failed to construct 'URL': Invalid URL".to_string())
                 })?;
                 resolved = Some(r.clone());
 
@@ -636,17 +814,19 @@ impl Runtime {
                 if hooks.foreign {
                     let target = loader_target(&hooks.parameters);
 
+                    let href = self.chromium_href(&r).to_string();
+
                     if !target.is_empty() && target != "_self" {
-                        special = Some(LoadResult::Foreign(r.as_str().to_string(), target));
+                        special = Some(LoadResult::Foreign(href, target));
                         return Ok(());
                     }
 
                     if r.scheme() != "data"
                         && ["html", "htm", "xhtml"]
                             .iter()
-                            .any(|e| r.as_str().ends_with(&format!(".{e}")))
+                            .any(|e| href.ends_with(&format!(".{e}")))
                     {
-                        special = Some(LoadResult::Foreign(r.as_str().to_string(), target));
+                        special = Some(LoadResult::Foreign(href, target));
                         return Ok(());
                     }
                 }
@@ -654,6 +834,11 @@ impl Runtime {
                 // A base64 data URL is fetched like any other (the browser decodes it); one without a comma is no URL fetch can read.
                 if loader.data_as_string && r.scheme() == "data" && !candidate.contains(',') {
                     return Err(Some("TypeError: Failed to fetch".to_string()));
+                }
+
+                // A host with a space (Chromium's `%20`) is no host of any server: `fetch` rejects it.
+                if let Some(rejection) = self.url_rejection(&r) {
+                    return Err(Some(rejection));
                 }
 
                 // `await fetch (...)`: the response of this candidate is not in yet. A data URL is not waited for,
@@ -848,11 +1033,64 @@ impl Runtime {
         Some(r.urls.len())
     }
 
-    pub(crate) fn format_load_subject(candidate: &str, resolved: Option<&url::Url>) -> String {
+    /// `new URL (candidate, base)` of FileLoader.loadDocumentAsync: [`join_url`], and for a host with a space (which
+    /// Chromium parses and the `url` crate does not) the stand-in URL of [`space_host_url`], remembered with Chromium's
+    /// `href` ([`Runtime::chromium_href`], [`Runtime::url_rejection`]).
+    pub(crate) fn resolve_candidate(
+        &mut self,
+        base: &url::Url,
+        candidate: &str,
+    ) -> Result<url::Url, url::ParseError> {
+        match join_url(base, candidate) {
+            Ok(r) => Ok(r),
+            Err(error) => {
+                let Some(space_host) = space_host_url(base, candidate) else {
+                    return Err(error);
+                };
+
+                self.space_hosts
+                    .insert(space_host.stand_in.as_str().to_string(), space_host.href);
+                Ok(space_host.stand_in)
+            }
+        }
+    }
+
+    /// The `href` Chromium gives `resolved`, which is a stand-in for a host with a space.
+    pub(crate) fn chromium_href<'a>(&'a self, resolved: &'a url::Url) -> &'a str {
+        self.space_hosts
+            .get(resolved.as_str())
+            .map_or(resolved.as_str(), String::as_str)
+    }
+
+    /// What `fetch` rejects with before any [`Fetcher`] runs: a stand-in URL (no server has a host with a space), or a URL with
+    /// a user name or a password (the `Request` constructor of the browser refuses it, whatever the scheme except `data`).
+    /// `None` for any other URL. The check is here, not in one [`Fetcher`], so that every fetcher has the same rule.
+    pub(crate) fn url_rejection(&self, resolved: &url::Url) -> Option<String> {
+        if let Some(href) = self.space_hosts.get(resolved.as_str()) {
+            return Some(fetch_rejection(resolved, href));
+        }
+
+        if resolved.scheme() != "data"
+            && (!resolved.username().is_empty() || resolved.password().is_some())
+        {
+            return Some(fetch_rejection(resolved, resolved.as_str()));
+        }
+
+        None
+    }
+
+    /// `href`: Chromium's `href` of `resolved` when it is a stand-in ([`Runtime::chromium_href`]).
+    pub(crate) fn format_load_subject(
+        candidate: &str,
+        resolved: Option<&url::Url>,
+        href: Option<&str>,
+    ) -> String {
         let data_url = resolved.is_some_and(|r| r.scheme() == "data");
         let resolved_text = match resolved {
             Some(r) if !data_url => {
-                decode_uri(r.as_str()).unwrap_or_else(|| r.as_str().to_string())
+                let href = href.unwrap_or_else(|| r.as_str());
+
+                decode_uri(href).unwrap_or_else(|| href.to_string())
             }
             _ => String::new(),
         };
@@ -878,7 +1116,8 @@ impl Runtime {
         attempts: usize,
         remaining: usize,
     ) {
-        let subject = Self::format_load_subject(candidate, resolved);
+        let href = resolved.and_then(|r| self.space_hosts.get(r.as_str()).cloned());
+        let subject = Self::format_load_subject(candidate, resolved, href.as_deref());
         let prefix = if loader.type_name.is_empty() {
             String::new()
         } else {
@@ -1877,6 +2116,169 @@ pub(crate) fn parse_bytes_waiting(
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    /// The credential rule is the runtime's, not one fetcher's: a fetcher that must not run for a URL with a user name or a
+    /// password is not called (PR #434 review). `data:` URLs have no credentials to refuse.
+    #[test]
+    fn url_rejection_refuses_credentials_before_any_fetcher_runs() {
+        struct Panics;
+
+        impl Fetcher for Panics {
+            fn fetch(&self, _: &url::Url) -> Result<Vec<u8>, String> {
+                panic!("the fetcher ran");
+            }
+        }
+
+        let scene = x3d_parse::parse_bytes(b"#VRML V2.0 utf8\n", "http://oracle/t.wrl").unwrap();
+        let rt = Runtime::new(scene, Box::new(Panics));
+
+        for (url, rejected) in [
+            ("https://user:pw@example.invalid/x", true),
+            ("https://user@example.invalid/x", true),
+            ("foo://:pw@example.invalid/x", true),
+            ("https://example.invalid/x", false),
+            ("data:text/plain,a", false),
+        ] {
+            let url = url::Url::parse(url).unwrap();
+            let got = rt.url_rejection(&url);
+
+            assert_eq!(got.is_some(), rejected, "{url}");
+
+            if rejected {
+                assert!(got.unwrap().contains("includes credentials"), "{url}");
+            }
+        }
+    }
+
+    /// Chromium 156.0.8078.47 `new URL (input, "http://127.0.0.1:8000/a/b.wrl") .href` for a space in the host (measured with
+    /// the browser of the pinned recordings): the `url` crate rejects each of these.
+    #[test]
+    fn space_host_url_gives_the_href_of_chromium() {
+        let base = url::Url::parse("http://127.0.0.1:8000/a/b.wrl").unwrap();
+
+        for (input, href) in [
+            (
+                "https://exa mple.invalid/x.wrl",
+                "https://exa%20mple.invalid/x.wrl",
+            ),
+            (
+                "https://exa%20mple.invalid/x.wrl",
+                "https://exa%20mple.invalid/x.wrl",
+            ),
+            (
+                "https://exa%C2%A0mple.invalid/x",
+                "https://exa%20mple.invalid/x",
+            ),
+            (
+                "https://exa  mple.invalid/x",
+                "https://exa%20%20mple.invalid/x",
+            ),
+            ("http:// a/x", "http://%20a/x"),
+            ("http://a /x", "http://a%20/x"),
+            ("http://a b.c:80/x", "http://a%20b.c/x"),
+            ("ws://a b:81/x?q=1#f", "ws://a%20b:81/x?q=1#f"),
+            ("ftp://a b/", "ftp://a%20b/"),
+            ("file://a b/x", "file://a%20b/x"),
+            ("http://a:b@c d/x", "http://a:b@c%20d/x"),
+            (
+                "https://us er:pw@exa mple.invalid/x",
+                "https://us%20er:pw@exa%20mple.invalid/x",
+            ),
+            ("HTTPS://EXA MPLE.INVALID/X", "https://exa%20mple.invalid/X"),
+            ("http://a\tb c/", "http://ab%20c/"),
+            (
+                "https://exa\u{a0}mple.invalid/x",
+                "https://exa%20mple.invalid/x",
+            ),
+            (
+                "https://exa\u{3000}mple.invalid/x",
+                "https://exa%20mple.invalid/x",
+            ),
+            (
+                "https://exa\u{2003}mple.invalid/x",
+                "https://exa%20mple.invalid/x",
+            ),
+            ("//exa mple.invalid/x", "http://exa%20mple.invalid/x"),
+            ("//a b", "http://a%20b/"),
+            ("\\\\exa mple.invalid/x", "http://exa%20mple.invalid/x"),
+            (
+                "https:exa mple.invalid/x.wrl",
+                "https://exa%20mple.invalid/x.wrl",
+            ),
+            (
+                "https:/exa mple.invalid/x.wrl",
+                "https://exa%20mple.invalid/x.wrl",
+            ),
+            ("http:\\\\exa mple\\x", "http://exa%20mple/x"),
+            // The label is encoded after the space became `%20`.
+            (
+                "https://ex\u{e4} mple.invalid/x",
+                "https://xn--ex%20mple-w2a.invalid/x",
+            ),
+            ("https://a \u{e4}.invalid/", "https://xn--a%20-ooa.invalid/"),
+            ("https://\u{e4} .invalid/x", "https://xn--%20-pla.invalid/x"),
+        ] {
+            assert!(join_url(&base, input).is_err(), "{input:?}");
+
+            let space_host = space_host_url(&base, input).unwrap_or_else(|| panic!("{input:?}"));
+
+            assert_eq!(space_host.href, href, "{input:?}");
+            assert_eq!(decode_uri(&space_host.href).unwrap().contains("%20"), false);
+        }
+    }
+
+    /// The same Chromium rejects these (or reads them as a path): no stand-in, and `join_url` is the answer.
+    #[test]
+    fn space_host_url_is_none_when_chromium_fails_or_the_space_is_not_in_the_host() {
+        let base = url::Url::parse("http://127.0.0.1:8000/a/b.wrl").unwrap();
+
+        for input in [
+            "https://exa%2520mple.invalid/x",
+            "http://a%2Fb c/x",
+            "http://a%00b c/x",
+            "http://[::1 ]/x",
+            "http://a:80 b/x",
+            "http://a b:8o/x",
+            "https://exa<mple.invalid/x",
+            "https://exa mple<.invalid/x",
+            // Chromium: https://xn--a%20-wia.invalid/ and https://xn--%20x-koa.invalid/ (not reproduced)
+            "https://a\u{a0}\u{e4}.invalid/",
+            "https://\u{e4}\u{a0}x.invalid/",
+            "foo://exa mple.invalid/x",
+            "blob:https://exa mple.invalid/x",
+            "https://user:pw@exa.invalid/x",
+            "a b/c",
+            "http:exa mple/x",
+            "http:/exa mple/x",
+            "text/with space.wrl",
+            "https://exa.invalid/with space",
+            "",
+        ] {
+            assert_eq!(space_host_url(&base, input), None, "{input:?}");
+        }
+    }
+
+    /// Differences between Chromium 156.0.8078.47 and the `url` crate in the host that are not fixed (measured, REA
+    /// sub:io.file-loader): the test fails when the crate's answer changes. Chromium escapes `*` in a host (`%2A`), which only
+    /// shows in the `href` of a `foreign` target; and it rejects `#` and `?` in the host of a `file:` URL, where the
+    /// crate starts the fragment and the query.
+    #[test]
+    fn host_differences_that_are_not_fixed_are_pinned() {
+        let base = url::Url::parse("http://127.0.0.1:8000/a/b.wrl").unwrap();
+
+        assert_eq!(
+            join_url(&base, "https://a*b.invalid/x").unwrap().as_str(),
+            "https://a*b.invalid/x" // Chromium: https://a%2Ab.invalid/x
+        );
+        assert_eq!(
+            join_url(&base, "file://a#b.invalid/x").unwrap().as_str(),
+            "file://a/#b.invalid/x" // Chromium: Invalid URL
+        );
+        assert_eq!(
+            join_url(&base, "file://a?b.invalid/x").unwrap().as_str(),
+            "file://a/?b.invalid/x" // Chromium: Invalid URL
+        );
+    }
 
     // The prefixes of the scripturl01 recording: JavaScript `\s` (U+FEFF in, U+0085 out) and three that are not.
     // The same table is in x3d-runtime/src/loader.rs and x3d-scene/src/xml.rs, so the two `is_js_space` cannot drift.
