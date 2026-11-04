@@ -134,6 +134,22 @@ fn want_path(base: &str, name: &str, msaa: u32) -> (PathBuf, bool) {
             eprintln!("reference: {name} MSAA {msaa} uses the {p} recording");
             return (over, true);
         }
+
+        // No platform file: allowed only for a case the recorder does not keep (NOT_KEPT in
+        // oracle/tools/b69_gs_pick_record.py) or one its PROVENANCE.json lists as equal to the NVIDIA
+        // recording. A missing or misspelled file is an error, not a quiet change of the reference.
+        let case = format!("{name}-msaa{msaa}");
+        let prov = over.with_file_name("PROVENANCE.json");
+        let equal = prov.is_file()
+            && json(prov)["equal_to_nvidia"]
+                .as_array()
+                .is_some_and(|a| a.iter().any(|c| c.as_str() == Some(case.as_str())));
+
+        assert!(
+            PLATFORM_NOT_KEPT.contains(&name) || equal,
+            "{case}: no {p} recording at {} and the case is neither not kept nor equal to the NVIDIA recording",
+            over.display()
+        );
     }
 
     (
@@ -141,6 +157,9 @@ fn want_path(base: &str, name: &str, msaa: u32) -> (PathBuf, bool) {
         false,
     )
 }
+
+/// The cases that have no platform recording on purpose (`NOT_KEPT` of oracle/tools/b69_gs_pick_record.py).
+const PLATFORM_NOT_KEPT: &[&str] = &["gs-pick-ortho"];
 
 const CASES: &[&str] = &[
     "gs-pick-basic",
