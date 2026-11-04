@@ -1,0 +1,160 @@
+{
+ "pinned": "34cdf9f97",
+ "chrome": "156.0.8078.47",
+ "oit": true,
+ "size": [
+  512,
+  512
+ ],
+ "frames": 10,
+ "settleMs": 400,
+ "gl": {
+  "vendor": "Google Inc. (NVIDIA Corporation)",
+  "renderer": "ANGLE (NVIDIA Corporation, NVIDIA GeForce RTX 3060 Ti/PCIe/SSE2, OpenGL ES 3.2)",
+  "version": "WebGL 2.0 (OpenGL ES 3.0 Chromium)",
+  "contextAttributes": {
+   "alpha": true,
+   "antialias": false,
+   "depth": true,
+   "desynchronized": false,
+   "failIfMajorPerformanceCaveat": false,
+   "powerPreference": "default",
+   "premultipliedAlpha": true,
+   "preserveDrawingBuffer": true,
+   "stencil": false,
+   "xrCompatible": false
+  },
+  "multisampling": 0,
+  "antialiased": true,
+  "splashVisible": false,
+  "canvasDisplay": "inline",
+  "drawingBuffer": [
+   512,
+   512
+  ],
+  "x_ite": "16.5.0"
+ },
+ "results": [
+  {
+   "file": "oit-alpha.wrl",
+   "ok": true,
+   "log": [],
+   "width": 512,
+   "height": 512,
+   "rgbaSha256": "3c0a5159478e2b62e475f7d738a31cb82e723e0056b01cafd87217bf7290efbe",
+   "pngSha256": "8839b0f9e409dbad59360b385d92ecaed4305733664c0c470c76dbde8b82523b",
+   "splashVisible": false,
+   "canvasDisplay": "block"
+  },
+  {
+   "file": "oit-fog.wrl",
+   "ok": true,
+   "log": [],
+   "width": 512,
+   "height": 512,
+   "rgbaSha256": "bb7e82f0e382041e97091d8f7e5b63b42bd3f62a28e08e0bac57de376e92b138",
+   "pngSha256": "cbef691ba0e80edf7cb23fa71529926fd0b7b6f563314ea8a336e977c004c872",
+   "splashVisible": false,
+   "canvasDisplay": "block"
+  },
+  {
+   "file": "oit-intersect.wrl",
+   "ok": true,
+   "log": [],
+   "width": 512,
+   "height": 512,
+   "rgbaSha256": "3c601caa25ff1a705ff109b1cc43d3b76ba641b1622f996ffa979338243f6fee",
+   "pngSha256": "9bd057f86adcffbfb3c49fcf1c40901539ef7ec3287f6ef63fc8fbd1815a303c",
+   "splashVisible": false,
+   "canvasDisplay": "block"
+  },
+  {
+   "file": "oit-layers.wrl",
+   "ok": true,
+   "log": [],
+   "width": 512,
+   "height": 512,
+   "rgbaSha256": "402e4e203d5975824e1aaa9558b8c2761b3314a39233cdddf84d8164bdae374e",
+   "pngSha256": "e04c549a9a4e10e4501e3ac52a908268a6f9558748d42a6c7b84176d13553946",
+   "splashVisible": false,
+   "canvasDisplay": "block"
+  },
+  {
+   "file": "oit-many.wrl",
+   "ok": true,
+   "log": [],
+   "width": 512,
+   "height": 512,
+   "rgbaSha256": "c9a937da13dc159bc0093cc2b35069308937d348ce4c2ef2888b68b68a0b1e95",
+   "pngSha256": "d697c06b266e1f092a7cb6537b5ec57e58ed18bcb7310f73b103fecc6cf862f6",
+   "splashVisible": false,
+   "canvasDisplay": "block"
+  },
+  {
+   "file": "oit-opaque.wrl",
+   "ok": true,
+   "log": [],
+   "width": 512,
+   "height": 512,
+   "rgbaSha256": "7639c2f21250db54deb1b64394de65c2e6a6d34f3efb08a0521a4cf88845b634",
+   "pngSha256": "17048d101ac64fbd94cdd2824db3aff1b1e3d525d7f3297b3a0f112071417c17",
+   "splashVisible": false,
+   "canvasDisplay": "block"
+  },
+  {
+   "file": "oit-order.wrl",
+   "ok": true,
+   "log": [],
+   "width": 512,
+   "height": 512,
+   "rgbaSha256": "ed5bd3c8b9c61e8a868385099e0160d5ad8f56c4c1e511191d87f4365a00ae3f",
+   "pngSha256": "6cd97693f1ba1e14240e00b648447fd374dd41b66625d3673e39a1bdb06a57f4",
+   "splashVisible": false,
+   "canvasDisplay": "block"
+  },
+  {
+   "file": "oit-ortho.wrl",
+   "ok": true,
+   "log": [],
+   "width": 512,
+   "height": 512,
+   "rgbaSha256": "97e9af5173360c261b759fec9875689d18780e85831ad06ae1dcd5e6571d1301",
+   "pngSha256": "e3ff80826ae14cf6bee439d66fc64ead19ab1c204c588ab698773b84da6e7803",
+   "splashVisible": false,
+   "canvasDisplay": "block"
+  },
+  {
+   "file": "oit-physical.wrl",
+   "ok": true,
+   "log": [],
+   "width": 512,
+   "height": 512,
+   "rgbaSha256": "a10543e39ac89344e935bca5e7d1c99531bc98a8b6dd0cbf59e9a8cb1d86eb9e",
+   "pngSha256": "4d6e299eba5e69b282b12ccb0810578a9808ca5e011ae284aed68e232b5b9cdd",
+   "splashVisible": false,
+   "canvasDisplay": "block"
+  },
+  {
+   "file": "oit-primitives.wrl",
+   "ok": true,
+   "log": [],
+   "width": 512,
+   "height": 512,
+   "rgbaSha256": "2773f55f2b385de78a32ed1036c98d66f059cbb50e7ae52c243be7edd6aba0de",
+   "pngSha256": "48ced2872ca1d2934f2832fb3e5939eacf957b33c99983b2dfd5c5a44667fedf",
+   "splashVisible": false,
+   "canvasDisplay": "block"
+  },
+  {
+   "file": "oit-textured.wrl",
+   "ok": true,
+   "log": [],
+   "width": 512,
+   "height": 512,
+   "rgbaSha256": "2d7ba0f3f6f601d7b492c4d00cfcc3163a61b2925d0e1a8a831dbac98fcb51f0",
+   "pngSha256": "08229002798581d0c7b7446fa4b79dc70fba027f38ca65897657483d4db5c2bd",
+   "splashVisible": false,
+   "canvasDisplay": "block"
+  }
+ ]
+}

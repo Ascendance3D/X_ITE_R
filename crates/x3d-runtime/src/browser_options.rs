@@ -627,6 +627,11 @@ impl BrowserOptions {
             .is_some_and(OptionValue::as_bool)
     }
 
+    /// `getBrowserOption ("OrderIndependentTransparency")` (X3DRenderObject.set_renderKey__, X3DRenderingContext.reshapeFramebuffer).
+    pub fn order_independent_transparency(&self) -> bool {
+        self.option("OrderIndependentTransparency").as_bool()
+    }
+
     /// `getBrowserOptions () ._Gravity .getValue ()` (X3DRenderObject gravitate).
     pub fn gravity(&self) -> f64 {
         self.option("Gravity").as_f64()

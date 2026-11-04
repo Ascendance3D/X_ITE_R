@@ -35,6 +35,7 @@ pub mod layer;
 #[cfg(feature = "script")]
 pub mod load;
 pub mod nurbs;
+pub mod oit_gpu;
 pub mod particles;
 pub mod pointing_gpu;
 pub mod rubber_band;

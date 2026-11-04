@@ -3,7 +3,7 @@
  * Chrome) and save the WebGL drawing buffer as PNG. The Rust renderer must draw the same picture.
  *
  *   node oracle/x_ite-shot.mjs <corpus_dir> <out_dir> [--size 512x512] [--jobs 6]
- *                              [--frames 10] [--settle 400] [--only <substring>]
+ *                              [--frames 10] [--settle 400] [--only <substring>] [--oit]
  *
  * Writes <out_dir>/<file>.png (same relative path, ".png" appended) and <out_dir>/index.json
  * (renderer string, size, sha256 of the raw RGBA and of the PNG, console log, errors).
@@ -21,7 +21,7 @@ import { checkOutput } from "./check-output.mjs";
 import { deflateSync } from "node:zlib";
 
 const ROOT = normalize (join (fileURLToPath (import.meta.url), ".."));
-const { chromium } = createRequire (join (ROOT, "../../../x_ite-tests/")) ("playwright");
+const { chromium } = createRequire (join (process .env .XITE_TESTS ?? join (ROOT, "../../../x_ite-tests"), "/")) ("playwright");
 
 const TYPES = { ".html": "text/html", ".js": "text/javascript", ".mjs": "text/javascript", ".css": "text/css",
    ".json": "application/json", ".png": "image/png", ".jpg": "image/jpeg", ".jpeg": "image/jpeg", ".gif": "image/gif" };
@@ -34,6 +34,7 @@ const JOBS     = Number (opt ("--jobs", "6"));
 const FRAMES   = Number (opt ("--frames", "10"));
 const SETTLE   = Number (opt ("--settle", "400"));
 const ONLY     = opt ("--only", "");
+const OIT      = argv .includes ("--oit");   // OrderIndependentTransparency browser option on (sub:render.transparency-sorting)
 
 const corpus = resolve (corpusArg);
 const outDir = resolve (outArg);
@@ -114,6 +115,10 @@ async function renderOne (file)
       await page .waitForFunction (() => window .ready, null, { timeout: 30000 });
       await page .evaluate (([w, h]) => window .setSize (w, h), [ W, H ]);
 
+      // The option reshapes the framebuffers (MultiSampleFramebuffer with the OIT accumulation buffers) before the world loads.
+      if (OIT)
+         await page .evaluate (() => document .getElementById ("c") .browser .setBrowserOption ("OrderIndependentTransparency", true));
+
       if (!info)
          info = await page .evaluate (() => window .info ());
 
@@ -183,6 +188,7 @@ await mkdir (outDir, { recursive: true });
 await writeFile (join (outDir, "index.json"), JSON .stringify ({
    pinned: (await readFile (join (ROOT, "x_ite-pin/PINNED_COMMIT"), "utf8")) .trim (),
    chrome: chromeVersion,
+   oit: OIT,
    size: [ W, H ], frames: FRAMES, settleMs: SETTLE,
    gl: info,
    results,
