@@ -17,6 +17,8 @@ use std::process::Command;
 
 const SENDER_PORTS: [u16; 2] = [41234, 41235];
 const LISTEN_PORT: u16 = 41236;
+/// The period of one round of the UDP sender (a datagram to each of two ports).
+const ROUND: std::time::Duration = std::time::Duration::from_millis(12);
 
 struct UdpVerdict {
     control: bool,
@@ -32,25 +34,32 @@ struct Udp {
 
 impl Udp {
     fn start() -> Udp {
+        Udp::start_on(SENDER_PORTS, LISTEN_PORT)
+    }
+
+    fn start_on(sender_ports: [u16; 2], listen_port: u16) -> Udp {
         use std::net::UdpSocket;
         use std::sync::Arc;
         use std::sync::atomic::{AtomicBool, Ordering};
 
         // Positive control first: a bound socket receives what the sender sends.
         let control = {
-            let b = UdpSocket::bind(("127.0.0.1", SENDER_PORTS[0])).unwrap();
+            let b = UdpSocket::bind(("127.0.0.1", sender_ports[0])).unwrap();
             b.set_read_timeout(Some(std::time::Duration::from_secs(2)))
                 .unwrap();
             let c = UdpSocket::bind(("127.0.0.1", 0)).unwrap();
-            c.send_to(&[7u8; 144], ("127.0.0.1", SENDER_PORTS[0]))
+            c.send_to(&[7u8; 144], ("127.0.0.1", sender_ports[0]))
                 .unwrap();
             let mut buf = [0u8; 2048];
             matches!(b.recv_from(&mut buf), Ok((144, _)))
         };
-        let listener = UdpSocket::bind(("127.0.0.1", LISTEN_PORT)).unwrap();
-        listener
-            .set_read_timeout(Some(std::time::Duration::from_millis(20)))
-            .unwrap();
+        let listener = UdpSocket::bind(("127.0.0.1", listen_port)).unwrap();
+        // Never block: a round that waits for the listener is a round the sender does not make. A short drive (a fast
+        // machine) then gets a few rounds, and the floor of the check below cannot be met (physical Mac: 9 rounds).
+        // The rounds are paced by a fixed period instead (ROUND), not run as fast as the sleep allows: macOS limits
+        // the ICMP port unreachable replies to 250 a second, and a sender above that sees sends that no refusal
+        // follows (the check wants half of the sends refused). Two ports at 12 ms make 167 a second.
+        listener.set_nonblocking(true).unwrap();
         let stop = Arc::new(AtomicBool::new(false));
         let flag = stop.clone();
         let handle = std::thread::spawn(move || {
@@ -73,7 +82,7 @@ impl Udp {
                 d.extend((0..size - 12).map(|i| i as u8));
                 d
             };
-            let senders: Vec<UdpSocket> = SENDER_PORTS
+            let senders: Vec<UdpSocket> = sender_ports
                 .iter()
                 .map(|p| {
                     let s = UdpSocket::bind(("127.0.0.1", 0)).unwrap();
@@ -86,6 +95,8 @@ impl Udp {
             let mut received = 0;
             let mut buf = [0u8; 4096];
             let mut round = 0u8;
+
+            let mut next = std::time::Instant::now();
 
             while !flag.load(Ordering::Relaxed) {
                 for (i, s) in senders.iter().enumerate() {
@@ -106,13 +117,16 @@ impl Udp {
                 }
 
                 round = round.wrapping_add(1);
-                std::thread::sleep(std::time::Duration::from_millis(1));
+                // A tick every ROUND, not a sleep of ROUND after the work: a sleep that overshoots (the hosted
+                // macOS machine rounds 1 ms up to 9 ms) is made up for by the next tick.
+                next += ROUND;
+                std::thread::sleep(next.saturating_duration_since(std::time::Instant::now()));
             }
 
             UdpVerdict {
                 control,
                 received,
-                ports: SENDER_PORTS
+                ports: sender_ports
                     .iter()
                     .enumerate()
                     .map(|(i, p)| (*p, sent[i], refused[i]))
@@ -419,4 +433,49 @@ fn rea_batch08_net_cases_match_x_ite() {
         failures.len(),
         failures.join("\n")
     );
+}
+
+/// The sender of the `--udp` cases must make many rounds in a short drive: the check of `compare_case` wants at least
+/// 5 refusals per port, and a refusal needs an earlier datagram, so a drive that gets under 10 rounds can never pass.
+/// A listener read that waited for a timeout made a round take 20 ms or more; on a physical Mac (Apple M1) a drive
+/// lasted for 9 rounds ("sent 5, refused 4"). This runs on every platform and needs no GPU, no answer key and no
+/// port of the cases (free ports are asked of the system).
+#[test]
+fn the_udp_sender_makes_many_rounds_in_a_short_drive() {
+    use std::net::UdpSocket;
+
+    // Three ports that are distinct: all three sockets stay bound until every port is read, so no bind can be handed a port
+    // another one just released (they are released together, right before the sender binds them).
+    let held: Vec<UdpSocket> = (0..3)
+        .map(|_| UdpSocket::bind(("127.0.0.1", 0)).unwrap())
+        .collect();
+    let ports: Vec<u16> = held
+        .iter()
+        .map(|s| s.local_addr().unwrap().port())
+        .collect();
+    drop(held);
+    let udp = Udp::start_on([ports[0], ports[1]], ports[2]);
+
+    // A drive of 400 ms: the old sender (a 20 ms wait in every round) made 19 rounds or fewer in it (9 in the 190 ms of
+    // the Mac drive); a round every 12 ms makes 33.
+    std::thread::sleep(std::time::Duration::from_millis(400));
+
+    let v = udp.finish();
+
+    assert!(v.control, "the positive control did not receive");
+    assert_eq!(v.received, 0, "nothing sends to the listener");
+
+    for (port, sent, refused) in &v.ports {
+        assert!(
+            sent + refused >= 25,
+            "port {port}: {sent} sent and {refused} refused in 400 ms; a round must not wait"
+        );
+        // The share of refusals is not checked here. A connected UDP socket keeps one pending error, so ICMP replies that
+        // arrive between two sends make one refusal; on a loaded hosted macOS machine the job read "sent 32 refused 11" in
+        // 43 rounds. The share is a property of the OS, not of the sender; `compare_case` checks it for the real cases.
+        assert!(
+            *refused >= 5,
+            "port {port}: sent {sent} refused {refused}; a closed port must refuse"
+        );
+    }
 }
