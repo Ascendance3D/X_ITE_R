@@ -7,8 +7,8 @@
 //! [`WebFetcher`]: the page's `fetch`, never a synchronous request. Its requests end with the world.
 
 use crate::device_request::{
-    Attempt, CHECKED_WGPU_VERSION, WGPU_REQUESTS_COMPATIBILITY_FEATURE_LEVEL,
-    request_with_compatibility,
+    ADAPTER_REQUEST_TRIES, Attempt, CHECKED_WGPU_VERSION,
+    WGPU_REQUESTS_COMPATIBILITY_FEATURE_LEVEL, request_with_compatibility, request_with_retries,
 };
 use crate::session::{Pointer, RouteInfo, Session, Touch};
 use std::cell::RefCell;
@@ -387,31 +387,42 @@ impl WebBrowser {
             .create_surface(wgpu::SurfaceTarget::Canvas(canvas))
             .map_err(|e| JsError::new(&format!("create_surface: {e}")))?;
         // Compatibility feature level first when wgpu can request it, else (and after a failure) the current request, once
-        // (rule BR3.1; docs in crate::device_request). wgpu 30 cannot, so today this is the current request only.
+        // (rule BR3.1; docs in crate::device_request). wgpu 30 cannot, so today this is the current request only. The
+        // current request asks the browser up to ADAPTER_REQUEST_TRIES times: Chrome on Linux answers the first request
+        // of a page with no adapter.
+        let retry_lines = std::cell::RefCell::new(vec![]);
         let outcome = request_with_compatibility(WGPU_REQUESTS_COMPATIBILITY_FEATURE_LEVEL, |attempt| {
-            let (instance, surface) = (&instance, &surface);
+            let (instance, surface, retry_lines) = (&instance, &surface, &retry_lines);
 
             async move {
                 match attempt {
                     Attempt::Compatibility => Err(format!(
                         "wgpu {CHECKED_WGPU_VERSION} has no option for the compatibility feature level"
                     )),
-                    Attempt::Current => instance
-                        .request_adapter(&wgpu::RequestAdapterOptions {
-                            power_preference: wgpu::PowerPreference::HighPerformance,
-                            force_fallback_adapter: false,
-                            compatible_surface: Some(surface),
-                            ..Default::default()
+                    Attempt::Current => {
+                        let (result, lines) = request_with_retries(ADAPTER_REQUEST_TRIES, || async {
+                            instance
+                                .request_adapter(&wgpu::RequestAdapterOptions {
+                                    power_preference: wgpu::PowerPreference::HighPerformance,
+                                    force_fallback_adapter: false,
+                                    compatible_surface: Some(surface),
+                                    ..Default::default()
+                                })
+                                .await
+                                .map_err(|e| format!("no WebGPU adapter: {e}"))
                         })
-                        .await
-                        .map_err(|e| format!("no WebGPU adapter: {e}")),
+                        .await;
+
+                        retry_lines.borrow_mut().extend(lines);
+                        result
+                    }
                 }
             }
         })
         .await
         .map_err(|e| JsError::new(&e))?;
 
-        for line in &outcome.diagnostics {
+        for line in retry_lines.borrow().iter().chain(&outcome.diagnostics) {
             web_sys::console::warn_1(&line.into());
         }
 
