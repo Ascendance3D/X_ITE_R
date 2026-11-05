@@ -181,9 +181,62 @@ describe ("runtime 02 lifecycle", { skip: Boolean (ONLY), timeout: CASE_TIMEOUT 
       }
    });
 
-   test ("without WebGPU the element shows a message, not an empty canvas", async () =>
+   test ("without WebGPU the element starts with WebGL2 on the same canvas", async () =>
    {
       const page = await openPage (DESKTOP, { init: () => { delete Navigator .prototype .gpu; } });
+
+      try
+      {
+         const out = await page .evaluate (async () =>
+         {
+            const canvas = document .querySelector ("x3d-canvas");
+
+            await canvas .browser .ready ();
+
+            const engine = canvas .browser [Symbol .for ("X_ITE_R.engine")];
+
+            return {
+               startError: window .startError ?? null,
+               backend:    engine .backend,
+               reason:     engine .fallbackReason ?? null,
+               slot:       canvas .shadowRoot .querySelector ("slot") ?.textContent ?? null,
+               canvas:     canvas .shadowRoot .contains (canvas .browser .getCanvas ()),
+            };
+         });
+
+         assert .equal (out .startError, null);
+         assert .equal (out .backend, "webgl2");
+         assert .match (out .reason, /WebGPU|gpu|adapter/i);
+         assert .equal (out .slot, null);
+         assert .equal (out .canvas, true);
+      }
+      finally
+      {
+         await page .context () .close ();
+      }
+   });
+
+   test ("backend=\"webgpu\" without WebGPU shows a message, not an empty canvas", async () =>
+   {
+      // The attribute is set when the parser adds the element, before its module runs.
+      const init = () =>
+      {
+         delete Navigator .prototype .gpu;
+
+         new MutationObserver ((records, observer) =>
+         {
+            const canvas = document .querySelector ("x3d-canvas");
+
+            if (canvas)
+            {
+               canvas .setAttribute ("backend", "webgpu");
+               observer .disconnect ();
+            }
+         })
+         .observe (document, { childList: true, subtree: true });
+      };
+
+      const page = await openPage (DESKTOP, { init });
 
       try
       {

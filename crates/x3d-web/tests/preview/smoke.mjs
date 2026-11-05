@@ -1,7 +1,10 @@
 // Release smoke test of the X_ITE_R Browser Preview package (tools/package-web-preview.sh) at a URL.
 //
 //   node tests/preview/smoke.mjs <base URL of the package> [--out DIR] [--channel chrome|msedge|chromium]
-//                                [--webgpu-flags] [--headed] [--pause MS]
+//                                [--webgpu-flags] [--headed] [--pause MS] [--backend webgpu|webgl2]
+//                                [--browser chromium|firefox|webkit] (Playwright; with --webdriver: safari|firefox)
+//
+// --backend webgl2 opens preview/index.html?backend=webgl2: the engine draws with wgpu's WebGL2 backend.
 //
 // <base URL> is the directory that holds x_ite_r.mjs, pkg/ and preview/ (a local server of the package directory,
 // or the staging server). The browser is a new, clean profile. Without --webgpu-flags it gets no flags, as a user's
@@ -12,7 +15,7 @@
 // canvas; loading the page is never a pass by itself. Evidence: results.json, console.txt and a screenshot of each
 // step in --out. Exit status 0 only when every check passes.
 
-import { chromium } from "playwright";
+import { chromium, firefox, webkit } from "playwright";
 import { webDriverPage } from "./webdriver.mjs";
 import { mkdir, writeFile } from "node:fs/promises";
 import { join } from "node:path";
@@ -140,7 +143,11 @@ if (webdriver)
 }
 else
 {
-   browser = await chromium .launch ({ channel, headless: !argv .includes ("--headed"), args });
+   const kind = opt ("--browser") ?? "chromium";
+
+   browser = await ({ chromium, firefox, webkit }) [kind] .launch (kind === "chromium"
+      ? { channel, headless: !argv .includes ("--headed"), args }
+      : { headless: !argv .includes ("--headed") });
 
    const context = await browser .newContext ({ viewport: { width: 1280, height: 1000 }, deviceScaleFactor: 1 });
 
@@ -258,14 +265,17 @@ async function drag (from, to, { steps = 12, hold = 0 } = { })
 const field = (node, name) => preview (([ node, name ]) => String (globalThis .X_ITE_R_PREVIEW .nodes [node] ?.[name] ?? ""), [ node, name ]);
 
 // 3. The page.
-await page .goto (new URL ("preview/index.html", base) .href);
+const backend = opt ("--backend");
 
-await check ("page starts: WebGPU engine and first world", async () =>
+await page .goto (new URL (`preview/index.html${backend ? `?backend=${backend}` : ""}`, base) .href);
+
+await check ("page starts: graphics backend and first world", async () =>
 {
    const status = await waitStatus (/^(loaded|error|X_ITE_R could not)/, 60000);
    const webgpu = await page .locator ("#webgpu") .textContent ();
 
    facts .webgpu  = webgpu;
+   facts .backend = backend ?? "webgpu";
    facts .version = await page .locator ("#version") .textContent ();
    facts .build   = await page .locator ("#build") .textContent ();
    facts .userAgent = await preview (() => navigator .userAgent);
@@ -275,7 +285,9 @@ await check ("page starts: WebGPU engine and first world", async () =>
       return a ? { vendor: a .info .vendor, architecture: a .info .architecture, device: a .info .device, description: a .info .description, isFallbackAdapter: a .info .isFallbackAdapter ?? a .isFallbackAdapter } : null;
    });
 
-   return { pass: /^started/ .test (webgpu) && /^loaded .*vrml97-basic\.wrl/ .test (status), detail: { webgpu, status } };
+   const want = backend === "webgl2" ? /^WebGL2 started/ : backend === "webgpu" ? /^WebGPU started/ : /^(WebGPU|WebGL2) started/;
+
+   return { pass: want .test (webgpu) && /^loaded .*vrml97-basic\.wrl/ .test (status), detail: { webgpu, status } };
 });
 
 await check ("version and build commit shown", async () =>
@@ -434,6 +446,33 @@ await check ("page reload starts the engine again", async () =>
    return { pass: /^loaded/ .test (status) && !isBg (s .at (175, 240)), detail: { status, file: s .file } };
 });
 
+// A lost device (the engine's loseDevice, as a GPU reset): the page stops, shows why, and offers one restart (on WebGL2
+// after WebGPU); the restart draws again. The page never restarts by itself.
+let lostDevice = false;
+
+await check ("lost device: the page stops and offers one restart, which draws", async () =>
+{
+   const before = await preview (() => document .getElementById ("webgpu") .dataset .backend);
+
+   lostDevice = true;
+   await preview (() => document .getElementById ("canvas") .browser [Symbol .for ("X_ITE_R.engine")] .loseDevice ());
+
+   const stopped = await waitStatus (/^stopped/, 10000);
+   const href    = await preview (() => document .getElementById ("restart") ?.href ?? null);
+
+   if (!href)
+      return { pass: false, detail: { before, stopped } };
+
+   await page .goto (href);
+
+   const status   = await waitStatus (/^(loaded|error|X_ITE_R could not)/, 60000);
+   const graphics = await page .locator ("#webgpu") .textContent ();
+   const s        = await shot ("restart");
+   const want     = before === "webgpu" ? /^WebGL2 started/ : /^(WebGPU|WebGL2) started/;
+
+   return { pass: /device is lost/ .test (stopped) && want .test (graphics) && /^loaded/ .test (status) && !isBg (s .at (175, 240)), detail: { before, stopped, href, graphics, status, file: s .file } };
+});
+
 await check ("dispose: the browser stops without page errors", async () =>
 {
    await page .flushConsole ?.();
@@ -454,7 +493,8 @@ await check ("console: no unexplained errors", async () =>
 {
    await page .flushConsole ?.();
    consoleLines .push (... (page .consoleLines ?? [ ]) .splice (0));
-   const expected = /missing-on-purpose\.wrl|status of 404/;
+   // The lost-device check adds the engine's own line about it.
+   const expected = lostDevice ? /missing-on-purpose\.wrl|status of 404|device lost|device is lost/ : /missing-on-purpose\.wrl|status of 404/;
    const errors   = consoleLines .filter (l => /^\[(error|pageerror)\]/ .test (l));
    const unexplained = errors .filter (l => !expected .test (l)) .map (l => l .split ("\n") [0]);
 

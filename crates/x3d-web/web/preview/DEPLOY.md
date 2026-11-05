@@ -30,10 +30,11 @@ All files are newly authored for X_ITE_R or generated from its source (MIT, `LIC
 3. Check the MIME types: `.wasm` must be `application/wasm` (the browser compiles it as a stream only then), `.mjs`
    and `.js` a JavaScript type. `htaccess.example` has the Apache lines; for nginx, `application/wasm wasm;` and
    `text/javascript mjs;` in `types`.
-4. Open `preview/` in Chrome or Edge 113 or later on a desktop.
+4. Open `preview/` in a browser with WebGPU or WebGL2. The "Graphics" row shows which one the engine uses.
 
-Chrome and Edge on Windows and macOS have WebGPU by default. On Linux, Chrome 156 and Edge 155 need
-`--enable-unsafe-webgpu --enable-features=Vulkan --ignore-gpu-blocklist`; on a Wayland desktop with an NVIDIA GPU the
+Chrome and Edge on Windows and macOS have WebGPU by default. A browser without a usable WebGPU adapter (Firefox on
+Linux, Chrome and Edge on Linux without flags) draws with WebGL2; no flag is needed for that. For WebGPU on Linux,
+Chrome 156 and Edge 155 need `--enable-unsafe-webgpu --enable-features=Vulkan --ignore-gpu-blocklist`; on a Wayland desktop with an NVIDIA GPU the
 window stays black with these flags unless the browser also gets `--ozone-platform=x11` (XWayland). Tested 2026-11-04
 on Ubuntu with an RTX 3060 Ti.
 
@@ -56,6 +57,8 @@ The preview page shows the version, the build commit, the WebGPU result, the wor
 ```sh
 cd crates/x3d-web && npm ci
 node tests/preview/smoke.mjs https://<server>/<path>/ --channel chrome --out evidence
+node tests/preview/smoke.mjs https://<server>/<path>/ --backend webgl2 --out evidence-webgl2    # the WebGL2 fallback
+node tests/preview/smoke.mjs https://<server>/<path>/ --browser firefox --out evidence-firefox
 ```
 
 It loads the page in a new browser profile, drives the worlds with the mouse and the JavaScript API, reads values and

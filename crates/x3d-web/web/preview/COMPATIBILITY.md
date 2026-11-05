@@ -7,6 +7,10 @@ Reference: X_ITE 16.5.0 (`34cdf9f97`). This is a pre-release. It is **not** a dr
 
 - VRML97 classic encoding, X3D classic (`.x3dv`), XML (`.x3d`) and JSON worlds; glTF worlds.
 - Rendering on WebGPU: geometry, materials (including PhysicalMaterial), lights, textures, Background, text.
+- Rendering on WebGL2 when WebGPU cannot start (no `navigator.gpu`, no adapter, an adapter below the WebGPU default
+  limits, or a device that cannot make the renderer's shaders). The same Rust renderer draws through wgpu's WebGL2
+  backend; the preview shows the backend in its "Graphics" row. `backend="webgpu"` or `backend="webgl2"` on the element
+  (`?backend=` on the preview page) forces one. The fallback is made once, at start, before the canvas has a context.
 - `<x3d-canvas>` with `src`, `url`, `contentScale`; the events `initialized`, `load`, `error`, `shutdown`.
 - Inline, EXTERNPROTO, ImageTexture, MovieTexture, AudioClip and fonts load with `fetch`, without blocking the page,
   with X_ITE's MFString fallback order and console messages. Relative URLs resolve against the file that names them.
@@ -24,8 +28,21 @@ Reference: X_ITE 16.5.0 (`34cdf9f97`). This is a pre-release. It is **not** a dr
 
 - `browser.name` is `"X_ITE_R"`, `browser.version` is `"0.1.0"`.
 - Script nodes are off by default (`scripts="true"` turns them on, with the page's privileges and `'unsafe-eval'`).
-- WebGPU only: there is no WebGL renderer, so a browser without WebGPU shows the fallback text.
+- A lost graphics device stops the engine (X_ITE's CONNECTION_ERROR) and the element shows why. The preview page offers
+  one restart (on WebGL2 after WebGPU); the engine never restarts by itself.
 - The other kept differences are in `docs/API.md`, "Known differences inside the supported part".
+
+## WebGL2 limits
+
+WebGL2 has no storage buffers, no compute shaders and no cube map arrays. On WebGL2:
+
+- No shadows (`shadows` of lights): every fragment is lit.
+- No volume scattering (`VolumeScatterMaterialExtension`): the subsurface term is zero.
+- Thick lines of particle systems are made on the CPU, not in a compute pass (same triangles).
+- GaussianSplats are not drawn.
+- An InstancedShape or ParticleSystem draws at most 340 instances per draw (one 64 KiB uniform block); a frame can have
+  any number of such draws.
+- Environment lights sample their cube maps as faces of a 2D array: the filtering does not cross cube faces.
 
 ## Not available
 
@@ -33,12 +50,14 @@ Reference: X_ITE 16.5.0 (`34cdf9f97`). This is a pre-release. It is **not** a dr
 - WebGPU compatibility mode for OpenGL ES 3.1 class GPUs (issue #142).
 - The WebGL rendering properties (`MaxTextureSize`, `MaxLights`, ...), `getUserViewpoints` and the other
   X3DBrowserContext functions.
-- Not tested on real mobile devices (issue #143); not tested in Safari or Firefox.
+- Not tested on real mobile devices (issue #143).
 
 ## Browsers
 
 | browser | state |
 | --- | --- |
 | Chrome or Edge 113 or later, desktop, with a WebGPU adapter | supported; the release check runs in Chrome |
-| Safari 26, Firefox with WebGPU | not tested |
-| browsers without WebGPU | not supported: the element shows its fallback text |
+| Firefox 153 (Linux), no WebGPU | WebGL2: the smoke test passes (headless, NVIDIA GPU) |
+| Chromium 151 without WebGPU flags (Linux) | WebGL2: the smoke test passes |
+| Safari | not tested yet |
+| browsers with neither WebGPU nor WebGL2 | not supported: the element shows its fallback text |
