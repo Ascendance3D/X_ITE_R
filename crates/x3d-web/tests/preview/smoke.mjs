@@ -13,6 +13,7 @@
 // step in --out. Exit status 0 only when every check passes.
 
 import { chromium } from "playwright";
+import { webDriverPage } from "./webdriver.mjs";
 import { mkdir, writeFile } from "node:fs/promises";
 import { join } from "node:path";
 
@@ -34,6 +35,7 @@ await mkdir (out, { recursive: true });
 const results = [ ];
 let   page;
 const consoleLines = [ ];
+const pointerLines = [ ];
 let   step = 0;
 
 function record (name, pass, detail)
@@ -51,6 +53,15 @@ async function check (name, fn)
       const { pass, detail } = await fn ();
 
       record (name, pass, detail);
+
+      // WebDriver: the pointer events of a failed check, as the page got them.
+      if (page ?.pointerLog)
+      {
+         const lines = await page .pointerLog ();
+
+         if (!pass)
+            pointerLines .push (`--- ${name}`, ... lines);
+      }
 
       if (pause)
          await page ?.waitForTimeout (pause);
@@ -100,22 +111,79 @@ await check ("http missing world is 404", async () =>
 
 // 2. The browser: a new profile, no extensions.
 const args = argv .includes ("--webgpu-flags")
-   ? [ "--enable-unsafe-webgpu", "--enable-features=Vulkan", "--use-angle=vulkan", "--ignore-gpu-blocklist", "--enable-gpu" ]
+   ? (process .env .SMOKE_FLAGS ?? "--enable-unsafe-webgpu --enable-features=Vulkan --use-angle=vulkan --ignore-gpu-blocklist --enable-gpu") .split (" ")
    : [ ];
 
-const browser = await chromium .launch ({ channel, headless: !argv .includes ("--headed"), args });
-const context = await browser .newContext ({ viewport: { width: 1280, height: 1000 }, deviceScaleFactor: 1 });
-// Decodes the screenshots: a headless browser of its own, so a --headed run shows only the page.
-const helperBrowser = await chromium .launch ({ headless: true });
-const helper  = await helperBrowser .newPage ();
-page          = await context .newPage ();
+// --webdriver <endpoint> --browser safari|firefox: a W3C WebDriver session (safaridriver, geckodriver) instead of
+// Playwright; see webdriver.mjs for what it records differently.
+const webdriver = opt ("--webdriver");
 const responses = [ ];
+let browser, helperBrowser, helper, decode, getResponses, pressAt, releaseAt, dragPath, wheelAt;
 
-page .on ("console",   message => consoleLines .push (`[${message .type ()}] ${message .text ()}`));
-page .on ("pageerror", error   => consoleLines .push (`[pageerror] ${error .message}`));
-page .on ("response",  response => responses .push ({ url: response .url (), status: response .status (), type: response .headers () ["content-type"] ?? "" }));
+if (webdriver)
+{
+   // Firefox's WebGPU canvas needs a window (headless Firefox 158 has no "webgpu" context), and Safari has no headless
+   // mode, so these run in a window. A window under the desktop's own cursor also gets that cursor's synthetic
+   // pointermove events (Firefox sends them when the content under the cursor changes): keep the cursor off it.
+   page = await webDriverPage (webdriver, { browserName: opt ("--browser") ?? "safari" });
+   // --window x,y,width,height: where the window goes, e.g. away from the desktop cursor (default 0,0,700,1000: the page
+   // in one column, the canvas at the top left).
+   const [ wx, wy, ww, wh ] = (opt ("--window") ?? "0,0,700,1000") .split (",") .map (Number);
 
-const facts = { base: base .href, browserVersion: browser .version (), channel: channel ?? "playwright chromium", flags: args };
+   await page .setWindowRect ({ x: wx, y: wy, width: ww, height: wh });
+   decode       = b64 => page .decode (b64);
+   getResponses = () => page .responses ();
+   pressAt      = (x, y) => page .press (x, y);
+   releaseAt    = () => page .release ();
+   dragPath     = (from, to, steps, hold) => page .drag (from, to, steps, hold);
+   wheelAt      = async (x, y, dy) => { await page .mouse .move (x, y); await page .mouse .wheel (0, dy); };
+}
+else
+{
+   browser = await chromium .launch ({ channel, headless: !argv .includes ("--headed"), args });
+
+   const context = await browser .newContext ({ viewport: { width: 1280, height: 1000 }, deviceScaleFactor: 1 });
+
+   // Decodes the screenshots: a headless browser of its own, so a --headed run shows only the page.
+   helperBrowser = await chromium .launch ({ channel, headless: true });
+   helper        = await helperBrowser .newPage ();
+   page          = await context .newPage ();
+
+   page .on ("console",   message => consoleLines .push (`[${message .type ()}] ${message .text ()}`));
+   page .on ("pageerror", error   => consoleLines .push (`[pageerror] ${error .message}`));
+   page .on ("response",  response => responses .push ({ url: response .url (), status: response .status (), type: response .headers () ["content-type"] ?? "" }));
+
+   decode = b64 => helper .evaluate (async b64 =>
+   {
+      const bitmap = await createImageBitmap (await (await fetch (`data:image/png;base64,${b64}`)) .blob ());
+      const c      = new OffscreenCanvas (bitmap .width, bitmap .height);
+      const g      = c .getContext ("2d");
+
+      g .drawImage (bitmap, 0, 0);
+      return { w: bitmap .width, h: bitmap .height, px: Array .from (g .getImageData (0, 0, bitmap .width, bitmap .height) .data) };
+   },
+   b64);
+
+   getResponses = async () => responses;
+   pressAt      = async (x, y) => { await page .mouse .move (x, y); await frames (3); await page .mouse .down (); };
+   releaseAt    = () => page .mouse .up ();
+   dragPath     = async (from, to, steps, hold) =>
+   {
+      await page .mouse .move (from [0], from [1]);
+      await page .mouse .down ();
+      await page .mouse .move (to [0], to [1], { steps });
+
+      if (hold)
+         await page .waitForTimeout (hold);
+
+      await page .mouse .up ();
+   };
+   wheelAt = async (x, y, dy) => { await page .mouse .move (x, y); await page .mouse .wheel (0, dy); };
+}
+
+const facts = webdriver
+   ? { base: base .href, browser: page .browserName, browserVersion: page .browserVersion, driver: "webdriver", console: "recorded after each navigation (webdriver.mjs)" }
+   : { base: base .href, browserVersion: browser .version (), channel: channel ?? "playwright chromium", flags: args };
 
 const preview = (fn, arg) => page .evaluate (fn, arg);
 
@@ -151,18 +219,11 @@ async function shot (name)
 
    await writeFile (join (out, file), png);
 
-   const data = await helper .evaluate (async b64 =>
-   {
-      const bitmap = await createImageBitmap (await (await fetch (`data:image/png;base64,${b64}`)) .blob ());
-      const c      = new OffscreenCanvas (bitmap .width, bitmap .height);
-      const g      = c .getContext ("2d");
+   const data = await decode (png .toString ("base64"));
 
-      g .drawImage (bitmap, 0, 0);
-      return { w: bitmap .width, h: bitmap .height, px: Array .from (g .getImageData (0, 0, bitmap .width, bitmap .height) .data) };
-   },
-   png .toString ("base64"));
-
-   const at = (x, y) => { const i = ((y + 1) * data .w + (x + 1)) * 4; return data .px .slice (i, i + 3); };
+   // The screenshot is in device pixels (2 per CSS pixel on a Retina display): x and y are CSS pixels of the canvas.
+   const scale = data .w / (W + 2);
+   const at    = (x, y) => { const i = (Math .round ((y + 1) * scale) * data .w + Math .round ((x + 1) * scale)) * 4; return data .px .slice (i, i + 3); };
 
    // Pixels that differ from the background.
    let fg = 0;
@@ -190,14 +251,7 @@ async function drag (from, to, { steps = 12, hold = 0 } = { })
 {
    const o = await canvasBox ();
 
-   await page .mouse .move (o .x + from [0], o .y + from [1]);
-   await page .mouse .down ();
-   await page .mouse .move (o .x + to [0], o .y + to [1], { steps });
-
-   if (hold)
-      await page .waitForTimeout (hold);
-
-   await page .mouse .up ();
+   await dragPath ([ o .x + from [0], o .y + from [1] ], [ o .x + to [0], o .y + to [1] ], steps, hold);
    await frames (3);
 }
 
@@ -241,12 +295,10 @@ await check ("TouchSensor: isActive while pressed, touchTime after", async () =>
 {
    const o = await canvasBox ();
 
-   await page .mouse .move (o .x + 175, o .y + 240);
-   await frames (3);
-   await page .mouse .down ();
+   await pressAt (o .x + 175, o .y + 240);
    await frames (3);
    const active = await field ("Touch", "isActive");
-   await page .mouse .up ();
+   await releaseAt ();
    await frames (3);
    const after = await field ("Touch", "isActive"), time = Number (await field ("Touch", "touchTime"));
 
@@ -290,8 +342,7 @@ await check ("EXAMINE: drag turns the view, wheel zooms", async () =>
    await page .waitForTimeout (400);
    const p1 = vec (await field ("Viewer", "position_changed"));
    const o  = await canvasBox ();
-   await page .mouse .move (o .x + 320, o .y + 430);
-   await page .mouse .wheel (0, -400);
+   await wheelAt (o .x + 320, o .y + 430, -400);
    await page .waitForTimeout (600);
    const p2 = vec (await field ("Viewer", "position_changed"));
    const s  = await shot ("examine");
@@ -335,7 +386,7 @@ await check ("X3D (XML) world renders, PhysicalMaterial field set, texture loads
    const s = await shot ("x3d-basic");
    const pyramid = s .at (320, 250), sphere = s .at (146, 240), stripes = s .region (470, 210, 520, 270) .filter (c => !isBg (c));
    const orange = stripes .some (c => c [0] > 150 && c [2] < 90), white = stripes .some (c => c [0] > 150 && c [2] > 150);
-   const tex = responses .find (r => r .url .endsWith ("/preview/textures/stripes.png"));
+   const tex = (await getResponses ()) .find (r => r .url .endsWith ("/preview/textures/stripes.png"));
 
    return { pass: ok && !isBg (pyramid) && sphere [1] > sphere [0] && orange && white && tex ?.status === 200,
             detail: { pyramid, sphere, orange, white, texture: tex, file: s .file } };
@@ -347,7 +398,8 @@ await check ("Inline, EXTERNPROTO and relative texture URLs load and render", as
    await frames (5);
    const s = await shot ("resources");
    const want = [ "/preview/worlds/parts/inline-part.wrl", "/preview/worlds/protos/colored-box.wrl", "/preview/textures/checker8.png", "/preview/textures/stripes.png" ];
-   const got  = want .map (w => responses .find (r => new URL (r .url) .pathname .endsWith (w)));
+   const all  = await getResponses ();
+   const got  = want .map (w => all .find (r => new URL (r .url) .pathname .endsWith (w)));
    const center = s .region (300, 220, 340, 260);
    const yellow = center .some (c => c [0] > 150 && c [1] > 120 && c [2] < 90), navy = center .some (c => c [2] > 1.5 * c [0] && c [2] > 60);
    const inline = s .region (130, 225, 165, 255) .filter (c => !isBg (c)) .length;
@@ -384,10 +436,14 @@ await check ("page reload starts the engine again", async () =>
 
 await check ("dispose: the browser stops without page errors", async () =>
 {
+   await page .flushConsole ?.();
+   consoleLines .push (... (page .consoleLines ?? [ ]) .splice (0));
    const errors = consoleLines .filter (l => l .startsWith ("[pageerror]")) .length;
    await page .click ("#dispose");
    await page .waitForTimeout (500);
    const status = await page .locator ("#status") .textContent ();
+   await page .flushConsole ?.();
+   consoleLines .push (... (page .consoleLines ?? [ ]) .splice (0));
    const after  = consoleLines .filter (l => l .startsWith ("[pageerror]")) .length;
 
    return { pass: /disposed/ .test (status) && after === errors, detail: { status } };
@@ -396,6 +452,8 @@ await check ("dispose: the browser stops without page errors", async () =>
 // Console: the only errors expected are those of the missing world.
 await check ("console: no unexplained errors", async () =>
 {
+   await page .flushConsole ?.();
+   consoleLines .push (... (page .consoleLines ?? [ ]) .splice (0));
    const expected = /missing-on-purpose\.wrl|status of 404/;
    const errors   = consoleLines .filter (l => /^\[(error|pageerror)\]/ .test (l));
    const unexplained = errors .filter (l => !expected .test (l)) .map (l => l .split ("\n") [0]);
@@ -404,9 +462,18 @@ await check ("console: no unexplained errors", async () =>
 });
 
 await writeFile (join (out, "console.txt"), consoleLines .join ("\n") + "\n");
-await writeFile (join (out, "results.json"), JSON .stringify ({ facts, results, responses }, null, 1) + "\n");
-await browser .close ();
-await helperBrowser .close ();
+
+if (pointerLines .length)
+   await writeFile (join (out, "pointer.txt"), pointerLines .join ("\n") + "\n");
+await writeFile (join (out, "results.json"), JSON .stringify ({ facts, results, responses: await getResponses () .catch (() => [ ]) }, null, 1) + "\n");
+
+if (webdriver)
+   await page .close ();
+else
+{
+   await browser .close ();
+   await helperBrowser .close ();
+}
 
 const failed = results .filter (r => !r .pass);
 
