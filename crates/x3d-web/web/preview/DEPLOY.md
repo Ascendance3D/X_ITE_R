@@ -20,8 +20,10 @@ X_ITE 16.5.0; `COMPATIBILITY.md` tells what works and what does not.
 | `docs/API.md` | the API list: supported, different, not implemented |
 | `htaccess.example` | Apache MIME types, if the server does not send them |
 
-All files are newly authored for X_ITE_R or generated from its source (MIT, `LICENSE`; X_ITE's field classes, MIT,
-`THIRD_PARTY_NOTICES.md`). The package holds no historical world content.
+The code and documents are newly authored for X_ITE_R or generated from its source (MIT, `LICENSE`; X_ITE's field
+classes, MIT, `THIRD_PARTY_NOTICES.md`). The three fonts in `site/fonts/` (Geist, JetBrains Mono, Plus Jakarta Sans) are
+not MIT: they are under the SIL Open Font License 1.1, and their notices are `site/fonts/OFL.txt`,
+`OFL-JetBrainsMono.txt` and `OFL-PlusJakartaSans.txt`. The package holds no historical world content.
 
 ## Deploy
 
@@ -40,8 +42,9 @@ on Ubuntu with an RTX 3060 Ti.
 
 No server code, no CORS headers and no special cross-origin isolation headers are needed. The page loads only files of
 its own origin. The test page sets its own Content Security Policy in a `<meta>` element: `script-src 'self'
-'wasm-unsafe-eval'` (no `'unsafe-eval'`) and `style-src 'self' 'unsafe-inline'` (the element's shadow `<style>`). Do not
-add `'unsafe-eval'` to a shared site's policy for this preview.
+'wasm-unsafe-eval'` (no `'unsafe-eval'`), `style-src 'self' 'unsafe-inline'` (the element's shadow `<style>`) and
+`img-src 'self' data: blob:`. A page that embeds `<x3d-canvas>` with its own policy needs `data:` in `img-src`: the
+splash screen logo is a `data:` URL, and without it the splash screen shows no logo and no name. Do not add `'unsafe-eval'` to a shared site's policy for this preview.
 
 ## Script nodes are off
 

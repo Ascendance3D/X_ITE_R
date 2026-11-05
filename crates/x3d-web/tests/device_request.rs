@@ -178,7 +178,7 @@ fn a_failed_adapter_request_is_asked_again() {
     assert_eq!(
         lines,
         vec![format!(
-            "X_ITE_R: WebGPU adapter request 1 of {ADAPTER_REQUEST_TRIES} failed (no adapter); asking again."
+            "X_ITE_R: graphics adapter request 1 of {ADAPTER_REQUEST_TRIES} failed (no adapter); asking again."
         )]
     );
 }

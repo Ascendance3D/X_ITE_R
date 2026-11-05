@@ -69,7 +69,7 @@ export async function webDriverPage (endpoint, capabilities)
       kind: "webdriver",
       consoleLines: [ ],
 
-      async goto (url) { await call ("POST", s ("/url"), { url }); await script (collector); },
+      async goto (url) { await page .flushConsole (); await call ("POST", s ("/url"), { url }); await script (collector); },
       async reload () { await page .flushConsole (); await call ("POST", s ("/refresh"), { }); await script (collector); },
       evaluate: (fn, arg) => script (fn, arg),
       waitForTimeout: ms => new Promise (r => setTimeout (r, ms)),
@@ -159,7 +159,7 @@ export async function webDriverPage (endpoint, capabilities)
 
       async responses ()
       {
-         return script (() => performance .getEntriesByType ("resource") .map (e => ({ url: e .name, status: e .responseStatus || (e .transferSize > 0 || e .decodedBodySize > 0 ? 200 : 0), type: "" })));
+         return script (() => performance .getEntriesByType ("resource") .map (e => ({ url: e .name, status: e .responseStatus || null, type: "" })));
       },
 
       pointerLog: () => script (() => (window .__smokePointer ?? [ ]) .splice (0)) .catch (() => [ ]),

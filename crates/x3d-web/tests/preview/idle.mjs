@@ -27,6 +27,10 @@ const worlds  = (opt ("--worlds") ?? "worlds/vrml97-basic.wrl,worlds/navigation.
 const flags   = "--enable-unsafe-webgpu --enable-features=Vulkan --use-angle=vulkan --ignore-gpu-blocklist --enable-gpu" .split (" ");
 const args    = kind === "chromium" && argv .includes ("--webgpu-flags") ? flags : [ ];
 
+// The package root: a base without a trailing slash would lose its last path segment in new URL ("preview/...", base).
+if (!base .pathname .endsWith ("/"))
+   base .pathname += "/";
+
 const browser = await { chromium, firefox, webkit } [kind] .launch ({ channel, headless: !argv .includes ("--headed"), args });
 const context = await browser .newContext ({ viewport: { width: 1280, height: 1000 } });
 

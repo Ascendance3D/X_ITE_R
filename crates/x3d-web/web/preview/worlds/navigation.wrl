@@ -22,11 +22,13 @@ Shape {
 }
 
 # Pillars in two rows
-DEF Pillar Shape {
-  appearance Appearance { material Material { diffuseColor 0.85 0.75 0.3 } }
-  geometry Cylinder { radius 0.4 height 3 }
+Transform {
+  translation -3 1.5 0
+  children DEF Pillar Shape {
+    appearance Appearance { material Material { diffuseColor 0.85 0.75 0.3 } }
+    geometry Cylinder { radius 0.4 height 3 }
+  }
 }
-Transform { translation -3 1.5 0 children USE Pillar }
 Transform { translation 3 1.5 0 children USE Pillar }
 Transform { translation -3 1.5 -6 children USE Pillar }
 Transform { translation 3 1.5 -6 children USE Pillar }

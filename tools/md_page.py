@@ -42,8 +42,10 @@ def inline(s):
 
 
 def rich(s):
+    # The text is escaped once here; a link target is part of it, so only its quotes are escaped again (a second
+    # html.escape would turn "&amp;" into "&amp;amp;").
     s = html.escape(s, quote=False)
-    s = re.sub(r"\[([^\]]+)\]\(([^)\s]+)\)", lambda m: f'<a href="{html.escape(m.group(2))}">{m.group(1)}</a>', s)
+    s = re.sub(r"\[([^\]]+)\]\(([^)\s]+)\)", lambda m: f'<a href="{m.group(2).replace(chr(34), "&quot;")}">{m.group(1)}</a>', s)
     s = re.sub(r"\*\*(.+?)\*\*", r"<b>\1</b>", s)
     s = re.sub(r"(?<![\w*])\*(?!\s)(.+?)(?<!\s)\*(?![\w*])", r"<em>\1</em>", s)
     return s
@@ -132,7 +134,8 @@ while i < len(lines):
 r = args.root
 nav = [(r or "./", "Overview"), (f"{r}preview/", "Live Preview"), (f"{r}example/", "Examples"),
        (f"{r}docs/api.html", "API"), (f"{r}compatibility.html", "Compatibility")]
-nav_html = "\n".join(f'      <a href="{h}"{" aria-current=\"page\"" if t == args.current else ""}>{t}</a>' for h, t in nav)
+CURRENT = ' aria-current="page"'
+nav_html = "\n".join(f'      <a href="{h}"{CURRENT if t == args.current else ""}>{t}</a>' for h, t in nav)
 toc_html = "\n".join(f'        <li><a href="#{a}">{t}</a></li>' for a, t in toc)
 title_text = html.escape(title or args.current)
 heading = inline(title or args.current)

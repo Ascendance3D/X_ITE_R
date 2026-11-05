@@ -5,7 +5,9 @@
 #   tools/package-web-preview.sh [OUT_DIR]
 #
 # OUT_DIR (default target/web-preview) must not hold the package yet. The working tree must be clean: the package
-# records the commit it is built from (build-info.json), and the same commit and toolchain give the same files.
+# records the commit it is built from (build-info.json), and the same commit and toolchain give the same files. The
+# source files come from that commit (git archive), so an untracked or changed file never enters the package; pkg/ is
+# generated new. Every file has mode 644 and every directory 755, whatever the umask.
 # The build is tools/build-web.sh with --remap-path-prefix flags, so the module holds no path of this machine (a check
 # below fails the package when one is left). Needs what tools/build-web.sh needs, and Node for the import check.
 set -euo pipefail
@@ -35,6 +37,8 @@ build_dir=${CARGO_BUILD_BUILD_DIR:-$repo/target}
 
 # Paths of this machine become fixed names in panic locations and debug strings.
 export RUSTFLAGS="${RUSTFLAGS:-} --remap-path-prefix=$cargo_home=/cargo --remap-path-prefix=$repo=/x_ite_r --remap-path-prefix=$build_dir=/build --remap-path-prefix=$sysroot=/rust"
+# pkg/ is generated (gitignored): a file left by an older build must not enter the package.
+rm -rf crates/x3d-web/web/pkg
 tools/build-web.sh
 
 web=crates/x3d-web/web
@@ -45,20 +49,29 @@ python3 -I -B tools/check_no_native_video.py --cargo --binary "$web"/pkg/*.wasm
 
 mkdir -p "$dir"
 
+# The tracked files of `path` at the commit, into `dest` (a new directory).
+from_commit() {
+  mkdir -p "$2"
+  git archive --format=tar "$commit" "$1" | tar -x -C "$2" --strip-components="$(( $(tr -cd / <<<"$1" | wc -c) + 1 ))" --no-same-permissions
+}
+
 # The runtime: the adapter, the audio and video mirrors and the generated module. xr_session.mjs is not part of it
 # (x_ite_r.mjs does not import it; WebXR is not supported, issue #83).
-cp "$web/x_ite_r.mjs" "$web/audio_mirror.mjs" "$web/video_mirror.mjs" "$dir/"
+for f in x_ite_r.mjs audio_mirror.mjs video_mirror.mjs; do
+  git show "$commit:$web/$f" > "$dir/$f"
+done
 cp -r "$web/pkg" "$dir/pkg"
 
 # The preview page and its worlds, the example, the API list, the licenses.
-cp -r "$web/preview" "$dir/preview"
-cp -r "$web/example" "$dir/example"
-# The start page's style, module, logo and fonts (Geist, SIL OFL 1.1: site/fonts/OFL.txt).
-cp -r "$web/site" "$dir/site"
+from_commit "$web/preview" "$dir/preview"
+from_commit "$web/example" "$dir/example"
+# The start page's style, module, logo and fonts (Geist, JetBrains Mono and Plus Jakarta Sans, SIL OFL 1.1: their
+# notices are site/fonts/OFL*.txt).
+from_commit "$web/site" "$dir/site"
 mkdir -p "$dir/docs"
-cp "$web/API.md" "$dir/docs/API.md"
-cp LICENSE "$dir/LICENSE"
-cp THIRD_PARTY_NOTICES.md "$dir/THIRD_PARTY_NOTICES.md"
+git show "$commit:$web/API.md" > "$dir/docs/API.md"
+git show "$commit:LICENSE" > "$dir/LICENSE"
+git show "$commit:THIRD_PARTY_NOTICES.md" > "$dir/THIRD_PARTY_NOTICES.md"
 mv "$dir/preview/DEPLOY.md" "$dir/README.md"
 mv "$dir/preview/COMPATIBILITY.md" "$dir/COMPATIBILITY.md"
 mv "$dir/preview/htaccess.example" "$dir/htaccess.example"
@@ -129,6 +142,9 @@ JS
 
 # Checksums of every file, then the archive with fixed owners, order and times.
 (cd "$dir" && find . -type f ! -name SHA256SUMS -print0 | LC_ALL=C sort -z | xargs -0 sha256sum > SHA256SUMS)
+# Modes after SHA256SUMS exists, so it gets them too (a mode is not part of a checksum).
+find "$dir" -type d -exec chmod 755 {} +
+find "$dir" -type f -exec chmod 644 {} +
 tar --sort=name --mtime="@$epoch" --owner=0 --group=0 --numeric-owner --format=gnu -C "$out" -cf - "$release" | gzip -n -9 > "$out/$release.tar.gz"
 (cd "$out" && sha256sum "$release.tar.gz" > "$release.tar.gz.sha256")
 
