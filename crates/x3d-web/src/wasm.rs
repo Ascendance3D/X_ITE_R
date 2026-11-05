@@ -492,9 +492,16 @@ impl WebBrowser {
                 }
             }
         })
-        .await?;
+        .await;
 
-        for line in retry_lines.borrow().iter().chain(&outcome.diagnostics) {
+        // The reasons of the failed tries are logged also when the last try fails (that failure is the error).
+        for line in retry_lines.borrow().iter() {
+            web_sys::console::warn_1(&line.into());
+        }
+
+        let outcome = outcome?;
+
+        for line in &outcome.diagnostics {
             web_sys::console::warn_1(&line.into());
         }
 
@@ -507,8 +514,9 @@ impl WebBrowser {
             missing.push(format!("{name} {have} < {want}"))
         });
 
-        // WebGL2 is always below them. The proof stage starts anyway and logs what is missing, so that the renderer's
-        // validation errors on this backend are seen (release lane, WebGL2 fallback).
+        // WebGL2 is always below them: the renderer has a downlevel profile for it (x3d_render::gpu::is_downlevel), so a
+        // WebGL2 adapter starts and the missing limits are logged. The renderer must still be made without a validation
+        // error (below).
         if webgl2 && !missing.is_empty() {
             web_sys::console::warn_1(
                 &format!(
@@ -549,16 +557,15 @@ impl WebBrowser {
         });
 
         // The renderer before the canvas's context: a WebGPU device that cannot make its shaders and layouts falls back
-        // (`create`). Pipeline errors of later draws are logged, never a restart.
+        // (`create`); on WebGL2 the same error rejects `ready()`. Pipeline errors of later draws are logged, never a
+        // restart.
         let scope = device.push_error_scope(wgpu::ErrorFilter::Validation);
         let mut renderer = Renderer::new(device.clone(), queue);
 
         if let Some(e) = scope.pop().await {
-            if webgl2 {
-                web_sys::console::error_1(&format!("WebGL2: {e}").into());
-            } else {
-                return Err(format!("the WebGPU renderer cannot be made: {e}"));
-            }
+            let kind = if webgl2 { "WebGL2" } else { "WebGPU" };
+
+            return Err(format!("the {kind} renderer cannot be made: {e}"));
         }
 
         let surface = match early_surface {

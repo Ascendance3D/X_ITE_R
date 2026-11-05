@@ -28,6 +28,10 @@ const DEVICES =
    tablet: { viewport: { width: 820, height: 1180 }, deviceScaleFactor: 2, isMobile: true, hasTouch: true },
 };
 
+// The package root: a base without a trailing slash would lose its last path segment in new URL ("preview/...", base).
+if (!base .pathname .endsWith ("/"))
+   base .pathname += "/";
+
 mkdirSync (out, { recursive: true });
 
 const browser = await chromium .launch ({ args: argv .includes ("--webgpu-flags") ? flags : [ ] });

@@ -132,8 +132,12 @@ select:disabled { opacity: 0.55; }
 
 @media (max-width: 1100px)
 {
-   .top-in { grid-template-columns: auto 1fr; }
-   .top nav { justify-content: flex-end; }
+   /* The navigation shrinks and scrolls sideways when its links are wider than the header. The first link's auto
+      margin keeps the links at the right while they fit; it becomes 0 when they overflow, so no link is pushed out of
+      the scroll area (justify-content: flex-end would do that). */
+   .top-in { grid-template-columns: auto minmax(0, 1fr); }
+   .top nav { justify-content: flex-start; min-width: 0; overflow-x: auto; scrollbar-width: none; }
+   .top nav a:first-child { margin-left: auto; }
    .repo { display: none; }
 }
 

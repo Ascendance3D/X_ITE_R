@@ -1204,6 +1204,8 @@ pub struct Renderer {
     /// when a pass needs more.
     shadow_instances: wgpu::Buffer,
     shadow_instance_capacity: usize,
+    /// Downlevel: the first instance of each shadow or depth draw (its window, bound with the draw); empty otherwise.
+    shadow_instance_window: Vec<u32>,
     shadow_group: wgpu::BindGroup,
     env: Option<EnvGpu>,
     /// The main frame's EnvironmentLight source was drawn by a texture pass this frame.
@@ -1952,13 +1954,14 @@ impl Renderer {
             label: Some("shadow draw"),
             entries: &[
                 uniform_entry(true, std::mem::size_of::<ShadowDrawU>() as u64),
-                // 1: the instance matrices (shadow.wgsl `instances`).
+                // 1: the instance matrices (shadow.wgsl `instances`); on a downlevel device a window of
+                // DOWNLEVEL_SHADOW_INSTANCES at each draw's first instance (a dynamic offset).
                 wgpu::BindGroupLayoutEntry {
                     binding: 1,
                     visibility: wgpu::ShaderStages::VERTEX,
                     ty: wgpu::BindingType::Buffer {
                         ty: instance_binding,
-                        has_dynamic_offset: false,
+                        has_dynamic_offset: downlevel,
                         min_binding_size: None,
                     },
                     count: None,
@@ -2284,6 +2287,7 @@ impl Renderer {
             shadow_capacity: 64,
             shadow_instances,
             shadow_instance_capacity: 64,
+            shadow_instance_window: vec![],
             shadow_group,
             env: None,
             env_rendered: false,
@@ -2517,7 +2521,7 @@ impl Renderer {
         device.create_buffer(&wgpu::BufferDescriptor {
             label: Some("shadow instances"),
             size: (if is_downlevel(device) {
-                capacity.max(DOWNLEVEL_SHADOW_INSTANCES)
+                capacity + DOWNLEVEL_SHADOW_INSTANCES
             } else {
                 capacity
             } * 64) as u64,
@@ -2559,6 +2563,44 @@ impl Renderer {
         (buffer, group)
     }
 
+    /// Binds the uniforms of shadow or depth draw `k`; on a downlevel device also its window of instance matrices,
+    /// starting `start` instances into the draw.
+    fn bind_shadow_draw(&self, pass: &mut wgpu::RenderPass<'_>, k: usize, start: u32) {
+        let draw = (k as u64 * SHADOW_STRIDE) as u32;
+
+        match self.shadow_instance_window.get(k) {
+            Some(&first) => {
+                pass.set_bind_group(0, &self.shadow_group, &[draw, (first + start) * 64])
+            }
+            None => pass.set_bind_group(0, &self.shadow_group, &[draw]),
+        }
+    }
+
+    /// Draws `instances` instances of shadow or depth draw `k`: in one call, or on a downlevel device in windows of at
+    /// most DOWNLEVEL_SHADOW_INSTANCES (256 * 64 = 16384 bytes, so each window offset stays 256 byte aligned).
+    fn draw_shadow_instances(
+        &self,
+        pass: &mut wgpu::RenderPass<'_>,
+        k: usize,
+        count: u32,
+        instances: u32,
+    ) {
+        if self.shadow_instance_window.is_empty() {
+            self.bind_shadow_draw(pass, k, 0);
+            pass.draw(0..count, 0..instances);
+            return;
+        }
+
+        let mut start = 0;
+
+        while start < instances {
+            let n = (instances - start).min(DOWNLEVEL_SHADOW_INSTANCES as u32);
+            self.bind_shadow_draw(pass, k, start);
+            pass.draw(0..count, 0..n);
+            start += n;
+        }
+    }
+
     /// The uniforms of a shadow or depth color pass, one per draw, and the instance matrices of its instanced draws
     /// into their buffers, grown when the pass needs more. `particle_draws` and `particle_instances` of them are
     /// ParticleSystem data (crate::transfer).
@@ -2569,6 +2611,51 @@ impl Renderer {
         particle_draws: usize,
         particle_instances: usize,
     ) {
+        // Downlevel: the uniform block holds DOWNLEVEL_SHADOW_INSTANCES matrices, bound at each draw's first one (a 256
+        // byte aligned offset: 4 matrices). The matrices of each instanced draw start at a multiple of 4, its window
+        // start is recorded, and its counts[2] (the first instance) becomes 0, the start of its window.
+        let relaid: Option<(Vec<ShadowDrawU>, Vec<[f32; 16]>)> =
+            is_downlevel(&self.device).then(|| {
+                let starts: Vec<usize> = draws
+                    .iter()
+                    .filter(|d| d.counts[1] != 0)
+                    .map(|d| d.counts[2] as usize)
+                    .collect();
+                let mut out_draws = draws.to_vec();
+                let mut out = Vec::with_capacity(instances.len());
+                let mut n = 0;
+
+                self.shadow_instance_window.clear();
+
+                for d in out_draws.iter_mut() {
+                    if d.counts[1] == 0 {
+                        self.shadow_instance_window.push(0);
+                        continue;
+                    }
+
+                    let start = d.counts[2] as usize;
+                    let end = starts.get(n + 1).copied().unwrap_or(instances.len());
+                    n += 1;
+
+                    while !out.len().is_multiple_of(4) {
+                        out.push([0.0; 16]);
+                    }
+
+                    self.shadow_instance_window.push(out.len() as u32);
+                    out.extend_from_slice(&instances[start..end]);
+                    d.counts[2] = 0;
+                }
+
+                (out_draws, out)
+            });
+        if relaid.is_none() {
+            self.shadow_instance_window.clear();
+        }
+        let (draws, instances) = match &relaid {
+            Some((d, i)) => (d.as_slice(), i.as_slice()),
+            None => (draws, instances),
+        };
+
         let more_instances = instances.len() > self.shadow_instance_capacity;
 
         if more_instances {
@@ -3024,11 +3111,7 @@ impl Renderer {
                     if let Some(lines) = &item.thick_lines {
                         let e = &self.thick[&Rc::as_ptr(lines)];
                         pass.set_pipeline(&self.thick_pipeline);
-                        pass.set_bind_group(
-                            0,
-                            &self.shadow_group,
-                            &[(k as u64 * SHADOW_STRIDE) as u32],
-                        );
+                        self.bind_shadow_draw(&mut pass, k, 0);
                         pass.set_vertex_buffer(0, e.triangles.slice(..));
                         pass.draw(0..e.count, 0..1);
                         self.stats.shadow_draw_calls += 1;
@@ -3046,13 +3129,8 @@ impl Renderer {
 
                     if e.count > 0 && instances > 0 {
                         pass.set_pipeline(pipeline);
-                        pass.set_bind_group(
-                            0,
-                            &self.shadow_group,
-                            &[(k as u64 * SHADOW_STRIDE) as u32],
-                        );
                         pass.set_vertex_buffer(0, e.buffer.slice(..));
-                        pass.draw(0..e.count, 0..instances);
+                        self.draw_shadow_instances(&mut pass, k, e.count, instances);
                         self.stats.shadow_draw_calls += 1;
                     }
                     k += 1;
@@ -4650,9 +4728,8 @@ impl Renderer {
 
             if e.count > 0 && instances > 0 {
                 pass.set_pipeline(pipeline);
-                pass.set_bind_group(0, &self.shadow_group, &[(k as u64 * SHADOW_STRIDE) as u32]);
                 pass.set_vertex_buffer(0, e.buffer.slice(..));
-                pass.draw(0..e.count, 0..instances);
+                self.draw_shadow_instances(&mut pass, k, e.count, instances);
                 self.stats.depth_draw_calls += 1;
             }
             k += 1;
@@ -6449,20 +6526,13 @@ impl Renderer {
                     if let Some([r, g, b, a]) = c.blend_constant {
                         pass.set_blend_constant(wgpu::Color { r, g, b, a });
                     }
-                    match self.draw_instance_window.get(c.draw_index) {
-                        Some(&first) => pass.set_bind_group(
-                            1,
-                            &self.draw_group,
-                            &[
-                                (c.draw_index as u64 * DRAW_STRIDE) as u32,
-                                first * std::mem::size_of::<InstanceU>() as u32,
-                            ],
-                        ),
-                        None => pass.set_bind_group(
+                    let window = self.draw_instance_window.get(c.draw_index).copied();
+                    if window.is_none() {
+                        pass.set_bind_group(
                             1,
                             &self.draw_group,
                             &[(c.draw_index as u64 * DRAW_STRIDE) as u32],
-                        ),
+                        );
                     }
                     pass.set_bind_group(2, &self.slot_groups[&c.textures].0, &[]);
                     let sg = c
@@ -6490,7 +6560,29 @@ impl Renderer {
                         }
                     }
 
-                    pass.draw(0..c.count, 0..c.instances);
+                    match window {
+                        // Downlevel: the uniform block holds DOWNLEVEL_INSTANCES instances, so a draw with more is
+                        // drawn in windows of at most that many, each bound at its own first instance. The offsets
+                        // stay 256 byte aligned: a draw starts at a multiple of 4 instances (768 bytes), and a window
+                        // is DOWNLEVEL_INSTANCES (84 * 192 = 16128 = 63 * 256 bytes).
+                        Some(first) => {
+                            let mut start = 0;
+                            while start < c.instances {
+                                let n = (c.instances - start).min(DOWNLEVEL_INSTANCES as u32);
+                                pass.set_bind_group(
+                                    1,
+                                    &self.draw_group,
+                                    &[
+                                        (c.draw_index as u64 * DRAW_STRIDE) as u32,
+                                        (first + start) * std::mem::size_of::<InstanceU>() as u32,
+                                    ],
+                                );
+                                pass.draw(0..c.count, 0..n);
+                                start += n;
+                            }
+                        }
+                        None => pass.draw(0..c.count, 0..c.instances),
+                    }
                 }
             };
 
@@ -7169,6 +7261,9 @@ const _: () = assert!(DOWNLEVEL_FRAME_BYTES <= DOWNLEVEL_UNIFORM_BLOCK);
 const _: () =
     assert!(DOWNLEVEL_INSTANCES * std::mem::size_of::<InstanceU>() <= DOWNLEVEL_UNIFORM_BLOCK);
 const _: () = assert!((DRAW_STRIDE as usize) <= DOWNLEVEL_UNIFORM_BLOCK);
+// A draw with more instances than one window is drawn window by window (encode): each window offset stays 256 byte
+// aligned.
+const _: () = assert!((DOWNLEVEL_INSTANCES * std::mem::size_of::<InstanceU>()).is_multiple_of(256));
 
 /// The bytes of `fu` in the downlevel layout (see [`DOWNLEVEL_FRAME_BYTES`]).
 fn downlevel_frame_bytes(fu: &FrameU) -> Vec<u8> {

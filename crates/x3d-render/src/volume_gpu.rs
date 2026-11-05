@@ -133,7 +133,9 @@ impl VolumeGpu {
             return;
         }
 
-        let source = assemble(p);
+        // The frame structs come from x3d.wgsl: on a downlevel device the frame group binds the shorter downlevel
+        // frame block, so the volume shader gets the same downlevel structs.
+        let source = crate::gpu::wgsl_for(device, &assemble(p));
         let module = device.create_shader_module(wgpu::ShaderModuleDescriptor {
             label: Some("volume"),
             source: wgpu::ShaderSource::Wgsl(source.into()),

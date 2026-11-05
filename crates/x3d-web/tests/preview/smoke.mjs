@@ -29,6 +29,8 @@ if (!base .pathname .endsWith ("/"))
 
 const out     = opt ("--out") ?? "preview-smoke";
 const channel = opt ("--channel");
+// The Playwright browser (without --webdriver); only a Chromium launch takes --channel.
+const kind    = opt ("--browser") ?? "chromium";
 const pause   = Number (opt ("--pause") ?? 0); // milliseconds after each check, to watch a --headed run
 const W = 640, H = 480;
 const BG = [ 38, 38, 51 ]; // skyColor 0.15 0.15 0.2
@@ -120,6 +122,9 @@ const args = argv .includes ("--webgpu-flags")
 // --webdriver <endpoint> --browser safari|firefox: a W3C WebDriver session (safaridriver, geckodriver) instead of
 // Playwright; see webdriver.mjs for what it records differently.
 const webdriver = opt ("--webdriver");
+// A resource the page fetched: status 200, or (WebDriver) an unknown status when the browser's Resource Timing has no
+// responseStatus (webdriver.mjs gives null then, never a guessed 200). The pixel checks show whether such a file loaded.
+const loaded = r => !!r && (r .status === 200 || (!!webdriver && r .status === null));
 const responses = [ ];
 let browser, helperBrowser, helper, decode, getResponses, pressAt, releaseAt, dragPath, wheelAt;
 
@@ -143,8 +148,6 @@ if (webdriver)
 }
 else
 {
-   const kind = opt ("--browser") ?? "chromium";
-
    browser = await ({ chromium, firefox, webkit }) [kind] .launch (kind === "chromium"
       ? { channel, headless: !argv .includes ("--headed"), args }
       : { headless: !argv .includes ("--headed") });
@@ -190,7 +193,7 @@ else
 
 const facts = webdriver
    ? { base: base .href, browser: page .browserName, browserVersion: page .browserVersion, driver: "webdriver", console: "recorded after each navigation (webdriver.mjs)" }
-   : { base: base .href, browserVersion: browser .version (), channel: channel ?? "playwright chromium", flags: args };
+   : { base: base .href, browser: kind, browserVersion: browser .version (), ...(kind === "chromium" ? { channel: channel ?? "playwright chromium", flags: args } : { }) };
 
 const preview = (fn, arg) => page .evaluate (fn, arg);
 
@@ -275,7 +278,9 @@ await check ("page starts: graphics backend and first world", async () =>
    const webgpu = await page .locator ("#webgpu") .textContent ();
 
    facts .webgpu  = webgpu;
-   facts .backend = backend ?? "webgpu";
+   // The backend the page reports ("WebGPU started ..." or "WebGL2 started ..."), not the one asked for.
+   facts .backend = /^WebGL2/ .test (webgpu) ? "webgl2" : /^WebGPU/ .test (webgpu) ? "webgpu" : null;
+   facts .requestedBackend = backend ?? null;
    facts .version = await page .locator ("#version") .textContent ();
    facts .build   = await page .locator ("#build") .textContent ();
    facts .userAgent = await preview (() => navigator .userAgent);
@@ -400,7 +405,7 @@ await check ("X3D (XML) world renders, PhysicalMaterial field set, texture loads
    const orange = stripes .some (c => c [0] > 150 && c [2] < 90), white = stripes .some (c => c [0] > 150 && c [2] > 150);
    const tex = (await getResponses ()) .find (r => r .url .endsWith ("/preview/textures/stripes.png"));
 
-   return { pass: ok && !isBg (pyramid) && sphere [1] > sphere [0] && orange && white && tex ?.status === 200,
+   return { pass: ok && !isBg (pyramid) && sphere [1] > sphere [0] && orange && white && loaded (tex),
             detail: { pyramid, sphere, orange, white, texture: tex, file: s .file } };
 });
 
@@ -418,7 +423,7 @@ await check ("Inline, EXTERNPROTO and relative texture URLs load and render", as
    const proto  = s .at (494, 240);
    const state  = await preview (() => { const p = globalThis .X_ITE_R_PREVIEW .browser .currentScene .externprotos [0]; return { loadState: p .loadState, complete: globalThis .X3D .X3DConstants .COMPLETE_STATE }; });
 
-   return { pass: ok && got .every (r => r ?.status === 200) && yellow && navy && inline > 20 && proto [0] > 120 && proto [2] > 120 && proto [1] < 0.7 * proto [0] && state .loadState === state .complete,
+   return { pass: ok && got .every (loaded) && yellow && navy && inline > 20 && proto [0] > 120 && proto [2] > 120 && proto [1] < 0.7 * proto [0] && state .loadState === state .complete,
             detail: { requests: got .map ((r, k) => `${want [k]} ${r ?.status}`), checker: { yellow, navy }, inlinePixels: inline, proto, externproto: state, file: s .file } };
 });
 
@@ -452,16 +457,23 @@ let lostDevice = false;
 
 await check ("lost device: the page stops and offers one restart, which draws", async () =>
 {
-   const before = await preview (() => document .getElementById ("webgpu") .dataset .backend);
+   const before    = await preview (() => document .getElementById ("webgpu") .dataset .backend);
+   const lastWorld = await preview (() => globalThis .X_ITE_R_PREVIEW .browser .currentScene ?.worldURL ?? "");
 
    lostDevice = true;
    await preview (() => document .getElementById ("canvas") .browser [Symbol .for ("X_ITE_R.engine")] .loseDevice ());
 
    const stopped = await waitStatus (/^stopped/, 10000);
    const href    = await preview (() => document .getElementById ("restart") ?.href ?? null);
+   // No control can replace the status (and its restart link) after the loss.
+   const controlsOff = await preview (() => [ ... document .querySelectorAll ("button, select") ] .every (e => e .disabled));
 
    if (!href)
-      return { pass: false, detail: { before, stopped } };
+      return { pass: false, detail: { before, stopped, controlsOff } };
+
+   // The restart link starts the world that was loaded, not the page URL's ?world=.
+   const restartWorld = new URL (href) .searchParams .get ("world");
+   const sameWorld    = !!restartWorld && lastWorld .endsWith (restartWorld);
 
    await page .goto (href);
 
@@ -470,7 +482,8 @@ await check ("lost device: the page stops and offers one restart, which draws", 
    const s        = await shot ("restart");
    const want     = before === "webgpu" ? /^WebGL2 started/ : /^(WebGPU|WebGL2) started/;
 
-   return { pass: /device is lost/ .test (stopped) && want .test (graphics) && /^loaded/ .test (status) && !isBg (s .at (175, 240)), detail: { before, stopped, href, graphics, status, file: s .file } };
+   return { pass: /device is lost/ .test (stopped) && controlsOff && sameWorld && want .test (graphics) && /^loaded/ .test (status) && !isBg (s .at (175, 240)),
+            detail: { before, stopped, controlsOff, lastWorld, href, graphics, status, file: s .file } };
 });
 
 await check ("dispose: the browser stops without page errors", async () =>

@@ -51,7 +51,7 @@
     <section class="panel stage" aria-label="Live view">
       <div class="panel-head"><p class="label">Live view</p><a class="label" href="interactive.wrl">interactive.wrl</a></div>
       <div class="canvas-box">
-        <x3d-canvas src="interactive.wrl" contentScale="auto">
+        <x3d-canvas src="interactive.wrl" contentscale="auto">
           This page needs a browser with WebGPU or WebGL2.
         </x3d-canvas>
       </div>
@@ -59,9 +59,9 @@
     <section class="panel side" aria-label="Controls">
       <p class="label">Controls</p>
       <p class="row">
-          <button class="tool" id="previous">previousViewpoint</button>
-          <button class="tool" id="next">nextViewpoint</button>
-          <button class="tool" id="all">viewAll</button>
+          <button type="button" class="tool" id="previous">previousViewpoint</button>
+          <button type="button" class="tool" id="next">nextViewpoint</button>
+          <button type="button" class="tool" id="all">viewAll</button>
       </p>
       <p class="label">Status</p>
       <div id="status">loading…</div>

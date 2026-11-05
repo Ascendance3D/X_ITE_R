@@ -49,15 +49,15 @@
     </div>
 
     <figure class="stage">
-      <x3d-canvas id="canvas" src="preview/worlds/vrml97-basic.wrl" contentScale="auto">
+      <x3d-canvas id="canvas" src="preview/worlds/vrml97-basic.wrl" contentscale="auto">
         <p class="fallback">This browser has neither WebGPU nor WebGL2, so the engine cannot start here.</p>
       </x3d-canvas>
+      <p class="hint">Drag to turn the view. Click the red box: a TouchSensor. Drag the blue box: a PlaneSensor.</p>
       <figcaption>
         <span class="mono" id="graphics">Graphics: starting</span>
         <span class="mono" id="world">World: preview/worlds/vrml97-basic.wrl</span>
         <span class="mono" id="status" role="status">Status: loading</span>
       </figcaption>
-      <p class="hint">Drag to turn the view. Click the red box: a TouchSensor. Drag the blue box: a PlaneSensor.</p>
     </figure>
   </section>
 
@@ -95,7 +95,7 @@
           <tr><td>Chromium, Edge</td><td>Linux</td><td class="mono pass">32/32</td><td class="mono pass">32/32</td></tr>
           <tr><td>Firefox</td><td>Linux</td><td class="mono">no WebGPU</td><td class="mono pass">32/32</td></tr>
           <tr><td>Chrome 156</td><td>macOS, Apple M1</td><td class="mono pass">32/32</td><td class="mono pass">32/32</td></tr>
-          <tr><td>Safari 27</td><td>macOS, Apple M1</td><td class="mono pass">32/32</td><td class="mono pass">32/32</td></tr>
+          <tr><td>Safari 27.0.1 (passes only while the window is visible)</td><td>macOS, Apple M1</td><td class="mono pass">32/32</td><td class="mono pass">32/32</td></tr>
           <tr><td>Touch: tap, drag, pinch, Anchor</td><td>Chromium phone emulation</td><td class="mono pass">8/8</td><td class="mono pass">8/8</td></tr>
         </tbody>
       </table>
@@ -148,8 +148,9 @@
     <div class="band-head">
       <p class="label">Download</p>
       <h2 id="download">The package</h2>
-      <p>This site is the package, served as static files. The archive and its SHA-256 are on the
-        <a href="https://github.com/Ascendance3D/X_ITE_R/releases">GitHub releases page</a>. Deployment:
+      <p>This site is the package, served as static files. The archive and its SHA-256 will be on the
+        <a href="https://github.com/Ascendance3D/X_ITE_R/releases">GitHub releases page</a> when the release is
+        published. Deployment:
         <a href="README.md">README.md</a>.</p>
     </div>
   </section>

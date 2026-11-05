@@ -58,14 +58,18 @@ async function graphics ()
    }
 }
 
-canvas .addEventListener ("load", () =>
+function loaded ()
 {
-   const url = canvas .browser .currentScene ?.worldURL ?? "";
+   const url = canvas .browser ?.currentScene ?.worldURL ?? "";
 
    // "load" also comes for the empty world the browser starts with.
    if (url .endsWith (world))
       status ("loaded", "ok");
-});
+}
+
+canvas .addEventListener ("load", loaded);
+// The world can finish loading before this module runs (x_ite_r.mjs does not wait for it).
+loaded ();
 
 canvas .addEventListener ("error", () => status (`${world} did not load`, "error"));
 

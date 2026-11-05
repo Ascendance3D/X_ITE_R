@@ -109,7 +109,7 @@ where
         match request().await {
             Ok(value) => return (Ok(value), diagnostics),
             Err(reason) if attempt < tries => diagnostics.push(format!(
-                "X_ITE_R: WebGPU adapter request {attempt} of {tries} failed ({reason}); asking again."
+                "X_ITE_R: graphics adapter request {attempt} of {tries} failed ({reason}); asking again."
             )),
             Err(reason) => return (Err(reason), diagnostics),
         }

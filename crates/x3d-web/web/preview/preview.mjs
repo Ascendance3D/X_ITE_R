@@ -65,12 +65,7 @@ async function showBuild ()
    }
 }
 
-// `?backend=webgl2` or `?backend=webgpu` chooses the graphics backend; without it the engine chooses (WebGPU when it can
-// start, else WebGL2). The element reads the attribute when its module has loaded.
-const requestedBackend = new URLSearchParams (location .search) .get ("backend");
-
-if (requestedBackend)
-   $("canvas") .setAttribute ("backend", requestedBackend);
+// `?backend=` is applied by backend.mjs, before the engine module runs.
 
 async function showWebGpu ()
 {
@@ -144,6 +139,8 @@ function findNodes ()
 }
 
 let generation = 0;
+// The URL of the last world that loaded (the restart link starts it again).
+let lastWorld = null;
 
 async function loadWorld (url)
 {
@@ -160,6 +157,7 @@ async function loadWorld (url)
          return false;
 
       findNodes ();
+      lastWorld = url;
       setStatus (`loaded ${url}`, "ok");
       log (`loaded ${browser .currentScene .worldURL}`, "ok");
       return true;
@@ -276,15 +274,22 @@ $("viewer")       .onchange = event => bindViewer (event .target .value);
 for (const button of document .querySelectorAll ("#color-set button"))
    button .onclick = () => setColor (button .dataset .color);
 
+// No control loads a world once the engine is gone: after Dispose or a lost device.
+function disableControls ()
+{
+   for (const element of document .querySelectorAll ("button, select"))
+      element .disabled = true;
+}
+
 $("dispose") .onclick = () =>
 {
+   // A pending loadWorld () skips its status writes.
+   ++ generation;
    browser .dispose ();
    nodes = { };
    setStatus ("browser disposed; reload the page to start again");
    log ("browser.dispose ()");
-
-   for (const element of document .querySelectorAll ("button, select"))
-      element .disabled = true;
+   disableControls ();
 };
 
 canvas .addEventListener ("load",  () => log ("event load"));
@@ -307,9 +312,12 @@ browser .addBrowserCallback ("preview-connection", X3D .X3DConstants .CONNECTION
 {
    const engineBackend = $("webgpu") .dataset .backend;
    const query         = engineBackend === "webgpu" ? "?backend=webgl2" : "";
-   const world         = new URLSearchParams (location .search) .get ("world");
+   const world         = lastWorld ?? new URLSearchParams (location .search) .get ("world");
    const href          = `${location .pathname}${query}${world ? `${query ? "&" : "?"}world=${encodeURIComponent (world)}` : ""}`;
 
+   // A pending loadWorld () skips its status writes, and the controls are off: the status keeps the restart link.
+   ++ generation;
+   disableControls ();
    setStatus (`stopped: the ${engineBackend === "webgl2" ? "WebGL2" : "WebGPU"} device is lost.`, "error");
    log ("Graphics device lost", "error");
 
