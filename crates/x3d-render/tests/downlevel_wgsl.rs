@@ -3,7 +3,9 @@
 //! (crates/x3d-web/tests/preview/smoke.mjs --backend webgl2) draws with these shaders; this test keeps them valid
 //! natively, without a GPU.
 
-use x3d_render::gpu::{DOWNLEVEL_INSTANCES, DOWNLEVEL_SHADOW_INSTANCES, downlevel_wgsl};
+use x3d_render::gpu::{
+    DOWNLEVEL_INSTANCES, DOWNLEVEL_SHADOW_INSTANCES, DOWNLEVEL_UNIFORM_BLOCK, downlevel_wgsl,
+};
 
 const X3D: &str = include_str!("../src/x3d.wgsl");
 const SHADOW: &str = include_str!("../src/shadow.wgsl");
@@ -67,8 +69,28 @@ fn shadow_and_depth_wgsl_downlevel_read_instances_from_a_uniform_block() {
 }
 
 #[test]
-fn the_downlevel_instance_blocks_fit_in_64_kib() {
-    // x3d.wgsl Instance: mat4x4 + 3 vec4 + vec4 + 4 vec4 = 192 bytes; shadow and depth instances: mat4x4, 64 bytes.
-    assert!(DOWNLEVEL_INSTANCES * 192 <= 65536);
-    assert!(DOWNLEVEL_SHADOW_INSTANCES * 64 <= 65536);
+fn every_downlevel_uniform_block_fits_in_16_kib() {
+    // WebGL2's minimum MAX_UNIFORM_BLOCK_SIZE, and the value of ANGLE on Metal (Apple M1, Chrome 156).
+    let caps = naga::valid::Capabilities::all() - naga::valid::Capabilities::CUBE_ARRAY_TEXTURES;
+    for (name, src) in [
+        ("x3d.wgsl", X3D),
+        ("shadow.wgsl", SHADOW),
+        ("depth.wgsl", DEPTH),
+    ] {
+        let s = downlevel_wgsl(src);
+        let module = naga::front::wgsl::parse_str(&s).unwrap();
+        naga::valid::Validator::new(naga::valid::ValidationFlags::all(), caps)
+            .validate(&module)
+            .unwrap();
+        for (_, var) in module.global_variables.iter() {
+            if var.space == naga::AddressSpace::Uniform {
+                let size = module.types[var.ty].inner.size(module.to_ctx());
+                assert!(
+                    size as usize <= DOWNLEVEL_UNIFORM_BLOCK,
+                    "{name}: uniform {:?} has {size} bytes",
+                    var.name
+                );
+            }
+        }
+    }
 }
