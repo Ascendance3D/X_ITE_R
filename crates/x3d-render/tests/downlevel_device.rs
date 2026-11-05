@@ -83,10 +83,13 @@ impl World {
             "x3d-render-downlevel-{}-{stamp}-{name}",
             std::process::id()
         ));
-        std::fs::create_dir(&dir).unwrap();
+        std::fs::create_dir(&dir)
+            .unwrap_or_else(|e| panic!("cannot create {}: {e}", dir.display()));
+        // The guard exists before the write, so a failed write also keeps the directory and prints its path.
         let path = dir.join(name);
-        std::fs::write(&path, text).unwrap();
-        Self { dir, path }
+        let world = Self { dir, path };
+        std::fs::write(&world.path, text).unwrap();
+        world
     }
 }
 
