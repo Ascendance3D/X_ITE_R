@@ -6668,11 +6668,12 @@
    "behavior": "",
    "tests": [
     "crates/x3d-viewer/tests/rea_batch09_sai.rs parse-formats parse-xml-mfstring parse-xml-unknown",
-    "crates/x3d-viewer/tests/golden_gate_binary.rs (73 binary inputs through createX3DFromURL: scene text of every dumped frame and the loader log exact)"
+    "crates/x3d-viewer/tests/golden_gate_binary.rs (73 binary inputs through createX3DFromURL: scene text of every dumped frame and the loader log exact)",
+    "crates/x3d-parse/tests/golden_gate_registry.rs (pinned GoldenGate.js list semantics)"
    ],
-   "missing": "binary dispatch (STLB, PLYB little and big endian, GLB2, by content under other extensions, gzipped, no-handler input, URL fallback lists) is compared through createX3DFromURL on 73 inputs (golden_gate_binary, three identical recordings per world): scene text of every dumped frame and the loader's log exact; NaN STL coordinates (the pinned page logs a stack overflow) are not compared; parsers added or removed with GoldenGate.addParsers / removeParsers and PLY Gaussian splats are not covered",
+   "missing": "binary dispatch (STLB, PLYB little and big endian, GLB2, by content under other extensions, gzipped, no-handler input, URL fallback lists) is compared through createX3DFromURL on 73 inputs (golden_gate_binary, three identical recordings per world): scene text of every dumped frame and the loader's log exact; NaN STL coordinates (the pinned page logs a stack overflow) are not compared; parsers added or removed with GoldenGate.addParsers / removeParsers / getParsers are covered by golden_gate_registry against the pinned source, not a recorded run (PR #441); PLY Gaussian splats are not covered",
    "oracle": "",
-   "notes": "b09 cloud 4b4daa1: parse-formats (50 createX3DFromString inputs: XML, VRML, JSON, glTF JSON, OBJ, STL ASCII, PLY ASCII, SVG, HTML, unknown, empty and whitespace input; the parser chosen, the scene and the rejection text) baselined from X_ITE (3 identical recordings), exact | Issue #51 2026-11-03 (PR #410). Status stays PARTIAL: the entry's behavior and oracle fields are empty, so any status change is the owner's."
+   "notes": "b09 cloud 4b4daa1: parse-formats (50 createX3DFromString inputs: XML, VRML, JSON, glTF JSON, OBJ, STL ASCII, PLY ASCII, SVG, HTML, unknown, empty and whitespace input; the parser chosen, the scene and the rejection text) baselined from X_ITE (3 identical recordings), exact | Issue #51 2026-11-03 (PR #410). Status stays PARTIAL: the entry's behavior and oracle fields are empty, so any status change is the owner's. | Issue #51 2026-11-05 (PR #441, merged 31499a74): the parser registry gap is closed. Re-run on master 31499a74: golden_gate_registry passes (16 tests), 0 skipped. Status stays PARTIAL."
   },
   {
    "id": "sub:parse.optimizer",
@@ -6950,11 +6951,13 @@
    "status": "PARTIAL",
    "behavior": "",
    "tests": [
-    "crates/x3d-viewer/tests/file_loader.rs (228 url lists through createX3DFromURL; oracle/file-loader-baseline)"
+    "crates/x3d-viewer/tests/file_loader.rs (228 url lists through createX3DFromURL; oracle/file-loader-baseline)",
+    "crates/x3d-viewer/tests/file_http.rs (4 groups; oracle/file-http-baseline)",
+    "crates/x3d-http/tests/http_fetcher.rs"
    ],
-   "missing": "text formats, encodings, gzip, url resolution, data: and ecmascript: candidates, fallback order and the failure text are compared with pinned X_ITE 16.5.0 at the createX3DFromURL level (file_loader, 228 lists, three identical recordings; GLB/STL/PLY by golden_gate_binary); the Inline data-url BOM and space-in-host URL parsing are compared (PR #434); `*` in a host and `#` / `?` in a `file:` host are pinned differences; still missing: redirects, response headers and the foreign text/html hand-off (they need a Fetcher that returns a response: PR #438, not merged)",
+   "missing": "text formats, encodings, gzip, url resolution, data: and ecmascript: candidates, fallback order and the failure text are compared with pinned X_ITE 16.5.0 at the createX3DFromURL level (file_loader, 228 lists, three identical recordings; GLB/STL/PLY by golden_gate_binary); the Inline data-url BOM and space-in-host URL parsing are compared (PR #434); `*` in a host and `#` / `?` in a `file:` host are pinned differences; redirects (301, 302, 303, 307, 308, chains, a loop, 20 and 21 hops), failed statuses, content types, response headers, Content-Encoding, a cut body and the foreign text/html hand-off are compared with the pinned page by file_http (PR #438, 4 groups, three identical recordings); pinned differences (known_differences_are_pinned): a redirect to another origin without Access-Control-Allow-Origin (the port has no origin) and the reason phrase of a status (the port keeps the canonical phrase)",
    "oracle": "",
-   "notes": "Recovery audit 2026-10-25 (origin/master cdfbffc): data: URLs are compared through node:Script (oracle/synthetic-rea-b09-sai/scr-url-order-micro.wrl: data:text/javascript, data:, data:text/plain) and node:ShaderPart (oracle/synthetic-rea-b08-shaders/data-base64.wrl). | Issue #51 2026-11-03 (PR #413): gunzip takes a single member, no second gunzip, a data: text url is read as a string. Status stays PARTIAL. | Issue #51 2026-11-04 (PR #434): Inline data-URL BOM, space in a URL host and the EXTERNPROTO no-handler text; 3 new pinned groups in file_loader. Status stays PARTIAL."
+   "notes": "Recovery audit 2026-10-25 (origin/master cdfbffc): data: URLs are compared through node:Script (oracle/synthetic-rea-b09-sai/scr-url-order-micro.wrl: data:text/javascript, data:, data:text/plain) and node:ShaderPart (oracle/synthetic-rea-b08-shaders/data-base64.wrl). | Issue #51 2026-11-03 (PR #413): gunzip takes a single member, no second gunzip, a data: text url is read as a string. Status stays PARTIAL. | Issue #51 2026-11-04 (PR #434): Inline data-URL BOM, space in a URL host and the EXTERNPROTO no-handler text; 3 new pinned groups in file_loader. Status stays PARTIAL. | Issue #51 2026-11-05 (PR #438, merged 31499a74): redirects, response headers and the foreign hand-off are no longer missing. Re-run on master 31499a74: file_http (5), file_loader (8), golden_gate_binary (5) and http_fetcher (29) pass, 0 skipped. Status stays PARTIAL."
   },
   {
    "id": "sub:config.components-profiles",
