@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<!-- The policy of this page only. Scripts are off (no scripts="true"), so no 'unsafe-eval'. 'wasm-unsafe-eval' lets the
+     page compile the engine's WebAssembly. The <x3d-canvas> element puts its own CSS in a shadow <style>, which needs
+     style-src 'unsafe-inline'. -->
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'wasm-unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; media-src 'self' data: blob:; connect-src 'self' data:; object-src 'none'; base-uri 'self'">
+<title>X_ITE_R Browser Preview</title>
+<link rel="stylesheet" href="preview.css">
+<script type="module" src="../x_ite_r.mjs"></script>
+<script type="module" src="preview.mjs"></script>
+</head>
+<body>
+<header>
+  <h1>X_ITE_R Browser Preview</h1>
+  <p class="warning">Pre-release for testing. It is not a full replacement for X_ITE 16.5.0. See <a href="../COMPATIBILITY.md">COMPATIBILITY.md</a>.</p>
+  <table class="facts">
+    <tr><th>Version</th><td id="version">…</td></tr>
+    <tr><th>Build commit</th><td id="build">…</td></tr>
+    <tr><th>WebGPU</th><td id="webgpu">…</td></tr>
+    <tr><th>World URL</th><td id="world-url">…</td></tr>
+    <tr><th>Status</th><td id="status">…</td></tr>
+  </table>
+</header>
+
+<main>
+  <section class="view">
+    <x3d-canvas id="canvas">This page needs a browser with WebGPU (Chrome or Edge 113 or later).</x3d-canvas>
+  </section>
+
+  <section class="controls">
+    <fieldset>
+      <legend>World</legend>
+      <label>Test world <select id="world"></select></label>
+      <button id="load">Load</button>
+      <button id="reload-world">Load again</button>
+    </fieldset>
+
+    <fieldset>
+      <legend>Viewpoints</legend>
+      <button id="previous">Previous</button>
+      <button id="next">Next</button>
+      <button id="view-all">View all</button>
+    </fieldset>
+
+    <fieldset id="viewer-set">
+      <legend>Viewer type</legend>
+      <label>NavigationInfo <select id="viewer" disabled></select></label>
+      <p class="hint" id="viewer-hint">The navigation world has EXAMINE, WALK and FLY.</p>
+    </fieldset>
+
+    <fieldset id="color-set">
+      <legend>JavaScript API: set a field</legend>
+      <button data-color="0.9 0.15 0.15" disabled>Red</button>
+      <button data-color="0.15 0.8 0.2" disabled>Green</button>
+      <button data-color="0.95 0.85 0.1" disabled>Yellow</button>
+      <p class="hint">Sets the field of the Material named "ColorTarget" in the world.</p>
+    </fieldset>
+
+    <fieldset>
+      <legend>Browser</legend>
+      <button id="dispose">Dispose browser</button>
+      <a href="" id="reload-page">Reload page</a>
+    </fieldset>
+  </section>
+
+  <section class="readout">
+    <h2>Live values</h2>
+    <pre id="values">(no world)</pre>
+    <h2>Events</h2>
+    <pre id="log"></pre>
+  </section>
+
+  <section class="help">
+    <h2>How to test</h2>
+    <ul>
+      <li><b>EXAMINE:</b> drag with the left mouse button (one finger) to turn the world. Use the wheel (two-finger pinch) to zoom.</li>
+      <li><b>WALK and FLY:</b> load "Navigation", select WALK or FLY, then drag up or down to move and left or right to turn.</li>
+      <li><b>TouchSensor:</b> in "VRML97 basic", press the red box. "Touch.isActive" is TRUE while you press.</li>
+      <li><b>PlaneSensor:</b> in "VRML97 basic", drag the blue box. It moves in its plane.</li>
+      <li><b>TimeSensor:</b> the green cone (VRML97) and the pyramid (X3D) turn continuously.</li>
+      <li><b>JavaScript API:</b> the color buttons set the "ColorTarget" Material field.</li>
+      <li><b>Inline, EXTERNPROTO and textures:</b> load "Resources". You see a checker box, a striped sphere (Inline) and a magenta box (EXTERNPROTO).</li>
+      <li><b>Failed URL:</b> load "Missing world". The status shows the error and the last world stays. Then load another world.</li>
+    </ul>
+    <p>Script nodes are off on this page. The viewer keyboard and context menu work as in X_ITE where the engine supports them.</p>
+  </section>
+</main>
+</body>
+</html>

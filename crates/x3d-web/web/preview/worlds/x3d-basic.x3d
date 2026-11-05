@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE X3D PUBLIC "ISO//Web3D//DTD X3D 4.0//EN" "https://www.web3d.org/specifications/x3d-4.0.dtd">
+<!-- X_ITE_R Browser Preview test world (X3D XML encoding). Newly authored for the preview; MIT, like the repository.
+     Center: a colored IndexedFaceSet pyramid ("Pyramid"); its Transform turns with a TimeSensor ("Clock").
+     Left: a sphere with the PhysicalMaterial "ColorTarget". Right: a textured box (../textures/stripes.png). -->
+<X3D profile="Interchange" version="4.0">
+  <head>
+    <meta name="title" content="X_ITE_R preview: X3D basic"/>
+  </head>
+  <Scene>
+    <NavigationInfo type='"EXAMINE" "ANY"'/>
+    <Background skyColor="0.15 0.15 0.2"/>
+    <Viewpoint DEF="Front" position="0 0 10" description="Front"/>
+    <ProximitySensor DEF="Viewer" size="1000 1000 1000"/>
+    <Transform DEF="Pyramid">
+      <Shape>
+        <IndexedFaceSet solid="false" colorPerVertex="false" coordIndex="0 1 2 -1 0 2 3 -1 0 3 4 -1 0 4 1 -1 1 4 3 2 -1">
+          <Coordinate point="0 1.5 0 -1.2 -1 1.2 1.2 -1 1.2 1.2 -1 -1.2 -1.2 -1 -1.2"/>
+          <Color color="1 0.3 0.2 0.3 1 0.3 0.3 0.4 1 1 0.9 0.2 0.7 0.7 0.7"/>
+        </IndexedFaceSet>
+      </Shape>
+    </Transform>
+    <TimeSensor DEF="Clock" cycleInterval="6" loop="true"/>
+    <OrientationInterpolator DEF="Turn" key="0 0.5 1" keyValue="0 1 0 0 0 1 0 3.14159 0 1 0 6.28318"/>
+    <ROUTE fromNode="Clock" fromField="fraction_changed" toNode="Turn" toField="set_fraction"/>
+    <ROUTE fromNode="Turn" fromField="value_changed" toNode="Pyramid" toField="set_rotation"/>
+    <Transform translation="-3 0 0">
+      <Shape>
+        <Appearance>
+          <PhysicalMaterial DEF="ColorTarget" baseColor="0.9 0.6 0.1" metallic="0" roughness="0.6"/>
+        </Appearance>
+        <Sphere radius="0.9"/>
+      </Shape>
+    </Transform>
+    <Transform translation="3 0 0">
+      <Shape>
+        <Appearance>
+          <Material/>
+          <ImageTexture url='"../textures/stripes.png"'/>
+        </Appearance>
+        <Box size="1.6 1.6 1.6"/>
+      </Shape>
+    </Transform>
+  </Scene>
+</X3D>
