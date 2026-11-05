@@ -95,8 +95,14 @@ export async function webDriverPage (endpoint, capabilities)
          return {
             textContent: () => script (sel => document .querySelector (sel) .textContent, selector),
             allTextContents: () => script (sel => [ ... document .querySelectorAll (sel) ] .map (e => e .textContent), selector),
-            boundingBox: () => script (sel => { const r = document .querySelector (sel) .getBoundingClientRect (); return { x: r .x, y: r .y, width: r .width, height: r .height }; }, selector),
-            screenshot: async () => Buffer .from (await call ("GET", s (`/element/${await element (selector)}/screenshot`)), "base64"),
+            // The window can be smaller than the page (a 1000-pixel window on a laptop screen): the element comes into
+            // view first, else Safari's element screenshot keeps only the visible part and pointer positions are off-screen.
+            boundingBox: () => script (sel => { const e = document .querySelector (sel); e .scrollIntoView ({ block: "nearest", inline: "nearest" }); const r = e .getBoundingClientRect (); return { x: r .x, y: r .y, width: r .width, height: r .height }; }, selector),
+            screenshot: async () =>
+            {
+               await script (sel => document .querySelector (sel) .scrollIntoView ({ block: "nearest", inline: "nearest" }), selector);
+               return Buffer .from (await call ("GET", s (`/element/${await element (selector)}/screenshot`)), "base64");
+            },
          };
       },
 
@@ -143,7 +149,13 @@ export async function webDriverPage (endpoint, capabilities)
          await script (([ sel, v ]) => { const e = document .querySelector (sel); e .value = v; e .dispatchEvent (new Event ("change", { bubbles: true })); }, [ selector, value ]);
       },
 
-      async click (selector) { await call ("POST", s (`/element/${await element (selector)}/click`), { }); },
+      // Element Click scrolls the element to the bottom edge of the viewport; geckodriver (Firefox 159) then reports a
+      // button there as obscured by <html>. The element goes to the center of the viewport first.
+      async click (selector)
+      {
+         await script (sel => document .querySelector (sel) .scrollIntoView ({ block: "center", inline: "nearest" }), selector);
+         await call ("POST", s (`/element/${await element (selector)}/click`), { });
+      },
 
       async responses ()
       {
