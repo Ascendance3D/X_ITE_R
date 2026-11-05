@@ -169,9 +169,9 @@ put("ply-splat/deg0-ascii.ply", splat_ascii(0))
 put("ply-splat/deg1-ascii.ply", splat_ascii(9))
 put("ply-splat/one-le.ply", splat_ply("<", b"binary_little_endian", 0, count=1))
 put("ply-splat/truncated-le.ply", splat_ply("<", b"binary_little_endian", 9)[:-7])
-# Without opacity, scales or rotation the pinned parser still builds a node: the lists are shorter than the positions.
+# Without the opacity property (scales and rotation present) the pinned parser still builds a node: the opacity list is shorter than the positions.
 put("ply-splat/no-opacity-le.ply", ply(b"binary_little_endian", [b"element vertex 2"] + SPLAT_CORE + SPLAT_DC + SPLAT_TAIL[1:],
-    [struct.pack("<%df" % (6 + 7), *(splat_row(i, 0)[:9] + splat_row(i, 0)[10:])) for i in range(2)]))
+    [struct.pack("<%df" % (6 + 7), *(splat_row(i, 0)[:6] + splat_row(i, 0)[7:])) for i in range(2)]))
 
 # ---------------------------------------------------------------------------------------------------------------- GLB
 

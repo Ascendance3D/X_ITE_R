@@ -82,7 +82,7 @@ def snap_ok():
     if got != SNAP_SHA256: print(f"snapshot sha256 {got} is not the expected {SNAP_SHA256}: refused"); return False
     return True
 if __name__ == "__main__":
-    if sys.argv[1:] not in (["check"], ["apply"]): raise SystemExit("usage: ledger_i452.py check|apply")
+    if sys.argv[1:] not in (["check"], ["apply"]): raise SystemExit("usage: ledger_i441.py check|apply")
     if not snap_ok(): sys.exit(1)
     if sys.argv[1:] == ["apply"]:
         d = build()
