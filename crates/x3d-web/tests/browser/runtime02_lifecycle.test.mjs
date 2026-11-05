@@ -181,6 +181,40 @@ describe ("runtime 02 lifecycle", { skip: Boolean (ONLY), timeout: CASE_TIMEOUT 
       }
    });
 
+   // The three cases of the backend choice: WebGPU with an adapter (this test), WebGL2 without WebGPU (the next test),
+   // neither (api.test.mjs 13). The test browser has WebGPU (runtime02_harness.mjs flags): no adapter is a failure here.
+   test ("with a WebGPU adapter the element starts with WebGPU, without a fallback", async () =>
+   {
+      const page = await openPage (DESKTOP);
+
+      try
+      {
+         const out = await page .evaluate (async () =>
+         {
+            const adapter = await navigator .gpu ?.requestAdapter ();
+            const canvas  = document .querySelector ("x3d-canvas");
+
+            await canvas .browser .ready ();
+
+            const engine = canvas .browser [Symbol .for ("X_ITE_R.engine")];
+
+            return {
+               adapter:    Boolean (adapter),
+               startError: window .startError ?? null,
+               backend:    engine .backend,
+               reason:     engine .fallbackReason ?? null,
+               canvas:     canvas .shadowRoot .contains (canvas .browser .getCanvas ()),
+            };
+         });
+
+         assert .deepEqual (out, { adapter: true, startError: null, backend: "webgpu", reason: null, canvas: true });
+      }
+      finally
+      {
+         await page .context () .close ();
+      }
+   });
+
    test ("without WebGPU the element starts with WebGL2 on the same canvas", async () =>
    {
       const page = await openPage (DESKTOP, { init: () => { delete Navigator .prototype .gpu; } });
