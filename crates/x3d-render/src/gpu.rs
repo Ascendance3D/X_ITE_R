@@ -5630,7 +5630,7 @@ impl Renderer {
                 // Downlevel: each draw binds a window of DOWNLEVEL_INSTANCES instances at its first one, at a 256 byte
                 // aligned offset (4 instances of 192 bytes are 768); its instances start at a multiple of 4.
                 if is_downlevel(&self.device) {
-                    while instance_data.len() % 4 != 0 {
+                    while !instance_data.len().is_multiple_of(4) {
                         instance_data.push(bytemuck::Zeroable::zeroed());
                     }
                 }
