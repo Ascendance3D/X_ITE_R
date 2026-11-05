@@ -83,3 +83,37 @@ where
         diagnostics,
     })
 }
+
+/// How often the web build makes one adapter request before it gives up.
+///
+/// Google Chrome 156 and Microsoft Edge 155 on Linux answer the first `navigator.gpu.requestAdapter ()` of a new page
+/// with `null` after about 400 ms, and a request made after it gets the adapter (measured 2026-11-04 with the WebGPU flags
+/// of `crates/x3d-web/tests/preview/smoke.mjs`; Playwright's Chromium 151 gets it at once). One request only left the page
+/// without an engine.
+pub const ADAPTER_REQUEST_TRIES: usize = 3;
+
+/// `request ()` until it succeeds, at most `tries` times (at least once). Each failure before the last is a diagnostic
+/// line; the last failure is the error.
+pub async fn request_with_retries<T, F, Fut>(
+    tries: usize,
+    mut request: F,
+) -> (Result<T, String>, Vec<String>)
+where
+    F: FnMut() -> Fut,
+    Fut: Future<Output = Result<T, String>>,
+{
+    let tries = tries.max(1);
+    let mut diagnostics = vec![];
+
+    for attempt in 1..=tries {
+        match request().await {
+            Ok(value) => return (Ok(value), diagnostics),
+            Err(reason) if attempt < tries => diagnostics.push(format!(
+                "X_ITE_R: WebGPU adapter request {attempt} of {tries} failed ({reason}); asking again."
+            )),
+            Err(reason) => return (Err(reason), diagnostics),
+        }
+    }
+
+    unreachable!("the loop returns on its last try")
+}

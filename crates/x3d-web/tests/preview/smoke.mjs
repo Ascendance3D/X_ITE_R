@@ -1,11 +1,12 @@
 // Release smoke test of the X_ITE_R Browser Preview package (tools/package-web-preview.sh) at a URL.
 //
 //   node tests/preview/smoke.mjs <base URL of the package> [--out DIR] [--channel chrome|msedge|chromium]
-//                                [--webgpu-flags] [--headed]
+//                                [--webgpu-flags] [--headed] [--pause MS]
 //
 // <base URL> is the directory that holds x_ite_r.mjs, pkg/ and preview/ (a local server of the package directory,
 // or the staging server). The browser is a new, clean profile. Without --webgpu-flags it gets no flags, as a user's
-// browser; --webgpu-flags adds the flags of the browser tests (Vulkan, unsafe WebGPU) for hosts that need them.
+// browser; --webgpu-flags adds the flags that Chrome and Edge on Linux need for WebGPU (Vulkan, unsafe WebGPU, GPU in
+// headless mode). Chrome and Edge on Windows and macOS have WebGPU without flags.
 //
 // Each check reads values from the engine through the page's JavaScript API, or pixels from a screenshot of the
 // canvas; loading the page is never a pass by itself. Evidence: results.json, console.txt and a screenshot of each
@@ -24,19 +25,23 @@ if (!base .pathname .endsWith ("/"))
 
 const out     = opt ("--out") ?? "preview-smoke";
 const channel = opt ("--channel");
+const pause   = Number (opt ("--pause") ?? 0); // milliseconds after each check, to watch a --headed run
 const W = 640, H = 480;
 const BG = [ 38, 38, 51 ]; // skyColor 0.15 0.15 0.2
 
 await mkdir (out, { recursive: true });
 
 const results = [ ];
+let   page;
 const consoleLines = [ ];
 let   step = 0;
 
 function record (name, pass, detail)
 {
    results .push ({ name, pass: !!pass, detail });
-   console .log (`${pass ? "PASS" : "FAIL"} ${name}${detail ? ` — ${typeof detail === "string" ? detail : JSON .stringify (detail)}` : ""}`);
+   const text = detail ? (typeof detail === "string" ? detail : JSON .stringify (detail)) : "";
+
+   console .log (`${pass ? "PASS" : "FAIL"} ${name}${text ? ` — ${text .length > 400 ? text .slice (0, 400) + " …" : text}` : ""}`);
 }
 
 async function check (name, fn)
@@ -46,6 +51,9 @@ async function check (name, fn)
       const { pass, detail } = await fn ();
 
       record (name, pass, detail);
+
+      if (pause)
+         await page ?.waitForTimeout (pause);
    }
    catch (error)
    {
@@ -92,13 +100,15 @@ await check ("http missing world is 404", async () =>
 
 // 2. The browser: a new profile, no extensions.
 const args = argv .includes ("--webgpu-flags")
-   ? [ "--enable-unsafe-webgpu", "--enable-features=Vulkan,VulkanFromANGLE", "--use-angle=vulkan", "--use-vulkan=native", "--ignore-gpu-blocklist" ]
+   ? [ "--enable-unsafe-webgpu", "--enable-features=Vulkan", "--use-angle=vulkan", "--ignore-gpu-blocklist", "--enable-gpu" ]
    : [ ];
 
 const browser = await chromium .launch ({ channel, headless: !argv .includes ("--headed"), args });
 const context = await browser .newContext ({ viewport: { width: 1280, height: 1000 }, deviceScaleFactor: 1 });
-const helper  = await context .newPage (); // decodes screenshots, about:blank
-const page    = await context .newPage ();
+// Decodes the screenshots: a headless browser of its own, so a --headed run shows only the page.
+const helperBrowser = await chromium .launch ({ headless: true });
+const helper  = await helperBrowser .newPage ();
+page          = await context .newPage ();
 const responses = [ ];
 
 page .on ("console",   message => consoleLines .push (`[${message .type ()}] ${message .text ()}`));
@@ -125,6 +135,15 @@ async function canvasBox ()
 // A screenshot of the canvas as RGBA rows; saved as evidence.
 async function shot (name)
 {
+   // The splash screen of a load fades out in 200 ms after the world is there (X_ITE's X3DCoreContext): wait until it
+   // is hidden and its fade is over, so that the picture is the world.
+   await page .waitForFunction (() =>
+   {
+      const splash = document .querySelector ("x3d-canvas") .shadowRoot ?.querySelector (".x_ite-private-splash-screen");
+
+      return !splash || (splash .classList .contains ("x_ite-private-hidden") && getComputedStyle (splash) .opacity === "0");
+   },
+   null, { timeout: 10000 }) .catch (() => { });
    await page .evaluate (() => new Promise (r => requestAnimationFrame (() => requestAnimationFrame (r))));
 
    const png  = await page .locator ("x3d-canvas") .screenshot ();
@@ -379,7 +398,7 @@ await check ("console: no unexplained errors", async () =>
 {
    const expected = /missing-on-purpose\.wrl|status of 404/;
    const errors   = consoleLines .filter (l => /^\[(error|pageerror)\]/ .test (l));
-   const unexplained = errors .filter (l => !expected .test (l));
+   const unexplained = errors .filter (l => !expected .test (l)) .map (l => l .split ("\n") [0]);
 
    return { pass: unexplained .length === 0, detail: { errors: errors .length, unexplained } };
 });
@@ -387,6 +406,7 @@ await check ("console: no unexplained errors", async () =>
 await writeFile (join (out, "console.txt"), consoleLines .join ("\n") + "\n");
 await writeFile (join (out, "results.json"), JSON .stringify ({ facts, results, responses }, null, 1) + "\n");
 await browser .close ();
+await helperBrowser .close ();
 
 const failed = results .filter (r => !r .pass);
 
