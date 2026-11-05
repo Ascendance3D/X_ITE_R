@@ -560,7 +560,7 @@ impl WebBrowser {
         let sink = self.log_sink.clone();
         let event_sink = self.field_event_sink.clone();
         let engine_options = self.engine_options.clone();
-        let session =
+        let mut session =
             Session::begin_with_scripts(world, now, self.config.width, self.config.height, |rt| {
                 // The page's options before the world's loads start (LoadUrlObjects is read when an Inline starts).
                 for (name, value) in engine_options {
@@ -615,6 +615,7 @@ impl WebBrowser {
                 }
             });
 
+        session.slow_scroll = page_slow_scroll();
         self.worlds.insert(id, World { session, cache });
         id
     }
@@ -3008,4 +3009,15 @@ fn field_definition_js(d: crate::session::FieldDefinition) -> JsValue {
 
     entry.push(&d.default.as_ref().map_or(JsValue::UNDEFINED, data_js));
     JsValue::from(entry)
+}
+
+/// X_ITE's SLOW_SCROLL test of the page: `navigator .userAgent` of the global object (a window or a worker).
+fn page_slow_scroll() -> bool {
+    let navigator = js_sys::Reflect::get(&js_sys::global(), &JsValue::from_str("navigator"));
+    let user_agent = navigator
+        .and_then(|n| js_sys::Reflect::get(&n, &JsValue::from_str("userAgent")))
+        .ok()
+        .and_then(|ua| ua.as_string());
+
+    user_agent.is_some_and(|ua| x3d_viewer::nav::slow_scroll_user_agent(&ua))
 }

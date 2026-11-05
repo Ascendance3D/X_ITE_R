@@ -38,3 +38,8 @@ walk-avatar-size-short oracle/synthetic-rea-b24-nav/nav-avatar-short.wrl oracle/
 walk-avatar-size-empty oracle/synthetic-rea-b24-nav/nav-avatar-empty.wrl oracle/synthetic-rea-b24-nav/scripts/walk-avatar-size-empty.json
 walk-avatar-size-negative oracle/synthetic-rea-b24-nav/nav-avatar-negative.wrl oracle/synthetic-rea-b24-nav/scripts/walk-avatar-size-negative.json
 fly-ctrl-look-pole oracle/synthetic-rea-b09-nav/nav-fly.wrl oracle/synthetic-rea-b24-nav/scripts/fly-ctrl-look-pole.json
+examine-cor-wheel-mac oracle/synthetic-rea-b24-nav/nav-examine-cor.wrl oracle/synthetic-rea-b24-nav/scripts/examine-cor-wheel-mac.json
+lookat-cor-wheel-mac oracle/synthetic-rea-b24-nav/nav-lookat-cor.wrl oracle/synthetic-rea-b24-nav/scripts/lookat-cor-wheel-mac.json
+plane-wheel-mac oracle/synthetic-rea-b09-nav/nav-plane.wrl oracle/synthetic-rea-b24-nav/scripts/plane-wheel-mac.json
+fly-wheel-roll-mac oracle/synthetic-rea-b09-nav/nav-fly.wrl oracle/synthetic-rea-b24-nav/scripts/fly-wheel-roll-mac.json
+walk-wheel-roll-mac oracle/synthetic-rea-b09-nav/nav-walk.wrl oracle/synthetic-rea-b24-nav/scripts/walk-wheel-roll-mac.json

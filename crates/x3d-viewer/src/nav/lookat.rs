@@ -14,7 +14,6 @@
 
 use super::*;
 
-const LOOKAT_SCROLL_FACTOR: f64 = 1.0 / 20.0; // 1 / 120 on Mac OS X and OculusBrowser
 const LOOKAT_MOVE_TIME: f64 = 0.3;
 const LOOKAT_ROTATE_TIME: f64 = 0.3;
 const DBL_TAP_TIME: f64 = 0.4;
@@ -134,7 +133,7 @@ impl LookAt {
 
         let zoom_factor = match zoom_factor {
             Some(z) if z != 0.0 && !z.is_nan() => z,
-            _ => LOOKAT_SCROLL_FACTOR,
+            _ => super::scroll_factor(cx.env),
         };
 
         let mut step = distance_to_center(cx, None);
