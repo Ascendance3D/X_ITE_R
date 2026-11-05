@@ -64,9 +64,10 @@ fn oracle() -> PathBuf {
 
 /// A world file in a directory of its own below `CARGO_TARGET_TMPDIR` (render_file reads a file).
 ///
-/// The directory name holds the process ID and the file name, so two tests (threads of one process, or processes
-/// of nextest) never share it. When the test passes, drop removes the directory. When the test fails (a panic), the
-/// directory stays for the diagnosis and its path is printed.
+/// The directory name holds the process ID, the start time in nanoseconds and the file name, so two tests (threads of
+/// one process, or processes of nextest) and two runs never share it; `create_dir` refuses a directory that exists. When
+/// the test passes, drop removes the directory. When the test fails (a panic), the directory stays for the diagnosis
+/// and its path is printed; a later run with the same process ID does not write to it or remove it.
 struct World {
     dir: PathBuf,
     path: PathBuf,
@@ -74,11 +75,15 @@ struct World {
 
 impl World {
     fn new(name: &str, text: &str) -> Self {
+        let stamp = std::time::SystemTime::now()
+            .duration_since(std::time::UNIX_EPOCH)
+            .unwrap()
+            .as_nanos();
         let dir = Path::new(env!("CARGO_TARGET_TMPDIR")).join(format!(
-            "x3d-render-downlevel-{}-{name}",
+            "x3d-render-downlevel-{}-{stamp}-{name}",
             std::process::id()
         ));
-        std::fs::create_dir_all(&dir).unwrap();
+        std::fs::create_dir(&dir).unwrap();
         let path = dir.join(name);
         std::fs::write(&path, text).unwrap();
         Self { dir, path }
