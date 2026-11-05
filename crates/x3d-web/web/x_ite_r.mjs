@@ -5711,7 +5711,8 @@ class X3DBrowser
          if (timing !== null)
             WebBrowser .setMovieTiming (timing);
 
-         return WebBrowser .create (this .#canvas);
+         // The graphics backend: `backend="webgl2"` uses wgpu's WebGL2 backend instead of WebGPU.
+         return WebBrowser .create (this .#canvas, element .getAttribute ("backend") ?? undefined);
       }) .then (engine =>
       {
          if (this .#disposed)
@@ -5721,6 +5722,10 @@ class X3DBrowser
          }
 
          this .#engine = engine;
+
+         // A lost WebGL2 context: wgpu's GL backend reports no device loss, so the canvas's event does (the frame loop
+         // then stops as for a lost WebGPU device).
+         this .#canvas .addEventListener ("webglcontextlost", () => engine .loseDevice (), { signal: this .#listeners .signal });
          // The Scripts of a world run only when the page lets them (the `scripts` attribute, read when the world starts):
          // they run with the privileges of the page, in its JavaScript engine (API.md, "Script nodes").
          // A Script's print and console lines go to the page's console in the Script's call, as X_ITE logs them.
@@ -7749,7 +7754,7 @@ class X3DBrowser
          {
             this .#stop ();
             this .#call (X3DConstants .CONNECTION_ERROR);
-            this .#fallback ("X_ITE_R stopped: the WebGPU device is lost.");
+            this .#fallback (`X_ITE_R stopped: the ${engine .backend === "webgl2" ? "WebGL2" : "WebGPU"} device is lost.`);
             return;
          }
 

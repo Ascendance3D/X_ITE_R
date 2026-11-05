@@ -65,39 +65,46 @@ async function showBuild ()
    }
 }
 
+// `?backend=webgl2` or `?backend=webgpu` chooses the graphics backend; without it the engine chooses (WebGPU when it can
+// start, else WebGL2). The element reads the attribute when its module has loaded.
+const requestedBackend = new URLSearchParams (location .search) .get ("backend");
+
+if (requestedBackend)
+   $("canvas") .setAttribute ("backend", requestedBackend);
+
 async function showWebGpu ()
 {
-   if (!navigator .gpu)
-   {
-      $("webgpu") .textContent = "not available in this browser (navigator.gpu is missing)";
-      $("webgpu") .className   = "error";
-      return false;
-   }
-
    try
    {
       await browser .ready ();
 
-      const engine = browser [Symbol .for ("X_ITE_R.engine")];
-      let   text   = `started: ${engine ?.adapterInfo ?? "adapter"}`;
+      const engine  = browser [Symbol .for ("X_ITE_R.engine")];
+      const backend = engine ?.backend === "webgl2" ? "WebGL2" : "WebGPU";
+      let   text    = `${backend} started: ${engine ?.adapterInfo ?? "adapter"}`;
 
-      // The page's own adapter request, for the vendor and architecture (the engine has its own device).
-      const adapter = await navigator .gpu .requestAdapter ();
-      const info    = adapter ?.info;
+      // The page's own WebGPU adapter request, for the vendor and architecture (the engine has its own device).
+      if (backend === "WebGPU")
+      {
+         const info = (await navigator .gpu ?.requestAdapter ()) ?.info;
 
-      if (info)
-         text += ` — ${[ info .vendor, info .architecture, info .device, info .description ] .filter (Boolean) .join (", ")}`;
+         if (info)
+            text += ` — ${[ info .vendor, info .architecture, info .device, info .description ] .filter (Boolean) .join (", ")}`;
+      }
+
+      if (engine ?.fallbackReason)
+         text += ` (WebGPU did not start: ${engine .fallbackReason})`;
 
       $("webgpu") .textContent = text;
       $("webgpu") .className   = "ok";
-      log (`WebGPU ${text}`, "ok");
+      $("webgpu") .dataset .backend = engine ?.backend ?? "";
+      log (`Graphics: ${text}`, "ok");
       return true;
    }
    catch (error)
    {
       $("webgpu") .textContent = `failed: ${error}`;
       $("webgpu") .className   = "error";
-      log (`WebGPU failed: ${error}`, "error");
+      log (`Graphics failed: ${error}`, "error");
       return false;
    }
 }
@@ -294,7 +301,27 @@ globalThis .X_ITE_R_PREVIEW = { browser, events, loadWorld, setColor, bindViewer
 showBuild ();
 showValues ();
 
+// A lost graphics device stops the engine (X_ITE's CONNECTION_ERROR). The page offers one restart, and on WebGPU one with
+// WebGL2; it never restarts by itself, so a device that is lost again cannot start a loop.
+browser .addBrowserCallback ("preview-connection", X3D .X3DConstants .CONNECTION_ERROR, () =>
+{
+   const engineBackend = $("webgpu") .dataset .backend;
+   const query         = engineBackend === "webgpu" ? "?backend=webgl2" : "";
+   const world         = new URLSearchParams (location .search) .get ("world");
+   const href          = `${location .pathname}${query}${world ? `${query ? "&" : "?"}world=${encodeURIComponent (world)}` : ""}`;
+
+   setStatus (`stopped: the ${engineBackend === "webgl2" ? "WebGL2" : "WebGPU"} device is lost.`, "error");
+   log ("Graphics device lost", "error");
+
+   const restart = document .createElement ("a");
+
+   restart .id          = "restart";
+   restart .href        = href;
+   restart .textContent = engineBackend === "webgpu" ? " Start again with WebGL2" : " Start again";
+   $("status") .append (restart);
+});
+
 if (await showWebGpu ())
    await loadWorld (select .value);
 else
-   setStatus ("X_ITE_R could not start: WebGPU is not available", "error");
+   setStatus ("X_ITE_R could not start: neither WebGPU nor WebGL2 is available", "error");
