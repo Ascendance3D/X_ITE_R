@@ -34,7 +34,7 @@ def note(text):
 
 C = {
  "sub:proto.externproto": (None, {
-   "missing": lambda old: old[:old.index("; createX3DFromString with an EXTERNPROTO after load is measured")] + "; the failed-URL scene cache differs by design (X_ITE caches a failed URL and throws a setWorldURL TypeError on the next request of it; the port fetches again), so createX3DFromString with an EXTERNPROTO after load is compared (case externproto-after-load, oracle/synthetic-rea-b09-sai/externproto-after-load.wrl, 6 strings with their own urls: scene text, poses and log equal at 60 frames) without asking a cached failed url twice",
+   "missing": lambda old: old[:old.index("; createX3DFromString with an EXTERNPROTO after load is measured")] + "; the failed-URL scene cache differs by design (X_ITE caches a failed URL and throws a setWorldURL TypeError on the next request of it; the port fetches again), so createX3DFromString with an EXTERNPROTO after load is compared (case externproto-after-load, oracle/synthetic-rea-b09-sai/externproto-after-load.wrl, 6 strings with their own urls: scene text, poses and log equal at the 21 dumped frames of sai-extern-short.json, frames 8 to 24 and 27, 30, 33, 36) without asking a cached failed url twice",
    "tests": addlist("crates/x3d-viewer/tests/rea_batch09_sai.rs (rea_batch09_sai_cases_match_x_ite, case externproto-after-load: createX3DFromString with an EXTERNPROTO after load, a data: url, two urls, a hash, a missing url; scene-cache hits resolve at the pinned frame; three identical recordings)"),
   }, "Issue #51 2026-11-05: PR #458. A Ready scene-cache hit in a createX3DFromString scene is handed over after the frame, as in X_ITE (case externproto-after-load, first red at frame 11, now equal at all 60 frames). Status stays PARTIAL."),
 }

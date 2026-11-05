@@ -171,4 +171,4 @@ text-screen oracle/synthetic-rea-b09-sai/text-screen.wrl oracle/synthetic-rea-b0
 update-end oracle/synthetic-rea-b97-update/update-end.wrl oracle/synthetic-rea-b97-update/update.json
 update-props oracle/synthetic-rea-b97-update/props.wrl oracle/synthetic-rea-b97-update/props.json
 update-speed oracle/synthetic-rea-b97-update/speed.wrl oracle/synthetic-rea-b97-update/speed.json
-externproto-after-load oracle/synthetic-rea-b09-sai/externproto-after-load.wrl oracle/synthetic-rea-b09-sai/sai.json
+externproto-after-load oracle/synthetic-rea-b09-sai/externproto-after-load.wrl oracle/synthetic-rea-b09-sai/sai-extern-short.json
