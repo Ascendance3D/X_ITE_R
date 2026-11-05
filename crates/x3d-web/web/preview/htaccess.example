@@ -1,0 +1,12 @@
+# Apache example for the X_ITE_R Browser Preview directory. Copy it to ".htaccess" only when the server
+# does not already send these types. It changes nothing outside this directory.
+AddType application/wasm .wasm
+AddType text/javascript .mjs .js
+AddType model/vrml .wrl
+AddType model/x3d+xml .x3d
+AddType model/x3d+vrml .x3dv
+AddType text/markdown .md
+# Optional: compress the module (the .wasm file is about 19 MB, about 8 MB with gzip).
+<IfModule mod_deflate.c>
+  AddOutputFilterByType DEFLATE application/wasm text/javascript model/vrml model/x3d+xml
+</IfModule>

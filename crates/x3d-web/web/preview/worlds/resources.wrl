@@ -1,0 +1,33 @@
+#VRML V2.0 utf8
+# X_ITE_R Browser Preview resource world. Newly authored for the preview; MIT, like the repository.
+# Every URL here is relative, so the world works at any path of any server:
+#   center: an ImageTexture from ../textures/checker8.png (a parent directory)
+#   left:   an Inline from parts/inline-part.wrl, which uses ../../textures/stripes.png (relative to the Inline's file)
+#   right:  an instance of the EXTERNPROTO ColoredBox from protos/colored-box.wrl#ColoredBox ("ProtoBox", color set here)
+
+EXTERNPROTO ColoredBox [
+  field SFColor color
+  field SFVec3f size
+] "protos/colored-box.wrl#ColoredBox"
+
+NavigationInfo { type [ "EXAMINE" "ANY" ] headlight TRUE }
+Background { skyColor 0.15 0.15 0.2 }
+DEF Front Viewpoint { position 0 0 10 description "Front" }
+
+Shape {
+  appearance Appearance {
+    material Material { }
+    texture ImageTexture { url "../textures/checker8.png" }
+  }
+  geometry Box { size 2 2 2 }
+}
+
+Transform {
+  translation -3 0 0
+  children DEF InlinePart Inline { url "parts/inline-part.wrl" }
+}
+
+Transform {
+  translation 3 0 0
+  children DEF ProtoBox ColoredBox { color 0.9 0.2 0.8 size 1.6 1.6 1.6 }
+}
