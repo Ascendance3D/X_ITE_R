@@ -40,8 +40,10 @@ WebGL2 has no storage buffers, no compute shaders and no cube map arrays. On Web
 - No volume scattering (`VolumeScatterMaterialExtension`): the subsurface term is zero.
 - Thick lines of particle systems are made on the CPU, not in a compute pass (same triangles).
 - GaussianSplats are not drawn.
-- An InstancedShape or ParticleSystem draws at most 340 instances per draw (one 64 KiB uniform block); a frame can have
-  any number of such draws.
+- Every uniform block fits in 16 KiB (the WebGL2 minimum; ANGLE on Apple GPUs has exactly that). So an InstancedShape
+  or ParticleSystem is drawn in windows of 84 instances (all instances are drawn; a large one needs more draws).
+- A frame has at most 64 lights and 8 TextureProjector nodes (192 and 32 on WebGPU). The lights after the first 64 do
+  not light anything.
 - Environment lights sample their cube maps as faces of a 2D array: the filtering does not cross cube faces.
 
 ## Not available
