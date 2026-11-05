@@ -41,18 +41,22 @@ C = {
  "sub:nav.plane": ("COMPLETE", {
    "missing": "",
    "tests": lambda old: [t.replace("40 cases", "45 cases") for t in old],
+   "oracle": lambda old: old.replace("rea-b24-nav-baseline (40 cases", "rea-b24-nav-baseline (45 cases"),
   }, "Issue #51 2026-11-05: PR #454 (60561425) added the macOS-user-agent cases to oracle/rea-b24-nav-baseline; rea_b24_nav shard0, shard1, shard2 (45 cases), slow_scroll_user_agent and viewer re-run on master 60561425: 16 passed, 0 skipped. Promoted PARTIAL to COMPLETE: the only listed gap, the macOS scroll factor (P10), is closed by plane-wheel-mac."),
  "sub:nav.lookat": ("COMPLETE", {
    "missing": "",
    "tests": lambda old: [t.replace("40 cases", "45 cases") for t in old],
+   "oracle": lambda old: old.replace("rea-b24-nav-baseline (40 cases", "rea-b24-nav-baseline (45 cases"),
   }, "Issue #51 2026-11-05: PR #454 (60561425) added the macOS-user-agent cases to oracle/rea-b24-nav-baseline; rea_b24_nav shard0, shard1, shard2 (45 cases), slow_scroll_user_agent and viewer re-run on master 60561425: 16 passed, 0 skipped. Promoted PARTIAL to COMPLETE: the only listed gap, the macOS scroll factor (L07), is closed by lookat-cor-wheel-mac."),
  "sub:nav.examine": (None, {
    "missing": swap("not compared: the macOS scroll factor (E17); E14", "not compared: E14"),
    "tests": lambda old: [t.replace("40 cases", "45 cases") for t in old],
+   "oracle": lambda old: old.replace("rea-b24-nav-baseline (40 cases", "rea-b24-nav-baseline (45 cases"),
   }, "Issue #51 2026-11-05: PR #454 (60561425) added the macOS-user-agent cases to oracle/rea-b24-nav-baseline; rea_b24_nav shard0, shard1, shard2 (45 cases), slow_scroll_user_agent and viewer re-run on master 60561425: 16 passed, 0 skipped. Text only: E17 is closed by examine-cor-wheel-mac; E14 and E18 stay open, so the entry stays PARTIAL."),
  "sub:nav.walk-fly": (None, {
    "missing": swap("not compared: macOS roll angle (F18, macOS only), MSAA above 0", "not compared: MSAA above 0"),
    "tests": lambda old: [t.replace("40 cases", "45 cases") for t in old],
+   "oracle": lambda old: old.replace("rea-b24-nav-baseline (40 cases", "rea-b24-nav-baseline (45 cases"),
   }, "Issue #51 2026-11-05: PR #454 (60561425) added the macOS-user-agent cases to oracle/rea-b24-nav-baseline; rea_b24_nav shard0, shard1, shard2 (45 cases), slow_scroll_user_agent and viewer re-run on master 60561425: 16 passed, 0 skipped. Text only: F18 is closed by fly-wheel-roll-mac and walk-wheel-roll-mac; MSAA above 0 and the Viewport rubber band stay open, so the entry stays PARTIAL."),
 }
 
