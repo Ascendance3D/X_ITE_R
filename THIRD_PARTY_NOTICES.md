@@ -457,3 +457,10 @@ LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
 ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+## Geist and Geist Mono fonts (SIL Open Font License 1.1)
+
+The Browser Preview start page (`crates/x3d-web/web/site/fonts/`) uses the variable fonts `Geist-Variable.woff2` and
+`GeistMono-Variable.woff2` from the `geist` npm package 1.9.1, unchanged. Copyright (c) 2023 Vercel, in collaboration
+with basement.studio. Licensed under the SIL Open Font License, Version 1.1; the full license text is
+`crates/x3d-web/web/site/fonts/OFL.txt` (`site/fonts/OFL.txt` in the package).
