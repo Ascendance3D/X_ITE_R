@@ -5,12 +5,13 @@
 //   npm test -- --test-name-pattern=Anchor      extra arguments go to node --test, before the file list
 //
 // Exit 1 when no test file is found, so a broken discovery never reports a pass.
-import { globSync } from "node:fs";
+import { readdirSync } from "node:fs";
 import { spawnSync } from "node:child_process";
 import { fileURLToPath } from "node:url";
 
 const dir   = fileURLToPath (new URL ("./browser/", import.meta.url));
-const files = globSync ("*.test.mjs", { cwd: dir }) .sort () .map (f => dir + f);
+// readdirSync, not fs.globSync (Node 22 and later), as tests/browser/shards.mjs.
+const files = readdirSync (dir) .filter (f => f .endsWith (".test.mjs")) .sort () .map (f => dir + f);
 
 if (files .length === 0)
 {
