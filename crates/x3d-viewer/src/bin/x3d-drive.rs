@@ -57,6 +57,35 @@ fn main() {
         .and_then(|v| v["warmupFrames"].as_u64())
         .or(opt("--warmup").and_then(|w| w.parse().ok()));
 
+    // `--http-map http://oracle=http://127.0.0.1:PORT` (repeatable): the paths under `/h/` of that origin are fetched over HTTP from
+    // the local test server (oracle/synthetic-rea-file-http), and the other URLs fail as at the oracle page.
+    let maps: Vec<_> = args
+        .windows(2)
+        .filter(|w| w[0] == "--http-map")
+        .map(|w| x3d_http::OriginMap::parse(&w[1]).expect("--http-map FROM=TO"))
+        .collect();
+
+    // A `--http-map` without its value (the last argument) is a usage error, not a run on the local fetcher.
+    if args.last().is_some_and(|a| a == "--http-map") {
+        eprintln!("usage: --http-map FROM=TO needs a value");
+        std::process::exit(2);
+    }
+
+    if !maps.is_empty() {
+        x3d_viewer::viewer::set_fetcher_wrap(Box::new(move |local| {
+            let options = x3d_http::HttpOptions {
+                proxy_from_env: false,
+                ..x3d_http::HttpOptions::default()
+            };
+
+            Box::new(x3d_http::OracleHttpFetcher {
+                local,
+                http: x3d_http::HttpFetcher::new(options).with_origin_map(maps.clone()),
+                prefix: "/h/".to_string(),
+            })
+        }));
+    }
+
     let out_path = out.clone();
     let r = std::thread::Builder::new()
         .stack_size(256 << 20)
@@ -431,6 +460,7 @@ fn run(
         "vrml": vrml,
         "prints": v.rt.prints,
         "log": log,
+        "foreign": v.foreign.iter().map(|(target, href)| json!([target, href])).collect::<Vec<_>>(),
         "anchors": v.anchors.iter().map(|a| json!({ "description": a.description, "url": a.urls, "parameter": a.parameters })).collect::<Vec<_>>(),
         "status": v.status,
         "title": v.title(),

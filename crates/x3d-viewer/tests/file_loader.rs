@@ -224,6 +224,11 @@ fn file_loader_inline_data_url_bom_matches_x_ite() {
 }
 
 #[test]
+fn file_loader_malformed_utf8_in_a_data_url_matches_x_ite() {
+    check("ff-data-utf8");
+}
+
+#[test]
 fn file_loader_host_characters_match_x_ite() {
     check("ff-host");
 }
@@ -233,12 +238,13 @@ fn file_loader_host_with_space_in_nodes_matches_x_ite() {
     check("ff-host-nodes");
 }
 
-/// The baseline directory holds exactly the six groups, so a new baseline cannot be left without a test.
+/// The baseline directory holds exactly the seven groups, so a new baseline cannot be left without a test.
 #[test]
 fn file_loader_baseline_groups_are_the_tested_ones() {
     assert_eq!(
         groups(&root()),
         [
+            "ff-data-utf8",
             "ff-host",
             "ff-host-nodes",
             "ff-inline",

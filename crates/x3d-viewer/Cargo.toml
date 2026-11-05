@@ -15,7 +15,7 @@ av1 = ["x3d-runtime/av1"]
 # Script nodes in QuickJS and the file loaders (`Viewer3d::load*`). QuickJS is C code that does not
 # build for wasm32-unknown-unknown: the browser build (x3d-web) turns this off and loads through
 # `Viewer3d::from_runtime`.
-script = ["dep:x3d-script", "x3d-render/script"]
+script = ["dep:x3d-script", "x3d-render/script", "dep:x3d-http"]
 # The embedding API (`embed::EmbeddedViewer`): the viewer on a host-provided wgpu device.
 embed = ["dep:wgpu", "script"]
 # The native window (winit + wgpu) and the `x3d-view` binary. The viewer core (frame stepping,
@@ -28,6 +28,8 @@ x3d-scene = { path = "../x3d-scene" }
 x3d-parse = { path = "../x3d-parse" }
 x3d-runtime = { path = "../x3d-runtime", default-features = false }
 x3d-script = { path = "../x3d-script", optional = true }
+# HTTP and HTTPS fetcher (ureq, rustls): native only, so it comes with `script` (the browser build has the page's fetch).
+x3d-http = { path = "../x3d-http", optional = true }
 x3d-render = { path = "../x3d-render", default-features = false }
 x3d-text = { path = "../x3d-text" }
 # Instant on wasm32-unknown-unknown too (std::time::Instant panics there).
@@ -67,6 +69,8 @@ name = "embed_minimal"
 required-features = ["embed"]
 
 [dev-dependencies]
+# The local route server of tests/file_http.rs.
+x3d-http = { path = "../x3d-http", features = ["test-server"] }
 x3d-evidence = { path = "../x3d-evidence" }
 wgpu = "30"
 pollster = "1"

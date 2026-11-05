@@ -15,7 +15,7 @@
  * x_ite-pin/src/anim.html. The browser's own frame loop is neutralized (see anim.html), time is
  * virtual: getCurrentTime, Date.now and setTimeout follow the script's clock.
  */
-import { createServer } from "node:http";
+import { createServer, STATUS_CODES } from "node:http";
 import { existsSync } from "node:fs";
 import { mkdir, readFile, writeFile } from "node:fs/promises";
 import { createRequire } from "node:module";
@@ -49,13 +49,68 @@ const dump     = new Set (script .dump ?? [ ]);
 const events   = script .events ?? [ ];
 const pngDir   = opt ("--png-dir", "");
 
-const server = createServer (async (req, res) =>
+// Script key "httpRoutes": "oracle/<dir>/routes.json" (issue #51, sub:io.file-loader): the requests for /h/NAME are answered from the table
+// instead of a file: a status (and reason phrase), headers, a body, redirects through the Location header, a body cut short ("truncateTo"),
+// a closed connection ("hangup"). The table is the one that crates/x3d-http/src/route_server.rs serves for the port, so both read one file.
+// `{origin}`, `{origin2}`, `{hostport}`, `{hostport2}` in a header value or the body text are the two servers (a second port is a second
+// origin, for a redirect across origins). The table is not served as a file, and the other servers' requests stay aborted.
+const routes = script .httpRoutes ? JSON .parse (await readFile (join (ROOT, "..", script .httpRoutes), "utf8")) : null;
+const places = [ "", "", "", "" ];
+const fill   = text => text .replaceAll ("{origin2}", places [1]) .replaceAll ("{hostport2}", places [3]) .replaceAll ("{origin}", places [0]) .replaceAll ("{hostport}", places [2]);
+
+function serveRoute (req, res, name)
+{
+   const route = routes [name];
+
+   if (!route)
+   {
+      res .writeHead (404, { "Cache-Control": "no-store" });
+      return res .end ();
+   }
+
+   if (route .hangup)
+      return req .socket .destroy ();
+
+   const headers = { "Cache-Control": "no-store" };
+
+   for (const [ key, value ] of Object .entries (route .headers ?? { }))
+      headers [key] = Array .isArray (value) ? value .map (fill) : fill (value);
+
+   const body = route .bodyHex !== undefined ? Buffer .from (route .bodyHex, "hex") : Buffer .from (fill (route .body ?? ""));
+
+   if (!Object .keys (headers) .some (key => key .toLowerCase () === "content-length"))
+      headers ["Content-Length"] = body .length;
+
+   setTimeout (() =>
+   {
+      res .writeHead (route .status ?? 200, route .reason ?? STATUS_CODES [route .status ?? 200] ?? "unknown", headers);
+
+      if (route .truncateTo === undefined)
+         return res .end (body);
+
+      res .write (body .subarray (0, route .truncateTo));
+      setTimeout (() => req .socket .destroy (), 50);
+   }, route .delayMs ?? 0);
+}
+
+const handle = async (req, res) =>
 {
    // A malformed percent escape in the path (a url the world authored on purpose, oracle/synthetic-rea-file-loader) is a 404, not a crash.
-   let path;
+   let path, name = null;
 
-   try { path = normalize (join (ROOT, decodeURIComponent (new URL (req .url, "http://x") .pathname))); }
+   try
+   {
+      const pathname = decodeURIComponent (new URL (req .url, "http://x") .pathname);
+
+      if (routes && pathname .startsWith ("/h/"))
+         name = pathname .slice (3);
+
+      path = normalize (join (ROOT, pathname));
+   }
    catch { res .writeHead (404, { "Cache-Control": "no-store" }); return res .end (); }
+
+   if (name !== null)
+      return serveRoute (req, res, name);
 
    if (!path .startsWith (ROOT)) { res .writeHead (403); return res .end (); }
 
@@ -87,11 +142,24 @@ const server = createServer (async (req, res) =>
       res .end (body);
    }
    catch { res .writeHead (404, { "Cache-Control": "no-store" }); res .end (); }
-});
+}
+
+const server  = createServer (handle);
+const server2 = routes ? createServer (handle) : null;
 
 await new Promise (r => server .listen (0, "127.0.0.1", r));
 
-const base    = `http://127.0.0.1:${server .address () .port}`;
+const base = `http://127.0.0.1:${server .address () .port}`;
+
+if (server2)
+{
+   await new Promise (r => server2 .listen (0, "127.0.0.1", r));
+   places [0] = base;
+   places [1] = `http://127.0.0.1:${server2 .address () .port}`;
+   places [2] = places [0] .slice (7);
+   places [3] = places [1] .slice (7);
+}
+
 // XITE_CHROME and XITE_ANGLE_BACKEND let another machine record: the physical M1 Mac uses
 // "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome" and "metal" (docs/gpu-failure-classification.md). Unset, the
 // recording is the one of the NVIDIA host (system Chrome, ANGLE on OpenGL).
@@ -146,9 +214,10 @@ let inFlight = 0;
 // module loads); x3d-drive takes the same key.
 const context = await browser .newContext ({ viewport: { width: W, height: H }, deviceScaleFactor: 1,
                                              ... (script .userAgent ? { userAgent: script .userAgent } : { }) });
-await context .route (url => !url .href .startsWith (base), route => route .abort ());
+await context .route (url => !url .href .startsWith (base) && !(places [1] && url .href .startsWith (places [1])), route => route .abort ());
 
 const page = await context .newPage ();
+
 
 if (script .settle)
 {
@@ -319,10 +388,42 @@ if (audio)
    { ... audio, length: (audioQuantum (frames) + audio .tail) * 128 });
 }
 
+
+// Script key "foreign": true (issue #51, sub:io.file-loader): FileLoader hands a page or a window target to `foreign (href, target)`, and
+// X3DBrowser.loadURL answers with `window .open (href, target)` for a non-empty target and with `location = href` otherwise. A headless
+// page cannot follow either, so `window .open` is replaced by a recorder, and the `navigate` event of the Navigation API (it has the
+// whole destination URL, with the fragment, which a network request has not) is recorded and cancelled once the world has loaded. The
+// result has `foreign`: [ [ target, href ], ... ] in the order they happened, with `location = href` as target "". Nothing else changes.
+const foreignList = [ ];
+
+if (script .foreign)
+{
+   await page .exposeFunction ("__foreignRecord", (target, href) => { foreignList .push ([ target, href ]); });
+
+   await context .addInitScript (() =>
+   {
+      window .open = (url, target) => { window .__foreignRecord (String (target ?? ""), String (url)); return null; };
+
+      navigation .addEventListener ("navigate", event =>
+      {
+         if (!window .__foreignArmed)
+            return;
+
+         window .__foreignRecord ("", event .destination .url);
+
+         if (event .cancelable)
+            event .preventDefault ();
+      });
+   });
+}
+
 try
 {
    await page .goto (`${base}/x_ite-pin/src/anim.html`);
    await page .waitForFunction (() => window .ready, null, { timeout: 30000 });
+
+   if (script .foreign)
+      await page .evaluate (() => { window .__foreignArmed = true; });
 
    // Script key "contentScale" (issue #51, F17): the ContentScale option of the canvas (the page has contentScale="1"),
    // set before the world loads. The pointer then arrives in drawing-buffer pixels (CSS pixels x ContentScale).
@@ -705,6 +806,9 @@ try
       }, script .collisionProbes);
 
    result .log = (await page .evaluate (() => window .getLog ())) .map (l => l .replaceAll (base, "http://oracle"));
+
+   if (script .foreign)
+      result .foreign = foreignList .map (([ target, href ]) => [ target, href .replaceAll (base, "http://oracle") ]);
 
    if (script .console)
       result .console = consoleLines .slice ();

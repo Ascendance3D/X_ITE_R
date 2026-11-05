@@ -743,8 +743,8 @@ impl Runtime {
 
         if self.world_state.aborted.remove(&id) && fetched {
             let resolved = url::Url::parse(&base)
-                .and_then(|b| crate::loader::join_url(&b, first))
-                .ok();
+                .ok()
+                .and_then(|b| self.resolve_candidate(&b, first).ok());
 
             self.print_load_error(
                 &loader,

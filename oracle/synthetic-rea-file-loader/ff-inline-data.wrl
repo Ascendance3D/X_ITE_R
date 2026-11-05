@@ -57,6 +57,25 @@ DEF I_list_bom_then_plain Inline { url [ "data:,%EF%BB%BF%zz" "data:,%23VRML%20V
 DEF I_list_latin1_first Inline { url [ "data:,ï»¿%23VRML%20V2.0%20utf8%0AWorldInfo%20%7B%20title%20%22list-latin1-first%22%20%7D%0A" "data:,%23VRML%20V2.0%20utf8%0AWorldInfo%20%7B%20title%20%22list-second%22%20%7D%0A" ] }
 DEF I_list_pct_bom_first Inline { url [ "data:,%EF%BB%BF%23VRML%20V2.0%20utf8%0AWorldInfo%20%7B%20title%20%22list-pct-bom-first%22%20%7D%0A" "data:,%23VRML%20V2.0%20utf8%0AWorldInfo%20%7B%20title%20%22list-second%22%20%7D%0A" ] }
 DEF I_list_both_bad Inline { url [ "data:,ï»¿garbage" "data:,%EF%BB%BFgarbage" ] }
+DEF I_utf8_ok_4byte Inline { url [ "data:,#VRML V2.0 utf8%0AWorldInfo%20%7B%20title%20%22ok-4byte%22%20%7D%0A%F0%9F%98%80" ] }
+DEF I_utf8_ok_2byte Inline { url [ "data:,#VRML V2.0 utf8%0AWorldInfo%20%7B%20title%20%22ok-2byte%22%20%7D%0A%C3%A9" ] }
+DEF I_utf8_bad_ff Inline { url [ "data:,#VRML V2.0 utf8%0AWorldInfo%20%7B%20title%20%22bad-ff%22%20%7D%0A%FF" ] }
+DEF I_utf8_bad_ff_first Inline { url [ "data:,%FF#VRML V2.0 utf8%0AWorldInfo%20%7B%20title%20%22bad-ff-first%22%20%7D%0A" ] }
+DEF I_utf8_bad_lone_c3 Inline { url [ "data:,#VRML V2.0 utf8%0AWorldInfo%20%7B%20title%20%22bad-lone-c3%22%20%7D%0A%C3" ] }
+DEF I_utf8_bad_c3_28 Inline { url [ "data:,#VRML V2.0 utf8%0AWorldInfo%20%7B%20title%20%22bad-c3-28%22%20%7D%0A%C3%28" ] }
+DEF I_utf8_bad_e2_82 Inline { url [ "data:,#VRML V2.0 utf8%0AWorldInfo%20%7B%20title%20%22bad-e2-82%22%20%7D%0A%E2%82" ] }
+DEF I_utf8_bad_overlong Inline { url [ "data:,#VRML V2.0 utf8%0AWorldInfo%20%7B%20title%20%22bad-overlong%22%20%7D%0A%C0%80" ] }
+DEF I_utf8_bad_surrogate Inline { url [ "data:,#VRML V2.0 utf8%0AWorldInfo%20%7B%20title%20%22bad-surrogate%22%20%7D%0A%ED%A0%80" ] }
+DEF I_utf8_bad_f8 Inline { url [ "data:,#VRML V2.0 utf8%0AWorldInfo%20%7B%20title%20%22bad-f8%22%20%7D%0A%F8%88%80%80%80" ] }
+DEF I_utf8_bad_continuation Inline { url [ "data:,#VRML V2.0 utf8%0AWorldInfo%20%7B%20title%20%22bad-continuation%22%20%7D%0A%80" ] }
+DEF I_utf8_bad_lower Inline { url [ "data:,#VRML V2.0 utf8%0AWorldInfo%20%7B%20title%20%22bad-lower%22%20%7D%0A%ff" ] }
+DEF I_utf8_bom_then_bad Inline { url [ "data:,%EF%BB%BF#VRML V2.0 utf8%0AWorldInfo%20%7B%20title%20%22bom-then-bad%22%20%7D%0A%FF" ] }
+DEF I_utf8_latin1_bom_then_bad Inline { url [ "data:,ï»¿#VRML V2.0 utf8%0AWorldInfo%20%7B%20title%20%22latin1-bom-then-bad%22%20%7D%0A%FF" ] }
+DEF I_utf8_mime_bad Inline { url [ "data:model/vrml,#VRML V2.0 utf8%0AWorldInfo%20%7B%20title%20%22mime-bad%22%20%7D%0A%FF" ] }
+DEF I_utf8_charset_bad Inline { url [ "data:text/plain;charset=utf-8,#VRML V2.0 utf8%0AWorldInfo%20%7B%20title%20%22charset-bad%22%20%7D%0A%FF" ] }
+DEF I_utf8_bad_then_bad_hex Inline { url [ "data:,#VRML V2.0 utf8%0AWorldInfo%20%7B%20title%20%22bad-then-bad-hex%22%20%7D%0A%FF%zz" ] }
+DEF I_utf8_list_bad_first Inline { url [ "data:,#VRML V2.0 utf8%0AWorldInfo%20%7B%20title%20%22bad-ff%22%20%7D%0A%FF" "data:,#VRML V2.0 utf8%0AWorldInfo%20%7B%20title%20%22utf8-second%22%20%7D%0A" ] }
+DEF I_utf8_list_bom_bad_first Inline { url [ "data:,%EF%BB%BF#VRML V2.0 utf8%0AWorldInfo%20%7B%20title%20%22bom-then-bad%22%20%7D%0A%FF" "data:,#VRML V2.0 utf8%0AWorldInfo%20%7B%20title%20%22utf8-second%22%20%7D%0A" ] }
 # EXTERNPROTO plain
 EXTERNPROTO EP0 [ ] [ "data:,%23VRML%20V2.0%20utf8%0APROTO%20P%20%5B%20%5D%20%7B%20Group%20%7B%20%7D%20%7D%0A" "data:,%23VRML%20V2.0%20utf8%0APROTO%20P0%20%5B%20%5D%20%7B%20Group%20%7B%20%7D%20%7D%0A" ]
 EP0 { }
