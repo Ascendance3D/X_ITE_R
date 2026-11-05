@@ -31,7 +31,10 @@ url = "2"
 
 [target.'cfg(target_arch = "wasm32")'.dependencies]
 x3d-script = { path = "../x3d-script", default-features = false }
-wgpu = "30"
+# `webgl`: the WebGL2 backend (Backends::GL), the fallback for a browser without a usable WebGPU adapter.
+wgpu = { version = "30", features = ["webgl"] }
+serde_json = "1"
+bytemuck = "1"
 # Exact: the wasm-bindgen CLI of tools/build-web.sh must be the same version (cargo install wasm-bindgen-cli).
 wasm-bindgen = "=0.2.129"
 wasm-bindgen-futures = "0.4"

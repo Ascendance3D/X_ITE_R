@@ -1,0 +1,27 @@
+/* The example pages, on the shared design system (../site/theme.css). */
+
+.tabs { display: flex; flex-wrap: wrap; gap: 0.5rem; justify-content: flex-end; }
+.tab { display: inline-flex; align-items: center; min-height: 44px; padding: 0 1rem; border-radius: 999px; background: var(--charcoal); box-shadow: inset 0 0 0 1px var(--line2); color: #cdd2dc; text-decoration: none; font-size: 0.875rem; }
+.tab:hover { color: var(--text); }
+.tab[aria-current] { background: rgb(255 107 24 / 0.12); box-shadow: inset 0 0 0 1px var(--orange); color: var(--text); }
+
+.ex { display: grid; grid-template-columns: minmax(0, 1fr) minmax(16rem, 22rem); gap: 1.5rem; align-items: start; }
+.stage .panel-head a { display: inline-flex; align-items: center; min-height: 44px; text-decoration: none; color: var(--cyan); }
+.canvas-box { padding: 0; }
+.canvas-box x3d-canvas { display: block; width: 100%; height: auto; aspect-ratio: 4 / 3; max-height: 70vh; background: var(--canvas); border-top: 1px solid var(--line); border-radius: 0 0 12px 12px; }
+.side { display: grid; gap: 0.75rem; padding: 1rem 1.1rem 1.25rem; }
+.side .label:not(:first-child) { margin-top: 0.5rem; }
+.row { display: flex; flex-wrap: wrap; gap: 0.5rem; margin: 0; }
+#status { padding: 0.75rem 0.9rem; border-radius: 8px; background: var(--canvas); box-shadow: inset 0 0 0 1px var(--line); font: 0.8125rem/1.6 var(--mono); white-space: pre-wrap; overflow-wrap: anywhere; }
+.hint { margin: 0; font-size: 0.875rem; color: var(--muted); }
+
+@media (max-width: 960px)
+{
+   .ex { grid-template-columns: minmax(0, 1fr); }
+   .tabs { justify-content: flex-start; }
+}
+
+@media (max-width: 767px)
+{
+   .tool { flex: 1 1 auto; }
+}

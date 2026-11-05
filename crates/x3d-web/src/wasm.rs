@@ -7,8 +7,8 @@
 //! [`WebFetcher`]: the page's `fetch`, never a synchronous request. Its requests end with the world.
 
 use crate::device_request::{
-    Attempt, CHECKED_WGPU_VERSION, WGPU_REQUESTS_COMPATIBILITY_FEATURE_LEVEL,
-    request_with_compatibility,
+    ADAPTER_REQUEST_TRIES, Attempt, CHECKED_WGPU_VERSION,
+    WGPU_REQUESTS_COMPATIBILITY_FEATURE_LEVEL, request_with_compatibility, request_with_retries,
 };
 use crate::session::{Pointer, RouteInfo, Session, Touch};
 use std::cell::RefCell;
@@ -348,6 +348,10 @@ pub struct WebBrowser {
     /// The last log lines of the world that a replace removed (what its Scripts' `shutdown` printed): the next
     /// [`WebBrowser::take_log`] of the current world gives them first.
     retired_log: Vec<String>,
+    /// Drawn with wgpu's WebGL2 backend (else WebGPU).
+    webgl2: bool,
+    /// Why WebGPU did not start, when `create` fell back to WebGL2.
+    fallback_reason: Option<String>,
 }
 
 /// A route as the array `routes` and its relatives give.
@@ -371,45 +375,131 @@ fn no_world() -> JsError {
 
 #[wasm_bindgen]
 impl WebBrowser {
-    /// The device and surface of `canvas` (WebGPU). Fails when the page has no WebGPU adapter, or the adapter lacks
-    /// what the renderer needs (the WebGPU default limits, a usable canvas format).
-    pub async fn create(canvas: web_sys::HtmlCanvasElement) -> Result<WebBrowser, JsError> {
+    /// The device and surface of `canvas`, and the renderer on them.
+    ///
+    /// `backend`:
+    /// * absent, `""` or `"auto"`: WebGPU when the browser has a WebGPU adapter that the renderer can use, else WebGL2
+    ///   (wgpu's WebGL2 backend, `Backends::GL`), on the same canvas. The choice is made before the canvas gives out a
+    ///   context: WebGPU's adapter, device and renderer are made first, and the canvas's `webgpu` context only after
+    ///   them, because a canvas that has given out one context kind never gives out the other. One fallback, never more.
+    /// * `"webgpu"`: WebGPU only; fails as before when it cannot start.
+    /// * `"webgl2"`: WebGL2 only.
+    pub async fn create(
+        canvas: web_sys::HtmlCanvasElement,
+        backend: Option<String>,
+    ) -> Result<WebBrowser, JsError> {
+        match backend.as_deref() {
+            None | Some("" | "auto") => match Self::start(canvas.clone(), false).await {
+                Ok(b) => Ok(b),
+                Err(why) => {
+                    web_sys::console::warn_1(
+                        &format!("X_ITE_R: WebGPU cannot start ({why}); starting with WebGL2.")
+                            .into(),
+                    );
+
+                    let mut b = Self::start(canvas, true)
+                        .await
+                        .map_err(|e| JsError::new(&format!("WebGPU: {why}; WebGL2: {e}")))?;
+
+                    b.fallback_reason = Some(why);
+                    Ok(b)
+                }
+            },
+            Some("webgpu") => Self::start(canvas, false)
+                .await
+                .map_err(|e| JsError::new(&e)),
+            Some("webgl2") => Self::start(canvas, true)
+                .await
+                .map_err(|e| JsError::new(&e)),
+            Some(other) => Err(JsError::new(&format!(
+                "X_ITE_R: unknown graphics backend \"{other}\" (auto, webgpu or webgl2)"
+            ))),
+        }
+    }
+
+    /// The graphics backend the engine draws with: `"webgpu"` or `"webgl2"`.
+    #[wasm_bindgen(getter)]
+    pub fn backend(&self) -> String {
+        if self.webgl2 { "webgl2" } else { "webgpu" }.to_string()
+    }
+
+    /// Why WebGPU did not start when the engine fell back to WebGL2, else `undefined`.
+    #[wasm_bindgen(getter, js_name = fallbackReason)]
+    pub fn fallback_reason(&self) -> Option<String> {
+        self.fallback_reason.clone()
+    }
+}
+
+impl WebBrowser {
+    async fn start(canvas: web_sys::HtmlCanvasElement, webgl2: bool) -> Result<WebBrowser, String> {
         // The page's Sound nodes are real browser nodes: the engine records its Web Audio calls for the page to make
         // (web/audio_mirror.mjs). Before the first world, because an engine makes its choice when it is created.
         x3d_runtime::sound::set_default_record_ops(true);
 
         let (width, height) = (canvas.width().max(1), canvas.height().max(1));
         let instance = wgpu::Instance::new(wgpu::InstanceDescriptor {
-            backends: wgpu::Backends::BROWSER_WEBGPU,
+            backends: if webgl2 {
+                wgpu::Backends::GL
+            } else {
+                wgpu::Backends::BROWSER_WEBGPU
+            },
             ..wgpu::InstanceDescriptor::new_without_display_handle()
         });
-        let surface = instance
-            .create_surface(wgpu::SurfaceTarget::Canvas(canvas))
-            .map_err(|e| JsError::new(&format!("create_surface: {e}")))?;
+        // WebGL2's adapter comes from the canvas's context; WebGPU's surface is made last (see `create`).
+        let early_surface = if webgl2 {
+            Some(
+                instance
+                    .create_surface(wgpu::SurfaceTarget::Canvas(canvas.clone()))
+                    .map_err(|e| format!("create_surface: {e}"))?,
+            )
+        } else {
+            None
+        };
         // Compatibility feature level first when wgpu can request it, else (and after a failure) the current request, once
-        // (rule BR3.1; docs in crate::device_request). wgpu 30 cannot, so today this is the current request only.
+        // (rule BR3.1; docs in crate::device_request). wgpu 30 cannot, so today this is the current request only. The
+        // current request asks the browser up to ADAPTER_REQUEST_TRIES times: Chrome on Linux answers the first request
+        // of a page with no adapter.
+        let retry_lines = std::cell::RefCell::new(vec![]);
         let outcome = request_with_compatibility(WGPU_REQUESTS_COMPATIBILITY_FEATURE_LEVEL, |attempt| {
-            let (instance, surface) = (&instance, &surface);
+            let (instance, surface, retry_lines) = (&instance, early_surface.as_ref(), &retry_lines);
 
             async move {
                 match attempt {
                     Attempt::Compatibility => Err(format!(
                         "wgpu {CHECKED_WGPU_VERSION} has no option for the compatibility feature level"
                     )),
-                    Attempt::Current => instance
-                        .request_adapter(&wgpu::RequestAdapterOptions {
-                            power_preference: wgpu::PowerPreference::HighPerformance,
-                            force_fallback_adapter: false,
-                            compatible_surface: Some(surface),
-                            ..Default::default()
+                    Attempt::Current => {
+                        let (result, lines) = request_with_retries(ADAPTER_REQUEST_TRIES, || async {
+                            instance
+                                .request_adapter(&wgpu::RequestAdapterOptions {
+                                    power_preference: wgpu::PowerPreference::HighPerformance,
+                                    force_fallback_adapter: false,
+                                    compatible_surface: surface,
+                                    ..Default::default()
+                                })
+                                .await
+                                .map_err(|e| {
+                                    let kind = if webgl2 { "WebGL2" } else { "WebGPU" };
+
+                                    format!("no {kind} adapter: {e}")
+                                })
                         })
-                        .await
-                        .map_err(|e| format!("no WebGPU adapter: {e}")),
+                        .await;
+
+                        retry_lines.borrow_mut().extend(lines);
+                        result
+                    }
                 }
             }
         })
-        .await
-        .map_err(|e| JsError::new(&e))?;
+        .await;
+
+        // The reasons of the failed tries are logged also when the last try fails (that failure is the error).
+        for line in retry_lines.borrow().iter() {
+            web_sys::console::warn_1(&line.into());
+        }
+
+        let outcome = outcome?;
 
         for line in &outcome.diagnostics {
             web_sys::console::warn_1(&line.into());
@@ -424,11 +514,22 @@ impl WebBrowser {
             missing.push(format!("{name} {have} < {want}"))
         });
 
-        if !missing.is_empty() {
-            return Err(JsError::new(&format!(
+        // WebGL2 is always below them: the renderer has a downlevel profile for it (x3d_render::gpu::is_downlevel), so a
+        // WebGL2 adapter starts and the missing limits are logged. The renderer must still be made without a validation
+        // error (below).
+        if webgl2 && !missing.is_empty() {
+            web_sys::console::warn_1(
+                &format!(
+                    "X_ITE_R: the WebGL2 adapter is below the WebGPU default limits: {}",
+                    missing.join(", ")
+                )
+                .into(),
+            );
+        } else if !missing.is_empty() {
+            return Err(format!(
                 "the WebGPU adapter is below the limits X_ITE_R needs: {}",
                 missing.join(", ")
-            )));
+            ));
         }
 
         let (device, queue) = adapter
@@ -439,7 +540,7 @@ impl WebBrowser {
                 ..Default::default()
             })
             .await
-            .map_err(|e| JsError::new(&format!("request_device: {e}")))?;
+            .map_err(|e| format!("request_device: {e}"))?;
 
         device.on_uncaptured_error(std::sync::Arc::new(|e| {
             web_sys::console::error_1(&format!("WebGPU: {e}").into());
@@ -455,6 +556,25 @@ impl WebBrowser {
             );
         });
 
+        // The renderer before the canvas's context: a WebGPU device that cannot make its shaders and layouts falls back
+        // (`create`); on WebGL2 the same error rejects `ready()`. Pipeline errors of later draws are logged, never a
+        // restart.
+        let scope = device.push_error_scope(wgpu::ErrorFilter::Validation);
+        let mut renderer = Renderer::new(device.clone(), queue);
+
+        if let Some(e) = scope.pop().await {
+            let kind = if webgl2 { "WebGL2" } else { "WebGPU" };
+
+            return Err(format!("the {kind} renderer cannot be made: {e}"));
+        }
+
+        let surface = match early_surface {
+            Some(s) => s,
+            None => instance
+                .create_surface(wgpu::SurfaceTarget::Canvas(canvas))
+                .map_err(|e| format!("create_surface: {e}"))?,
+        };
+
         // The shaders write display-encoded values: draw through a non-sRGB view (see x3d-view's window code).
         let caps = surface.get_capabilities(&adapter);
         let format = caps
@@ -462,9 +582,14 @@ impl WebBrowser {
             .iter()
             .copied()
             .find(|f| x3d_render::gpu::target_format_ok(f.remove_srgb_suffix()))
-            .ok_or_else(|| {
-                JsError::new(&format!("no usable canvas format in {:?}", caps.formats))
-            })?;
+            .ok_or_else(|| format!("no usable canvas format in {:?}", caps.formats))?;
+        // WebGL2 has no surface view formats (DownlevelFlags::SURFACE_VIEW_FORMATS): its canvas is configured with the
+        // non-sRGB format itself, which it offers too.
+        let format = if webgl2 && caps.formats.contains(&format.remove_srgb_suffix()) {
+            format.remove_srgb_suffix()
+        } else {
+            format
+        };
         let view_format = format.remove_srgb_suffix();
         let config = wgpu::SurfaceConfiguration {
             usage: wgpu::TextureUsages::RENDER_ATTACHMENT,
@@ -488,7 +613,6 @@ impl WebBrowser {
 
         surface.configure(&device, &config);
 
-        let mut renderer = Renderer::new(device.clone(), queue);
         let info = adapter.get_info();
 
         renderer.set_supported_samples(Renderer::supported_sample_counts(
@@ -522,9 +646,14 @@ impl WebBrowser {
             field_event_sink: None,
             retired: HashMap::new(),
             retired_log: vec![],
+            webgl2,
+            fallback_reason: None,
         })
     }
+}
 
+#[wasm_bindgen]
+impl WebBrowser {
     /// The WebGPU adapter: name, backend, device type.
     #[wasm_bindgen(getter, js_name = adapterInfo)]
     pub fn adapter_info(&self) -> String {
@@ -547,6 +676,9 @@ impl WebBrowser {
     #[wasm_bindgen(js_name = loseDevice)]
     pub fn lose_device(&self) {
         self.device.destroy();
+        // WebGPU reports the loss through the device-lost callback, later; wgpu's WebGL2 backend has none (the page
+        // reports `webglcontextlost` with this call). The engine is lost from now on either way.
+        self.lost.store(true, Ordering::SeqCst);
     }
 
     fn add(

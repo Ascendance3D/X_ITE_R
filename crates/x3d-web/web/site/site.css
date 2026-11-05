@@ -1,0 +1,81 @@
+/* The start page of the X_ITE_R Browser Preview, on the shared design system (theme.css, linked before this file). */
+
+:root
+{
+   --bench: var(--surface); --panel: var(--charcoal); --rule: var(--line); --ink: var(--on); --graph: var(--muted); --faint: var(--muted);
+   --signal: var(--orange); --pass: var(--green); --fail: var(--red); --sans: var(--body);
+   --gutter: var(--pad); --gap: clamp(3rem, 8vw, 5rem);
+}
+
+main { max-width: 1320px; margin: 0 auto; padding-inline: var(--pad); }
+.label { margin: 0 0 0.75rem; }
+h1 { font-size: clamp(2rem, 3.6vw, 2.75rem); margin: 0 0 1rem; }
+h2 { margin: 0 0 1rem; }
+
+/* Hero: text left (5), live canvas right (7) */
+
+.hero { display: grid; grid-template-columns: 5fr 7fr; gap: clamp(2rem, 5vw, 4rem); align-items: start; padding-block: var(--gap); }
+
+h1, h2 { font-weight: 600; letter-spacing: -0.02em; line-height: 1.15; margin: 0 0 1rem; }
+h1 { font-size: clamp(2rem, 4vw, 3.25rem); }
+h2 { font-size: clamp(1.375rem, 2.2vw, 1.75rem); }
+
+.lead { max-width: 65ch; color: var(--graph); }
+.callout { max-width: 65ch; margin: 1.5rem 0; padding: 0.875rem 1rem; background: var(--panel); border-left: 2px solid var(--signal); }
+
+.button
+{
+   display: inline-flex; align-items: center; min-height: 44px; padding: 0 1.4rem; border-radius: 999px;
+   background: var(--orange); color: #2e0f00; font-weight: 600; text-decoration: none;
+   transition: transform 220ms var(--spring);
+}
+.button:hover { color: #2e0f00; transform: translateY(-1px); }
+.button:active { transform: translateY(1px); }
+
+.stage { margin: 0; }
+.stage x3d-canvas { display: block; width: 100%; height: auto; aspect-ratio: 4 / 3; background: var(--canvas); border: 1px solid var(--rule); border-radius: 12px; overflow: hidden; }
+.stage figcaption { display: grid; grid-template-columns: repeat(auto-fit, minmax(12rem, 1fr)); gap: 0.25rem 1.5rem; padding-block: 0.75rem; border-bottom: 1px solid var(--rule); color: var(--graph); }
+.fallback { padding: 1.5rem; color: var(--graph); }
+.hint { margin: 0.75rem 0 0; color: var(--faint); font-size: 0.875rem; }
+
+/* Bands */
+
+.band { display: grid; align-items: start; grid-template-columns: 4fr 8fr; gap: 1.5rem clamp(2rem, 5vw, 4rem); padding-block: var(--gap); border-top: 1px solid var(--rule); }
+.band > :not(.band-head) { grid-column: 2; }
+.band-head p:not(.label) { color: var(--graph); max-width: 65ch; }
+.band.split { grid-template-columns: 1fr 1fr; }
+.band.split > div { grid-column: auto; }
+.band ul { margin: 0; padding-left: 1.1rem; color: var(--graph); }
+.band li + li { margin-top: 0.35rem; }
+
+.facts { display: grid; grid-template-columns: max-content 1fr; margin: 0; }
+.facts dt, .facts dd { margin: 0; padding: 0.7rem 0; border-bottom: 1px solid var(--rule); }
+.facts dt { padding-right: 2rem; color: var(--graph); }
+.facts dd { overflow-wrap: anywhere; }
+
+.table-wrap { overflow-x: auto; }
+table { width: 100%; border-collapse: collapse; }
+th, td { padding: 0.7rem 1rem 0.7rem 0; border-bottom: 1px solid var(--rule); text-align: left; vertical-align: top; }
+th { font: 500 0.75rem/1.2 var(--mono); letter-spacing: 0.08em; text-transform: uppercase; color: var(--graph); }
+td.pass { color: var(--pass); }
+.note { color: var(--faint); font-size: 0.875rem; max-width: 65ch; }
+
+.code { margin: 0; padding: 1rem 1.25rem; overflow-x: auto; background: var(--panel); border: 1px solid var(--rule); border-radius: 8px; font: 0.875rem/1.6 var(--mono); }
+.links { display: flex; flex-wrap: wrap; gap: 0.5rem 1.5rem; }
+.links a { display: inline-block; padding-block: 0.6rem; }
+
+
+/* One column below 768 px; the canvas goes under the text. */
+
+@media (max-width: 767px)
+{
+   .hero, .band, .band.split { grid-template-columns: minmax(0, 1fr); }
+   .band > :not(.band-head) { grid-column: auto; }
+   .facts { grid-template-columns: minmax(0, 1fr); }
+   .facts dt { padding-bottom: 0; border-bottom: 0; }
+}
+
+@media (prefers-reduced-motion: reduce)
+{
+   * { transition: none !important; }
+}
