@@ -127,6 +127,52 @@ put("ply/bad-format.ply", ply(b"binary_middle_endian", [b"element vertex 1", b"p
 put("ply/bad-version.ply", b"ply\nformat binary_little_endian 2.0\nelement vertex 1\nproperty float x\nend_header\n" + pk("<", "f", 1))
 put("ply/no-end-header.ply", b"ply\nformat binary_little_endian 1.0\nelement vertex 1\nproperty float x\n" + pk("<", "f", 1))
 
+# ---------------------------------------------------------------------------------------------------------------- PLY Gaussian splats
+
+SPLAT_CORE = [b"property float x", b"property float y", b"property float z"]
+SPLAT_DC = [b"property float f_dc_0", b"property float f_dc_1", b"property float f_dc_2"]
+SPLAT_TAIL = [b"property float opacity", b"property float scale_0", b"property float scale_1", b"property float scale_2",
+              b"property float rot_0", b"property float rot_1", b"property float rot_2", b"property float rot_3"]
+
+
+def splat_header(rest, count):
+    return [b"element vertex %d" % count] + SPLAT_CORE + SPLAT_DC + [b"property float f_rest_%d" % i for i in range(rest)] + SPLAT_TAIL
+
+
+def splat_row(i, rest):
+    """One splat: position, SH degree 0, `rest` further coefficients, opacity, log scales, quaternion (w, x, y, z)."""
+    pos = [0.5 * i, -0.25 * i + 1, 0.125 * i - 2]
+    dc = [0.25 + 0.1 * i, -0.5 + 0.05 * i, 0.75 - 0.2 * i]
+    fr = [round(0.01 * (k + 1) * (i + 1) - 0.1, 4) for k in range(rest)]
+    tail = [0.3 * i - 0.5, -1.0 - 0.1 * i, -0.5 + 0.2 * i, 0.1 * i, 0.9, 0.1 * (i + 1), -0.2, 0.3 + 0.05 * i]
+    return pos + dc + fr + tail
+
+
+def splat_ply(endian, fmt, rest, count=3):
+    rows = b"".join(struct.pack(endian + "%df" % (len(row)), *row) for row in (splat_row(i, rest) for i in range(count)))
+    return ply(fmt, splat_header(rest, count), [rows])
+
+
+def splat_ascii(rest, count=3):
+    head = [b"ply", b"format ascii 1.0"] + splat_header(rest, count) + [b"end_header"]
+    rows = [b" ".join(repr(float(v)).encode() for v in splat_row(i, rest)) for i in range(count)]
+    return b"\n".join(head + rows) + b"\n"
+
+
+put("ply-splat/deg0-le.ply", splat_ply("<", b"binary_little_endian", 0))
+put("ply-splat/deg1-le.ply", splat_ply("<", b"binary_little_endian", 9))
+put("ply-splat/deg1-be.ply", splat_ply(">", b"binary_big_endian", 9))
+put("ply-splat/deg2-le.ply", splat_ply("<", b"binary_little_endian", 24))
+put("ply-splat/deg3-le.ply", splat_ply("<", b"binary_little_endian", 45, count=2))
+put("ply-splat/rest5-le.ply", splat_ply("<", b"binary_little_endian", 5))
+put("ply-splat/deg0-ascii.ply", splat_ascii(0))
+put("ply-splat/deg1-ascii.ply", splat_ascii(9))
+put("ply-splat/one-le.ply", splat_ply("<", b"binary_little_endian", 0, count=1))
+put("ply-splat/truncated-le.ply", splat_ply("<", b"binary_little_endian", 9)[:-7])
+# Without opacity, scales or rotation the pinned parser still builds a node: the lists are shorter than the positions.
+put("ply-splat/no-opacity-le.ply", ply(b"binary_little_endian", [b"element vertex 2"] + SPLAT_CORE + SPLAT_DC + SPLAT_TAIL[1:],
+    [struct.pack("<%df" % (6 + 7), *(splat_row(i, 0)[:9] + splat_row(i, 0)[10:])) for i in range(2)]))
+
 # ---------------------------------------------------------------------------------------------------------------- GLB
 
 def glb(json_obj, bin_chunk=None, version=2, length=None, extra=b"", json_text=None):
@@ -278,6 +324,19 @@ groups = {
         ["ply/bad-format.ply"],
         ["ply/bad-version.ply"],
         ["ply/no-end-header.ply"],
+    ],
+    "gg-ply-splat": [
+        ["ply-splat/deg0-le.ply"],
+        ["ply-splat/deg1-le.ply"],
+        ["ply-splat/deg1-be.ply"],
+        ["ply-splat/deg2-le.ply"],
+        ["ply-splat/deg3-le.ply"],
+        ["ply-splat/rest5-le.ply"],
+        ["ply-splat/deg0-ascii.ply"],
+        ["ply-splat/deg1-ascii.ply"],
+        ["ply-splat/one-le.ply"],
+        ["ply-splat/truncated-le.ply"],
+        ["ply-splat/no-opacity-le.ply"],
     ],
     "gg-glb": [
         ["glb/tri.glb"],

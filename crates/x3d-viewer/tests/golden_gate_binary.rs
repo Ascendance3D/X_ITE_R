@@ -160,6 +160,11 @@ fn golden_gate_ply_binary_matches_x_ite() {
 }
 
 #[test]
+fn golden_gate_ply_splat_matches_x_ite() {
+    check("gg-ply-splat");
+}
+
+#[test]
 fn golden_gate_glb_matches_x_ite() {
     check("gg-glb");
 }
@@ -169,11 +174,11 @@ fn golden_gate_dispatch_matches_x_ite() {
     check("gg-dispatch");
 }
 
-/// The baseline directory holds exactly the four groups, so a new baseline cannot be left without a test.
+/// The baseline directory holds exactly the five groups, so a new baseline cannot be left without a test.
 #[test]
 fn golden_gate_baseline_groups_are_the_tested_ones() {
     assert_eq!(
         groups(&root()),
-        ["gg-dispatch", "gg-glb", "gg-ply", "gg-stl"]
+        ["gg-dispatch", "gg-glb", "gg-ply", "gg-ply-splat", "gg-stl"]
     );
 }

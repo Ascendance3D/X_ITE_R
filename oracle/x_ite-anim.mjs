@@ -218,9 +218,23 @@ const page = await context .newPage ();
 
 if (script .settle)
 {
-   page .on ("request", () => ++ inFlight);
-   page .on ("requestfinished", () => -- inFlight);
-   page .on ("requestfailed", () => -- inFlight);
+   if (process .env .XITE_ANIM_DEDUP_PENDING)
+   {
+      // Opt-in (the GaussianSplats sort worker): Chromium reports a Worker's fetch twice through "request" and once through
+      // "requestfinished", so a counter never returns to 0. Count each URL once while it is pending.
+      const pending = new Set ();
+      const done = r => { pending .delete (r .url ()); inFlight = pending .size; };
+
+      page .on ("request", r => { pending .add (r .url ()); inFlight = pending .size; });
+      page .on ("requestfinished", done);
+      page .on ("requestfailed", done);
+   }
+   else
+   {
+      page .on ("request", () => ++ inFlight);
+      page .on ("requestfinished", () => -- inFlight);
+      page .on ("requestfailed", () => -- inFlight);
+   }
 }
 
 if (script .console)

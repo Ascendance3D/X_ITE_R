@@ -8,7 +8,7 @@ Text only. No status changes. Both PRs are merged on master 31499a74, and two en
   are pinned by known_differences_are_pinned. The status stays PARTIAL: the pinned differences remain and the owner has
   not approved them as differences of the platform.
 - sub:parse.golden-gate: addParsers / removeParsers / getParsers are covered by golden_gate_registry (PR #441). That test
-  checks the pinned source, not a recorded run. The status stays PARTIAL: PLY Gaussian splats and NaN STL stay open.
+  checks the pinned source, not a recorded run. The status stays PARTIAL: NaN STL stays open.
 
 Counts do not change: 282 COMPLETE / 42 PARTIAL / 21 DIFFERENT / 1 MISSING, total 346."""
 import json, os, sys, collections, hashlib
@@ -42,9 +42,9 @@ C = {
    "tests": addlist("crates/x3d-viewer/tests/file_http.rs (4 groups; oracle/file-http-baseline)", "crates/x3d-http/tests/http_fetcher.rs"),
   }, "Issue #51 2026-11-05 (PR #438, merged 31499a74): redirects, response headers and the foreign hand-off are no longer missing. Re-run on master 31499a74: file_http (5), file_loader (8), golden_gate_binary (5) and http_fetcher (29) pass, 0 skipped. Status stays PARTIAL."),
  "sub:parse.golden-gate": (None, {
-   "missing": swap("parsers added or removed with GoldenGate.addParsers / removeParsers and PLY Gaussian splats are not covered", "parsers added or removed with GoldenGate.addParsers / removeParsers / getParsers are covered by golden_gate_registry against the pinned source, not a recorded run (PR #441); PLY Gaussian splats are not covered"),
-   "tests": addlist("crates/x3d-parse/tests/golden_gate_registry.rs (pinned GoldenGate.js list semantics)"),
-  }, "Issue #51 2026-11-05 (PR #441, merged 31499a74): the parser registry gap is closed. Re-run on master 31499a74: golden_gate_registry passes (16 tests), 0 skipped. Status stays PARTIAL."),
+   "missing": swap("parsers added or removed with GoldenGate.addParsers / removeParsers and PLY Gaussian splats are not covered", "parsers added or removed with GoldenGate.addParsers / removeParsers / getParsers are covered by golden_gate_registry against the pinned source, not a recorded run (PR #441); PLY Gaussian splats (binary little and big endian, ASCII, SH degrees 0 to 3, a partial f_rest list, a missing opacity, a cut file; 11 inputs) are compared through createX3DFromURL by golden_gate_binary gg-ply-splat (three identical recordings)"),
+   "tests": addlist("crates/x3d-parse/tests/golden_gate_registry.rs (pinned GoldenGate.js list semantics)", "crates/x3d-viewer/tests/golden_gate_binary.rs golden_gate_ply_splat_matches_x_ite (gg-ply-splat: 11 inputs, scene text of every dumped frame and the loader log exact)"),
+  }, "Issue #51 2026-11-05 (PR #441, merged 31499a74): the parser registry gap is closed. Re-run on master 31499a74: golden_gate_registry passes (16 tests), golden_gate_binary passes (6 tests, with the new gg-ply-splat group), 0 skipped. Mutation check: swapping the quaternion order wxyz to xyzw in formats.rs fails golden_gate_ply_splat_matches_x_ite. Status stays PARTIAL: NaN STL coordinates (the pinned page logs a stack overflow) are not compared."),
 }
 
 
