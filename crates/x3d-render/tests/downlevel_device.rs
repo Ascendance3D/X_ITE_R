@@ -62,13 +62,45 @@ fn oracle() -> PathBuf {
         .unwrap()
 }
 
-/// The world `text` written to a file of its own (render_file reads a file).
-fn world(name: &str, text: &str) -> PathBuf {
-    let dir = std::env::temp_dir().join(format!("x3d-render-downlevel-{}", std::process::id()));
-    std::fs::create_dir_all(&dir).unwrap();
-    let path = dir.join(name);
-    std::fs::write(&path, text).unwrap();
-    path
+/// A world file in a directory of its own below `CARGO_TARGET_TMPDIR` (render_file reads a file).
+///
+/// The directory name holds the process ID, the start time in nanoseconds and the file name, so two tests (threads of
+/// one process, or processes of nextest) and two runs never share it; `create_dir` refuses a directory that exists. When
+/// the test passes, drop removes the directory. When the test fails (a panic), the directory stays for the diagnosis
+/// and its path is printed; a later run with the same process ID does not write to it or remove it.
+struct World {
+    dir: PathBuf,
+    path: PathBuf,
+}
+
+impl World {
+    fn new(name: &str, text: &str) -> Self {
+        let stamp = std::time::SystemTime::now()
+            .duration_since(std::time::UNIX_EPOCH)
+            .unwrap()
+            .as_nanos();
+        let dir = Path::new(env!("CARGO_TARGET_TMPDIR")).join(format!(
+            "x3d-render-downlevel-{}-{stamp}-{name}",
+            std::process::id()
+        ));
+        std::fs::create_dir(&dir)
+            .unwrap_or_else(|e| panic!("cannot create {}: {e}", dir.display()));
+        // The guard exists before the write, so a failed write also keeps the directory and prints its path.
+        let path = dir.join(name);
+        let world = Self { dir, path };
+        std::fs::write(&world.path, text).unwrap();
+        world
+    }
+}
+
+impl Drop for World {
+    fn drop(&mut self) {
+        if std::thread::panicking() {
+            eprintln!("world kept for diagnosis: {}", self.path.display());
+        } else {
+            let _ = std::fs::remove_dir_all(&self.dir);
+        }
+    }
 }
 
 /// The full and the downlevel image of `file`, and the share of pixels more than 8 off.
@@ -143,7 +175,8 @@ fn instanced_grid(n: usize) -> String {
 fn downlevel_instanced_draw_over_one_window_matches_the_full_device() {
     // More than two windows, and a count that ends inside a window.
     let n = DOWNLEVEL_INSTANCES * 2 + 37;
-    let Some((off, lit)) = compare(&world("instanced.x3dv", &instanced_grid(n))) else {
+    let world = World::new("instanced.x3dv", &instanced_grid(n));
+    let Some((off, lit)) = compare(&world.path) else {
         return x3d_evidence::no_gpu("no adapter");
     };
     assert!(
@@ -171,7 +204,8 @@ fn downlevel_depth_map_with_more_instances_than_one_window_matches_the_full_devi
          geometry IndexedFaceSet {{ solid FALSE coord Coordinate {{ point [ -1.3 -1 0, 1.3 -1 0, 1.3 1 0, -1.3 1 0 ] }} \
          coordIndex [ 0 1 2 3 -1 ] texCoord TextureCoordinate {{ point [ 0 0, 1 0, 1 1, 0 1 ] }} }} }}\n"
     );
-    let Some((off, lit)) = compare(&world("depth-map.x3dv", &text)) else {
+    let world = World::new("depth-map.x3dv", &text);
+    let Some((off, lit)) = compare(&world.path) else {
         return x3d_evidence::no_gpu("no adapter");
     };
     assert!(lit > 0, "the depth map is drawn");
