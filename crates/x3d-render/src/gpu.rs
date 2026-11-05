@@ -1682,7 +1682,7 @@ impl Renderer {
         // transmission buffer, lut_ggx.png, lut_charlie.png and lut_sheen_E.png (one array).
         let downlevel = is_downlevel(&device);
         let frame_entries = [
-            uniform_entry(false, std::mem::size_of::<FrameU>() as u64),
+            uniform_entry(false, frame_uniform_size(&device) as u64),
             texture_entry(1, env_view_dimension(&device)),
             sampler_entry(2),
             texture_entry(3, wgpu::TextureViewDimension::D2),
@@ -1850,7 +1850,7 @@ impl Renderer {
 
         let frame_buffer = device.create_buffer(&wgpu::BufferDescriptor {
             label: Some("frame"),
-            size: std::mem::size_of::<FrameU>() as u64,
+            size: frame_uniform_size(&device) as u64,
             usage: wgpu::BufferUsages::UNIFORM | wgpu::BufferUsages::COPY_DST,
             mapped_at_creation: false,
         });
@@ -4740,9 +4740,11 @@ impl Renderer {
                 fu.projection[i] = -fu.projection[i];
             }
         }
-        let n = frame.lights.len().min(MAX_FRAME_LIGHTS);
+        // The frame's capacity: smaller on a downlevel device (frame_caps).
+        let (max_frame_lights, max_frame_projectors) = frame_caps(&self.device);
+        let n = frame.lights.len().min(max_frame_lights);
         fu.num_lights = [n as u32, 0, 0, 0];
-        for (i, l) in frame.lights.iter().take(MAX_FRAME_LIGHTS).enumerate() {
+        for (i, l) in frame.lights.iter().take(max_frame_lights).enumerate() {
             let m = l.matrix;
             fu.lights[i] = LightU {
                 color_type: [
@@ -4793,7 +4795,7 @@ impl Renderer {
         for (i, p) in frame
             .projectors
             .iter()
-            .take(MAX_FRAME_PROJECTORS)
+            .take(max_frame_projectors)
             .enumerate()
         {
             fu.projectors[i] = ProjectorU {
@@ -4901,7 +4903,7 @@ impl Renderer {
         if !frame.shadow_maps.is_empty() && !is_downlevel(&self.device) {
             let (shadow, places) = self.render_shadow_maps(frame);
 
-            for (i, l) in frame.lights.iter().take(MAX_FRAME_LIGHTS).enumerate() {
+            for (i, l) in frame.lights.iter().take(max_frame_lights).enumerate() {
                 if let Some(&(first, stride)) = l.shadow.as_ref().and_then(|sh| places.get(sh.map))
                 {
                     fu.lights[i].shadow_params[2] = f32::from_bits(first);
@@ -4934,9 +4936,15 @@ impl Renderer {
             );
         }
 
-        self.queue
-            .write_buffer(&self.frame_buffer, 0, bytemuck::bytes_of(&fu));
-        crate::transfer::upload(crate::transfer::Kind::Other, std::mem::size_of_val(&fu));
+        if is_downlevel(&self.device) {
+            let bytes = downlevel_frame_bytes(&fu);
+            self.queue.write_buffer(&self.frame_buffer, 0, &bytes);
+            crate::transfer::upload(crate::transfer::Kind::Other, bytes.len());
+        } else {
+            self.queue
+                .write_buffer(&self.frame_buffer, 0, bytemuck::bytes_of(&fu));
+            crate::transfer::upload(crate::transfer::Kind::Other, std::mem::size_of_val(&fu));
+        }
 
         // --- draw list in X3DRenderObject.drawShapes order
         let mut scratch_data: Vec<f32> = std::mem::take(&mut self.scratch_data);
@@ -5174,7 +5182,7 @@ impl Renderer {
                     .lights
                     .iter()
                     .copied()
-                    .filter(|l| (*l as usize) < MAX_FRAME_LIGHTS)
+                    .filter(|l| (*l as usize) < max_frame_lights)
                     .take(MAX_LIGHTS)
                     .collect();
                 volume_inputs.push(crate::volume_gpu::VolumeInput {
@@ -5262,7 +5270,7 @@ impl Renderer {
                 .lights
                 .iter()
                 .copied()
-                .filter(|l| (*l as usize) < MAX_FRAME_LIGHTS)
+                .filter(|l| (*l as usize) < max_frame_lights)
                 .take(MAX_LIGHTS)
                 .collect();
             d.light_count[0] = lights.len() as u32;
@@ -5279,7 +5287,7 @@ impl Renderer {
                     frame
                         .projectors
                         .get(*p as usize)
-                        .filter(|_| (*p as usize) < MAX_FRAME_PROJECTORS)
+                        .filter(|_| (*p as usize) < max_frame_projectors)
                 })
                 .map(|p| p.texture.clone())
                 .collect();
@@ -5302,7 +5310,7 @@ impl Renderer {
                 .iter()
                 .copied()
                 .filter(|p| {
-                    (*p as usize) < MAX_FRAME_PROJECTORS && (*p as usize) < frame.projectors.len()
+                    (*p as usize) < max_frame_projectors && (*p as usize) < frame.projectors.len()
                 })
                 .take(MAX_TEXTURES)
                 .collect();
@@ -7120,11 +7128,69 @@ pub fn is_downlevel(device: &wgpu::Device) -> bool {
     device.limits().max_storage_buffers_per_shader_stage == 0
 }
 
-/// The instances one draw reads on a downlevel device: a uniform block of 340 x3d.wgsl `Instance` (192 bytes each, 65280
-/// bytes; WebGL2 guarantees 16 KiB but every tested browser has 64 KiB, checked at start).
-pub const DOWNLEVEL_INSTANCES: usize = 340;
-/// The shadow.wgsl and depth.wgsl instance matrices of one draw on a downlevel device (64 KiB).
-pub const DOWNLEVEL_SHADOW_INSTANCES: usize = 1024;
+/// The uniform block size every downlevel uniform fits in: 16 KiB, the WebGL2 minimum of MAX_UNIFORM_BLOCK_SIZE (ANGLE on
+/// Metal has exactly that; desktop Linux drivers have 64 KiB).
+pub const DOWNLEVEL_UNIFORM_BLOCK: usize = 16384;
+/// The instances one draw reads on a downlevel device: a uniform block of 84 x3d.wgsl `Instance` (192 bytes each, 16128
+/// bytes).
+pub const DOWNLEVEL_INSTANCES: usize = 84;
+/// The shadow.wgsl and depth.wgsl instance matrices of one draw on a downlevel device (16 KiB).
+pub const DOWNLEVEL_SHADOW_INSTANCES: usize = 256;
+/// The lights of a frame on a downlevel device (x3d.wgsl FrameUniforms `lights`); the full profile has 192.
+pub const DOWNLEVEL_FRAME_LIGHTS: usize = 64;
+/// The texture projectors of a frame on a downlevel device; the full profile has 32.
+pub const DOWNLEVEL_FRAME_PROJECTORS: usize = 8;
+
+/// The frame's light and projector capacity on `device`.
+fn frame_caps(device: &wgpu::Device) -> (usize, usize) {
+    if is_downlevel(device) {
+        (DOWNLEVEL_FRAME_LIGHTS, DOWNLEVEL_FRAME_PROJECTORS)
+    } else {
+        (MAX_FRAME_LIGHTS, MAX_FRAME_PROJECTORS)
+    }
+}
+
+/// The size of the frame uniform block on `device`: [`FrameU`], or its downlevel form ([`downlevel_frame_bytes`]).
+fn frame_uniform_size(device: &wgpu::Device) -> usize {
+    if is_downlevel(device) {
+        DOWNLEVEL_FRAME_BYTES
+    } else {
+        std::mem::size_of::<FrameU>()
+    }
+}
+
+/// [`FrameU`] with DOWNLEVEL_FRAME_LIGHTS lights and DOWNLEVEL_FRAME_PROJECTORS projectors: the same fields in the same
+/// order, the two arrays shorter (x3d.wgsl's FrameUniforms after [`downlevel_wgsl`]).
+const DOWNLEVEL_FRAME_BYTES: usize = std::mem::size_of::<FrameU>()
+    - (MAX_FRAME_LIGHTS - DOWNLEVEL_FRAME_LIGHTS) * std::mem::size_of::<LightU>()
+    - (MAX_FRAME_PROJECTORS - DOWNLEVEL_FRAME_PROJECTORS) * std::mem::size_of::<ProjectorU>();
+
+const _: () = assert!(DOWNLEVEL_FRAME_BYTES <= DOWNLEVEL_UNIFORM_BLOCK);
+const _: () =
+    assert!(DOWNLEVEL_INSTANCES * std::mem::size_of::<InstanceU>() <= DOWNLEVEL_UNIFORM_BLOCK);
+const _: () = assert!((DRAW_STRIDE as usize) <= DOWNLEVEL_UNIFORM_BLOCK);
+
+/// The bytes of `fu` in the downlevel layout (see [`DOWNLEVEL_FRAME_BYTES`]).
+fn downlevel_frame_bytes(fu: &FrameU) -> Vec<u8> {
+    let b = bytemuck::bytes_of(fu);
+    let lights = std::mem::offset_of!(FrameU, lights);
+    let after_lights = std::mem::offset_of!(FrameU, fog_color_type);
+    let projectors = std::mem::offset_of!(FrameU, projectors);
+    let after_projectors = std::mem::offset_of!(FrameU, pass_flags);
+    let mut out = Vec::with_capacity(DOWNLEVEL_FRAME_BYTES);
+
+    out.extend_from_slice(&b[..lights]);
+    out.extend_from_slice(
+        &b[lights..lights + DOWNLEVEL_FRAME_LIGHTS * std::mem::size_of::<LightU>()],
+    );
+    out.extend_from_slice(&b[after_lights..projectors]);
+    out.extend_from_slice(
+        &b[projectors..projectors + DOWNLEVEL_FRAME_PROJECTORS * std::mem::size_of::<ProjectorU>()],
+    );
+    out.extend_from_slice(&b[after_projectors..]);
+    debug_assert_eq!(out.len(), DOWNLEVEL_FRAME_BYTES);
+    out
+}
 
 /// The layers of the filtered environment texture: 18 (three cube maps). On a downlevel device 19: wgpu's GL backend makes
 /// a square texture with a multiple of 6 layers a cube map array (`is_cube_compatible`), which WebGL2 does not have; with
@@ -7153,6 +7219,8 @@ pub fn wgsl_for(device: &wgpu::Device, src: &str) -> String {
 
 /// The downlevel profile of a shader (no storage buffers, no cube map arrays):
 ///
+/// * every uniform block fits in [`DOWNLEVEL_UNIFORM_BLOCK`]: the frame has [`DOWNLEVEL_FRAME_LIGHTS`] lights and
+///   [`DOWNLEVEL_FRAME_PROJECTORS`] projectors;
 /// * `instances` is a uniform block of [`DOWNLEVEL_INSTANCES`] (x3d.wgsl) or [`DOWNLEVEL_SHADOW_INSTANCES`] (shadow.wgsl,
 ///   depth.wgsl) entries instead of a storage buffer;
 /// * the environment cube maps are the faces of a 2D array, sampled by face (`env_sample_level`, the face selection of
@@ -7165,6 +7233,14 @@ pub fn downlevel_wgsl(src: &str) -> String {
     s = s.replace(
         "var<storage, read> instances: array<Instance>;",
         &format!("var<uniform> instances: array<Instance, {DOWNLEVEL_INSTANCES}>;"),
+    );
+    s = s.replace(
+        "    lights: array<Light, 192>,",
+        &format!("    lights: array<Light, {DOWNLEVEL_FRAME_LIGHTS}>,"),
+    );
+    s = s.replace(
+        "    projectors: array<Projector, 32>,",
+        &format!("    projectors: array<Projector, {DOWNLEVEL_FRAME_PROJECTORS}>,"),
     );
     s = s.replace(
         "var<storage, read> instances: array<mat4x4<f32>>;",
