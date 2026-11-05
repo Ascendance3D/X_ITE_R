@@ -100,6 +100,9 @@ pub struct Session {
     log_seen: usize,
     /// The world was unloaded ([`Session::unload`]).
     unloaded: bool,
+    /// X_ITE's SLOW_SCROLL for the viewer of this world: the page's user agent is a macOS or Oculus browser
+    /// (`x3d_viewer::nav::slow_scroll_user_agent`). Set before the world goes live.
+    pub slow_scroll: bool,
     /// The INITIALIZED_EVENT of the world's own replaceWorld is still to come: the page fires that one itself.
     own_initialized: bool,
 }
@@ -336,6 +339,7 @@ impl Session {
             size: (width, height),
             log_seen: 0,
             unloaded: false,
+            slow_scroll: false,
             own_initialized: true,
         };
 
@@ -389,12 +393,10 @@ impl Session {
         // From now on the browser events of the world go to the page: an Anchor can replace it.
         rt.browser_events = Some(vec![]);
 
-        self.stage = Stage::Live(Box::new(Viewer3d::from_runtime(
-            *rt,
-            now,
-            self.size.0,
-            self.size.1,
-        )));
+        let mut viewer = Box::new(Viewer3d::from_runtime(*rt, now, self.size.0, self.size.1));
+
+        viewer.slow_scroll = self.slow_scroll;
+        self.stage = Stage::Live(viewer);
 
         // The runtime moved into the viewer: the Script host reaches it there.
         let rt = self.rt_mut();

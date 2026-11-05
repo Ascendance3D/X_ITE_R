@@ -42,12 +42,12 @@ The worlds of the cases are synthetic and authored for this repository.
 | E12 | double click looks at the picked shape's bounding box (also an InstancedShape and explicit bboxSize); Alt looks at the point; miss; interrupt of spin and chasers | compared | rea_batch09_nav (x10-examine-dblclick, -alt, -miss, -during-spin, -during-chaser, -then-drag, -drag-interrupt, examine-instanced-dblclick, examine-bbox-dblclick) |
 | E13 | a bound viewpoint change and a transition start disconnect chasers and spin | compared | rea_batch09_nav (examine-viewpoint-switch, trans-linear-examine, trans-animate-examine, trans-teleport-examine and their -interrupt cases) |
 | E14 | one-finger touch rotate and two-finger pinch zoom | compared in the browser lane only (not `x3d-viewer`) | `crates/x3d-web/tests/browser/runtime02_case.mjs` `navigate` (README of `x3d-web`) |
-| E15 | two-finger touch pan, double tap look at | missing | the stepped harness has no touch events; only one-finger rotate and pinch are compared (E14) |
-| E16 | pointer press outside the viewport rectangle is ignored (`isPointerInRectangle` with a Viewport node) | missing | no multi-viewport navigation case |
-| E17 | SLOW_SCROLL scroll factor 1/120 on macOS and Oculus user agents | missing | platform branch of `navigator.userAgent`; the oracle runs on Linux |
+| E15 | two-finger touch pan, double tap look at | compared in the browser lane only (not `x3d-viewer`) | `crates/x3d-web/tests/browser/nav01_case.mjs` `navExamine` (pan, double tap, slow taps, empty space; #370) |
+| E16 | pointer press outside the viewport rectangle is ignored (`isPointerInRectangle` with a Viewport node) | compared in the browser lane only (not `x3d-viewer`) | `crates/x3d-web/tests/browser/nav04_case.mjs` (a press, wheel and touch outside a layer's Viewport; #370) |
+| E17 | SLOW_SCROLL scroll factor 1/120 on macOS and Oculus user agents | compared | rea_b24_nav (examine-cor-wheel-mac: the Linux page with a macOS user agent) |
 | E18 | rotate and zoom regressions of a private world (`x10-scripts/clip-*`, `rotate-then-zoom-*`, `msaa-orrery-*`) | compared by `oracle/tools/x10_compare.py` only | world is private and not committed, so no cargo test |
 
-compared 13 (E01 to E13), 2 more compared outside the `x3d-viewer` tests (E14 browser lane, E18 tool only), missing 3 (E15 to E17).
+compared 14 (E01 to E13, E17), 4 more compared outside the `x3d-viewer` tests (E14 to E16 browser lane, E18 tool only on a private world).
 
 ## sub:nav.walk-fly (WalkViewer.js, FlyViewer.js, X3DFlyViewer.js)
 
@@ -70,9 +70,9 @@ compared 13 (E01 to E13), 2 more compared outside the `x3d-viewer` tests (E14 br
 | F15 | Rubberband browser option (the drawn rubber band: MOVE line for the left button, PAN line for the middle button or Alt; gone on release, on a roll of the wheel, on a viewer switch; not drawn for Ctrl look-around or with the option off) | compared | rea_nav_overlay (rubber-walk-up-right, -fly-down-left, -walk-vertical, -fly-horizontal, -walk-horizontal-left, -fly-vertical-up, -walk-long, -fly-short, -pan-middle, -pan-alt, -two-buttons, -wheel-roll, -ctrl-look, -option-off, -viewer-switch, -scale-2, -scale-1.5, -scale-0.5): every pixel that differs from the sky color, MSAA 0 |
 | F16 | touch: one finger drives, two fingers look around | missing | the stepped harness has no touch events |
 | F17 | direction divided by the ContentScale rendering property (HiDPI pointer) | compared | rea_nav_overlay (scale-walk-forward-2, -1.5, -0.5, -3, scale-walk-turn-2, scale-fly-diagonal-1.5, scale-fly-shift-2, scale-walk-alt-pan-2, scale-fly-middle-pan-0.5, scale-fly-ctrl-look-2): the `contentScale` canvas attribute 0.5 to 3, poses only |
-| F18 | ROLL_ANGLE for macOS and Oculus user agents (PI/512) | missing | platform branch of `navigator.userAgent` |
+| F18 | ROLL_ANGLE for macOS and Oculus user agents (PI/512) | compared | rea_b24_nav (fly-wheel-roll-mac, walk-wheel-roll-mac) |
 
-compared 16, missing 2 (F16 is compared in the browser lane, see the ledger notes of `sub:nav.walk-fly`; F18 is a macOS platform branch, not run on this Linux host).
+compared 17 (F18 with a macOS user agent), missing 1 (F16 is compared in the browser lane, see the ledger notes of `sub:nav.walk-fly`).
 
 ## sub:nav.plane (PlaneViewer.js)
 
@@ -86,10 +86,10 @@ compared 16, missing 2 (F16 is compared in the browser lane, see the ledger note
 | P06 | zoom-in limit: fieldOfViewScale not below 0.00001 | compared | rea_b24_nav (plane-zoom-in-limit) |
 | P07 | OrthoViewpoint pan and zoom (no PI limit) | compared | rea_batch09_nav (x10-plane-ortho, x10-plane-ortho-drag, x10-plane-ortho-drag-alt, x10-plane-ortho-wheel) |
 | P08 | double click looks at the shape's box, Alt at the point (only because `DEVELOPMENT` is true in `src/`) | compared | rea_b24_nav (plane-dblclick, plane-dblclick-alt) |
-| P09 | touch: two-finger pan and pinch zoom, double tap | missing | the stepped harness has no touch events |
-| P10 | scroll factor 1/160 on macOS and Oculus user agents | missing | platform branch of `navigator.userAgent` |
+| P09 | touch: two-finger pan and pinch zoom, double tap | compared (browser lane) | crates/x3d-web/tests/browser/nav03.test.mjs (navPlane: move, zoom, mode, oneFinger, doubleTap, slowTaps; #370) |
+| P10 | scroll factor 1/160 on macOS and Oculus user agents | compared | rea_b24_nav (plane-wheel-mac: the page with a macOS user agent) |
 
-compared 8, missing 2.
+compared 10 (P09 in the browser lane), missing 0.
 
 ## sub:nav.lookat (LookAtViewer.js)
 
@@ -100,10 +100,10 @@ compared 8, missing 2.
 | L03 | left drag moves the view (orientation chaser), several moves per frame, drag then click | compared | rea_batch09_nav (x10-lookat-drag, x10-lookat-drag-multi, x10-lookat-drag-then-click, lookat-b09-drag) |
 | L04 | wheel zoom toward the center of rotation, also inside a drag | compared | rea_batch09_nav (x10-lookat-wheel, x10-lookat-wheel-in-drag) |
 | L05 | Viewpoint.centerOfRotation as the zoom and drag center | compared | rea_b24_nav (lookat-cor-wheel, lookat-cor-drag) |
-| L06 | touch: two-finger pan and pinch, double tap (DBL_TAP_TIME) | missing | the stepped harness has no touch events |
-| L07 | scroll factor 1/120 on macOS and Oculus user agents | missing | platform branch of `navigator.userAgent` |
+| L06 | touch: two-finger pan and pinch, double tap (DBL_TAP_TIME) | compared (browser lane) | crates/x3d-web/tests/browser/nav03.test.mjs (navLookAt: move, zoom, mode, oneFinger, doubleTap, slowTaps; #370) |
+| L07 | scroll factor 1/120 on macOS and Oculus user agents | compared | rea_b24_nav (lookat-cor-wheel-mac) |
 
-compared 5, missing 2.
+compared 7 (L06 in the browser lane), missing 0.
 
 ## sub:nav.collision-gravity (X3DRenderObject, X3DLayerNode.collision, NavigationInfo.avatarSize)
 

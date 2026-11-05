@@ -20,7 +20,22 @@ pub use plane::Plane;
 const SPIN_RELEASE_TIME: f64 = 20.0; // ms
 const SPIN_ANGLE: f64 = 2.0 * std::f64::consts::PI / 180.0;
 const SPIN_FACTOR: f64 = 0.3;
-const SCROLL_FACTOR: f64 = 1.0 / 20.0;
+/// ExamineViewer / LookAtViewer SCROLL_FACTOR: `SLOW_SCROLL ? 1 / 120 : 1 / 20` ([`Env::slow_scroll`]).
+pub(crate) fn scroll_factor(env: &Env) -> f64 {
+    if env.slow_scroll {
+        1.0 / 120.0
+    } else {
+        1.0 / 20.0
+    }
+}
+
+/// X_ITE's `SLOW_SCROLL = /Mac OS X|OculusBrowser/i .test (navigator .userAgent)` (ExamineViewer, LookAtViewer,
+/// PlaneViewer, X3DFlyViewer): the user agents whose wheel steps are fine-grained.
+pub fn slow_scroll_user_agent(user_agent: &str) -> bool {
+    let ua = user_agent.to_ascii_lowercase();
+
+    ua.contains("mac os x") || ua.contains("oculusbrowser")
+}
 const MOVE_TIME: f64 = 0.2;
 const ROTATE_TIME_EXAMINE: f64 = 0.2;
 const ROTATE_TIME_FLY: f64 = 0.3;
@@ -33,7 +48,10 @@ const ROTATION_SPEED_FACTOR: f64 = 1.4;
 const ROTATION_LIMIT: f64 = 40.0;
 const PAN_SPEED_FACTOR: f64 = SPEED_FACTOR;
 const PAN_SHIFT_SPEED_FACTOR: f64 = 1.4 * PAN_SPEED_FACTOR;
-const ROLL_ANGLE: f64 = std::f64::consts::PI / 32.0;
+/// X3DFlyViewer ROLL_ANGLE: `SLOW_SCROLL ? Math .PI / 512 : Math .PI / 32`.
+fn roll_angle(env: &Env) -> f64 {
+    std::f64::consts::PI / if env.slow_scroll { 512.0 } else { 32.0 }
+}
 const CRITICAL_ANGLE_FLY: f64 = 0.99;
 
 #[derive(Clone, Copy, Debug)]
@@ -114,6 +132,9 @@ pub struct Env {
     pub straighten: bool,
     /// BrowserOptions Rubberband (default TRUE): read when a button goes down.
     pub rubberband: bool,
+    /// X_ITE's SLOW_SCROLL ([`slow_scroll_user_agent`]): the wheel scroll factors and the fly roll angle of a macOS or
+    /// Oculus browser.
+    pub slow_scroll: bool,
 }
 
 pub struct Cx<'a> {
@@ -504,7 +525,7 @@ impl Examine {
 
                 self.remove_spinning(cx.env.date_now);
                 cx.vp.transition_stop();
-                self.zoom(SCROLL_FACTOR, delta_y, cx);
+                self.zoom(scroll_factor(cx.env), delta_y, cx);
             }
             Input::DblClick { x, y } => self.dblclick(x, y, cx),
             // The stepped harness sends no touch events; the web browser does (crates/x3d-web).
@@ -536,7 +557,7 @@ impl Examine {
         let zf = if zoom_factor != 0.0 && !zoom_factor.is_nan() {
             zoom_factor
         } else {
-            SCROLL_FACTOR
+            scroll_factor(cx.env)
         };
         self.zoom(zf, delta_y, cx);
     }
@@ -1135,10 +1156,12 @@ impl Fly {
 
                 cx.vp.transition_stop();
 
+                let roll = roll_angle(cx.env);
+
                 if delta_y < 0.0 {
-                    self.add_roll(-ROLL_ANGLE, cx);
+                    self.add_roll(-roll, cx);
                 } else if delta_y > 0.0 {
-                    self.add_roll(ROLL_ANGLE, cx);
+                    self.add_roll(roll, cx);
                 }
             }
             Input::TouchStart(t) => self.touchstart(t, cx),

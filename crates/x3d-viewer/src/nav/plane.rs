@@ -143,7 +143,9 @@ impl Plane {
         // `event .zoomFactor || SCROLL_FACTOR`
         let zoom_factor = match zoom_factor {
             Some(z) if z != 0.0 && !z.is_nan() => z,
-            _ => SCROLL_FACTOR,
+            // PlaneViewer SCROLL_FACTOR: `SLOW_SCROLL ? 1 / 160 : 1 / 20`.
+            _ if cx.env.slow_scroll => 1.0 / 160.0,
+            _ => 1.0 / 20.0,
         };
 
         if delta_y < 0.0 {

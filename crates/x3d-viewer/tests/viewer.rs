@@ -153,6 +153,9 @@ fn viewpoint_stack_next_previous_first_last() {
 fn examine_drag_rotates_and_wheel_zooms() {
     big(|| {
         let mut v = open("examine.wrl", VPS);
+        // The non-Mac wheel factor on every host: the macOS build turns X_ITE's SLOW_SCROLL on (1/120, not 1/20), which
+        // the rea_b24_nav "-mac" cases compare with the pinned page.
+        v.slow_scroll = false;
         let (p0, _, _) = v.user_pose();
         v.input(UiEvent::MouseDown {
             button: 0,

@@ -236,6 +236,12 @@ fn run(
 
     v.frame_rate = 1.0 / dt;
 
+    // `"userAgent": "…"`: the user agent of the oracle page (oracle/x_ite-anim.mjs), which decides X_ITE's SLOW_SCROLL. Without
+    // it the page is headless Chrome on Linux, so SLOW_SCROLL is off on every host, the macOS one too.
+    v.slow_scroll = script["userAgent"]
+        .as_str()
+        .is_some_and(x3d_viewer::nav::slow_scroll_user_agent);
+
     // `"browserOptions": { "Rubberband": false }` (issue #51, F15): `browser .setBrowserOption (name, value)` after the load, for the
     // boolean options (the oracle's counterpart is in oracle/x_ite-anim.mjs).
     if let Some(options) = script["browserOptions"].as_object() {

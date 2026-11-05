@@ -36,11 +36,13 @@ def world(name, navinfo, viewpoints, body):
     open(os.path.join(root, name + ".wrl"), "w").write(HEADER + navinfo + "\n" + "\n".join(viewpoints) + "\n" + body + "\n")
 
 
-def script(name, frames, events, capture, probes=None):
+def script(name, frames, events, capture, probes=None, user_agent=None):
     d = {"size": [512, 512], "t0": 946684800, "dt": 1 / 30, "capture": capture, "dump": [], "frames": frames,
          "events": sorted(events, key=lambda e: e["frame"])}
     if probes:
         d["collisionProbes"] = probes
+    if user_agent:
+        d["userAgent"] = user_agent
     json.dump(d, open(os.path.join(root, "scripts", name + ".json"), "w"), indent=1)
 
 
@@ -249,6 +251,24 @@ for _ in range(4):
     f = last + 2
 script("fly-ctrl-look-pole", f + 20, ev + [mods(f)], [12, 30, 50, f + 20])
 case("fly-ctrl-look-pole", B09 + "nav-fly.wrl")
+
+# --- SLOW_SCROLL (E17, L07, P10, F18): a macOS user agent ----------------------------------------------------------------
+# X_ITE 16.5.0 sets SLOW_SCROLL = /Mac OS X|OculusBrowser/i .test (navigator .userAgent) when the module loads: the wheel
+# scroll factor of EXAMINE and LOOKAT is 1/120 (not 1/20), of PLANE 1/160, and the FLY/WALK roll angle PI/512 (not PI/32).
+# The same events as the cases without it; the page (and x3d-drive) take the "userAgent" script key.
+MAC_UA = ("Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/156.0.0.0 "
+          "Safari/537.36")
+script("examine-cor-wheel-mac", 70, wheel(range(2, 10), -100) + wheel(range(30, 38), 100), [6, 20, 45, 70], user_agent=MAC_UA)
+case("examine-cor-wheel-mac", "nav-examine-cor")
+script("lookat-cor-wheel-mac", 70, wheel(range(2, 10), -100) + wheel(range(30, 38), 100), [6, 20, 45, 70], user_agent=MAC_UA)
+case("lookat-cor-wheel-mac", "nav-lookat-cor")
+script("plane-wheel-mac", 70, wheel(range(2, 30), -100, 300, 200) + wheel(range(40, 50), 100, 300, 200), [10, 30, 45, 70],
+       user_agent=MAC_UA)
+case("plane-wheel-mac", B09 + "nav-plane.wrl")
+for t in ("fly", "walk"):
+    script(f"{t}-wheel-roll-mac", 70, wheel(range(2, 7), -100) + wheel(range(20, 25), 100) + wheel(range(40, 43), -100),
+           [5, 12, 30, 70], user_agent=MAC_UA)
+    case(f"{t}-wheel-roll-mac", B09 + f"nav-{t}.wrl")
 
 with open(os.path.join(root, "cases.txt"), "w") as f:
     for name, w, s in cases:
