@@ -65,6 +65,12 @@ mv "$dir/preview/htaccess.example" "$dir/htaccess.example"
 cp "$dir/preview/root-index.html" "$dir/index.html"
 rm "$dir/preview/root-index.html"
 
+# HTML pages of the two documents, in the package's design; the Markdown files stay beside them.
+python3 -I -B tools/md_page.py "$dir/docs/API.md" "$dir/docs/api.html" --root ../ --current API \
+  --eyebrow "Documentation · JavaScript API" --source-link API.md
+python3 -I -B tools/md_page.py "$dir/COMPATIBILITY.md" "$dir/compatibility.html" --root "" --current Compatibility \
+  --eyebrow "Compatibility · Browser Preview 0.1.0" --source-link COMPATIBILITY.md
+
 wasm_bindgen=$(awk '/^name = "wasm-bindgen"$/ { getline; gsub(/version = |"/, ""); print; exit }' Cargo.lock)
 
 python3 -I - "$dir" "$commit" "$epoch" "$(rustc --version)" "$wasm_bindgen" <<'PY'

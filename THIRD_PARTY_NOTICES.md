@@ -458,9 +458,17 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-## Geist and Geist Mono fonts (SIL Open Font License 1.1)
+## Geist, Plus Jakarta Sans and JetBrains Mono fonts (SIL Open Font License 1.1)
 
-The Browser Preview start page (`crates/x3d-web/web/site/fonts/`) uses the variable fonts `Geist-Variable.woff2` and
-`GeistMono-Variable.woff2` from the `geist` npm package 1.9.1, unchanged. Copyright (c) 2023 Vercel, in collaboration
-with basement.studio. Licensed under the SIL Open Font License, Version 1.1; the full license text is
-`crates/x3d-web/web/site/fonts/OFL.txt` (`site/fonts/OFL.txt` in the package).
+The package pages (`crates/x3d-web/web/site/fonts/`, `site/fonts/` in the package) use three variable fonts, unchanged:
+
+- `Geist-Variable.woff2` from the `geist` npm package 1.9.1. Copyright (c) 2023 Vercel, in collaboration with
+  basement.studio. License text: `site/fonts/OFL.txt`.
+- `PlusJakartaSans-Variable.woff2`: `files/plus-jakarta-sans-latin-wght-normal.woff2` of the npm package
+  `@fontsource-variable/plus-jakarta-sans` 5.3.0. Copyright 2020 The Plus Jakarta Sans Project Authors
+  (https://github.com/tokotype/PlusJakartaSans). License text: `site/fonts/OFL-PlusJakartaSans.txt`.
+- `JetBrainsMono-Variable.woff2`: `files/jetbrains-mono-latin-wght-normal.woff2` of the npm package
+  `@fontsource-variable/jetbrains-mono` 5.3.0. Copyright 2020 The JetBrains Mono Project Authors
+  (https://github.com/JetBrains/JetBrainsMono). License text: `site/fonts/OFL-JetBrainsMono.txt`.
+
+Each is licensed under the SIL Open Font License, Version 1.1.
