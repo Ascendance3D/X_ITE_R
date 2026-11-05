@@ -7,7 +7,8 @@ h2 { font-size: 1.05em; margin: 0.8em 0 0.3em; }
 .facts td { word-break: break-all; }
 main { display: grid; grid-template-columns: 660px minmax(260px, 1fr); gap: 0.5em 1.5em; align-items: start; }
 .view { grid-row: span 2; }
-x3d-canvas { display: block; width: 640px; max-width: 100%; height: 480px; border: 1px solid #888; }
+/* 640 x 480 on a wide screen; on a narrow one (a phone) the full width at 4:3. */
+x3d-canvas { display: block; width: 640px; max-width: 100%; height: auto; aspect-ratio: 4 / 3; border: 1px solid #888; }
 fieldset { margin: 0 0 0.6em; }
 .hint { margin: 0.3em 0 0; font-size: 0.85em; color: #555; }
 pre { background: #f4f4f4; padding: 0.5em; margin: 0; font-size: 0.85em; white-space: pre-wrap; }
@@ -15,4 +16,4 @@ pre { background: #f4f4f4; padding: 0.5em; margin: 0; font-size: 0.85em; white-s
 .help { grid-column: 1 / -1; }
 .ok { color: #116611; }
 .error { color: #aa1111; }
-@media (max-width: 960px) { main { grid-template-columns: 1fr; } .view { grid-row: auto; } }
+@media (max-width: 960px) { main { grid-template-columns: minmax(0, 1fr); } .view { grid-row: auto; } }
