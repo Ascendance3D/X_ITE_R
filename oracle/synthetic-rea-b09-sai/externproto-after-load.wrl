@@ -34,8 +34,8 @@ function cycle () {
   if (step == 2) mk ('dataVrml', '#VRML V2.0 utf8\nEXTERNPROTO EP [ exposedField SFFloat v ] \"' + DATA + '\"\nEP { v 3 }\n');
   if (step == 3) mk ('missingVrml', '#VRML V2.0 utf8\nEXTERNPROTO EP [ exposedField SFFloat v ] \"nowhere-ep.wrl\"\nEP { v 3 }\n');
   if (step == 4) mk ('dataX3d', '<X3D profile=\"Immersive\" version=\"4.0\"><Scene><ExternProtoDeclare name=\"EP\" url=\"&quot;' + DATA + '&quot;\"><field accessType=\"inputOutput\" type=\"SFFloat\" name=\"v\"/></ExternProtoDeclare><ProtoInstance name=\"EP\"><fieldValue name=\"v\" value=\"3\"/></ProtoInstance></Scene></X3D>');
-  if (step == 5) mk ('missingX3d', '<X3D profile=\"Immersive\" version=\"4.0\"><Scene><ExternProtoDeclare name=\"EP\" url=\"&quot;nowhere-ep.wrl&quot;\"><field accessType=\"inputOutput\" type=\"SFFloat\" name=\"v\"/></ExternProtoDeclare></Scene></X3D>');
-  if (step == 6) mk ('twoUrls', '#VRML V2.0 utf8\nEXTERNPROTO EP [ exposedField SFFloat v ] [ \"nowhere-ep.wrl\", \"' + DATA + '\" ]\nEP { v 3 }\n');
+  if (step == 5) mk ('missingX3d', '<X3D profile=\"Immersive\" version=\"4.0\"><Scene><ExternProtoDeclare name=\"EP\" url=\"&quot;nowhere-ep2.wrl&quot;\"><field accessType=\"inputOutput\" type=\"SFFloat\" name=\"v\"/></ExternProtoDeclare></Scene></X3D>');
+  if (step == 6) mk ('twoUrls', '#VRML V2.0 utf8\nEXTERNPROTO EP [ exposedField SFFloat v ] [ \"nowhere-ep3.wrl\", \"' + DATA + '\" ]\nEP { v 3 }\n');
   if (step == 7) mk ('hash', '#VRML V2.0 utf8\nEXTERNPROTO EP [ exposedField SFFloat v ] \"' + DATA + '#EP\"\nEP { v 3 }\n');
   if (step == 10) { var r = [ ]; for (var i = 0; i < made .length; ++ i) r .push (i + ':' + describe (made [i])); rec ('later=' + r .join (';')); }
 }

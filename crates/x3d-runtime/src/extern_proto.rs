@@ -701,8 +701,27 @@ impl Runtime {
             match self.extern_cache_get(key) {
                 Some(CacheEntry::Ready(ctx, _)) => {
                     let ctx = *ctx;
+                    let owner = self.scene.externprotos[e].ctx;
 
-                    return self.extern_deliver(e, request, ctx, &resolved, true);
+                    if !self.pending_browser.iter().any(|p| p.ctx == owner) {
+                        return self.extern_deliver(e, request, ctx, &resolved, true);
+                    }
+
+                    let (scene_node, _) = self.new_load_count_scene();
+
+                    // A scene made by createX3DFromString (FileLoader.js, cached scenes): the hit
+                    // resolves one frame later than a hit during a world's own load, which the
+                    // synthetic-rea-b09-sai/externproto-after-load.wrl recording shows (frames 11, 17, 20
+                    // against 12, 18, 21). It is handed over after the frame, as a fresh load is.
+                    self.extern_frame_waiters.push(PendingExtern {
+                        ext: e,
+                        request,
+                        ctx,
+                        scene_node,
+                        url: resolved.clone(),
+                        key: Some(key.clone()),
+                    });
+                    return Step::Wait;
                 }
                 Some(CacheEntry::Pending(waiters)) => {
                     waiters.push((e, request, resolved));
