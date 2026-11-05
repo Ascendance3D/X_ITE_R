@@ -799,6 +799,41 @@ const THICK_USAGE: wgpu::BufferUsages = wgpu::BufferUsages::STORAGE
     .union(wgpu::BufferUsages::COPY_DST)
     .union(wgpu::BufferUsages::COPY_SRC);
 
+/// [`THICK_USAGE`], without STORAGE on a downlevel device.
+fn thick_usage(device: &wgpu::Device) -> wgpu::BufferUsages {
+    if is_downlevel(device) {
+        THICK_USAGE.difference(wgpu::BufferUsages::STORAGE)
+    } else {
+        THICK_USAGE
+    }
+}
+
+/// STORAGE, or UNIFORM on a downlevel device (the buffers that downlevel_wgsl reads as uniform blocks).
+fn storage_usage(device: &wgpu::Device) -> wgpu::BufferUsages {
+    if is_downlevel(device) {
+        wgpu::BufferUsages::UNIFORM
+    } else {
+        wgpu::BufferUsages::STORAGE
+    }
+}
+
+/// The instance buffer binding: the whole storage buffer, or its first `downlevel_bytes` on a downlevel device.
+fn instance_binding<'a>(
+    device: &wgpu::Device,
+    instances: &'a wgpu::Buffer,
+    downlevel_bytes: usize,
+) -> wgpu::BindingResource<'a> {
+    if is_downlevel(device) {
+        wgpu::BindingResource::Buffer(wgpu::BufferBinding {
+            buffer: instances,
+            offset: 0,
+            size: wgpu::BufferSize::new(downlevel_bytes as u64),
+        })
+    } else {
+        instances.as_entire_binding()
+    }
+}
+
 struct TexGpu {
     _image: Rc<TextureImage>,
     view: wgpu::TextureView,
@@ -1155,7 +1190,7 @@ pub struct Renderer {
     scatter_pass: bool,
     /// The frame group's scatter buffers when no frame has a VolumeScatterMaterialExtension.
     scatter_dummy: (wgpu::Buffer, wgpu::Buffer),
-    scatter_depth_copy: crate::scatter_gpu::ScatterDepthCopy,
+    scatter_depth_copy: Option<crate::scatter_gpu::ScatterDepthCopy>,
     mip_layout: wgpu::BindGroupLayout,
     mip_pipeline: wgpu::RenderPipeline,
     /// The rubber band of the FLY and WALK viewers (created at the first frame that has one).
@@ -1169,6 +1204,8 @@ pub struct Renderer {
     /// when a pass needs more.
     shadow_instances: wgpu::Buffer,
     shadow_instance_capacity: usize,
+    /// Downlevel: the first instance of each shadow or depth draw (its window, bound with the draw); empty otherwise.
+    shadow_instance_window: Vec<u32>,
     shadow_group: wgpu::BindGroup,
     env: Option<EnvGpu>,
     /// The main frame's EnvironmentLight source was drawn by a texture pass this frame.
@@ -1183,6 +1220,8 @@ pub struct Renderer {
     instance_capacity: usize,
     instance_buffer: wgpu::Buffer,
     draw_capacity: usize,
+    /// Downlevel: the first instance of each draw of the frame (the offset of its instance window); empty otherwise.
+    draw_instance_window: Vec<u32>,
     draw_group: wgpu::BindGroup,
     scratch: wgpu::Buffer,
     scratch_capacity: u64,
@@ -1194,12 +1233,14 @@ pub struct Renderer {
     free_vertices: Vec<FreeBuffer>,
     /// thick_lines.wgsl and the shadow and depth map pipelines that draw its triangles.
     thick_layout: wgpu::BindGroupLayout,
-    thick_compute: wgpu::ComputePipeline,
+    /// None on a downlevel device.
+    thick_compute: Option<wgpu::ComputePipeline>,
     thick_pipeline: wgpu::RenderPipeline,
     thick: HashMap<*const x3d_runtime::particles::ThickLines, ThickGpu>,
     /// thick_lines.wgsl `display`.
     thick_display_layout: wgpu::BindGroupLayout,
-    thick_display: wgpu::ComputePipeline,
+    /// None on a downlevel device.
+    thick_display: Option<wgpu::ComputePipeline>,
     /// The buffers of this frame's compute passes ([`Source::Buffer`] and their inputs), free at the next frame.
     frame_buffers: Vec<wgpu::Buffer>,
     /// Uploaded textures (views and samplers), kept while used.
@@ -1495,13 +1536,15 @@ impl Renderer {
                     self.oit_shader_3d = Some(self.device.create_shader_module(
                         wgpu::ShaderModuleDescriptor {
                             label: Some("x3d.wgsl OIT (3D)"),
-                            source: wgpu::ShaderSource::Wgsl(volume_shader(&oit).into()),
+                            source: wgpu::ShaderSource::Wgsl(
+                                wgsl_for(&self.device, &volume_shader(&oit)).into(),
+                            ),
                         },
                     ));
                     self.oit_shader = Some(self.device.create_shader_module(
                         wgpu::ShaderModuleDescriptor {
                             label: Some("x3d.wgsl OIT"),
-                            source: wgpu::ShaderSource::Wgsl(oit.into()),
+                            source: wgpu::ShaderSource::Wgsl(wgsl_for(&self.device, &oit).into()),
                         },
                     ));
                 }
@@ -1521,14 +1564,16 @@ impl Renderer {
             self.device
                 .create_shader_module(wgpu::ShaderModuleDescriptor {
                     label: Some("x3d.wgsl variant (3D)"),
-                    source: wgpu::ShaderSource::Wgsl(volume_shader(&src).into()),
+                    source: wgpu::ShaderSource::Wgsl(
+                        wgsl_for(&self.device, &volume_shader(&src)).into(),
+                    ),
                 }),
         );
         self.alt_shader = Some(
             self.device
                 .create_shader_module(wgpu::ShaderModuleDescriptor {
                     label: Some("x3d.wgsl variant"),
-                    source: wgpu::ShaderSource::Wgsl(src.into()),
+                    source: wgpu::ShaderSource::Wgsl(wgsl_for(&self.device, &src).into()),
                 }),
         );
     }
@@ -1598,11 +1643,13 @@ impl Renderer {
         note_line_width_backend(&device);
         let shader = device.create_shader_module(wgpu::ShaderModuleDescriptor {
             label: Some("x3d.wgsl"),
-            source: wgpu::ShaderSource::Wgsl(include_str!("x3d.wgsl").into()),
+            source: wgpu::ShaderSource::Wgsl(wgsl_for(&device, include_str!("x3d.wgsl")).into()),
         });
         let shader_3d = device.create_shader_module(wgpu::ShaderModuleDescriptor {
             label: Some("x3d.wgsl (3D)"),
-            source: wgpu::ShaderSource::Wgsl(volume_shader(include_str!("x3d.wgsl")).into()),
+            source: wgpu::ShaderSource::Wgsl(
+                wgsl_for(&device, &volume_shader(include_str!("x3d.wgsl"))).into(),
+            ),
         });
 
         let uniform_entry = |dynamic: bool, size: u64| wgpu::BindGroupLayoutEntry {
@@ -1635,62 +1682,72 @@ impl Renderer {
         };
         // 1..6: IBL2.glsl diffuse, specular and sheen cube maps (one cube array), the
         // transmission buffer, lut_ggx.png, lut_charlie.png and lut_sheen_E.png (one array).
+        let downlevel = is_downlevel(&device);
+        let frame_entries = [
+            uniform_entry(false, frame_uniform_size(&device) as u64),
+            texture_entry(1, env_view_dimension(&device)),
+            sampler_entry(2),
+            texture_entry(3, wgpu::TextureViewDimension::D2),
+            sampler_entry(4),
+            texture_entry(5, wgpu::TextureViewDimension::D2Array),
+            sampler_entry(6),
+            // 7: the shadow maps (Shadow2.glsl x3d_ShadowMap): their depth values, copied from
+            // the depth textures (a buffer, as the fragment stage has no texture binding left).
+            wgpu::BindGroupLayoutEntry {
+                binding: 7,
+                visibility: wgpu::ShaderStages::FRAGMENT,
+                ty: wgpu::BindingType::Buffer {
+                    ty: wgpu::BufferBindingType::Storage { read_only: true },
+                    has_dynamic_offset: false,
+                    min_binding_size: None,
+                },
+                count: None,
+            },
+            // 8, 9: the volume scatter buffer (VolumeScatterMaterialExtension): RGBA32F values and window depth.
+            wgpu::BindGroupLayoutEntry {
+                binding: 8,
+                visibility: wgpu::ShaderStages::FRAGMENT,
+                ty: wgpu::BindingType::Buffer {
+                    ty: wgpu::BufferBindingType::Storage { read_only: true },
+                    has_dynamic_offset: false,
+                    min_binding_size: None,
+                },
+                count: None,
+            },
+            wgpu::BindGroupLayoutEntry {
+                binding: 9,
+                visibility: wgpu::ShaderStages::FRAGMENT,
+                ty: wgpu::BindingType::Buffer {
+                    ty: wgpu::BufferBindingType::Storage { read_only: true },
+                    has_dynamic_offset: false,
+                    min_binding_size: None,
+                },
+                count: None,
+            },
+        ];
+        // A downlevel device has no storage buffers: no shadow maps, no volume scatter buffer (downlevel_wgsl).
         let frame_layout = device.create_bind_group_layout(&wgpu::BindGroupLayoutDescriptor {
             label: Some("frame"),
-            entries: &[
-                uniform_entry(false, std::mem::size_of::<FrameU>() as u64),
-                texture_entry(1, wgpu::TextureViewDimension::CubeArray),
-                sampler_entry(2),
-                texture_entry(3, wgpu::TextureViewDimension::D2),
-                sampler_entry(4),
-                texture_entry(5, wgpu::TextureViewDimension::D2Array),
-                sampler_entry(6),
-                // 7: the shadow maps (Shadow2.glsl x3d_ShadowMap): their depth values, copied from
-                // the depth textures (a buffer, as the fragment stage has no texture binding left).
-                wgpu::BindGroupLayoutEntry {
-                    binding: 7,
-                    visibility: wgpu::ShaderStages::FRAGMENT,
-                    ty: wgpu::BindingType::Buffer {
-                        ty: wgpu::BufferBindingType::Storage { read_only: true },
-                        has_dynamic_offset: false,
-                        min_binding_size: None,
-                    },
-                    count: None,
-                },
-                // 8, 9: the volume scatter buffer (VolumeScatterMaterialExtension): RGBA32F values and window depth.
-                wgpu::BindGroupLayoutEntry {
-                    binding: 8,
-                    visibility: wgpu::ShaderStages::FRAGMENT,
-                    ty: wgpu::BindingType::Buffer {
-                        ty: wgpu::BufferBindingType::Storage { read_only: true },
-                        has_dynamic_offset: false,
-                        min_binding_size: None,
-                    },
-                    count: None,
-                },
-                wgpu::BindGroupLayoutEntry {
-                    binding: 9,
-                    visibility: wgpu::ShaderStages::FRAGMENT,
-                    ty: wgpu::BindingType::Buffer {
-                        ty: wgpu::BufferBindingType::Storage { read_only: true },
-                        has_dynamic_offset: false,
-                        min_binding_size: None,
-                    },
-                    count: None,
-                },
-            ],
+            entries: &frame_entries[..if downlevel { 7 } else { 10 }],
         });
+        // The instances: a storage buffer, or a uniform block of DOWNLEVEL_INSTANCES on a downlevel device.
+        let instance_binding = if downlevel {
+            wgpu::BufferBindingType::Uniform
+        } else {
+            wgpu::BufferBindingType::Storage { read_only: true }
+        };
         let draw_layout = device.create_bind_group_layout(&wgpu::BindGroupLayoutDescriptor {
             label: Some("draw"),
             entries: &[
                 uniform_entry(true, std::mem::size_of::<DrawU>() as u64),
-                // 1: the instances of the frame's instanced draws (x3d.wgsl Instance).
+                // 1: the instances of the frame's instanced draws (x3d.wgsl Instance). Downlevel: a window at a
+                // dynamic offset.
                 wgpu::BindGroupLayoutEntry {
                     binding: 1,
                     visibility: wgpu::ShaderStages::VERTEX,
                     ty: wgpu::BindingType::Buffer {
-                        ty: wgpu::BufferBindingType::Storage { read_only: true },
-                        has_dynamic_offset: false,
+                        ty: instance_binding,
+                        has_dynamic_offset: downlevel,
                         min_binding_size: None,
                     },
                     count: None,
@@ -1795,7 +1852,7 @@ impl Renderer {
 
         let frame_buffer = device.create_buffer(&wgpu::BufferDescriptor {
             label: Some("frame"),
-            size: std::mem::size_of::<FrameU>() as u64,
+            size: frame_uniform_size(&device) as u64,
             usage: wgpu::BufferUsages::UNIFORM | wgpu::BufferUsages::COPY_DST,
             mapped_at_creation: false,
         });
@@ -1812,24 +1869,26 @@ impl Renderer {
         let shadow_dummy = device.create_buffer(&wgpu::BufferDescriptor {
             label: Some("no shadow maps"),
             size: 16,
-            usage: wgpu::BufferUsages::STORAGE,
+            usage: storage_usage(&device),
             mapped_at_creation: false,
         });
         let scatter_dummy = (
             device.create_buffer(&wgpu::BufferDescriptor {
                 label: Some("no volume scatter colors"),
                 size: 16,
-                usage: wgpu::BufferUsages::STORAGE,
+                usage: storage_usage(&device),
                 mapped_at_creation: false,
             }),
             device.create_buffer(&wgpu::BufferDescriptor {
                 label: Some("no volume scatter depth"),
                 size: 16,
-                usage: wgpu::BufferUsages::STORAGE,
+                usage: storage_usage(&device),
                 mapped_at_creation: false,
             }),
         );
-        let scatter_depth_copy = crate::scatter_gpu::ScatterDepthCopy::new(&device);
+        // A compute pass: none on a downlevel device (no volume scatter there).
+        let scatter_depth_copy =
+            (!downlevel).then(|| crate::scatter_gpu::ScatterDepthCopy::new(&device));
         let frame_group = Self::make_frame_group(
             &device,
             &frame_layout,
@@ -1889,19 +1948,20 @@ impl Renderer {
         // X3DRenderObject.depth for the shadow maps (shadow.wgsl): depth only, no culling.
         let shadow_shader = device.create_shader_module(wgpu::ShaderModuleDescriptor {
             label: Some("shadow.wgsl"),
-            source: wgpu::ShaderSource::Wgsl(include_str!("shadow.wgsl").into()),
+            source: wgpu::ShaderSource::Wgsl(wgsl_for(&device, include_str!("shadow.wgsl")).into()),
         });
         let shadow_layout = device.create_bind_group_layout(&wgpu::BindGroupLayoutDescriptor {
             label: Some("shadow draw"),
             entries: &[
                 uniform_entry(true, std::mem::size_of::<ShadowDrawU>() as u64),
-                // 1: the instance matrices (shadow.wgsl `instances`).
+                // 1: the instance matrices (shadow.wgsl `instances`); on a downlevel device a window of
+                // DOWNLEVEL_SHADOW_INSTANCES at each draw's first instance (a dynamic offset).
                 wgpu::BindGroupLayoutEntry {
                     binding: 1,
                     visibility: wgpu::ShaderStages::VERTEX,
                     ty: wgpu::BindingType::Buffer {
-                        ty: wgpu::BufferBindingType::Storage { read_only: true },
-                        has_dynamic_offset: false,
+                        ty: instance_binding,
+                        has_dynamic_offset: downlevel,
                         min_binding_size: None,
                     },
                     count: None,
@@ -2051,38 +2111,55 @@ impl Renderer {
             },
             count: None,
         };
+        // A downlevel device has no compute passes: its thick lines are made on the CPU (thick_line_positions), and
+        // these layouts are empty.
+        let thick_entries = [storage_entry(0, true), storage_entry(1, false)];
         let thick_layout = device.create_bind_group_layout(&wgpu::BindGroupLayoutDescriptor {
             label: Some("thick lines"),
-            entries: &[storage_entry(0, true), storage_entry(1, false)],
+            entries: if downlevel { &[] } else { &thick_entries },
         });
+        let thick_display_entries = [
+            storage_entry(0, true),
+            storage_entry(2, false),
+            storage_entry(3, true),
+        ];
         let thick_display_layout =
             device.create_bind_group_layout(&wgpu::BindGroupLayoutDescriptor {
                 label: Some("thick line display"),
-                entries: &[
-                    storage_entry(0, true),
-                    storage_entry(2, false),
-                    storage_entry(3, true),
-                ],
+                entries: if downlevel {
+                    &[]
+                } else {
+                    &thick_display_entries
+                },
             });
         let thick_module = device.create_shader_module(wgpu::ShaderModuleDescriptor {
             label: Some("thick_lines.wgsl"),
-            source: wgpu::ShaderSource::Wgsl(include_str!("thick_lines.wgsl").into()),
+            source: wgpu::ShaderSource::Wgsl(
+                if downlevel {
+                    "@compute @workgroup_size(1) fn main() {}"
+                } else {
+                    include_str!("thick_lines.wgsl")
+                }
+                .into(),
+            ),
         });
         let [thick_compute, thick_display] =
             [("main", &thick_layout), ("display", &thick_display_layout)].map(|(entry, layout)| {
-                device.create_compute_pipeline(&wgpu::ComputePipelineDescriptor {
-                    label: Some("thick lines"),
-                    layout: Some(
-                        &device.create_pipeline_layout(&wgpu::PipelineLayoutDescriptor {
-                            label: Some("thick lines"),
-                            bind_group_layouts: &[Some(layout)],
-                            ..Default::default()
-                        }),
-                    ),
-                    module: &thick_module,
-                    entry_point: Some(entry),
-                    compilation_options: Default::default(),
-                    cache: None,
+                (!downlevel).then(|| {
+                    device.create_compute_pipeline(&wgpu::ComputePipelineDescriptor {
+                        label: Some("thick lines"),
+                        layout: Some(&device.create_pipeline_layout(
+                            &wgpu::PipelineLayoutDescriptor {
+                                label: Some("thick lines"),
+                                bind_group_layouts: &[Some(layout)],
+                                ..Default::default()
+                            },
+                        )),
+                        module: &thick_module,
+                        entry_point: Some(entry),
+                        compilation_options: Default::default(),
+                        cache: None,
+                    })
                 })
             });
         let shadow_instances = Self::make_shadow_instances(&device, 64);
@@ -2210,6 +2287,7 @@ impl Renderer {
             shadow_capacity: 64,
             shadow_instances,
             shadow_instance_capacity: 64,
+            shadow_instance_window: vec![],
             shadow_group,
             env: None,
             env_rendered: false,
@@ -2221,6 +2299,7 @@ impl Renderer {
             instance_capacity,
             instance_buffer,
             draw_capacity,
+            draw_instance_window: vec![],
             draw_group,
             scratch,
             scratch_capacity,
@@ -2308,10 +2387,15 @@ impl Renderer {
     }
 
     fn make_instance_buffer(device: &wgpu::Device, capacity: usize) -> wgpu::Buffer {
+        let capacity = if is_downlevel(device) {
+            capacity + DOWNLEVEL_INSTANCES
+        } else {
+            capacity
+        };
         device.create_buffer(&wgpu::BufferDescriptor {
             label: Some("instances"),
             size: (capacity * std::mem::size_of::<InstanceU>()) as u64,
-            usage: wgpu::BufferUsages::STORAGE | wgpu::BufferUsages::COPY_DST,
+            usage: storage_usage(device) | wgpu::BufferUsages::COPY_DST,
             mapped_at_creation: false,
         })
     }
@@ -2342,7 +2426,11 @@ impl Renderer {
                 },
                 wgpu::BindGroupEntry {
                     binding: 1,
-                    resource: instances.as_entire_binding(),
+                    resource: instance_binding(
+                        device,
+                        instances,
+                        DOWNLEVEL_INSTANCES * std::mem::size_of::<InstanceU>(),
+                    ),
                 },
             ],
         });
@@ -2432,8 +2520,12 @@ impl Renderer {
     fn make_shadow_instances(device: &wgpu::Device, capacity: usize) -> wgpu::Buffer {
         device.create_buffer(&wgpu::BufferDescriptor {
             label: Some("shadow instances"),
-            size: (capacity * 64) as u64,
-            usage: wgpu::BufferUsages::STORAGE | wgpu::BufferUsages::COPY_DST,
+            size: (if is_downlevel(device) {
+                capacity + DOWNLEVEL_SHADOW_INSTANCES
+            } else {
+                capacity
+            } * 64) as u64,
+            usage: storage_usage(device) | wgpu::BufferUsages::COPY_DST,
             mapped_at_creation: false,
         })
     }
@@ -2464,11 +2556,49 @@ impl Renderer {
                 },
                 wgpu::BindGroupEntry {
                     binding: 1,
-                    resource: instances.as_entire_binding(),
+                    resource: instance_binding(device, instances, DOWNLEVEL_SHADOW_INSTANCES * 64),
                 },
             ],
         });
         (buffer, group)
+    }
+
+    /// Binds the uniforms of shadow or depth draw `k`; on a downlevel device also its window of instance matrices,
+    /// starting `start` instances into the draw.
+    fn bind_shadow_draw(&self, pass: &mut wgpu::RenderPass<'_>, k: usize, start: u32) {
+        let draw = (k as u64 * SHADOW_STRIDE) as u32;
+
+        match self.shadow_instance_window.get(k) {
+            Some(&first) => {
+                pass.set_bind_group(0, &self.shadow_group, &[draw, (first + start) * 64])
+            }
+            None => pass.set_bind_group(0, &self.shadow_group, &[draw]),
+        }
+    }
+
+    /// Draws `instances` instances of shadow or depth draw `k`: in one call, or on a downlevel device in windows of at
+    /// most DOWNLEVEL_SHADOW_INSTANCES (256 * 64 = 16384 bytes, so each window offset stays 256 byte aligned).
+    fn draw_shadow_instances(
+        &self,
+        pass: &mut wgpu::RenderPass<'_>,
+        k: usize,
+        count: u32,
+        instances: u32,
+    ) {
+        if self.shadow_instance_window.is_empty() {
+            self.bind_shadow_draw(pass, k, 0);
+            pass.draw(0..count, 0..instances);
+            return;
+        }
+
+        let mut start = 0;
+
+        while start < instances {
+            let n = (instances - start).min(DOWNLEVEL_SHADOW_INSTANCES as u32);
+            self.bind_shadow_draw(pass, k, start);
+            pass.draw(0..count, 0..n);
+            start += n;
+        }
     }
 
     /// The uniforms of a shadow or depth color pass, one per draw, and the instance matrices of its instanced draws
@@ -2481,6 +2611,51 @@ impl Renderer {
         particle_draws: usize,
         particle_instances: usize,
     ) {
+        // Downlevel: the uniform block holds DOWNLEVEL_SHADOW_INSTANCES matrices, bound at each draw's first one (a 256
+        // byte aligned offset: 4 matrices). The matrices of each instanced draw start at a multiple of 4, its window
+        // start is recorded, and its counts[2] (the first instance) becomes 0, the start of its window.
+        let relaid: Option<(Vec<ShadowDrawU>, Vec<[f32; 16]>)> =
+            is_downlevel(&self.device).then(|| {
+                let starts: Vec<usize> = draws
+                    .iter()
+                    .filter(|d| d.counts[1] != 0)
+                    .map(|d| d.counts[2] as usize)
+                    .collect();
+                let mut out_draws = draws.to_vec();
+                let mut out = Vec::with_capacity(instances.len());
+                let mut n = 0;
+
+                self.shadow_instance_window.clear();
+
+                for d in out_draws.iter_mut() {
+                    if d.counts[1] == 0 {
+                        self.shadow_instance_window.push(0);
+                        continue;
+                    }
+
+                    let start = d.counts[2] as usize;
+                    let end = starts.get(n + 1).copied().unwrap_or(instances.len());
+                    n += 1;
+
+                    while !out.len().is_multiple_of(4) {
+                        out.push([0.0; 16]);
+                    }
+
+                    self.shadow_instance_window.push(out.len() as u32);
+                    out.extend_from_slice(&instances[start..end]);
+                    d.counts[2] = 0;
+                }
+
+                (out_draws, out)
+            });
+        if relaid.is_none() {
+            self.shadow_instance_window.clear();
+        }
+        let (draws, instances) = match &relaid {
+            Some((d, i)) => (d.as_slice(), i.as_slice()),
+            None => (draws, instances),
+        };
+
         let more_instances = instances.len() > self.shadow_instance_capacity;
 
         if more_instances {
@@ -2537,6 +2712,30 @@ impl Renderer {
 
             let (segments, instances) = (lines.vertices.len() / 8, lines.instances.len());
             let count = segments * instances * 6;
+
+            let Some(thick_compute) = self.thick_compute.clone() else {
+                // Downlevel: the same triangles, made on the CPU.
+                let positions: &[u8] = bytemuck::cast_slice(thick_line_positions(lines));
+                let triangles = pooled_buffer(
+                    &self.device,
+                    &mut self.free_vertices,
+                    &mut self.stats,
+                    (positions.len() as u64).max(16),
+                    thick_usage(&self.device),
+                );
+                self.queue.write_buffer(&triangles, 0, positions);
+                crate::transfer::upload(crate::transfer::Kind::Particle, positions.len());
+                self.thick.insert(
+                    key,
+                    ThickGpu {
+                        lines: lines.clone(),
+                        input: triangles.clone(),
+                        triangles,
+                        count: count as u32,
+                    },
+                );
+                continue;
+            };
             let input = thick_input(lines, false);
             let bytes: &[u8] = bytemuck::cast_slice(&input);
             let input_buffer = pooled_buffer(
@@ -2578,7 +2777,7 @@ impl Renderer {
             });
             let mut pass = encoder.begin_compute_pass(&Default::default());
             let groups = (segments * instances).div_ceil(64) as u32;
-            pass.set_pipeline(&self.thick_compute);
+            pass.set_pipeline(&thick_compute);
             pass.set_bind_group(0, &group, &[]);
             pass.dispatch_workgroups(groups.min(65535), groups.div_ceil(65535), 1);
             drop(pass);
@@ -2669,7 +2868,11 @@ impl Renderer {
         });
         let mut pass = encoder.begin_compute_pass(&Default::default());
         let groups = (segments * matrices.len()).div_ceil(64) as u32;
-        pass.set_pipeline(&self.thick_display);
+        pass.set_pipeline(
+            self.thick_display
+                .as_ref()
+                .expect("not on a downlevel device"),
+        );
         pass.set_bind_group(0, &group, &[]);
         pass.dispatch_workgroups(groups.min(65535), groups.div_ceil(65535), 1);
         drop(pass);
@@ -2908,11 +3111,7 @@ impl Renderer {
                     if let Some(lines) = &item.thick_lines {
                         let e = &self.thick[&Rc::as_ptr(lines)];
                         pass.set_pipeline(&self.thick_pipeline);
-                        pass.set_bind_group(
-                            0,
-                            &self.shadow_group,
-                            &[(k as u64 * SHADOW_STRIDE) as u32],
-                        );
+                        self.bind_shadow_draw(&mut pass, k, 0);
                         pass.set_vertex_buffer(0, e.triangles.slice(..));
                         pass.draw(0..e.count, 0..1);
                         self.stats.shadow_draw_calls += 1;
@@ -2930,13 +3129,8 @@ impl Renderer {
 
                     if e.count > 0 && instances > 0 {
                         pass.set_pipeline(pipeline);
-                        pass.set_bind_group(
-                            0,
-                            &self.shadow_group,
-                            &[(k as u64 * SHADOW_STRIDE) as u32],
-                        );
                         pass.set_vertex_buffer(0, e.buffer.slice(..));
-                        pass.draw(0..e.count, 0..instances);
+                        self.draw_shadow_instances(&mut pass, k, e.count, instances);
                         self.stats.shadow_draw_calls += 1;
                     }
                     k += 1;
@@ -3060,7 +3254,7 @@ impl Renderer {
                 size: wgpu::Extent3d {
                     width: 1,
                     height: 1,
-                    depth_or_array_layers: 18,
+                    depth_or_array_layers: env_layers(device),
                 },
                 mip_level_count: 1,
                 sample_count: 1,
@@ -3070,12 +3264,12 @@ impl Renderer {
                 view_formats: &[],
             },
             wgpu::util::TextureDataOrder::LayerMajor,
-            &[255; 18 * 4],
+            &vec![255; env_layers(device) as usize * 4],
         );
         let sampler = device.create_sampler(&Default::default());
         (
             texture.create_view(&wgpu::TextureViewDescriptor {
-                dimension: Some(wgpu::TextureViewDimension::CubeArray),
+                dimension: Some(env_view_dimension(device)),
                 ..Default::default()
             }),
             sampler,
@@ -3313,7 +3507,9 @@ impl Renderer {
             &self.device,
             &self.queue,
             &mut encoder,
-            &self.scatter_depth_copy,
+            self.scatter_depth_copy
+                .as_ref()
+                .ok_or("no volume scatter on a downlevel device")?,
             &depth,
         );
         self.queue.submit([encoder.finish()]);
@@ -3393,7 +3589,7 @@ impl Renderer {
                     binding: 9,
                     resource: scatter.1.as_entire_binding(),
                 },
-            ],
+            ][..if is_downlevel(device) { 7 } else { 10 }],
         })
     }
 
@@ -3439,7 +3635,7 @@ impl Renderer {
                 size: wgpu::Extent3d {
                     width: size,
                     height: size,
-                    depth_or_array_layers: 18,
+                    depth_or_array_layers: env_layers(device),
                 },
                 mip_level_count: mips,
                 sample_count: 1,
@@ -3506,7 +3702,7 @@ impl Renderer {
         });
         let m = (
             maps.create_view(&wgpu::TextureViewDescriptor {
-                dimension: Some(wgpu::TextureViewDimension::CubeArray),
+                dimension: Some(env_view_dimension(&self.device)),
                 ..Default::default()
             }),
             sampler,
@@ -4532,9 +4728,8 @@ impl Renderer {
 
             if e.count > 0 && instances > 0 {
                 pass.set_pipeline(pipeline);
-                pass.set_bind_group(0, &self.shadow_group, &[(k as u64 * SHADOW_STRIDE) as u32]);
                 pass.set_vertex_buffer(0, e.buffer.slice(..));
-                pass.draw(0..e.count, 0..instances);
+                self.draw_shadow_instances(&mut pass, k, e.count, instances);
                 self.stats.depth_draw_calls += 1;
             }
             k += 1;
@@ -4622,9 +4817,11 @@ impl Renderer {
                 fu.projection[i] = -fu.projection[i];
             }
         }
-        let n = frame.lights.len().min(MAX_FRAME_LIGHTS);
+        // The frame's capacity: smaller on a downlevel device (frame_caps).
+        let (max_frame_lights, max_frame_projectors) = frame_caps(&self.device);
+        let n = frame.lights.len().min(max_frame_lights);
         fu.num_lights = [n as u32, 0, 0, 0];
-        for (i, l) in frame.lights.iter().take(MAX_FRAME_LIGHTS).enumerate() {
+        for (i, l) in frame.lights.iter().take(max_frame_lights).enumerate() {
             let m = l.matrix;
             fu.lights[i] = LightU {
                 color_type: [
@@ -4675,7 +4872,7 @@ impl Renderer {
         for (i, p) in frame
             .projectors
             .iter()
-            .take(MAX_FRAME_PROJECTORS)
+            .take(max_frame_projectors)
             .enumerate()
         {
             fu.projectors[i] = ProjectorU {
@@ -4729,6 +4926,7 @@ impl Renderer {
         // transmission buffer.
         let scatter = !self.transmission_pass
             && !self.scatter_pass
+            && self.scatter_depth_copy.is_some()
             && frame.items.iter().any(|i| i.volume_scatter());
 
         if scatter {
@@ -4778,10 +4976,11 @@ impl Renderer {
         // X3DRenderObject.draw: renderShadowMap of each light before the shapes.
         let mut shadow_buffer = self.shadow_dummy.clone();
 
-        if !frame.shadow_maps.is_empty() {
+        // A downlevel device reads no shadow maps (downlevel_wgsl): they are not drawn.
+        if !frame.shadow_maps.is_empty() && !is_downlevel(&self.device) {
             let (shadow, places) = self.render_shadow_maps(frame);
 
-            for (i, l) in frame.lights.iter().take(MAX_FRAME_LIGHTS).enumerate() {
+            for (i, l) in frame.lights.iter().take(max_frame_lights).enumerate() {
                 if let Some(&(first, stride)) = l.shadow.as_ref().and_then(|sh| places.get(sh.map))
                 {
                     fu.lights[i].shadow_params[2] = f32::from_bits(first);
@@ -4814,9 +5013,15 @@ impl Renderer {
             );
         }
 
-        self.queue
-            .write_buffer(&self.frame_buffer, 0, bytemuck::bytes_of(&fu));
-        crate::transfer::upload(crate::transfer::Kind::Other, std::mem::size_of_val(&fu));
+        if is_downlevel(&self.device) {
+            let bytes = downlevel_frame_bytes(&fu);
+            self.queue.write_buffer(&self.frame_buffer, 0, &bytes);
+            crate::transfer::upload(crate::transfer::Kind::Other, bytes.len());
+        } else {
+            self.queue
+                .write_buffer(&self.frame_buffer, 0, bytemuck::bytes_of(&fu));
+            crate::transfer::upload(crate::transfer::Kind::Other, std::mem::size_of_val(&fu));
+        }
 
         // --- draw list in X3DRenderObject.drawShapes order
         let mut scratch_data: Vec<f32> = std::mem::take(&mut self.scratch_data);
@@ -5054,7 +5259,7 @@ impl Renderer {
                     .lights
                     .iter()
                     .copied()
-                    .filter(|l| (*l as usize) < MAX_FRAME_LIGHTS)
+                    .filter(|l| (*l as usize) < max_frame_lights)
                     .take(MAX_LIGHTS)
                     .collect();
                 volume_inputs.push(crate::volume_gpu::VolumeInput {
@@ -5142,7 +5347,7 @@ impl Renderer {
                 .lights
                 .iter()
                 .copied()
-                .filter(|l| (*l as usize) < MAX_FRAME_LIGHTS)
+                .filter(|l| (*l as usize) < max_frame_lights)
                 .take(MAX_LIGHTS)
                 .collect();
             d.light_count[0] = lights.len() as u32;
@@ -5159,7 +5364,7 @@ impl Renderer {
                     frame
                         .projectors
                         .get(*p as usize)
-                        .filter(|_| (*p as usize) < MAX_FRAME_PROJECTORS)
+                        .filter(|_| (*p as usize) < max_frame_projectors)
                 })
                 .map(|p| p.texture.clone())
                 .collect();
@@ -5182,7 +5387,7 @@ impl Renderer {
                 .iter()
                 .copied()
                 .filter(|p| {
-                    (*p as usize) < MAX_FRAME_PROJECTORS && (*p as usize) < frame.projectors.len()
+                    (*p as usize) < max_frame_projectors && (*p as usize) < frame.projectors.len()
                 })
                 .take(MAX_TEXTURES)
                 .collect();
@@ -5499,6 +5704,14 @@ impl Renderer {
                     particle_instances += i.matrices.len();
                 }
 
+                // Downlevel: each draw binds a window of DOWNLEVEL_INSTANCES instances at its first one, at a 256 byte
+                // aligned offset (4 instances of 192 bytes are 768); its instances start at a multiple of 4.
+                if is_downlevel(&self.device) {
+                    while !instance_data.len().is_multiple_of(4) {
+                        instance_data.push(bytemuck::Zeroable::zeroed());
+                    }
+                }
+
                 di.inst_flags = [
                     1,
                     !i.colors.is_empty() as u32,
@@ -5663,6 +5876,7 @@ impl Renderer {
                         // displayInstancedThick of the transformed lines: their vertices from a compute pass.
                         Some(i)
                             if !i.matrices.is_empty()
+                                && self.thick_display.is_some()
                                 && l.width > max_line_width()
                                 && !points
                                 && item.custom.is_none() =>
@@ -6027,6 +6241,18 @@ impl Renderer {
             );
         }
 
+        // Downlevel: the first instance of each draw becomes the offset of its window (bound with the draw), and the
+        // index in the window starts at 0.
+        self.draw_instance_window.clear();
+
+        if is_downlevel(&self.device) {
+            self.draw_instance_window.extend(
+                draws
+                    .iter_mut()
+                    .map(|d| std::mem::take(&mut d.inst_flags[3])),
+            );
+        }
+
         self.draw_bytes.clear();
         self.draw_bytes
             .resize(draws.len().max(1) * DRAW_STRIDE as usize, 0);
@@ -6300,11 +6526,14 @@ impl Renderer {
                     if let Some([r, g, b, a]) = c.blend_constant {
                         pass.set_blend_constant(wgpu::Color { r, g, b, a });
                     }
-                    pass.set_bind_group(
-                        1,
-                        &self.draw_group,
-                        &[(c.draw_index as u64 * DRAW_STRIDE) as u32],
-                    );
+                    let window = self.draw_instance_window.get(c.draw_index).copied();
+                    if window.is_none() {
+                        pass.set_bind_group(
+                            1,
+                            &self.draw_group,
+                            &[(c.draw_index as u64 * DRAW_STRIDE) as u32],
+                        );
+                    }
                     pass.set_bind_group(2, &self.slot_groups[&c.textures].0, &[]);
                     let sg = c
                         .style_texture
@@ -6331,7 +6560,29 @@ impl Renderer {
                         }
                     }
 
-                    pass.draw(0..c.count, 0..c.instances);
+                    match window {
+                        // Downlevel: the uniform block holds DOWNLEVEL_INSTANCES instances, so a draw with more is
+                        // drawn in windows of at most that many, each bound at its own first instance. The offsets
+                        // stay 256 byte aligned: a draw starts at a multiple of 4 instances (768 bytes), and a window
+                        // is DOWNLEVEL_INSTANCES (84 * 192 = 16128 = 63 * 256 bytes).
+                        Some(first) => {
+                            let mut start = 0;
+                            while start < c.instances {
+                                let n = (c.instances - start).min(DOWNLEVEL_INSTANCES as u32);
+                                pass.set_bind_group(
+                                    1,
+                                    &self.draw_group,
+                                    &[
+                                        (c.draw_index as u64 * DRAW_STRIDE) as u32,
+                                        (first + start) * std::mem::size_of::<InstanceU>() as u32,
+                                    ],
+                                );
+                                pass.draw(0..c.count, 0..n);
+                                start += n;
+                            }
+                        }
+                        None => pass.draw(0..c.count, 0..c.instances),
+                    }
                 }
             };
 
@@ -6962,6 +7213,234 @@ pub fn thick_lines(
     }
 }
 
+/// A device without storage buffers: WebGL2 (wgpu's GL backend in a browser) and OpenGL ES 3.0 class GPUs. The renderer
+/// then runs its downlevel profile (docs in [`downlevel_wgsl`]): the same passes and shaders, with the storage buffers,
+/// the cube map array and the compute passes replaced, and the features that need them off.
+pub fn is_downlevel(device: &wgpu::Device) -> bool {
+    device.limits().max_storage_buffers_per_shader_stage == 0
+}
+
+/// The uniform block size every downlevel uniform fits in: 16 KiB, the WebGL2 minimum of MAX_UNIFORM_BLOCK_SIZE (ANGLE on
+/// Metal has exactly that; desktop Linux drivers have 64 KiB).
+pub const DOWNLEVEL_UNIFORM_BLOCK: usize = 16384;
+/// The instances one draw reads on a downlevel device: a uniform block of 84 x3d.wgsl `Instance` (192 bytes each, 16128
+/// bytes).
+pub const DOWNLEVEL_INSTANCES: usize = 84;
+/// The shadow.wgsl and depth.wgsl instance matrices of one draw on a downlevel device (16 KiB).
+pub const DOWNLEVEL_SHADOW_INSTANCES: usize = 256;
+/// The lights of a frame on a downlevel device (x3d.wgsl FrameUniforms `lights`); the full profile has 192.
+pub const DOWNLEVEL_FRAME_LIGHTS: usize = 64;
+/// The texture projectors of a frame on a downlevel device; the full profile has 32.
+pub const DOWNLEVEL_FRAME_PROJECTORS: usize = 8;
+
+/// The frame's light and projector capacity on `device`.
+fn frame_caps(device: &wgpu::Device) -> (usize, usize) {
+    if is_downlevel(device) {
+        (DOWNLEVEL_FRAME_LIGHTS, DOWNLEVEL_FRAME_PROJECTORS)
+    } else {
+        (MAX_FRAME_LIGHTS, MAX_FRAME_PROJECTORS)
+    }
+}
+
+/// The size of the frame uniform block on `device`: [`FrameU`], or its downlevel form ([`downlevel_frame_bytes`]).
+fn frame_uniform_size(device: &wgpu::Device) -> usize {
+    if is_downlevel(device) {
+        DOWNLEVEL_FRAME_BYTES
+    } else {
+        std::mem::size_of::<FrameU>()
+    }
+}
+
+/// [`FrameU`] with DOWNLEVEL_FRAME_LIGHTS lights and DOWNLEVEL_FRAME_PROJECTORS projectors: the same fields in the same
+/// order, the two arrays shorter (x3d.wgsl's FrameUniforms after [`downlevel_wgsl`]).
+const DOWNLEVEL_FRAME_BYTES: usize = std::mem::size_of::<FrameU>()
+    - (MAX_FRAME_LIGHTS - DOWNLEVEL_FRAME_LIGHTS) * std::mem::size_of::<LightU>()
+    - (MAX_FRAME_PROJECTORS - DOWNLEVEL_FRAME_PROJECTORS) * std::mem::size_of::<ProjectorU>();
+
+const _: () = assert!(DOWNLEVEL_FRAME_BYTES <= DOWNLEVEL_UNIFORM_BLOCK);
+const _: () =
+    assert!(DOWNLEVEL_INSTANCES * std::mem::size_of::<InstanceU>() <= DOWNLEVEL_UNIFORM_BLOCK);
+const _: () = assert!((DRAW_STRIDE as usize) <= DOWNLEVEL_UNIFORM_BLOCK);
+// A draw with more instances than one window is drawn window by window (encode): each window offset stays 256 byte
+// aligned.
+const _: () = assert!((DOWNLEVEL_INSTANCES * std::mem::size_of::<InstanceU>()).is_multiple_of(256));
+
+/// The bytes of `fu` in the downlevel layout (see [`DOWNLEVEL_FRAME_BYTES`]).
+fn downlevel_frame_bytes(fu: &FrameU) -> Vec<u8> {
+    let b = bytemuck::bytes_of(fu);
+    let lights = std::mem::offset_of!(FrameU, lights);
+    let after_lights = std::mem::offset_of!(FrameU, fog_color_type);
+    let projectors = std::mem::offset_of!(FrameU, projectors);
+    let after_projectors = std::mem::offset_of!(FrameU, pass_flags);
+    let mut out = Vec::with_capacity(DOWNLEVEL_FRAME_BYTES);
+
+    out.extend_from_slice(&b[..lights]);
+    out.extend_from_slice(
+        &b[lights..lights + DOWNLEVEL_FRAME_LIGHTS * std::mem::size_of::<LightU>()],
+    );
+    out.extend_from_slice(&b[after_lights..projectors]);
+    out.extend_from_slice(
+        &b[projectors..projectors + DOWNLEVEL_FRAME_PROJECTORS * std::mem::size_of::<ProjectorU>()],
+    );
+    out.extend_from_slice(&b[after_projectors..]);
+    debug_assert_eq!(out.len(), DOWNLEVEL_FRAME_BYTES);
+    out
+}
+
+/// The layers of the filtered environment texture: 18 (three cube maps). On a downlevel device 19: wgpu's GL backend makes
+/// a square texture with a multiple of 6 layers a cube map array (`is_cube_compatible`), which WebGL2 does not have; with
+/// 19 layers it is a 2D array, which [`downlevel_wgsl`]'s `env_sample_level` samples by face. Layer 18 is never read.
+fn env_layers(device: &wgpu::Device) -> u32 {
+    if is_downlevel(device) { 19 } else { 18 }
+}
+
+/// The view dimension of the environment texture: a cube array, or a 2D array on a downlevel device.
+fn env_view_dimension(device: &wgpu::Device) -> wgpu::TextureViewDimension {
+    if is_downlevel(device) {
+        wgpu::TextureViewDimension::D2Array
+    } else {
+        wgpu::TextureViewDimension::CubeArray
+    }
+}
+
+/// `src` (x3d.wgsl or a variant of it, shadow.wgsl, depth.wgsl) for `device`: unchanged, or [`downlevel_wgsl`] of it.
+pub fn wgsl_for(device: &wgpu::Device, src: &str) -> String {
+    if is_downlevel(device) {
+        downlevel_wgsl(src)
+    } else {
+        src.to_string()
+    }
+}
+
+/// The downlevel profile of a shader (no storage buffers, no cube map arrays):
+///
+/// * every uniform block fits in [`DOWNLEVEL_UNIFORM_BLOCK`]: the frame has [`DOWNLEVEL_FRAME_LIGHTS`] lights and
+///   [`DOWNLEVEL_FRAME_PROJECTORS`] projectors;
+/// * `instances` is a uniform block of [`DOWNLEVEL_INSTANCES`] (x3d.wgsl) or [`DOWNLEVEL_SHADOW_INSTANCES`] (shadow.wgsl,
+///   depth.wgsl) entries instead of a storage buffer;
+/// * the environment cube maps are the faces of a 2D array, sampled by face (`env_sample_level`, the face selection of
+///   OpenGL ES 3.0 table 3.21);
+/// * the shadow maps are not read: every fragment is lit (no shadows);
+/// * the volume scatter buffer is not read: the subsurface scattering term is zero.
+pub fn downlevel_wgsl(src: &str) -> String {
+    let mut s = src.to_string();
+
+    s = s.replace(
+        "var<storage, read> instances: array<Instance>;",
+        &format!("var<uniform> instances: array<Instance, {DOWNLEVEL_INSTANCES}>;"),
+    );
+    s = s.replace(
+        "    lights: array<Light, 192>,",
+        &format!("    lights: array<Light, {DOWNLEVEL_FRAME_LIGHTS}>,"),
+    );
+    s = s.replace(
+        "    projectors: array<Projector, 32>,",
+        &format!("    projectors: array<Projector, {DOWNLEVEL_FRAME_PROJECTORS}>,"),
+    );
+    s = s.replace(
+        "var<storage, read> instances: array<mat4x4<f32>>;",
+        &format!("var<uniform> instances: array<mat4x4<f32>, {DOWNLEVEL_SHADOW_INSTANCES}>;"),
+    );
+
+    if s.contains("var env_maps: texture_cube_array<f32>;") {
+        s = s.replace(
+            "var env_maps: texture_cube_array<f32>;",
+            "var env_maps: texture_2d_array<f32>;",
+        );
+        s = s.replace("textureSampleLevel(env_maps, env_s, ", "env_sample_level(");
+        s.push_str(ENV_SAMPLE_LEVEL);
+    }
+
+    s = s.replace(
+        "@group(0) @binding(7) var<storage, read> shadow_maps: array<f32>;",
+        "",
+    );
+    s = s.replace(
+        "@group(0) @binding(8) var<storage, read> scatter_color: array<vec4<f32>>;",
+        "",
+    );
+    s = s.replace(
+        "@group(0) @binding(9) var<storage, read> scatter_depth: array<f32>;",
+        "",
+    );
+    s = replace_indexed(&s, "shadow_maps", "1.0");
+    s = replace_indexed(&s, "scatter_color", "vec4<f32>(0.0)");
+    s = replace_indexed(&s, "scatter_depth", "1.0");
+    s
+}
+
+/// `name[...]` (with nested brackets) replaced by `with`.
+fn replace_indexed(src: &str, name: &str, with: &str) -> String {
+    let pattern = format!("{name}[");
+    let mut out = String::with_capacity(src.len());
+    let mut rest = src;
+
+    while let Some(i) = rest.find(&pattern) {
+        let before_ok = rest[..i]
+            .chars()
+            .next_back()
+            .is_none_or(|c| !(c.is_alphanumeric() || c == '_'));
+
+        if !before_ok {
+            out.push_str(&rest[..i + pattern.len()]);
+            rest = &rest[i + pattern.len()..];
+            continue;
+        }
+
+        out.push_str(&rest[..i]);
+        let mut depth = 0;
+        let mut end = rest.len();
+
+        for (j, c) in rest[i + name.len()..].char_indices() {
+            match c {
+                '[' => depth += 1,
+                ']' => {
+                    depth -= 1;
+                    if depth == 0 {
+                        end = i + name.len() + j + 1;
+                        break;
+                    }
+                }
+                _ => {}
+            }
+        }
+
+        out.push_str(with);
+        rest = &rest[end..];
+    }
+
+    out.push_str(rest);
+    out
+}
+
+/// textureSampleLevel of a cube map array, for a 2D array that holds the faces (+X, -X, +Y, -Y, +Z, -Z) of each cube.
+const ENV_SAMPLE_LEVEL: &str = r#"
+fn env_sample_level(dir: vec3<f32>, cube: i32, lod: f32) -> vec4<f32> {
+    let a = abs(dir);
+    var face = 0;
+    var sc = 0.0;
+    var tc = 0.0;
+    var ma = 1.0;
+
+    if (a.x >= a.y && a.x >= a.z) {
+        ma = a.x;
+        tc = -dir.y;
+        if (dir.x >= 0.0) { face = 0; sc = -dir.z; } else { face = 1; sc = dir.z; }
+    } else if (a.y >= a.z) {
+        ma = a.y;
+        sc = dir.x;
+        if (dir.y >= 0.0) { face = 2; tc = dir.z; } else { face = 3; tc = -dir.z; }
+    } else {
+        ma = a.z;
+        tc = -dir.y;
+        if (dir.z >= 0.0) { face = 4; sc = dir.x; } else { face = 5; sc = -dir.x; }
+    }
+
+    let st = vec2<f32>(sc, tc) / (2.0 * max(ma, 1e-20)) + 0.5;
+    return textureSampleLevel(env_maps, env_s, st, cube * 6 + face, lod);
+}
+"#;
+
 /// The triangles of `lines` (six positions per segment and instance, in instance order), made on the CPU on first
 /// use, on half the cores for many instances.
 pub fn thick_line_positions(lines: &x3d_runtime::particles::ThickLines) -> &[[f32; 4]] {
@@ -6973,6 +7452,14 @@ pub fn thick_line_positions(lines: &x3d_runtime::particles::ThickLines) -> &[[f3
             .clamp(1, lines.instances.len().div_ceil(256).max(1));
         let chunk = lines.instances.len().div_ceil(threads).max(1);
         let mut out = Vec::with_capacity(per * lines.instances.len());
+
+        // wasm32 has no threads (available_parallelism fails there, so `threads` is 1).
+        if threads == 1 {
+            for m in &lines.instances {
+                thick_line_instance(view, m, &mut out);
+            }
+            return out;
+        }
 
         std::thread::scope(|scope| {
             let parts: Vec<_> = lines

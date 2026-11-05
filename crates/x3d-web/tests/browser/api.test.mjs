@@ -374,11 +374,23 @@ describe ("x3d-canvas", () =>
       await page .context () .close ();
    });
 
-   test ("13. without WebGPU, ready () rejects and the element shows its own content", async () =>
+   // Without WebGPU the engine starts on WebGL2 (runtime02_lifecycle.test.mjs); with neither, it cannot start. The page
+   // has no WebGPU and every canvas refuses a WebGL context.
+   test ("13. without WebGPU and WebGL2, ready () rejects and the element shows its own content", async () =>
    {
       const context = await browser .newContext ();
 
-      await context .addInitScript (() => { delete Navigator .prototype .gpu; });
+      await context .addInitScript (() =>
+      {
+         delete Navigator .prototype .gpu;
+
+         for (const type of [ HTMLCanvasElement, globalThis .OffscreenCanvas ] .filter (Boolean))
+         {
+            const getContext = type .prototype .getContext;
+
+            type .prototype .getContext = function (kind, ... args) { return /^(webgl|webgl2|experimental-webgl)$/ .test (kind) ? null : getContext .call (this, kind, ... args); };
+         }
+      });
 
       const page = await context .newPage ();
 

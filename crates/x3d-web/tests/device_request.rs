@@ -5,8 +5,8 @@ use std::future::Future;
 use std::pin::pin;
 use std::task::{Context, Poll, Waker};
 use x3d_web::device_request::{
-    Attempt, CHECKED_WGPU_VERSION, WGPU_REQUESTS_COMPATIBILITY_FEATURE_LEVEL,
-    request_with_compatibility,
+    ADAPTER_REQUEST_TRIES, Attempt, CHECKED_WGPU_VERSION,
+    WGPU_REQUESTS_COMPATIBILITY_FEATURE_LEVEL, request_with_compatibility, request_with_retries,
 };
 
 /// Runs a future that never waits.
@@ -154,4 +154,59 @@ fn the_wgpu_check_is_for_the_locked_version() {
          WGPU_REQUESTS_COMPATIBILITY_FEATURE_LEVEL and CHECKED_WGPU_VERSION"
     );
     assert!(!WGPU_REQUESTS_COMPATIBILITY_FEATURE_LEVEL);
+}
+
+/// Chrome on Linux answers the first adapter request of a page with no adapter; the next request gets it. One request
+/// only left the page without an engine (the X_ITE_R Browser Preview smoke test in Google Chrome 156).
+#[test]
+fn a_failed_adapter_request_is_asked_again() {
+    let calls = RefCell::new(0);
+    let (result, lines) = run(request_with_retries(ADAPTER_REQUEST_TRIES, || {
+        *calls.borrow_mut() += 1;
+        let n = *calls.borrow();
+        async move {
+            if n == 1 {
+                Err("no adapter".to_string())
+            } else {
+                Ok("adapter")
+            }
+        }
+    }));
+
+    assert_eq!(result, Ok("adapter"));
+    assert_eq!(*calls.borrow(), 2);
+    assert_eq!(
+        lines,
+        vec![format!(
+            "X_ITE_R: graphics adapter request 1 of {ADAPTER_REQUEST_TRIES} failed (no adapter); asking again."
+        )]
+    );
+}
+
+#[test]
+fn adapter_requests_stop_at_the_limit_with_the_last_reason() {
+    let calls = RefCell::new(0);
+    let (result, lines) = run(request_with_retries(3, || {
+        *calls.borrow_mut() += 1;
+        let n = *calls.borrow();
+        async move { Err::<&str, _>(format!("no adapter {n}")) }
+    }));
+
+    assert_eq!(result, Err("no adapter 3".to_string()));
+    assert_eq!(*calls.borrow(), 3);
+    assert_eq!(lines.len(), 2);
+}
+
+#[test]
+fn a_first_adapter_is_requested_once() {
+    let calls = RefCell::new(0);
+    let (result, lines) = run(request_with_retries(3, || {
+        *calls.borrow_mut() += 1;
+        async { Ok::<_, String>("adapter") }
+    }));
+
+    assert_eq!(result, Ok("adapter"));
+    assert_eq!(*calls.borrow(), 1);
+    assert!(lines.is_empty());
+    assert_eq!(ADAPTER_REQUEST_TRIES, 3);
 }

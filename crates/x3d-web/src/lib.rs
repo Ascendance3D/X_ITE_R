@@ -15,6 +15,8 @@ pub mod session;
 pub mod script;
 #[cfg(target_arch = "wasm32")]
 pub mod wasm;
+#[cfg(target_arch = "wasm32")]
+pub mod webgl_probe;
 
 /// X_ITE's default `Multisampling` rendering property (RenderingProperties.js), as x3d-viewer's embedding API uses.
 pub const DEFAULT_MULTISAMPLING: u32 = 4;

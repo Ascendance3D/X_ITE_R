@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<!-- The policy of this page only. Scripts are off (no scripts="true"), so no 'unsafe-eval'. 'wasm-unsafe-eval' lets the
+     page compile the engine's WebAssembly. The <x3d-canvas> element puts its own CSS in a shadow <style>, which needs
+     style-src 'unsafe-inline'. -->
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'wasm-unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; media-src 'self' data: blob:; connect-src 'self' data:; font-src 'self'; object-src 'none'; base-uri 'self'">
+<meta name="theme-color" content="#0b0f17">
+<title>Live Preview · X_ITE_R</title>
+<link rel="stylesheet" href="../site/theme.css">
+<link rel="stylesheet" href="preview.css">
+<script type="module" src="backend.mjs"></script>
+<script type="module" src="../x_ite_r.mjs"></script>
+<script type="module" src="preview.mjs"></script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to the content</a>
+
+<header class="top">
+  <div class="top-in">
+    <a class="brand" href="../" aria-label="X_ITE_R start page">
+      <img src="../site/exciter-wide.png" width="131" height="42" alt="eXciteR">
+      <span class="brand-name">X_ITE_R</span>
+      <span class="tag">Alpha 0.1.0</span>
+    </a>
+    <nav aria-label="Main">
+      <a href="../">Overview</a>
+      <a href="./" aria-current="page">Live Preview</a>
+      <a href="../example/">Examples</a>
+      <a href="../docs/api.html">API</a>
+      <a href="../compatibility.html">Compatibility</a>
+    </nav>
+    <a class="repo" href="https://github.com/Ascendance3D/X_ITE_R"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M2 3h12v10H2z M4 6l2 2-2 2 M8 10h4" fill="none" stroke="currentColor" stroke-width="1.3"/></svg>Ascendance3D/X_ITE_R</a>
+  </div>
+</header>
+
+<div class="page-head">
+  <div class="wrap">
+    <div>
+      <p class="eyebrow">Live Preview · test interface</p>
+      <h1>Browser Preview</h1>
+      <p class="lead">Load a test world, move through it, press its sensors and set fields from JavaScript. Every control
+        below talks to the Rust engine through the same API as X_ITE.</p>
+    </div>
+    <p class="notice"><b>Pre-release for testing.</b> It is not a full replacement for X_ITE 16.5.0.
+      <a href="../compatibility.html">What works and what does not</a>.</p>
+  </div>
+</div>
+
+<main id="main" class="wrap section">
+  <div class="bench">
+    <section class="panel view" aria-label="Live view">
+      <div class="panel-head">
+        <p class="label">Live view</p>
+        <span class="chip"><span class="dot" aria-hidden="true"></span><span>Graphics:</span> <span id="webgpu">…</span></span>
+      </div>
+      <x3d-canvas id="canvas">This page needs a browser with WebGPU or WebGL2.</x3d-canvas>
+      <p class="status-bar"><span class="label">Status</span> <span id="status" role="status">…</span></p>
+    </section>
+
+    <section class="controls" aria-label="Controls">
+      <fieldset class="panel">
+        <legend>World</legend>
+        <label>Test world <select id="world"></select></label>
+        <div class="row">
+          <button type="button" class="tool primary" id="load">Load</button>
+          <button type="button" class="tool" id="reload-world">Load again</button>
+        </div>
+      </fieldset>
+
+      <fieldset class="panel">
+        <legend>Viewpoints</legend>
+        <div class="row">
+          <button type="button" class="tool" id="previous">Previous</button>
+          <button type="button" class="tool" id="next">Next</button>
+          <button type="button" class="tool" id="view-all">View all</button>
+        </div>
+      </fieldset>
+
+      <fieldset class="panel" id="viewer-set">
+        <legend>Viewer type</legend>
+        <label>NavigationInfo <select id="viewer" disabled></select></label>
+        <p class="hint" id="viewer-hint">The navigation world has EXAMINE, WALK and FLY.</p>
+      </fieldset>
+
+      <fieldset class="panel" id="color-set">
+        <legend>JavaScript API: set a field</legend>
+        <div class="row">
+          <button type="button" class="tool swatch" data-color="0.9 0.15 0.15" disabled>Red</button>
+          <button type="button" class="tool swatch" data-color="0.15 0.8 0.2" disabled>Green</button>
+          <button type="button" class="tool swatch" data-color="0.95 0.85 0.1" disabled>Yellow</button>
+        </div>
+        <p class="hint">Sets the field of the Material named "ColorTarget" in the world.</p>
+      </fieldset>
+
+      <fieldset class="panel">
+        <legend>Browser</legend>
+        <div class="row">
+          <button type="button" class="tool" id="dispose">Dispose browser</button>
+          <a class="tool" href="" id="reload-page">Reload page</a>
+        </div>
+      </fieldset>
+    </section>
+  </div>
+
+  <section class="help panel" aria-labelledby="help-h">
+    <h2 id="help-h">How to test</h2>
+    <ul>
+      <li><b>EXAMINE:</b> drag with the left mouse button (one finger) to turn the world. Use the wheel (two-finger pinch) to zoom.</li>
+      <li><b>WALK and FLY:</b> load "Navigation", select WALK or FLY, then drag up or down to move and left or right to turn.</li>
+      <li><b>TouchSensor:</b> in "VRML97 basic", press the red box. "Touch.isActive" is TRUE while you press.</li>
+      <li><b>PlaneSensor:</b> in "VRML97 basic", drag the blue box. It moves in its plane.</li>
+      <li><b>TimeSensor:</b> the green cone (VRML97) and the pyramid (X3D) turn continuously.</li>
+      <li><b>JavaScript API:</b> the color buttons set the "ColorTarget" Material field.</li>
+      <li><b>Inline, EXTERNPROTO and textures:</b> load "Resources". You see a checker box, a striped sphere (Inline) and a magenta box (EXTERNPROTO).</li>
+      <li><b>Failed URL:</b> load "Missing world". The status shows the error and the last world stays. Then load another world.</li>
+    </ul>
+    <p class="hint">Script nodes are off on this page. The viewer keyboard and context menu work as in X_ITE where the engine supports them.</p>
+  </section>
+
+  <section class="tech" aria-labelledby="tech-h">
+    <h2 id="tech-h" class="label">Diagnostics</h2>
+    <div class="tech-grid">
+      <div class="panel">
+        <p class="label panel-head">Live values</p>
+        <pre id="values">(no world)</pre>
+      </div>
+      <div class="panel">
+        <p class="label panel-head">Events</p>
+        <pre id="log"></pre>
+      </div>
+      <div class="panel">
+        <p class="label panel-head">Build</p>
+        <table class="facts">
+          <tbody>
+            <tr><th>Version</th><td id="version">…</td></tr>
+            <tr><th>Build commit</th><td id="build">…</td></tr>
+            <tr><th>World URL</th><td id="world-url">…</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="foot">
+  <div class="wrap foot-base"><span>X_ITE_R · MIT license · Reference: X_ITE 16.5.0</span><span><a href="../LICENSE">License</a> · <a href="../THIRD_PARTY_NOTICES.md">Third-party notices</a> · <a href="../build-info.json">build-info.json</a></span></div>
+</footer>
+</body>
+</html>
