@@ -56,10 +56,15 @@ WebGL2 has no storage buffers, no compute shaders and no cube map arrays. On Web
 
 ## Browsers
 
-| browser | state |
-| --- | --- |
-| Chrome or Edge 113 or later, desktop, with a WebGPU adapter | supported; the release check runs in Chrome |
-| Firefox 153 (Linux), no WebGPU | WebGL2: the smoke test passes (headless, NVIDIA GPU) |
-| Chromium 151 without WebGPU flags (Linux) | WebGL2: the smoke test passes |
-| Safari | not tested yet |
-| browsers with neither WebGPU nor WebGL2 | not supported: the element shows its fallback text |
+Release check of 2026-11-05 (`tests/preview/smoke.mjs`, 32 checks; `tests/preview/touch.mjs`, 8 checks).
+
+| browser | system | state |
+| --- | --- | --- |
+| Chrome 156, Chromium, Edge | Linux, NVIDIA | WebGPU (with the Linux flags in README.md) and WebGL2: the smoke test passes |
+| Firefox 153 to 159 | Linux | no WebGPU; WebGL2: the smoke test passes (Playwright and geckodriver) |
+| Chrome 156 | macOS, Apple M1 | WebGPU (Metal) and WebGL2 (ANGLE Metal): the smoke test passes |
+| Safari 27.0.1 | macOS, Apple M1 | WebGPU and WebGL2: the smoke test passes while the Safari window is visible |
+| Chromium phone and tablet emulation | Linux | touch (tap, drag, pinch, cancel, Anchor, dispose): passes; emulation, not a device |
+| browsers with neither WebGPU nor WebGL2 | | not supported: the element shows its fallback text |
+
+Not tested: real phones and tablets (issue #143), Safari on iOS, Firefox on macOS and Windows.

@@ -1,0 +1,124 @@
+/* The start page of the X_ITE_R Browser Preview. Dark zinc surfaces, one accent (eXciteR orange), ruled sections.
+   Fonts: Geist and Geist Mono (SIL OFL 1.1, fonts/OFL.txt), served from this directory. */
+
+@font-face { font-family: "Geist"; src: url("fonts/Geist-Variable.woff2") format("woff2"); font-weight: 100 900; font-display: swap; }
+@font-face { font-family: "Geist Mono"; src: url("fonts/GeistMono-Variable.woff2") format("woff2"); font-weight: 100 900; font-display: swap; }
+
+:root
+{
+   --bench:   #111113;  /* page */
+   --panel:   #18181b;  /* raised areas */
+   --rule:    #2a2a2e;  /* 1px rules */
+   --ink:     #e7e5e4;  /* text */
+   --graph:   #a1a1aa;  /* secondary text */
+   --faint:   #8a8a93;  /* metadata (4.5:1 on --bench) */
+   --signal:  #e07a3a;  /* the accent */
+   --pass:    #8fbf8a;  /* result text only */
+   --fail:    #d98080;
+
+   --sans: "Geist", ui-sans-serif, system-ui, sans-serif;
+   --mono: "Geist Mono", ui-monospace, "SFMono-Regular", monospace;
+   --gutter: clamp(1.5rem, 4vw, 3rem);
+   --gap: clamp(3rem, 8vw, 6rem);
+
+   color-scheme: dark;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+
+html { background: var(--bench); color: var(--ink); font: 400 1rem/1.6 var(--sans); -webkit-text-size-adjust: 100%; }
+body { margin: 0; }
+
+a { color: var(--ink); text-decoration-color: var(--signal); text-underline-offset: 0.2em; transition: color 120ms cubic-bezier(0.2, 0.8, 0.2, 1); }
+a:hover { color: var(--signal); }
+:focus-visible { outline: 2px solid var(--signal); outline-offset: 3px; }
+
+.mono { font-family: var(--mono); font-size: 0.875rem; }
+.label { margin: 0 0 0.75rem; font: 500 0.75rem/1 var(--mono); letter-spacing: 0.08em; text-transform: uppercase; color: var(--graph); }
+.ok { color: var(--pass); }
+.error { color: var(--fail); }
+
+.skip { position: absolute; left: -100vw; }
+.skip:focus { left: var(--gutter); top: 0.5rem; background: var(--panel); padding: 0.5rem 1rem; }
+
+/* Header */
+
+.top, main, .bottom { max-width: 1200px; margin: 0 auto; padding-inline: var(--gutter); }
+
+.top { display: grid; grid-template-columns: auto 1fr; align-items: center; gap: 1.5rem; padding-block: 1rem; border-bottom: 1px solid var(--rule); }
+.brand { display: inline-grid; grid-auto-flow: column; align-items: center; gap: 0.75rem; text-decoration: none; font-weight: 600; letter-spacing: -0.01em; min-height: 44px; }
+.brand img { display: block; }
+.top ul { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 0.25rem 1.5rem; margin: 0; padding: 0; list-style: none; }
+.top li a { display: inline-block; padding-block: 0.6rem; text-decoration: none; color: var(--graph); }
+.top li a:hover { color: var(--ink); }
+
+/* Hero: text left (5), live canvas right (7) */
+
+.hero { display: grid; grid-template-columns: 5fr 7fr; gap: clamp(2rem, 5vw, 4rem); align-items: start; padding-block: var(--gap); }
+
+h1, h2 { font-weight: 600; letter-spacing: -0.02em; line-height: 1.15; margin: 0 0 1rem; }
+h1 { font-size: clamp(2rem, 4vw, 3.25rem); }
+h2 { font-size: clamp(1.375rem, 2.2vw, 1.75rem); }
+
+.lead { max-width: 65ch; color: var(--graph); }
+.callout { max-width: 65ch; margin: 1.5rem 0; padding: 0.875rem 1rem; background: var(--panel); border-left: 2px solid var(--signal); }
+
+.button
+{
+   display: inline-flex; align-items: center; min-height: 44px; padding: 0 1.25rem; border-radius: 6px;
+   background: var(--signal); color: var(--bench); font-weight: 600; text-decoration: none;
+   transition: transform 120ms cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+.button:hover { color: var(--bench); }
+.button:active { transform: translateY(1px); }
+
+.stage { margin: 0; }
+.stage x3d-canvas { display: block; width: 100%; height: auto; aspect-ratio: 4 / 3; background: var(--panel); border: 1px solid var(--rule); border-radius: 4px; }
+.stage figcaption { display: grid; grid-template-columns: repeat(auto-fit, minmax(12rem, 1fr)); gap: 0.25rem 1.5rem; padding-block: 0.75rem; border-bottom: 1px solid var(--rule); color: var(--graph); }
+.fallback { padding: 1.5rem; color: var(--graph); }
+.hint { margin: 0.75rem 0 0; color: var(--faint); font-size: 0.875rem; }
+
+/* Bands */
+
+.band { display: grid; align-items: start; grid-template-columns: 4fr 8fr; gap: 1.5rem clamp(2rem, 5vw, 4rem); padding-block: var(--gap); border-top: 1px solid var(--rule); }
+.band > :not(.band-head) { grid-column: 2; }
+.band-head p:not(.label) { color: var(--graph); max-width: 65ch; }
+.band.split { grid-template-columns: 1fr 1fr; }
+.band.split > div { grid-column: auto; }
+.band ul { margin: 0; padding-left: 1.1rem; color: var(--graph); }
+.band li + li { margin-top: 0.35rem; }
+
+.facts { display: grid; grid-template-columns: max-content 1fr; margin: 0; }
+.facts dt, .facts dd { margin: 0; padding: 0.7rem 0; border-bottom: 1px solid var(--rule); }
+.facts dt { padding-right: 2rem; color: var(--graph); }
+.facts dd { overflow-wrap: anywhere; }
+
+.table-wrap { overflow-x: auto; }
+table { width: 100%; border-collapse: collapse; }
+th, td { padding: 0.7rem 1rem 0.7rem 0; border-bottom: 1px solid var(--rule); text-align: left; vertical-align: top; }
+th { font: 500 0.75rem/1.2 var(--mono); letter-spacing: 0.08em; text-transform: uppercase; color: var(--graph); }
+td.pass { color: var(--pass); }
+.note { color: var(--faint); font-size: 0.875rem; max-width: 65ch; }
+
+.code { margin: 0; padding: 1rem 1.25rem; overflow-x: auto; background: var(--panel); border: 1px solid var(--rule); border-radius: 8px; font: 0.875rem/1.6 var(--mono); }
+.links { display: flex; flex-wrap: wrap; gap: 0.5rem 1.5rem; }
+.links a { display: inline-block; padding-block: 0.6rem; }
+
+.bottom { padding-block: 2rem 3rem; border-top: 1px solid var(--rule); color: var(--faint); font-size: 0.875rem; }
+
+/* One column below 768 px; the canvas goes under the text. */
+
+@media (max-width: 767px)
+{
+   .top { grid-template-columns: 1fr; gap: 0.25rem; }
+   .top ul { justify-content: flex-start; }
+   .hero, .band, .band.split { grid-template-columns: minmax(0, 1fr); }
+   .band > :not(.band-head) { grid-column: auto; }
+   .facts { grid-template-columns: minmax(0, 1fr); }
+   .facts dt { padding-bottom: 0; border-bottom: 0; }
+}
+
+@media (prefers-reduced-motion: reduce)
+{
+   * { transition: none !important; }
+}

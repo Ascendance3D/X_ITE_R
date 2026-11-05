@@ -53,6 +53,8 @@ cp -r "$web/pkg" "$dir/pkg"
 # The preview page and its worlds, the example, the API list, the licenses.
 cp -r "$web/preview" "$dir/preview"
 cp -r "$web/example" "$dir/example"
+# The start page's style, module, logo and fonts (Geist, SIL OFL 1.1: site/fonts/OFL.txt).
+cp -r "$web/site" "$dir/site"
 mkdir -p "$dir/docs"
 cp "$web/API.md" "$dir/docs/API.md"
 cp LICENSE "$dir/LICENSE"

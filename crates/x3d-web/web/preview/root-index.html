@@ -1,15 +1,159 @@
 <!DOCTYPE html>
 <html lang="en">
+<head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<!-- The start page of the package (tools/package-web-preview.sh copies it to index.html). Every URL is relative, so the
+     package works at any path. Policy as the preview page's: no inline script, no 'unsafe-eval'; 'wasm-unsafe-eval'
+     compiles the engine; style-src 'unsafe-inline' is for the <x3d-canvas> shadow <style>. -->
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'wasm-unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; media-src 'self' data: blob:; connect-src 'self' data:; font-src 'self'; object-src 'none'; base-uri 'self'">
+<meta name="description" content="X_ITE_R Browser Preview 0.1.0: the Rust port of the X_ITE X3D and VRML97 browser, as WebAssembly with WebGPU or WebGL2.">
 <title>X_ITE_R Browser Preview 0.1.0</title>
-<h1>X_ITE_R Browser Preview 0.1.0</h1>
-<p>A pre-release of the X_ITE_R browser runtime (Rust, WebAssembly, WebGPU). It is not a full replacement for X_ITE 16.5.0.</p>
-<ul>
-  <li><a href="preview/">Preview test page</a>: test worlds, navigation, sensors, JavaScript API</li>
-  <li><a href="example/">Example: one Box and the JavaScript API</a></li>
-  <li><a href="example/interactive.html">Example: EXAMINE, TouchSensor, PlaneSensor, Anchor, Inline, texture</a></li>
-  <li><a href="README.md">README.md</a> (deployment), <a href="COMPATIBILITY.md">COMPATIBILITY.md</a>, <a href="docs/API.md">docs/API.md</a>, <a href="build-info.json">build-info.json</a>, <a href="SHA256SUMS">SHA256SUMS</a></li>
-</ul>
-<p>Needs a browser with WebGPU: Chrome or Edge 113 or later on a desktop.</p>
+<link rel="stylesheet" href="site/site.css">
+<script type="module" src="x_ite_r.mjs"></script>
+<script type="module" src="site/home.mjs"></script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to the content</a>
+
+<header class="top">
+  <a class="brand" href="./" aria-label="X_ITE_R start page">
+    <img src="site/exciter-logo.png" width="46" height="56" alt="eXciteR logo">
+    <span>X_ITE_R</span>
+  </a>
+  <nav aria-label="Main">
+    <ul>
+      <li><a href="preview/">Preview</a></li>
+      <li><a href="example/">Examples</a></li>
+      <li><a href="docs/API.md">JavaScript API</a></li>
+      <li><a href="COMPATIBILITY.md">Compatibility</a></li>
+      <li><a href="https://github.com/Ascendance3D/X_ITE_R">Source</a></li>
+    </ul>
+  </nav>
+</header>
+
+<main id="main">
+  <section class="hero" aria-labelledby="title">
+    <div class="hero-text">
+      <p class="label">Browser Preview 0.1.0</p>
+      <h1 id="title">X3D and VRML97 worlds, run by a Rust engine in the browser.</h1>
+      <p class="lead">X_ITE_R is a port of the X_ITE browser to Rust. The engine runs as WebAssembly. It parses the world,
+        runs the events, sensors and navigation, and draws with WebGPU. When the browser has no WebGPU, the same
+        renderer draws with WebGL2.</p>
+      <p class="callout">Pre-release for testing. It is not a full replacement for X_ITE 16.5.0.
+        <a href="COMPATIBILITY.md">What works and what does not</a>.</p>
+      <p><a class="button" href="preview/">Open the preview</a></p>
+    </div>
+
+    <figure class="stage">
+      <x3d-canvas id="canvas" src="preview/worlds/vrml97-basic.wrl" contentScale="auto">
+        <p class="fallback">This browser has neither WebGPU nor WebGL2, so the engine cannot start here.</p>
+      </x3d-canvas>
+      <figcaption>
+        <span class="mono" id="graphics">Graphics: starting</span>
+        <span class="mono" id="world">World: preview/worlds/vrml97-basic.wrl</span>
+        <span class="mono" id="status" role="status">Status: loading</span>
+      </figcaption>
+      <p class="hint">Drag to turn the view. Click the red box: a TouchSensor. Drag the blue box: a PlaneSensor.</p>
+    </figure>
+  </section>
+
+  <section class="band" aria-labelledby="facts">
+    <div class="band-head">
+      <p class="label">Build</p>
+      <h2 id="facts">Facts of this package</h2>
+      <p>Read from <a class="mono" href="build-info.json">build-info.json</a>. Check every file with
+        <span class="mono">sha256sum -c SHA256SUMS</span>.</p>
+    </div>
+    <dl class="facts">
+      <dt>Version</dt>        <dd class="mono" id="f-version">0.1.0</dd>
+      <dt>Commit</dt>         <dd class="mono" id="f-commit">see build-info.json</dd>
+      <dt>Engine module</dt>  <dd class="mono" id="f-wasm">pkg/x3d_web_bg.wasm</dd>
+      <dt>Toolchain</dt>      <dd class="mono" id="f-rustc">see build-info.json</dd>
+      <dt>Reference</dt>      <dd class="mono" id="f-reference">X_ITE 16.5.0</dd>
+      <dt>Graphics</dt>       <dd>WebGPU when the browser gives an adapter, else WebGL2 (one renderer, reduced limits)</dd>
+      <dt>Script nodes</dt>   <dd>Off. A page turns them on with <span class="mono">scripts="true"</span>; they then run with the page's privileges.</dd>
+      <dt>License</dt>        <dd><a href="LICENSE">MIT</a>; <a href="THIRD_PARTY_NOTICES.md">third-party notices</a></dd>
+    </dl>
+  </section>
+
+  <section class="band" aria-labelledby="browsers">
+    <div class="band-head">
+      <p class="label">Tested</p>
+      <h2 id="browsers">Browsers</h2>
+      <p>The release check (32 checks: drawing, navigation, sensors, field changes, Inline, EXTERNPROTO, reload,
+        device loss, dispose) on 2026-11-05. Other browsers and devices are not tested.</p>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th scope="col">Browser</th><th scope="col">System</th><th scope="col">WebGPU</th><th scope="col">WebGL2</th></tr></thead>
+        <tbody>
+          <tr><td>Chrome 156</td><td>Linux, NVIDIA</td><td class="mono pass">32/32</td><td class="mono pass">32/32</td></tr>
+          <tr><td>Chromium, Edge</td><td>Linux</td><td class="mono pass">32/32</td><td class="mono pass">32/32</td></tr>
+          <tr><td>Firefox</td><td>Linux</td><td class="mono">no WebGPU</td><td class="mono pass">32/32</td></tr>
+          <tr><td>Chrome 156</td><td>macOS, Apple M1</td><td class="mono pass">32/32</td><td class="mono pass">32/32</td></tr>
+          <tr><td>Safari 27</td><td>macOS, Apple M1</td><td class="mono pass">32/32</td><td class="mono pass">32/32</td></tr>
+          <tr><td>Touch: tap, drag, pinch, Anchor</td><td>Chromium phone emulation</td><td class="mono pass">8/8</td><td class="mono pass">8/8</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="note">Not tested: real phones and tablets, Firefox on macOS and Windows, Safari on iOS. The touch row is
+      emulation, not a device.</p>
+  </section>
+
+  <section class="band split" aria-labelledby="limits">
+    <div>
+      <p class="label">Limits</p>
+      <h2 id="limits">On WebGL2</h2>
+      <ul>
+        <li>No shadows and no volume scattering.</li>
+        <li>No GaussianSplats.</li>
+        <li>Thick particle lines are made on the CPU.</li>
+        <li>At most 64 lights and 8 TextureProjector nodes per frame.</li>
+        <li>Instanced shapes are drawn in windows of 84 instances.</li>
+      </ul>
+    </div>
+    <div>
+      <p class="label">Missing</p>
+      <h2>Not available</h2>
+      <ul>
+        <li>WebXR.</li>
+        <li>WebGPU compatibility mode for OpenGL ES 3.1 class GPUs.</li>
+        <li>Most X3DBrowserContext functions and the WebGL rendering properties.</li>
+      </ul>
+      <p><a href="COMPATIBILITY.md">The full list</a></p>
+    </div>
+  </section>
+
+  <section class="band" aria-labelledby="use">
+    <div class="band-head">
+      <p class="label">Use</p>
+      <h2 id="use">One element, X_ITE's API names</h2>
+      <p>The element and its API are a small subset of X_ITE's. <a href="docs/API.md">docs/API.md</a> lists what is
+        supported, what is different and what is not implemented.</p>
+    </div>
+    <pre class="code"><code>&lt;script type="module" src="x_ite_r.mjs"&gt;&lt;/script&gt;
+&lt;x3d-canvas src="world.wrl"&gt;&lt;/x3d-canvas&gt;</code></pre>
+    <p class="links">
+      <a href="example/">Example: one Box and the API</a>
+      <a href="example/interactive.html">Example: sensors, Anchor, Inline, texture</a>
+      <a class="mono" href="build-info.json">build-info.json</a>
+    </p>
+  </section>
+
+  <section class="band" aria-labelledby="download">
+    <div class="band-head">
+      <p class="label">Download</p>
+      <h2 id="download">The package</h2>
+      <p>This site is the package, served as static files. The archive and its SHA-256 are on the
+        <a href="https://github.com/Ascendance3D/X_ITE_R/releases">GitHub releases page</a>. Deployment:
+        <a href="README.md">README.md</a>.</p>
+    </div>
+  </section>
+</main>
+
+<footer class="bottom">
+  <p>X_ITE_R, MIT license. Reference: X_ITE 16.5.0. <a href="https://github.com/Ascendance3D/X_ITE_R">github.com/Ascendance3D/X_ITE_R</a></p>
+</footer>
+</body>
 </html>
