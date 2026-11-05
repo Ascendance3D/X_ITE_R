@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "pretest": "node tests/browser/shards.mjs matrix",
-    "test": "node --test --test-concurrency=1 'tests/browser/*.test.mjs'"
+    "test": "node tests/run-browser.mjs"
   },
   "devDependencies": {
     "playwright": "1.62.1"
