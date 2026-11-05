@@ -1,0 +1,45 @@
+#X3D V3.3 utf8
+PROFILE Immersive
+COMPONENT Scripting:1
+META "title" "createX3DFromString with an EXTERNPROTO after load"
+# Synthetic REA oracle world (sub:proto.externproto). Browser.createX3DFromString is called from a cycle after the page has loaded,
+# with strings that hold an EXTERNPROTO: a data: url that holds a PROTO, a url that does not exist, and the same two in XML.
+# The Script records the new scene (extern proto names, load states, instance state, node counts) in the SFString `hist`.
+DEF P Script {
+  inputOutput SFString hist ""
+  inputOutput SFInt32 step 0
+  inputOnly SFTime cycle
+  url "ecmascript:
+
+var made = [ ];
+function rec (s) { hist = hist + s + ' '; }
+function describe (s) {
+  var e = s .externprotos [0];
+  var out = 'ep=' + s .externprotos .length;
+  if (e) out += ',' + e .name + ',ls=' + e .loadState + ',proto=' + (e .isExternProto) + ',fields=' + e .fields .length;
+  out += ',root=' + s .rootNodes .length;
+  if (s .rootNodes .length) out += ',' + s .rootNodes [0] .getTypeName ();
+  return out;
+}
+function mk (name, text) {
+  try {
+    Browser .createX3DFromString (text) .then (function (s) { made .push (s); rec (name + ':OK:' + describe (s)); },
+                                               function (e) { rec (name + ':REJ:' + e .message); });
+  } catch (e) { rec (name + ':THROW:' + e .message); }
+}
+var BODY = 'PROTO EP [ inputOutput SFFloat v 0 ] { Group { } }\n';
+var DATA = 'data:model/vrml;charset=utf-8,' + encodeURIComponent ('#VRML V2.0 utf8\n' + BODY);
+function cycle () {
+  step = step + 1;
+  if (step == 2) mk ('dataVrml', '#VRML V2.0 utf8\nEXTERNPROTO EP [ exposedField SFFloat v ] \"' + DATA + '\"\nEP { v 3 }\n');
+  if (step == 3) mk ('missingVrml', '#VRML V2.0 utf8\nEXTERNPROTO EP [ exposedField SFFloat v ] \"nowhere-ep.wrl\"\nEP { v 3 }\n');
+  if (step == 4) mk ('dataX3d', '<X3D profile=\"Immersive\" version=\"4.0\"><Scene><ExternProtoDeclare name=\"EP\" url=\"&quot;' + DATA + '&quot;\"><field accessType=\"inputOutput\" type=\"SFFloat\" name=\"v\"/></ExternProtoDeclare><ProtoInstance name=\"EP\"><fieldValue name=\"v\" value=\"3\"/></ProtoInstance></Scene></X3D>');
+  if (step == 5) mk ('missingX3d', '<X3D profile=\"Immersive\" version=\"4.0\"><Scene><ExternProtoDeclare name=\"EP\" url=\"&quot;nowhere-ep.wrl&quot;\"><field accessType=\"inputOutput\" type=\"SFFloat\" name=\"v\"/></ExternProtoDeclare></Scene></X3D>');
+  if (step == 6) mk ('twoUrls', '#VRML V2.0 utf8\nEXTERNPROTO EP [ exposedField SFFloat v ] [ \"nowhere-ep.wrl\", \"' + DATA + '\" ]\nEP { v 3 }\n');
+  if (step == 7) mk ('hash', '#VRML V2.0 utf8\nEXTERNPROTO EP [ exposedField SFFloat v ] \"' + DATA + '#EP\"\nEP { v 3 }\n');
+  if (step == 10) { var r = [ ]; for (var i = 0; i < made .length; ++ i) r .push (i + ':' + describe (made [i])); rec ('later=' + r .join (';')); }
+}
+  "
+}
+DEF STEP TimeSensor { cycleInterval 0.05 loop TRUE }
+ROUTE STEP.cycleTime TO P.cycle
