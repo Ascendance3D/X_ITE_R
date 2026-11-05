@@ -32,6 +32,11 @@ All files are newly authored for X_ITE_R or generated from its source (MIT, `LIC
    `text/javascript mjs;` in `types`.
 4. Open `preview/` in Chrome or Edge 113 or later on a desktop.
 
+Chrome and Edge on Windows and macOS have WebGPU by default. On Linux, Chrome 156 and Edge 155 need
+`--enable-unsafe-webgpu --enable-features=Vulkan --ignore-gpu-blocklist`; on a Wayland desktop with an NVIDIA GPU the
+window stays black with these flags unless the browser also gets `--ozone-platform=x11` (XWayland). Tested 2026-11-04
+on Ubuntu with an RTX 3060 Ti.
+
 No server code, no CORS headers and no special cross-origin isolation headers are needed. The page loads only files of
 its own origin. The test page sets its own Content Security Policy in a `<meta>` element: `script-src 'self'
 'wasm-unsafe-eval'` (no `'unsafe-eval'`) and `style-src 'self' 'unsafe-inline'` (the element's shadow `<style>`). Do not
