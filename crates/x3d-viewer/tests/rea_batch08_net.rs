@@ -404,6 +404,15 @@ fn compare_case(
 
             match x3d_render::compare::load_png(&png_dir.join(&file)) {
                 Ok((rw, rh, mut got)) if (rw, rh) == (w, h) => {
+                    if let Some(r) = masked
+                        .iter()
+                        .find(|r| r.2 > w || r.3 > h || r.0 >= r.2 || r.1 >= r.3)
+                    {
+                        fail(format!(
+                            "{file}: known-difference region {r:?} is not inside the {w}x{h} picture"
+                        ));
+                        continue;
+                    }
                     for (i, &r) in masked.iter().enumerate() {
                         if regions.len() <= i {
                             regions.push((format!("{r:?}"), vec![], vec![]));
