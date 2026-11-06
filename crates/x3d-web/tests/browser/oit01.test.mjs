@@ -131,17 +131,39 @@ describe ("oit 01", { skip: Boolean (ONLY) }, () =>
          try
          {
             const { off, on } = await references (page);
-            const plain = await draw (page);
+            // The page sets false first: in X_ITE the Script's true of the second reference world stays for the next world.
+            const plain = await draw (page, { before: b => b .setBrowserOption ("OrderIndependentTransparency", false) });
             const live  = await draw (page, { world: null, before: b => b .setBrowserOption ("OrderIndependentTransparency", true) });
             const next  = await draw (page);
             const replaced = await draw (page, { replace: true });
             const back  = await draw (page, { world: null, before: b => b .setBrowserOption ("OrderIndependentTransparency", false) });
 
-            assert .equal (plain .hash, off .hash, "without the option the page draws without OIT");
+            assert .equal (plain .hash, off .hash, "with the option false the page draws without OIT");
             assert .equal (live .hash, on .hash, `the option set on the live world: ${JSON .stringify ({ live, on, off })}`);
             assert .equal (next .hash, on .hash, `the option stays after loadURL: ${JSON .stringify ({ next, on, off })}`);
             assert .equal (replaced .hash, on .hash, `the option stays after replaceWorld: ${JSON .stringify ({ replaced, on, off })}`);
             assert .equal (back .hash, off .hash, "the option set back to false");
+         }
+         finally
+         {
+            await page .context () .close ();
+         }
+      });
+
+      // Pinned X_ITE 16.5.0 (Chrome 156): BrowserOptions.reset runs only when the browser starts, so a world Script's
+      // OrderIndependentTransparency true stays for the next loadURL (the plain world after it draws with OIT on, and
+      // getBrowserOption gives true). X_ITE_R starts each world with the page's options.
+      test (`${backend}: a world Script's option stays for the next world`,
+         { timeout: CASE_TIMEOUT, todo: "a world Script's browser option does not stay for the next world, as in X_ITE" }, async () =>
+      {
+         const page = await open (backend, { scripts: "true" });
+
+         try
+         {
+            const { off, on } = await references (page);
+            const after = await draw (page);
+
+            assert .equal (after .hash, on .hash, `the plain world after the Script's true: ${JSON .stringify ({ after, on, off })}`);
          }
          finally
          {
