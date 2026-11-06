@@ -122,9 +122,9 @@
   },
   "rubber-wheel-roll": {
    "run_sha256": [
-    "24308049cde5678f51fdc36c5b2e669cca03981e69db106e592903d9da38c1f0",
-    "24308049cde5678f51fdc36c5b2e669cca03981e69db106e592903d9da38c1f0",
-    "24308049cde5678f51fdc36c5b2e669cca03981e69db106e592903d9da38c1f0"
+    "a13c119d36df7998d1adfd2220006f9294aaf9af97f261eefce9369c7319c864",
+    "a13c119d36df7998d1adfd2220006f9294aaf9af97f261eefce9369c7319c864",
+    "a13c119d36df7998d1adfd2220006f9294aaf9af97f261eefce9369c7319c864"
    ]
   }
  },
@@ -134,5 +134,6 @@
  "platform": "apple-m1",
  "recorded": "2026-11-05",
  "recorder": "oracle/tools/rea_nav_overlay.py record (oracle/x_ite-anim.mjs)",
- "rule": "3 identical summaries; kept only where the NVIDIA summary differs"
+ "rule": "3 identical summaries; kept only where the NVIDIA summary differs",
+ "user_agent": "rubber-wheel-roll (the only case with a wheel event): Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/156.0.0.0 Safari/537.36 (XITE_USER_AGENT), so X_ITE's SLOW_SCROLL is off as on the NVIDIA host; the other 17 cases: the browser's own (macOS); they have no wheel event, and SLOW_SCROLL only scales wheel steps (PlaneViewer.js, LookAtViewer.js, X3DFlyViewer.js)"
 }
