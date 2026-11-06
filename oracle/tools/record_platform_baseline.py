@@ -20,6 +20,15 @@ pass). A baseline is never taken from Rust. Tests choose the recording with X3D_
       --hardware "Apple M1, macOS 27.0.1" [--only NAME] [--names FILE]
 
 The recorders are oracle/x_ite-anim.mjs (MSAA 0) and oracle/x_ite-anim-msaa.mjs (MSAA N), run from the repository root.
+
+Bases with another layout (issue #461) name it; the defaults are the layout above:
+  --cases PATH      the case table, relative to oracle/ (default <base>/cases.txt); `name world script [msaa]`, msaa 0 when absent
+  --key T           the case key (default {name}-msaa{msaa}); the override is <key>.json
+  --json T          the NVIDIA recording of a case, relative to oracle/ (default {base}/{key}/js.json)
+  --pictures T      the NVIDIA pictures of a case, relative to oracle/ (e.g. {base}/{key}/js). The pictures are recorded too
+                    (--png-dir), must be identical in the three runs, and a picture that differs from the NVIDIA picture in
+                    any pixel is kept as <key>.<file> (rea_b21_wide_lines' layout). The JSON override is kept only when the
+                    JSON differs.
 """
 import datetime, hashlib, json, os, shutil, subprocess, sys, tempfile
 
@@ -28,16 +37,29 @@ args = sys.argv[1:]
 opt = lambda n, d=None: args[args.index(n) + 1] if n in args else d
 platform, base, hardware = opt("--platform"), opt("--base"), opt("--hardware", "")
 only, names_file = opt("--only"), opt("--names")
+cases_t, key_t, json_t, pictures_t = opt("--cases", "{base}/cases.txt"), opt("--key", "{name}-msaa{msaa}"), opt("--json", "{base}/{key}/js.json"), opt("--pictures")
 assert platform and base, "--platform and --base are required"
 assert os.environ.get("XITE_CHROME") and os.environ.get("XITE_ANGLE_BACKEND"), "set XITE_CHROME and XITE_ANGLE_BACKEND"
 
 src = os.path.join(root, "oracle", base)
 dest = os.path.join(root, "oracle", f"{base.removesuffix('-baseline')}-{platform}-baseline")
 names = {l.strip() for l in open(names_file)} if names_file else None
-rows = [l.split() for l in open(os.path.join(src, "cases.txt")).read().splitlines() if l.strip()]
+rows = [l.split() for l in open(os.path.join(root, "oracle", cases_t.format(base=base))).read().splitlines() if l.strip()]
+rows = [r if len(r) > 3 else r + ["0"] for r in rows]
 rows = [r for r in rows if (not only or only in r[0]) and (names is None or r[0] in names)]
 view = lambda p: {k: v for k, v in json.load(open(p)).items() if k != "loadFrames"}
 sha = lambda p: hashlib.sha256(open(p, "rb").read()).hexdigest()
+
+
+def _load_png_pixels():
+    import importlib.util
+    spec = importlib.util.spec_from_file_location("png_pixels", os.path.join(os.path.dirname(os.path.abspath(__file__)), "png_pixels.py"))
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return module.pixels
+
+
+pixels = _load_png_pixels()
 chrome = subprocess.run([os.environ["XITE_CHROME"], "--version"], capture_output=True, text=True).stdout.strip()
 pinned = open(os.path.join(root, "oracle", "x_ite-pin", "PINNED_COMMIT")).read().strip()
 
@@ -46,33 +68,58 @@ kept, same, unstable, lines, prov = [], [], [], {}, {}
 
 for row in rows:
     name, world, script, msaa = row[0], row[1], row[2], row[3]
-    outs = []
+    key = key_t.format(name=name, msaa=msaa)
+    outs, pngs = [], []
     for i in (1, 2, 3):
-        out = os.path.join(tmp, f"{name}-msaa{msaa}-{i}.json")
+        out = os.path.join(tmp, f"{key}-{i}.json")
         cmd = ["node", os.path.join(root, "oracle", "x_ite-anim.mjs" if msaa == "0" else "x_ite-anim-msaa.mjs"), world, script, "--out", out]
         if msaa != "0":
             cmd += ["--ms", msaa]
+        if pictures_t:
+            pngs.append(os.path.join(tmp, f"{key}-{i}-png"))
+            cmd += ["--png-dir", pngs[-1]]
         subprocess.run(cmd, check=True, cwd=root, timeout=300, capture_output=True)
         outs.append(out)
     a, b, c = (view(o) for o in outs)
-    key = f"{name}-msaa{msaa}"
 
     if not (a == b == c):
         diff = sorted({k for o in (b, c) for k in set(a) | set(o) if a.get(k) != o.get(k)})
         unstable.append(f"{key}: runs differ in {diff}")
         continue
 
-    nv = view(os.path.join(src, key, "js.json"))
+    nv = view(os.path.join(root, "oracle", json_t.format(base=base, key=key, name=name, msaa=msaa)))
     keys = sorted(k for k in set(a) | set(nv) if a.get(k) != nv.get(k))
+    differing_pictures = []
 
-    if not keys:
+    nv_dir = os.path.join(root, "oracle", pictures_t.format(base=base, key=key, name=name, msaa=msaa)) if pictures_t else None
+
+    # A case without NVIDIA pictures (no js/ directory) compares its JSON only, as the tests do.
+    if nv_dir and os.path.isdir(nv_dir):
+        files = sorted(f for f in os.listdir(nv_dir) if f.endswith(".png"))
+        made = [sorted(f for f in os.listdir(d) if f.endswith(".png")) for d in pngs]
+        if any(m != files for m in made):
+            unstable.append(f"{key}: the pictures {made[0]} are not the NVIDIA pictures {files}")
+            continue
+        if any(pixels(os.path.join(pngs[0], f)) != pixels(os.path.join(d, f)) for d in pngs[1:] for f in files):
+            unstable.append(f"{key}: the pictures of the runs differ")
+            continue
+        differing_pictures = [f for f in files if pixels(os.path.join(pngs[0], f)) != pixels(os.path.join(nv_dir, f))]
+
+    if not keys and not differing_pictures:
         same.append(key)
         continue
 
     os.makedirs(dest, exist_ok=True)
-    shutil.copyfile(outs[0], os.path.join(dest, key + ".json"))
+    entry = dict(run_sha256=[sha(o) for o in outs])
+    if keys:
+        shutil.copyfile(outs[0], os.path.join(dest, key + ".json"))
+        entry["differs_from_nvidia_in"] = keys
+    for f in differing_pictures:
+        shutil.copyfile(os.path.join(pngs[0], f), os.path.join(dest, f"{key}.{f}"))
+    if differing_pictures:
+        entry["pictures_differ_from_nvidia"] = {f: sha(os.path.join(dest, f"{key}.{f}")) for f in differing_pictures}
     lines[key] = " ".join(row)
-    prov[key] = dict(differs_from_nvidia_in=keys, run_sha256=[sha(o) for o in outs])
+    prov[key] = entry
     kept.append(key)
 
 if lines:
@@ -82,7 +129,7 @@ if lines:
     if os.path.exists(table):
         for l in open(table).read().splitlines():
             if l.strip():
-                f = l.split(); old[f"{f[0]}-msaa{f[3]}"] = l
+                f = l.split(); old[key_t.format(name=f[0], msaa=f[3] if len(f) > 3 else "0")] = l
     old.update(lines)
     open(table, "w").write("".join(old[k] + "\n" for k in sorted(old)))
     pfile = os.path.join(dest, "PROVENANCE.json")
@@ -102,4 +149,4 @@ print(f"{base}/{platform}: {len(rows)} cases recorded three times; {len(kept)} o
 for u in unstable:
     print("UNSTABLE", u)
 for k in kept:
-    print("override", k, prov[k]["differs_from_nvidia_in"])
+    print("override", k, prov[k].get("differs_from_nvidia_in", []), sorted(prov[k].get("pictures_differ_from_nvidia", {})))
