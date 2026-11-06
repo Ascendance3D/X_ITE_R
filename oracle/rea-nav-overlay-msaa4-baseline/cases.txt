@@ -1,0 +1,14 @@
+rubber-walk-up-right
+rubber-fly-down-left
+rubber-walk-vertical
+rubber-fly-horizontal
+rubber-walk-horizontal-left
+rubber-fly-vertical-up
+rubber-walk-long
+rubber-fly-short
+rubber-pan-middle
+rubber-pan-alt
+rubber-two-buttons
+rubber-wheel-roll
+rubber-ctrl-look
+rubber-viewer-switch

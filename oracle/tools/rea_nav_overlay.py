@@ -9,6 +9,10 @@
       as oracle/rea-nav-overlay-baseline/NAME.json (one directory level) and the SHA-256 of the three are printed. A summary is the
       poses and, for a case with "pixels": true, for each captured frame the pixels that differ from the first pixel (the sky color):
       [x, y, r, g, b] with y from the top. A baseline is never taken from Rust.
+  python3 -I -B oracle/tools/rea_nav_overlay.py record --msaa 4 [--only SUBSTRING] [--jobs N]
+      The same at Multisampling 4 with oracle/x_ite-anim-msaa.mjs --ms 4, for the rubber band cases without the keys "contentScale"
+      and "browserOptions" (x_ite-anim-msaa.mjs has neither), into oracle/rea-nav-overlay-msaa4-baseline/NAME.json and its cases.txt
+      (one name per line).
 """
 import hashlib, json, os, shutil, subprocess, sys
 from concurrent.futures import ThreadPoolExecutor
@@ -110,11 +114,19 @@ def summary(d, with_pixels):
     return out
 
 
-def record(only, jobs):
+def msaa_case(script_path):
+    s = json.load(open(os.path.join(root, script_path)))
+    return s.get("pixels", False) and "contentScale" not in s and "browserOptions" not in s
+
+
+def record(only, jobs, msaa):
     table = [l.split() for l in open(os.path.join(syn, "cases.txt")).read().splitlines() if l.strip()]
+    if msaa:
+        table = [c for c in table if msaa_case(c[2])]
     table = [c for c in table if not only or only in c[0]]
-    dest = os.path.join(root, "oracle", "rea-nav-overlay-baseline")
+    dest = os.path.join(root, "oracle", f"rea-nav-overlay-msaa{msaa}-baseline" if msaa else "rea-nav-overlay-baseline")
     os.makedirs(dest, exist_ok=True)
+    anim = ["x_ite-anim-msaa.mjs"] if msaa else ["x_ite-anim.mjs"]
 
     def run(case):
         name, world, script_path = case
@@ -124,8 +136,9 @@ def record(only, jobs):
             d = f"/tmp/nav-overlay-record/{name}-{i}"
             shutil.rmtree(d, ignore_errors=True)
             os.makedirs(d)
-            subprocess.run(["node", os.path.join(root, "oracle", "x_ite-anim.mjs"), world, script_path, "--out", os.path.join(d, "js.json"),
-                            "--png-dir", os.path.join(d, "png")], check=True, cwd=root, timeout=300, capture_output=True)
+            subprocess.run(["node", os.path.join(root, "oracle", anim[0]), world, script_path, "--out", os.path.join(d, "js.json"),
+                            "--png-dir", os.path.join(d, "png")] + (["--ms", str(msaa)] if msaa else []),
+                           check=True, cwd=root, timeout=300, capture_output=True)
             texts.append(json.dumps(summary(d, pixels), sort_keys=True, indent=0))
             shutil.rmtree(d, ignore_errors=True)
         return name, texts
@@ -141,6 +154,8 @@ def record(only, jobs):
         print(f"{name}: {'identical' if same else 'DIFFER'} {' '.join(x[:12] for x in digests)} {len(texts[0])} bytes")
         if same:
             open(os.path.join(dest, name + ".json"), "w").write(texts[0] + "\n")
+    if msaa and not only:
+        open(os.path.join(dest, "cases.txt"), "w").write("".join(n + "\n" for n, _ in results))
     sys.exit(1 if bad else 0)
 
 
@@ -150,6 +165,6 @@ if __name__ == "__main__":
     if a and a[0] == "gen":
         gen()
     elif a and a[0] == "record":
-        record(opt("--only"), int(opt("--jobs", "6")))
+        record(opt("--only"), int(opt("--jobs", "6")), int(opt("--msaa", "0")))
     else:
         sys.exit(__doc__)
