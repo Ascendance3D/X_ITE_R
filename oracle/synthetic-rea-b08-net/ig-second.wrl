@@ -1,0 +1,20 @@
+#X3D V4.1 utf8
+PROFILE Interchange
+COMPONENT Shape:4
+COMPONENT Networking:4
+COMPONENT DIS:2
+COMPONENT Scripting:1
+COMPONENT KeyDeviceSensor:1
+COMPONENT EventUtilities:1
+COMPONENT Text:2
+COMPONENT X_ITE:1
+Viewpoint { position 0 0 11 }
+Background { skyColor 0.15 0.15 0.18 }
+DirectionalLight { direction -0.4 -0.6 -0.7 intensity 0.9 }
+PointLight { location 0 0 10 intensity 0.6 }
+Transform { translation -2.4 1.8 0 children Shape { appearance Appearance { material Material { diffuseColor 0.8 0.3 0.2 specularColor 0.6 0.6 0.6 shininess 0.4 } } geometry DEF IGC0 InlineGeometry { url "ig/routes.x3dv" } } }
+Transform { translation 0 1.8 0 children Shape { appearance Appearance { material Material { diffuseColor 0.8 0.3 0.2 specularColor 0.6 0.6 0.6 shininess 0.4 } } geometry DEF IGC1 InlineGeometry { url "ig/routes.x3dv" } } }
+Transform { translation 2.4 1.8 0 children Shape { appearance Appearance { material Material { diffuseColor 0.8 0.3 0.2 specularColor 0.6 0.6 0.6 shininess 0.4 } } geometry DEF IGC2 InlineGeometry { url "ig/routes.x3dv" } } }
+Transform { translation -2.4 -1.8 0 children Shape { appearance Appearance { material Material { diffuseColor 0.8 0.3 0.2 specularColor 0.6 0.6 0.6 shininess 0.4 } } geometry DEF IGB0 InlineGeometry { url "ig/routes-extrusion.x3dv" } } }
+Transform { translation 0 -1.8 0 children Shape { appearance Appearance { material Material { diffuseColor 0.8 0.3 0.2 specularColor 0.6 0.6 0.6 shininess 0.4 } } geometry DEF IGB1 InlineGeometry { url "ig/routes-extrusion.x3dv" } } }
+Transform { translation 2.4 -1.8 0 children Shape { appearance Appearance { material Material { diffuseColor 0.8 0.3 0.2 specularColor 0.6 0.6 0.6 shininess 0.4 } } geometry DEF IGB2 InlineGeometry { url "ig/routes-extrusion.x3dv" } } }
