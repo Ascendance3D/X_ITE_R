@@ -5817,6 +5817,11 @@ class X3DBrowser
          if (timing !== null)
             WebBrowser .setMovieTiming (timing);
 
+         // The page's WebGL2 point rounding (issue #470), measured once per page before the first X_ITE_R context
+         // exists: the measurement holds one more WebGL2 context for one draw only, and at a browser's limit of live
+         // WebGL contexts it then makes no X_ITE_R context the oldest.
+         pointSnapHalfUp ();
+
          // The graphics backend: `backend="webgl2"` uses wgpu's WebGL2 backend instead of WebGPU.
          return WebBrowser .create (this .#canvas, element .getAttribute ("backend") ?? undefined);
       }) .then (engine =>
@@ -5829,7 +5834,8 @@ class X3DBrowser
 
          this .#engine = engine;
 
-         // The point sprite snap follows this page's WebGL2 rasterizer, as X_ITE's points do (issue #470).
+         // The point sprite snap follows this page's WebGL2 rasterizer, as X_ITE's points do (issue #470). The value was
+         // measured before WebBrowser.create.
          engine .setPointSnapHalfUp (pointSnapHalfUp ());
 
          // A lost WebGL2 context: wgpu's GL backend reports no device loss, so the canvas's event does (the frame loop

@@ -5,6 +5,9 @@
 //
 // * On every backend: the renderer's snap rule (engine .pointSnapHalfUp) equals the rule this test measures itself in a
 //   WebGL2 context of the same page, with points at other positions than the page module's measurement.
+// * On every backend: without a usable WebGL2 measurement (no context, an exception, or a picture without the points),
+//   the page starts and keeps the old rule (round to even).
+// * On every backend: the renderer uses the rule: the snap world with each rule gives other pictures.
 // * The pictures of oracle/synthetic-point-tie against the pinned X_ITE pictures, only when XR_POINT_TIE_REFERENCE names
 //   the platform the pictures were recorded on: `nvidia` (oracle/render-point-tie-baseline) or `apple-m1`
 //   (oracle/render-point-tie-apple-m1-baseline, which keeps only the worlds that differ from the NVIDIA pictures). Other
@@ -40,8 +43,34 @@ function reference (world)
 
 // An init script: the attributes are on the element before the page module upgrades it. The pictures are 256 x 256
 // and drawn without multisampling, as the pinned pictures were recorded.
-const attributes = ({ backend, size }) =>
+const attributes = ({ backend, size, fault }) =>
 {
+   // A fault of the page's WebGL2 measurement (OffscreenCanvas only: the x3d-canvas itself is an HTMLCanvasElement).
+   if (fault)
+   {
+      const getContext = OffscreenCanvas .prototype .getContext;
+
+      OffscreenCanvas .prototype .getContext = function (type, ... rest)
+      {
+         if (type !== "webgl2")
+            return getContext .call (this, type, ... rest);
+
+         if (fault === "null")
+            return null;
+
+         if (fault === "throw")
+            throw new Error ("test: no WebGL2");
+
+         // "black": a context whose readPixels gives no lit pixel.
+         const gl         = getContext .call (this, type, ... rest);
+         const readPixels = gl .readPixels .bind (gl);
+
+         gl .readPixels = (... args) => { readPixels (... args); args [6] .fill (0); };
+
+         return gl;
+      };
+   }
+
    new MutationObserver (() =>
    {
       const element = document .querySelector ("x3d-canvas");
@@ -53,17 +82,18 @@ const attributes = ({ backend, size }) =>
       element .setAttribute ("style", `display:block;width:${size}px;height:${size}px`);
       element .setAttribute ("antialiased", "false");
 
-      if (backend !== "webgpu")
-         element .setAttribute ("backend", backend);
+      // Always named: with no attribute a WebGPU failure would fall back to WebGL2 and pass as WebGPU.
+      element .setAttribute ("backend", backend);
    }) .observe (document, { childList: true, subtree: true });
 };
 
-async function open (backend)
+async function open (backend, fault)
 {
-   const page  = await openPage (VIEW, { init: `(${attributes .toString ()}) (${JSON .stringify ({ backend, size: SIZE })})` });
+   const page  = await openPage (VIEW, { init: `(${attributes .toString ()}) (${JSON .stringify ({ backend, size: SIZE, fault })})` });
    const error = await page .evaluate (() => window .startError);
 
    assert .equal (error, undefined, `X_ITE_R did not start: ${error}\n${page .log .join ("\n")}`);
+   assert .equal (await page .evaluate (() => document .querySelector ("x3d-canvas") .browser [Symbol .for ("X_ITE_R.engine")] .backend), backend);
 
    return page;
 }
@@ -176,6 +206,78 @@ describe ("point tie 01", { skip: Boolean (ONLY) }, () =>
 
             console .log (`${backend}: WebGL2 point rows ${JSON .stringify (rows)}: half up ${halfUp}; renderer ${rule}`);
             assert .equal (rule, halfUp, `the renderer's snap rule; the page's WebGL2 rows (tie, half, step, below): ${JSON .stringify (rows)}`);
+         }
+         finally
+         {
+            await page .context () .close ();
+         }
+      });
+
+      for (const fault of [ "null", "throw", "black" ])
+      {
+         test (`${backend}: WebGL2 measurement fault "${fault}": the page starts and rounds to even`, { timeout: CASE_TIMEOUT }, async () =>
+         {
+            const page = await open (backend, fault);
+
+            try
+            {
+               const rule = await page .evaluate (() => document .querySelector ("x3d-canvas") .browser [Symbol .for ("X_ITE_R.engine")] .pointSnapHalfUp);
+
+               assert .equal (rule, false);
+            }
+            finally
+            {
+               await page .context () .close ();
+            }
+         });
+      }
+
+      test (`${backend}: the renderer draws with the rule it has`, { timeout: CASE_TIMEOUT }, async () =>
+      {
+         const world = await readFile (join (WORLDS, "point-tie-snap.wrl"), "utf8");
+         const page  = await open (backend);
+
+         try
+         {
+            const hashes = await page .evaluate (async world =>
+            {
+               const browser = document .querySelector ("x3d-canvas") .browser;
+               const engine  = browser [Symbol .for ("X_ITE_R.engine")];
+               const frames  = async n => { for (let i = 0; i < n; ++ i) await new Promise (r => requestAnimationFrame (r)); };
+               const hash    = async () =>
+               {
+                  const p = await engine .readPixels ();
+                  let h = 0, lit = 0;
+
+                  for (let i = 0; i < p .length; i += 4)
+                  {
+                     h = (h * 31 + p [i] + p [i + 1] * 3 + p [i + 2] * 7) % 1000003;
+                     lit += p [i] > 128;
+                  }
+
+                  return { h, lit };
+               };
+
+               const rule = engine .pointSnapHalfUp;
+
+               await browser .loadURL (new window .X3D_NS .MFString ("data:model/x3d-vrml," + encodeURIComponent (world)));
+               await frames (20);
+
+               engine .setPointSnapHalfUp (false);
+               await frames (5);
+               const even = await hash ();
+
+               engine .setPointSnapHalfUp (true);
+               await frames (5);
+               const up = await hash ();
+
+               engine .setPointSnapHalfUp (rule);
+
+               return { even, up };
+            }, world);
+
+            assert .ok (hashes .even .lit > 0 && hashes .up .lit > 0, JSON .stringify (hashes));
+            assert .notEqual (hashes .even .h, hashes .up .h, `the two rules give the same picture: ${JSON .stringify (hashes)}`);
          }
          finally
          {
