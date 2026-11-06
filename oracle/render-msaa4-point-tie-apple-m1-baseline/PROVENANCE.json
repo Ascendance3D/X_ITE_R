@@ -1,0 +1,115 @@
+{
+ "angle_backend": "metal",
+ "chrome": "156.0.8078.79",
+ "gl_renderer": "ANGLE (Apple, ANGLE Metal Renderer: Apple M1, Unspecified Version)",
+ "hardware": "Apple M1 (8-core GPU, vendor 0x106b), macOS 27.0.1 (26A434)",
+ "issue": "#461",
+ "kept": {
+  "point-tie-1.wrl.png": {
+   "png": "ee9824937e511d4d8351b76754b0aa93dd97b7a18d60f361a163ea471229a3a0",
+   "runs_png_sha256": [
+    "ee9824937e511d4d8351b76754b0aa93dd97b7a18d60f361a163ea471229a3a0",
+    "ee9824937e511d4d8351b76754b0aa93dd97b7a18d60f361a163ea471229a3a0",
+    "ee9824937e511d4d8351b76754b0aa93dd97b7a18d60f361a163ea471229a3a0"
+   ]
+  },
+  "point-tie-2.wrl.png": {
+   "png": "8ca3cb5548462b52b962deaa6fde5394c40e8f8f02fa9edf2c92e16c73be6369",
+   "runs_png_sha256": [
+    "8ca3cb5548462b52b962deaa6fde5394c40e8f8f02fa9edf2c92e16c73be6369",
+    "8ca3cb5548462b52b962deaa6fde5394c40e8f8f02fa9edf2c92e16c73be6369",
+    "8ca3cb5548462b52b962deaa6fde5394c40e8f8f02fa9edf2c92e16c73be6369"
+   ]
+  },
+  "point-tie-2p5.wrl.png": {
+   "png": "6b06b8855d6217eb5f4403956a497867c835311b86ef266329991da5e71a310f",
+   "runs_png_sha256": [
+    "6b06b8855d6217eb5f4403956a497867c835311b86ef266329991da5e71a310f",
+    "6b06b8855d6217eb5f4403956a497867c835311b86ef266329991da5e71a310f",
+    "6b06b8855d6217eb5f4403956a497867c835311b86ef266329991da5e71a310f"
+   ]
+  },
+  "point-tie-3.wrl.png": {
+   "png": "ee43920d783cccde18ad73ff17417da2cf424fe06882b3e7210fbd7c37bdee5d",
+   "runs_png_sha256": [
+    "ee43920d783cccde18ad73ff17417da2cf424fe06882b3e7210fbd7c37bdee5d",
+    "ee43920d783cccde18ad73ff17417da2cf424fe06882b3e7210fbd7c37bdee5d",
+    "ee43920d783cccde18ad73ff17417da2cf424fe06882b3e7210fbd7c37bdee5d"
+   ]
+  },
+  "point-tie-4.wrl.png": {
+   "png": "a15621016c6fc661357271d809a392140fa8d17f4250c5c79210f6270f2a1d8f",
+   "runs_png_sha256": [
+    "a15621016c6fc661357271d809a392140fa8d17f4250c5c79210f6270f2a1d8f",
+    "a15621016c6fc661357271d809a392140fa8d17f4250c5c79210f6270f2a1d8f",
+    "a15621016c6fc661357271d809a392140fa8d17f4250c5c79210f6270f2a1d8f"
+   ]
+  },
+  "point-tie-5.wrl.png": {
+   "png": "91c90a628be69a3f86613e4b7a3a71c59710b0a93a2e8f05cd3c3786db40de72",
+   "runs_png_sha256": [
+    "91c90a628be69a3f86613e4b7a3a71c59710b0a93a2e8f05cd3c3786db40de72",
+    "91c90a628be69a3f86613e4b7a3a71c59710b0a93a2e8f05cd3c3786db40de72",
+    "91c90a628be69a3f86613e4b7a3a71c59710b0a93a2e8f05cd3c3786db40de72"
+   ]
+  },
+  "point-tie-6.wrl.png": {
+   "png": "1af0a26840dbb7aaf06336dd91f9a005e6c22f90ef2b88e9955e4eba76e4adef",
+   "runs_png_sha256": [
+    "1af0a26840dbb7aaf06336dd91f9a005e6c22f90ef2b88e9955e4eba76e4adef",
+    "1af0a26840dbb7aaf06336dd91f9a005e6c22f90ef2b88e9955e4eba76e4adef",
+    "1af0a26840dbb7aaf06336dd91f9a005e6c22f90ef2b88e9955e4eba76e4adef"
+   ]
+  },
+  "point-tie-8p5.wrl.png": {
+   "png": "78a963c45ffa7a9f567b2d62bc2724900bda35745b3b1f6d904f26073627cfc8",
+   "runs_png_sha256": [
+    "78a963c45ffa7a9f567b2d62bc2724900bda35745b3b1f6d904f26073627cfc8",
+    "78a963c45ffa7a9f567b2d62bc2724900bda35745b3b1f6d904f26073627cfc8",
+    "78a963c45ffa7a9f567b2d62bc2724900bda35745b3b1f6d904f26073627cfc8"
+   ]
+  },
+  "point-tie-9.wrl.png": {
+   "png": "996c396e93dc07d9f59cefcf547dd948c5c59584e02745332aa95ab79779b705",
+   "runs_png_sha256": [
+    "996c396e93dc07d9f59cefcf547dd948c5c59584e02745332aa95ab79779b705",
+    "996c396e93dc07d9f59cefcf547dd948c5c59584e02745332aa95ab79779b705",
+    "996c396e93dc07d9f59cefcf547dd948c5c59584e02745332aa95ab79779b705"
+   ]
+  },
+  "point-tie-control.wrl.png": {
+   "png": "95debb3be7ddaccedc9ef87a06e7dfafaf74fdb0f1a8b9aaef9fc73a19c96a48",
+   "runs_png_sha256": [
+    "95debb3be7ddaccedc9ef87a06e7dfafaf74fdb0f1a8b9aaef9fc73a19c96a48",
+    "95debb3be7ddaccedc9ef87a06e7dfafaf74fdb0f1a8b9aaef9fc73a19c96a48",
+    "95debb3be7ddaccedc9ef87a06e7dfafaf74fdb0f1a8b9aaef9fc73a19c96a48"
+   ]
+  },
+  "point-tie-control3.wrl.png": {
+   "png": "91703eca96802d0b679eb087544bdbe3f20abb487b9c229d42884649eda84494",
+   "runs_png_sha256": [
+    "91703eca96802d0b679eb087544bdbe3f20abb487b9c229d42884649eda84494",
+    "91703eca96802d0b679eb087544bdbe3f20abb487b9c229d42884649eda84494",
+    "91703eca96802d0b679eb087544bdbe3f20abb487b9c229d42884649eda84494"
+   ]
+  },
+  "point-tie-snap.wrl.png": {
+   "png": "132b1f0466151a0fe8e962d264031b806c6b1feebc19e0b2e9766a217a7aead0",
+   "runs_png_sha256": [
+    "132b1f0466151a0fe8e962d264031b806c6b1feebc19e0b2e9766a217a7aead0",
+    "132b1f0466151a0fe8e962d264031b806c6b1feebc19e0b2e9766a217a7aead0",
+    "132b1f0466151a0fe8e962d264031b806c6b1feebc19e0b2e9766a217a7aead0"
+   ]
+  }
+ },
+ "ms": "4",
+ "nvidia_reference": "oracle/render-msaa4-point-tie-baseline (unchanged)",
+ "pinned": "34cdf9f97",
+ "platform": "apple-m1",
+ "recorded": "2026-11-06",
+ "recorder": "oracle/x_ite-shot-msaa.mjs",
+ "recorder_args": "oracle/synthetic-point-tie <out> --size 256x256 (ms 4)",
+ "rule": "kept only where the three runs are pixel-identical and differ from the NVIDIA picture in oracle/render-msaa4-point-tie-baseline",
+ "runs": 3,
+ "same_as_nvidia": []
+}
