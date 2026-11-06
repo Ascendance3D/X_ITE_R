@@ -1,0 +1,76 @@
+{
+ "angle_backend": "metal",
+ "cases": {
+  "vp-group-walk-press-outside": {
+   "run_sha256": [
+    "48f15f63765134e66767ae2856e4ad4ea81af26ccff18f0484bbae2ba37ab72b",
+    "48f15f63765134e66767ae2856e4ad4ea81af26ccff18f0484bbae2ba37ab72b",
+    "48f15f63765134e66767ae2856e4ad4ea81af26ccff18f0484bbae2ba37ab72b"
+   ]
+  },
+  "vp-group-walk-up-right": {
+   "run_sha256": [
+    "9ecd2c083d325be6bcdf2c37c2987405751ce76efbed1409f9e6844cd93a1df6",
+    "9ecd2c083d325be6bcdf2c37c2987405751ce76efbed1409f9e6844cd93a1df6",
+    "9ecd2c083d325be6bcdf2c37c2987405751ce76efbed1409f9e6844cd93a1df6"
+   ]
+  },
+  "vp-layer-fly-down-left": {
+   "run_sha256": [
+    "36253aaf80a8ab422bce9e8ba17349a2ae3b3eef6473ea4e9383fbda518cb55f",
+    "36253aaf80a8ab422bce9e8ba17349a2ae3b3eef6473ea4e9383fbda518cb55f",
+    "36253aaf80a8ab422bce9e8ba17349a2ae3b3eef6473ea4e9383fbda518cb55f"
+   ]
+  },
+  "vp-layer-fly-pan-middle": {
+   "run_sha256": [
+    "4fc4f731b64095ef54e94e03c33c51e585f6af42f61552f7e9a6ddac0ccff4da",
+    "4fc4f731b64095ef54e94e03c33c51e585f6af42f61552f7e9a6ddac0ccff4da",
+    "4fc4f731b64095ef54e94e03c33c51e585f6af42f61552f7e9a6ddac0ccff4da"
+   ]
+  },
+  "vp-layer-fly-scale-2": {
+   "run_sha256": [
+    "d3cb8bfb05509c73b1da761a8626894377fc3857fe5997b22a169af81c4b906f",
+    "d3cb8bfb05509c73b1da761a8626894377fc3857fe5997b22a169af81c4b906f",
+    "d3cb8bfb05509c73b1da761a8626894377fc3857fe5997b22a169af81c4b906f"
+   ]
+  },
+  "vp-layer-walk-leave": {
+   "run_sha256": [
+    "d4e1c8eb4b7434934d5d57369eb448718c2c08da5652b24d8baf811820c4c598",
+    "d4e1c8eb4b7434934d5d57369eb448718c2c08da5652b24d8baf811820c4c598",
+    "d4e1c8eb4b7434934d5d57369eb448718c2c08da5652b24d8baf811820c4c598"
+   ]
+  },
+  "vp-layer-walk-press-outside": {
+   "run_sha256": [
+    "12811fe7085e9e97d6d4ebeba8c7cf8df21b32d8790148a14a6faf82f3fa779e",
+    "12811fe7085e9e97d6d4ebeba8c7cf8df21b32d8790148a14a6faf82f3fa779e",
+    "12811fe7085e9e97d6d4ebeba8c7cf8df21b32d8790148a14a6faf82f3fa779e"
+   ]
+  },
+  "vp-layer-walk-scale-0.5": {
+   "run_sha256": [
+    "12770fbc7cad7a3938f875b66a91145334c7186d3c4578a79bfcc0c5b1f8dfff",
+    "12770fbc7cad7a3938f875b66a91145334c7186d3c4578a79bfcc0c5b1f8dfff",
+    "12770fbc7cad7a3938f875b66a91145334c7186d3c4578a79bfcc0c5b1f8dfff"
+   ]
+  },
+  "vp-layer-walk-up-right": {
+   "run_sha256": [
+    "e9833da4fcd1b426613703cc89d9e17fdec704b98db26b9c0750ebc42b9bf1ce",
+    "e9833da4fcd1b426613703cc89d9e17fdec704b98db26b9c0750ebc42b9bf1ce",
+    "e9833da4fcd1b426613703cc89d9e17fdec704b98db26b9c0750ebc42b9bf1ce"
+   ]
+  }
+ },
+ "chrome": "Google Chrome 156.0.8078.79",
+ "hardware": "Apple M1 (8-core GPU), macOS 27.0.1 (26A434)",
+ "pinned_x_ite": "16.5.0 34cdf9f97",
+ "platform": "apple-m1",
+ "recorded": "2026-11-06",
+ "recorder": "oracle/tools/rea_nav_overlay.py record (oracle/x_ite-anim.mjs)",
+ "rule": "3 identical summaries; kept only where the NVIDIA summary differs",
+ "user_agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/156.0.0.0 Safari/537.36"
+}

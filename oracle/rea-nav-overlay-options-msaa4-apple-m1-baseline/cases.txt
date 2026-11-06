@@ -1,0 +1,4 @@
+rubber-option-off oracle/synthetic-rea-nav-overlay/nav-walk.wrl oracle/synthetic-rea-nav-overlay/rubber-option-off.json
+rubber-scale-0.5 oracle/synthetic-rea-nav-overlay/nav-fly.wrl oracle/synthetic-rea-nav-overlay/rubber-scale-0.5.json
+rubber-scale-1.5 oracle/synthetic-rea-nav-overlay/nav-fly.wrl oracle/synthetic-rea-nav-overlay/rubber-scale-1.5.json
+rubber-scale-2 oracle/synthetic-rea-nav-overlay/nav-fly.wrl oracle/synthetic-rea-nav-overlay/rubber-scale-2.json
