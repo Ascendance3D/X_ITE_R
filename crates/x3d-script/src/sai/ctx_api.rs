@@ -518,18 +518,28 @@ pub(super) fn op<C: Cx>(ctx: &C, a: &[C::V]) -> Result<J<C::V>, C::E> {
 
             Ok(J::Undefined)
         }
-        // X3DBaseNode.addUserDefinedField / removeUserDefinedField on a PROTO declaration:
-        // (id, "add", name, accessType, value) or (id, "remove", name).
+        // X3DBaseNode.addUserDefinedField / removeUserDefinedField on a PROTO or EXTERNPROTO declaration:
+        // (id, "add", name, accessType, value, extern) or (id, "remove", name, -, -, extern).
         "protoField" => {
             let id = num_arg(ctx, a, 0) as usize;
             let name = str_at(2);
+            let extern_ = a.get(5).is_some_and(coerce_bool);
 
             if str_at(1) == "remove" {
-                rt().proto_remove_user_field(id, &name);
+                if extern_ {
+                    rt().extern_remove_user_field(id, &name);
+                } else {
+                    rt().proto_remove_user_field(id, &name);
+                }
             } else if let Some(value) = value_arg(a, 4) {
                 let access = num_arg(ctx, a, 3) as u8;
+                let field = x3d_scene::Field::new(&name, access, value);
 
-                rt().proto_add_user_field(id, x3d_scene::Field::new(&name, access, value));
+                if extern_ {
+                    rt().extern_add_user_field(id, field);
+                } else {
+                    rt().proto_add_user_field(id, field);
+                }
             }
 
             Ok(J::Undefined)

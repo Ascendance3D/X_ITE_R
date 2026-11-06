@@ -1542,25 +1542,22 @@ engineMembers (X3DProtoDeclarationNode,
       return R (X ("cx", - (key + 2), "protoNew", s .extern, s .id));
    },
    newInstance () { return this .createInstance (this .getExecutionContext ()); },
-   // X3DBaseNode.addUserDefinedField / removeUserDefinedField on a PROTO declaration.
+   // X3DBaseNode.addUserDefinedField / removeUserDefinedField on a PROTO or EXTERNPROTO declaration (both can have
+   // user-defined fields, X3DProtoDeclarationNode.canUserDefinedFields).
    addUserDefinedField (accessType, name, field)
    {
       const s = this [ENGINE_STATE];
 
-      if (s .extern)
-         throw new Error ("Couldn't add user-defined field, node does not support this.");
-
       if (! (field instanceof X3DField))
          throw new TypeError ("field.setTainted is not a function");
 
-      X ("cx", - (s .info () .ctx + 2), "protoField", s .id, "add", String (name), accessType, A (field));
+      X ("cx", - (s .info () .ctx + 2), "protoField", s .id, "add", String (name), accessType, A (field), s .extern);
    },
    removeUserDefinedField (name)
    {
       const s = this [ENGINE_STATE];
 
-      if (! s .extern)
-         X ("cx", - (s .info () .ctx + 2), "protoField", s .id, "remove", String (name));
+      X ("cx", - (s .info () .ctx + 2), "protoField", s .id, "remove", String (name), 0, null, s .extern);
    },
    requestUpdateInstances () { const s = this [ENGINE_STATE]; X ("cx", - (s .info () .ctx + 2), "protoRequest", s .extern, s .id); },
    // X3DProtoDeclarationNode.updateInstances: every instance takes the interface as it is now.
