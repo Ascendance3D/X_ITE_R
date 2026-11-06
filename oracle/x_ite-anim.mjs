@@ -214,7 +214,10 @@ let inFlight = 0;
 // module loads); x3d-drive takes the same key. XITE_USER_AGENT is the agent of a script without one: a platform recording on a Mac
 // (issue #461) gives the agent of the NVIDIA host's Chrome, so that only the GPU differs, not X_ITE's macOS scroll factor.
 const userAgent = script .userAgent ?? process .env .XITE_USER_AGENT;
-const context = await browser .newContext ({ viewport: { width: W, height: H }, deviceScaleFactor: 1,
+// Touch events of the script (touchstart, touchmove, touchend; issue E14 of docs/reports/NAV_ITEM_LISTS.md) are Chrome DevTools
+// `Input.dispatchTouchEvent`, which needs a touch context; a script without them runs in the context it always had.
+const hasTouch = events .some (e => e .type .startsWith ("touch"));
+const context = await browser .newContext ({ viewport: { width: W, height: H }, deviceScaleFactor: 1, ... (hasTouch ? { hasTouch: true } : { }),
                                              ... (userAgent ? { userAgent } : { }) });
 await context .route (url => !url .href .startsWith (base) && !(places [1] && url .href .startsWith (places [1])), route => route .abort ());
 
@@ -608,6 +611,57 @@ try
    if (script .physics)
       result .physics = { dt: [ ], frames: { 0: await page .evaluate (n => window .__physSnap (n), script .physics .nodes) } };
 
+   // Script keys "touchstart", "touchmove" with "points": [[x, y], ...] (origin bottom left, like the mouse events): every touch that
+   // is down after the event, the index in the list is the touch's id. "touchend" with "ids": [id, ...] releases those touches (all
+   // touches without "ids"), like the `touchPoints` of the DevTools touchEnd. The page's log of the touch events it received
+   // is the result key `touchLog` ([ frame, type, [[pageX, pageY], ...] ]), so that a recording shows what X_ITE saw, and
+   // `touchSplit` counts the events the page saw as two (see crates/x3d-web/tests/browser/touchdelivery.mjs); a recording with
+   // a split is not kept by the recording tool.
+   let cdp = null;
+   const down = new Map ();
+
+   if (hasTouch)
+   {
+      await page .evaluate (() =>
+      {
+         window .touchLog = [ ];
+
+         for (const type of [ "touchstart", "touchmove", "touchend", "touchcancel" ])
+            window .addEventListener (type, event => window .touchLog .push ([ type, [ ... event .touches ] .map (t => [ t .pageX, t .pageY ]) ]), { capture: true, passive: true });
+      });
+
+      result .touchLog   = [ ];
+      result .touchSplit = 0;
+      result .innerWidth = await page .evaluate (() => window .innerWidth);
+   }
+
+   const touch = async (e, type) =>
+   {
+      cdp ??= await context .newCDPSession (page);
+
+      if (type !== "touchEnd")
+         (e .points ?? [ ]) .forEach ((p, id) => down .set (id, p));
+
+      const ids    = type === "touchEnd" ? (e .ids ?? [ ... down .keys () ]) : [ ... down .keys () ];
+      const points = ids .map (id => ({ x: down .get (id) [0], y: H - down .get (id) [1], id, radiusX: 1, radiusY: 1, force: 1 }));
+
+      if (type === "touchEnd")
+         ids .forEach (id => down .delete (id));
+
+      const since  = await page .evaluate (() => window .touchLog .length);
+
+      await cdp .send ("Input.dispatchTouchEvent", { type, touchPoints: points });
+      await settle ();
+
+      const seen = await page .evaluate (since => window .touchLog .slice (since), since);
+
+      result .touchLog .push (... seen .map (s => [ e .frame, ... s ]));
+
+      // One request is one page event; two page events for it are a split delivery.
+      if (seen .filter (([ t ]) => t === type .toLowerCase ()) .length > 1)
+         ++ result .touchSplit;
+   };
+
    const mouseButton = b => ({ 0: "left", 1: "middle", 2: "right" }) [b] ?? "left";
 
    if (audio)
@@ -639,6 +693,9 @@ try
             case "mousemove": await page .mouse .move (e .x, H - e .y); break;
             case "wheel":     await page .mouse .move (e .x, H - e .y); await page .mouse .wheel (0, e .deltaY); break;
             case "dblclick":  await page .mouse .dblclick (e .x, H - e .y); break; // move, down/up (clickCount 1), down/up (clickCount 2): the browser fires "dblclick"
+            case "touchstart": await touch (e, "touchStart"); break;
+            case "touchmove":  await touch (e, "touchMove"); break;
+            case "touchend":   await touch (e, "touchEnd"); break;
             case "viewer":    await page .evaluate (n => window .setViewer (n), e .name); break;
             // REA batch 10: the canvas is resized (CSS size); X_ITE's ResizeObserver runs reshape () on the next rendering opportunity.
             case "resize":

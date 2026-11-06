@@ -20,12 +20,13 @@
 //! "physics" pins `currentFrameRate` to 1 / dt, like the oracle page does.
 //! Event types: mousedown, mouseup, mousemove, wheel (deltaY), dblclick, key (Home, End, PageUp,
 //! PageDown), mods (shift, ctrl, alt), viewer (name), resize (width, height: the canvas CSS size). Pointer coordinates are pixels with the
-//! origin at the bottom left of the canvas. "t" (seconds) offsets the event's Date.now ().
+//! origin at the bottom left of the canvas. Touch events (`touchstart`, `touchmove`, `touchend`, with "points" or "ids"): see `apply_touch`. "t" (seconds) offsets the event's Date.now ().
 
 use serde_json::{Value, json};
 use std::path::{Path, PathBuf};
+use x3d_viewer::nav::Touches;
 use x3d_viewer::script::apply;
-use x3d_viewer::viewer::Viewer3d;
+use x3d_viewer::viewer::{UiEvent, Viewer3d};
 
 /// The `physics` object of the result as text (see `main`).
 static PHYSICS_TEXT: std::sync::Mutex<Option<String>> = std::sync::Mutex::new(None);
@@ -114,6 +115,59 @@ fn main() {
         Some(o) => std::fs::write(o, text).unwrap(),
         None => println!("{text}"),
     }
+}
+
+/// The touch events of a script (the recorder oracle/x_ite-anim.mjs sends the same to Chrome as DevTools touch events):
+/// `touchstart` and `touchmove` with `"points": [[x, y], ...]` (every touch that is down after the event; the index is the touch's id)
+/// and `touchend` with `"ids": [id, ...]` (those touches are released; without `ids` all are). Coordinates are pixels with the origin
+/// at the bottom left, as for the mouse events. `event .touches` is every touch still down in id order, `window .innerWidth` (the pinch
+/// zoom factor's divisor) is the canvas width, as in the oracle page. Returns false for any other event type.
+fn apply_touch(
+    v: &mut Viewer3d,
+    e: &Value,
+    down: &mut std::collections::BTreeMap<u64, (f64, f64)>,
+) -> bool {
+    let kind = e["type"].as_str().unwrap_or("");
+
+    if !matches!(kind, "touchstart" | "touchmove" | "touchend") {
+        return false;
+    }
+
+    let height = v.height as f64;
+
+    if kind == "touchend" {
+        let ids: Vec<u64> = match e["ids"].as_array() {
+            Some(a) => a.iter().filter_map(Value::as_u64).collect(),
+            None => down.keys().copied().collect(),
+        };
+
+        for id in ids {
+            down.remove(&id);
+        }
+    } else if let Some(points) = e["points"].as_array() {
+        for (id, p) in points.iter().enumerate() {
+            let x = p[0].as_f64().unwrap_or(0.0).floor();
+            let y = p[1].as_f64().unwrap_or(0.0);
+            down.insert(id as u64, (x, height - (height - y).floor()));
+        }
+    }
+
+    let mut t = Touches {
+        n: down.len(),
+        p: [(0.0, 0.0); 2],
+        zoom_width: v.width as f64,
+    };
+
+    for (slot, p) in t.p.iter_mut().zip(down.values()) {
+        *slot = *p;
+    }
+
+    v.input(match kind {
+        "touchstart" => UiEvent::TouchStart(t),
+        "touchmove" => UiEvent::TouchMove(t),
+        _ => UiEvent::TouchEnd(t),
+    });
+    true
 }
 
 fn vec3(v: &x3d_fields::math::Vector3) -> Value {
@@ -360,6 +414,8 @@ fn run(
 
     let build_each = script["buildEachFrame"].as_bool().unwrap_or(false);
 
+    let mut touches_down = std::collections::BTreeMap::new();
+
     for k in 1..=frames {
         let prev = t0 + (k - 1) as f64 * dt;
 
@@ -370,7 +426,9 @@ fn run(
 
         for e in events.iter().filter(|e| e["frame"].as_u64() == Some(k)) {
             v.date_now = prev + e["t"].as_f64().unwrap_or(0.0);
-            apply(&mut v, e);
+            if !apply_touch(&mut v, e, &mut touches_down) {
+                apply(&mut v, e);
+            }
         }
 
         v.date_now = t0 + k as f64 * dt;

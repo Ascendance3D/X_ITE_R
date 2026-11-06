@@ -1,0 +1,236 @@
+{
+  "ok": true,
+  "poses": {
+    "16": {
+      "position": [
+        -7.148671546344891,
+        -6.849368950643607,
+        6.781050073582871
+      ],
+      "orientation": [
+        -0.5712183561929874,
+        0.7832286472990555,
+        -0.24548416567728423,
+        5.279500404852379
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "touch front",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "40": {
+      "position": [
+        -9.491452069452397,
+        -6.849368950643607,
+        -2.645464532222494
+      ],
+      "orientation": [
+        0.22147935537484614,
+        -0.9305298980600868,
+        0.29165219690416716,
+        1.9112555031624716
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "touch front",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "110": {
+      "position": [
+        9.761133498368505,
+        -6.849368950643607,
+        1.3440304330585349
+      ],
+      "orientation": [
+        -0.3245151156518209,
+        -0.9025857575182173,
+        0.28289377872047894,
+        4.747151035525337
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "touch front",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    }
+  },
+  "vrml": {
+    "110": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT EnvironmentalSensor : 3\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Scripting : 1\nCOMPONENT Sound : 3\nCOMPONENT Text : 2\n\nNavigationInfo {\n  type \"EXAMINE\"\n}\n\nViewpoint {\n  description \"touch front\"\n  position 0 0 12\n}\n\nTransform {\n  translation 2 1 0\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.9 0.9 0.2\n      }\n    }\n    geometry Box {\n      size 1.5 1.5 1.5\n    }\n  }\n}\n\nTransform {\n  translation -3 0 -2\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.2 0.9 0.9\n      }\n    }\n    geometry Box {\n      size 1 3 1\n    }\n  }\n}\n\nTransform {\n  translation 0 -2 0\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.5 0.5 0.5\n      }\n    }\n    geometry Box {\n      size 12 0.2 8\n    }\n  }\n}\n"
+  },
+  "prints": [],
+  "log": [],
+  "anchors": [],
+  "loadFrames": 3,
+  "warmupFrames": 8,
+  "geometry": {
+    "rect": [
+      0,
+      0,
+      512,
+      512
+    ],
+    "viewport": [
+      0,
+      0,
+      512,
+      512
+    ],
+    "scroll": [
+      0,
+      0
+    ]
+  },
+  "touchLog": [
+    [
+      2,
+      "touchstart",
+      [
+        [
+          256,
+          256
+        ]
+      ]
+    ],
+    [
+      3,
+      "touchmove",
+      [
+        [
+          270,
+          247
+        ]
+      ]
+    ],
+    [
+      4,
+      "touchmove",
+      [
+        [
+          284,
+          238
+        ]
+      ]
+    ],
+    [
+      5,
+      "touchmove",
+      [
+        [
+          298,
+          229
+        ]
+      ]
+    ],
+    [
+      6,
+      "touchmove",
+      [
+        [
+          312,
+          220
+        ]
+      ]
+    ],
+    [
+      7,
+      "touchmove",
+      [
+        [
+          326,
+          211
+        ]
+      ]
+    ],
+    [
+      8,
+      "touchmove",
+      [
+        [
+          340,
+          202
+        ]
+      ]
+    ],
+    [
+      9,
+      "touchmove",
+      [
+        [
+          354,
+          193
+        ]
+      ]
+    ],
+    [
+      10,
+      "touchmove",
+      [
+        [
+          368,
+          184
+        ]
+      ]
+    ],
+    [
+      11,
+      "touchmove",
+      [
+        [
+          382,
+          175
+        ]
+      ]
+    ],
+    [
+      12,
+      "touchmove",
+      [
+        [
+          396,
+          166
+        ]
+      ]
+    ],
+    [
+      13,
+      "touchmove",
+      [
+        [
+          410,
+          157
+        ]
+      ]
+    ],
+    [
+      14,
+      "touchmove",
+      [
+        [
+          424,
+          148
+        ]
+      ]
+    ],
+    [
+      14,
+      "touchend",
+      []
+    ]
+  ],
+  "touchSplit": 0,
+  "innerWidth": 512
+}

@@ -1,0 +1,7 @@
+touch-add-finger-pinch oracle/synthetic-rea-b24-nav/touch-examine.wrl oracle/synthetic-rea-b24-nav/scripts/touch-add-finger-pinch.json 0
+touch-pinch-in oracle/synthetic-rea-b24-nav/touch-examine.wrl oracle/synthetic-rea-b24-nav/scripts/touch-pinch-in.json 0
+touch-pinch-out oracle/synthetic-rea-b24-nav/touch-examine.wrl oracle/synthetic-rea-b24-nav/scripts/touch-pinch-out.json 0
+touch-pinch-slanted oracle/synthetic-rea-b24-nav/touch-examine.wrl oracle/synthetic-rea-b24-nav/scripts/touch-pinch-slanted.json 0
+touch-rotate oracle/synthetic-rea-b24-nav/touch-examine.wrl oracle/synthetic-rea-b24-nav/scripts/touch-rotate.json 0
+touch-rotate-spin oracle/synthetic-rea-b24-nav/touch-examine.wrl oracle/synthetic-rea-b24-nav/scripts/touch-rotate-spin.json 0
+touch-rotate-then-pinch oracle/synthetic-rea-b24-nav/touch-examine.wrl oracle/synthetic-rea-b24-nav/scripts/touch-rotate-then-pinch.json 0
