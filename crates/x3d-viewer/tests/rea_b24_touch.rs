@@ -312,9 +312,7 @@ fn compare_case(
     let _ = std::fs::remove_dir_all(&out);
 }
 
-const SHARDS: usize = 1;
-
-fn run_shard(shard: usize) {
+fn run_cases() {
     let root = PathBuf::from(env!("CARGO_MANIFEST_DIR"))
         .join("../..")
         .canonicalize()
@@ -333,11 +331,7 @@ fn run_shard(shard: usize) {
     let mut failures = vec![];
     let mut checked = 0;
 
-    for (i, line) in cases.lines().filter(|l| !l.trim().is_empty()).enumerate() {
-        if i % SHARDS != shard {
-            continue;
-        }
-
+    for line in cases.lines().filter(|l| !l.trim().is_empty()) {
         let f: Vec<&str> = line.split_whitespace().collect();
         let (name, world, script, msaa) = (f[0], f[1], f[2], f[3].parse::<u32>().unwrap());
         let text_tol = f.get(4).map_or(0.0, |t| t.parse::<f64>().unwrap());
@@ -371,5 +365,5 @@ fn run_shard(shard: usize) {
 
 #[test]
 fn rea_b24_touch_match_x_ite() {
-    run_shard(0);
+    run_cases();
 }
