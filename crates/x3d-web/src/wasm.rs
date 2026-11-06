@@ -2435,6 +2435,7 @@ impl WebBrowser {
         self.renderer.set_point_snap_half_up(on);
     }
 
+    /// The point sprite snap rule the renderer uses now (issue #470), for tests and diagnostics.
     #[wasm_bindgen(getter, js_name = pointSnapHalfUp)]
     pub fn point_snap_half_up(&self) -> bool {
         self.renderer.point_snap_half_up()

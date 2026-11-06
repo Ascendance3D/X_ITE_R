@@ -100,7 +100,9 @@ async function open (backend, fault)
    return page;
 }
 
-// The test's own measurement of the page's WebGL2 point rounding: 1-pixel points at window y 2 + d on an 8 x 8 buffer
+// The test's own measurement of the page's WebGL2 point rounding. It is written apart from the page module's
+// (x_ite_r.mjs pointSnapHalfUp) on purpose, at another pixel edge (y 2, not 4) and in the reverse column order, so that
+// the two do not share a mistake: keep them different. 1-pixel points at window y 2 + d on an 8 x 8 buffer
 // (2 is a pixel edge). d = 0 is a tie, 2/1024 half a 1/256 step, 4/1024 one step and 1/1024 less than half a step.
 // Returns the lit row of each point, or null without WebGL2.
 const measureRows = () =>

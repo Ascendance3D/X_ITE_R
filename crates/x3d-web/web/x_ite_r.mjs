@@ -3007,19 +3007,26 @@ function pointSnapHalfUp ()
       if (!gl)
          return pointSnapHalfUpMeasured;
 
+      // A shader that does not compile, or a program that does not link, keeps false.
       const shader = (type, source) =>
       {
          const s = gl .createShader (type);
 
          gl .shaderSource (s, source);
          gl .compileShader (s);
-         return s;
+         return gl .getShaderParameter (s, gl .COMPILE_STATUS) ? s : null;
       };
+
+      const vertex   = shader (gl .VERTEX_SHADER, "#version 300 es\nin vec2 p;\nvoid main () { gl_Position = vec4 (p, 0.0, 1.0); gl_PointSize = 1.0; }\n");
+      const fragment = shader (gl .FRAGMENT_SHADER, "#version 300 es\nprecision highp float;\nout vec4 c;\nvoid main () { c = vec4 (1.0); }\n");
+
+      if (!vertex || !fragment)
+         return pointSnapHalfUpMeasured;
 
       const program = gl .createProgram ();
 
-      gl .attachShader (program, shader (gl .VERTEX_SHADER, "#version 300 es\nin vec2 p;\nvoid main () { gl_Position = vec4 (p, 0.0, 1.0); gl_PointSize = 1.0; }\n"));
-      gl .attachShader (program, shader (gl .FRAGMENT_SHADER, "#version 300 es\nprecision highp float;\nout vec4 c;\nvoid main () { c = vec4 (1.0); }\n"));
+      gl .attachShader (program, vertex);
+      gl .attachShader (program, fragment);
       gl .bindAttribLocation (program, 0, "p");
       gl .linkProgram (program);
 

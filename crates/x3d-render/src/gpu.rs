@@ -1454,6 +1454,7 @@ impl Renderer {
         self.point_snap_half_up = on;
     }
 
+    /// The point sprite snap rule in use ([`Renderer::set_point_snap_half_up`]): true rounds a half 1/256 pixel step up.
     pub fn point_snap_half_up(&self) -> bool {
         self.point_snap_half_up
     }
