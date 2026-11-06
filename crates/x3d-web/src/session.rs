@@ -521,6 +521,14 @@ impl Session {
         self.rt_mut().browser_options.set_option(name, value);
     }
 
+    /// The page's Antialiased and Multisampling options ([`x3d_runtime::browser_options::BrowserOptions::set_page_sampling`])
+    /// in this world, without an event (issue #480).
+    pub fn set_page_sampling(&mut self, antialiased: bool, multisampling: i32) {
+        self.rt_mut()
+            .browser_options
+            .set_page_sampling(antialiased, multisampling);
+    }
+
     /// The page's Shading and Multisampling ([`x3d_runtime::browser_options::BrowserOptions::set_page_rendering`]) in this
     /// world. The renderer has them already, so a live world does not send an older change of its own after them.
     pub fn set_page_rendering(&mut self, shading: Option<&str>, samples: Option<u32>) {

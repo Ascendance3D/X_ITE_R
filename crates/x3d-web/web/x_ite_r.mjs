@@ -6082,6 +6082,8 @@ class X3DBrowser
 
       this .#derived .Multisampling = this .#options .get ("Antialiased") .getValue () ? samples : 0;
       this .#derived .Antialiased   = samples > 0;
+      // The world's Scripts read the page's options (one BrowserOptions in X_ITE, issue #480).
+      this .#engine ?.setSamplingOptions (this .#options .get ("Antialiased") .getValue (), isNaN (requested) ? 4 : requested);
       this .#engine ?.setSampleCount (this .#derived .Multisampling);
    }
 
