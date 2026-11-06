@@ -18,6 +18,14 @@ on:
       - "rust-toolchain*"
       - ".github/workflows/macos-tests.yml"
   workflow_dispatch:
+    inputs:
+      reference_platform:
+        # Issue #461: a hand-started run may name the platform whose recordings the hardware-difference tests compare with
+        # (X3D_REFERENCE_PLATFORM, crates/x3d-*/tests/common/reference.rs). Pushes and pull requests leave it empty: the NVIDIA
+        # references. A named platform stops each such test when the adapter is not of that platform.
+        description: "X3D_REFERENCE_PLATFORM for this run (empty: the NVIDIA references)"
+        required: false
+        default: ""
 
 permissions:
   contents: read
@@ -33,6 +41,7 @@ env:
   X3D_EVIDENCE_ALLOW: no-gpu-adapter,backend-absent,x_ite-text.json,items-baseline.json,x0-baseline.json,x0-xml-baseline.json
   X3D_EVIDENCE_LOG: ${{ github.workspace }}/evidence-skips.tsv
   X3D_QUIET_NO_GPU: "1"
+  X3D_REFERENCE_PLATFORM: ${{ inputs.reference_platform || '' }}
   GPU_TESTS: >-
     test(x1_runtime_matches_x_ite)
     | test(items_runtime_matches_x_ite)
