@@ -12,7 +12,7 @@ import json, os, sys, collections, hashlib
 HERE = os.path.dirname(os.path.abspath(__file__))
 AUTH = os.path.join(HERE, "..", "ledger.json")
 SNAP = os.path.join(HERE, "..", "snapshots", "before-ig2", "ledger.json")
-SNAP_SHA256 = "21926ac64f7feb137ee7c9faabf70eeb576fedc6f87bab1672fbcbf229deb33b"
+SNAP_SHA256 = "815008724e21bb838fe74e3b06b31b8cec66851ee301cc8ccc657a8c6e5c2919"
 
 def swap(old_text, new_text):
     def f(old):

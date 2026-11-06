@@ -1280,6 +1280,8 @@ pub struct Renderer {
     /// top-down Vulkan one. Only the offscreen readback path can undo that; see
     /// [`Renderer::set_gl_sample_orientation`].
     gl_sample_orientation: bool,
+    /// [`point_snap_half_up`] of the device's backend: the point sprite snap of x3d.wgsl (`frame.layer.z`).
+    point_snap_half_up: bool,
     /// [`Renderer::set_xr_eye`].
     xr_eye: Option<Matrix4>,
     /// True while `render_to_rgba` draws mirrored.
@@ -1641,6 +1643,7 @@ impl Renderer {
         target: Option<(wgpu::TextureFormat, u32)>,
     ) -> Renderer {
         note_line_width_backend(&device);
+        let point_snap_half_up = point_snap_half_up(device.adapter_info().backend);
         let shader = device.create_shader_module(wgpu::ShaderModuleDescriptor {
             label: Some("x3d.wgsl"),
             source: wgpu::ShaderSource::Wgsl(wgsl_for(&device, include_str!("x3d.wgsl")).into()),
@@ -2320,6 +2323,7 @@ impl Renderer {
             generated: HashMap::new(),
             msaa_color: None,
             gl_sample_orientation: false,
+            point_snap_half_up,
             xr_eye: None,
             flip_now: false,
             depth_mode: DepthMode::Standard,
@@ -4948,7 +4952,12 @@ impl Renderer {
         if transmission {
             self.render_transmission_pass(frame, width, height, flip)?;
         }
-        fu.layer = [layer_rect[2] as f32, layer_rect[3] as f32, 0.0, 0.0];
+        fu.layer = [
+            layer_rect[2] as f32,
+            layer_rect[3] as f32,
+            self.point_snap_half_up as u32 as f32,
+            0.0,
+        ];
 
         // ToneMapping2.glsl x3d_Exposure and tone map; IBL2.glsl x3d_EnvironmentLightSource.
         fu.tone = [frame.tone_mapping as f32, frame.exposure as f32, 0.0, 0.0];
@@ -6870,6 +6879,16 @@ pub fn note_line_width_backend(device: &wgpu::Device) {
     );
 }
 
+/// How the rasterizer of the pinned page's GPU rounds a point position to its 1/256 pixel grid, for the point sprite
+/// snap of x3d.wgsl (`frame.layer.z`). GL on the NVIDIA host rounds a half step to even (oracle/render-point-tie-baseline
+/// point-tie-snap). ANGLE on Metal rounds a half step up, along x and along y of the window (measured on the physical M1
+/// against the pinned page, issue #461, point-tie-snap: a sprite 2/1024 pixel past a tie moves by one pixel, 1/1024 pixel
+/// past it does not). The Metal rasterizer of the native device rounds x the same way, so only y, which x3d.wgsl snaps
+/// itself to move the tie, needs the rule.
+pub fn point_snap_half_up(backend: wgpu::Backend) -> bool {
+    backend == wgpu::Backend::Metal
+}
+
 /// The vertices of a line geometry with LineProperties, in the stipple layout. `projection` is the
 /// GL projection, window coordinates have their origin at the lower left (gl_FragCoord).
 ///
@@ -8063,6 +8082,27 @@ mod line_instance_tests {
 
         assert!(length(&b) > 0.0);
         assert_eq!(length(&a), length(&b));
+    }
+}
+
+#[cfg(test)]
+mod point_snap_tests {
+    use super::point_snap_half_up;
+    use wgpu::Backend;
+
+    #[test]
+    fn only_metal_rounds_a_point_half_step_up() {
+        assert!(point_snap_half_up(Backend::Metal));
+
+        for b in [
+            Backend::Vulkan,
+            Backend::Gl,
+            Backend::Dx12,
+            Backend::BrowserWebGpu,
+            Backend::Noop,
+        ] {
+            assert!(!point_snap_half_up(b), "{b:?}");
+        }
     }
 }
 

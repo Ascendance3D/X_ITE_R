@@ -55,7 +55,8 @@ struct FrameUniforms {
     env_m0: vec4<f32>,
     env_m1: vec4<f32>,
     env_m2: vec4<f32>,
-    // the width and height of the layer's viewport (gl.viewport)
+    // x, y: the width and height of the layer's viewport (gl.viewport); z: 1 when the rasterizer rounds a point
+    // position half a 1/256 pixel step up (ANGLE on Metal), 0 when it rounds it to even (gpu::point_snap_half_up)
     layer: vec4<f32>,
     projectors: array<Projector, 32>,
     // x: 1 in the transmission pass (X3D_TRANSMISSION_PASS, X3D_LINEAR_OUTPUT).
@@ -358,7 +359,9 @@ fn vertex_common(in: VIn, vertex: u32, instance: u32) -> VOut {
 
         if (frame.viewport.z != 1.0 && p.w > 0.0) {
             let window_y = (p.y / p.w * 0.5 + 0.5) * frame.layer.y;
-            center_y = ((round(window_y * 256.0) / 256.0) / frame.layer.y - 0.5) * 2.0 * p.w;
+            // The snap rounds like the rasterizer of the pinned page's GPU: to even (GL), or half up (ANGLE on Metal).
+            let grid_y = select(round(window_y * 256.0), floor(window_y * 256.0 + 0.5), frame.layer.z == 1.0);
+            center_y = ((grid_y / 256.0) / frame.layer.y - 0.5) * 2.0 * p.w;
             tie_shift = -2.0 / (256.0 * frame.layer.y);
             coord_shift = 1.0 / (256.0 * size);
         }

@@ -1,0 +1,65 @@
+#VRML V2.0 utf8
+# Synthetic, newly authored for the Rust port REA batch 24 (no archive content).
+# Field updates on an EXTERNPROTO declaration: before its url has loaded (initialize) and after (a later frame),
+# seen by the declaration, by an instance created before and by one created after.
+EXTERNPROTO Ext [ field SFInt32 level eventIn SFInt32 poke ] "lib.wrl#Lib"
+DEF S Script {
+  url "javascript:
+var frame = 0;
+var early = null;
+
+function show (label, f)
+{
+   try { print (label + ': ' + f ()); }
+   catch (e) { print (label + ' threw ' + e .name + ': ' + e .message); }
+}
+
+function names (o) { return Array .from (o .getFieldDefinitions (), f => f .name + ':' + f .accessType + ':' + f .dataType) .join (','); }
+function udf (o) { return Array .from (o .getUserDefinedFields (), f => f .getName ()) .join (','); }
+
+function initialize ()
+{
+   const cs = Browser .currentScene;
+   const e  = cs .externprotos .get ('Ext');
+
+   early = cs .createProto ('Ext');
+
+   show ('init loadState', () => e .loadState);
+   show ('init decl', () => names (e));
+   show ('init canUserDefinedFields', () => e .canUserDefinedFields ());
+   show ('init udf', () => udf (e));
+   show ('init add extra', () => e .addUserDefinedField (X3DConstants .initializeOnly, 'extra', new SFVec3f (1, 2, 3)));
+   show ('init after add decl', () => names (e));
+   show ('init after add udf', () => udf (e));
+   show ('init after add early', () => names (early));
+   show ('init late', () => { const n = cs .createProto ('Ext'); return names (n) + ' ' + n .extra; });
+   show ('init remove level', () => e .removeUserDefinedField ('level'));
+   show ('init after remove decl', () => names (e));
+   show ('init toVRMLString', () => e .toVRMLString ());
+}
+
+function prepareEvents ()
+{
+   const cs = Browser .currentScene;
+   const e  = cs .externprotos .get ('Ext');
+
+   if (++ frame !== 3)
+      return;
+
+   show ('late loadState', () => e .loadState);
+   show ('late decl', () => names (e));
+   show ('late udf', () => udf (e));
+   show ('late early', () => names (early));
+   show ('late early level', () => early .level);
+   show ('late add more', () => e .addUserDefinedField (X3DConstants .inputOutput, 'more', new SFString ('four')));
+   show ('late after add decl', () => names (e));
+   show ('late after add proto decl', () => names (e .getProtoDeclaration ()));
+   show ('late new', () => { const n = cs .createProto ('Ext'); return names (n) + ' ' + n .more; });
+   show ('late updateInstances', () => e .updateInstances ());
+   show ('late after upd early', () => names (early));
+   show ('late remove more', () => e .removeUserDefinedField ('more'));
+   show ('late after remove decl', () => names (e));
+   show ('late toVRMLString', () => e .toVRMLString ());
+}
+"
+}
