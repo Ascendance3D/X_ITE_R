@@ -1,0 +1,136 @@
+{
+ "size": [
+  512,
+  512
+ ],
+ "t0": 946684800,
+ "dt": 0.03333333333333333,
+ "capture": [
+  12,
+  30,
+  70
+ ],
+ "dump": [],
+ "frames": 70,
+ "events": [
+  {
+   "frame": 2,
+   "type": "touchstart",
+   "points": [
+    [
+     206,
+     226
+    ]
+   ]
+  },
+  {
+   "frame": 2,
+   "type": "touchstart",
+   "points": [
+    [
+     206,
+     226
+    ],
+    [
+     306,
+     286
+    ]
+   ]
+  },
+  {
+   "frame": 3,
+   "type": "touchmove",
+   "points": [
+    [
+     214,
+     231
+    ],
+    [
+     298,
+     281
+    ]
+   ]
+  },
+  {
+   "frame": 4,
+   "type": "touchmove",
+   "points": [
+    [
+     222,
+     236
+    ],
+    [
+     290,
+     276
+    ]
+   ]
+  },
+  {
+   "frame": 5,
+   "type": "touchmove",
+   "points": [
+    [
+     230,
+     241
+    ],
+    [
+     282,
+     271
+    ]
+   ]
+  },
+  {
+   "frame": 6,
+   "type": "touchmove",
+   "points": [
+    [
+     238,
+     246
+    ],
+    [
+     274,
+     266
+    ]
+   ]
+  },
+  {
+   "frame": 7,
+   "type": "touchmove",
+   "points": [
+    [
+     246,
+     251
+    ],
+    [
+     266,
+     261
+    ]
+   ]
+  },
+  {
+   "frame": 8,
+   "type": "touchmove",
+   "points": [
+    [
+     254,
+     256
+    ],
+    [
+     258,
+     256
+    ]
+   ]
+  },
+  {
+   "frame": 10,
+   "type": "touchend",
+   "ids": [
+    0
+   ]
+  },
+  {
+   "frame": 10,
+   "type": "touchend"
+  }
+ ]
+}
