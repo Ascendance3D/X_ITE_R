@@ -3231,11 +3231,12 @@
     "render_rea_b08_net (ig-*)",
     "rea_batch08_net (ig-runtime)",
     "rea_b08_net_reload",
-    "rea_b08_net_unload"
+    "rea_b08_net_unload",
+    "crates/x3d-viewer/tests/rea_batch08_net.rs (rea_batch08_net_cases_match_x_ite, case ig-second --known-diff=ig-second: three InlineGeometry of ig/routes.x3dv and three of ig/routes-extrusion.x3dv; everything outside the decided region equal to X_ITE; in the region X_ITE's second and third copies stay still and Rust's move, ADR 0012)"
    ],
-   "missing": "X_ITE (Cache on) gives a second InlineGeometry with the same url a copy() without routes ('TODO: add routes' in InlineGeometry.js); Rust keeps the routes; a decided difference (ADR 0012) that is untested: no second-instance recording exists; ig-select reload picture check disabled",
-   "oracle": "",
-   "notes": "in node table since the 2026-10-16 regeneration | REA batch 08 (proposal 2026-10-18, pending local GPU gates): | Issue #68 2026-11-02 (ADR 0012 (Accepted 2026-11-02, PR #324)): decided as an approved difference. ISO/IEC 19775-1 V4.0 has no InlineGeometry node (it is an X_ITE node), so no clause decides it. Status stays PARTIAL because the difference has no test."
+   "missing": "ig-select reload picture check disabled",
+   "oracle": "pinned X_ITE 16.5.0 (34cdf9f97): oracle/rea-b08-net-baseline/ig-second-msaa0 (three identical recordings, rea_b08_net.py pin)",
+   "notes": "in node table since the 2026-10-16 regeneration | REA batch 08 (proposal 2026-10-18, pending local GPU gates): | Issue #68 2026-11-02 (ADR 0012 (Accepted 2026-11-02, PR #324)): decided as an approved difference. ISO/IEC 19775-1 V4.0 has no InlineGeometry node (it is an X_ITE node), so no clause decides it. Status stays PARTIAL because the difference has no test. | Issue #68 2026-11-06: the decided difference of ADR 0012 has a test now. oracle/rea-b08-net-baseline/ig-second-msaa0 (pinned X_ITE 16.5.0, three identical recordings, js.json sha256 0022e835ec69ba45bd39a645783f8d2c57a375e7a08125270107d0ac018b5db9) shows X_ITE's copies of the Extrusion with routes to set_spine still and the Coordinate copies moving (the copy shares the routed Coordinate node); rea_batch08_net compares everything else and asserts the difference in the region (red checks: without the mask 1.5 to 4.4% of the pixels over 8; a mask on a moving X_ITE cell fails). Text only: the ig-select reload picture check stays open, so the entry stays PARTIAL."
   },
   {
    "id": "node:LoadSensor",
