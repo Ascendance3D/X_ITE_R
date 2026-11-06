@@ -3521,15 +3521,16 @@ impl Viewer3d {
 
     /// X3DFlyViewer.display: the rubber band of a FLY or WALK viewer while a button is held and the `Rubberband` option was on when
     /// it went down. The viewer's pointer is in canvas (CSS) pixels; X_ITE's is in drawing-buffer pixels (`getPointerFromEvent`
-    /// scales it to the viewport), so the ends and the viewport are scaled by the buffer size over the canvas size. A Viewport node
-    /// of the layer maps the pointer to its own rectangle in X_ITE; here the pointer stays canvas based, as everywhere in the viewer.
+    /// scales it to the browser's viewport), so the ends are scaled by the buffer size over the canvas size. ScreenLine.display
+    /// sets `gl.viewport` and `gl.scissor` to `browser .getViewport ()`, the whole drawing buffer (X3DRenderingContext
+    /// `_viewport`), also when the active layer has a Viewport: that Viewport only decides if the press starts the viewer
+    /// (X3DViewer.isPointerInRectangle). Compared by rea_nav_overlay_viewport_matches_x_ite.
     fn rubber_band(&self, width: u32, height: u32) -> Option<x3d_render::rubber_band::RubberBand> {
         let (from, to) = self.nav.rubber_band()?;
         let (sx, sy) = (
             width as f64 / self.width as f64,
             height as f64 / self.height as f64,
         );
-        let r = self.layer_rect(self.home_layer());
         let content_scale = self
             .rt
             .browser_options
@@ -3541,7 +3542,7 @@ impl Viewer3d {
             from: [from[0] * sx, from[1] * sy],
             to: [to[0] * sx, to[1] * sy],
             content_scale,
-            viewport: [r[0] * sx, r[1] * sy, r[2] * sx, r[3] * sy],
+            viewport: [0.0, 0.0, width as f64, height as f64],
         })
     }
 

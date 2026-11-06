@@ -1,0 +1,9 @@
+vp-layer-walk-up-right
+vp-layer-walk-leave
+vp-layer-walk-press-outside
+vp-layer-fly-down-left
+vp-layer-fly-pan-middle
+vp-layer-fly-scale-2
+vp-layer-walk-scale-0.5
+vp-group-walk-up-right
+vp-group-walk-press-outside
