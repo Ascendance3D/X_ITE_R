@@ -146,7 +146,7 @@ pub struct RubberBandGpu {
     bind_group: wgpu::BindGroup,
     vertices: wgpu::Buffer,
     indices: wgpu::Buffer,
-    pipelines: HashMap<wgpu::TextureFormat, wgpu::RenderPipeline>,
+    pipelines: HashMap<(wgpu::TextureFormat, u32), wgpu::RenderPipeline>,
 }
 
 impl RubberBandGpu {
@@ -216,10 +216,11 @@ impl RubberBandGpu {
         &mut self,
         device: &wgpu::Device,
         format: wgpu::TextureFormat,
+        samples: u32,
     ) -> &wgpu::RenderPipeline {
         let (module, layout) = (&self.module, &self.pipeline_layout);
 
-        self.pipelines.entry(format).or_insert_with(|| {
+        self.pipelines.entry((format, samples)).or_insert_with(|| {
             device.create_render_pipeline(&wgpu::RenderPipelineDescriptor {
                 label: Some("rubber band"),
                 layout: Some(layout),
@@ -237,7 +238,10 @@ impl RubberBandGpu {
                 // of a multisampled oracle comparison draws the same.
                 primitive: Default::default(),
                 depth_stencil: None,
-                multisample: Default::default(),
+                multisample: wgpu::MultisampleState {
+                    count: samples,
+                    ..Default::default()
+                },
                 fragment: Some(wgpu::FragmentState {
                     module,
                     entry_point: Some("fs_main"),
@@ -266,8 +270,9 @@ impl RubberBandGpu {
         })
     }
 
-    /// Draw `band` over `target` (a `width` x `height` view of `format`, which keeps what it has). `flip` is the upside down
-    /// target of the GL sample orientation.
+    /// Draw `band` over `target` (a `width` x `height` view of `format`, which keeps what it has). With `msaa`, the multisampled
+    /// color buffer of the frame (its samples kept), the band is drawn into it and resolved into `target`. `flip` is the upside
+    /// down target of the GL sample orientation.
     #[allow(clippy::too_many_arguments)]
     pub fn encode(
         &mut self,
@@ -276,6 +281,7 @@ impl RubberBandGpu {
         encoder: &mut wgpu::CommandEncoder,
         band: &RubberBand,
         target: &wgpu::TextureView,
+        msaa: Option<&wgpu::TextureView>,
         format: wgpu::TextureFormat,
         width: u32,
         height: u32,
@@ -307,17 +313,23 @@ impl RubberBandGpu {
         data[..16].copy_from_slice(&projection);
         data[16..].copy_from_slice(&model_view);
         queue.write_buffer(&self.uniform, 0, cast_slice(&data));
-        self.pipeline(device, format);
-        let pipeline = &self.pipelines[&format];
+        let samples = msaa.map_or(1, |m| m.texture().sample_count());
+        self.pipeline(device, format, samples);
+        let pipeline = &self.pipelines[&(format, samples)];
         let mut pass = encoder.begin_render_pass(&wgpu::RenderPassDescriptor {
             label: Some("rubber band"),
             color_attachments: &[Some(wgpu::RenderPassColorAttachment {
-                view: target,
+                view: msaa.unwrap_or(target),
                 depth_slice: None,
-                resolve_target: None,
+                resolve_target: msaa.map(|_| target),
                 ops: wgpu::Operations {
                     load: wgpu::LoadOp::Load,
-                    store: wgpu::StoreOp::Store,
+                    // MultiSampleFramebuffer.blit: the samples are not kept after the resolve.
+                    store: if msaa.is_some() {
+                        wgpu::StoreOp::Discard
+                    } else {
+                        wgpu::StoreOp::Store
+                    },
                 },
             })],
             ..Default::default()

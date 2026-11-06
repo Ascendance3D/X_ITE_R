@@ -13,6 +13,10 @@
 //! The pictures need the Vulkan adapter (the viewer's pointing and depth passes too); without one the tests record a
 //! `no-gpu-adapter` skip, which `X3D_EVIDENCE=strict` turns into a failure.
 //!
+//! At Multisampling 4, the rubber band cases of oracle/rea-nav-overlay-msaa4-baseline/cases.txt (`rea_nav_overlay.py record --msaa 4`:
+//! oracle/x_ite-anim-msaa.mjs, three identical runs) run `x3d-drive --msaa 4 --gl-samples` with the same checks: X_ITE draws the band
+//! into its multisampled framebuffer before the blit, so its edges are antialiased.
+//!
 //! `REA_ONLY=<substring>` restricts the cases.
 
 mod common;
@@ -131,11 +135,28 @@ fn compare_pictures(
     );
 }
 
-fn compare_case(root: &Path, name: &str, world: &str, script: &str, failures: &mut Vec<String>) {
-    let base = common::reference::flat_json(root, "rea-nav-overlay-baseline", name);
+fn compare_case(
+    root: &Path,
+    name: &str,
+    world: &str,
+    script: &str,
+    msaa: u32,
+    failures: &mut Vec<String>,
+) {
+    // The NVIDIA recording, or the one of X3D_REFERENCE_PLATFORM where it has this case (common/reference.rs); MSAA 4 has its own
+    // directories (oracle/rea-nav-overlay-msaa4-baseline and oracle/rea-nav-overlay-msaa4-<platform>-baseline).
+    let dir = if msaa > 0 {
+        format!("rea-nav-overlay-msaa{msaa}-baseline")
+    } else {
+        "rea-nav-overlay-baseline".to_string()
+    };
+    let base = common::reference::flat_json(root, &dir, name);
     let js: Value = serde_json::from_str(&std::fs::read_to_string(&base).unwrap()).unwrap();
     let pictures = js.get("frames").is_some();
-    let out = std::env::temp_dir().join(format!("rea-nav-overlay-{}-{name}", std::process::id()));
+    let out = std::env::temp_dir().join(format!(
+        "rea-nav-overlay-{}-{name}-msaa{msaa}",
+        std::process::id()
+    ));
     std::fs::create_dir_all(&out).unwrap();
     let rs_json = out.join("rs.json");
     let png_dir = out.join("rs");
@@ -146,6 +167,11 @@ fn compare_case(root: &Path, name: &str, world: &str, script: &str, failures: &m
         .arg(&rs_json)
         .arg("--warmup-from")
         .arg(&base);
+
+    if msaa > 0 {
+        // The MSAA oracle page draws with GL's sample pattern (x3d-drive --gl-samples, as the other MSAA comparisons).
+        cmd.args(["--msaa", &msaa.to_string(), "--gl-samples"]);
+    }
 
     if pictures {
         cmd.arg("--png-dir").arg(&png_dir);
@@ -232,8 +258,8 @@ fn compare_case(root: &Path, name: &str, world: &str, script: &str, failures: &m
     let _ = std::fs::remove_dir_all(&out);
 }
 
-/// The cases of a group: `rubber-` (F15) or `scale-` (F17).
-fn run_group(prefix: &str) {
+/// The cases of a group: `rubber-` (F15) or `scale-` (F17); at `msaa` above 0 only the cases of that baseline's cases.txt.
+fn run_group(prefix: &str, msaa: u32) {
     let root = PathBuf::from(env!("CARGO_MANIFEST_DIR"))
         .join("../..")
         .canonicalize()
@@ -248,6 +274,12 @@ fn run_group(prefix: &str) {
     let cases =
         std::fs::read_to_string(root.join("oracle/synthetic-rea-nav-overlay/cases.txt")).unwrap();
     let only = std::env::var("REA_ONLY").ok();
+    let listed = (msaa > 0).then(|| {
+        std::fs::read_to_string(root.join(format!(
+            "oracle/rea-nav-overlay-msaa{msaa}-baseline/cases.txt"
+        )))
+        .unwrap()
+    });
     let mut failures = vec![];
     let mut checked = 0;
 
@@ -255,15 +287,20 @@ fn run_group(prefix: &str) {
         let f: Vec<&str> = line.split_whitespace().collect();
         let (name, world, script) = (f[0], f[1], f[2]);
 
-        if !name.starts_with(prefix) || only.as_deref().is_some_and(|o| !name.contains(o)) {
+        if !name.starts_with(prefix)
+            || only.as_deref().is_some_and(|o| !name.contains(o))
+            || listed
+                .as_deref()
+                .is_some_and(|l| !l.lines().any(|n| n.trim() == name))
+        {
             continue;
         }
 
-        compare_case(&root, name, world, script, &mut failures);
+        compare_case(&root, name, world, script, msaa, &mut failures);
         checked += 1;
     }
 
-    eprintln!("{prefix}: {checked} cases checked");
+    eprintln!("{prefix} MSAA {msaa}: {checked} cases checked");
     assert!(only.is_some() || checked > 5, "only {checked} cases ran");
     assert!(
         failures.is_empty(),
@@ -275,10 +312,15 @@ fn run_group(prefix: &str) {
 
 #[test]
 fn rea_nav_overlay_rubber_band_matches_x_ite() {
-    run_group("rubber-");
+    run_group("rubber-", 0);
+}
+
+#[test]
+fn rea_nav_overlay_rubber_band_msaa4_matches_x_ite() {
+    run_group("rubber-", 4);
 }
 
 #[test]
 fn rea_nav_overlay_content_scale_matches_x_ite() {
-    run_group("scale-");
+    run_group("scale-", 0);
 }

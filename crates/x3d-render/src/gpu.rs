@@ -1275,6 +1275,9 @@ pub struct Renderer {
         u32,
         u32,
     )>,
+    /// The last pass of this frame keeps the multisampled color samples (StoreOp::Store, not Discard): a rubber band follows
+    /// and is drawn into them before the resolve, as X3DFlyViewer.display draws it into X_ITE's MultiSampleFramebuffer.
+    keep_msaa_samples: bool,
     /// Draw the scene mirrored vertically (and un-mirror `render_to_rgba`): GL framebuffers are
     /// bottom-up, so the hardware's MSAA sample pattern lands vertically mirrored relative to a
     /// top-down Vulkan one. Only the offscreen readback path can undo that; see
@@ -2322,6 +2325,7 @@ impl Renderer {
             face_depth: None,
             generated: HashMap::new(),
             msaa_color: None,
+            keep_msaa_samples: false,
             gl_sample_orientation: false,
             point_snap_half_up,
             xr_eye: None,
@@ -4252,6 +4256,7 @@ impl Renderer {
             self.sample_count()
         };
         let flip = self.flip_now;
+        self.keep_msaa_samples = samples > 1 && frame.rubber_band.is_some();
 
         if frame.layers.is_empty() {
             self.encode_frame(
@@ -4269,7 +4274,7 @@ impl Renderer {
                     more: false,
                 },
             )?;
-            self.encode_rubber_band(encoder, frame, target, format, width, height, flip);
+            self.encode_rubber_band(encoder, frame, target, format, width, height, samples, flip);
             return Ok(());
         }
 
@@ -4302,13 +4307,13 @@ impl Renderer {
             }
         }
 
-        self.encode_rubber_band(encoder, frame, target, format, width, height, flip);
+        self.encode_rubber_band(encoder, frame, target, format, width, height, samples, flip);
         Ok(())
     }
 
-    /// X3DFlyViewer.display (displayFinishEvents): the rubber band over the finished frame, after the multisampled color
-    /// buffer is resolved into `target` (X_ITE draws it into the framebuffer before the blit; the two agree without
-    /// multisampling, with it the band here has no antialiased edge).
+    /// X3DFlyViewer.display (displayFinishEvents): the rubber band over the finished frame. With multisampling it is drawn into
+    /// the multisampled color buffer, which the last pass kept (`keep_msaa_samples`), and resolved into `target` after it, as
+    /// X_ITE draws it into its MultiSampleFramebuffer before the blit; without multisampling it is drawn into `target`.
     #[allow(clippy::too_many_arguments)]
     fn encode_rubber_band(
         &mut self,
@@ -4318,13 +4323,21 @@ impl Renderer {
         format: wgpu::TextureFormat,
         width: u32,
         height: u32,
+        samples: u32,
         flip: bool,
     ) {
+        self.keep_msaa_samples = false;
+
         let Some(band) = &frame.rubber_band else {
             return;
         };
 
         let device = &self.device;
+        let msaa = self
+            .msaa_color
+            .as_ref()
+            .filter(|m| samples > 1 && m.5 == samples)
+            .map(|m| &m.1);
         self.rubber_band
             .get_or_insert_with(|| crate::rubber_band::RubberBandGpu::new(device))
             .encode(
@@ -4333,6 +4346,7 @@ impl Renderer {
                 encoder,
                 band,
                 target,
+                msaa,
                 format,
                 width,
                 height,
@@ -6486,7 +6500,8 @@ impl Renderer {
             };
             // MultiSampleFramebuffer.blit: the multisampled color renderbuffer is resolved into the default
             // framebuffer after drawShapes; the samples are not kept.
-            let color_store = if msaa_view.is_some() && !pass_target.more {
+            let color_store = if msaa_view.is_some() && !pass_target.more && !self.keep_msaa_samples
+            {
                 wgpu::StoreOp::Discard
             } else {
                 wgpu::StoreOp::Store

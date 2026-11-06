@@ -1,0 +1,111 @@
+{
+ "angle_backend": "metal",
+ "cases": {
+  "rubber-ctrl-look": {
+   "run_sha256": [
+    "1fae192e57504964623c0603ab56d69da73f93702ba4a158fc1399f58acad647",
+    "1fae192e57504964623c0603ab56d69da73f93702ba4a158fc1399f58acad647",
+    "1fae192e57504964623c0603ab56d69da73f93702ba4a158fc1399f58acad647"
+   ]
+  },
+  "rubber-fly-down-left": {
+   "run_sha256": [
+    "fa1a7e6489fe9c36f841bf99817863083935fac9a48e3e850b3ebef9bf335d9b",
+    "fa1a7e6489fe9c36f841bf99817863083935fac9a48e3e850b3ebef9bf335d9b",
+    "fa1a7e6489fe9c36f841bf99817863083935fac9a48e3e850b3ebef9bf335d9b"
+   ]
+  },
+  "rubber-fly-horizontal": {
+   "run_sha256": [
+    "2f00cd715bc8615d7225850d226e2939ae9890728d079f3dc34308341f9cc322",
+    "2f00cd715bc8615d7225850d226e2939ae9890728d079f3dc34308341f9cc322",
+    "2f00cd715bc8615d7225850d226e2939ae9890728d079f3dc34308341f9cc322"
+   ]
+  },
+  "rubber-fly-short": {
+   "run_sha256": [
+    "e997472a36c5b193fd069fa34f1ec371ab391ed4a878b67349459a1c9f3f4c5c",
+    "e997472a36c5b193fd069fa34f1ec371ab391ed4a878b67349459a1c9f3f4c5c",
+    "e997472a36c5b193fd069fa34f1ec371ab391ed4a878b67349459a1c9f3f4c5c"
+   ]
+  },
+  "rubber-fly-vertical-up": {
+   "run_sha256": [
+    "66bbf3b218552fee45b71310aa489f887c3983c7352983f95ff0d977f15d63dd",
+    "66bbf3b218552fee45b71310aa489f887c3983c7352983f95ff0d977f15d63dd",
+    "66bbf3b218552fee45b71310aa489f887c3983c7352983f95ff0d977f15d63dd"
+   ]
+  },
+  "rubber-pan-alt": {
+   "run_sha256": [
+    "d70d146ddddf338e92b86cfddcdd9ccdfe6af006fad64b2de7ac0c2e06cb6728",
+    "d70d146ddddf338e92b86cfddcdd9ccdfe6af006fad64b2de7ac0c2e06cb6728",
+    "d70d146ddddf338e92b86cfddcdd9ccdfe6af006fad64b2de7ac0c2e06cb6728"
+   ]
+  },
+  "rubber-pan-middle": {
+   "run_sha256": [
+    "29662ec58287e20763c309ab38bb9a94164e8e940ba1fe7d69a7d9c48821fcef",
+    "29662ec58287e20763c309ab38bb9a94164e8e940ba1fe7d69a7d9c48821fcef",
+    "29662ec58287e20763c309ab38bb9a94164e8e940ba1fe7d69a7d9c48821fcef"
+   ]
+  },
+  "rubber-two-buttons": {
+   "run_sha256": [
+    "03c9c188d547cf499449e2aa8e4a5501c25f370650aef40e8c7f1efbeff70c15",
+    "03c9c188d547cf499449e2aa8e4a5501c25f370650aef40e8c7f1efbeff70c15",
+    "03c9c188d547cf499449e2aa8e4a5501c25f370650aef40e8c7f1efbeff70c15"
+   ]
+  },
+  "rubber-viewer-switch": {
+   "run_sha256": [
+    "a395c70a52d5b3e6dda84647b54d230fb20b9bd1d5063e47bbc810fb803858fc",
+    "a395c70a52d5b3e6dda84647b54d230fb20b9bd1d5063e47bbc810fb803858fc",
+    "a395c70a52d5b3e6dda84647b54d230fb20b9bd1d5063e47bbc810fb803858fc"
+   ]
+  },
+  "rubber-walk-horizontal-left": {
+   "run_sha256": [
+    "879e8eaad78342710e540b6b2788a99c1698292bd1c6d7d9b0ecef183c85af01",
+    "879e8eaad78342710e540b6b2788a99c1698292bd1c6d7d9b0ecef183c85af01",
+    "879e8eaad78342710e540b6b2788a99c1698292bd1c6d7d9b0ecef183c85af01"
+   ]
+  },
+  "rubber-walk-long": {
+   "run_sha256": [
+    "fb71aca9bd28f53e2946f29df899cf7266dbdc2054bb7aae7b16007b0f88da48",
+    "fb71aca9bd28f53e2946f29df899cf7266dbdc2054bb7aae7b16007b0f88da48",
+    "fb71aca9bd28f53e2946f29df899cf7266dbdc2054bb7aae7b16007b0f88da48"
+   ]
+  },
+  "rubber-walk-up-right": {
+   "run_sha256": [
+    "787b287a805eacc09142574ae9eaa70871c8c30cb979e0752cff0ae42db4d31f",
+    "787b287a805eacc09142574ae9eaa70871c8c30cb979e0752cff0ae42db4d31f",
+    "787b287a805eacc09142574ae9eaa70871c8c30cb979e0752cff0ae42db4d31f"
+   ]
+  },
+  "rubber-walk-vertical": {
+   "run_sha256": [
+    "63b37005a37215248af52fe8797f96a6cf7a2570d01baf01082e713a9980cce2",
+    "63b37005a37215248af52fe8797f96a6cf7a2570d01baf01082e713a9980cce2",
+    "63b37005a37215248af52fe8797f96a6cf7a2570d01baf01082e713a9980cce2"
+   ]
+  },
+  "rubber-wheel-roll": {
+   "run_sha256": [
+    "2bc0b8e92772527fe1fddbcc15e88b1488e75f5e2ad41e2c0c3136cb40a7f800",
+    "2bc0b8e92772527fe1fddbcc15e88b1488e75f5e2ad41e2c0c3136cb40a7f800",
+    "2bc0b8e92772527fe1fddbcc15e88b1488e75f5e2ad41e2c0c3136cb40a7f800"
+   ]
+  }
+ },
+ "chrome": "Google Chrome 156.0.8078.79",
+ "hardware": "Apple M1 (8-core GPU), macOS 27.0.1 (26A434)",
+ "pinned_x_ite": "16.5.0 34cdf9f97",
+ "platform": "apple-m1",
+ "recorded": "2026-11-06",
+ "recorder": "oracle/tools/rea_nav_overlay.py record (oracle/x_ite-anim-msaa.mjs --ms 4)",
+ "rule": "3 identical summaries; kept only where the NVIDIA summary differs",
+ "user_agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/156.0.0.0 Safari/537.36"
+}
