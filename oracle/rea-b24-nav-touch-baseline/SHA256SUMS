@@ -1,0 +1,8 @@
+a10b952128e0bd9519dff4c0f2944a8feffa816a739b55e73ae6e9d4e0f55e9f  cases.txt
+2252e86de21d2f678d28d73a050e54549719d605836d296d8e04ffec179b00f5  touch-add-finger-pinch-msaa0/js.json
+5143b96c465abd6f0b4b1ae2422eab8c41108b26868bae7db3063d85d19c43df  touch-pinch-in-msaa0/js.json
+498689f588ebb76ee2c23578eb639bdedc8c88690707bff8d4516e1abe3f3c59  touch-pinch-out-msaa0/js.json
+04f1c7604663e084bce366ce5f78bc173fffc6ebb3fd172387966d506a2ad38c  touch-pinch-slanted-msaa0/js.json
+bb35bf89c57a21b39967fffbecdd4216267b5f40ea9a6174f5c7d751369ddabe  touch-rotate-msaa0/js.json
+f2059c0e02939e914d3425fdd2167273dcc9deaa0c7672f5d23e705f9f86ba02  touch-rotate-spin-msaa0/js.json
+bc54f86b8e8f7d825629a408393e1aeb3948600b19b44eca983ec6c0c9780e3f  touch-rotate-then-pinch-msaa0/js.json

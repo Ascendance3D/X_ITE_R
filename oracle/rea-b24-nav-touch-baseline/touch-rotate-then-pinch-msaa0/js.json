@@ -1,0 +1,459 @@
+{
+  "ok": true,
+  "poses": {
+    "16": {
+      "position": [
+        -5.656227792791771,
+        -4.3187404384198596,
+        9.662068524990236
+      ],
+      "orientation": [
+        -0.5594616753186781,
+        0.8148530984207566,
+        -0.1517137496857581,
+        5.640655442649723
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "touch front",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "30": {
+      "position": [
+        -6.528628490939237,
+        -4.532946077110652,
+        9.77078302184175
+      ],
+      "orientation": [
+        -0.5166356999618164,
+        0.8417401504856273,
+        -0.156719726216575,
+        5.591400648737072
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "touch front",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "45": {
+      "position": [
+        -8.018877159860871,
+        -5.567652963416553,
+        12.001097767554445
+      ],
+      "orientation": [
+        -0.5166356999618164,
+        0.8417401504856273,
+        -0.156719726216575,
+        5.591400648737072
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "touch front",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "70": {
+      "position": [
+        -8.018877159860871,
+        -5.567652963416553,
+        12.001097767554445
+      ],
+      "orientation": [
+        -0.5166356999618164,
+        0.8417401504856273,
+        -0.156719726216575,
+        5.591400648737072
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "touch front",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "110": {
+      "position": [
+        -8.018877159860871,
+        -5.567652963416553,
+        12.001097767554445
+      ],
+      "orientation": [
+        -0.5166356999618164,
+        0.8417401504856273,
+        -0.156719726216575,
+        5.591400648737072
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "touch front",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    }
+  },
+  "vrml": {
+    "110": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT EnvironmentalSensor : 3\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Scripting : 1\nCOMPONENT Sound : 3\nCOMPONENT Text : 2\n\nNavigationInfo {\n  type \"EXAMINE\"\n}\n\nViewpoint {\n  description \"touch front\"\n  position 0 0 12\n}\n\nTransform {\n  translation 2 1 0\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.9 0.9 0.2\n      }\n    }\n    geometry Box {\n      size 1.5 1.5 1.5\n    }\n  }\n}\n\nTransform {\n  translation -3 0 -2\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.2 0.9 0.9\n      }\n    }\n    geometry Box {\n      size 1 3 1\n    }\n  }\n}\n\nTransform {\n  translation 0 -2 0\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.5 0.5 0.5\n      }\n    }\n    geometry Box {\n      size 12 0.2 8\n    }\n  }\n}\n"
+  },
+  "prints": [],
+  "log": [],
+  "anchors": [],
+  "loadFrames": 3,
+  "warmupFrames": 8,
+  "geometry": {
+    "rect": [
+      0,
+      0,
+      512,
+      512
+    ],
+    "viewport": [
+      0,
+      0,
+      512,
+      512
+    ],
+    "scroll": [
+      0,
+      0
+    ]
+  },
+  "touchLog": [
+    [
+      2,
+      "touchstart",
+      [
+        [
+          256,
+          256
+        ]
+      ]
+    ],
+    [
+      3,
+      "touchmove",
+      [
+        [
+          264,
+          251
+        ]
+      ]
+    ],
+    [
+      4,
+      "touchmove",
+      [
+        [
+          272,
+          246
+        ]
+      ]
+    ],
+    [
+      5,
+      "touchmove",
+      [
+        [
+          280,
+          241
+        ]
+      ]
+    ],
+    [
+      6,
+      "touchmove",
+      [
+        [
+          288,
+          236
+        ]
+      ]
+    ],
+    [
+      7,
+      "touchmove",
+      [
+        [
+          296,
+          231
+        ]
+      ]
+    ],
+    [
+      8,
+      "touchmove",
+      [
+        [
+          304,
+          226
+        ]
+      ]
+    ],
+    [
+      9,
+      "touchmove",
+      [
+        [
+          312,
+          221
+        ]
+      ]
+    ],
+    [
+      10,
+      "touchmove",
+      [
+        [
+          320,
+          216
+        ]
+      ]
+    ],
+    [
+      11,
+      "touchmove",
+      [
+        [
+          328,
+          211
+        ]
+      ]
+    ],
+    [
+      12,
+      "touchmove",
+      [
+        [
+          336,
+          206
+        ]
+      ]
+    ],
+    [
+      13,
+      "touchmove",
+      [
+        [
+          344,
+          201
+        ]
+      ]
+    ],
+    [
+      14,
+      "touchmove",
+      [
+        [
+          352,
+          196
+        ]
+      ]
+    ],
+    [
+      15,
+      "touchend",
+      []
+    ],
+    [
+      25,
+      "touchstart",
+      [
+        [
+          156,
+          256
+        ]
+      ]
+    ],
+    [
+      25,
+      "touchstart",
+      [
+        [
+          156,
+          256
+        ],
+        [
+          356,
+          256
+        ]
+      ]
+    ],
+    [
+      26,
+      "touchmove",
+      [
+        [
+          163,
+          256
+        ],
+        [
+          349,
+          256
+        ]
+      ]
+    ],
+    [
+      27,
+      "touchmove",
+      [
+        [
+          170,
+          256
+        ],
+        [
+          342,
+          256
+        ]
+      ]
+    ],
+    [
+      28,
+      "touchmove",
+      [
+        [
+          177,
+          256
+        ],
+        [
+          335,
+          256
+        ]
+      ]
+    ],
+    [
+      29,
+      "touchmove",
+      [
+        [
+          184,
+          256
+        ],
+        [
+          328,
+          256
+        ]
+      ]
+    ],
+    [
+      30,
+      "touchmove",
+      [
+        [
+          191,
+          256
+        ],
+        [
+          321,
+          256
+        ]
+      ]
+    ],
+    [
+      31,
+      "touchmove",
+      [
+        [
+          198,
+          256
+        ],
+        [
+          314,
+          256
+        ]
+      ]
+    ],
+    [
+      32,
+      "touchmove",
+      [
+        [
+          205,
+          256
+        ],
+        [
+          307,
+          256
+        ]
+      ]
+    ],
+    [
+      33,
+      "touchmove",
+      [
+        [
+          212,
+          256
+        ],
+        [
+          300,
+          256
+        ]
+      ]
+    ],
+    [
+      34,
+      "touchmove",
+      [
+        [
+          219,
+          256
+        ],
+        [
+          293,
+          256
+        ]
+      ]
+    ],
+    [
+      35,
+      "touchmove",
+      [
+        [
+          226,
+          256
+        ],
+        [
+          286,
+          256
+        ]
+      ]
+    ],
+    [
+      36,
+      "touchend",
+      [
+        [
+          286,
+          256
+        ]
+      ]
+    ],
+    [
+      36,
+      "touchend",
+      []
+    ]
+  ],
+  "touchSplit": 0,
+  "innerWidth": 512
+}
