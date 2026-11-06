@@ -1,0 +1,605 @@
+{
+  "ok": true,
+  "poses": {
+    "30": {
+      "position": [
+        0,
+        1.6000000529559475,
+        12
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "layer 0",
+      "viewer": "WALK",
+      "fieldOfViewScale": 1
+    },
+    "60": {
+      "position": [
+        0,
+        1.6000000529559475,
+        9.3120001640625
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "layer 0",
+      "viewer": "WALK",
+      "fieldOfViewScale": 1
+    },
+    "80": {
+      "position": [
+        0,
+        1.6000000529559475,
+        7.564800492187501
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "layer 0",
+      "viewer": "WALK",
+      "fieldOfViewScale": 1
+    },
+    "100": {
+      "position": [
+        0,
+        1.6000000529559475,
+        7.564800492187501
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "layer 0",
+      "viewer": "WALK",
+      "fieldOfViewScale": 1
+    },
+    "120": {
+      "position": [
+        0,
+        1.6000000529559475,
+        7.564800492187501
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "layer 0",
+      "viewer": "WALK",
+      "fieldOfViewScale": 1
+    },
+    "140": {
+      "position": [
+        0,
+        1.6000000529559475,
+        7.564800492187501
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "layer 0",
+      "viewer": "WALK",
+      "fieldOfViewScale": 1
+    },
+    "170": {
+      "position": [
+        0,
+        1.6000000529559475,
+        7.564800492187501
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "layer 0",
+      "viewer": "WALK",
+      "fieldOfViewScale": 1
+    },
+    "190": {
+      "position": [
+        0,
+        1.6000000529559475,
+        7.564800492187501
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "layer 0",
+      "viewer": "WALK",
+      "fieldOfViewScale": 1
+    }
+  },
+  "vrml": {
+    "190": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Layering : 1\nCOMPONENT Scripting : 1\n\nNavigationInfo {\n  type \"WALK\"\n  speed 4\n}\n\nViewpoint {\n  description \"layer 0\"\n  position 0 1 12\n}\n\nTransform {\n  translation 0 -0.1 0\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.4 0.4 0.4\n      }\n    }\n    geometry Box {\n      size 40 0.2 40\n    }\n  }\n}\n\nDEF COL0 Collision {\n  children Transform {\n    translation 0.8 5 12\n    children Shape {\n      appearance Appearance {\n        material Material {\n          diffuseColor 0.8 0.3 0.3\n        }\n      }\n      geometry Box {\n        size 1 12 1\n      }\n    }\n  }\n}\n\nCollision {\n  children Transform {\n    translation 0 5 7\n    children Shape {\n      appearance Appearance {\n        material Material {\n          diffuseColor 0.8 0.3 0.3\n        }\n      }\n      geometry Box {\n        size 12 10 0.4\n      }\n    }\n  }\n}\n\nDEF LS LayerSet {\n  order [\n    0,\n    1,\n    2\n  ]\n  layers [\n    DEF L1 Layer {\n      children [\n        NavigationInfo {\n          type \"WALK\"\n          speed 4\n        }\n        Viewpoint {\n          description \"layer 1\"\n          position 0 6 12\n        }\n        Transform {\n          translation 0 1.9 0\n          children Shape {\n            appearance Appearance {\n              material Material {\n                diffuseColor 0.3 0.5 0.3\n              }\n            }\n            geometry Box {\n              size 40 0.2 40\n            }\n          }\n        }\n        DEF COL1 Collision {\n          children Transform {\n            translation 0.8 5 12\n            children Shape {\n              appearance Appearance {\n                material Material {\n                  diffuseColor 0.8 0.3 0.3\n                }\n              }\n              geometry Box {\n                size 1 12 1\n              }\n            }\n          }\n        }\n        Collision {\n          children Transform {\n            translation 0 5 2\n            children Shape {\n              appearance Appearance {\n                material Material {\n                  diffuseColor 0.8 0.3 0.3\n                }\n              }\n              geometry Box {\n                size 12 10 0.4\n              }\n            }\n          }\n        }\n      ]\n    }\n    DEF L2 Layer {\n      children [\n        NavigationInfo {\n          type \"WALK\"\n          avatarSize [\n            0.25,\n            3,\n            0.75\n          ]\n          speed 4\n        }\n        Viewpoint {\n          description \"layer 2\"\n          position 0 9 12\n        }\n        Transform {\n          translation 0 -1.1 0\n          children Shape {\n            appearance Appearance {\n              material Material {\n                diffuseColor 0.3 0.3 0.5\n              }\n            }\n            geometry Box {\n              size 40 0.2 40\n            }\n          }\n        }\n        DEF COL2 Collision {\n          children Transform {\n            translation 0.8 5 12\n            children Shape {\n              appearance Appearance {\n                material Material {\n                  diffuseColor 0.8 0.3 0.3\n                }\n              }\n              geometry Box {\n                size 1 12 1\n              }\n            }\n          }\n        }\n      ]\n    }\n  ]\n}\n\nDEF INFO WorldInfo {\n  title \"gravity layers\"\n  info \"s=011 n=211\"\n}\n\nDEF W Script {\n  inputOnly      SFTime tick\n  inputOnly      SFBool a0\n  inputOnly      SFBool a1\n  inputOnly      SFBool a2\n  initializeOnly SFNode ls USE LS\n  initializeOnly SFNode info USE INFO\n\n  url \"ecmascript:\nvar s = [ 0, 0, 0 ], n = [ 0, 0, 0 ], first = -1, next = 0, plan = [];\nfunction show () { info .info = new MFString ('s=' + s [0] + s [1] + s [2] + ' n=' + n [0] + n [1] + n [2]); }\nfunction a0 (v) { s [0] = v ? 1 : 0; n [0] += 1; show (); }\nfunction a1 (v) { s [1] = v ? 1 : 0; n [1] += 1; show (); }\nfunction a2 (v) { s [2] = v ? 1 : 0; n [2] += 1; show (); }\nfunction tick (value)\n{\n   if (first < 0) first = value;\n   var e = value - first;\n   while (next < plan .length && e >= plan [next][0] - 1e-6) { ls .activeLayer = plan [next][1]; ++ next; }\n}\n\"\n  directOutput TRUE\n}\n\nROUTE COL0.isActive TO W.a0\nROUTE COL1.isActive TO W.a1\nROUTE COL2.isActive TO W.a2\n"
+  },
+  "prints": [],
+  "log": [],
+  "anchors": [],
+  "loadFrames": 3,
+  "warmupFrames": 8,
+  "geometry": {
+    "rect": [
+      0,
+      0,
+      512,
+      512
+    ],
+    "viewport": [
+      0,
+      0,
+      512,
+      512
+    ],
+    "scroll": [
+      0,
+      0
+    ]
+  },
+  "collisionProbes": [
+    {
+      "distance": 0.35620283936115116,
+      "id": 2,
+      "normal": [
+        0,
+        1.1102230246251568e-16,
+        1
+      ]
+    },
+    {
+      "distance": 0.18953315976495255,
+      "id": 2,
+      "normal": [
+        0,
+        -1.1102230246251568e-16,
+        1
+      ]
+    },
+    {
+      "distance": 1.376619335301193,
+      "id": 0,
+      "normal": [
+        -2.7755575615628907e-17,
+        1,
+        1.1102230246251563e-16
+      ]
+    },
+    {
+      "distance": 0.1294354167057683,
+      "id": 2,
+      "normal": [
+        1.1102230246251573e-16,
+        5.551115123125787e-16,
+        1
+      ]
+    },
+    {
+      "distance": 0.20686814166897727,
+      "id": 2,
+      "normal": [
+        -3.6977854932234945e-32,
+        3.330669073875471e-16,
+        1
+      ]
+    },
+    {
+      "distance": 0.12944735023104625,
+      "id": 2,
+      "normal": [
+        -1.1102230246251573e-16,
+        5.551115123125787e-16,
+        1
+      ]
+    },
+    {
+      "distance": 1.3766199767961924,
+      "id": 0,
+      "normal": [
+        2.7755575615628907e-17,
+        1,
+        1.1102230246251563e-16
+      ]
+    },
+    {
+      "distance": 0.18953298793593487,
+      "id": 2,
+      "normal": [
+        0,
+        -1.1102230246251568e-16,
+        1
+      ]
+    },
+    {
+      "distance": 0.2967861635240816,
+      "id": 2,
+      "normal": [
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "distance": 0.20057339180105171,
+      "id": 2,
+      "normal": [
+        0,
+        5.551115123125783e-17,
+        1
+      ]
+    },
+    {
+      "distance": 1.7873078246396974,
+      "id": 0,
+      "normal": [
+        0,
+        1,
+        0
+      ]
+    },
+    {
+      "distance": 0.14585997687869456,
+      "id": 2,
+      "normal": [
+        1.1102230246251565e-16,
+        5.551115123125783e-17,
+        1
+      ]
+    },
+    {
+      "distance": 1.7873067249339842,
+      "id": 0,
+      "normal": [
+        -6.162975822039155e-32,
+        1,
+        1.1102230246251565e-16
+      ]
+    },
+    {
+      "distance": 0.14585988237273484,
+      "id": 2,
+      "normal": [
+        -1.1102230246251565e-16,
+        5.551115123125783e-17,
+        1
+      ]
+    },
+    {
+      "distance": 1.7873074580711263,
+      "id": 0,
+      "normal": [
+        0,
+        1,
+        0
+      ]
+    },
+    {
+      "distance": 0.20057350062609625,
+      "id": 2,
+      "normal": [
+        0,
+        5.551115123125783e-17,
+        1
+      ]
+    },
+    {
+      "distance": 0.36480045317930654,
+      "id": 2,
+      "normal": [
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "distance": 0.2815301638155161,
+      "id": 2,
+      "normal": [
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "distance": 3.200000047683716,
+      "id": -1,
+      "normal": [
+        -1.2819751242557097e-16,
+        -0.577350269189626,
+        -0.8164965809277259
+      ]
+    },
+    {
+      "distance": 3.200000047683716,
+      "id": -1,
+      "normal": [
+        -0.8164965809277258,
+        -0.5773502691896261,
+        6.40987562127855e-17
+      ]
+    },
+    {
+      "distance": 3.200000047683716,
+      "id": -1,
+      "normal": [
+        0.5773502691896256,
+        -0.577350269189626,
+        0.5773502691896257
+      ]
+    },
+    {
+      "distance": 3.200000047683716,
+      "id": -1,
+      "normal": [
+        -0.5773502691896255,
+        -0.577350269189626,
+        -0.5773502691896257
+      ]
+    },
+    {
+      "distance": 3.200000047683716,
+      "id": -1,
+      "normal": [
+        0.8164965809277258,
+        -0.5773502691896261,
+        0
+      ]
+    },
+    {
+      "distance": 0.28153038146560516,
+      "id": 2,
+      "normal": [
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "distance": 0.14872565818488792,
+      "id": 2,
+      "normal": [
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "distance": 0.12839417152014998,
+      "id": 2,
+      "normal": [
+        0,
+        -5.551115123125783e-17,
+        1
+      ]
+    },
+    {
+      "distance": 3.200000047683716,
+      "id": -1,
+      "normal": [
+        3.2049378106392725e-16,
+        -0.9082484193757544,
+        -0.41843136677529785
+      ]
+    },
+    {
+      "distance": 3.200000047683716,
+      "id": -1,
+      "normal": [
+        -0.4184313667752981,
+        -0.7865661124422733,
+        0.45412436848951976
+      ]
+    },
+    {
+      "distance": 3.200000047683716,
+      "id": -1,
+      "normal": [
+        0.6169900773689662,
+        -0.6938055024773021,
+        0.3714258595742296
+      ]
+    },
+    {
+      "distance": 3.200000047683716,
+      "id": -1,
+      "normal": [
+        -0.6169900773689665,
+        -0.7865661151224066,
+        0.02523868002653117
+      ]
+    },
+    {
+      "distance": 3.200000047683716,
+      "id": -1,
+      "normal": [
+        0.4184314258374511,
+        -0.9082483921657201,
+        1.489374871288649e-7
+      ]
+    },
+    {
+      "distance": 0.12839411567571912,
+      "id": 2,
+      "normal": [
+        0,
+        -5.551115123125783e-17,
+        1
+      ]
+    },
+    {
+      "distance": 0.15058102496055392,
+      "id": 2,
+      "normal": [
+        0,
+        -1.1102230246251568e-16,
+        1
+      ]
+    },
+    {
+      "distance": 0.12671524307556425,
+      "id": 2,
+      "normal": [
+        0,
+        1.1102230246251568e-16,
+        1
+      ]
+    },
+    {
+      "distance": 3.200000047683716,
+      "id": -1,
+      "normal": [
+        2.8844440295753455e-16,
+        -0.9957818904133451,
+        0.09175198485495904
+      ]
+    },
+    {
+      "distance": 3.200000047683716,
+      "id": -1,
+      "normal": [
+        0.09175198485495886,
+        -0.4978911193130043,
+        0.8623723132060878
+      ]
+    },
+    {
+      "distance": 3.200000047683716,
+      "id": -1,
+      "normal": [
+        0.5449108598972867,
+        -0.8332249540678461,
+        0.09385270739107728
+      ]
+    },
+    {
+      "distance": 3.200000047683716,
+      "id": -1,
+      "normal": [
+        -0.5449108598972865,
+        -0.4978914420587251,
+        0.6746675230739086
+      ]
+    },
+    {
+      "distance": 3.200000047683716,
+      "id": -1,
+      "normal": [
+        -0.09175181643632783,
+        -0.9957819059311774,
+        8.40074817593119e-7
+      ]
+    },
+    {
+      "distance": 0.12671520584594376,
+      "id": 2,
+      "normal": [
+        0,
+        1.1102230246251568e-16,
+        1
+      ]
+    },
+    {
+      "distance": 1.599999899193037,
+      "id": 0,
+      "normal": [
+        0,
+        1,
+        -1.110223024625157e-16
+      ]
+    },
+    {
+      "distance": 3.200000047683716,
+      "id": -1,
+      "normal": [
+        0.5773502691896261,
+        0.5773502691896255,
+        -0.5773502691896257
+      ]
+    },
+    {
+      "distance": 0.1522974794306926,
+      "id": 2,
+      "normal": [
+        0,
+        -1.6653345369377348e-16,
+        1
+      ]
+    },
+    {
+      "distance": 0.2338357437515255,
+      "id": 2,
+      "normal": [
+        0,
+        0,
+        1
+      ]
+    }
+  ]
+}

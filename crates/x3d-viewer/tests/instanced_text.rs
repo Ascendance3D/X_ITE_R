@@ -15,6 +15,8 @@
 //!
 //! `REA_ONLY=<substring>` restricts the cases.
 
+mod common;
+
 use serde_json::Value;
 use std::path::{Path, PathBuf};
 use std::process::Command;
@@ -64,7 +66,14 @@ fn compare_case(
     failures: &mut Vec<String>,
 ) {
     let base = root.join("oracle/instanced-text-baseline");
-    let baseline = base.join(format!("{name}-msaa{msaa}.json"));
+    let key = format!("{name}-msaa{msaa}");
+    let platform = common::reference::platform();
+    let baseline = common::reference::flat_json_for(
+        root,
+        "instanced-text-baseline",
+        &key,
+        platform.as_deref(),
+    );
     let pictures = base.join(format!("png/{name}-msaa{msaa}"));
     let js: Value = serde_json::from_str(&std::fs::read_to_string(&baseline).unwrap()).unwrap();
     // One directory for each call: the two tests run in threads of one process under `cargo test`, and both run the same case.
@@ -262,7 +271,15 @@ fn compare_case(
         for entry in std::fs::read_dir(&pictures).unwrap() {
             let p = entry.unwrap().path();
             let file = p.file_name().unwrap().to_string_lossy().to_string();
-            let (w, h, want) = x3d_render::compare::load_png(&p).unwrap();
+            let want_path = common::reference::picture_for(
+                root,
+                "instanced-text-baseline",
+                &key,
+                &file,
+                &p,
+                platform.as_deref(),
+            );
+            let (w, h, want) = x3d_render::compare::load_png(&want_path).unwrap();
 
             match x3d_render::compare::load_png(&png_dir.join(&file)) {
                 Ok((rw, rh, got)) if (rw, rh) == (w, h) => {

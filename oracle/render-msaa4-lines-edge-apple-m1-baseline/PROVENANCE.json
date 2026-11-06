@@ -1,0 +1,73 @@
+{
+ "angle_backend": "metal",
+ "chrome": "Google Chrome 156.0.8078.79",
+ "gl_renderer": "ANGLE (Apple, ANGLE Metal Renderer: Apple M1, Unspecified Version)",
+ "hardware": "Apple M1 (8-core GPU), macOS 27.0.1 (26A434)",
+ "kept": {
+  "lines-edge-cam2.wrl.png": {
+   "png": "bd16f26ed046d33250f901834d2dc5c126b77a0dbed1f208f2d87e4a88137917",
+   "runs_png_sha256": [
+    "bd16f26ed046d33250f901834d2dc5c126b77a0dbed1f208f2d87e4a88137917",
+    "bd16f26ed046d33250f901834d2dc5c126b77a0dbed1f208f2d87e4a88137917",
+    "bd16f26ed046d33250f901834d2dc5c126b77a0dbed1f208f2d87e4a88137917"
+   ]
+  },
+  "lines-edge-cam3.wrl.png": {
+   "png": "75072820bc34ca7d977e54c57a2d9119ebe18ccaeca2fdf5c11515f1760ba6fe",
+   "runs_png_sha256": [
+    "75072820bc34ca7d977e54c57a2d9119ebe18ccaeca2fdf5c11515f1760ba6fe",
+    "75072820bc34ca7d977e54c57a2d9119ebe18ccaeca2fdf5c11515f1760ba6fe",
+    "75072820bc34ca7d977e54c57a2d9119ebe18ccaeca2fdf5c11515f1760ba6fe"
+   ]
+  },
+  "lines-edge-cam4.wrl.png": {
+   "png": "3e3ca0bc57a300c2f8499e20ac77adade09443efa936fc3bb641e04273a800ef",
+   "runs_png_sha256": [
+    "3e3ca0bc57a300c2f8499e20ac77adade09443efa936fc3bb641e04273a800ef",
+    "3e3ca0bc57a300c2f8499e20ac77adade09443efa936fc3bb641e04273a800ef",
+    "3e3ca0bc57a300c2f8499e20ac77adade09443efa936fc3bb641e04273a800ef"
+   ]
+  },
+  "lines-edge-points.wrl.png": {
+   "png": "00a8f738cf3c66a8c89c99e84ba41fb4faf8ec2b05807a5f6c59258e0b6dcef3",
+   "runs_png_sha256": [
+    "00a8f738cf3c66a8c89c99e84ba41fb4faf8ec2b05807a5f6c59258e0b6dcef3",
+    "00a8f738cf3c66a8c89c99e84ba41fb4faf8ec2b05807a5f6c59258e0b6dcef3",
+    "00a8f738cf3c66a8c89c99e84ba41fb4faf8ec2b05807a5f6c59258e0b6dcef3"
+   ]
+  },
+  "lines-edge-thin.wrl.png": {
+   "png": "e295a94ed11815758cb38c8a6efb3a539ad6b3b245723f99408e0b69c557bac1",
+   "runs_png_sha256": [
+    "e295a94ed11815758cb38c8a6efb3a539ad6b3b245723f99408e0b69c557bac1",
+    "e295a94ed11815758cb38c8a6efb3a539ad6b3b245723f99408e0b69c557bac1",
+    "e295a94ed11815758cb38c8a6efb3a539ad6b3b245723f99408e0b69c557bac1"
+   ]
+  },
+  "lines-edge-wide.wrl.png": {
+   "png": "713912f5a73f9898ba9e1f2c6c5ffa104275736fd92060bd0c0fa19b51da4dac",
+   "runs_png_sha256": [
+    "713912f5a73f9898ba9e1f2c6c5ffa104275736fd92060bd0c0fa19b51da4dac",
+    "713912f5a73f9898ba9e1f2c6c5ffa104275736fd92060bd0c0fa19b51da4dac",
+    "713912f5a73f9898ba9e1f2c6c5ffa104275736fd92060bd0c0fa19b51da4dac"
+   ]
+  },
+  "lines-edge.wrl.png": {
+   "png": "61686e382410cedb93c0a007774a5cf355d6bbe896dad6d6c2e60b594991fc7a",
+   "runs_png_sha256": [
+    "61686e382410cedb93c0a007774a5cf355d6bbe896dad6d6c2e60b594991fc7a",
+    "61686e382410cedb93c0a007774a5cf355d6bbe896dad6d6c2e60b594991fc7a",
+    "61686e382410cedb93c0a007774a5cf355d6bbe896dad6d6c2e60b594991fc7a"
+   ]
+  }
+ },
+ "nvidia_reference": "oracle/render-msaa4-lines-edge-baseline (unchanged)",
+ "pinned": "34cdf9f97",
+ "platform": "apple-m1",
+ "recorded": "2026-11-05",
+ "recorder": "oracle/x_ite-shot-msaa.mjs",
+ "recorder_args": "oracle/synthetic-lines-edge <out> --size 256x256 --ms 4",
+ "rule": "kept only where the three runs are pixel-identical and differ from the NVIDIA picture in oracle/render-msaa4-lines-edge-baseline",
+ "runs": 3,
+ "same_as_nvidia": []
+}

@@ -29,6 +29,7 @@
 mod common;
 
 use common::gpu::gpu;
+use common::reference::{check_adapter, platform, png_for};
 use std::path::PathBuf;
 
 const WORLDS: [&str; 7] = [
@@ -55,6 +56,18 @@ const KNOWN: &[(&str, u32, usize, u8)] = &[
     ("lines-edge-cam4", 4, 2, 64),
 ];
 
+/// The record of the Apple M1 (`X3D_REFERENCE_PLATFORM=apple-m1`, Rust on Metal against the M1 pictures of
+/// oracle/render-lines-edge-apple-m1-baseline and oracle/render-msaa4-lines-edge-apple-m1-baseline, issue #461). Cases not listed are exact.
+const KNOWN_APPLE_M1: &[(&str, u32, usize, u8)] = &[("lines-edge-cam4", 4, 1, 64)];
+
+/// The record of the reference in use.
+fn known() -> &'static [(&'static str, u32, usize, u8)] {
+    match platform().as_deref() {
+        Some("apple-m1") => KNOWN_APPLE_M1,
+        _ => KNOWN,
+    }
+}
+
 /// How many pixels more than the record a case may show before the test fails (other GPUs differ by a tie or two).
 const MARGIN: usize = 8;
 
@@ -75,6 +88,8 @@ fn measure_all() -> Option<Vec<(&'static str, u32, usize, u8, usize)>> {
         .join("../../oracle")
         .canonicalize()
         .unwrap();
+    let platform = platform();
+    check_adapter(platform.as_deref(), &g.adapter_info);
     let mut out = vec![];
 
     for samples in [0u32, 4] {
@@ -87,7 +102,12 @@ fn measure_all() -> Option<Vec<(&'static str, u32, usize, u8, usize)>> {
         }
 
         for world in WORLDS {
-            let key = root.join(format!("{}/{world}.wrl.png", key_dir(samples)));
+            let key = png_for(
+                &root,
+                key_dir(samples),
+                &format!("{world}.wrl.png"),
+                platform.as_deref(),
+            );
             let (w, h, want) = x3d_render::compare::load_png(&key)
                 .unwrap_or_else(|e| panic!("{world} MSAA {samples}: no answer key {key:?}: {e}"));
             let shot = x3d_render::render_file(
@@ -140,7 +160,10 @@ fn lines_edge_known_pixel_differences_are_recorded() {
     let mut failures = vec![];
 
     for (world, samples, over, max, _) in &all {
-        match KNOWN.iter().find(|(w, s, _, _)| w == world && s == samples) {
+        match known()
+            .iter()
+            .find(|(w, s, _, _)| w == world && s == samples)
+        {
             Some((_, _, known, known_max)) => {
                 if *over > known + MARGIN || max > known_max {
                     failures.push(format!(

@@ -211,9 +211,11 @@ const consoleLines = [ ];
 let inFlight = 0;
 
 // Script key "userAgent": the page's navigator .userAgent (X_ITE's SLOW_SCROLL test in the navigation viewers reads it when its
-// module loads); x3d-drive takes the same key.
+// module loads); x3d-drive takes the same key. XITE_USER_AGENT is the agent of a script without one: a platform recording on a Mac
+// (issue #461) gives the agent of the NVIDIA host's Chrome, so that only the GPU differs, not X_ITE's macOS scroll factor.
+const userAgent = script .userAgent ?? process .env .XITE_USER_AGENT;
 const context = await browser .newContext ({ viewport: { width: W, height: H }, deviceScaleFactor: 1,
-                                             ... (script .userAgent ? { userAgent: script .userAgent } : { }) });
+                                             ... (userAgent ? { userAgent } : { }) });
 await context .route (url => !url .href .startsWith (base) && !(places [1] && url .href .startsWith (places [1])), route => route .abort ());
 
 const page = await context .newPage ();
