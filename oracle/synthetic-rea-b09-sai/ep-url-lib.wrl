@@ -1,0 +1,3 @@
+#VRML V2.0 utf8
+# Synthetic REA oracle file (sub:proto.externproto): the PROTO an EXTERNPROTO of ep-url-*.wrl names.
+PROTO EP [ exposedField SFFloat v 0 ] { Group { } }
