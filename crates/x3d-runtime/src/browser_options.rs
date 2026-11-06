@@ -484,6 +484,30 @@ impl BrowserOptions {
         true
     }
 
+    /// The page's Shading option and Multisampling rendering property, without an event (X_ITE has one BrowserOptions
+    /// for the page and its world): a world takes them before its Scripts run, and the live world when the page sets
+    /// them. A later `setBrowserOption` of the world changes them again, so the last one set is in force.
+    pub fn set_page_rendering(&mut self, shading: Option<&str>, samples: Option<u32>) {
+        if let Some(name) = shading {
+            if let Some(i) = self.options.index("Shading") {
+                self.options.fields[i].1 = OptionValue::String(name.to_string());
+            }
+
+            self.shading = ShadingMode::from_option(name);
+            self.rendering.set(
+                "Shading",
+                OptionValue::String(self.shading.name().to_string()),
+            );
+        }
+
+        if let Some(n) = samples {
+            self.rendering.set(
+                "Multisampling",
+                OptionValue::Int32(n.min(i32::MAX as u32) as i32),
+            );
+        }
+    }
+
     /// A RenderingProperties value the browser sets (`getRenderingProperties () ._Name = value`).
     pub fn set_rendering_value(&mut self, name: &str, value: OptionValue) {
         if self.rendering.index(name).is_some() {
