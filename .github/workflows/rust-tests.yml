@@ -89,6 +89,11 @@ env:
     | test(rea_b24_nav_shard0_match_x_ite)
     | test(rea_b24_nav_shard1_match_x_ite)
     | test(rea_b24_nav_shard2_match_x_ite)
+    | test(rea_b24_touch_match_x_ite)
+    | test(rea_x10_synthetic_shard0_match_x_ite)
+    | test(rea_x10_synthetic_shard1_match_x_ite)
+    | test(rea_x10_synthetic_shard2_match_x_ite)
+    | test(rea_x10_synthetic_shard3_match_x_ite)
 
 # Where the jobs run (issue #162, owner ruling 2026-11-01): on the self-hosted xite-ci runners (labels self-hosted, Linux,
 # X64) unless the run is a pull request whose head branch is in another repository (a fork): that run stays on the

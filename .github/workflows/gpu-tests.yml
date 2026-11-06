@@ -49,6 +49,11 @@ env:
     | test(rea_b24_nav_shard0_match_x_ite)
     | test(rea_b24_nav_shard1_match_x_ite)
     | test(rea_b24_nav_shard2_match_x_ite)
+    | test(rea_b24_touch_match_x_ite)
+    | test(rea_x10_synthetic_shard0_match_x_ite)
+    | test(rea_x10_synthetic_shard1_match_x_ite)
+    | test(rea_x10_synthetic_shard2_match_x_ite)
+    | test(rea_x10_synthetic_shard3_match_x_ite)
 
 jobs:
   gpu:

@@ -60,6 +60,11 @@ env:
     | test(rea_b24_nav_shard0_match_x_ite)
     | test(rea_b24_nav_shard1_match_x_ite)
     | test(rea_b24_nav_shard2_match_x_ite)
+    | test(rea_b24_touch_match_x_ite)
+    | test(rea_x10_synthetic_shard0_match_x_ite)
+    | test(rea_x10_synthetic_shard1_match_x_ite)
+    | test(rea_x10_synthetic_shard2_match_x_ite)
+    | test(rea_x10_synthetic_shard3_match_x_ite)
 
   # Tests that fail on the hosted macOS 15 arm64 virtual machine for a reason that is not a build defect (run 41557728237
   # of PR #342). The job summary lists them by name; issue #88 (audio) and issue #89 (graphics) track them.
