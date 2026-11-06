@@ -47,6 +47,7 @@ C = {
    "tests": addlist("crates/x3d-web/tests/browser/antialiased02.test.mjs (the page's antialiased attribute and a world Script's Multisampling and Antialiased in five orders, pixels and sample count against pinned X_ITE 16.5.0 measured in Chrome; WebGPU and WebGL2)", "crates/x3d-runtime/src/browser_options.rs (script_sampling_reads_the_page_options)"),
   }, "Issue #480 2026-11-06: PR #483. The world's Antialiased option stayed true under the page's antialiased=\"false\", so a world Script's Multisampling 4 drew 4 samples where X_ITE draws none (BrowserOptions.js set_Multisampling__). A world now takes the page's Antialiased and Multisampling options without an event. Not fixed: the page's getBrowserOption and getRenderingProperty do not see a world Script's option change (two todo cases in antialiased02; issue draft waits for the owner). Text only: the status does not change."),
  "sub:render.transparency-sorting": (None, {
+   "missing": swap("OIT is not compared", "OIT is not compared in the reference worlds; the page's OIT option is compared with pinned X_ITE on one synthetic world (oit01, PR #484), and a world Script's option in the next world differs from X_ITE (two todo cases)"),
    "tests": addlist("crates/x3d-web/tests/browser/oit01.test.mjs (the page's OrderIndependentTransparency option before a world loads, on the live world, after loadURL and replaceWorld, and in last-writer order with a world Script, and a todo case for a world Script's option in the next world; WebGPU and WebGL2)"),
   }, "Issue #479 2026-11-06: PR #484. The page's OrderIndependentTransparency option did not reach the browser renderer; only a world Script's did. It is now one of the page's engine options. Against pinned X_ITE 16.5.0 in Chrome (400x300, two overlapping transparent quads): 2 pixels over 8 with OIT on and with it off, pinned on against off 6489. Not fixed: a world Script's option does not stay for the next world, as it does in pinned X_ITE (BrowserOptions.reset runs only at start; two todo cases in oit01). Text only: the MSAA 4 reference gaps stay, so the entry stays PARTIAL."),
 }
@@ -69,7 +70,8 @@ def check(d):
     if [i["id"] for i in d["items"]] != [i["id"] for i in load(SNAP)["items"]]: bad.append("ID order changed")
     want = {i["id"]: i for i in build()["items"]}
     for k, b in snap.items():
-        a = cur[k]
+        a = cur.get(k)
+        if a is None: continue  # reported above: ID set or total changed
         if k not in C and a != b: bad.append(f"unrelated entry changed: {k}")
         if b["status"] == "DIFFERENT" and a != b: bad.append(f"DIFFERENT changed: {k}")
         if k in C and (a["status"] != (C[k][0] or b["status"]) or not a["notes"].startswith(b["notes"])): bad.append(f"{k}: status or notes")
