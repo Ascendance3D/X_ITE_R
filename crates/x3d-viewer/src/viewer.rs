@@ -843,6 +843,15 @@ impl Viewer3d {
         }
     }
 
+    /// The renderer has the world's Multisampling and Shading now (the page set them in both): a change the world made
+    /// before is not applied later over the page's newer value.
+    pub fn rendering_synced(&mut self) {
+        let now = rendering_state(&self.rt, self.base().geo.is_some());
+
+        self.synced_rendering.0 = now.0;
+        self.synced_rendering.2 = now.2;
+    }
+
     /// The RenderingProperties the renderer starts with (see [`Viewer3d::take_rendering_changes`]).
     pub fn rendering_properties(&self) -> RenderingChanges {
         let now = rendering_state(&self.rt, self.base().geo.is_some());

@@ -521,6 +521,18 @@ impl Session {
         self.rt_mut().browser_options.set_option(name, value);
     }
 
+    /// The page's Shading and Multisampling ([`x3d_runtime::browser_options::BrowserOptions::set_page_rendering`]) in this
+    /// world. The renderer has them already, so a live world does not send an older change of its own after them.
+    pub fn set_page_rendering(&mut self, shading: Option<&str>, samples: Option<u32>) {
+        self.rt_mut()
+            .browser_options
+            .set_page_rendering(shading, samples);
+
+        if let Some(v) = self.viewer() {
+            v.rendering_synced();
+        }
+    }
+
     /// The world's audio graph ([`x3d_runtime::sound::AudioEngine::graph`]), or `None` while no Sound node has made the audio
     /// context.
     pub fn audio_graph(&self) -> Option<x3d_runtime::sound::AudioGraph> {

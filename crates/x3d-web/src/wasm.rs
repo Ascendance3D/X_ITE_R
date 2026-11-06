@@ -327,11 +327,11 @@ pub struct WebBrowser {
     sound_options: Option<(bool, f64)>,
     /// The page's browser options the engine reads itself ([`WebBrowser::set_engine_option`]); a world that starts takes them.
     engine_options: Vec<(String, x3d_runtime::browser_options::OptionValue)>,
-    /// The sample count the page set ([`WebBrowser::set_sample_count`]): a world that starts keeps it. Without it a new
+    /// The sample count the page set ([`WebBrowser::set_sample_count`]): a world starts with it. Without it a new
     /// world's own default (4) would replace the page's Antialiased and Multisampling options (issue #471).
     page_samples: Option<u32>,
-    /// The Shading the page set ([`WebBrowser::set_shading`]); a world that starts keeps it, like `page_samples`.
-    page_shading: Option<x3d_render::gpu::ShadingMode>,
+    /// The Shading the page set ([`WebBrowser::set_shading`]); a world starts with it, like `page_samples`.
+    page_shading: Option<&'static str>,
     /// The audio engines the page has been told about ([`WebBrowser::take_audio_ops`]), by `AudioEngine::uid`.
     audio_known: std::collections::HashSet<u64>,
     /// The buffers of the last [`WebBrowser::take_audio_ops`] ([`WebBrowser::audio_buffer`]).
@@ -699,12 +699,18 @@ impl WebBrowser {
         let sink = self.log_sink.clone();
         let event_sink = self.field_event_sink.clone();
         let engine_options = self.engine_options.clone();
+        let (page_shading, page_samples) = (self.page_shading, self.page_samples);
         let mut session =
             Session::begin_with_scripts(world, now, self.config.width, self.config.height, |rt| {
                 // The page's options before the world's loads start (LoadUrlObjects is read when an Inline starts).
                 for (name, value) in engine_options {
                     rt.browser_options.init_option(&name, value);
                 }
+
+                // X_ITE's BrowserOptions belong to the browser, not to a world: the world starts with the page's Shading
+                // and Multisampling, and a Script that sets them (in initialize, too) sets them after the page.
+                rt.browser_options
+                    .set_page_rendering(page_shading, page_samples);
 
                 // The page's console and field callbacks run in the route chain (issue #202): the lines made before an
                 // event go to the console first, then the page's callbacks of the event are called.
@@ -1017,17 +1023,8 @@ impl WebBrowser {
             v.rendering_properties().apply(&mut self.renderer);
         }
 
-        // X_ITE's BrowserOptions belong to the browser, not to a world: the page's Multisampling and Shading stay in
-        // force over the new world's engine-side defaults. A change the world makes later still goes through
-        // take_rendering_changes.
-        if let Some(n) = self.page_samples {
-            self.renderer.set_sample_count(n);
-        }
-
-        if let Some(s) = self.page_shading {
-            self.renderer.set_shading(s);
-        }
-
+        // The world started with the page's Multisampling and Shading (WebBrowser::add, set_shading, set_sample_count);
+        // its own Scripts set them after the page.
         self.current = Some(id);
         Ok(())
     }
@@ -2404,16 +2401,20 @@ impl WebBrowser {
     pub fn set_shading(&mut self, name: &str) {
         use x3d_render::gpu::ShadingMode;
 
-        let mode = match name {
-            "POINT" => ShadingMode::Point,
-            "WIREFRAME" => ShadingMode::Wireframe,
-            "FLAT" => ShadingMode::Flat,
-            "PHONG" => ShadingMode::Phong,
-            _ => ShadingMode::Gouraud,
+        let (mode, name) = match name {
+            "POINT" => (ShadingMode::Point, "POINT"),
+            "WIREFRAME" => (ShadingMode::Wireframe, "WIREFRAME"),
+            "FLAT" => (ShadingMode::Flat, "FLAT"),
+            "PHONG" => (ShadingMode::Phong, "PHONG"),
+            _ => (ShadingMode::Gouraud, "GOURAUD"),
         };
 
-        self.page_shading = Some(mode);
+        self.page_shading = Some(name);
         self.renderer.set_shading(mode);
+
+        for w in self.worlds.values_mut() {
+            w.session.set_page_rendering(Some(name), None);
+        }
     }
 
     /// The `Multisampling` rendering property: the sample count to draw with (0 or 1 draws without multisampling).
@@ -2422,6 +2423,10 @@ impl WebBrowser {
     pub fn set_sample_count(&mut self, samples: u32) {
         self.page_samples = Some(samples);
         self.renderer.set_sample_count(samples);
+
+        for w in self.worlds.values_mut() {
+            w.session.set_page_rendering(None, Some(samples));
+        }
     }
 
     /// The sample count the renderer draws with now (1 without multisampling). For tests and diagnostics: the
