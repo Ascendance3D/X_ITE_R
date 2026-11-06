@@ -2168,12 +2168,23 @@ fn op<C: Cx>(ctx: &C, args: Vec<C::V>) -> Result<J<C::V>, C::E> {
 
             // An instance shares its declaration's definitions (`this [_fieldDefinitions] = protoNode .getFieldDefinitions ()`):
             // once the declaration's interface changed, they name the new interface although the instance's fields stay the old
-            // ones until `updateInstances`.
-            if let NodeKind::Instance(ProtoRef::Proto(p)) = &n.kind {
-                let d = &rt().scene.protos[*p];
+            // ones until `updateInstances`. An EXTERNPROTO instance shares the EXTERNPROTO declaration's.
+            let decl = match &n.kind {
+                NodeKind::Instance(ProtoRef::Proto(p)) => {
+                    let d = &rt().scene.protos[*p];
+                    Some((d.has_metadata, &d.fields))
+                }
+                NodeKind::Instance(ProtoRef::Extern(e)) => {
+                    let d = &rt().scene.externprotos[*e];
+                    Some((d.has_metadata, &d.fields))
+                }
+                _ => None,
+            };
+
+            if let Some((has_metadata, fields)) = decl {
                 let mut list: Vec<(String, u8, FieldValue)> = vec![];
 
-                if d.has_metadata {
+                if has_metadata {
                     list.push((
                         "metadata".into(),
                         access::INPUT_OUTPUT,
@@ -2182,7 +2193,7 @@ fn op<C: Cx>(ctx: &C, args: Vec<C::V>) -> Result<J<C::V>, C::E> {
                 }
 
                 list.extend(
-                    d.fields
+                    fields
                         .iter()
                         .map(|f| (f.name.clone(), f.access, f.value.clone())),
                 );
