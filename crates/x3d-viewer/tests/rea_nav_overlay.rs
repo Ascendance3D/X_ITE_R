@@ -143,13 +143,14 @@ fn compare_case(
     msaa: u32,
     failures: &mut Vec<String>,
 ) {
-    let base = if msaa > 0 {
-        root.join(format!(
-            "oracle/rea-nav-overlay-msaa{msaa}-baseline/{name}.json"
-        ))
+    // The NVIDIA recording, or the one of X3D_REFERENCE_PLATFORM where it has this case (common/reference.rs); MSAA 4 has its own
+    // directories (oracle/rea-nav-overlay-msaa4-baseline and oracle/rea-nav-overlay-msaa4-<platform>-baseline).
+    let dir = if msaa > 0 {
+        format!("rea-nav-overlay-msaa{msaa}-baseline")
     } else {
-        root.join(format!("oracle/rea-nav-overlay-baseline/{name}.json"))
+        "rea-nav-overlay-baseline".to_string()
     };
+    let base = common::reference::flat_json(root, &dir, name);
     let js: Value = serde_json::from_str(&std::fs::read_to_string(&base).unwrap()).unwrap();
     let pictures = js.get("frames").is_some();
     let out = std::env::temp_dir().join(format!(

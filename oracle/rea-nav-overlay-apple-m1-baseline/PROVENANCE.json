@@ -1,0 +1,139 @@
+{
+ "angle_backend": "metal",
+ "cases": {
+  "rubber-ctrl-look": {
+   "run_sha256": [
+    "1fae192e57504964623c0603ab56d69da73f93702ba4a158fc1399f58acad647",
+    "1fae192e57504964623c0603ab56d69da73f93702ba4a158fc1399f58acad647",
+    "1fae192e57504964623c0603ab56d69da73f93702ba4a158fc1399f58acad647"
+   ]
+  },
+  "rubber-fly-down-left": {
+   "run_sha256": [
+    "9d196ed23805dad294e60fc60b795809132a91566b5e5b4c8384ff70b8c227f4",
+    "9d196ed23805dad294e60fc60b795809132a91566b5e5b4c8384ff70b8c227f4",
+    "9d196ed23805dad294e60fc60b795809132a91566b5e5b4c8384ff70b8c227f4"
+   ]
+  },
+  "rubber-fly-horizontal": {
+   "run_sha256": [
+    "913119faf9f1d19f58fe99a8f9beb63b266c0f143a53ae625f699fa00d9e1f17",
+    "913119faf9f1d19f58fe99a8f9beb63b266c0f143a53ae625f699fa00d9e1f17",
+    "913119faf9f1d19f58fe99a8f9beb63b266c0f143a53ae625f699fa00d9e1f17"
+   ]
+  },
+  "rubber-fly-short": {
+   "run_sha256": [
+    "ada3c1c652844cbcca376bd9f5e5ec2c89c1922807b5854aa248e74233c73e1e",
+    "ada3c1c652844cbcca376bd9f5e5ec2c89c1922807b5854aa248e74233c73e1e",
+    "ada3c1c652844cbcca376bd9f5e5ec2c89c1922807b5854aa248e74233c73e1e"
+   ]
+  },
+  "rubber-fly-vertical-up": {
+   "run_sha256": [
+    "d32f6a2138c90f4ae4f696270e46e31360d75e848d8bea31474df1ae8707747c",
+    "d32f6a2138c90f4ae4f696270e46e31360d75e848d8bea31474df1ae8707747c",
+    "d32f6a2138c90f4ae4f696270e46e31360d75e848d8bea31474df1ae8707747c"
+   ]
+  },
+  "rubber-option-off": {
+   "run_sha256": [
+    "2024dde487169eadcc3136bb460df6cf846642935b3f5189816d934de02277f8",
+    "2024dde487169eadcc3136bb460df6cf846642935b3f5189816d934de02277f8",
+    "2024dde487169eadcc3136bb460df6cf846642935b3f5189816d934de02277f8"
+   ]
+  },
+  "rubber-pan-alt": {
+   "run_sha256": [
+    "648322049b930a31622c5cea76f287a5412922b6790cb8b003f024b41754658d",
+    "648322049b930a31622c5cea76f287a5412922b6790cb8b003f024b41754658d",
+    "648322049b930a31622c5cea76f287a5412922b6790cb8b003f024b41754658d"
+   ]
+  },
+  "rubber-pan-middle": {
+   "run_sha256": [
+    "9e4c7155dc6e23099ddd086dd5e8846e248d49bc06e2f236715e1f2206101c2f",
+    "9e4c7155dc6e23099ddd086dd5e8846e248d49bc06e2f236715e1f2206101c2f",
+    "9e4c7155dc6e23099ddd086dd5e8846e248d49bc06e2f236715e1f2206101c2f"
+   ]
+  },
+  "rubber-scale-0.5": {
+   "run_sha256": [
+    "4a9026a0132fd4cd8ce81c22f6eceebafefe54d367fbe73a99288b70af2ef6fb",
+    "4a9026a0132fd4cd8ce81c22f6eceebafefe54d367fbe73a99288b70af2ef6fb",
+    "4a9026a0132fd4cd8ce81c22f6eceebafefe54d367fbe73a99288b70af2ef6fb"
+   ]
+  },
+  "rubber-scale-1.5": {
+   "run_sha256": [
+    "fff93c2acc798bbb30787dd97c4d7fbf96a7b80d59539fc3312a58ed132f4965",
+    "fff93c2acc798bbb30787dd97c4d7fbf96a7b80d59539fc3312a58ed132f4965",
+    "fff93c2acc798bbb30787dd97c4d7fbf96a7b80d59539fc3312a58ed132f4965"
+   ]
+  },
+  "rubber-scale-2": {
+   "run_sha256": [
+    "a42b45a2cebc1f28e840883f1d74c0885ce1b506e6c32cbe92a99a6c3b6b1274",
+    "a42b45a2cebc1f28e840883f1d74c0885ce1b506e6c32cbe92a99a6c3b6b1274",
+    "a42b45a2cebc1f28e840883f1d74c0885ce1b506e6c32cbe92a99a6c3b6b1274"
+   ]
+  },
+  "rubber-two-buttons": {
+   "run_sha256": [
+    "c29dc470d51b79b224e8d4ed415630ee57e7343015f085cf0c4dba4f6d3df6e2",
+    "c29dc470d51b79b224e8d4ed415630ee57e7343015f085cf0c4dba4f6d3df6e2",
+    "c29dc470d51b79b224e8d4ed415630ee57e7343015f085cf0c4dba4f6d3df6e2"
+   ]
+  },
+  "rubber-viewer-switch": {
+   "run_sha256": [
+    "d57fcc3ef6bb543651b23aa089257784f12705aed8d14faea8067530aa7a98e3",
+    "d57fcc3ef6bb543651b23aa089257784f12705aed8d14faea8067530aa7a98e3",
+    "d57fcc3ef6bb543651b23aa089257784f12705aed8d14faea8067530aa7a98e3"
+   ]
+  },
+  "rubber-walk-horizontal-left": {
+   "run_sha256": [
+    "3d226040639b5f9bf061417367391c7540a66d4144b8074e97fe1032a5205cb7",
+    "3d226040639b5f9bf061417367391c7540a66d4144b8074e97fe1032a5205cb7",
+    "3d226040639b5f9bf061417367391c7540a66d4144b8074e97fe1032a5205cb7"
+   ]
+  },
+  "rubber-walk-long": {
+   "run_sha256": [
+    "0d6d7377461b023cc28e7c6432008e4912f5af8274dd2dfd2967f0521e1a6589",
+    "0d6d7377461b023cc28e7c6432008e4912f5af8274dd2dfd2967f0521e1a6589",
+    "0d6d7377461b023cc28e7c6432008e4912f5af8274dd2dfd2967f0521e1a6589"
+   ]
+  },
+  "rubber-walk-up-right": {
+   "run_sha256": [
+    "e9833da4fcd1b426613703cc89d9e17fdec704b98db26b9c0750ebc42b9bf1ce",
+    "e9833da4fcd1b426613703cc89d9e17fdec704b98db26b9c0750ebc42b9bf1ce",
+    "e9833da4fcd1b426613703cc89d9e17fdec704b98db26b9c0750ebc42b9bf1ce"
+   ]
+  },
+  "rubber-walk-vertical": {
+   "run_sha256": [
+    "7ecbd7e0d5bf7f56ba2b0a37fce5a341d2fac27deeb7cf596b99b48808fe589b",
+    "7ecbd7e0d5bf7f56ba2b0a37fce5a341d2fac27deeb7cf596b99b48808fe589b",
+    "7ecbd7e0d5bf7f56ba2b0a37fce5a341d2fac27deeb7cf596b99b48808fe589b"
+   ]
+  },
+  "rubber-wheel-roll": {
+   "run_sha256": [
+    "a13c119d36df7998d1adfd2220006f9294aaf9af97f261eefce9369c7319c864",
+    "a13c119d36df7998d1adfd2220006f9294aaf9af97f261eefce9369c7319c864",
+    "a13c119d36df7998d1adfd2220006f9294aaf9af97f261eefce9369c7319c864"
+   ]
+  }
+ },
+ "chrome": "Google Chrome 156.0.8078.79",
+ "hardware": "Apple M1 (8-core GPU), macOS 27.0.1 (26A434)",
+ "pinned_x_ite": "16.5.0 34cdf9f97",
+ "platform": "apple-m1",
+ "recorded": "2026-11-05",
+ "recorder": "oracle/tools/rea_nav_overlay.py record (oracle/x_ite-anim.mjs)",
+ "rule": "3 identical summaries; kept only where the NVIDIA summary differs",
+ "user_agent": "rubber-wheel-roll (the only case with a wheel event): Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/156.0.0.0 Safari/537.36 (XITE_USER_AGENT), so X_ITE's SLOW_SCROLL is off as on the NVIDIA host; the other 17 cases: the browser's own (macOS); they have no wheel event, and SLOW_SCROLL only scales wheel steps (ExamineViewer.js, LookAtViewer.js, PlaneViewer.js, X3DFlyViewer.js)"
+}

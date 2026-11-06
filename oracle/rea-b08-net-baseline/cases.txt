@@ -62,3 +62,4 @@ fl-basic-b oracle/synthetic-rea-b08-net/fl-basic-b.wrl oracle/synthetic-rea-b08-
 fl-basic-b oracle/synthetic-rea-b08-net/fl-basic-b.wrl oracle/synthetic-rea-b08-net/fl-basic-b.json 4
 ig-remove oracle/synthetic-rea-b08-net/ig-remove.wrl oracle/synthetic-rea-b08-net/ig-remove.json 0
 ig-remove oracle/synthetic-rea-b08-net/ig-remove.wrl oracle/synthetic-rea-b08-net/ig-remove.json 4
+ig-second oracle/synthetic-rea-b08-net/ig-second.wrl oracle/synthetic-rea-b08-net/ig-second.json 0 --known-diff=ig-second

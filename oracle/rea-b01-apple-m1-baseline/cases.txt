@@ -1,0 +1,1 @@
+shading-wireframe oracle/synthetic-rea/shading-wireframe.wrl oracle/synthetic-rea/scripts/shading.json 4

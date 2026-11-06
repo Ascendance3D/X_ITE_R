@@ -11,7 +11,12 @@
 //!
 //! Only `js.json` (poses, probes, text) can come from a platform recording. The pictures of the case (`js/*.png`) come from the
 //! NVIDIA recording, so the image comparison of a case does not change with the platform; the exceptions are rea_b21_wide_lines and
-//! rea_b22_two_layer_shadows, whose platform recordings may hold `<case>.<frame>.png` where the platform's page draws the frame differently.
+//! rea_b22_two_layer_shadows, whose platform recordings may hold `<case>.<frame>.png` where the platform's page draws the frame differently,
+//! and the tests of issue #461 (rea_collision_time, instanced_text, rea_batch01), whose platform recordings may hold `<key>.<file>` for a
+//! picture `<file>` of the case (`picture_for`, made by `oracle/tools/record_platform_baseline.py --pictures`).
+//!
+//! A named platform must be the machine the test runs on: `platform()` stops the test when no adapter of that platform is there
+//! (`adapter_matches`), so a platform recording is never the reference on another GPU. The platform is never chosen from the adapter.
 
 use std::path::{Path, PathBuf};
 
@@ -36,7 +41,78 @@ pub fn platform() -> Option<String> {
         "X3D_REFERENCE_PLATFORM={p}: unknown platform (known: {PLATFORMS:?})"
     );
 
+    static ADAPTERS: std::sync::OnceLock<Vec<(wgpu::Backend, u32, String)>> =
+        std::sync::OnceLock::new();
+    let adapters = ADAPTERS.get_or_init(|| {
+        let mut desc = wgpu::InstanceDescriptor::new_without_display_handle();
+        desc.backends = wgpu::Backends::METAL;
+        let instance = wgpu::Instance::new(desc);
+        pollster::block_on(instance.enumerate_adapters(wgpu::Backends::METAL))
+            .iter()
+            .map(|a| {
+                let i = a.get_info();
+                (i.backend, i.vendor, i.name)
+            })
+            .collect()
+    });
+
+    assert!(
+        adapters
+            .iter()
+            .any(|(backend, vendor, name)| adapter_matches(&p, *backend, *vendor, name)),
+        "X3D_REFERENCE_PLATFORM={p}, but no {p} adapter is here (Metal adapters: {adapters:?}): the {p} recordings are not the reference on this machine"
+    );
+
     Some(p)
+}
+
+/// Whether an adapter can be `platform`: apple-m1 needs a Metal adapter of Apple (vendor 0x106b, or "Apple" in the name).
+pub fn adapter_matches(platform: &str, backend: wgpu::Backend, vendor: u32, name: &str) -> bool {
+    match platform {
+        "apple-m1" => {
+            backend == wgpu::Backend::Metal && (vendor == 0x106b || name.starts_with("Apple"))
+        }
+        _ => false,
+    }
+}
+
+/// A recording stored flat, `oracle/<base>/<key>.json` (rea_collision_time, rea_gravity_layers, instanced_text, rea_nav_overlay), with
+/// the platform given by the caller: `oracle/<stem>-<platform>-baseline/<key>.json` where that file exists.
+pub fn flat_json_for(root: &Path, base: &str, key: &str, platform: Option<&str>) -> PathBuf {
+    let own = root.join(format!("oracle/{base}/{key}.json"));
+
+    let Some(p) = platform else {
+        return own;
+    };
+
+    let over = root.join(format!("oracle/{}/{key}.json", platform_base(base, p)));
+
+    if over.is_file() {
+        eprintln!("reference: {key} uses the {p} recording");
+        over
+    } else {
+        own
+    }
+}
+
+pub fn flat_json(root: &Path, base: &str, key: &str) -> PathBuf {
+    flat_json_for(root, base, key, platform().as_deref())
+}
+
+/// A picture `file` of a case whose NVIDIA picture is `own`: `oracle/<stem>-<platform>-baseline/<key>.<file>` where the platform
+/// recording holds it, else `own`.
+pub fn picture_for(
+    root: &Path,
+    base: &str,
+    key: &str,
+    file: &str,
+    own: &Path,
+    platform: Option<&str>,
+) -> PathBuf {
+    platform
+        .map(|p| root.join(format!("oracle/{}/{key}.{file}", platform_base(base, p))))
+        .filter(|over| over.is_file())
+        .unwrap_or_else(|| own.to_path_buf())
 }
 
 /// The `js.json` of a case, with the platform given by the caller (the tests of this module use it without the environment).

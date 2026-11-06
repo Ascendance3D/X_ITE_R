@@ -129,9 +129,11 @@ fn compare_case(
     text_tol: f64,
     failures: &mut Vec<String>,
 ) {
-    let dir = root.join(format!(
-        "oracle/rea-gravity-layers-baseline/{name}-msaa{msaa}.json"
-    ));
+    let dir = common::reference::flat_json(
+        root,
+        "rea-gravity-layers-baseline",
+        &format!("{name}-msaa{msaa}"),
+    );
     let js: Value = serde_json::from_str(&std::fs::read_to_string(&dir).unwrap()).unwrap();
     let out = std::env::temp_dir().join(format!(
         "rea-gravity-layers-{}-{name}-msaa{msaa}",

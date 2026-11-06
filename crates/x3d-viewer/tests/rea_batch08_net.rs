@@ -2,12 +2,14 @@
 //! `oracle/tools/rea_b08_net.py case`): DISEntityManager, DISEntityTypeMapping, ReceiverPdu, SignalPdu, TransmitterPdu,
 //! InlineGeometry and FontLibrary (worlds: oracle/synthetic-rea-b08-net).
 //!
-//! Each case of oracle/rea-b08-net-baseline/cases.txt (`name world script msaa [text_tol]`) runs
+//! Each case of oracle/rea-b08-net-baseline/cases.txt (`name world script msaa [text_tol] [--udp] [--known-diff=KEY]`) runs
 //! `x3d-drive` on the world and its event script and compares the result with the oracle's
 //! `js.json` like oracle/tools/x10_compare.py: scene text exact (or, with `text_tol`, the same
 //! text with every number within it: absolute below magnitude 1, relative above), poses within
 //! 1e-4, the sorted log exact, captured frames with at most 0.5% of the pixels more than 8 off.
-//! Without a GPU adapter the image part is skipped.
+//! Without a GPU adapter the image part is skipped. A `--known-diff=KEY` case leaves the picture regions of a decided
+//! difference (`known_diff`) out of that comparison and checks the difference itself there: X_ITE's region stays the same in
+//! every captured frame, Rust's changes (ig-second, ADR 0012: Rust keeps the routes of a second InlineGeometry).
 //!
 //! `REA_ONLY=<substring>` restricts the cases.
 
@@ -220,6 +222,30 @@ fn nums(v: &Value) -> Vec<f64> {
         .unwrap_or_default()
 }
 
+/// A decided difference of a case (`--known-diff=KEY` in cases.txt): the picture region where X_ITE and Rust differ by
+/// decision, as `(x0, y0, x1, y1)` in pixels from the top left, and why.
+fn known_diff(key: &str) -> (&'static [(u32, u32, u32, u32)], &'static str) {
+    match key {
+        // ADR 0012 (issue #68): with Cache on, X_ITE 16.5.0 gives a second InlineGeometry of the same url a copy() of the
+        // geometry without its routes ("TODO: add routes", InlineGeometry.js setInternalScene). Rust keeps the routes. The
+        // Extrusion row (routes to EX.set_spine) shows it: X_ITE's second and third copies stay still, Rust's move. The
+        // Coordinate row moves in both, because the copy shares the routed Coordinate node.
+        "ig-second" => (
+            &[(170, 256, 512, 512)],
+            "ADR 0012: the second and third InlineGeometry of routes-extrusion.x3dv keep their routes in Rust",
+        ),
+        _ => panic!("unknown --known-diff={key}"),
+    }
+}
+
+/// The pixels of `px` (RGBA, width `w`) inside `r`.
+fn region(px: &[u8], w: u32, r: (u32, u32, u32, u32)) -> Vec<u8> {
+    let (x0, y0, x1, y1) = r;
+    (y0..y1)
+        .flat_map(|y| px[((y * w + x0) * 4) as usize..((y * w + x1) * 4) as usize].to_vec())
+        .collect()
+}
+
 #[allow(clippy::too_many_arguments)]
 fn compare_case(
     root: &Path,
@@ -230,6 +256,7 @@ fn compare_case(
     text_tol: f64,
     udp_on: bool,
     gpu: bool,
+    known: Option<&str>,
     failures: &mut Vec<String>,
 ) {
     let dir = root.join(format!("oracle/rea-b08-net-baseline/{name}-msaa{msaa}"));
@@ -356,14 +383,48 @@ fn compare_case(
         }
     }
 
+    let (masked, why) = known.map_or((&[][..], ""), known_diff);
+    // The masked regions of each picture, X_ITE and Rust, in frame order: the difference itself is checked below.
+    let mut regions: Vec<(String, Vec<Vec<u8>>, Vec<Vec<u8>>)> = vec![];
+
     if images {
-        for entry in std::fs::read_dir(dir.join("js")).unwrap() {
-            let p = entry.unwrap().path();
+        let mut files: Vec<_> = std::fs::read_dir(dir.join("js"))
+            .unwrap()
+            .map(|e| e.unwrap().path())
+            .collect();
+        files.sort_by_key(|p| {
+            p.file_stem()
+                .and_then(|s| s.to_str())
+                .and_then(|s| s.parse::<u32>().ok())
+        });
+
+        for p in files {
             let file = p.file_name().unwrap().to_string_lossy().to_string();
             let (w, h, want) = x3d_render::compare::load_png(&p).unwrap();
 
             match x3d_render::compare::load_png(&png_dir.join(&file)) {
-                Ok((rw, rh, got)) if (rw, rh) == (w, h) => {
+                Ok((rw, rh, mut got)) if (rw, rh) == (w, h) => {
+                    if let Some(r) = masked
+                        .iter()
+                        .find(|r| r.2 > w || r.3 > h || r.0 >= r.2 || r.1 >= r.3)
+                    {
+                        fail(format!(
+                            "{file}: known-difference region {r:?} is not inside the {w}x{h} picture"
+                        ));
+                        continue;
+                    }
+                    for (i, &r) in masked.iter().enumerate() {
+                        if regions.len() <= i {
+                            regions.push((format!("{r:?}"), vec![], vec![]));
+                        }
+                        regions[i].1.push(region(&want, w, r));
+                        regions[i].2.push(region(&got, w, r));
+                        let (x0, y0, x1, y1) = r;
+                        for y in y0..y1 {
+                            let row = ((y * w + x0) * 4) as usize..((y * w + x1) * 4) as usize;
+                            got[row.clone()].copy_from_slice(&want[row]);
+                        }
+                    }
                     let s = x3d_render::compare::compare(w, h, &want, &got, 8);
 
                     if s.pixels_over * 1000 > (w * h) as usize * 5 {
@@ -377,6 +438,37 @@ fn compare_case(
                 Err(e) => fail(format!("{file}: {e}")),
             }
         }
+    }
+
+    // The decided difference must be there, else the mask hides nothing and must go: X_ITE's region is the same in
+    // every picture, Rust's is not, and the two are not equal.
+    for (r, js_px, rs_px) in &regions {
+        if js_px.windows(2).any(|p| p[0] != p[1]) {
+            fail(format!(
+                "known difference {}: the X_ITE region {r} changes between pictures ({why})",
+                known.unwrap()
+            ));
+        }
+        if rs_px.windows(2).all(|p| p[0] == p[1]) {
+            fail(format!(
+                "known difference {}: the Rust region {r} does not change between pictures ({why})",
+                known.unwrap()
+            ));
+        }
+        // And the two differ there: else the region holds no difference to leave out.
+        if js_px.iter().zip(rs_px).all(|(a, b)| a == b) {
+            fail(format!(
+                "known difference {}: the X_ITE and Rust regions {r} are equal in every picture ({why})",
+                known.unwrap()
+            ));
+        }
+    }
+
+    if !masked.is_empty() && images && regions.is_empty() {
+        fail(format!(
+            "known difference {}: no picture was compared",
+            known.unwrap()
+        ));
     }
 
     let _ = std::fs::remove_dir_all(&out);
@@ -403,6 +495,7 @@ fn rea_batch08_net_cases_match_x_ite() {
         let f: Vec<&str> = line.split_whitespace().collect();
         let (name, world, script, msaa) = (f[0], f[1], f[2], f[3].parse::<u32>().unwrap());
         let udp_on = f.contains(&"--udp");
+        let known = f.iter().find_map(|a| a.strip_prefix("--known-diff="));
         let text_tol = f
             .get(4)
             .filter(|t| !t.starts_with("--"))
@@ -421,6 +514,7 @@ fn rea_batch08_net_cases_match_x_ite() {
             text_tol,
             udp_on,
             gpu,
+            known,
             &mut failures,
         );
         checked += 1;

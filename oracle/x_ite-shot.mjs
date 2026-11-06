@@ -66,10 +66,15 @@ const server = createServer (async (req, res) =>
 await new Promise (r => server .listen (0, "127.0.0.1", r));
 
 const base    = `http://127.0.0.1:${server .address () .port}`;
+// XITE_CHROME and XITE_ANGLE_BACKEND let another machine record (as in x_ite-anim.mjs): the physical M1 Mac uses
+// "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome" and "metal" (issue #461). Unset, the recording is the one of the
+// NVIDIA host (system Chrome, ANGLE on OpenGL).
 const browser = await chromium .launch ({
-   executablePath: "/usr/bin/google-chrome",
+   executablePath: process .env .XITE_CHROME ?? "/usr/bin/google-chrome",
    headless: true,
-   args: [ "--headless=new", "--no-sandbox", "--use-gl=angle", "--use-angle=gl", "--enable-gpu", "--ignore-gpu-blocklist" ],
+   args: [ "--headless=new", "--no-sandbox",
+      ...(process .env .XITE_ANGLE_BACKEND ? [ `--use-angle=${process .env .XITE_ANGLE_BACKEND}` ] : [ "--use-gl=angle", "--use-angle=gl" ]),
+      "--enable-gpu", "--ignore-gpu-blocklist" ],
 });
 
 // --- PNG encoder (RGBA8, no filter), so the oracle has no extra dependencies.

@@ -1,0 +1,111 @@
+{
+ "angle_backend": "metal",
+ "cases": {
+  "it-extra-msaa4": {
+   "differs_from_nvidia_in": [
+    "info"
+   ],
+   "pictures_differ_from_nvidia": {
+    "10.png": "e598310b594176c03a5d168813d33910da60414597569dd67234743b4d22ecf1"
+   },
+   "run_sha256": [
+    "6f3a8ed846aff129ce99d1c2fef67e2ba3d5e9e7b7c348a5bce589f568fee8c0",
+    "6f3a8ed846aff129ce99d1c2fef67e2ba3d5e9e7b7c348a5bce589f568fee8c0",
+    "6f3a8ed846aff129ce99d1c2fef67e2ba3d5e9e7b7c348a5bce589f568fee8c0"
+   ]
+  },
+  "it-pick-msaa0": {
+   "differs_from_nvidia_in": [
+    "pickProbes"
+   ],
+   "run_sha256": [
+    "aa417aedc12f17bd028d88cf271a5b299602cf3e9a0112fd9ffb4075051b8dec",
+    "aa417aedc12f17bd028d88cf271a5b299602cf3e9a0112fd9ffb4075051b8dec",
+    "aa417aedc12f17bd028d88cf271a5b299602cf3e9a0112fd9ffb4075051b8dec"
+   ]
+  },
+  "it-pick-msaa4": {
+   "differs_from_nvidia_in": [
+    "info",
+    "pickProbes"
+   ],
+   "pictures_differ_from_nvidia": {
+    "10.png": "9be9a6afd2234d8e54983852480c25710034b0b2435accaac4b2e9e024809029"
+   },
+   "run_sha256": [
+    "f08586422dd359be4d295baeb4e40e6626cef8fcc479aa608b5e9bd8b0f8c64d",
+    "f08586422dd359be4d295baeb4e40e6626cef8fcc479aa608b5e9bd8b0f8c64d",
+    "f08586422dd359be4d295baeb4e40e6626cef8fcc479aa608b5e9bd8b0f8c64d"
+   ]
+  },
+  "it-runtime-msaa0": {
+   "pictures_differ_from_nvidia": {
+    "17.png": "d77d518fb0e913794bf6db64fef413761c3668ae1bc68a241d44f16a0682cb2a",
+    "25.png": "9ccd5e765d04e61355eb2cfcddd545deda0d67bb7044d5c7d599395c1742fd14",
+    "33.png": "66f9cab50f06ebb08589f6d2dddbcb27f056573e0f1f6d153a09e0f9fb3f58ed",
+    "4.png": "36247875f58338fdbe7c9956eb991585623ab2fba6439aae02cff70f675ee37e",
+    "41.png": "9d592d3ba8960cfa3ac3161a8882a9828f1a05de3f63ff216e2b2b662de66465",
+    "49.png": "e5790f841f27ab5dc4fec87a1ccd74250f36a043984a4d5f999ccafe947dfff8",
+    "73.png": "9c13b2ee012db853f47ee4da1197875904101ae47462a0755baa32b0937f456b",
+    "9.png": "d45f47ab9d51306307b39ee1d2e6e97371de979a45ce678174f857fb66703c2f"
+   },
+   "run_sha256": [
+    "19c798538da03fac113f51b2773d61566e7bcdc09a3d914f692004944b7157f8",
+    "19c798538da03fac113f51b2773d61566e7bcdc09a3d914f692004944b7157f8",
+    "19c798538da03fac113f51b2773d61566e7bcdc09a3d914f692004944b7157f8"
+   ]
+  },
+  "it-runtime-msaa4": {
+   "differs_from_nvidia_in": [
+    "info"
+   ],
+   "pictures_differ_from_nvidia": {
+    "17.png": "11bab205def8e2a1eb60bfaafaddd580b0a0f6ee4ca949e2e82cf91364e6a8e1",
+    "25.png": "659d56dd4eb00e83d8657f0a8b4cff0b632e16b3b7302338040e839b0a8c7c38",
+    "33.png": "2f44617f3ab4b023a79b5b00f8cef5a586ca05a72cc0843264b59002a6947af5",
+    "4.png": "171b038a21ca1b9d3a5cccf8c0b1f44fada10d90e0e3ce1428a30a8feac9c6b9",
+    "41.png": "afbc214bc539b88f8631f1923318af72ec0e6f3ded5e9298dd2984e387c5d1b6",
+    "49.png": "935ee782a981d2d6a1ec132bdbeb8b9b350f8fc6037248cdf1586d68ef8b75dd",
+    "57.png": "766ffd5d58eacd1603dbbba487afb74993ee22617126f976b13a9486043547fc",
+    "65.png": "42e586b811a76202c436bdcb18752829815d3ae1f73cb0c13ffa9ed8cd1af847",
+    "73.png": "d5872cf39074e877e20c31489d80c0d4322d34b8544e834dd1f0cdb5f3557308",
+    "9.png": "ac719e2ccc2c97442fdf03b9e14473f27adcf75f126d41231b754c70a4824ccb"
+   },
+   "run_sha256": [
+    "d4fdf17c4181690285ca8ac73d16cfcc309259187f3d890ed6583aa09de306f9",
+    "d4fdf17c4181690285ca8ac73d16cfcc309259187f3d890ed6583aa09de306f9",
+    "d4fdf17c4181690285ca8ac73d16cfcc309259187f3d890ed6583aa09de306f9"
+   ]
+  },
+  "it-static-msaa0": {
+   "pictures_differ_from_nvidia": {
+    "10.png": "3a5ffeae67d672b356737e97a64732a61e160d0477e4d2b900ce25403f056c06"
+   },
+   "run_sha256": [
+    "f78f8794a68a3259be0b0b3661d85a10541fb0cf9cd2f4cafa4c03ac89815e31",
+    "f78f8794a68a3259be0b0b3661d85a10541fb0cf9cd2f4cafa4c03ac89815e31",
+    "f78f8794a68a3259be0b0b3661d85a10541fb0cf9cd2f4cafa4c03ac89815e31"
+   ]
+  },
+  "it-static-msaa4": {
+   "differs_from_nvidia_in": [
+    "info"
+   ],
+   "pictures_differ_from_nvidia": {
+    "10.png": "61891cf4ff2970cf15fcd7fa6a958b6a9d72506221389342d13f3624e45be42d"
+   },
+   "run_sha256": [
+    "01e4131b2f7187646eac6f8f6d286cb9650507a7653e94f9b1ac48e71bb6c3fa",
+    "01e4131b2f7187646eac6f8f6d286cb9650507a7653e94f9b1ac48e71bb6c3fa",
+    "01e4131b2f7187646eac6f8f6d286cb9650507a7653e94f9b1ac48e71bb6c3fa"
+   ]
+  }
+ },
+ "chrome": "Google Chrome 156.0.8078.79",
+ "hardware": "Apple M1 (8-core GPU), macOS 27.0.1 (26A434)",
+ "pinned_x_ite": "16.5.0 34cdf9f97",
+ "platform": "apple-m1",
+ "recorded": "2026-11-05",
+ "recorder": "oracle/x_ite-anim.mjs, oracle/x_ite-anim-msaa.mjs",
+ "rule": "3 identical runs; kept only where the NVIDIA recording differs"
+}
