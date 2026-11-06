@@ -29,7 +29,7 @@ const DIR = dirname (fileURLToPath (import.meta.url));
 export const SHARDS = {
    phone:  [ "runtime02_phone.test.mjs" ],
    tablet: [ "runtime02_tablet.test.mjs", "runtime02_lifecycle.test.mjs" ],
-   input:  [ "runtime02_input.test.mjs", "loadurl01.test.mjs", "videomirror01.test.mjs", "touchsnapshot01.test.mjs", "antialiased01.test.mjs", "antialiased02.test.mjs" ],
+   input:  [ "runtime02_input.test.mjs", "loadurl01.test.mjs", "videomirror01.test.mjs", "touchsnapshot01.test.mjs", "antialiased01.test.mjs", "antialiased02.test.mjs", "pointtie01.test.mjs" ],
    "cases-1": [ "scripturl01.test.mjs", "script01.test.mjs", "attributes01.test.mjs", "gltfworld01.test.mjs", "options01.test.mjs", "fallback01.test.mjs", "routes01.test.mjs", "scenecreate01.test.mjs", "gltfworld02.test.mjs", "fields04.test.mjs", "sound01.test.mjs", "sound02.test.mjs", "sound03.test.mjs", "sound04.test.mjs", "movie01.test.mjs" ],
    "cases-2": [ "runtime02.test.mjs", "dataurl01.test.mjs", "scenetext01.test.mjs", "degenerate01.test.mjs", "api.test.mjs", "entry01.test.mjs", "fields01.test.mjs", "fields02.test.mjs", "fields03.test.mjs", "fields05.test.mjs", "dom01.test.mjs", "dom02.test.mjs", "dom03.test.mjs", "rootnodes01.test.mjs", "nav01.test.mjs", "nav02.test.mjs", "nav03.test.mjs", "nav04.test.mjs", "touchdelivery01.test.mjs", "scriptlife01.test.mjs", "externremove01.test.mjs", "inlinehold01.test.mjs", "shutdown01.test.mjs", "ui02.test.mjs", "reentry01.test.mjs" ],
    "cases-3": [ "splatsort01.test.mjs", "ui01.test.mjs" ],
