@@ -1,0 +1,3313 @@
+{
+  "ok": true,
+  "poses": {
+    "30": {
+      "position": [
+        0,
+        1.6,
+        8.236800328125002
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "start",
+      "viewer": "WALK",
+      "fieldOfViewScale": 1
+    },
+    "75": {
+      "position": [
+        0,
+        1.6,
+        2.592000328124998
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "start",
+      "viewer": "WALK",
+      "fieldOfViewScale": 1
+    },
+    "125": {
+      "position": [
+        0,
+        1.6,
+        7.968000492187501
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "start",
+      "viewer": "WALK",
+      "fieldOfViewScale": 1
+    },
+    "195": {
+      "position": [
+        0,
+        1.6,
+        -0.09599950781250222
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "start",
+      "viewer": "WALK",
+      "fieldOfViewScale": 1
+    },
+    "200": {
+      "position": [
+        0,
+        1.6,
+        -0.09599950781250222
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "start",
+      "viewer": "WALK",
+      "fieldOfViewScale": 1
+    }
+  },
+  "vrml": {
+    "30": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Full\n\nCOMPONENT Scripting : 1\n\nNavigationInfo {\n  type \"WALK\"\n  speed 4\n  transitionType \"TELEPORT\"\n}\n\nViewpoint {\n  description \"start\"\n  position 0 1.6 12\n}\n\nTransform {\n  translation 0 -0.1 0\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.4 0.4 0.4\n      }\n    }\n    geometry Box {\n      size 60 0.2 60\n    }\n  }\n}\n\nDEF C1 Collision {\n  visible FALSE\n  children Transform {\n    translation 0 1.5 4\n    children Shape {\n      appearance Appearance {\n        material Material {\n          diffuseColor 0.8 0.3 0.3\n        }\n      }\n      geometry Box {\n        size 8 3 0.4\n      }\n    }\n  }\n}\n\nTransform {\n  translation 5 0.5 6\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.9 0.9 0.2\n      }\n    }\n    geometry Box {\n      size 1 1 1\n    }\n  }\n}\n\nTransform {\n  translation -6 1 9\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.2 0.9 0.9\n      }\n    }\n    geometry Box {\n      size 1 2 1\n    }\n  }\n}\n\nTransform {\n  translation 0 2.5 -9\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.9 0.2 0.9\n      }\n    }\n    geometry Box {\n      size 6 0.4 0.4\n    }\n  }\n}\n\nDEF LOG Script {\n  inputOutput SFString hist \"\"\n  inputOutput SFInt32  frame 40\n  inputOnly   SFBool   C1_a\n  inputOnly   SFTime   C1_t\n\n  url \"ecmascript:\n    function C1_a (v, t) { hist = hist + ' ' + frame + ':C1.isActive=' + v + '@' + (t - 946684800) .toFixed (6); }\n    function C1_t (v, t) { hist = hist + ' ' + frame + ':C1.collideTime=' + (v - 946684800) .toFixed (6); }\n    function prepareEvents () { frame = frame + 1; }\n\"\n}\n\nROUTE C1.isActive TO LOG.C1_a\nROUTE C1.collideTime TO LOG.C1_t\n",
+    "75": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Full\n\nCOMPONENT Scripting : 1\n\nNavigationInfo {\n  type \"WALK\"\n  speed 4\n  transitionType \"TELEPORT\"\n}\n\nViewpoint {\n  description \"start\"\n  position 0 1.6 12\n}\n\nTransform {\n  translation 0 -0.1 0\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.4 0.4 0.4\n      }\n    }\n    geometry Box {\n      size 60 0.2 60\n    }\n  }\n}\n\nDEF C1 Collision {\n  visible FALSE\n  children Transform {\n    translation 0 1.5 4\n    children Shape {\n      appearance Appearance {\n        material Material {\n          diffuseColor 0.8 0.3 0.3\n        }\n      }\n      geometry Box {\n        size 8 3 0.4\n      }\n    }\n  }\n}\n\nTransform {\n  translation 5 0.5 6\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.9 0.9 0.2\n      }\n    }\n    geometry Box {\n      size 1 1 1\n    }\n  }\n}\n\nTransform {\n  translation -6 1 9\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.2 0.9 0.9\n      }\n    }\n    geometry Box {\n      size 1 2 1\n    }\n  }\n}\n\nTransform {\n  translation 0 2.5 -9\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.9 0.2 0.9\n      }\n    }\n    geometry Box {\n      size 6 0.4 0.4\n    }\n  }\n}\n\nDEF LOG Script {\n  inputOutput SFString hist \"\"\n  inputOutput SFInt32  frame 85\n  inputOnly   SFBool   C1_a\n  inputOnly   SFTime   C1_t\n\n  url \"ecmascript:\n    function C1_a (v, t) { hist = hist + ' ' + frame + ':C1.isActive=' + v + '@' + (t - 946684800) .toFixed (6); }\n    function C1_t (v, t) { hist = hist + ' ' + frame + ':C1.collideTime=' + (v - 946684800) .toFixed (6); }\n    function prepareEvents () { frame = frame + 1; }\n\"\n}\n\nROUTE C1.isActive TO LOG.C1_a\nROUTE C1.collideTime TO LOG.C1_t\n",
+    "125": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Full\n\nCOMPONENT Scripting : 1\n\nNavigationInfo {\n  type \"WALK\"\n  speed 4\n  transitionType \"TELEPORT\"\n}\n\nViewpoint {\n  description \"start\"\n  position 0 1.6 12\n}\n\nTransform {\n  translation 0 -0.1 0\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.4 0.4 0.4\n      }\n    }\n    geometry Box {\n      size 60 0.2 60\n    }\n  }\n}\n\nDEF C1 Collision {\n  visible FALSE\n  children Transform {\n    translation 0 1.5 4\n    children Shape {\n      appearance Appearance {\n        material Material {\n          diffuseColor 0.8 0.3 0.3\n        }\n      }\n      geometry Box {\n        size 8 3 0.4\n      }\n    }\n  }\n}\n\nTransform {\n  translation 5 0.5 6\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.9 0.9 0.2\n      }\n    }\n    geometry Box {\n      size 1 1 1\n    }\n  }\n}\n\nTransform {\n  translation -6 1 9\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.2 0.9 0.9\n      }\n    }\n    geometry Box {\n      size 1 2 1\n    }\n  }\n}\n\nTransform {\n  translation 0 2.5 -9\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.9 0.2 0.9\n      }\n    }\n    geometry Box {\n      size 6 0.4 0.4\n    }\n  }\n}\n\nDEF LOG Script {\n  inputOutput SFString hist \"\"\n  inputOutput SFInt32  frame 135\n  inputOnly   SFBool   C1_a\n  inputOnly   SFTime   C1_t\n\n  url \"ecmascript:\n    function C1_a (v, t) { hist = hist + ' ' + frame + ':C1.isActive=' + v + '@' + (t - 946684800) .toFixed (6); }\n    function C1_t (v, t) { hist = hist + ' ' + frame + ':C1.collideTime=' + (v - 946684800) .toFixed (6); }\n    function prepareEvents () { frame = frame + 1; }\n\"\n}\n\nROUTE C1.isActive TO LOG.C1_a\nROUTE C1.collideTime TO LOG.C1_t\n",
+    "195": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Full\n\nCOMPONENT Scripting : 1\n\nNavigationInfo {\n  type \"WALK\"\n  speed 4\n  transitionType \"TELEPORT\"\n}\n\nViewpoint {\n  description \"start\"\n  position 0 1.6 12\n}\n\nTransform {\n  translation 0 -0.1 0\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.4 0.4 0.4\n      }\n    }\n    geometry Box {\n      size 60 0.2 60\n    }\n  }\n}\n\nDEF C1 Collision {\n  visible FALSE\n  children Transform {\n    translation 0 1.5 4\n    children Shape {\n      appearance Appearance {\n        material Material {\n          diffuseColor 0.8 0.3 0.3\n        }\n      }\n      geometry Box {\n        size 8 3 0.4\n      }\n    }\n  }\n}\n\nTransform {\n  translation 5 0.5 6\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.9 0.9 0.2\n      }\n    }\n    geometry Box {\n      size 1 1 1\n    }\n  }\n}\n\nTransform {\n  translation -6 1 9\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.2 0.9 0.9\n      }\n    }\n    geometry Box {\n      size 1 2 1\n    }\n  }\n}\n\nTransform {\n  translation 0 2.5 -9\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.9 0.2 0.9\n      }\n    }\n    geometry Box {\n      size 6 0.4 0.4\n    }\n  }\n}\n\nDEF LOG Script {\n  inputOutput SFString hist \"\"\n  inputOutput SFInt32  frame 205\n  inputOnly   SFBool   C1_a\n  inputOnly   SFTime   C1_t\n\n  url \"ecmascript:\n    function C1_a (v, t) { hist = hist + ' ' + frame + ':C1.isActive=' + v + '@' + (t - 946684800) .toFixed (6); }\n    function C1_t (v, t) { hist = hist + ' ' + frame + ':C1.collideTime=' + (v - 946684800) .toFixed (6); }\n    function prepareEvents () { frame = frame + 1; }\n\"\n}\n\nROUTE C1.isActive TO LOG.C1_a\nROUTE C1.collideTime TO LOG.C1_t\n",
+    "200": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Full\n\nCOMPONENT Scripting : 1\n\nNavigationInfo {\n  type \"WALK\"\n  speed 4\n  transitionType \"TELEPORT\"\n}\n\nViewpoint {\n  description \"start\"\n  position 0 1.6 12\n}\n\nTransform {\n  translation 0 -0.1 0\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.4 0.4 0.4\n      }\n    }\n    geometry Box {\n      size 60 0.2 60\n    }\n  }\n}\n\nDEF C1 Collision {\n  visible FALSE\n  children Transform {\n    translation 0 1.5 4\n    children Shape {\n      appearance Appearance {\n        material Material {\n          diffuseColor 0.8 0.3 0.3\n        }\n      }\n      geometry Box {\n        size 8 3 0.4\n      }\n    }\n  }\n}\n\nTransform {\n  translation 5 0.5 6\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.9 0.9 0.2\n      }\n    }\n    geometry Box {\n      size 1 1 1\n    }\n  }\n}\n\nTransform {\n  translation -6 1 9\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.2 0.9 0.9\n      }\n    }\n    geometry Box {\n      size 1 2 1\n    }\n  }\n}\n\nTransform {\n  translation 0 2.5 -9\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.9 0.2 0.9\n      }\n    }\n    geometry Box {\n      size 6 0.4 0.4\n    }\n  }\n}\n\nDEF LOG Script {\n  inputOutput SFString hist \"\"\n  inputOutput SFInt32  frame 210\n  inputOnly   SFBool   C1_a\n  inputOnly   SFTime   C1_t\n\n  url \"ecmascript:\n    function C1_a (v, t) { hist = hist + ' ' + frame + ':C1.isActive=' + v + '@' + (t - 946684800) .toFixed (6); }\n    function C1_t (v, t) { hist = hist + ' ' + frame + ':C1.collideTime=' + (v - 946684800) .toFixed (6); }\n    function prepareEvents () { frame = frame + 1; }\n\"\n}\n\nROUTE C1.isActive TO LOG.C1_a\nROUTE C1.collideTime TO LOG.C1_t\n"
+  },
+  "prints": [],
+  "log": [],
+  "anchors": [],
+  "loadFrames": 3,
+  "warmupFrames": 8,
+  "geometry": {
+    "rect": [
+      0,
+      0,
+      512,
+      512
+    ],
+    "viewport": [
+      0,
+      0,
+      512,
+      512
+    ],
+    "scroll": [
+      0,
+      0
+    ]
+  },
+  "pickProbes": [
+    {
+      "id": 1,
+      "point": [
+        -1.5999958515167236,
+        -1.600000023841858,
+        -4.128849029541016
+      ],
+      "normal": [
+        0,
+        1,
+        0
+      ],
+      "texCoord": [
+        0.47333335876464844,
+        0.5704140663146973,
+        0,
+        1
+      ]
+    },
+    {
+      "id": 1,
+      "point": [
+        -1.3862178325653076,
+        -1.600000023841858,
+        -4.128849029541016
+      ],
+      "normal": [
+        0,
+        1,
+        0
+      ],
+      "texCoord": [
+        0.47689634561538696,
+        0.5704140663146973,
+        0,
+        1
+      ]
+    },
+    {
+      "id": 1,
+      "point": [
+        -1.172439694404602,
+        -1.600000023841858,
+        -4.128849029541016
+      ],
+      "normal": [
+        0,
+        1,
+        0
+      ],
+      "texCoord": [
+        0.4804593324661255,
+        0.5704140663146973,
+        0,
+        1
+      ]
+    },
+    {
+      "id": 1,
+      "point": [
+        -0.9586617350578308,
+        -1.600000023841858,
+        -4.128849029541016
+      ],
+      "normal": [
+        0,
+        1,
+        0
+      ],
+      "texCoord": [
+        0.4840222895145416,
+        0.5704140663146973,
+        0,
+        1
+      ]
+    },
+    {
+      "id": 1,
+      "point": [
+        -0.74488365650177,
+        -1.600000023841858,
+        -4.128849029541016
+      ],
+      "normal": [
+        0,
+        1,
+        0
+      ],
+      "texCoord": [
+        0.48758527636528015,
+        0.5704140663146973,
+        0,
+        1
+      ]
+    },
+    {
+      "id": 1,
+      "point": [
+        -0.531105637550354,
+        -1.600000023841858,
+        -4.128849029541016
+      ],
+      "normal": [
+        0,
+        1,
+        0
+      ],
+      "texCoord": [
+        0.4911482334136963,
+        0.5704140663146973,
+        0,
+        1
+      ]
+    },
+    {
+      "id": 1,
+      "point": [
+        -0.3173275589942932,
+        -1.600000023841858,
+        -4.128849029541016
+      ],
+      "normal": [
+        0,
+        1,
+        0
+      ],
+      "texCoord": [
+        0.4947111904621124,
+        0.5704140663146973,
+        0,
+        1
+      ]
+    },
+    {
+      "id": 1,
+      "point": [
+        -0.1035495325922966,
+        -1.600000023841858,
+        -4.128849029541016
+      ],
+      "normal": [
+        0,
+        1,
+        0
+      ],
+      "texCoord": [
+        0.49827414751052856,
+        0.570414125919342,
+        0,
+        1
+      ]
+    },
+    {
+      "id": 1,
+      "point": [
+        0.11022850126028061,
+        -1.600000023841858,
+        -4.128849029541016
+      ],
+      "normal": [
+        0,
+        1,
+        0
+      ],
+      "texCoord": [
+        0.5018371343612671,
+        0.570414125919342,
+        0,
+        1
+      ]
+    },
+    {
+      "id": 1,
+      "point": [
+        0.3240065574645996,
+        -1.600000023841858,
+        -4.128849029541016
+      ],
+      "normal": [
+        0,
+        1,
+        0
+      ],
+      "texCoord": [
+        0.5054001212120056,
+        0.570414125919342,
+        0,
+        1
+      ]
+    },
+    {
+      "id": 1,
+      "point": [
+        0.5377843976020813,
+        -1.600000023841858,
+        -4.128849029541016
+      ],
+      "normal": [
+        0,
+        1,
+        0
+      ],
+      "texCoord": [
+        0.5089630484580994,
+        0.570414125919342,
+        0,
+        1
+      ]
+    },
+    {
+      "id": 1,
+      "point": [
+        0.7515625357627869,
+        -1.600000023841858,
+        -4.128849029541016
+      ],
+      "normal": [
+        0,
+        1,
+        0
+      ],
+      "texCoord": [
+        0.5125260353088379,
+        0.570414125919342,
+        0,
+        1
+      ]
+    },
+    {
+      "id": 1,
+      "point": [
+        0.9653406739234924,
+        -1.600000023841858,
+        -4.128849029541016
+      ],
+      "normal": [
+        0,
+        1,
+        0
+      ],
+      "texCoord": [
+        0.5160890221595764,
+        0.570414125919342,
+        0,
+        1
+      ]
+    },
+    {
+      "id": 1,
+      "point": [
+        1.1791187524795532,
+        -1.600000023841858,
+        -4.128849029541016
+      ],
+      "normal": [
+        0,
+        1,
+        0
+      ],
+      "texCoord": [
+        0.5196519494056702,
+        0.570414125919342,
+        0,
+        1
+      ]
+    },
+    {
+      "id": 1,
+      "point": [
+        1.3928968906402588,
+        -1.600000023841858,
+        -4.128849029541016
+      ],
+      "normal": [
+        0,
+        1,
+        0
+      ],
+      "texCoord": [
+        0.5232149362564087,
+        0.570414125919342,
+        0,
+        1
+      ]
+    },
+    {
+      "id": 1,
+      "point": [
+        1.6066750288009644,
+        -1.600000023841858,
+        -4.128849029541016
+      ],
+      "normal": [
+        0,
+        1,
+        0
+      ],
+      "texCoord": [
+        0.5267778635025024,
+        0.570414125919342,
+        0,
+        1
+      ]
+    },
+    {
+      "id": 1,
+      "point": [
+        -1.8467402458190918,
+        -1.600000023841858,
+        -4.76558256149292
+      ],
+      "normal": [
+        0,
+        1,
+        0
+      ],
+      "texCoord": [
+        0.46922093629837036,
+        0.5810262560844421,
+        0,
+        1
+      ]
+    },
+    {
+      "id": 1,
+      "point": [
+        -1.5999943017959595,
+        -1.600000023841858,
+        -4.76558256149292
+      ],
+      "normal": [
+        0,
+        1,
+        0
+      ],
+      "texCoord": [
+        0.47333335876464844,
+        0.5810262560844421,
+        0,
+        1
+      ]
+    },
+    {
+      "id": 1,
+      "point": [
+        -1.3532483577728271,
+        -1.600000023841858,
+        -4.76558256149292
+      ],
+      "normal": [
+        0,
+        1,
+        0
+      ],
+      "texCoord": [
+        0.4774458110332489,
+        0.5810262560844421,
+        0,
+        1
+      ]
+    },
+    {
+      "id": 1,
+      "point": [
+        -1.1065022945404053,
+        -1.600000023841858,
+        -4.76558256149292
+      ],
+      "normal": [
+        0,
+        1,
+        0
+      ],
+      "texCoord": [
+        0.48155826330184937,
+        0.5810263156890869,
+        0,
+        1
+      ]
+    },
+    {
+      "id": 1,
+      "point": [
+        -0.8597564101219177,
+        -1.600000023841858,
+        -4.76558256149292
+      ],
+      "normal": [
+        0,
+        1,
+        0
+      ],
+      "texCoord": [
+        0.48567068576812744,
+        0.5810263156890869,
+        0,
+        1
+      ]
+    },
+    {
+      "id": 1,
+      "point": [
+        -0.6130104064941406,
+        -1.600000023841858,
+        -4.76558256149292
+      ],
+      "normal": [
+        0,
+        1,
+        0
+      ],
+      "texCoord": [
+        0.4897831380367279,
+        0.5810263156890869,
+        0,
+        1
+      ]
+    },
+    {
+      "id": 1,
+      "point": [
+        -0.3662644326686859,
+        -1.600000023841858,
+        -4.76558256149292
+      ],
+      "normal": [
+        0,
+        1,
+        0
+      ],
+      "texCoord": [
+        0.493895560503006,
+        0.5810263156890869,
+        0,
+        1
+      ]
+    },
+    {
+      "id": 1,
+      "point": [
+        -0.11951852589845657,
+        -1.600000023841858,
+        -4.76558256149292
+      ],
+      "normal": [
+        0,
+        1,
+        0
+      ],
+      "texCoord": [
+        0.49800801277160645,
+        0.5810263156890869,
+        0,
+        1
+      ]
+    },
+    {
+      "id": 1,
+      "point": [
+        0.12722724676132202,
+        -1.600000023841858,
+        -4.76558256149292
+      ],
+      "normal": [
+        0,
+        1,
+        0
+      ],
+      "texCoord": [
+        0.5021203756332397,
+        0.5810263156890869,
+        0,
+        1
+      ]
+    },
+    {
+      "id": 1,
+      "point": [
+        0.3739732801914215,
+        -1.600000023841858,
+        -4.76558256149292
+      ],
+      "normal": [
+        0,
+        1,
+        0
+      ],
+      "texCoord": [
+        0.5062328577041626,
+        0.5810263156890869,
+        0,
+        1
+      ]
+    },
+    {
+      "id": 1,
+      "point": [
+        0.6207193732261658,
+        -1.600000023841858,
+        -4.76558256149292
+      ],
+      "normal": [
+        0,
+        1,
+        0
+      ],
+      "texCoord": [
+        0.5103453397750854,
+        0.5810263156890869,
+        0,
+        1
+      ]
+    },
+    {
+      "id": 1,
+      "point": [
+        0.8674653768539429,
+        -1.600000023841858,
+        -4.76558256149292
+      ],
+      "normal": [
+        0,
+        1,
+        0
+      ],
+      "texCoord": [
+        0.5144577026367188,
+        0.5810263156890869,
+        0,
+        1
+      ]
+    },
+    {
+      "id": 1,
+      "point": [
+        1.1142114400863647,
+        -1.600000023841858,
+        -4.76558256149292
+      ],
+      "normal": [
+        0,
+        1,
+        0
+      ],
+      "texCoord": [
+        0.5185701251029968,
+        0.5810263156890869,
+        0,
+        1
+      ]
+    },
+    {
+      "id": 1,
+      "point": [
+        1.3609575033187866,
+        -1.600000023841858,
+        -4.76558256149292
+      ],
+      "normal": [
+        0,
+        1,
+        0
+      ],
+      "texCoord": [
+        0.5226826071739197,
+        0.5810263156890869,
+        0,
+        1
+      ]
+    },
+    {
+      "id": 1,
+      "point": [
+        1.6077035665512085,
+        -1.600000023841858,
+        -4.76558256149292
+      ],
+      "normal": [
+        0,
+        1,
+        0
+      ],
+      "texCoord": [
+        0.5267950296401978,
+        0.5810263156890869,
+        0,
+        1
+      ]
+    },
+    {
+      "id": 1,
+      "point": [
+        1.8544495105743408,
+        -1.600000023841858,
+        -4.76558256149292
+      ],
+      "normal": [
+        0,
+        1,
+        0
+      ],
+      "texCoord": [
+        0.5309074521064758,
+        0.5810263156890869,
+        0,
+        1
+      ]
+    },
+    {
+      "id": 1,
+      "point": [
+        -2.183464765548706,
+        -1.600000023841858,
+        -5.634512901306152
+      ],
+      "normal": [
+        0,
+        1,
+        0
+      ],
+      "texCoord": [
+        0.46360886096954346,
+        0.5955083966255188,
+        0,
+        1
+      ]
+    },
+    {
+      "id": 1,
+      "point": [
+        -1.8917285203933716,
+        -1.600000023841858,
+        -5.634512901306152
+      ],
+      "normal": [
+        0,
+        1,
+        0
+      ],
+      "texCoord": [
+        0.46847113966941833,
+        0.5955084562301636,
+        0,
+        1
+      ]
+    },
+    {
+      "id": 1,
+      "point": [
+        -1.599992275238037,
+        -1.600000023841858,
+        -5.634512901306152
+      ],
+      "normal": [
+        0,
+        1,
+        0
+      ],
+      "texCoord": [
+        0.4733334183692932,
+        0.5955084562301636,
+        0,
+        1
+      ]
+    },
+    {
+      "id": 1,
+      "point": [
+        -1.308255910873413,
+        -1.600000023841858,
+        -5.634512901306152
+      ],
+      "normal": [
+        0,
+        1,
+        0
+      ],
+      "texCoord": [
+        0.4781956970691681,
+        0.5955084562301636,
+        0,
+        1
+      ]
+    },
+    {
+      "id": 1,
+      "point": [
+        -1.0165196657180786,
+        -1.600000023841858,
+        -5.634512901306152
+      ],
+      "normal": [
+        0,
+        1,
+        0
+      ],
+      "texCoord": [
+        0.48305800557136536,
+        0.5955084562301636,
+        0,
+        1
+      ]
+    },
+    {
+      "id": 1,
+      "point": [
+        -0.7247834205627441,
+        -1.600000023841858,
+        -5.634512901306152
+      ],
+      "normal": [
+        0,
+        1,
+        0
+      ],
+      "texCoord": [
+        0.48792025446891785,
+        0.5955084562301636,
+        0,
+        1
+      ]
+    },
+    {
+      "id": 1,
+      "point": [
+        -0.4330473840236664,
+        -1.600000023841858,
+        -5.634512901306152
+      ],
+      "normal": [
+        0,
+        1,
+        0
+      ],
+      "texCoord": [
+        0.4927825331687927,
+        0.5955084562301636,
+        0,
+        1
+      ]
+    },
+    {
+      "id": 1,
+      "point": [
+        -0.14131100475788116,
+        -1.600000023841858,
+        -5.634512901306152
+      ],
+      "normal": [
+        0,
+        1,
+        0
+      ],
+      "texCoord": [
+        0.4976448118686676,
+        0.5955084562301636,
+        0,
+        1
+      ]
+    },
+    {
+      "id": 1,
+      "point": [
+        0.15042537450790405,
+        -1.600000023841858,
+        -5.634512901306152
+      ],
+      "normal": [
+        0,
+        1,
+        0
+      ],
+      "texCoord": [
+        0.5025070905685425,
+        0.5955084562301636,
+        0,
+        1
+      ]
+    },
+    {
+      "id": 1,
+      "point": [
+        0.4421617388725281,
+        -1.600000023841858,
+        -5.634512901306152
+      ],
+      "normal": [
+        0,
+        1,
+        0
+      ],
+      "texCoord": [
+        0.507369339466095,
+        0.5955084562301636,
+        0,
+        1
+      ]
+    },
+    {
+      "id": 1,
+      "point": [
+        0.7338981032371521,
+        -1.600000023841858,
+        -5.634512901306152
+      ],
+      "normal": [
+        0,
+        1,
+        0
+      ],
+      "texCoord": [
+        0.5122316479682922,
+        0.5955084562301636,
+        0,
+        1
+      ]
+    },
+    {
+      "id": 1,
+      "point": [
+        1.025634527206421,
+        -1.600000023841858,
+        -5.634512901306152
+      ],
+      "normal": [
+        0,
+        1,
+        0
+      ],
+      "texCoord": [
+        0.5170938968658447,
+        0.5955084562301636,
+        0,
+        1
+      ]
+    },
+    {
+      "id": 1,
+      "point": [
+        1.317370891571045,
+        -1.600000023841858,
+        -5.634512901306152
+      ],
+      "normal": [
+        0,
+        1,
+        0
+      ],
+      "texCoord": [
+        0.521956205368042,
+        0.5955084562301636,
+        0,
+        1
+      ]
+    },
+    {
+      "id": 1,
+      "point": [
+        1.609107255935669,
+        -1.600000023841858,
+        -5.634512901306152
+      ],
+      "normal": [
+        0,
+        1,
+        0
+      ],
+      "texCoord": [
+        0.5268184542655945,
+        0.5955084562301636,
+        0,
+        1
+      ]
+    },
+    {
+      "id": 1,
+      "point": [
+        1.900843620300293,
+        -1.600000023841858,
+        -5.634512901306152
+      ],
+      "normal": [
+        0,
+        1,
+        0
+      ],
+      "texCoord": [
+        0.531680703163147,
+        0.5955084562301636,
+        0,
+        1
+      ]
+    },
+    {
+      "id": 1,
+      "point": [
+        2.192579984664917,
+        -1.600000023841858,
+        -5.634512901306152
+      ],
+      "normal": [
+        0,
+        1,
+        0
+      ],
+      "texCoord": [
+        0.5365429520606995,
+        0.5955084562301636,
+        0,
+        1
+      ]
+    },
+    {
+      "id": 1,
+      "point": [
+        -2.6703646183013916,
+        -1.600000023841858,
+        -6.8909759521484375
+      ],
+      "normal": [
+        0,
+        1,
+        0
+      ],
+      "texCoord": [
+        0.4554939270019531,
+        0.6164495348930359,
+        0,
+        1
+      ]
+    },
+    {
+      "id": 1,
+      "point": [
+        -2.313572645187378,
+        -1.600000023841858,
+        -6.8909759521484375
+      ],
+      "normal": [
+        0,
+        1,
+        0
+      ],
+      "texCoord": [
+        0.46144041419029236,
+        0.6164495348930359,
+        0,
+        1
+      ]
+    },
+    {
+      "id": 1,
+      "point": [
+        -1.9567811489105225,
+        -1.600000023841858,
+        -6.8909759521484375
+      ],
+      "normal": [
+        0,
+        1,
+        0
+      ],
+      "texCoord": [
+        0.46738699078559875,
+        0.6164495348930359,
+        0,
+        1
+      ]
+    },
+    {
+      "id": 1,
+      "point": [
+        -1.599989414215088,
+        -1.600000023841858,
+        -6.8909759521484375
+      ],
+      "normal": [
+        0,
+        1,
+        0
+      ],
+      "texCoord": [
+        0.47333353757858276,
+        0.6164495348930359,
+        0,
+        1
+      ]
+    },
+    {
+      "id": 1,
+      "point": [
+        -1.2431977987289429,
+        -1.600000023841858,
+        -6.8909759521484375
+      ],
+      "normal": [
+        0,
+        1,
+        0
+      ],
+      "texCoord": [
+        0.4792800545692444,
+        0.6164495348930359,
+        0,
+        1
+      ]
+    },
+    {
+      "id": 1,
+      "point": [
+        -0.8864060044288635,
+        -1.600000023841858,
+        -6.8909759521484375
+      ],
+      "normal": [
+        0,
+        1,
+        0
+      ],
+      "texCoord": [
+        0.4852266013622284,
+        0.6164495348930359,
+        0,
+        1
+      ]
+    },
+    {
+      "id": 1,
+      "point": [
+        -0.5296141505241394,
+        -1.600000023841858,
+        -6.8909759521484375
+      ],
+      "normal": [
+        0,
+        1,
+        0
+      ],
+      "texCoord": [
+        0.49117311835289,
+        0.6164495348930359,
+        0,
+        1
+      ]
+    },
+    {
+      "id": 1,
+      "point": [
+        -0.1728222668170929,
+        -1.600000023841858,
+        -6.8909759521484375
+      ],
+      "normal": [
+        0,
+        1,
+        0
+      ],
+      "texCoord": [
+        0.497119665145874,
+        0.6164495348930359,
+        0,
+        1
+      ]
+    },
+    {
+      "id": 1,
+      "point": [
+        0.18396960198879242,
+        -1.600000023841858,
+        -6.8909759521484375
+      ],
+      "normal": [
+        0,
+        1,
+        0
+      ],
+      "texCoord": [
+        0.5030661821365356,
+        0.6164495348930359,
+        0,
+        1
+      ]
+    },
+    {
+      "id": 1,
+      "point": [
+        0.5407614707946777,
+        -1.600000023841858,
+        -6.8909759521484375
+      ],
+      "normal": [
+        0,
+        1,
+        0
+      ],
+      "texCoord": [
+        0.5090126991271973,
+        0.6164495348930359,
+        0,
+        1
+      ]
+    },
+    {
+      "id": 1,
+      "point": [
+        0.8975533246994019,
+        -1.600000023841858,
+        -6.8909759521484375
+      ],
+      "normal": [
+        0,
+        1,
+        0
+      ],
+      "texCoord": [
+        0.5149592161178589,
+        0.6164495348930359,
+        0,
+        1
+      ]
+    },
+    {
+      "id": 1,
+      "point": [
+        1.2543452978134155,
+        -1.600000023841858,
+        -6.8909759521484375
+      ],
+      "normal": [
+        0,
+        1,
+        0
+      ],
+      "texCoord": [
+        0.5209057927131653,
+        0.6164495348930359,
+        0,
+        1
+      ]
+    },
+    {
+      "id": 1,
+      "point": [
+        1.6111371517181396,
+        -1.600000023841858,
+        -6.8909759521484375
+      ],
+      "normal": [
+        0,
+        1,
+        0
+      ],
+      "texCoord": [
+        0.5268523097038269,
+        0.6164495348930359,
+        0,
+        1
+      ]
+    },
+    {
+      "id": 1,
+      "point": [
+        1.9679288864135742,
+        -1.600000023841858,
+        -6.8909759521484375
+      ],
+      "normal": [
+        0,
+        1,
+        0
+      ],
+      "texCoord": [
+        0.5327988862991333,
+        0.6164495348930359,
+        0,
+        1
+      ]
+    },
+    {
+      "id": 1,
+      "point": [
+        2.324720859527588,
+        -1.600000023841858,
+        -6.8909759521484375
+      ],
+      "normal": [
+        0,
+        1,
+        0
+      ],
+      "texCoord": [
+        0.5387453436851501,
+        0.6164495348930359,
+        0,
+        1
+      ]
+    },
+    {
+      "id": 1,
+      "point": [
+        2.6815125942230225,
+        -1.600000023841858,
+        -6.8909759521484375
+      ],
+      "normal": [
+        0,
+        1,
+        0
+      ],
+      "texCoord": [
+        0.5446919202804565,
+        0.6164495348930359,
+        0,
+        1
+      ]
+    },
+    {
+      "id": 1,
+      "point": [
+        -3.4367353916168213,
+        -1.600000023841858,
+        -8.868624687194824
+      ],
+      "normal": [
+        0,
+        1,
+        0
+      ],
+      "texCoord": [
+        0.44272100925445557,
+        0.6494102478027344,
+        0,
+        1
+      ]
+    },
+    {
+      "id": 1,
+      "point": [
+        -2.977548360824585,
+        -1.600000023841858,
+        -8.868624687194824
+      ],
+      "normal": [
+        0,
+        1,
+        0
+      ],
+      "texCoord": [
+        0.4503740966320038,
+        0.6494102478027344,
+        0,
+        1
+      ]
+    },
+    {
+      "id": 1,
+      "point": [
+        -2.5183603763580322,
+        -1.600000023841858,
+        -8.868624687194824
+      ],
+      "normal": [
+        0,
+        1,
+        0
+      ],
+      "texCoord": [
+        0.4580272436141968,
+        0.6494102478027344,
+        0,
+        1
+      ]
+    },
+    {
+      "id": 1,
+      "point": [
+        -2.0591723918914795,
+        -1.600000023841858,
+        -8.868624687194824
+      ],
+      "normal": [
+        0,
+        1,
+        0
+      ],
+      "texCoord": [
+        0.46568039059638977,
+        0.6494102478027344,
+        0,
+        1
+      ]
+    },
+    {
+      "id": 1,
+      "point": [
+        -1.5999842882156372,
+        -1.600000023841858,
+        -8.868624687194824
+      ],
+      "normal": [
+        0,
+        1,
+        0
+      ],
+      "texCoord": [
+        0.4733335077762604,
+        0.6494102478027344,
+        0,
+        1
+      ]
+    },
+    {
+      "id": 1,
+      "point": [
+        -1.140796422958374,
+        -1.600000023841858,
+        -8.868624687194824
+      ],
+      "normal": [
+        0,
+        1,
+        0
+      ],
+      "texCoord": [
+        0.48098665475845337,
+        0.6494102478027344,
+        0,
+        1
+      ]
+    },
+    {
+      "id": 1,
+      "point": [
+        -0.6816083192825317,
+        -1.600000023841858,
+        -8.868624687194824
+      ],
+      "normal": [
+        0,
+        1,
+        0
+      ],
+      "texCoord": [
+        0.488639771938324,
+        0.6494102478027344,
+        0,
+        1
+      ]
+    },
+    {
+      "id": 1,
+      "point": [
+        -0.22242039442062378,
+        -1.600000023841858,
+        -8.868624687194824
+      ],
+      "normal": [
+        0,
+        1,
+        0
+      ],
+      "texCoord": [
+        0.49629291892051697,
+        0.6494102478027344,
+        0,
+        1
+      ]
+    },
+    {
+      "id": 1,
+      "point": [
+        0.23676757514476776,
+        -1.600000023841858,
+        -8.868624687194824
+      ],
+      "normal": [
+        0,
+        1,
+        0
+      ],
+      "texCoord": [
+        0.5039460062980652,
+        0.6494102478027344,
+        0,
+        1
+      ]
+    },
+    {
+      "id": 1,
+      "point": [
+        0.6959555149078369,
+        -1.600000023841858,
+        -8.868624687194824
+      ],
+      "normal": [
+        0,
+        1,
+        0
+      ],
+      "texCoord": [
+        0.5115991830825806,
+        0.6494102478027344,
+        0,
+        1
+      ]
+    },
+    {
+      "id": 1,
+      "point": [
+        1.1551433801651,
+        -1.600000023841858,
+        -8.868624687194824
+      ],
+      "normal": [
+        0,
+        1,
+        0
+      ],
+      "texCoord": [
+        0.5192523002624512,
+        0.6494102478027344,
+        0,
+        1
+      ]
+    },
+    {
+      "id": 1,
+      "point": [
+        1.6143314838409424,
+        -1.600000023841858,
+        -8.868624687194824
+      ],
+      "normal": [
+        0,
+        1,
+        0
+      ],
+      "texCoord": [
+        0.5269054174423218,
+        0.6494102478027344,
+        0,
+        1
+      ]
+    },
+    {
+      "id": 1,
+      "point": [
+        2.073519229888916,
+        -1.600000023841858,
+        -8.868624687194824
+      ],
+      "normal": [
+        0,
+        1,
+        0
+      ],
+      "texCoord": [
+        0.5345585346221924,
+        0.6494102478027344,
+        0,
+        1
+      ]
+    },
+    {
+      "id": 1,
+      "point": [
+        2.5327069759368896,
+        -1.600000023841858,
+        -8.868624687194824
+      ],
+      "normal": [
+        0,
+        1,
+        0
+      ],
+      "texCoord": [
+        0.5422117114067078,
+        0.6494102478027344,
+        0,
+        1
+      ]
+    },
+    {
+      "id": 1,
+      "point": [
+        2.9918954372406006,
+        -1.600000023841858,
+        -8.868624687194824
+      ],
+      "normal": [
+        0,
+        1,
+        0
+      ],
+      "texCoord": [
+        0.5498648285865784,
+        0.6494102478027344,
+        0,
+        1
+      ]
+    },
+    {
+      "id": 1,
+      "point": [
+        3.451083183288574,
+        -1.600000023841858,
+        -8.868624687194824
+      ],
+      "normal": [
+        0,
+        1,
+        0
+      ],
+      "texCoord": [
+        0.5575180053710938,
+        0.6494102478027344,
+        0,
+        1
+      ]
+    },
+    {
+      "id": 1,
+      "point": [
+        -4.820047855377197,
+        -1.600000023841858,
+        -12.438313484191895
+      ],
+      "normal": [
+        0,
+        1,
+        0
+      ],
+      "texCoord": [
+        0.4196658134460449,
+        0.708905041217804,
+        0,
+        1
+      ]
+    },
+    {
+      "id": 1,
+      "point": [
+        -4.1760334968566895,
+        -1.600000023841858,
+        -12.438313484191895
+      ],
+      "normal": [
+        0,
+        1,
+        0
+      ],
+      "texCoord": [
+        0.4303993284702301,
+        0.708905041217804,
+        0,
+        1
+      ]
+    },
+    {
+      "id": 1,
+      "point": [
+        -3.5320188999176025,
+        -1.600000023841858,
+        -12.438313484191895
+      ],
+      "normal": [
+        0,
+        1,
+        0
+      ],
+      "texCoord": [
+        0.44113296270370483,
+        0.708905041217804,
+        0,
+        1
+      ]
+    },
+    {
+      "id": 1,
+      "point": [
+        -2.8880043029785156,
+        -1.600000023841858,
+        -12.438313484191895
+      ],
+      "normal": [
+        0,
+        1,
+        0
+      ],
+      "texCoord": [
+        0.4518665075302124,
+        0.708905041217804,
+        0,
+        1
+      ]
+    },
+    {
+      "id": 1,
+      "point": [
+        -2.2439897060394287,
+        -1.600000023841858,
+        -12.438313484191895
+      ],
+      "normal": [
+        0,
+        1,
+        0
+      ],
+      "texCoord": [
+        0.46260011196136475,
+        0.708905041217804,
+        0,
+        1
+      ]
+    },
+    {
+      "id": 1,
+      "point": [
+        -1.5999749898910522,
+        -1.600000023841858,
+        -12.438313484191895
+      ],
+      "normal": [
+        0,
+        1,
+        0
+      ],
+      "texCoord": [
+        0.4733336567878723,
+        0.708905041217804,
+        0,
+        1
+      ]
+    },
+    {
+      "id": 1,
+      "point": [
+        -0.9559603333473206,
+        -1.600000023841858,
+        -12.438313484191895
+      ],
+      "normal": [
+        0,
+        1,
+        0
+      ],
+      "texCoord": [
+        0.48406726121902466,
+        0.708905041217804,
+        0,
+        1
+      ]
+    },
+    {
+      "id": 1,
+      "point": [
+        -0.3119457960128784,
+        -1.600000023841858,
+        -12.438313484191895
+      ],
+      "normal": [
+        0,
+        1,
+        0
+      ],
+      "texCoord": [
+        0.4948008060455322,
+        0.708905041217804,
+        0,
+        1
+      ]
+    },
+    {
+      "id": 1,
+      "point": [
+        0.3320687711238861,
+        -1.600000023841858,
+        -12.438313484191895
+      ],
+      "normal": [
+        0,
+        1,
+        0
+      ],
+      "texCoord": [
+        0.5055344104766846,
+        0.708905041217804,
+        0,
+        1
+      ]
+    },
+    {
+      "id": 1,
+      "point": [
+        0.9760834574699402,
+        -1.600000023841858,
+        -12.438313484191895
+      ],
+      "normal": [
+        0,
+        1,
+        0
+      ],
+      "texCoord": [
+        0.5162679553031921,
+        0.708905041217804,
+        0,
+        1
+      ]
+    },
+    {
+      "id": 1,
+      "point": [
+        1.6200979948043823,
+        -1.600000023841858,
+        -12.438313484191895
+      ],
+      "normal": [
+        0,
+        1,
+        0
+      ],
+      "texCoord": [
+        0.5270015597343445,
+        0.708905041217804,
+        0,
+        1
+      ]
+    },
+    {
+      "id": 1,
+      "point": [
+        2.2641124725341797,
+        -1.600000023841858,
+        -12.438313484191895
+      ],
+      "normal": [
+        0,
+        1,
+        0
+      ],
+      "texCoord": [
+        0.537735104560852,
+        0.708905041217804,
+        0,
+        1
+      ]
+    },
+    {
+      "id": 1,
+      "point": [
+        2.9081270694732666,
+        -1.600000023841858,
+        -12.438313484191895
+      ],
+      "normal": [
+        0,
+        1,
+        0
+      ],
+      "texCoord": [
+        0.5484687089920044,
+        0.708905041217804,
+        0,
+        1
+      ]
+    },
+    {
+      "id": 1,
+      "point": [
+        3.5521416664123535,
+        -1.600000023841858,
+        -12.438313484191895
+      ],
+      "normal": [
+        0,
+        1,
+        0
+      ],
+      "texCoord": [
+        0.559202253818512,
+        0.708905041217804,
+        0,
+        1
+      ]
+    },
+    {
+      "id": 1,
+      "point": [
+        4.196156024932861,
+        -1.600000023841858,
+        -12.438313484191895
+      ],
+      "normal": [
+        0,
+        1,
+        0
+      ],
+      "texCoord": [
+        0.5699359178543091,
+        0.708905041217804,
+        0,
+        1
+      ]
+    },
+    {
+      "id": 1,
+      "point": [
+        4.840170860290527,
+        -1.600000023841858,
+        -12.438313484191895
+      ],
+      "normal": [
+        0,
+        1,
+        0
+      ],
+      "texCoord": [
+        0.5806694030761719,
+        0.708905041217804,
+        0,
+        1
+      ]
+    },
+    {
+      "id": 1,
+      "point": [
+        -8.067127227783203,
+        -1.600000023841858,
+        -20.817522048950195
+      ],
+      "normal": [
+        0,
+        1,
+        0
+      ],
+      "texCoord": [
+        0.3655478358268738,
+        0.8485584259033203,
+        0,
+        1
+      ]
+    },
+    {
+      "id": 1,
+      "point": [
+        -6.989264965057373,
+        -1.600000023841858,
+        -20.817522048950195
+      ],
+      "normal": [
+        0,
+        1,
+        0
+      ],
+      "texCoord": [
+        0.3835121989250183,
+        0.8485584259033203,
+        0,
+        1
+      ]
+    },
+    {
+      "id": 1,
+      "point": [
+        -5.911402702331543,
+        -1.600000023841858,
+        -20.817522048950195
+      ],
+      "normal": [
+        0,
+        1,
+        0
+      ],
+      "texCoord": [
+        0.40147656202316284,
+        0.8485584259033203,
+        0,
+        1
+      ]
+    },
+    {
+      "id": 1,
+      "point": [
+        -4.833540439605713,
+        -1.600000023841858,
+        -20.817522048950195
+      ],
+      "normal": [
+        0,
+        1,
+        0
+      ],
+      "texCoord": [
+        0.41944095492362976,
+        0.8485584259033203,
+        0,
+        1
+      ]
+    },
+    {
+      "id": 1,
+      "point": [
+        -3.7556777000427246,
+        -1.600000023841858,
+        -20.817522048950195
+      ],
+      "normal": [
+        0,
+        1,
+        0
+      ],
+      "texCoord": [
+        0.4374053180217743,
+        0.8485584259033203,
+        0,
+        1
+      ]
+    },
+    {
+      "id": 1,
+      "point": [
+        -2.6778154373168945,
+        -1.600000023841858,
+        -20.817522048950195
+      ],
+      "normal": [
+        0,
+        1,
+        0
+      ],
+      "texCoord": [
+        0.4553697109222412,
+        0.8485584259033203,
+        0,
+        1
+      ]
+    },
+    {
+      "id": 1,
+      "point": [
+        -1.599953055381775,
+        -1.600000023841858,
+        -20.817522048950195
+      ],
+      "normal": [
+        0,
+        1,
+        0
+      ],
+      "texCoord": [
+        0.47333407402038574,
+        0.8485584259033203,
+        0,
+        1
+      ]
+    },
+    {
+      "id": 1,
+      "point": [
+        -0.5220908522605896,
+        -1.600000023841858,
+        -20.817522048950195
+      ],
+      "normal": [
+        0,
+        1,
+        0
+      ],
+      "texCoord": [
+        0.49129846692085266,
+        0.8485584259033203,
+        0,
+        1
+      ]
+    },
+    {
+      "id": 1,
+      "point": [
+        0.5557714104652405,
+        -1.600000023841858,
+        -20.817522048950195
+      ],
+      "normal": [
+        0,
+        1,
+        0
+      ],
+      "texCoord": [
+        0.5092628002166748,
+        0.8485584259033203,
+        0,
+        1
+      ]
+    },
+    {
+      "id": 1,
+      "point": [
+        1.6336338520050049,
+        -1.600000023841858,
+        -20.817522048950195
+      ],
+      "normal": [
+        0,
+        1,
+        0
+      ],
+      "texCoord": [
+        0.5272272229194641,
+        0.8485584259033203,
+        0,
+        1
+      ]
+    },
+    {
+      "id": 1,
+      "point": [
+        2.711495876312256,
+        -1.600000023841858,
+        -20.817522048950195
+      ],
+      "normal": [
+        0,
+        1,
+        0
+      ],
+      "texCoord": [
+        0.5451915860176086,
+        0.8485584259033203,
+        0,
+        1
+      ]
+    },
+    {
+      "id": 1,
+      "point": [
+        3.789358377456665,
+        -1.600000023841858,
+        -20.817522048950195
+      ],
+      "normal": [
+        0,
+        1,
+        0
+      ],
+      "texCoord": [
+        0.5631559491157532,
+        0.8485584259033203,
+        0,
+        1
+      ]
+    },
+    {
+      "id": 1,
+      "point": [
+        4.867220401763916,
+        -1.600000023841858,
+        -20.817522048950195
+      ],
+      "normal": [
+        0,
+        1,
+        0
+      ],
+      "texCoord": [
+        0.5811203122138977,
+        0.8485584259033203,
+        0,
+        1
+      ]
+    },
+    {
+      "id": 1,
+      "point": [
+        5.945082664489746,
+        -1.600000023841858,
+        -20.817522048950195
+      ],
+      "normal": [
+        0,
+        1,
+        0
+      ],
+      "texCoord": [
+        0.5990846753120422,
+        0.8485584259033203,
+        0,
+        1
+      ]
+    },
+    {
+      "id": 1,
+      "point": [
+        7.022944927215576,
+        -1.600000023841858,
+        -20.817522048950195
+      ],
+      "normal": [
+        0,
+        1,
+        0
+      ],
+      "texCoord": [
+        0.6170490980148315,
+        0.8485584259033203,
+        0,
+        1
+      ]
+    },
+    {
+      "id": 1,
+      "point": [
+        8.100807189941406,
+        -1.600000023841858,
+        -20.817522048950195
+      ],
+      "normal": [
+        0,
+        1,
+        0
+      ],
+      "texCoord": [
+        0.6350134611129761,
+        0.8485584259033203,
+        0,
+        1
+      ]
+    },
+    {
+      "id": 0
+    },
+    {
+      "id": 0
+    },
+    {
+      "id": 0
+    },
+    {
+      "id": 0
+    },
+    {
+      "id": 0
+    },
+    {
+      "id": 0
+    },
+    {
+      "id": 0
+    },
+    {
+      "id": 0
+    },
+    {
+      "id": 0
+    },
+    {
+      "id": 0
+    },
+    {
+      "id": 0
+    },
+    {
+      "id": 0
+    },
+    {
+      "id": 0
+    },
+    {
+      "id": 0
+    },
+    {
+      "id": 0
+    },
+    {
+      "id": 0
+    },
+    {
+      "id": 0
+    },
+    {
+      "id": 0
+    },
+    {
+      "id": 0
+    },
+    {
+      "id": 0
+    },
+    {
+      "id": 0
+    },
+    {
+      "id": 0
+    },
+    {
+      "id": 0
+    },
+    {
+      "id": 0
+    },
+    {
+      "id": 0
+    },
+    {
+      "id": 0
+    },
+    {
+      "id": 0
+    },
+    {
+      "id": 0
+    },
+    {
+      "id": 0
+    },
+    {
+      "id": 0
+    },
+    {
+      "id": 0
+    },
+    {
+      "id": 0
+    },
+    {
+      "id": 0
+    },
+    {
+      "id": 1,
+      "point": [
+        -2.994765520095825,
+        0.699999988079071,
+        -8.919938087463379
+      ],
+      "normal": [
+        0,
+        -1,
+        0
+      ],
+      "texCoord": [
+        0.0008723700884729624,
+        0.46015575528144836,
+        0,
+        1
+      ]
+    },
+    {
+      "id": 1,
+      "point": [
+        -2.5329222679138184,
+        0.699999988079071,
+        -8.919938087463379
+      ],
+      "normal": [
+        0,
+        -1,
+        0
+      ],
+      "texCoord": [
+        0.07784626632928848,
+        0.46015575528144836,
+        0,
+        1
+      ]
+    },
+    {
+      "id": 1,
+      "point": [
+        -2.0710787773132324,
+        0.699999988079071,
+        -8.919938087463379
+      ],
+      "normal": [
+        0,
+        -1,
+        0
+      ],
+      "texCoord": [
+        0.15482014417648315,
+        0.46015575528144836,
+        0,
+        1
+      ]
+    },
+    {
+      "id": 1,
+      "point": [
+        -1.6092355251312256,
+        0.699999988079071,
+        -8.919938087463379
+      ],
+      "normal": [
+        0,
+        -1,
+        0
+      ],
+      "texCoord": [
+        0.2317940592765808,
+        0.46015575528144836,
+        0,
+        1
+      ]
+    },
+    {
+      "id": 1,
+      "point": [
+        -1.1473920345306396,
+        0.699999988079071,
+        -8.919938087463379
+      ],
+      "normal": [
+        0,
+        -1,
+        0
+      ],
+      "texCoord": [
+        0.3087679147720337,
+        0.46015575528144836,
+        0,
+        1
+      ]
+    },
+    {
+      "id": 1,
+      "point": [
+        -0.6855487823486328,
+        0.699999988079071,
+        -8.919938087463379
+      ],
+      "normal": [
+        0,
+        -1,
+        0
+      ],
+      "texCoord": [
+        0.38574185967445374,
+        0.46015575528144836,
+        0,
+        1
+      ]
+    },
+    {
+      "id": 1,
+      "point": [
+        -0.2237052023410797,
+        0.699999988079071,
+        -8.919938087463379
+      ],
+      "normal": [
+        0,
+        -1,
+        0
+      ],
+      "texCoord": [
+        0.4627158045768738,
+        0.46015578508377075,
+        0,
+        1
+      ]
+    },
+    {
+      "id": 1,
+      "point": [
+        0.2381381243467331,
+        0.699999988079071,
+        -8.919938087463379
+      ],
+      "normal": [
+        0,
+        -1,
+        0
+      ],
+      "texCoord": [
+        0.5396897196769714,
+        0.46015578508377075,
+        0,
+        1
+      ]
+    },
+    {
+      "id": 1,
+      "point": [
+        0.6999815702438354,
+        0.699999988079071,
+        -8.919938087463379
+      ],
+      "normal": [
+        0,
+        -1,
+        0
+      ],
+      "texCoord": [
+        0.6166635751724243,
+        0.46015578508377075,
+        0,
+        1
+      ]
+    },
+    {
+      "id": 1,
+      "point": [
+        1.1618249416351318,
+        0.699999988079071,
+        -8.919938087463379
+      ],
+      "normal": [
+        0,
+        -1,
+        0
+      ],
+      "texCoord": [
+        0.693637490272522,
+        0.46015578508377075,
+        0,
+        1
+      ]
+    },
+    {
+      "id": 1,
+      "point": [
+        1.6236681938171387,
+        0.699999988079071,
+        -8.919938087463379
+      ],
+      "normal": [
+        0,
+        -1,
+        0
+      ],
+      "texCoord": [
+        0.7706114053726196,
+        0.46015578508377075,
+        0,
+        1
+      ]
+    },
+    {
+      "id": 1,
+      "point": [
+        2.0855114459991455,
+        0.699999988079071,
+        -8.919938087463379
+      ],
+      "normal": [
+        0,
+        -1,
+        0
+      ],
+      "texCoord": [
+        0.8475853204727173,
+        0.46015578508377075,
+        0,
+        1
+      ]
+    },
+    {
+      "id": 1,
+      "point": [
+        2.5473549365997314,
+        0.699999988079071,
+        -8.919938087463379
+      ],
+      "normal": [
+        0,
+        -1,
+        0
+      ],
+      "texCoord": [
+        0.9245591759681702,
+        0.46015578508377075,
+        0,
+        1
+      ]
+    },
+    {
+      "id": 0
+    },
+    {
+      "id": 0
+    },
+    {
+      "id": 0
+    },
+    {
+      "id": 0
+    },
+    {
+      "id": 0
+    },
+    {
+      "id": 0
+    },
+    {
+      "id": 0
+    },
+    {
+      "id": 0
+    },
+    {
+      "id": 0
+    },
+    {
+      "id": 0
+    },
+    {
+      "id": 0
+    },
+    {
+      "id": 0
+    },
+    {
+      "id": 0
+    },
+    {
+      "id": 0
+    },
+    {
+      "id": 0
+    },
+    {
+      "id": 0
+    },
+    {
+      "id": 0
+    },
+    {
+      "id": 0
+    },
+    {
+      "id": 0
+    },
+    {
+      "id": 0
+    },
+    {
+      "id": 0
+    },
+    {
+      "id": 0
+    },
+    {
+      "id": 0
+    },
+    {
+      "id": 0
+    },
+    {
+      "id": 0
+    },
+    {
+      "id": 0
+    },
+    {
+      "id": 0
+    },
+    {
+      "id": 0
+    },
+    {
+      "id": 0
+    },
+    {
+      "id": 0
+    },
+    {
+      "id": 0
+    },
+    {
+      "id": 0
+    },
+    {
+      "id": 0
+    },
+    {
+      "id": 0
+    },
+    {
+      "id": 0
+    },
+    {
+      "id": 0
+    },
+    {
+      "id": 0
+    },
+    {
+      "id": 0
+    },
+    {
+      "id": 0
+    },
+    {
+      "id": 0
+    },
+    {
+      "id": 0
+    },
+    {
+      "id": 0
+    },
+    {
+      "id": 0
+    },
+    {
+      "id": 0
+    },
+    {
+      "id": 0
+    },
+    {
+      "id": 0
+    },
+    {
+      "id": 0
+    },
+    {
+      "id": 0
+    },
+    {
+      "id": 0
+    },
+    {
+      "id": 0
+    },
+    {
+      "id": 0
+    },
+    {
+      "id": 0
+    },
+    {
+      "id": 0
+    },
+    {
+      "id": 0
+    },
+    {
+      "id": 0
+    },
+    {
+      "id": 0
+    },
+    {
+      "id": 0
+    },
+    {
+      "id": 0
+    },
+    {
+      "id": 0
+    },
+    {
+      "id": 0
+    },
+    {
+      "id": 0
+    },
+    {
+      "id": 0
+    },
+    {
+      "id": 0
+    },
+    {
+      "id": 0
+    },
+    {
+      "id": 0
+    },
+    {
+      "id": 0
+    },
+    {
+      "id": 0
+    },
+    {
+      "id": 0
+    },
+    {
+      "id": 0
+    },
+    {
+      "id": 0
+    },
+    {
+      "id": 0
+    },
+    {
+      "id": 0
+    },
+    {
+      "id": 0
+    },
+    {
+      "id": 0
+    },
+    {
+      "id": 0
+    },
+    {
+      "id": 0
+    },
+    {
+      "id": 0
+    },
+    {
+      "id": 0
+    },
+    {
+      "id": 0
+    },
+    {
+      "id": 0
+    },
+    {
+      "id": 0
+    },
+    {
+      "id": 0
+    },
+    {
+      "id": 0
+    },
+    {
+      "id": 0
+    },
+    {
+      "id": 0
+    },
+    {
+      "id": 0
+    },
+    {
+      "id": 0
+    },
+    {
+      "id": 0
+    },
+    {
+      "id": 0
+    },
+    {
+      "id": 0
+    },
+    {
+      "id": 0
+    },
+    {
+      "id": 0
+    },
+    {
+      "id": 0
+    },
+    {
+      "id": 0
+    },
+    {
+      "id": 0
+    },
+    {
+      "id": 0
+    },
+    {
+      "id": 0
+    },
+    {
+      "id": 0
+    }
+  ],
+  "collisionProbes": [
+    {
+      "distance": 1.3766103543712023,
+      "id": 0,
+      "normal": [
+        0,
+        1,
+        -1.1102230246251568e-16
+      ]
+    },
+    {
+      "distance": 1.3766191520169075,
+      "id": 0,
+      "normal": [
+        -2.7755575615628914e-17,
+        1,
+        0
+      ]
+    },
+    {
+      "distance": 1.3766226344183325,
+      "id": 0,
+      "normal": [
+        -2.7755575615628907e-17,
+        1,
+        1.1102230246251563e-16
+      ]
+    },
+    {
+      "distance": 1.376629782505468,
+      "id": 0,
+      "normal": [
+        5.551115123125802e-17,
+        1,
+        4.440892098500628e-16
+      ]
+    },
+    {
+      "distance": 1.3766210765019056,
+      "id": 0,
+      "normal": [
+        -2.465190328815662e-32,
+        1,
+        2.220446049250313e-16
+      ]
+    },
+    {
+      "distance": 1.376618602164051,
+      "id": 0,
+      "normal": [
+        -5.551115123125802e-17,
+        1,
+        4.440892098500628e-16
+      ]
+    },
+    {
+      "distance": 1.3766114540769154,
+      "id": 0,
+      "normal": [
+        2.7755575615628907e-17,
+        1,
+        1.1102230246251563e-16
+      ]
+    },
+    {
+      "distance": 1.3766618572554352,
+      "id": 0,
+      "normal": [
+        2.7755575615628914e-17,
+        1,
+        0
+      ]
+    },
+    {
+      "distance": 1.787308741061125,
+      "id": 0,
+      "normal": [
+        0,
+        1,
+        0
+      ]
+    },
+    {
+      "distance": 1.7873047088068434,
+      "id": 0,
+      "normal": [
+        -2.0816681711721685e-17,
+        1,
+        0
+      ]
+    },
+    {
+      "distance": 1.7873076413554119,
+      "id": 0,
+      "normal": [
+        0,
+        1,
+        0
+      ]
+    },
+    {
+      "distance": 1.7873074580711263,
+      "id": 0,
+      "normal": [
+        -1.3183898417423734e-16,
+        1,
+        -2.220446049250313e-16
+      ]
+    },
+    {
+      "distance": 1.7873069082182698,
+      "id": 0,
+      "normal": [
+        -6.162975822039155e-32,
+        1,
+        1.1102230246251565e-16
+      ]
+    },
+    {
+      "distance": 1.7873058085125566,
+      "id": 0,
+      "normal": [
+        1.3183898417423734e-16,
+        1,
+        -2.220446049250313e-16
+      ]
+    },
+    {
+      "distance": 1.7873067249339842,
+      "id": 0,
+      "normal": [
+        0,
+        1,
+        0
+      ]
+    },
+    {
+      "distance": 1.7873074580711263,
+      "id": 0,
+      "normal": [
+        2.0816681711721685e-17,
+        1,
+        0
+      ]
+    },
+    {
+      "distance": 3.200000047683716,
+      "id": -1,
+      "normal": [
+        0.816496580927726,
+        -0.49999991106389685,
+        -0.28867528863660674
+      ]
+    },
+    {
+      "distance": 3.200000047683716,
+      "id": -1,
+      "normal": [
+        0.8164965809277263,
+        -0.4999999110638969,
+        -0.28867528863660674
+      ]
+    },
+    {
+      "distance": 3.200000047683716,
+      "id": -1,
+      "normal": [
+        0.37322601503369723,
+        -0.49999991106389713,
+        -0.7814745233455542
+      ]
+    },
+    {
+      "distance": 3.200000047683716,
+      "id": -1,
+      "normal": [
+        -0.7814745233455542,
+        -0.49999991106389713,
+        -0.3732260150336974
+      ]
+    },
+    {
+      "distance": 3.200000047683716,
+      "id": -1,
+      "normal": [
+        0.2886752886366065,
+        -0.4999999110638971,
+        0.8164965809277261
+      ]
+    },
+    {
+      "distance": 3.200000047683716,
+      "id": -1,
+      "normal": [
+        -0.2886752886366063,
+        -0.4999999110638972,
+        -0.8164965809277261
+      ]
+    },
+    {
+      "distance": 3.200000047683716,
+      "id": -1,
+      "normal": [
+        0.7814745233455542,
+        -0.4999999110638972,
+        0.37322601503369723
+      ]
+    },
+    {
+      "distance": 3.200000047683716,
+      "id": -1,
+      "normal": [
+        -0.3732260150336971,
+        -0.49999991106389713,
+        0.7814745233455542
+      ]
+    },
+    {
+      "distance": 3.200000047683716,
+      "id": -1,
+      "normal": [
+        -0.816496580927726,
+        -0.49999991106389713,
+        0.28867528863660674
+      ]
+    },
+    {
+      "distance": 3.200000047683716,
+      "id": -1,
+      "normal": [
+        -0.816496580927726,
+        -0.2886748796068229,
+        0.5000001472172978
+      ]
+    },
+    {
+      "distance": 3.200000047683716,
+      "id": -1,
+      "normal": [
+        -0.2237967744980023,
+        0.2154523956074839,
+        0.9505236814258161
+      ]
+    },
+    {
+      "distance": 3.200000047683716,
+      "id": -1,
+      "normal": [
+        0.9505236814258161,
+        0.2984856525316921,
+        0.08608743393459578
+      ]
+    },
+    {
+      "distance": 3.200000047683716,
+      "id": -1,
+      "normal": [
+        -0.611248732504495,
+        -0.10800145835302968,
+        -0.7840348665749932
+      ]
+    },
+    {
+      "distance": 3.200000047683716,
+      "id": -1,
+      "normal": [
+        0.6112487325044946,
+        0.2984855746940066,
+        0.7329947808212808
+      ]
+    },
+    {
+      "distance": 3.200000047683716,
+      "id": -1,
+      "normal": [
+        -0.9505237038386848,
+        0.21545229322636514,
+        -0.2237967778684234
+      ]
+    },
+    {
+      "distance": 3.200000047683716,
+      "id": -1,
+      "normal": [
+        0.22379677786842353,
+        -0.28867488062399466,
+        -0.9309037627555461
+      ]
+    },
+    {
+      "distance": 3.200000047683716,
+      "id": -1,
+      "normal": [
+        0.8164965825149813,
+        -0.4999999410099818,
+        -0.2886752322790635
+      ]
+    },
+    {
+      "distance": 3.200000047683716,
+      "id": -1,
+      "normal": [
+        0.8164965825149813,
+        -0.5000001133832871,
+        0.288674933719671
+      ]
+    },
+    {
+      "distance": 3.200000047683716,
+      "id": -1,
+      "normal": [
+        0.7814742735037413,
+        -0.5732234172515485,
+        0.24639982501263408
+      ]
+    },
+    {
+      "distance": 3.200000047683716,
+      "id": -1,
+      "normal": [
+        0.24639982501263416,
+        -0.963388303221758,
+        0.10568871013142943
+      ]
+    },
+    {
+      "distance": 3.200000047683716,
+      "id": -1,
+      "normal": [
+        -0.09949778352081971,
+        -0.6973032691983567,
+        0.7098368417035903
+      ]
+    },
+    {
+      "distance": 3.200000047683716,
+      "id": -1,
+      "normal": [
+        0.09949778352081966,
+        -0.9633884223204783,
+        0.24896372991523136
+      ]
+    },
+    {
+      "distance": 3.200000047683716,
+      "id": -1,
+      "normal": [
+        -0.24639949913315862,
+        -0.5732228207412714,
+        0.7814748138029458
+      ]
+    },
+    {
+      "distance": 3.200000047683716,
+      "id": -1,
+      "normal": [
+        -0.7814748138029458,
+        -0.49999971145110883,
+        0.3732256742782564
+      ]
+    },
+    {
+      "distance": 1.599999899193037,
+      "id": 0,
+      "normal": [
+        0,
+        1,
+        -1.110223024625157e-16
+      ]
+    },
+    {
+      "distance": 3.200000047683716,
+      "id": -1,
+      "normal": [
+        0.5773502691896261,
+        0.5773502691896255,
+        -0.5773502691896257
+      ]
+    },
+    {
+      "distance": 1.420146328923025,
+      "id": 0,
+      "normal": [
+        -1.6653345369377346e-16,
+        1,
+        -1.1102230246251563e-16
+      ]
+    },
+    {
+      "distance": 1.406729644296057,
+      "id": 0,
+      "normal": [
+        1.1102230246251557e-16,
+        1,
+        0
+      ]
+    }
+  ]
+}

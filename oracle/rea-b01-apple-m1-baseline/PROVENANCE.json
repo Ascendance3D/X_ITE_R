@@ -1,0 +1,515 @@
+{
+ "angle_backend": "metal",
+ "cases": {
+  "browser-options-effects-msaa0": {
+   "differs_from_nvidia_in": [
+    "poses"
+   ],
+   "pictures_differ_from_nvidia": {
+    "100.png": "6ed348072303aa281a28ac01cf0fcf94f87e6c7f9271c5134ce0c6ad51262a1f",
+    "150.png": "6ed348072303aa281a28ac01cf0fcf94f87e6c7f9271c5134ce0c6ad51262a1f",
+    "20.png": "f3296f7a9cc6f032429af3ba83ae8dc12b8dce20dffaf09176f23d57d10e0156",
+    "60.png": "b8a480de17ef852d0f0435fe3a3731baa4966dbebbe02a0a0371d567109d8f72"
+   },
+   "run_sha256": [
+    "aad5bd7dbbdae4e3b437c42b9af5a308967e4dccabd62f596329181c47cc0307",
+    "aad5bd7dbbdae4e3b437c42b9af5a308967e4dccabd62f596329181c47cc0307",
+    "aad5bd7dbbdae4e3b437c42b9af5a308967e4dccabd62f596329181c47cc0307"
+   ]
+  },
+  "browser-options-friction-none-msaa0": {
+   "differs_from_nvidia_in": [
+    "poses"
+   ],
+   "pictures_differ_from_nvidia": {
+    "60.png": "7b058a7645af4c2741b9d886d63bb138452fb029ec8c5cdb19ca1279d3331558"
+   },
+   "run_sha256": [
+    "fb3a06657f9ac002266952551d4e717d4673e0277f647527cb7eff1134c96135",
+    "fb3a06657f9ac002266952551d4e717d4673e0277f647527cb7eff1134c96135",
+    "fb3a06657f9ac002266952551d4e717d4673e0277f647527cb7eff1134c96135"
+   ]
+  },
+  "browser-options-friction-some-msaa0": {
+   "pictures_differ_from_nvidia": {
+    "60.png": "7b058a7645af4c2741b9d886d63bb138452fb029ec8c5cdb19ca1279d3331558"
+   },
+   "run_sha256": [
+    "a65d5ceff6d00abac0f3fd6e1641cb12a92b251e8e048b33f81fcaad0ccee7be",
+    "a65d5ceff6d00abac0f3fd6e1641cb12a92b251e8e048b33f81fcaad0ccee7be",
+    "a65d5ceff6d00abac0f3fd6e1641cb12a92b251e8e048b33f81fcaad0ccee7be"
+   ]
+  },
+  "browser-options-horizon-false-msaa0": {
+   "pictures_differ_from_nvidia": {
+    "13.png": "38e799b91677e92e208a3a923f3161d099dc3fc89db2b25b85b39b1e40a558c4",
+    "60.png": "be1e2f2829a24342c0fc4083f7fa3123f4b5a9a8fce6c4a433ff1213f653c0c4"
+   },
+   "run_sha256": [
+    "2bddc75560f09416674df6c5e1cc808b87dc06f619ee634f742dad92f4343d74",
+    "2bddc75560f09416674df6c5e1cc808b87dc06f619ee634f742dad92f4343d74",
+    "2bddc75560f09416674df6c5e1cc808b87dc06f619ee634f742dad92f4343d74"
+   ]
+  },
+  "browser-options-horizon-true-msaa0": {
+   "pictures_differ_from_nvidia": {
+    "13.png": "6b8fec06ff376c4a590e70ac481be7392428d548d011b7fcf1caf22331f4ba00",
+    "60.png": "a8e1a8c54ab0a0ee96b3ef8cc60f3e78be128940ca0d424cd83f44d7c6853942"
+   },
+   "run_sha256": [
+    "c1a05676ce066ded8b5afa4bcbe5235cbffe3f31369addb918988184d8282323",
+    "c1a05676ce066ded8b5afa4bcbe5235cbffe3f31369addb918988184d8282323",
+    "c1a05676ce066ded8b5afa4bcbe5235cbffe3f31369addb918988184d8282323"
+   ]
+  },
+  "browser-options-inline-viewpoints-false-msaa0": {
+   "pictures_differ_from_nvidia": {
+    "10.png": "8b9873d16566cfad44d9743e664079b7ceb8dd44c6ae60cef6112bffbfa1a5d0",
+    "100.png": "e5ae2966d11c9b21ea0dfc6fbef2c9395e29bf2816f5920a8831ffb72e82f598",
+    "40.png": "18a46e53d6dc768442fe068002954fdcb61e50816e78b5a740740a0afa70642c"
+   },
+   "run_sha256": [
+    "17bdd6cee9102f3b6c35055d6cefca586552f82261ed95389850be6efdc2b1ac",
+    "17bdd6cee9102f3b6c35055d6cefca586552f82261ed95389850be6efdc2b1ac",
+    "17bdd6cee9102f3b6c35055d6cefca586552f82261ed95389850be6efdc2b1ac"
+   ]
+  },
+  "browser-options-inline-viewpoints-true-msaa0": {
+   "pictures_differ_from_nvidia": {
+    "10.png": "8b9873d16566cfad44d9743e664079b7ceb8dd44c6ae60cef6112bffbfa1a5d0",
+    "100.png": "20d55d256bd6b81ae602b0c7e00ec0063e8022e98003558531fce369572bf53a",
+    "40.png": "9333ee5c543329781736e42676004291b633f2da01c8bab6ec9d00bf011fb494"
+   },
+   "run_sha256": [
+    "c9786f072f8bbe46af068ad7e7005e077a585a2aa553214f3cdbb0d93a394cd6",
+    "c9786f072f8bbe46af068ad7e7005e077a585a2aa553214f3cdbb0d93a394cd6",
+    "c9786f072f8bbe46af068ad7e7005e077a585a2aa553214f3cdbb0d93a394cd6"
+   ]
+  },
+  "browser-options-loadurl-msaa0": {
+   "pictures_differ_from_nvidia": {
+    "100.png": "e6fa192ed16e4c866f4fe405347bb3fda0997ccb8fa83dfc3e456f539509cc44",
+    "150.png": "e6fa192ed16e4c866f4fe405347bb3fda0997ccb8fa83dfc3e456f539509cc44",
+    "20.png": "147548cdfad4212a211df49d33139f83495fe069eb1d41049313e91903dbdf32",
+    "70.png": "147548cdfad4212a211df49d33139f83495fe069eb1d41049313e91903dbdf32"
+   },
+   "run_sha256": [
+    "7aa76a705093114d279b893be0e3d6baaa986f9e9a7ccdc2679991ad7faab275",
+    "7aa76a705093114d279b893be0e3d6baaa986f9e9a7ccdc2679991ad7faab275",
+    "7aa76a705093114d279b893be0e3d6baaa986f9e9a7ccdc2679991ad7faab275"
+   ]
+  },
+  "browser-options-msaa0": {
+   "differs_from_nvidia_in": [
+    "vrml"
+   ],
+   "run_sha256": [
+    "c7dc8f5bc13356317058cfecadf1276a11973f9930446644addc736377ebe92b",
+    "c7dc8f5bc13356317058cfecadf1276a11973f9930446644addc736377ebe92b",
+    "c7dc8f5bc13356317058cfecadf1276a11973f9930446644addc736377ebe92b"
+   ]
+  },
+  "browser-options-quality-msaa0": {
+   "pictures_differ_from_nvidia": {
+    "10.png": "128f001f77f4348ea5c20ee260abf997633789b0cc9366ab66f16a07c3a98002",
+    "100.png": "19439028b1e5ebf63309599dfcd9b23170c6135dcb34ccd968199eb5371e005e"
+   },
+   "run_sha256": [
+    "19cfb050c0adc69694af0ff50bdf1879acbe1ecf0f435e91a96e3ea36d9cdaa6",
+    "19cfb050c0adc69694af0ff50bdf1879acbe1ecf0f435e91a96e3ea36d9cdaa6",
+    "19cfb050c0adc69694af0ff50bdf1879acbe1ecf0f435e91a96e3ea36d9cdaa6"
+   ]
+  },
+  "clip-pick-msaa0": {
+   "pictures_differ_from_nvidia": {
+    "44.png": "0a0bedf7ce7552ef27d305aaa296573f81d5b182cbf1e2b44b152d02ca50dae9"
+   },
+   "run_sha256": [
+    "02d659a4a5c0772f013390015cef5b4043c5b4f6567dec176067de2aae6bcff8",
+    "02d659a4a5c0772f013390015cef5b4043c5b4f6567dec176067de2aae6bcff8",
+    "02d659a4a5c0772f013390015cef5b4043c5b4f6567dec176067de2aae6bcff8"
+   ]
+  },
+  "clip-walk-msaa0": {
+   "pictures_differ_from_nvidia": {
+    "60.png": "2b13f45365a20e00cbde7a0d7a694924edcb8c1ffd2b3c2addb11182a9eea75d"
+   },
+   "run_sha256": [
+    "ec2826c214a4aef167c5d12257304d2936766d98e6262a5f261b1bda567f9158",
+    "ec2826c214a4aef167c5d12257304d2936766d98e6262a5f261b1bda567f9158",
+    "ec2826c214a4aef167c5d12257304d2936766d98e6262a5f261b1bda567f9158"
+   ]
+  },
+  "geolod-msaa0": {
+   "differs_from_nvidia_in": [
+    "geometry"
+   ],
+   "pictures_differ_from_nvidia": {
+    "10.png": "3955be409d4b85b3b1a2b5eab567ee061bbabab9cfe911816974050be1d1cfb8",
+    "30.png": "d55d2f150e42a6dbab6222a5d6b8ed38109eb9a4034b3d0b3654e0727b036e12",
+    "60.png": "5d1b3ef56a28b5d8e40f5d615525866fa31209be3ec94f080a15b921f55a3def"
+   },
+   "run_sha256": [
+    "d6cda6df4e6321ed8a9b9ca942033c9431b15b09ab1062defc10c078e9ca01b0",
+    "d6cda6df4e6321ed8a9b9ca942033c9431b15b09ab1062defc10c078e9ca01b0",
+    "d6cda6df4e6321ed8a9b9ca942033c9431b15b09ab1062defc10c078e9ca01b0"
+   ]
+  },
+  "geolod-msaa4": {
+   "differs_from_nvidia_in": [
+    "info"
+   ],
+   "pictures_differ_from_nvidia": {
+    "10.png": "215618250fe92a1213e6370e970913788bfb2abdfce750a7c2f3063081f2fd99",
+    "30.png": "7aef4b9b7e7d806be3b94bb9aa9584d8001dc7b49200a302bc2d9ba34dfaaea9",
+    "60.png": "7e82654d25ba596fb4aa70c613335a2600238025333b8da6ce9a0596a9541a65"
+   },
+   "run_sha256": [
+    "8a65d548ae95381160771cce752cd83f2084f303f93e6905dc5aa375a66c7ce4",
+    "8a65d548ae95381160771cce752cd83f2084f303f93e6905dc5aa375a66c7ce4",
+    "8a65d548ae95381160771cce752cd83f2084f303f93e6905dc5aa375a66c7ce4"
+   ]
+  },
+  "geolod-touch-msaa0": {
+   "differs_from_nvidia_in": [
+    "geometry",
+    "vrml"
+   ],
+   "pictures_differ_from_nvidia": {
+    "20.png": "cfa2bcc5075f5c4addb251f1fb555448c08094893d08c3f47c8827abed074da3"
+   },
+   "run_sha256": [
+    "9b1e57b947daf02568ad209f3ea4eb9bae4f71ed467c09af60ca2c2335a924ae",
+    "9b1e57b947daf02568ad209f3ea4eb9bae4f71ed467c09af60ca2c2335a924ae",
+    "9b1e57b947daf02568ad209f3ea4eb9bae4f71ed467c09af60ca2c2335a924ae"
+   ]
+  },
+  "geoviewpoint-examine-msaa0": {
+   "pictures_differ_from_nvidia": {
+    "40.png": "ded0ce5cbc5adce835046bee8d1a8903f41226a0ebe4529c3957b985cf28e119",
+    "5.png": "a55696a8cb1647a8564a1dea90cf5e808e33c35c50fbf94f4ac62066650dfa78",
+    "90.png": "ee7d835651dddbb3eed7f4480886da89054fa211d73655a6cb7a2be245922a73"
+   },
+   "run_sha256": [
+    "55da958a2205a1220545f2d1b6493e5bf039b36a854a127750235158861396ad",
+    "55da958a2205a1220545f2d1b6493e5bf039b36a854a127750235158861396ad",
+    "55da958a2205a1220545f2d1b6493e5bf039b36a854a127750235158861396ad"
+   ]
+  },
+  "geoviewpoint-fly-msaa0": {
+   "differs_from_nvidia_in": [
+    "poses"
+   ],
+   "pictures_differ_from_nvidia": {
+    "1.png": "36819faf7ecc77ceb336c7bd0476a476aeda70dba51c146fe5f31e91538015c3",
+    "50.png": "36819faf7ecc77ceb336c7bd0476a476aeda70dba51c146fe5f31e91538015c3",
+    "80.png": "36819faf7ecc77ceb336c7bd0476a476aeda70dba51c146fe5f31e91538015c3"
+   },
+   "run_sha256": [
+    "c7641ea0642072a0ab425ac74bbb6fcfde3d15efd1d3d460521fd8eeeea6ee1c",
+    "c7641ea0642072a0ab425ac74bbb6fcfde3d15efd1d3d460521fd8eeeea6ee1c",
+    "c7641ea0642072a0ab425ac74bbb6fcfde3d15efd1d3d460521fd8eeeea6ee1c"
+   ]
+  },
+  "geoviewpoint-fly-msaa4": {
+   "differs_from_nvidia_in": [
+    "info",
+    "poses"
+   ],
+   "pictures_differ_from_nvidia": {
+    "1.png": "36819faf7ecc77ceb336c7bd0476a476aeda70dba51c146fe5f31e91538015c3",
+    "50.png": "36819faf7ecc77ceb336c7bd0476a476aeda70dba51c146fe5f31e91538015c3",
+    "80.png": "36819faf7ecc77ceb336c7bd0476a476aeda70dba51c146fe5f31e91538015c3"
+   },
+   "run_sha256": [
+    "93b4940ac034076eb40313203fce206b6f0aaf4eda65e1e527ddd3723d74f65a",
+    "93b4940ac034076eb40313203fce206b6f0aaf4eda65e1e527ddd3723d74f65a",
+    "93b4940ac034076eb40313203fce206b6f0aaf4eda65e1e527ddd3723d74f65a"
+   ]
+  },
+  "geoviewpoint-legacy-msaa0": {
+   "differs_from_nvidia_in": [
+    "geometry"
+   ],
+   "pictures_differ_from_nvidia": {
+    "15.png": "424676214cb542404958c12e34433547824b0fccf1db0ebebe061b3b231afeb4",
+    "40.png": "424676214cb542404958c12e34433547824b0fccf1db0ebebe061b3b231afeb4",
+    "5.png": "424676214cb542404958c12e34433547824b0fccf1db0ebebe061b3b231afeb4"
+   },
+   "run_sha256": [
+    "b16927a1b758896fcaa0b2e7edefb9b5fc70b934b75930c65a1d7668e3312462",
+    "b16927a1b758896fcaa0b2e7edefb9b5fc70b934b75930c65a1d7668e3312462",
+    "b16927a1b758896fcaa0b2e7edefb9b5fc70b934b75930c65a1d7668e3312462"
+   ]
+  },
+  "geoviewpoint-legacy-xml-msaa0": {
+   "differs_from_nvidia_in": [
+    "geometry"
+   ],
+   "pictures_differ_from_nvidia": {
+    "10.png": "424676214cb542404958c12e34433547824b0fccf1db0ebebe061b3b231afeb4"
+   },
+   "run_sha256": [
+    "dc36fb7ff707cee79fd823bae5be8000ea05c46f2daa4795647ce49f8dcb276a",
+    "dc36fb7ff707cee79fd823bae5be8000ea05c46f2daa4795647ce49f8dcb276a",
+    "dc36fb7ff707cee79fd823bae5be8000ea05c46f2daa4795647ce49f8dcb276a"
+   ]
+  },
+  "geoviewpoint-walk-msaa0": {
+   "differs_from_nvidia_in": [
+    "poses"
+   ],
+   "run_sha256": [
+    "cbb0df0c89eea4c36e9de631d20b69541f66d2941629fbf15f8e5c14ddd244c5",
+    "cbb0df0c89eea4c36e9de631d20b69541f66d2941629fbf15f8e5c14ddd244c5",
+    "cbb0df0c89eea4c36e9de631d20b69541f66d2941629fbf15f8e5c14ddd244c5"
+   ]
+  },
+  "shading-flat-msaa0": {
+   "pictures_differ_from_nvidia": {
+    "12.png": "75d25e5929c92efd2df7582f70749ba56ed26059b14310a6a5e2f296bb369cdc",
+    "3.png": "75d25e5929c92efd2df7582f70749ba56ed26059b14310a6a5e2f296bb369cdc"
+   },
+   "run_sha256": [
+    "2af229666bd3b2c84640010c35ae0ad333c222ed79fd7cf16008d4bc90d0acf5",
+    "2af229666bd3b2c84640010c35ae0ad333c222ed79fd7cf16008d4bc90d0acf5",
+    "2af229666bd3b2c84640010c35ae0ad333c222ed79fd7cf16008d4bc90d0acf5"
+   ]
+  },
+  "shading-flat-msaa4": {
+   "differs_from_nvidia_in": [
+    "info"
+   ],
+   "pictures_differ_from_nvidia": {
+    "12.png": "b6e0391fc84af68a7a00cf3a43c9ddeb0e2022a476c78ffc3d4cef8245d4ae0a",
+    "3.png": "b6e0391fc84af68a7a00cf3a43c9ddeb0e2022a476c78ffc3d4cef8245d4ae0a"
+   },
+   "run_sha256": [
+    "bd7fa4578120fad1240c9eddf49a0b6472df37069b5a81e9b9f9df6106c1f776",
+    "bd7fa4578120fad1240c9eddf49a0b6472df37069b5a81e9b9f9df6106c1f776",
+    "bd7fa4578120fad1240c9eddf49a0b6472df37069b5a81e9b9f9df6106c1f776"
+   ]
+  },
+  "shading-legacy-flat-msaa0": {
+   "pictures_differ_from_nvidia": {
+    "12.png": "c02d2447cf44374ee24d7cb29dfbf2ba143344a92894b5b08c29942095b7cd60",
+    "3.png": "c02d2447cf44374ee24d7cb29dfbf2ba143344a92894b5b08c29942095b7cd60"
+   },
+   "run_sha256": [
+    "bc5bb4e7e0d48b00e4de24d032f0c0eef0d14bff0a7db4aa8ace3b1ee659d9fd",
+    "bc5bb4e7e0d48b00e4de24d032f0c0eef0d14bff0a7db4aa8ace3b1ee659d9fd",
+    "bc5bb4e7e0d48b00e4de24d032f0c0eef0d14bff0a7db4aa8ace3b1ee659d9fd"
+   ]
+  },
+  "shading-legacy-flat-msaa4": {
+   "differs_from_nvidia_in": [
+    "info"
+   ],
+   "pictures_differ_from_nvidia": {
+    "12.png": "601257e6d6fcf0e3d9edd7d2e88c466334091fa85e537675a2f521afd7116e89",
+    "3.png": "601257e6d6fcf0e3d9edd7d2e88c466334091fa85e537675a2f521afd7116e89"
+   },
+   "run_sha256": [
+    "3578e75a38049611ce2b4542f1e7c9fe73d88b49f952e09260798e5a5ce4e108",
+    "3578e75a38049611ce2b4542f1e7c9fe73d88b49f952e09260798e5a5ce4e108",
+    "3578e75a38049611ce2b4542f1e7c9fe73d88b49f952e09260798e5a5ce4e108"
+   ]
+  },
+  "shading-legacy-gouraud-msaa0": {
+   "pictures_differ_from_nvidia": {
+    "12.png": "144d328bd6867ebae6da555850f14ef1538bb05cfadad0fcd2950a8443c2df63",
+    "3.png": "144d328bd6867ebae6da555850f14ef1538bb05cfadad0fcd2950a8443c2df63"
+   },
+   "run_sha256": [
+    "15421e0847277536427676dc23138f44188e139ad3b9265a80b062c8d6f71491",
+    "15421e0847277536427676dc23138f44188e139ad3b9265a80b062c8d6f71491",
+    "15421e0847277536427676dc23138f44188e139ad3b9265a80b062c8d6f71491"
+   ]
+  },
+  "shading-legacy-gouraud-msaa4": {
+   "differs_from_nvidia_in": [
+    "info"
+   ],
+   "pictures_differ_from_nvidia": {
+    "12.png": "57be1400d092a2e3c42c49b697f9a3c3b01d582af32e7cac7b626824a97f4c58",
+    "3.png": "57be1400d092a2e3c42c49b697f9a3c3b01d582af32e7cac7b626824a97f4c58"
+   },
+   "run_sha256": [
+    "a1eeac5eda3696078e87f20c1a0ded6c79770f5ebaea48f0d20013c6ed1ede18",
+    "a1eeac5eda3696078e87f20c1a0ded6c79770f5ebaea48f0d20013c6ed1ede18",
+    "a1eeac5eda3696078e87f20c1a0ded6c79770f5ebaea48f0d20013c6ed1ede18"
+   ]
+  },
+  "shading-legacy-phong-msaa0": {
+   "pictures_differ_from_nvidia": {
+    "12.png": "55d9d05ec4da74d33cbe7e309c4adf93c09e9d0e0de491e0a5036a7f1969d134",
+    "3.png": "55d9d05ec4da74d33cbe7e309c4adf93c09e9d0e0de491e0a5036a7f1969d134"
+   },
+   "run_sha256": [
+    "28c72974ed261cf43ab38007d06e9c402a8329c034b22f199ff60d671f8c0c5d",
+    "28c72974ed261cf43ab38007d06e9c402a8329c034b22f199ff60d671f8c0c5d",
+    "28c72974ed261cf43ab38007d06e9c402a8329c034b22f199ff60d671f8c0c5d"
+   ]
+  },
+  "shading-legacy-phong-msaa4": {
+   "differs_from_nvidia_in": [
+    "info"
+   ],
+   "pictures_differ_from_nvidia": {
+    "12.png": "92244a6ac16b464ee7707e258ed862cf6808d8dae0e3200b445ef49af7753275",
+    "3.png": "92244a6ac16b464ee7707e258ed862cf6808d8dae0e3200b445ef49af7753275"
+   },
+   "run_sha256": [
+    "a19d05297e49ebf1345a3db667469eddcf5e28cb6ac7e233ec250f2aa3916e10",
+    "a19d05297e49ebf1345a3db667469eddcf5e28cb6ac7e233ec250f2aa3916e10",
+    "a19d05297e49ebf1345a3db667469eddcf5e28cb6ac7e233ec250f2aa3916e10"
+   ]
+  },
+  "shading-phong-msaa0": {
+   "pictures_differ_from_nvidia": {
+    "12.png": "c42ff5042f87bc0f5b73dfef941fdaeff586be46dd1645b85db6a4a188d42699",
+    "3.png": "c42ff5042f87bc0f5b73dfef941fdaeff586be46dd1645b85db6a4a188d42699"
+   },
+   "run_sha256": [
+    "2bb97bd33080d82ebf752285fe367d11bf623548f3d5935698e5fdf39c5decfb",
+    "2bb97bd33080d82ebf752285fe367d11bf623548f3d5935698e5fdf39c5decfb",
+    "2bb97bd33080d82ebf752285fe367d11bf623548f3d5935698e5fdf39c5decfb"
+   ]
+  },
+  "shading-phong-msaa4": {
+   "differs_from_nvidia_in": [
+    "info"
+   ],
+   "pictures_differ_from_nvidia": {
+    "12.png": "48a08424384667b4f82a3514702abb923f3617bd0f2a2721d65fb417922111ad",
+    "3.png": "48a08424384667b4f82a3514702abb923f3617bd0f2a2721d65fb417922111ad"
+   },
+   "run_sha256": [
+    "fc819755d6192778aeb3186127c807e29ebd6233cb5d82d73efe9ce02de60128",
+    "fc819755d6192778aeb3186127c807e29ebd6233cb5d82d73efe9ce02de60128",
+    "fc819755d6192778aeb3186127c807e29ebd6233cb5d82d73efe9ce02de60128"
+   ]
+  },
+  "shading-point-collision-msaa0": {
+   "differs_from_nvidia_in": [
+    "geometry"
+   ],
+   "pictures_differ_from_nvidia": {
+    "150.png": "424676214cb542404958c12e34433547824b0fccf1db0ebebe061b3b231afeb4",
+    "40.png": "b4705daa76c34effec43187438ef949283c6a93745a824b67ca0a7073c31ce1b"
+   },
+   "run_sha256": [
+    "a24483e70be8171a618266ae304935e481a3006aba53f000e7cded3b1de6d7ec",
+    "a24483e70be8171a618266ae304935e481a3006aba53f000e7cded3b1de6d7ec",
+    "a24483e70be8171a618266ae304935e481a3006aba53f000e7cded3b1de6d7ec"
+   ]
+  },
+  "shading-point-msaa0": {
+   "pictures_differ_from_nvidia": {
+    "12.png": "43de7fa72ceb55b3b6181adcd15d78ef3fd88e0ed8b4d150fd89c19789d7dd36",
+    "3.png": "43de7fa72ceb55b3b6181adcd15d78ef3fd88e0ed8b4d150fd89c19789d7dd36"
+   },
+   "run_sha256": [
+    "3bfa9fad75e558f28202d04932ed6c5bb8e5d837ce815f12c39334b7e0e68b98",
+    "3bfa9fad75e558f28202d04932ed6c5bb8e5d837ce815f12c39334b7e0e68b98",
+    "3bfa9fad75e558f28202d04932ed6c5bb8e5d837ce815f12c39334b7e0e68b98"
+   ]
+  },
+  "shading-point-msaa4": {
+   "differs_from_nvidia_in": [
+    "info"
+   ],
+   "pictures_differ_from_nvidia": {
+    "12.png": "685d8ac28d00a3dd90697e72ec98383b91a93f7b2f556e445c88257826d08cdd",
+    "3.png": "685d8ac28d00a3dd90697e72ec98383b91a93f7b2f556e445c88257826d08cdd"
+   },
+   "run_sha256": [
+    "94fc234772f020a16e88646d440647c23dffc3f4a807bb7491e44027ff3fbbe2",
+    "94fc234772f020a16e88646d440647c23dffc3f4a807bb7491e44027ff3fbbe2",
+    "94fc234772f020a16e88646d440647c23dffc3f4a807bb7491e44027ff3fbbe2"
+   ]
+  },
+  "shading-wireframe-collision-msaa0": {
+   "differs_from_nvidia_in": [
+    "geometry",
+    "poses"
+   ],
+   "pictures_differ_from_nvidia": {
+    "150.png": "424676214cb542404958c12e34433547824b0fccf1db0ebebe061b3b231afeb4",
+    "40.png": "040e387fa8522b124ea6982fc1bf9e7879e995eff018e72f9e4b34f0feab14d2"
+   },
+   "run_sha256": [
+    "b24b47cf00500d8f712761dbeed6ff75c893e812cd1aff78c699dbb4eff48318",
+    "b24b47cf00500d8f712761dbeed6ff75c893e812cd1aff78c699dbb4eff48318",
+    "b24b47cf00500d8f712761dbeed6ff75c893e812cd1aff78c699dbb4eff48318"
+   ]
+  },
+  "shading-wireframe-msaa0": {
+   "pictures_differ_from_nvidia": {
+    "12.png": "9bd8d6add6b9ab7ef610ee8b14d3aa6bff1d7d2b783843d24e45750f251df49c",
+    "3.png": "9bd8d6add6b9ab7ef610ee8b14d3aa6bff1d7d2b783843d24e45750f251df49c"
+   },
+   "run_sha256": [
+    "4b781e60705c996d681995aa009b503ec58d374cc8984503e152f262a55470f9",
+    "4b781e60705c996d681995aa009b503ec58d374cc8984503e152f262a55470f9",
+    "4b781e60705c996d681995aa009b503ec58d374cc8984503e152f262a55470f9"
+   ]
+  },
+  "shading-wireframe-msaa4": {
+   "differs_from_nvidia_in": [
+    "info"
+   ],
+   "pictures_differ_from_nvidia": {
+    "12.png": "5316e32ec529a08871607dd690b571cc096f002cfb340a986114725fed20cd00",
+    "3.png": "5316e32ec529a08871607dd690b571cc096f002cfb340a986114725fed20cd00"
+   },
+   "run_sha256": [
+    "096ed1ce87bb9e13c1f00bf2c2ca00c8b071f6876a3b44a07a875251ff0c000b",
+    "096ed1ce87bb9e13c1f00bf2c2ca00c8b071f6876a3b44a07a875251ff0c000b",
+    "096ed1ce87bb9e13c1f00bf2c2ca00c8b071f6876a3b44a07a875251ff0c000b"
+   ]
+  },
+  "textureprops-v33-dump-msaa0": {
+   "pictures_differ_from_nvidia": {
+    "3.png": "c27a199d55403a3cc020dcc1e3351bc00581639fcadf1b13635da8e6c2aa1390"
+   },
+   "run_sha256": [
+    "b8cec9c1efcea00a778ea6b6ed27358f76f643f3adee807ec06447254da30c1e",
+    "b8cec9c1efcea00a778ea6b6ed27358f76f643f3adee807ec06447254da30c1e",
+    "b8cec9c1efcea00a778ea6b6ed27358f76f643f3adee807ec06447254da30c1e"
+   ]
+  },
+  "twosided-console-msaa0": {
+   "pictures_differ_from_nvidia": {
+    "3.png": "efd9c4cdfff08cb136049ae842b42d6abdbe5cf0e991e07d2bc7424032ef4895"
+   },
+   "run_sha256": [
+    "8d04d2e869f8ea5b88b6b307f9d9fcb140e4081f301ab28561619416dcae65da",
+    "8d04d2e869f8ea5b88b6b307f9d9fcb140e4081f301ab28561619416dcae65da",
+    "8d04d2e869f8ea5b88b6b307f9d9fcb140e4081f301ab28561619416dcae65da"
+   ]
+  },
+  "viewpoint-navigationinfo-msaa0": {
+   "differs_from_nvidia_in": [
+    "geometry"
+   ],
+   "pictures_differ_from_nvidia": {
+    "15.png": "9403d82588d125ce1a7c01def12d40c28fb040e42a2fe28fae346f135dee66e8",
+    "30.png": "67650718b5bd0cc54d9d0584351d577ff70239529cdfe77dad3e62cec5dc684e",
+    "5.png": "6b1fa2cd841b5ff3dafdc621af7aab518ff04d0b5eb6ec96ea47f4467d4883ba"
+   },
+   "run_sha256": [
+    "c935e77d858b91e540f9b56a8a251025445509e4801350b40b8e2e2dd3e4a4ec",
+    "c935e77d858b91e540f9b56a8a251025445509e4801350b40b8e2e2dd3e4a4ec",
+    "c935e77d858b91e540f9b56a8a251025445509e4801350b40b8e2e2dd3e4a4ec"
+   ]
+  }
+ },
+ "chrome": "Google Chrome 156.0.8078.79",
+ "hardware": "Apple M1 (8-core GPU), macOS 27.0.1 (26A434)",
+ "pinned_x_ite": "16.5.0 34cdf9f97",
+ "platform": "apple-m1",
+ "recorded": "2026-11-05",
+ "recorder": "oracle/x_ite-anim.mjs, oracle/x_ite-anim-msaa.mjs",
+ "rule": "3 identical runs; kept only where the NVIDIA recording differs"
+}

@@ -1,0 +1,218 @@
+{
+"frames": {
+"10": {
+"background": [
+51,
+77,
+128
+],
+"pixels": [],
+"size": [
+512,
+512
+]
+},
+"2": {
+"background": [
+51,
+77,
+128
+],
+"pixels": [],
+"size": [
+512,
+512
+]
+},
+"29": {
+"background": [
+51,
+77,
+128
+],
+"pixels": [],
+"size": [
+512,
+512
+]
+},
+"3": {
+"background": [
+51,
+77,
+128
+],
+"pixels": [],
+"size": [
+512,
+512
+]
+},
+"31": {
+"background": [
+51,
+77,
+128
+],
+"pixels": [],
+"size": [
+512,
+512
+]
+}
+},
+"geometry": {
+"rect": [
+0,
+0,
+512,
+512
+],
+"scroll": [
+0,
+0
+],
+"viewport": [
+0,
+0,
+512,
+512
+]
+},
+"ok": true,
+"poses": {
+"10": {
+"centerOfRotation": [
+0,
+0,
+0
+],
+"description": "start",
+"fieldOfViewScale": 1,
+"orientation": [
+0.7278335333687082,
+-0.6761954298464479,
+0.11409683763717261,
+0.37212947150894665
+],
+"position": [
+0,
+1.6,
+12
+],
+"viewer": "FLY",
+"viewpoint": ""
+},
+"2": {
+"centerOfRotation": [
+0,
+0,
+0
+],
+"description": "start",
+"fieldOfViewScale": 1,
+"orientation": [
+0,
+0,
+1,
+0
+],
+"position": [
+0,
+1.6,
+12
+],
+"viewer": "FLY",
+"viewpoint": ""
+},
+"29": {
+"centerOfRotation": [
+0,
+0,
+0
+],
+"description": "start",
+"fieldOfViewScale": 1,
+"orientation": [
+0.7278335333687078,
+-0.6761954298464475,
+0.11409683763717256,
+0.45561117299405857
+],
+"position": [
+0,
+1.6,
+12
+],
+"viewer": "FLY",
+"viewpoint": ""
+},
+"3": {
+"centerOfRotation": [
+0,
+0,
+0
+],
+"description": "start",
+"fieldOfViewScale": 1,
+"orientation": [
+0,
+0,
+1,
+0
+],
+"position": [
+0,
+1.6,
+12
+],
+"viewer": "FLY",
+"viewpoint": ""
+},
+"31": {
+"centerOfRotation": [
+0,
+0,
+0
+],
+"description": "start",
+"fieldOfViewScale": 1,
+"orientation": [
+0.7278335333687078,
+-0.6761954298464475,
+0.11409683763717256,
+0.45561117299405857
+],
+"position": [
+0,
+1.6,
+12
+],
+"viewer": "FLY",
+"viewpoint": ""
+},
+"40": {
+"centerOfRotation": [
+0,
+0,
+0
+],
+"description": "start",
+"fieldOfViewScale": 1,
+"orientation": [
+0.7278335333687078,
+-0.6761954298464475,
+0.11409683763717256,
+0.45561117299405857
+],
+"position": [
+0,
+1.6,
+12
+],
+"viewer": "FLY",
+"viewpoint": ""
+}
+},
+"warmupFrames": 8
+}
