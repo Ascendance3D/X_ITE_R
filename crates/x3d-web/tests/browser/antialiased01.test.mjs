@@ -96,7 +96,9 @@ async function draw (page, { before = () => { }, again = false, world = WORLD } 
 
 const BACKENDS = [ "webgpu", "webgl2" ];
 
-describe ("antialiased 01", { skip: Boolean (ONLY), timeout: CASE_TIMEOUT }, () =>
+// The timeout is per case, not for the suite: on SwiftShader one case takes about 22 s (hosted CI), so 16 cases need
+// more than one CASE_TIMEOUT.
+describe ("antialiased 01", { skip: Boolean (ONLY) }, () =>
 {
    for (const backend of BACKENDS)
    {
@@ -117,7 +119,7 @@ describe ("antialiased 01", { skip: Boolean (ONLY), timeout: CASE_TIMEOUT }, () 
 
       for (const [ name, extra, before, again, samples ] of cases)
       {
-         test (`${backend}: ${name}`, async () =>
+         test (`${backend}: ${name}`, { timeout: CASE_TIMEOUT }, async () =>
          {
             const page = await open (backend, extra);
 
@@ -141,7 +143,7 @@ describe ("antialiased 01", { skip: Boolean (ONLY), timeout: CASE_TIMEOUT }, () 
          });
       }
 
-      test (`${backend}: Shading FLAT set before the world loads stays in force`, async () =>
+      test (`${backend}: Shading FLAT set before the world loads stays in force`, { timeout: CASE_TIMEOUT }, async () =>
       {
          const page = await open (backend, { antialiased: "false" });
 
