@@ -146,7 +146,14 @@ fn compare_case(
     ));
     // The recording is stored flat (`NAME-msaaN.json`, one directory level: the review gate's recorded-baseline pattern); the pictures
     // are in `NAME-msaaN/js/`.
-    let js_path = dir.with_extension("json");
+    let key = format!("{name}-msaa{msaa}");
+    let platform = common::reference::platform();
+    let js_path = common::reference::flat_json_for(
+        root,
+        "rea-collision-time-baseline",
+        &key,
+        platform.as_deref(),
+    );
     let js: Value = serde_json::from_str(&std::fs::read_to_string(&js_path).unwrap()).unwrap();
     let out = std::env::temp_dir().join(format!(
         "rea-collision-time-{}-{name}-msaa{msaa}",
@@ -309,7 +316,15 @@ fn compare_case(
         for entry in std::fs::read_dir(dir.join("js")).unwrap() {
             let p = entry.unwrap().path();
             let file = p.file_name().unwrap().to_string_lossy().to_string();
-            let (w, h, want) = x3d_render::compare::load_png(&p).unwrap();
+            let want_path = common::reference::picture_for(
+                root,
+                "rea-collision-time-baseline",
+                &key,
+                &file,
+                &p,
+                platform.as_deref(),
+            );
+            let (w, h, want) = x3d_render::compare::load_png(&want_path).unwrap();
 
             match x3d_render::compare::load_png(&png_dir.join(&file)) {
                 Ok((rw, rh, got)) if (rw, rh) == (w, h) => {

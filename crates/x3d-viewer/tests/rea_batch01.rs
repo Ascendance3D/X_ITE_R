@@ -13,6 +13,8 @@
 //!
 //! `REA_ONLY=<substring>` restricts the cases.
 
+mod common;
+
 use serde_json::Value;
 use std::path::{Path, PathBuf};
 use std::process::Command;
@@ -119,8 +121,11 @@ fn compare_case(
     failures: &mut Vec<String>,
 ) {
     let dir = root.join(format!("oracle/rea-b01-baseline/{name}-msaa{msaa}"));
-    let js: Value =
-        serde_json::from_str(&std::fs::read_to_string(dir.join("js.json")).unwrap()).unwrap();
+    let key = format!("{name}-msaa{msaa}");
+    let platform = common::reference::platform();
+    let js_path =
+        common::reference::js_json_for(root, "rea-b01-baseline", name, msaa, platform.as_deref());
+    let js: Value = serde_json::from_str(&std::fs::read_to_string(&js_path).unwrap()).unwrap();
     let out =
         std::env::temp_dir().join(format!("rea-b01-{}-{name}-msaa{msaa}", std::process::id()));
     std::fs::create_dir_all(&out).unwrap();
@@ -132,7 +137,7 @@ fn compare_case(
         .arg("--out")
         .arg(&rs_json)
         .arg("--warmup-from")
-        .arg(dir.join("js.json"));
+        .arg(&js_path);
 
     let images = gpu && dir.join("js").is_dir();
 
@@ -216,7 +221,15 @@ fn compare_case(
         for entry in std::fs::read_dir(dir.join("js")).unwrap() {
             let p = entry.unwrap().path();
             let file = p.file_name().unwrap().to_string_lossy().to_string();
-            let (w, h, want) = x3d_render::compare::load_png(&p).unwrap();
+            let want_path = common::reference::picture_for(
+                root,
+                "rea-b01-baseline",
+                &key,
+                &file,
+                &p,
+                platform.as_deref(),
+            );
+            let (w, h, want) = x3d_render::compare::load_png(&want_path).unwrap();
 
             match x3d_render::compare::load_png(&png_dir.join(&file)) {
                 Ok((rw, rh, got)) if (rw, rh) == (w, h) => {
