@@ -19,7 +19,8 @@ pass). A baseline is never taken from Rust. Tests choose the recording with X3D_
   python3 -I -B oracle/tools/record_platform_baseline.py --platform apple-m1 --base rea-b09-nav-baseline \\
       --hardware "Apple M1, macOS 27.0.1" [--only NAME] [--names FILE]
 
-The recorders are oracle/x_ite-anim.mjs (MSAA 0) and oracle/x_ite-anim-msaa.mjs (MSAA N), run from the repository root.
+The recorders are oracle/x_ite-anim.mjs (MSAA 0, 512x512), oracle/x_ite-anim-sized.mjs (MSAA 0, another script size) and
+oracle/x_ite-anim-msaa.mjs (MSAA N), run from the repository root.
 
 Bases with another layout (issue #461) name it; the defaults are the layout above:
   --cases PATH      the case table, relative to oracle/ (default <base>/cases.txt); `name world script [msaa]`, msaa 0 when absent
@@ -72,7 +73,11 @@ for row in rows:
     outs, pngs = [], []
     for i in (1, 2, 3):
         out = os.path.join(tmp, f"{key}-{i}.json")
-        cmd = ["node", os.path.join(root, "oracle", "x_ite-anim.mjs" if msaa == "0" else "x_ite-anim-msaa.mjs"), world, script, "--out", out]
+        # x_ite-anim.mjs draws on the fixed 512x512 canvas of anim.html; a script of another size was recorded with the sized
+        # variant (anim-sized.html), as the NVIDIA rea-b01 baselines at 384 and 256 were.
+        sized = json.load(open(os.path.join(root, script))).get("size", [512, 512]) != [512, 512]
+        anim = "x_ite-anim-msaa.mjs" if msaa != "0" else "x_ite-anim-sized.mjs" if sized else "x_ite-anim.mjs"
+        cmd = ["node", os.path.join(root, "oracle", anim), world, script, "--out", out]
         if msaa != "0":
             cmd += ["--ms", msaa]
         if pictures_t:
@@ -135,7 +140,7 @@ if lines:
     pfile = os.path.join(dest, "PROVENANCE.json")
     cur = json.load(open(pfile)) if os.path.exists(pfile) else {"cases": {}}
     cur.update(platform=platform, hardware=hardware, chrome=chrome, angle_backend=os.environ["XITE_ANGLE_BACKEND"],
-               pinned_x_ite="16.5.0 " + pinned, recorder="oracle/x_ite-anim.mjs, oracle/x_ite-anim-msaa.mjs",
+               pinned_x_ite="16.5.0 " + pinned, recorder="oracle/x_ite-anim.mjs, oracle/x_ite-anim-sized.mjs, oracle/x_ite-anim-msaa.mjs",
                recorded=datetime.date.today().isoformat(), rule="3 identical runs; kept only where the NVIDIA recording differs")
     cur["cases"].update(prov)
     json.dump(cur, open(pfile, "w"), indent=1, sort_keys=True)

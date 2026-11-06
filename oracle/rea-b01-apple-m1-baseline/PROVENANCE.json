@@ -59,7 +59,7 @@
   "viewpoint-navigationinfo-msaa0"
  ],
  "hardware": "Apple M1 (8-core GPU), macOS 27.0.1 (26A434)",
- "minimized": "Only the case that fails against the NVIDIA recording on the physical M1 is kept (rea_batch01 at c573592e: shading-wireframe MSAA 4, pictures 3 and 12, 1.532% over 8). The other 39 recorded cases pass against NVIDIA, and 7 of them (sizes 384 and 256) are not the NVIDIA scene: oracle/x_ite-anim.mjs with today's anim.html draws 512x512 whatever the script's size (on Linux too).",
+ "minimized": "Only the case that fails against the NVIDIA recording on the physical M1 is kept (rea_batch01 at c573592e: shading-wireframe MSAA 4, pictures 3 and 12, 1.532% over 8). The other 39 cases pass against NVIDIA on the M1. The first recording run took the 7 MSAA 0 cases of size 384 and 256 with x_ite-anim.mjs (fixed 512x512 canvas) instead of x_ite-anim-sized.mjs; the tool now selects the sized recorder (on Linux it gives the NVIDIA geolod js.json byte for byte); those recordings were not kept.",
  "pinned_x_ite": "16.5.0 34cdf9f97",
  "platform": "apple-m1",
  "recorded": "2026-11-05",
