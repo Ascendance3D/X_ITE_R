@@ -14,6 +14,13 @@
       nodes) records anything the nodes send. Both X_ITE and Rust must leave 41234 closed (connected UDP sockets
       get ECONNREFUSED) and the listener empty; udp.json records the counts.
 
+  python3 -I oracle/tools/rea_b08_net.py pin NAME WORLD SCRIPT MSAA --known-diff=KEY
+      For a case with a decided difference (rea_batch08_net.rs `--known-diff=KEY`): run only the X_ITE side (x_ite-anim.mjs,
+      x_ite-anim-msaa.mjs) three times; js.json (without `loadFrames`, the frame the load finished in, which follows Chrome's I/O)
+      and every PNG must be byte-identical; the first run is kept as oracle/rea-b08-net-baseline/NAME-msaaMSAA and the case line
+      is added to cases.txt. The comparison with Rust (everything except the named difference, and the difference asserted on its
+      own) is rea_batch08_net.rs. Needs XITE_TESTS and oracle/x_ite-pin/node_modules (oracle/README.md).
+
 A baseline is written only from an X_ITE run; the Rust result is compared, never copied.
 """
 import json, os, shutil, socket, struct, subprocess, sys, threading, time
@@ -113,6 +120,47 @@ if args[0] == "shots":
         for f in os.listdir(os.path.join(root, "oracle", out)):
             if f.startswith("dis-viewall"):
                 os.remove(os.path.join(root, "oracle", out, f))
+elif args[0] == "pin":
+    import filecmp, tempfile
+    known = [a for a in args if a.startswith("--known-diff=")]
+    name, world, script, msaa = [a for a in args[1:] if not a.startswith("--")][:4]
+    tmp = tempfile.mkdtemp(prefix="rea-b08-net-pin-")
+    runs = []
+    try:
+        for i in (1, 2, 3):
+            out = os.path.join(tmp, str(i))
+            os.makedirs(out)
+            cmd = ["node", os.path.join(root, "oracle", "x_ite-anim.mjs" if msaa == "0" else "x_ite-anim-msaa.mjs"), world, script,
+                   "--out", os.path.join(out, "js.json"), "--png-dir", os.path.join(out, "js")] + ([] if msaa == "0" else ["--ms", msaa])
+            subprocess.run(cmd, check=True, cwd=root, timeout=300, capture_output=True)
+            runs.append(out)
+        view = lambda d: {k: v for k, v in json.load(open(os.path.join(d, "js.json"))).items() if k != "loadFrames"}
+        a = runs[0]
+        pngs = sorted(os.listdir(os.path.join(a, "js")))
+        same = all(pngs == sorted(os.listdir(os.path.join(b, "js"))) and view(a) == view(b)
+                   and all(filecmp.cmp(os.path.join(a, "js", f), os.path.join(b, "js", f), shallow=False) for f in pngs) for b in runs[1:])
+        ok = view(a).get("ok")
+        import hashlib
+        sha = lambda p: hashlib.sha256(open(p, "rb").read()).hexdigest()
+        print(f"{name} MSAA {msaa}: three X_ITE runs {'identical' if same else 'DIFFER'} ({len(pngs)} images); ok={ok}")
+        for i, r in enumerate(runs, 1):
+            print(f"  run {i}: js.json sha256 {sha(os.path.join(r, 'js.json'))} (loadFrames {json.load(open(os.path.join(r, 'js.json'))).get('loadFrames')})")
+        for f in pngs:
+            print(f"  {f} sha256 {sha(os.path.join(a, 'js', f))}")
+        if not same or not ok:
+            sys.exit(1)
+        dest = os.path.join(root, "oracle", "rea-b08-net-baseline", f"{name}-msaa{msaa}")
+        shutil.rmtree(dest, ignore_errors=True)
+        os.makedirs(dest)
+        shutil.copy(os.path.join(a, "js.json"), dest)
+        shutil.copytree(os.path.join(a, "js"), os.path.join(dest, "js"))
+        cases = os.path.join(root, "oracle", "rea-b08-net-baseline", "cases.txt")
+        line = " ".join([name, world, script, msaa] + known)
+        lines = open(cases).read().splitlines()
+        lines = [l for l in lines if l.split()[:1] != [name] or l.split()[3:4] != [msaa]] + [line]
+        open(cases, "w").write("\n".join(lines) + "\n")
+    finally:
+        shutil.rmtree(tmp, ignore_errors=True)
 elif args[0] == "case":
     udp_on = "--udp" in args
     args = [a for a in args if a != "--udp"]
