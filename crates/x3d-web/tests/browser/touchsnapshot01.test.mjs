@@ -28,7 +28,10 @@ import { fields, frames, touch } from "./runtime02_case.mjs";
 const HOLD_LIMIT = 5000;
 
 // Sends a two-finger event with the page's frames held. `requestAnimationFrame` is wrapped for the hold only and restored
-// after it; a callback asked for during the hold runs at the first frame after it.
+// after it; a callback asked for during the hold runs at the first frame after it. A callback that the page asked for
+// before the wrap is not held, so the hold waits for one frame before the event is sent: callbacks of a frame run in the
+// order they were asked for, so that frame runs the page's callback first, and the page asks for the next one through
+// the wrap.
 async function holdFrames (page, type, points, send)
 {
    await page .evaluate (([ domType ]) =>
@@ -47,7 +50,11 @@ async function holdFrames (page, type, points, send)
       addEventListener (domType, state .listener, { capture: true });
       window .requestAnimationFrame = callback => real .call (window, function again (stamp) { state .held ? real .call (window, again) : callback (stamp); });
       window .frameHold = state;
+
+      return new Promise (resolve => real .call (window, () => resolve ()));
    }, [ type === "touchStart" ? "touchstart" : "touchmove" ]);
+
+   let failed = false;
 
    try
    {
@@ -62,9 +69,17 @@ async function holdFrames (page, type, points, send)
             points .every (([ x, y ]) => touches .some (([ tx, ty ]) => Math .abs (tx - x) <= 0.5 && Math .abs (ty - y) <= 0.5));
       }, points, { timeout: HOLD_LIMIT });
    }
+   catch (error)
+   {
+      failed = true;
+      throw error;
+   }
    finally
    {
-      await page .evaluate (() => { window .frameHold .restore (); delete window .frameHold; });
+      // After a failure the restore is best effort, so that its own error (a closed page) does not hide the first one.
+      const restore = page .evaluate (() => { window .frameHold ?.restore (); delete window .frameHold; });
+
+      await (failed ? restore .catch (() => { }) : restore);
    }
 }
 
