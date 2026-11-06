@@ -508,6 +508,20 @@ impl BrowserOptions {
         }
     }
 
+    /// The page's Antialiased and Multisampling options, without an event (issue #480). X_ITE has one BrowserOptions
+    /// for the page and its world, so a world Script's `setBrowserOption ("Multisampling", n)` reads the page's
+    /// Antialiased (set_Multisampling__: `Antialiased ? samples : 0`), and its `setBrowserOption ("Antialiased", true)`
+    /// reads the page's Multisampling. The rendering property stays as the page set it ([`Self::set_page_rendering`]).
+    pub fn set_page_sampling(&mut self, antialiased: bool, multisampling: i32) {
+        if let Some(i) = self.options.index("Antialiased") {
+            self.options.fields[i].1 = OptionValue::Bool(antialiased);
+        }
+
+        if let Some(i) = self.options.index("Multisampling") {
+            self.options.fields[i].1 = OptionValue::Int32(multisampling);
+        }
+    }
+
     /// A RenderingProperties value the browser sets (`getRenderingProperties () ._Name = value`).
     pub fn set_rendering_value(&mut self, name: &str, value: OptionValue) {
         if self.rendering.index(name).is_some() {
@@ -695,6 +709,43 @@ pub fn js_int32(v: f64) -> i32 {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    /// Issue #480: the page's Antialiased and Multisampling options are the world's (X_ITE has one BrowserOptions), so
+    /// a Script's Multisampling keeps 0 samples while the page's Antialiased is false, and a Script's Antialiased true
+    /// gives the page's Multisampling (pinned X_ITE 16.5.0 in Chrome: 0 and 4 samples).
+    #[test]
+    fn script_sampling_reads_the_page_options() {
+        let mut b = BrowserOptions::new(512, 512);
+
+        b.set_page_sampling(false, 4);
+        b.set_page_rendering(None, Some(0));
+        assert_eq!(b.multisampling(), 0);
+        assert!(
+            !b.has_pending_events(),
+            "the page's options come without an event"
+        );
+
+        b.set_option("Multisampling", OptionValue::Int32(4));
+        b.process_events();
+        assert_eq!(
+            b.multisampling(),
+            0,
+            "a Script's Multisampling with the page's Antialiased false"
+        );
+
+        b.set_option("Antialiased", OptionValue::Bool(true));
+        b.process_events();
+        assert_eq!(b.multisampling(), 4, "a Script's Antialiased true");
+
+        b.set_page_sampling(false, 2);
+        b.set_option("Antialiased", OptionValue::Bool(true));
+        b.process_events();
+        assert_eq!(
+            b.multisampling(),
+            2,
+            "a Script's Antialiased true reads the page's Multisampling"
+        );
+    }
 
     #[test]
     fn defaults_and_page_attributes() {
