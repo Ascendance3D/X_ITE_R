@@ -2450,16 +2450,19 @@ impl WebBrowser {
     /// A browser option the shared engine reads itself, for the worlds and loads now and for those to come: the booleans
     /// `EnableInlineViewpoints` (X3DLayerNode.getUserViewpoints), `LoadUrlObjects` (X3DUrlObject.requestImmediateLoad), `Cache` (X3DExternProtoDeclaration.loadData) and
     /// `StraightenHorizon` (BrowserOptions.set_StraightenHorizon__, X3DBrowser.viewAll), and the number `Gravity`
-    /// (X3DRenderObject.gravitate). The page gives the option's value already coerced to the field type. Returns whether
-    /// the engine has the option.
+    /// (X3DRenderObject.gravitate), and `OrderIndependentTransparency` (X3DRenderObject.set_renderKey__: a world takes it
+    /// as its starting state, and a live world's change reaches the renderer as a rendering change, issue #479). The page
+    /// gives the option's value already coerced to the field type. Returns whether the engine has the option.
     #[wasm_bindgen(js_name = setEngineOption)]
     pub fn set_engine_option(&mut self, name: &str, flag: bool, number: f64) -> bool {
         use x3d_runtime::browser_options::OptionValue;
 
         let value = match name {
-            "EnableInlineViewpoints" | "LoadUrlObjects" | "StraightenHorizon" | "Cache" => {
-                OptionValue::Bool(flag)
-            }
+            "EnableInlineViewpoints"
+            | "LoadUrlObjects"
+            | "StraightenHorizon"
+            | "Cache"
+            | "OrderIndependentTransparency" => OptionValue::Bool(flag),
             "Gravity" => OptionValue::Double(number),
             _ => return false,
         };

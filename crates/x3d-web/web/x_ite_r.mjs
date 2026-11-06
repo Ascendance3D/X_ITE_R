@@ -6018,8 +6018,9 @@ class X3DBrowser
 
    // The options the shared engine reads itself (WebBrowser.setEngineOption): EnableInlineViewpoints
    // (X3DLayerNode.getUserViewpoints), LoadUrlObjects (X3DUrlObject.requestImmediateLoad), StraightenHorizon
-   // (BrowserOptions.set_StraightenHorizon__, X3DBrowser.viewAll) and Gravity (X3DRenderObject.gravitate).
-   static #engineOptions = [ "EnableInlineViewpoints", "LoadUrlObjects", "StraightenHorizon", "Gravity", "Cache" ];
+   // (BrowserOptions.set_StraightenHorizon__, X3DBrowser.viewAll), Gravity (X3DRenderObject.gravitate) and
+   // OrderIndependentTransparency (X3DRenderObject.set_renderKey__, issue #479).
+   static #engineOptions = [ "EnableInlineViewpoints", "LoadUrlObjects", "StraightenHorizon", "Gravity", "Cache", "OrderIndependentTransparency" ];
 
    #applyEngineOptions ()
    {
