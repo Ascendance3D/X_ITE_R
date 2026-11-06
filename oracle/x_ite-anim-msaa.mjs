@@ -124,7 +124,10 @@ function encodePNG (w, h, rgba)
 
 const result = { ok: false, poses: { }, vrml: { }, prints: [ ], log: [ ], anchors: [ ] };
 
-const context = await browser .newContext ({ viewport: { width: W, height: H }, deviceScaleFactor: 1 });
+// Script key "userAgent" and XITE_USER_AGENT for a script without one, as in x_ite-anim.mjs (X_ITE's SLOW_SCROLL test reads it).
+const userAgent = script .userAgent ?? process .env .XITE_USER_AGENT;
+const context = await browser .newContext ({ viewport: { width: W, height: H }, deviceScaleFactor: 1,
+                                             ... (userAgent ? { userAgent } : { }) });
 await context .route (url => !url .href .startsWith (base), route => route .abort ());
 
 const page = await context .newPage ();
