@@ -1,6 +1,6 @@
 // OIT 01 test of X_ITE_R's <x3d-canvas> (issue #479): the page's OrderIndependentTransparency option reaches the
-// renderer, before a world loads, on the live world and after loadURL, and the last one set is in force, the page's or
-// a world Script's.
+// renderer, before a world loads, on the live world and after loadURL and replaceWorld, and the last one set is in
+// force, the page's or a world Script's.
 //
 // Pinned X_ITE 16.5.0 has one BrowserOptions for the page and its world: set_OrderIndependentTransparency__ calls
 // browser .reshape (BrowserOptions.js:369) and X3DRenderObject has an interest on the field (X3DRenderObject.js:85).
@@ -59,10 +59,11 @@ async function open (backend, extra = { })
    return page;
 }
 
-// Runs `before` in the page, loads `world` (null: the world stays), lets frames pass and returns the picture's hash.
-async function draw (page, { before = () => { }, world = WORLD } = { })
+// Runs `before` in the page, loads `world` (null: the world stays; with `replace`, by replaceWorld instead of loadURL),
+// lets frames pass and returns the picture's hash.
+async function draw (page, { before = () => { }, world = WORLD, replace = false } = { })
 {
-   return page .evaluate (async ([ text, beforeText ]) =>
+   return page .evaluate (async ([ text, beforeText, replace ]) =>
    {
       const browser = document .querySelector ("x3d-canvas") .browser;
       const engine  = browser [Symbol .for ("X_ITE_R.engine")];
@@ -70,7 +71,9 @@ async function draw (page, { before = () => { }, world = WORLD } = { })
 
       await (0, eval) (beforeText) (browser);
 
-      if (text !== null)
+      if (text !== null && replace)
+         await browser .replaceWorld (await browser .createX3DFromString (text));
+      else if (text !== null)
          await browser .loadURL (new window .X3D_NS .MFString ("data:model/x3d-vrml," + encodeURIComponent (text)));
 
       await frames (20);
@@ -82,7 +85,7 @@ async function draw (page, { before = () => { }, world = WORLD } = { })
          hash = (hash * 31 + pixels [i] + pixels [i + 1] * 3 + pixels [i + 2] * 7) % 1000003;
 
       return { hash, option: browser .getBrowserOption ("OrderIndependentTransparency"), backend: engine .backend };
-   }, [ world, `(${before .toString ()})` ]);
+   }, [ world, `(${before .toString ()})`, replace ]);
 }
 
 const BACKENDS = [ "webgpu", "webgl2" ];
@@ -121,7 +124,7 @@ describe ("oit 01", { skip: Boolean (ONLY) }, () =>
          }
       });
 
-      test (`${backend}: setBrowserOption on the live world, then loadURL`, { timeout: CASE_TIMEOUT }, async () =>
+      test (`${backend}: setBrowserOption on the live world, then loadURL and replaceWorld`, { timeout: CASE_TIMEOUT }, async () =>
       {
          const page = await open (backend, { scripts: "true" });
 
@@ -131,11 +134,13 @@ describe ("oit 01", { skip: Boolean (ONLY) }, () =>
             const plain = await draw (page);
             const live  = await draw (page, { world: null, before: b => b .setBrowserOption ("OrderIndependentTransparency", true) });
             const next  = await draw (page);
+            const replaced = await draw (page, { replace: true });
             const back  = await draw (page, { world: null, before: b => b .setBrowserOption ("OrderIndependentTransparency", false) });
 
             assert .equal (plain .hash, off .hash, "without the option the page draws without OIT");
             assert .equal (live .hash, on .hash, `the option set on the live world: ${JSON .stringify ({ live, on, off })}`);
             assert .equal (next .hash, on .hash, `the option stays after loadURL: ${JSON .stringify ({ next, on, off })}`);
+            assert .equal (replaced .hash, on .hash, `the option stays after replaceWorld: ${JSON .stringify ({ replaced, on, off })}`);
             assert .equal (back .hash, off .hash, "the option set back to false");
          }
          finally
