@@ -2424,6 +2424,13 @@ impl WebBrowser {
         self.renderer.set_sample_count(samples);
     }
 
+    /// The sample count the renderer draws with now (1 without multisampling). For tests and diagnostics: the
+    /// `Multisampling` property is what the page asked for, this is what the renderer uses (issue #471).
+    #[wasm_bindgen(getter, js_name = sampleCount)]
+    pub fn sample_count(&self) -> u32 {
+        self.renderer.sample_count()
+    }
+
     /// The highest sample count the device supports: X_ITE's `MaxSamples`, the limit of `Multisampling`.
     #[wasm_bindgen(getter, js_name = maxSamples)]
     pub fn max_samples(&self) -> u32 {

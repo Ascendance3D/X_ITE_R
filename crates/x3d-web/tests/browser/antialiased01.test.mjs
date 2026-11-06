@@ -90,15 +90,18 @@ async function draw (page, { before = () => { }, again = false, world = WORLD } 
          if (v === 0) ++ dark; else if (v === 255) ++ white; else ++ edge;
       }
 
-      return { edge, dark, white, hash, multisampling: browser .getRenderingProperty ("Multisampling"), backend: engine .backend };
+      return { edge, dark, white, hash, multisampling: browser .getRenderingProperty ("Multisampling"), sampleCount: engine .sampleCount, backend: engine .backend };
    }, [ world, `(${before .toString ()})`, again ]);
 }
 
 const BACKENDS = [ "webgpu", "webgl2" ];
 
-// The timeout is per case, not for the suite: on SwiftShader one case takes about 22 s (hosted CI), so 16 cases need
-// more than one CASE_TIMEOUT.
-describe ("antialiased 01", { skip: Boolean (ONLY) }, () =>
+// Each case has CASE_TIMEOUT: a case that hangs fails at that time and does not wait for the suite. The suite has a
+// finite limit too (SUITE_TIMEOUT), below the 45 minutes of the browser job: on SwiftShader one case takes about 22 s
+// (hosted CI), so the 18 cases need more than one CASE_TIMEOUT but much less than SUITE_TIMEOUT.
+const SUITE_TIMEOUT = 20 * 60_000;
+
+describe ("antialiased 01", { skip: Boolean (ONLY), timeout: SUITE_TIMEOUT }, () =>
 {
    for (const backend of BACKENDS)
    {
@@ -107,6 +110,7 @@ describe ("antialiased 01", { skip: Boolean (ONLY) }, () =>
          [ "antialiased=\"false\" before ready: no multisampling", { antialiased: "false" }, undefined, false, 0 ],
          [ "antialiased=\"false\" and a second loadURL", { antialiased: "false" }, undefined, true, 0 ],
          [ "antialiased=\"true\"", { antialiased: "true" }, undefined, false, 4 ],
+         [ "antialiased=\"true\" and a second loadURL (4 samples stay)", { antialiased: "true" }, undefined, true, 4 ],
          [ "no attribute (default 4 samples)", { }, undefined, false, 4 ],
          [ "antialiased=\"false\" set after ready", { }, b => b .getElement () .setAttribute ("antialiased", "false"), false, 0 ],
          [ "Antialiased option set to false after a first world", { }, async b =>
@@ -129,6 +133,7 @@ describe ("antialiased 01", { skip: Boolean (ONLY) }, () =>
 
                assert .equal (r .backend, backend);
                assert .equal (r .multisampling, samples, "the reported Multisampling");
+               assert .equal (r .sampleCount, Math .max (samples, 1), `the sample count of the renderer: ${JSON .stringify (r)}`);
                assert .ok (r .dark > 100 && r .white > 100, JSON .stringify (r));
 
                if (samples === 0)
