@@ -64,6 +64,8 @@ pub struct PendingBrowserScene {
     /// The nodes of a scene of `createX3DFromURL` / `createVrmlFromURL` that passes the simple-scene gate: it becomes a
     /// candidate of the reachability sweep once its outcome is delivered (see `release.rs`, "Scenes loaded from a URL").
     pub release: Option<std::ops::Range<NodeId>>,
+    /// The scene came from a URL (`createX3DFromURL`, `createVrmlFromURL`, `loadURL`), not from a string.
+    pub from_url: bool,
 }
 
 /// What `Browser.replaceWorld` was given.
@@ -485,6 +487,7 @@ impl Runtime {
             scene_node,
             world,
             release: simple.then_some(m.node_offset..m.node_end),
+            from_url: url,
         });
 
         // A scene of the page (an external browser) gets no execution context: its changes do not reach the world's.

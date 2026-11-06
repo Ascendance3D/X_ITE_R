@@ -1,0 +1,4 @@
+#VRML V2.0 utf8
+# Synthetic REA oracle file (sub:proto.externproto): a scene createX3DFromURL loads, with an EXTERNPROTO of a file next to it.
+EXTERNPROTO EP [ exposedField SFFloat v ] "ep-url-lib.wrl"
+EP { v 3 }

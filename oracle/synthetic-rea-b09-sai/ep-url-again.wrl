@@ -1,0 +1,4 @@
+#VRML V2.0 utf8
+# Synthetic REA oracle file (sub:proto.externproto): a second scene with the EXTERNPROTO of ep-url-file.wrl (a scene-cache hit).
+EXTERNPROTO EP [ exposedField SFFloat v ] "ep-url-lib.wrl"
+EP { v 5 }
