@@ -703,7 +703,14 @@ impl Runtime {
                     let ctx = *ctx;
                     let owner = self.scene.externprotos[e].ctx;
 
-                    if !self.pending_browser.iter().any(|p| p.ctx == owner) {
+                    // Only a scene made from a string waits (below). A scene of createX3DFromURL takes the hit
+                    // at once, as during a world's own load: synthetic-rea-b09-sai/externproto-from-url.wrl
+                    // (frames 14 and 17 on the pinned page).
+                    if !self
+                        .pending_browser
+                        .iter()
+                        .any(|p| p.ctx == owner && !p.from_url)
+                    {
                         return self.extern_deliver(e, request, ctx, &resolved, true);
                     }
 

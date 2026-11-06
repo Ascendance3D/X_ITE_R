@@ -1,0 +1,515 @@
+{
+  "ok": true,
+  "poses": {
+    "8": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "9": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "10": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "11": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "12": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "13": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "14": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "15": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "16": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "17": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "18": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "19": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "20": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "21": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "22": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "23": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "24": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "27": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "30": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "33": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "36": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    }
+  },
+  "vrml": {
+    "8": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nMETA \"title\" \"createX3DFromURL with an EXTERNPROTO after load\"\n\nDEF P Script {\n  inputOutput SFString hist \"file:OK:ep=1,EP,ls=1008,proto=true,fields=2,root=1,SFNode missing:OK:ep=1,EP,ls=1009,proto=true,fields=2,root=1,SFNode \"\n  inputOutput SFInt32  step 3\n  inputOnly   SFTime   cycle\n\n  url \"ecmascript:\n\nvar made = [ ];\nfunction rec (s) { hist = hist + s + ' '; }\nfunction describe (s) {\n  var e = s .externprotos [0];\n  var out = 'ep=' + s .externprotos .length;\n  if (e) out += ',' + e .name + ',ls=' + e .loadState + ',proto=' + (e .isExternProto) + ',fields=' + e .fields .length;\n  out += ',root=' + s .rootNodes .length;\n  if (s .rootNodes .length) out += ',' + s .rootNodes [0] .getTypeName ();\n  return out;\n}\nfunction mk (name, url) {\n  try {\n    Browser .createX3DFromURL (new MFString (url)) .then (function (s) { made .push (s); rec (name + ':OK:' + describe (s)); },\n                                                       function (e) { rec (name + ':REJ:' + e .message); });\n  } catch (e) { rec (name + ':THROW:' + e .message); }\n}\nfunction cycle () {\n  step = step + 1;\n  if (step == 2) mk ('file', 'ep-url-file.wrl');\n  if (step == 3) mk ('missing', 'ep-url-missing.wrl');\n  if (step == 5) mk ('again', 'ep-url-again.wrl');\n  if (step == 6) mk ('sameTwice', 'ep-url-file.wrl');\n  if (step == 10) { var r = [ ]; for (var i = 0; i < made .length; ++ i) r .push (i + ':' + describe (made [i])); rec ('later=' + r .join (';')); }\n}\n  \"\n}\n\nDEF STEP TimeSensor {\n  cycleInterval 0.05\n  loop TRUE\n}\n\nROUTE STEP.cycleTime TO P.cycle\n",
+    "9": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nMETA \"title\" \"createX3DFromURL with an EXTERNPROTO after load\"\n\nDEF P Script {\n  inputOutput SFString hist \"file:OK:ep=1,EP,ls=1008,proto=true,fields=2,root=1,SFNode missing:OK:ep=1,EP,ls=1009,proto=true,fields=2,root=1,SFNode \"\n  inputOutput SFInt32  step 4\n  inputOnly   SFTime   cycle\n\n  url \"ecmascript:\n\nvar made = [ ];\nfunction rec (s) { hist = hist + s + ' '; }\nfunction describe (s) {\n  var e = s .externprotos [0];\n  var out = 'ep=' + s .externprotos .length;\n  if (e) out += ',' + e .name + ',ls=' + e .loadState + ',proto=' + (e .isExternProto) + ',fields=' + e .fields .length;\n  out += ',root=' + s .rootNodes .length;\n  if (s .rootNodes .length) out += ',' + s .rootNodes [0] .getTypeName ();\n  return out;\n}\nfunction mk (name, url) {\n  try {\n    Browser .createX3DFromURL (new MFString (url)) .then (function (s) { made .push (s); rec (name + ':OK:' + describe (s)); },\n                                                       function (e) { rec (name + ':REJ:' + e .message); });\n  } catch (e) { rec (name + ':THROW:' + e .message); }\n}\nfunction cycle () {\n  step = step + 1;\n  if (step == 2) mk ('file', 'ep-url-file.wrl');\n  if (step == 3) mk ('missing', 'ep-url-missing.wrl');\n  if (step == 5) mk ('again', 'ep-url-again.wrl');\n  if (step == 6) mk ('sameTwice', 'ep-url-file.wrl');\n  if (step == 10) { var r = [ ]; for (var i = 0; i < made .length; ++ i) r .push (i + ':' + describe (made [i])); rec ('later=' + r .join (';')); }\n}\n  \"\n}\n\nDEF STEP TimeSensor {\n  cycleInterval 0.05\n  loop TRUE\n}\n\nROUTE STEP.cycleTime TO P.cycle\n",
+    "10": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nMETA \"title\" \"createX3DFromURL with an EXTERNPROTO after load\"\n\nDEF P Script {\n  inputOutput SFString hist \"file:OK:ep=1,EP,ls=1008,proto=true,fields=2,root=1,SFNode missing:OK:ep=1,EP,ls=1009,proto=true,fields=2,root=1,SFNode \"\n  inputOutput SFInt32  step 4\n  inputOnly   SFTime   cycle\n\n  url \"ecmascript:\n\nvar made = [ ];\nfunction rec (s) { hist = hist + s + ' '; }\nfunction describe (s) {\n  var e = s .externprotos [0];\n  var out = 'ep=' + s .externprotos .length;\n  if (e) out += ',' + e .name + ',ls=' + e .loadState + ',proto=' + (e .isExternProto) + ',fields=' + e .fields .length;\n  out += ',root=' + s .rootNodes .length;\n  if (s .rootNodes .length) out += ',' + s .rootNodes [0] .getTypeName ();\n  return out;\n}\nfunction mk (name, url) {\n  try {\n    Browser .createX3DFromURL (new MFString (url)) .then (function (s) { made .push (s); rec (name + ':OK:' + describe (s)); },\n                                                       function (e) { rec (name + ':REJ:' + e .message); });\n  } catch (e) { rec (name + ':THROW:' + e .message); }\n}\nfunction cycle () {\n  step = step + 1;\n  if (step == 2) mk ('file', 'ep-url-file.wrl');\n  if (step == 3) mk ('missing', 'ep-url-missing.wrl');\n  if (step == 5) mk ('again', 'ep-url-again.wrl');\n  if (step == 6) mk ('sameTwice', 'ep-url-file.wrl');\n  if (step == 10) { var r = [ ]; for (var i = 0; i < made .length; ++ i) r .push (i + ':' + describe (made [i])); rec ('later=' + r .join (';')); }\n}\n  \"\n}\n\nDEF STEP TimeSensor {\n  cycleInterval 0.05\n  loop TRUE\n}\n\nROUTE STEP.cycleTime TO P.cycle\n",
+    "11": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nMETA \"title\" \"createX3DFromURL with an EXTERNPROTO after load\"\n\nDEF P Script {\n  inputOutput SFString hist \"file:OK:ep=1,EP,ls=1008,proto=true,fields=2,root=1,SFNode missing:OK:ep=1,EP,ls=1009,proto=true,fields=2,root=1,SFNode \"\n  inputOutput SFInt32  step 4\n  inputOnly   SFTime   cycle\n\n  url \"ecmascript:\n\nvar made = [ ];\nfunction rec (s) { hist = hist + s + ' '; }\nfunction describe (s) {\n  var e = s .externprotos [0];\n  var out = 'ep=' + s .externprotos .length;\n  if (e) out += ',' + e .name + ',ls=' + e .loadState + ',proto=' + (e .isExternProto) + ',fields=' + e .fields .length;\n  out += ',root=' + s .rootNodes .length;\n  if (s .rootNodes .length) out += ',' + s .rootNodes [0] .getTypeName ();\n  return out;\n}\nfunction mk (name, url) {\n  try {\n    Browser .createX3DFromURL (new MFString (url)) .then (function (s) { made .push (s); rec (name + ':OK:' + describe (s)); },\n                                                       function (e) { rec (name + ':REJ:' + e .message); });\n  } catch (e) { rec (name + ':THROW:' + e .message); }\n}\nfunction cycle () {\n  step = step + 1;\n  if (step == 2) mk ('file', 'ep-url-file.wrl');\n  if (step == 3) mk ('missing', 'ep-url-missing.wrl');\n  if (step == 5) mk ('again', 'ep-url-again.wrl');\n  if (step == 6) mk ('sameTwice', 'ep-url-file.wrl');\n  if (step == 10) { var r = [ ]; for (var i = 0; i < made .length; ++ i) r .push (i + ':' + describe (made [i])); rec ('later=' + r .join (';')); }\n}\n  \"\n}\n\nDEF STEP TimeSensor {\n  cycleInterval 0.05\n  loop TRUE\n}\n\nROUTE STEP.cycleTime TO P.cycle\n",
+    "12": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nMETA \"title\" \"createX3DFromURL with an EXTERNPROTO after load\"\n\nDEF P Script {\n  inputOutput SFString hist \"file:OK:ep=1,EP,ls=1008,proto=true,fields=2,root=1,SFNode missing:OK:ep=1,EP,ls=1009,proto=true,fields=2,root=1,SFNode \"\n  inputOutput SFInt32  step 5\n  inputOnly   SFTime   cycle\n\n  url \"ecmascript:\n\nvar made = [ ];\nfunction rec (s) { hist = hist + s + ' '; }\nfunction describe (s) {\n  var e = s .externprotos [0];\n  var out = 'ep=' + s .externprotos .length;\n  if (e) out += ',' + e .name + ',ls=' + e .loadState + ',proto=' + (e .isExternProto) + ',fields=' + e .fields .length;\n  out += ',root=' + s .rootNodes .length;\n  if (s .rootNodes .length) out += ',' + s .rootNodes [0] .getTypeName ();\n  return out;\n}\nfunction mk (name, url) {\n  try {\n    Browser .createX3DFromURL (new MFString (url)) .then (function (s) { made .push (s); rec (name + ':OK:' + describe (s)); },\n                                                       function (e) { rec (name + ':REJ:' + e .message); });\n  } catch (e) { rec (name + ':THROW:' + e .message); }\n}\nfunction cycle () {\n  step = step + 1;\n  if (step == 2) mk ('file', 'ep-url-file.wrl');\n  if (step == 3) mk ('missing', 'ep-url-missing.wrl');\n  if (step == 5) mk ('again', 'ep-url-again.wrl');\n  if (step == 6) mk ('sameTwice', 'ep-url-file.wrl');\n  if (step == 10) { var r = [ ]; for (var i = 0; i < made .length; ++ i) r .push (i + ':' + describe (made [i])); rec ('later=' + r .join (';')); }\n}\n  \"\n}\n\nDEF STEP TimeSensor {\n  cycleInterval 0.05\n  loop TRUE\n}\n\nROUTE STEP.cycleTime TO P.cycle\n",
+    "13": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nMETA \"title\" \"createX3DFromURL with an EXTERNPROTO after load\"\n\nDEF P Script {\n  inputOutput SFString hist \"file:OK:ep=1,EP,ls=1008,proto=true,fields=2,root=1,SFNode missing:OK:ep=1,EP,ls=1009,proto=true,fields=2,root=1,SFNode \"\n  inputOutput SFInt32  step 5\n  inputOnly   SFTime   cycle\n\n  url \"ecmascript:\n\nvar made = [ ];\nfunction rec (s) { hist = hist + s + ' '; }\nfunction describe (s) {\n  var e = s .externprotos [0];\n  var out = 'ep=' + s .externprotos .length;\n  if (e) out += ',' + e .name + ',ls=' + e .loadState + ',proto=' + (e .isExternProto) + ',fields=' + e .fields .length;\n  out += ',root=' + s .rootNodes .length;\n  if (s .rootNodes .length) out += ',' + s .rootNodes [0] .getTypeName ();\n  return out;\n}\nfunction mk (name, url) {\n  try {\n    Browser .createX3DFromURL (new MFString (url)) .then (function (s) { made .push (s); rec (name + ':OK:' + describe (s)); },\n                                                       function (e) { rec (name + ':REJ:' + e .message); });\n  } catch (e) { rec (name + ':THROW:' + e .message); }\n}\nfunction cycle () {\n  step = step + 1;\n  if (step == 2) mk ('file', 'ep-url-file.wrl');\n  if (step == 3) mk ('missing', 'ep-url-missing.wrl');\n  if (step == 5) mk ('again', 'ep-url-again.wrl');\n  if (step == 6) mk ('sameTwice', 'ep-url-file.wrl');\n  if (step == 10) { var r = [ ]; for (var i = 0; i < made .length; ++ i) r .push (i + ':' + describe (made [i])); rec ('later=' + r .join (';')); }\n}\n  \"\n}\n\nDEF STEP TimeSensor {\n  cycleInterval 0.05\n  loop TRUE\n}\n\nROUTE STEP.cycleTime TO P.cycle\n",
+    "14": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nMETA \"title\" \"createX3DFromURL with an EXTERNPROTO after load\"\n\nDEF P Script {\n  inputOutput SFString hist \"file:OK:ep=1,EP,ls=1008,proto=true,fields=2,root=1,SFNode missing:OK:ep=1,EP,ls=1009,proto=true,fields=2,root=1,SFNode again:OK:ep=1,EP,ls=1008,proto=true,fields=2,root=1,SFNode \"\n  inputOutput SFInt32  step 5\n  inputOnly   SFTime   cycle\n\n  url \"ecmascript:\n\nvar made = [ ];\nfunction rec (s) { hist = hist + s + ' '; }\nfunction describe (s) {\n  var e = s .externprotos [0];\n  var out = 'ep=' + s .externprotos .length;\n  if (e) out += ',' + e .name + ',ls=' + e .loadState + ',proto=' + (e .isExternProto) + ',fields=' + e .fields .length;\n  out += ',root=' + s .rootNodes .length;\n  if (s .rootNodes .length) out += ',' + s .rootNodes [0] .getTypeName ();\n  return out;\n}\nfunction mk (name, url) {\n  try {\n    Browser .createX3DFromURL (new MFString (url)) .then (function (s) { made .push (s); rec (name + ':OK:' + describe (s)); },\n                                                       function (e) { rec (name + ':REJ:' + e .message); });\n  } catch (e) { rec (name + ':THROW:' + e .message); }\n}\nfunction cycle () {\n  step = step + 1;\n  if (step == 2) mk ('file', 'ep-url-file.wrl');\n  if (step == 3) mk ('missing', 'ep-url-missing.wrl');\n  if (step == 5) mk ('again', 'ep-url-again.wrl');\n  if (step == 6) mk ('sameTwice', 'ep-url-file.wrl');\n  if (step == 10) { var r = [ ]; for (var i = 0; i < made .length; ++ i) r .push (i + ':' + describe (made [i])); rec ('later=' + r .join (';')); }\n}\n  \"\n}\n\nDEF STEP TimeSensor {\n  cycleInterval 0.05\n  loop TRUE\n}\n\nROUTE STEP.cycleTime TO P.cycle\n",
+    "15": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nMETA \"title\" \"createX3DFromURL with an EXTERNPROTO after load\"\n\nDEF P Script {\n  inputOutput SFString hist \"file:OK:ep=1,EP,ls=1008,proto=true,fields=2,root=1,SFNode missing:OK:ep=1,EP,ls=1009,proto=true,fields=2,root=1,SFNode again:OK:ep=1,EP,ls=1008,proto=true,fields=2,root=1,SFNode \"\n  inputOutput SFInt32  step 6\n  inputOnly   SFTime   cycle\n\n  url \"ecmascript:\n\nvar made = [ ];\nfunction rec (s) { hist = hist + s + ' '; }\nfunction describe (s) {\n  var e = s .externprotos [0];\n  var out = 'ep=' + s .externprotos .length;\n  if (e) out += ',' + e .name + ',ls=' + e .loadState + ',proto=' + (e .isExternProto) + ',fields=' + e .fields .length;\n  out += ',root=' + s .rootNodes .length;\n  if (s .rootNodes .length) out += ',' + s .rootNodes [0] .getTypeName ();\n  return out;\n}\nfunction mk (name, url) {\n  try {\n    Browser .createX3DFromURL (new MFString (url)) .then (function (s) { made .push (s); rec (name + ':OK:' + describe (s)); },\n                                                       function (e) { rec (name + ':REJ:' + e .message); });\n  } catch (e) { rec (name + ':THROW:' + e .message); }\n}\nfunction cycle () {\n  step = step + 1;\n  if (step == 2) mk ('file', 'ep-url-file.wrl');\n  if (step == 3) mk ('missing', 'ep-url-missing.wrl');\n  if (step == 5) mk ('again', 'ep-url-again.wrl');\n  if (step == 6) mk ('sameTwice', 'ep-url-file.wrl');\n  if (step == 10) { var r = [ ]; for (var i = 0; i < made .length; ++ i) r .push (i + ':' + describe (made [i])); rec ('later=' + r .join (';')); }\n}\n  \"\n}\n\nDEF STEP TimeSensor {\n  cycleInterval 0.05\n  loop TRUE\n}\n\nROUTE STEP.cycleTime TO P.cycle\n",
+    "16": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nMETA \"title\" \"createX3DFromURL with an EXTERNPROTO after load\"\n\nDEF P Script {\n  inputOutput SFString hist \"file:OK:ep=1,EP,ls=1008,proto=true,fields=2,root=1,SFNode missing:OK:ep=1,EP,ls=1009,proto=true,fields=2,root=1,SFNode again:OK:ep=1,EP,ls=1008,proto=true,fields=2,root=1,SFNode \"\n  inputOutput SFInt32  step 6\n  inputOnly   SFTime   cycle\n\n  url \"ecmascript:\n\nvar made = [ ];\nfunction rec (s) { hist = hist + s + ' '; }\nfunction describe (s) {\n  var e = s .externprotos [0];\n  var out = 'ep=' + s .externprotos .length;\n  if (e) out += ',' + e .name + ',ls=' + e .loadState + ',proto=' + (e .isExternProto) + ',fields=' + e .fields .length;\n  out += ',root=' + s .rootNodes .length;\n  if (s .rootNodes .length) out += ',' + s .rootNodes [0] .getTypeName ();\n  return out;\n}\nfunction mk (name, url) {\n  try {\n    Browser .createX3DFromURL (new MFString (url)) .then (function (s) { made .push (s); rec (name + ':OK:' + describe (s)); },\n                                                       function (e) { rec (name + ':REJ:' + e .message); });\n  } catch (e) { rec (name + ':THROW:' + e .message); }\n}\nfunction cycle () {\n  step = step + 1;\n  if (step == 2) mk ('file', 'ep-url-file.wrl');\n  if (step == 3) mk ('missing', 'ep-url-missing.wrl');\n  if (step == 5) mk ('again', 'ep-url-again.wrl');\n  if (step == 6) mk ('sameTwice', 'ep-url-file.wrl');\n  if (step == 10) { var r = [ ]; for (var i = 0; i < made .length; ++ i) r .push (i + ':' + describe (made [i])); rec ('later=' + r .join (';')); }\n}\n  \"\n}\n\nDEF STEP TimeSensor {\n  cycleInterval 0.05\n  loop TRUE\n}\n\nROUTE STEP.cycleTime TO P.cycle\n",
+    "17": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nMETA \"title\" \"createX3DFromURL with an EXTERNPROTO after load\"\n\nDEF P Script {\n  inputOutput SFString hist \"file:OK:ep=1,EP,ls=1008,proto=true,fields=2,root=1,SFNode missing:OK:ep=1,EP,ls=1009,proto=true,fields=2,root=1,SFNode again:OK:ep=1,EP,ls=1008,proto=true,fields=2,root=1,SFNode sameTwice:OK:ep=1,EP,ls=1008,proto=true,fields=2,root=1,SFNode \"\n  inputOutput SFInt32  step 6\n  inputOnly   SFTime   cycle\n\n  url \"ecmascript:\n\nvar made = [ ];\nfunction rec (s) { hist = hist + s + ' '; }\nfunction describe (s) {\n  var e = s .externprotos [0];\n  var out = 'ep=' + s .externprotos .length;\n  if (e) out += ',' + e .name + ',ls=' + e .loadState + ',proto=' + (e .isExternProto) + ',fields=' + e .fields .length;\n  out += ',root=' + s .rootNodes .length;\n  if (s .rootNodes .length) out += ',' + s .rootNodes [0] .getTypeName ();\n  return out;\n}\nfunction mk (name, url) {\n  try {\n    Browser .createX3DFromURL (new MFString (url)) .then (function (s) { made .push (s); rec (name + ':OK:' + describe (s)); },\n                                                       function (e) { rec (name + ':REJ:' + e .message); });\n  } catch (e) { rec (name + ':THROW:' + e .message); }\n}\nfunction cycle () {\n  step = step + 1;\n  if (step == 2) mk ('file', 'ep-url-file.wrl');\n  if (step == 3) mk ('missing', 'ep-url-missing.wrl');\n  if (step == 5) mk ('again', 'ep-url-again.wrl');\n  if (step == 6) mk ('sameTwice', 'ep-url-file.wrl');\n  if (step == 10) { var r = [ ]; for (var i = 0; i < made .length; ++ i) r .push (i + ':' + describe (made [i])); rec ('later=' + r .join (';')); }\n}\n  \"\n}\n\nDEF STEP TimeSensor {\n  cycleInterval 0.05\n  loop TRUE\n}\n\nROUTE STEP.cycleTime TO P.cycle\n",
+    "18": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nMETA \"title\" \"createX3DFromURL with an EXTERNPROTO after load\"\n\nDEF P Script {\n  inputOutput SFString hist \"file:OK:ep=1,EP,ls=1008,proto=true,fields=2,root=1,SFNode missing:OK:ep=1,EP,ls=1009,proto=true,fields=2,root=1,SFNode again:OK:ep=1,EP,ls=1008,proto=true,fields=2,root=1,SFNode sameTwice:OK:ep=1,EP,ls=1008,proto=true,fields=2,root=1,SFNode \"\n  inputOutput SFInt32  step 7\n  inputOnly   SFTime   cycle\n\n  url \"ecmascript:\n\nvar made = [ ];\nfunction rec (s) { hist = hist + s + ' '; }\nfunction describe (s) {\n  var e = s .externprotos [0];\n  var out = 'ep=' + s .externprotos .length;\n  if (e) out += ',' + e .name + ',ls=' + e .loadState + ',proto=' + (e .isExternProto) + ',fields=' + e .fields .length;\n  out += ',root=' + s .rootNodes .length;\n  if (s .rootNodes .length) out += ',' + s .rootNodes [0] .getTypeName ();\n  return out;\n}\nfunction mk (name, url) {\n  try {\n    Browser .createX3DFromURL (new MFString (url)) .then (function (s) { made .push (s); rec (name + ':OK:' + describe (s)); },\n                                                       function (e) { rec (name + ':REJ:' + e .message); });\n  } catch (e) { rec (name + ':THROW:' + e .message); }\n}\nfunction cycle () {\n  step = step + 1;\n  if (step == 2) mk ('file', 'ep-url-file.wrl');\n  if (step == 3) mk ('missing', 'ep-url-missing.wrl');\n  if (step == 5) mk ('again', 'ep-url-again.wrl');\n  if (step == 6) mk ('sameTwice', 'ep-url-file.wrl');\n  if (step == 10) { var r = [ ]; for (var i = 0; i < made .length; ++ i) r .push (i + ':' + describe (made [i])); rec ('later=' + r .join (';')); }\n}\n  \"\n}\n\nDEF STEP TimeSensor {\n  cycleInterval 0.05\n  loop TRUE\n}\n\nROUTE STEP.cycleTime TO P.cycle\n",
+    "19": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nMETA \"title\" \"createX3DFromURL with an EXTERNPROTO after load\"\n\nDEF P Script {\n  inputOutput SFString hist \"file:OK:ep=1,EP,ls=1008,proto=true,fields=2,root=1,SFNode missing:OK:ep=1,EP,ls=1009,proto=true,fields=2,root=1,SFNode again:OK:ep=1,EP,ls=1008,proto=true,fields=2,root=1,SFNode sameTwice:OK:ep=1,EP,ls=1008,proto=true,fields=2,root=1,SFNode \"\n  inputOutput SFInt32  step 7\n  inputOnly   SFTime   cycle\n\n  url \"ecmascript:\n\nvar made = [ ];\nfunction rec (s) { hist = hist + s + ' '; }\nfunction describe (s) {\n  var e = s .externprotos [0];\n  var out = 'ep=' + s .externprotos .length;\n  if (e) out += ',' + e .name + ',ls=' + e .loadState + ',proto=' + (e .isExternProto) + ',fields=' + e .fields .length;\n  out += ',root=' + s .rootNodes .length;\n  if (s .rootNodes .length) out += ',' + s .rootNodes [0] .getTypeName ();\n  return out;\n}\nfunction mk (name, url) {\n  try {\n    Browser .createX3DFromURL (new MFString (url)) .then (function (s) { made .push (s); rec (name + ':OK:' + describe (s)); },\n                                                       function (e) { rec (name + ':REJ:' + e .message); });\n  } catch (e) { rec (name + ':THROW:' + e .message); }\n}\nfunction cycle () {\n  step = step + 1;\n  if (step == 2) mk ('file', 'ep-url-file.wrl');\n  if (step == 3) mk ('missing', 'ep-url-missing.wrl');\n  if (step == 5) mk ('again', 'ep-url-again.wrl');\n  if (step == 6) mk ('sameTwice', 'ep-url-file.wrl');\n  if (step == 10) { var r = [ ]; for (var i = 0; i < made .length; ++ i) r .push (i + ':' + describe (made [i])); rec ('later=' + r .join (';')); }\n}\n  \"\n}\n\nDEF STEP TimeSensor {\n  cycleInterval 0.05\n  loop TRUE\n}\n\nROUTE STEP.cycleTime TO P.cycle\n",
+    "20": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nMETA \"title\" \"createX3DFromURL with an EXTERNPROTO after load\"\n\nDEF P Script {\n  inputOutput SFString hist \"file:OK:ep=1,EP,ls=1008,proto=true,fields=2,root=1,SFNode missing:OK:ep=1,EP,ls=1009,proto=true,fields=2,root=1,SFNode again:OK:ep=1,EP,ls=1008,proto=true,fields=2,root=1,SFNode sameTwice:OK:ep=1,EP,ls=1008,proto=true,fields=2,root=1,SFNode \"\n  inputOutput SFInt32  step 7\n  inputOnly   SFTime   cycle\n\n  url \"ecmascript:\n\nvar made = [ ];\nfunction rec (s) { hist = hist + s + ' '; }\nfunction describe (s) {\n  var e = s .externprotos [0];\n  var out = 'ep=' + s .externprotos .length;\n  if (e) out += ',' + e .name + ',ls=' + e .loadState + ',proto=' + (e .isExternProto) + ',fields=' + e .fields .length;\n  out += ',root=' + s .rootNodes .length;\n  if (s .rootNodes .length) out += ',' + s .rootNodes [0] .getTypeName ();\n  return out;\n}\nfunction mk (name, url) {\n  try {\n    Browser .createX3DFromURL (new MFString (url)) .then (function (s) { made .push (s); rec (name + ':OK:' + describe (s)); },\n                                                       function (e) { rec (name + ':REJ:' + e .message); });\n  } catch (e) { rec (name + ':THROW:' + e .message); }\n}\nfunction cycle () {\n  step = step + 1;\n  if (step == 2) mk ('file', 'ep-url-file.wrl');\n  if (step == 3) mk ('missing', 'ep-url-missing.wrl');\n  if (step == 5) mk ('again', 'ep-url-again.wrl');\n  if (step == 6) mk ('sameTwice', 'ep-url-file.wrl');\n  if (step == 10) { var r = [ ]; for (var i = 0; i < made .length; ++ i) r .push (i + ':' + describe (made [i])); rec ('later=' + r .join (';')); }\n}\n  \"\n}\n\nDEF STEP TimeSensor {\n  cycleInterval 0.05\n  loop TRUE\n}\n\nROUTE STEP.cycleTime TO P.cycle\n",
+    "21": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nMETA \"title\" \"createX3DFromURL with an EXTERNPROTO after load\"\n\nDEF P Script {\n  inputOutput SFString hist \"file:OK:ep=1,EP,ls=1008,proto=true,fields=2,root=1,SFNode missing:OK:ep=1,EP,ls=1009,proto=true,fields=2,root=1,SFNode again:OK:ep=1,EP,ls=1008,proto=true,fields=2,root=1,SFNode sameTwice:OK:ep=1,EP,ls=1008,proto=true,fields=2,root=1,SFNode \"\n  inputOutput SFInt32  step 8\n  inputOnly   SFTime   cycle\n\n  url \"ecmascript:\n\nvar made = [ ];\nfunction rec (s) { hist = hist + s + ' '; }\nfunction describe (s) {\n  var e = s .externprotos [0];\n  var out = 'ep=' + s .externprotos .length;\n  if (e) out += ',' + e .name + ',ls=' + e .loadState + ',proto=' + (e .isExternProto) + ',fields=' + e .fields .length;\n  out += ',root=' + s .rootNodes .length;\n  if (s .rootNodes .length) out += ',' + s .rootNodes [0] .getTypeName ();\n  return out;\n}\nfunction mk (name, url) {\n  try {\n    Browser .createX3DFromURL (new MFString (url)) .then (function (s) { made .push (s); rec (name + ':OK:' + describe (s)); },\n                                                       function (e) { rec (name + ':REJ:' + e .message); });\n  } catch (e) { rec (name + ':THROW:' + e .message); }\n}\nfunction cycle () {\n  step = step + 1;\n  if (step == 2) mk ('file', 'ep-url-file.wrl');\n  if (step == 3) mk ('missing', 'ep-url-missing.wrl');\n  if (step == 5) mk ('again', 'ep-url-again.wrl');\n  if (step == 6) mk ('sameTwice', 'ep-url-file.wrl');\n  if (step == 10) { var r = [ ]; for (var i = 0; i < made .length; ++ i) r .push (i + ':' + describe (made [i])); rec ('later=' + r .join (';')); }\n}\n  \"\n}\n\nDEF STEP TimeSensor {\n  cycleInterval 0.05\n  loop TRUE\n}\n\nROUTE STEP.cycleTime TO P.cycle\n",
+    "22": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nMETA \"title\" \"createX3DFromURL with an EXTERNPROTO after load\"\n\nDEF P Script {\n  inputOutput SFString hist \"file:OK:ep=1,EP,ls=1008,proto=true,fields=2,root=1,SFNode missing:OK:ep=1,EP,ls=1009,proto=true,fields=2,root=1,SFNode again:OK:ep=1,EP,ls=1008,proto=true,fields=2,root=1,SFNode sameTwice:OK:ep=1,EP,ls=1008,proto=true,fields=2,root=1,SFNode \"\n  inputOutput SFInt32  step 8\n  inputOnly   SFTime   cycle\n\n  url \"ecmascript:\n\nvar made = [ ];\nfunction rec (s) { hist = hist + s + ' '; }\nfunction describe (s) {\n  var e = s .externprotos [0];\n  var out = 'ep=' + s .externprotos .length;\n  if (e) out += ',' + e .name + ',ls=' + e .loadState + ',proto=' + (e .isExternProto) + ',fields=' + e .fields .length;\n  out += ',root=' + s .rootNodes .length;\n  if (s .rootNodes .length) out += ',' + s .rootNodes [0] .getTypeName ();\n  return out;\n}\nfunction mk (name, url) {\n  try {\n    Browser .createX3DFromURL (new MFString (url)) .then (function (s) { made .push (s); rec (name + ':OK:' + describe (s)); },\n                                                       function (e) { rec (name + ':REJ:' + e .message); });\n  } catch (e) { rec (name + ':THROW:' + e .message); }\n}\nfunction cycle () {\n  step = step + 1;\n  if (step == 2) mk ('file', 'ep-url-file.wrl');\n  if (step == 3) mk ('missing', 'ep-url-missing.wrl');\n  if (step == 5) mk ('again', 'ep-url-again.wrl');\n  if (step == 6) mk ('sameTwice', 'ep-url-file.wrl');\n  if (step == 10) { var r = [ ]; for (var i = 0; i < made .length; ++ i) r .push (i + ':' + describe (made [i])); rec ('later=' + r .join (';')); }\n}\n  \"\n}\n\nDEF STEP TimeSensor {\n  cycleInterval 0.05\n  loop TRUE\n}\n\nROUTE STEP.cycleTime TO P.cycle\n",
+    "23": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nMETA \"title\" \"createX3DFromURL with an EXTERNPROTO after load\"\n\nDEF P Script {\n  inputOutput SFString hist \"file:OK:ep=1,EP,ls=1008,proto=true,fields=2,root=1,SFNode missing:OK:ep=1,EP,ls=1009,proto=true,fields=2,root=1,SFNode again:OK:ep=1,EP,ls=1008,proto=true,fields=2,root=1,SFNode sameTwice:OK:ep=1,EP,ls=1008,proto=true,fields=2,root=1,SFNode \"\n  inputOutput SFInt32  step 8\n  inputOnly   SFTime   cycle\n\n  url \"ecmascript:\n\nvar made = [ ];\nfunction rec (s) { hist = hist + s + ' '; }\nfunction describe (s) {\n  var e = s .externprotos [0];\n  var out = 'ep=' + s .externprotos .length;\n  if (e) out += ',' + e .name + ',ls=' + e .loadState + ',proto=' + (e .isExternProto) + ',fields=' + e .fields .length;\n  out += ',root=' + s .rootNodes .length;\n  if (s .rootNodes .length) out += ',' + s .rootNodes [0] .getTypeName ();\n  return out;\n}\nfunction mk (name, url) {\n  try {\n    Browser .createX3DFromURL (new MFString (url)) .then (function (s) { made .push (s); rec (name + ':OK:' + describe (s)); },\n                                                       function (e) { rec (name + ':REJ:' + e .message); });\n  } catch (e) { rec (name + ':THROW:' + e .message); }\n}\nfunction cycle () {\n  step = step + 1;\n  if (step == 2) mk ('file', 'ep-url-file.wrl');\n  if (step == 3) mk ('missing', 'ep-url-missing.wrl');\n  if (step == 5) mk ('again', 'ep-url-again.wrl');\n  if (step == 6) mk ('sameTwice', 'ep-url-file.wrl');\n  if (step == 10) { var r = [ ]; for (var i = 0; i < made .length; ++ i) r .push (i + ':' + describe (made [i])); rec ('later=' + r .join (';')); }\n}\n  \"\n}\n\nDEF STEP TimeSensor {\n  cycleInterval 0.05\n  loop TRUE\n}\n\nROUTE STEP.cycleTime TO P.cycle\n",
+    "24": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nMETA \"title\" \"createX3DFromURL with an EXTERNPROTO after load\"\n\nDEF P Script {\n  inputOutput SFString hist \"file:OK:ep=1,EP,ls=1008,proto=true,fields=2,root=1,SFNode missing:OK:ep=1,EP,ls=1009,proto=true,fields=2,root=1,SFNode again:OK:ep=1,EP,ls=1008,proto=true,fields=2,root=1,SFNode sameTwice:OK:ep=1,EP,ls=1008,proto=true,fields=2,root=1,SFNode \"\n  inputOutput SFInt32  step 9\n  inputOnly   SFTime   cycle\n\n  url \"ecmascript:\n\nvar made = [ ];\nfunction rec (s) { hist = hist + s + ' '; }\nfunction describe (s) {\n  var e = s .externprotos [0];\n  var out = 'ep=' + s .externprotos .length;\n  if (e) out += ',' + e .name + ',ls=' + e .loadState + ',proto=' + (e .isExternProto) + ',fields=' + e .fields .length;\n  out += ',root=' + s .rootNodes .length;\n  if (s .rootNodes .length) out += ',' + s .rootNodes [0] .getTypeName ();\n  return out;\n}\nfunction mk (name, url) {\n  try {\n    Browser .createX3DFromURL (new MFString (url)) .then (function (s) { made .push (s); rec (name + ':OK:' + describe (s)); },\n                                                       function (e) { rec (name + ':REJ:' + e .message); });\n  } catch (e) { rec (name + ':THROW:' + e .message); }\n}\nfunction cycle () {\n  step = step + 1;\n  if (step == 2) mk ('file', 'ep-url-file.wrl');\n  if (step == 3) mk ('missing', 'ep-url-missing.wrl');\n  if (step == 5) mk ('again', 'ep-url-again.wrl');\n  if (step == 6) mk ('sameTwice', 'ep-url-file.wrl');\n  if (step == 10) { var r = [ ]; for (var i = 0; i < made .length; ++ i) r .push (i + ':' + describe (made [i])); rec ('later=' + r .join (';')); }\n}\n  \"\n}\n\nDEF STEP TimeSensor {\n  cycleInterval 0.05\n  loop TRUE\n}\n\nROUTE STEP.cycleTime TO P.cycle\n",
+    "27": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nMETA \"title\" \"createX3DFromURL with an EXTERNPROTO after load\"\n\nDEF P Script {\n  inputOutput SFString hist \"file:OK:ep=1,EP,ls=1008,proto=true,fields=2,root=1,SFNode missing:OK:ep=1,EP,ls=1009,proto=true,fields=2,root=1,SFNode again:OK:ep=1,EP,ls=1008,proto=true,fields=2,root=1,SFNode sameTwice:OK:ep=1,EP,ls=1008,proto=true,fields=2,root=1,SFNode later=0:ep=1,EP,ls=1008,proto=true,fields=2,root=1,SFNode;1:ep=1,EP,ls=1009,proto=true,fields=2,root=1,SFNode;2:ep=1,EP,ls=1008,proto=true,fields=2,root=1,SFNode;3:ep=1,EP,ls=1008,proto=true,fields=2,root=1,SFNode \"\n  inputOutput SFInt32  step 10\n  inputOnly   SFTime   cycle\n\n  url \"ecmascript:\n\nvar made = [ ];\nfunction rec (s) { hist = hist + s + ' '; }\nfunction describe (s) {\n  var e = s .externprotos [0];\n  var out = 'ep=' + s .externprotos .length;\n  if (e) out += ',' + e .name + ',ls=' + e .loadState + ',proto=' + (e .isExternProto) + ',fields=' + e .fields .length;\n  out += ',root=' + s .rootNodes .length;\n  if (s .rootNodes .length) out += ',' + s .rootNodes [0] .getTypeName ();\n  return out;\n}\nfunction mk (name, url) {\n  try {\n    Browser .createX3DFromURL (new MFString (url)) .then (function (s) { made .push (s); rec (name + ':OK:' + describe (s)); },\n                                                       function (e) { rec (name + ':REJ:' + e .message); });\n  } catch (e) { rec (name + ':THROW:' + e .message); }\n}\nfunction cycle () {\n  step = step + 1;\n  if (step == 2) mk ('file', 'ep-url-file.wrl');\n  if (step == 3) mk ('missing', 'ep-url-missing.wrl');\n  if (step == 5) mk ('again', 'ep-url-again.wrl');\n  if (step == 6) mk ('sameTwice', 'ep-url-file.wrl');\n  if (step == 10) { var r = [ ]; for (var i = 0; i < made .length; ++ i) r .push (i + ':' + describe (made [i])); rec ('later=' + r .join (';')); }\n}\n  \"\n}\n\nDEF STEP TimeSensor {\n  cycleInterval 0.05\n  loop TRUE\n}\n\nROUTE STEP.cycleTime TO P.cycle\n",
+    "30": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nMETA \"title\" \"createX3DFromURL with an EXTERNPROTO after load\"\n\nDEF P Script {\n  inputOutput SFString hist \"file:OK:ep=1,EP,ls=1008,proto=true,fields=2,root=1,SFNode missing:OK:ep=1,EP,ls=1009,proto=true,fields=2,root=1,SFNode again:OK:ep=1,EP,ls=1008,proto=true,fields=2,root=1,SFNode sameTwice:OK:ep=1,EP,ls=1008,proto=true,fields=2,root=1,SFNode later=0:ep=1,EP,ls=1008,proto=true,fields=2,root=1,SFNode;1:ep=1,EP,ls=1009,proto=true,fields=2,root=1,SFNode;2:ep=1,EP,ls=1008,proto=true,fields=2,root=1,SFNode;3:ep=1,EP,ls=1008,proto=true,fields=2,root=1,SFNode \"\n  inputOutput SFInt32  step 11\n  inputOnly   SFTime   cycle\n\n  url \"ecmascript:\n\nvar made = [ ];\nfunction rec (s) { hist = hist + s + ' '; }\nfunction describe (s) {\n  var e = s .externprotos [0];\n  var out = 'ep=' + s .externprotos .length;\n  if (e) out += ',' + e .name + ',ls=' + e .loadState + ',proto=' + (e .isExternProto) + ',fields=' + e .fields .length;\n  out += ',root=' + s .rootNodes .length;\n  if (s .rootNodes .length) out += ',' + s .rootNodes [0] .getTypeName ();\n  return out;\n}\nfunction mk (name, url) {\n  try {\n    Browser .createX3DFromURL (new MFString (url)) .then (function (s) { made .push (s); rec (name + ':OK:' + describe (s)); },\n                                                       function (e) { rec (name + ':REJ:' + e .message); });\n  } catch (e) { rec (name + ':THROW:' + e .message); }\n}\nfunction cycle () {\n  step = step + 1;\n  if (step == 2) mk ('file', 'ep-url-file.wrl');\n  if (step == 3) mk ('missing', 'ep-url-missing.wrl');\n  if (step == 5) mk ('again', 'ep-url-again.wrl');\n  if (step == 6) mk ('sameTwice', 'ep-url-file.wrl');\n  if (step == 10) { var r = [ ]; for (var i = 0; i < made .length; ++ i) r .push (i + ':' + describe (made [i])); rec ('later=' + r .join (';')); }\n}\n  \"\n}\n\nDEF STEP TimeSensor {\n  cycleInterval 0.05\n  loop TRUE\n}\n\nROUTE STEP.cycleTime TO P.cycle\n",
+    "33": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nMETA \"title\" \"createX3DFromURL with an EXTERNPROTO after load\"\n\nDEF P Script {\n  inputOutput SFString hist \"file:OK:ep=1,EP,ls=1008,proto=true,fields=2,root=1,SFNode missing:OK:ep=1,EP,ls=1009,proto=true,fields=2,root=1,SFNode again:OK:ep=1,EP,ls=1008,proto=true,fields=2,root=1,SFNode sameTwice:OK:ep=1,EP,ls=1008,proto=true,fields=2,root=1,SFNode later=0:ep=1,EP,ls=1008,proto=true,fields=2,root=1,SFNode;1:ep=1,EP,ls=1009,proto=true,fields=2,root=1,SFNode;2:ep=1,EP,ls=1008,proto=true,fields=2,root=1,SFNode;3:ep=1,EP,ls=1008,proto=true,fields=2,root=1,SFNode \"\n  inputOutput SFInt32  step 12\n  inputOnly   SFTime   cycle\n\n  url \"ecmascript:\n\nvar made = [ ];\nfunction rec (s) { hist = hist + s + ' '; }\nfunction describe (s) {\n  var e = s .externprotos [0];\n  var out = 'ep=' + s .externprotos .length;\n  if (e) out += ',' + e .name + ',ls=' + e .loadState + ',proto=' + (e .isExternProto) + ',fields=' + e .fields .length;\n  out += ',root=' + s .rootNodes .length;\n  if (s .rootNodes .length) out += ',' + s .rootNodes [0] .getTypeName ();\n  return out;\n}\nfunction mk (name, url) {\n  try {\n    Browser .createX3DFromURL (new MFString (url)) .then (function (s) { made .push (s); rec (name + ':OK:' + describe (s)); },\n                                                       function (e) { rec (name + ':REJ:' + e .message); });\n  } catch (e) { rec (name + ':THROW:' + e .message); }\n}\nfunction cycle () {\n  step = step + 1;\n  if (step == 2) mk ('file', 'ep-url-file.wrl');\n  if (step == 3) mk ('missing', 'ep-url-missing.wrl');\n  if (step == 5) mk ('again', 'ep-url-again.wrl');\n  if (step == 6) mk ('sameTwice', 'ep-url-file.wrl');\n  if (step == 10) { var r = [ ]; for (var i = 0; i < made .length; ++ i) r .push (i + ':' + describe (made [i])); rec ('later=' + r .join (';')); }\n}\n  \"\n}\n\nDEF STEP TimeSensor {\n  cycleInterval 0.05\n  loop TRUE\n}\n\nROUTE STEP.cycleTime TO P.cycle\n",
+    "36": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nMETA \"title\" \"createX3DFromURL with an EXTERNPROTO after load\"\n\nDEF P Script {\n  inputOutput SFString hist \"file:OK:ep=1,EP,ls=1008,proto=true,fields=2,root=1,SFNode missing:OK:ep=1,EP,ls=1009,proto=true,fields=2,root=1,SFNode again:OK:ep=1,EP,ls=1008,proto=true,fields=2,root=1,SFNode sameTwice:OK:ep=1,EP,ls=1008,proto=true,fields=2,root=1,SFNode later=0:ep=1,EP,ls=1008,proto=true,fields=2,root=1,SFNode;1:ep=1,EP,ls=1009,proto=true,fields=2,root=1,SFNode;2:ep=1,EP,ls=1008,proto=true,fields=2,root=1,SFNode;3:ep=1,EP,ls=1008,proto=true,fields=2,root=1,SFNode \"\n  inputOutput SFInt32  step 13\n  inputOnly   SFTime   cycle\n\n  url \"ecmascript:\n\nvar made = [ ];\nfunction rec (s) { hist = hist + s + ' '; }\nfunction describe (s) {\n  var e = s .externprotos [0];\n  var out = 'ep=' + s .externprotos .length;\n  if (e) out += ',' + e .name + ',ls=' + e .loadState + ',proto=' + (e .isExternProto) + ',fields=' + e .fields .length;\n  out += ',root=' + s .rootNodes .length;\n  if (s .rootNodes .length) out += ',' + s .rootNodes [0] .getTypeName ();\n  return out;\n}\nfunction mk (name, url) {\n  try {\n    Browser .createX3DFromURL (new MFString (url)) .then (function (s) { made .push (s); rec (name + ':OK:' + describe (s)); },\n                                                       function (e) { rec (name + ':REJ:' + e .message); });\n  } catch (e) { rec (name + ':THROW:' + e .message); }\n}\nfunction cycle () {\n  step = step + 1;\n  if (step == 2) mk ('file', 'ep-url-file.wrl');\n  if (step == 3) mk ('missing', 'ep-url-missing.wrl');\n  if (step == 5) mk ('again', 'ep-url-again.wrl');\n  if (step == 6) mk ('sameTwice', 'ep-url-file.wrl');\n  if (step == 10) { var r = [ ]; for (var i = 0; i < made .length; ++ i) r .push (i + ':' + describe (made [i])); rec ('later=' + r .join (';')); }\n}\n  \"\n}\n\nDEF STEP TimeSensor {\n  cycleInterval 0.05\n  loop TRUE\n}\n\nROUTE STEP.cycleTime TO P.cycle\n"
+  },
+  "prints": [],
+  "log": [
+    "error: X3DExternProtoDeclaration: Couldn't load URL 'http://oracle/synthetic-rea-b09-sai/nowhere-ep-url.wrl'. Error: Not Found"
+  ],
+  "anchors": [],
+  "loadFrames": 3,
+  "warmupFrames": 8,
+  "geometry": {
+    "rect": [
+      0,
+      0,
+      512,
+      512
+    ],
+    "viewport": [
+      0,
+      0,
+      512,
+      512
+    ],
+    "scroll": [
+      0,
+      0
+    ]
+  }
+}
