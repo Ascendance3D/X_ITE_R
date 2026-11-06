@@ -90,7 +90,7 @@ async function draw (page, { before = () => { }, again = false, world = WORLD } 
          if (v === 0) ++ dark; else if (v === 255) ++ white; else ++ edge;
       }
 
-      return { edge, dark, white, hash, multisampling: browser .getRenderingProperty ("Multisampling"), sampleCount: engine .sampleCount, backend: engine .backend };
+      return { edge, dark, white, hash, multisampling: browser .getRenderingProperty ("Multisampling"), sampleCount: engine .sampleCount, maxSamples: engine .maxSamples, backend: engine .backend };
    }, [ world, `(${before .toString ()})`, again ]);
 }
 
@@ -132,14 +132,17 @@ describe ("antialiased 01", { skip: Boolean (ONLY), timeout: SUITE_TIMEOUT }, ()
                const r = await draw (page, { before, again });
 
                assert .equal (r .backend, backend);
-               assert .equal (r .multisampling, samples, "the reported Multisampling");
-               assert .equal (r .sampleCount, Math .max (samples, 1), `the sample count of the renderer: ${JSON .stringify (r)}`);
+               // The page clamps Multisampling to the device's highest count (engine .maxSamples, X_ITE getMaxSamples ()).
+               const expected = Math .min (samples, r .maxSamples);
+
+               assert .equal (r .multisampling, expected, "the reported Multisampling");
+               assert .equal (r .sampleCount, Math .max (expected, 1), `the sample count of the renderer: ${JSON .stringify (r)}`);
                assert .ok (r .dark > 100 && r .white > 100, JSON .stringify (r));
 
-               if (samples === 0)
+               if (expected <= 1)
                   assert .equal (r .edge, 0, `a world drawn with one sample has no edge pixels: ${JSON .stringify (r)}`);
                else
-                  assert .ok (r .edge > 100, `a world drawn with ${samples} samples has edge pixels: ${JSON .stringify (r)}`);
+                  assert .ok (r .edge > 100, `a world drawn with ${expected} samples has edge pixels: ${JSON .stringify (r)}`);
             }
             finally
             {
