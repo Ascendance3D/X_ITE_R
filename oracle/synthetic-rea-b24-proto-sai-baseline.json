@@ -323,6 +323,140 @@
      }
     }
    ]
+  },
+  {
+   "case": "p06",
+   "ok": true,
+   "steps": [
+    {
+     "k": 0,
+     "console": [
+      "log: init loadState: 1007",
+      "log: init decl: metadata:7:1021,level:1:1016,poke:2:1016",
+      "log: init canUserDefinedFields: true",
+      "log: init udf: level,poke",
+      "log: init add extra: undefined",
+      "log: init after add decl: metadata:7:1021,level:1:1016,poke:2:1016,extra:1:1029",
+      "log: init after add udf: level,poke,extra",
+      "log: init after add early: metadata:7:1021,level:1:1016,poke:2:1016,extra:1:1029",
+      "log: init late: metadata:7:1021,level:1:1016,poke:2:1016,extra:1:1029 1 2 3",
+      "log: init remove level: undefined",
+      "log: init after remove decl: metadata:7:1021,poke:2:1016,extra:1:1029",
+      "log: init toVRMLString: EXTERNPROTO Ext [",
+      "log: late loadState: 1008",
+      "log: late decl: metadata:7:1021,level:1:1016,poke:2:1016",
+      "log: late udf: level,poke",
+      "log: late early: metadata:7:1021,level:1:1016,poke:2:1016",
+      "log: late early level: 3",
+      "log: late add more: undefined",
+      "log: late after add decl: metadata:7:1021,level:1:1016,poke:2:1016,more:7:1024",
+      "log: late after add proto decl: metadata:7:1021,level:1:1016,poke:2:1016",
+      "log: late new: metadata:7:1021,level:1:1016,poke:2:1016,more:7:1024 four",
+      "log: late updateInstances: undefined",
+      "log: late after upd early: metadata:7:1021,level:1:1016,poke:2:1016,more:7:1024",
+      "log: late remove more: undefined",
+      "log: late after remove decl: metadata:7:1021,level:1:1016,poke:2:1016",
+      "log: late toVRMLString: EXTERNPROTO Ext ["
+     ],
+     "loadCount": 0,
+     "externs": [
+      {
+       "name": "Ext",
+       "loadState": "COMPLETE",
+       "url": [
+        "lib.wrl#Lib"
+       ],
+       "proto": "Lib",
+       "fields": [
+        "level",
+        "poke"
+       ]
+      }
+     ],
+     "instances": {},
+     "vrml": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT EnvironmentalSensor : 3\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Scripting : 1\nCOMPONENT Sound : 3\nCOMPONENT Text : 2\n\nEXTERNPROTO Ext [\n  initializeOnly SFInt32 level\n  inputOnly      SFInt32 poke\n]\n\"lib.wrl#Lib\"\n\nDEF S Script {\n  url \"javascript:\nvar frame = 0;\nvar early = null;\n\nfunction show (label, f)\n{\n   try { print (label + ': ' + f ()); }\n   catch (e) { print (label + ' threw ' + e .name + ': ' + e .message); }\n}\n\nfunction names (o) { return Array .from (o .getFieldDefinitions (), f => f .name + ':' + f .accessType + ':' + f .dataType) .join (','); }\nfunction udf (o) { return Array .from (o .getUserDefinedFields (), f => f .getName ()) .join (','); }\n\nfunction initialize ()\n{\n   const cs = Browser .currentScene;\n   const e  = cs .externprotos .get ('Ext');\n\n   early = cs .createProto ('Ext');\n\n   show ('init loadState', () => e .loadState);\n   show ('init decl', () => names (e));\n   show ('init canUserDefinedFields', () => e .canUserDefinedFields ());\n   show ('init udf', () => udf (e));\n   show ('init add extra', () => e .addUserDefinedField (X3DConstants .initializeOnly, 'extra', new SFVec3f (1, 2, 3)));\n   show ('init after add decl', () => names (e));\n   show ('init after add udf', () => udf (e));\n   show ('init after add early', () => names (early));\n   show ('init late', () => { const n = cs .createProto ('Ext'); return names (n) + ' ' + n .extra; });\n   show ('init remove level', () => e .removeUserDefinedField ('level'));\n   show ('init after remove decl', () => names (e));\n   show ('init toVRMLString', () => e .toVRMLString ());\n}\n\nfunction prepareEvents ()\n{\n   const cs = Browser .currentScene;\n   const e  = cs .externprotos .get ('Ext');\n\n   if (++ frame !== 3)\n      return;\n\n   show ('late loadState', () => e .loadState);\n   show ('late decl', () => names (e));\n   show ('late udf', () => udf (e));\n   show ('late early', () => names (early));\n   show ('late early level', () => early .level);\n   show ('late add more', () => e .addUserDefinedField (X3DConstants .inputOutput, 'more', new SFString ('four')));\n   show ('late after add decl', () => names (e));\n   show ('late after add proto decl', () => names (e .getProtoDeclaration ()));\n   show ('late new', () => { const n = cs .createProto ('Ext'); return names (n) + ' ' + n .more; });\n   show ('late updateInstances', () => e .updateInstances ());\n   show ('late after upd early', () => names (early));\n   show ('late remove more', () => e .removeUserDefinedField ('more'));\n   show ('late after remove decl', () => names (e));\n   show ('late toVRMLString', () => e .toVRMLString ());\n}\n\"\n}\n"
+    },
+    {
+     "k": 1,
+     "console": [],
+     "loadCount": 0,
+     "externs": [
+      {
+       "name": "Ext",
+       "loadState": "COMPLETE",
+       "url": [
+        "lib.wrl#Lib"
+       ],
+       "proto": "Lib",
+       "fields": [
+        "level",
+        "poke"
+       ]
+      }
+     ],
+     "instances": {}
+    },
+    {
+     "k": 2,
+     "console": [],
+     "loadCount": 0,
+     "externs": [
+      {
+       "name": "Ext",
+       "loadState": "COMPLETE",
+       "url": [
+        "lib.wrl#Lib"
+       ],
+       "proto": "Lib",
+       "fields": [
+        "level",
+        "poke"
+       ]
+      }
+     ],
+     "instances": {}
+    },
+    {
+     "k": 3,
+     "console": [],
+     "loadCount": 0,
+     "externs": [
+      {
+       "name": "Ext",
+       "loadState": "COMPLETE",
+       "url": [
+        "lib.wrl#Lib"
+       ],
+       "proto": "Lib",
+       "fields": [
+        "level",
+        "poke"
+       ]
+      }
+     ],
+     "instances": {}
+    },
+    {
+     "k": 4,
+     "console": [],
+     "loadCount": 0,
+     "externs": [
+      {
+       "name": "Ext",
+       "loadState": "COMPLETE",
+       "url": [
+        "lib.wrl#Lib"
+       ],
+       "proto": "Lib",
+       "fields": [
+        "level",
+        "poke"
+       ]
+      }
+     ],
+     "instances": {}
+    }
+   ]
   }
  ]
 }

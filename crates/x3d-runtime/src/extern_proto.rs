@@ -1430,6 +1430,21 @@ impl Runtime {
         self.remap_proto_references(p, &old);
     }
 
+    /// X3DBaseNode.addUserDefinedField on an EXTERNPROTO declaration: as on a PROTO, a field of the same name goes first and
+    /// the new one comes last. Only the declaration's own interface changes: a load later assigns the loaded PROTO's
+    /// interface (setProtoDeclaration), and the loaded PROTO keeps its own. No IS reference names an EXTERNPROTO field.
+    pub fn extern_add_user_field(&mut self, e: ExternId, field: Field) {
+        let d = &mut self.scene.externprotos[e];
+
+        d.fields.retain(|f| f.name != field.name);
+        d.fields.push(field);
+    }
+
+    /// X3DBaseNode.removeUserDefinedField on an EXTERNPROTO declaration (nothing when it has no such field).
+    pub fn extern_remove_user_field(&mut self, e: ExternId, name: &str) {
+        self.scene.externprotos[e].fields.retain(|f| f.name != name);
+    }
+
     fn proto_field_names(&self, p: ProtoId) -> Vec<String> {
         self.scene.protos[p]
             .fields
