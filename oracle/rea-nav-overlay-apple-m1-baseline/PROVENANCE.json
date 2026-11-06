@@ -135,5 +135,5 @@
  "recorded": "2026-11-05",
  "recorder": "oracle/tools/rea_nav_overlay.py record (oracle/x_ite-anim.mjs)",
  "rule": "3 identical summaries; kept only where the NVIDIA summary differs",
- "user_agent": "rubber-wheel-roll (the only case with a wheel event): Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/156.0.0.0 Safari/537.36 (XITE_USER_AGENT), so X_ITE's SLOW_SCROLL is off as on the NVIDIA host; the other 17 cases: the browser's own (macOS); they have no wheel event, and SLOW_SCROLL only scales wheel steps (PlaneViewer.js, LookAtViewer.js, X3DFlyViewer.js)"
+ "user_agent": "rubber-wheel-roll (the only case with a wheel event): Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/156.0.0.0 Safari/537.36 (XITE_USER_AGENT), so X_ITE's SLOW_SCROLL is off as on the NVIDIA host; the other 17 cases: the browser's own (macOS); they have no wheel event, and SLOW_SCROLL only scales wheel steps (ExamineViewer.js, LookAtViewer.js, PlaneViewer.js, X3DFlyViewer.js)"
 }
