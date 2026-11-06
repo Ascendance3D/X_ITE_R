@@ -22,38 +22,54 @@ import { fields, frames, touch } from "./runtime02_case.mjs";
 // which left x = -0.003346939 (reproduced by sending the halves as two events with frames between). The hosted runner's
 // SwiftShader draws a frame in 0.3 s, so a 28 ms gap holds a frame boundary about one run in ten. This is the delivery of
 // the browser, not the gesture the test is about (X_ITE, which handles each DOM event at once, would see the same
-// half step). The test holds the page's animation frames while it sends a two-finger event and until both halves
-// have come, so that the page draws no frame between them and a frame sees the whole step.
-const SPLIT_GAP = 150;
+// half step). The test holds the page's animation frames while it sends a two-finger event, until the page has received a
+// DOM touch event with every finger at its new position, so that the page draws no frame between the halves and a frame
+// sees the whole step. HOLD_LIMIT only bounds the wait: a step that never arrives whole fails the test.
+const HOLD_LIMIT = 5000;
 
-async function holdFrames (page, send)
+// Sends a two-finger event with the page's frames held. `requestAnimationFrame` is wrapped for the hold only and restored
+// after it; a callback asked for during the hold runs at the first frame after it.
+async function holdFrames (page, type, points, send)
 {
-   await page .evaluate (() =>
+   await page .evaluate (([ domType ]) =>
    {
-      if (!window .frameHold)
+      const real  = window .requestAnimationFrame;
+      const state = { held: true, touches: null };
+
+      state .listener = event => { state .touches = Array .from (event .targetTouches, t => [ t .clientX, t .clientY ]); };
+      state .restore  = () =>
       {
-         const real = window .requestAnimationFrame .bind (window);
+         state .held = false;
+         window .requestAnimationFrame = real;
+         removeEventListener (domType, state .listener, { capture: true });
+      };
 
-         window .frameHold = { held: false };
-         window .requestAnimationFrame = callback => real (function again (stamp) { window .frameHold .held ? real (again) : callback (stamp); });
-      }
-
-      window .frameHold .held = true;
-   });
+      addEventListener (domType, state .listener, { capture: true });
+      window .requestAnimationFrame = callback => real .call (window, function again (stamp) { state .held ? real .call (window, again) : callback (stamp); });
+      window .frameHold = state;
+   }, [ type === "touchStart" ? "touchstart" : "touchmove" ]);
 
    try
    {
       await send ();
-      await page .waitForTimeout (SPLIT_GAP);
+
+      // The whole step has come when a DOM event has every finger at its new position (CDP x, y are client pixels).
+      await page .waitForFunction (points =>
+      {
+         const touches = window .frameHold .touches;
+
+         return touches ?.length === points .length &&
+            points .every (([ x, y ]) => touches .some (([ tx, ty ]) => Math .abs (tx - x) <= 0.5 && Math .abs (ty - y) <= 0.5));
+      }, points, { timeout: HOLD_LIMIT });
    }
    finally
    {
-      await page .evaluate (() => { window .frameHold .held = false; });
+      await page .evaluate (() => { window .frameHold .restore (); delete window .frameHold; });
    }
 }
 
-// `touch` for the events with two points: the page draws no frame until both halves of the event have come.
-const touch2 = (page, type, points) => holdFrames (page, async () =>
+// `touch` for the events with two points: the page draws no frame until the whole event has come.
+const touch2 = (page, type, points) => holdFrames (page, type, points, async () =>
 {
    const cdp = page .cdp ??= await page .context () .newCDPSession (page);
 
