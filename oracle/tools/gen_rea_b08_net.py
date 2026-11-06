@@ -322,9 +322,10 @@ scripts["ig-select.json"] = runtime_json(60, [])
 # that url; the second and later nodes find the geometry locked and use `geometryNode .copy ()` (no instance argument: a flat copy, the
 # fields are assigned, so child nodes are shared) and InlineGeometry.js leaves "TODO: add routes" there. Two files, three nodes each:
 #  * ig/routes.x3dv: TimeSensor -> CoordinateInterpolator -> a Coordinate (a child node, shared by the flat copy): every copy moves too;
-#  * ig/routes-extrusion.x3dv: TimeSensor -> PositionInterpolator -> `size` of the Box itself: the copies keep the initial size, only the
-#    first node (the cached scene's own geometry) grows. Rust keeps the routes for every instance: ADR 0012, item 6.
-# Test: crates/x3d-viewer/tests/rea_b08_ig_second.rs.
+#  * ig/routes-extrusion.x3dv: TimeSensor -> CoordinateInterpolator -> `set_spine` of the Extrusion itself (a field of the copied node,
+#    not a shared child): the copies keep the spine they had when they were copied, only the first node (the cached scene's own
+#    geometry) moves. Rust keeps the routes for every instance: ADR 0012, item 6.
+# Test: crates/x3d-viewer/tests/rea_batch08_net.rs, case ig-second (`--known-diff=ig-second`).
 files[IGDIR + "/routes-extrusion.x3dv"] = x3dv("Shape { geometry DEF EX Extrusion { crossSection [ 0.4 0.4, 0.4 -0.4, -0.4 -0.4, -0.4 0.4, 0.4 0.4 ] spine [ 0 -0.3 0, 0 0.3 0 ] solid TRUE } }", "DEF TS TimeSensor { loop TRUE cycleInterval 2 }", "DEF CI CoordinateInterpolator { key [ 0 1 ] keyValue [ 0 -0.3 0, 0 0.3 0, 0 -1.2 0, 0 1.2 0 ] }", "ROUTE TS.fraction_changed TO CI.set_fraction", "ROUTE CI.value_changed TO EX.set_spine")
 ig_second = [(f"{r}{i}", x, y, u) for r, y, u in (("C", 1.8, "ig/routes.x3dv"), ("B", -1.8, "ig/routes-extrusion.x3dv")) for i, x in enumerate((-2.4, 0, 2.4))]
 rows = [f'Transform {{ translation {x} {y} 0 children Shape {{ {mat} geometry DEF IG{n} InlineGeometry {{ url "{u}" }} }} }}' for n, x, y, u in ig_second]

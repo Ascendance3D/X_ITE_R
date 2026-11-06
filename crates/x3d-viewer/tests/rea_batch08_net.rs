@@ -432,7 +432,7 @@ fn compare_case(
     }
 
     // The decided difference must be there, else the mask hides nothing and must go: X_ITE's region is the same in
-    // every picture, Rust's is not.
+    // every picture, Rust's is not, and the two are not equal.
     for (r, js_px, rs_px) in &regions {
         if js_px.windows(2).any(|p| p[0] != p[1]) {
             fail(format!(
@@ -443,6 +443,13 @@ fn compare_case(
         if rs_px.windows(2).all(|p| p[0] == p[1]) {
             fail(format!(
                 "known difference {}: the Rust region {r} does not change between pictures ({why})",
+                known.unwrap()
+            ));
+        }
+        // And the two differ there: else the region holds no difference to leave out.
+        if js_px.iter().zip(rs_px).all(|(a, b)| a == b) {
+            fail(format!(
+                "known difference {}: the X_ITE and Rust regions {r} are equal in every picture ({why})",
                 known.unwrap()
             ));
         }
