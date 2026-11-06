@@ -327,6 +327,11 @@ pub struct WebBrowser {
     sound_options: Option<(bool, f64)>,
     /// The page's browser options the engine reads itself ([`WebBrowser::set_engine_option`]); a world that starts takes them.
     engine_options: Vec<(String, x3d_runtime::browser_options::OptionValue)>,
+    /// The sample count the page set ([`WebBrowser::set_sample_count`]): a world that starts keeps it. Without it a new
+    /// world's own default (4) would replace the page's Antialiased and Multisampling options (issue #471).
+    page_samples: Option<u32>,
+    /// The Shading the page set ([`WebBrowser::set_shading`]); a world that starts keeps it, like `page_samples`.
+    page_shading: Option<x3d_render::gpu::ShadingMode>,
     /// The audio engines the page has been told about ([`WebBrowser::take_audio_ops`]), by `AudioEngine::uid`.
     audio_known: std::collections::HashSet<u64>,
     /// The buffers of the last [`WebBrowser::take_audio_ops`] ([`WebBrowser::audio_buffer`]).
@@ -636,6 +641,8 @@ impl WebBrowser {
             audio_clock: None,
             sound_options: None,
             engine_options: Vec::new(),
+            page_samples: None,
+            page_shading: None,
             audio_known: Default::default(),
             audio_payloads: Default::default(),
             video_known: false,
@@ -1008,6 +1015,17 @@ impl WebBrowser {
 
         if let Some(v) = w.session.viewer() {
             v.rendering_properties().apply(&mut self.renderer);
+        }
+
+        // X_ITE's BrowserOptions belong to the browser, not to a world: the page's Multisampling and Shading stay in
+        // force over the new world's engine-side defaults. A change the world makes later still goes through
+        // take_rendering_changes.
+        if let Some(n) = self.page_samples {
+            self.renderer.set_sample_count(n);
+        }
+
+        if let Some(s) = self.page_shading {
+            self.renderer.set_shading(s);
         }
 
         self.current = Some(id);
@@ -2386,19 +2404,23 @@ impl WebBrowser {
     pub fn set_shading(&mut self, name: &str) {
         use x3d_render::gpu::ShadingMode;
 
-        self.renderer.set_shading(match name {
+        let mode = match name {
             "POINT" => ShadingMode::Point,
             "WIREFRAME" => ShadingMode::Wireframe,
             "FLAT" => ShadingMode::Flat,
             "PHONG" => ShadingMode::Phong,
             _ => ShadingMode::Gouraud,
-        });
+        };
+
+        self.page_shading = Some(mode);
+        self.renderer.set_shading(mode);
     }
 
     /// The `Multisampling` rendering property: the sample count to draw with (0 or 1 draws without multisampling).
     /// The renderer uses the highest count the device supports that is not above the request.
     #[wasm_bindgen(js_name = setSampleCount)]
     pub fn set_sample_count(&mut self, samples: u32) {
+        self.page_samples = Some(samples);
         self.renderer.set_sample_count(samples);
     }
 
