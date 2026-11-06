@@ -149,6 +149,10 @@ try
    await page .goto (`${base}/x_ite-pin/src/anim-msaa.html?w=${W}&h=${H}&aa=${AA}${MS ? "&ms=" + MS : ""}`);
    await page .waitForFunction (() => window .ready, null, { timeout: 30000 });
 
+   // Script key "contentScale", as in x_ite-anim.mjs (issue #51, F17): set before the world loads.
+   if (script .contentScale !== undefined)
+      await page .evaluate (s => document .getElementById ("c") .setAttribute ("contentScale", String (s)), script .contentScale);
+
    const abs = resolve (fileArg);
    const url = `${base}/${relative (ROOT, abs) .split ("/") .map (encodeURIComponent) .join ("/")}`;
    const loaded = await page .evaluate (([u, t, d, w]) => window .load (u, t, d, w), [ url, t0, dt, warmup ]);
@@ -159,6 +163,10 @@ try
 
    if (!loaded .ok)
       throw new Error (loaded .error);
+
+   // Script key "browserOptions", as in x_ite-anim.mjs (issue #51, F15): `browser .setBrowserOption (name, value)` after the load.
+   if (script .browserOptions)
+      await page .evaluate (o => { const b = document .getElementById ("c") .browser; for (const [ k, v ] of Object .entries (o)) b .setBrowserOption (k, v); }, script .browserOptions);
 
    await page .evaluate (d => window .setDt (d), dt);
    result .geometry = await page .evaluate (() => window .geometry ());

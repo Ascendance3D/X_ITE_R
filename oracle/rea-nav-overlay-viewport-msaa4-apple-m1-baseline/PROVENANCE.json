@@ -1,0 +1,76 @@
+{
+ "angle_backend": "metal",
+ "cases": {
+  "vp-group-walk-press-outside": {
+   "run_sha256": [
+    "d795235150d0c0625fbe5a9ac6ba881bc6119a9fdfa744c87cb8c6d99c7278f2",
+    "d795235150d0c0625fbe5a9ac6ba881bc6119a9fdfa744c87cb8c6d99c7278f2",
+    "d795235150d0c0625fbe5a9ac6ba881bc6119a9fdfa744c87cb8c6d99c7278f2"
+   ]
+  },
+  "vp-group-walk-up-right": {
+   "run_sha256": [
+    "7c73ed3044c0a8d6053330b56a3a3105e632b488e1f33c160871a8b9191ddc07",
+    "7c73ed3044c0a8d6053330b56a3a3105e632b488e1f33c160871a8b9191ddc07",
+    "7c73ed3044c0a8d6053330b56a3a3105e632b488e1f33c160871a8b9191ddc07"
+   ]
+  },
+  "vp-layer-fly-down-left": {
+   "run_sha256": [
+    "290aea25a41a73b070cf897afddc26354ce2c1a1d4ac9abcc62840b9ca66f98a",
+    "290aea25a41a73b070cf897afddc26354ce2c1a1d4ac9abcc62840b9ca66f98a",
+    "290aea25a41a73b070cf897afddc26354ce2c1a1d4ac9abcc62840b9ca66f98a"
+   ]
+  },
+  "vp-layer-fly-pan-middle": {
+   "run_sha256": [
+    "274636583a9269d8746ba9ca865741d3309599ae3f98b21d75c7cc7e28b9012b",
+    "274636583a9269d8746ba9ca865741d3309599ae3f98b21d75c7cc7e28b9012b",
+    "274636583a9269d8746ba9ca865741d3309599ae3f98b21d75c7cc7e28b9012b"
+   ]
+  },
+  "vp-layer-fly-scale-2": {
+   "run_sha256": [
+    "0c0888a7a9b0b2b4865bf2133d85bd5c48a30a949600065d6d0b2afc20c975b2",
+    "0c0888a7a9b0b2b4865bf2133d85bd5c48a30a949600065d6d0b2afc20c975b2",
+    "0c0888a7a9b0b2b4865bf2133d85bd5c48a30a949600065d6d0b2afc20c975b2"
+   ]
+  },
+  "vp-layer-walk-leave": {
+   "run_sha256": [
+    "8bfbaa3b229b321a4aafc109dd05cec2f4e800825c1d6c5c061772fd06651812",
+    "8bfbaa3b229b321a4aafc109dd05cec2f4e800825c1d6c5c061772fd06651812",
+    "8bfbaa3b229b321a4aafc109dd05cec2f4e800825c1d6c5c061772fd06651812"
+   ]
+  },
+  "vp-layer-walk-press-outside": {
+   "run_sha256": [
+    "12811fe7085e9e97d6d4ebeba8c7cf8df21b32d8790148a14a6faf82f3fa779e",
+    "12811fe7085e9e97d6d4ebeba8c7cf8df21b32d8790148a14a6faf82f3fa779e",
+    "12811fe7085e9e97d6d4ebeba8c7cf8df21b32d8790148a14a6faf82f3fa779e"
+   ]
+  },
+  "vp-layer-walk-scale-0.5": {
+   "run_sha256": [
+    "29c09afb6faeb5e4781a718b8f448d0d6f1c7a4b6e05a774cd3a800d822f5ded",
+    "29c09afb6faeb5e4781a718b8f448d0d6f1c7a4b6e05a774cd3a800d822f5ded",
+    "29c09afb6faeb5e4781a718b8f448d0d6f1c7a4b6e05a774cd3a800d822f5ded"
+   ]
+  },
+  "vp-layer-walk-up-right": {
+   "run_sha256": [
+    "787b287a805eacc09142574ae9eaa70871c8c30cb979e0752cff0ae42db4d31f",
+    "787b287a805eacc09142574ae9eaa70871c8c30cb979e0752cff0ae42db4d31f",
+    "787b287a805eacc09142574ae9eaa70871c8c30cb979e0752cff0ae42db4d31f"
+   ]
+  }
+ },
+ "chrome": "Google Chrome 156.0.8078.79",
+ "hardware": "Apple M1 (8-core GPU), macOS 27.0.1 (26A434)",
+ "pinned_x_ite": "16.5.0 34cdf9f97",
+ "platform": "apple-m1",
+ "recorded": "2026-11-06",
+ "recorder": "oracle/tools/rea_nav_overlay.py record (oracle/x_ite-anim-msaa.mjs --ms 4)",
+ "rule": "3 identical summaries; kept only where the NVIDIA summary differs",
+ "user_agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/156.0.0.0 Safari/537.36"
+}

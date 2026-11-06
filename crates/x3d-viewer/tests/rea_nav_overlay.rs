@@ -17,6 +17,16 @@
 //! oracle/x_ite-anim-msaa.mjs, three identical runs) run `x3d-drive --msaa 4 --gl-samples` with the same checks: X_ITE draws the band
 //! into its multisampled framebuffer before the blit, so its edges are antialiased.
 //!
+//! Two more sets, each with its own new directories (the directories above are not changed):
+//!
+//! * Viewport (oracle/synthetic-rea-nav-overlay-viewport, `rea_nav_overlay.py gen-viewport`): the active layer has a Viewport, or a
+//!   Viewport grouping node is in the scene. ScreenLine.display sets `gl.viewport` and `gl.scissor` to `browser .getViewport ()`,
+//!   the whole drawing buffer (X3DRenderingContext `_viewport`), and the ends come from `getPointerFromEvent`, also in
+//!   drawing-buffer pixels; the layer's Viewport only decides if the press starts the viewer (X3DViewer.isPointerInRectangle).
+//!   Baselines oracle/rea-nav-overlay-viewport-baseline and oracle/rea-nav-overlay-viewport-msaa4-baseline.
+//! * Options at Multisampling 4: the rubber band cases with "contentScale" or "browserOptions" of the default set, in
+//!   oracle/rea-nav-overlay-options-msaa4-baseline (`record --set options --msaa 4`).
+//!
 //! `REA_ONLY=<substring>` restricts the cases.
 
 mod common;
@@ -137,6 +147,7 @@ fn compare_pictures(
 
 fn compare_case(
     root: &Path,
+    stem: &str,
     name: &str,
     world: &str,
     script: &str,
@@ -144,19 +155,16 @@ fn compare_case(
     failures: &mut Vec<String>,
 ) {
     // The NVIDIA recording, or the one of X3D_REFERENCE_PLATFORM where it has this case (common/reference.rs); MSAA 4 has its own
-    // directories (oracle/rea-nav-overlay-msaa4-baseline and oracle/rea-nav-overlay-msaa4-<platform>-baseline).
+    // directories (oracle/<stem>-msaa4-baseline and oracle/<stem>-msaa4-<platform>-baseline).
     let dir = if msaa > 0 {
-        format!("rea-nav-overlay-msaa{msaa}-baseline")
+        format!("{stem}-msaa{msaa}-baseline")
     } else {
-        "rea-nav-overlay-baseline".to_string()
+        format!("{stem}-baseline")
     };
     let base = common::reference::flat_json(root, &dir, name);
     let js: Value = serde_json::from_str(&std::fs::read_to_string(&base).unwrap()).unwrap();
     let pictures = js.get("frames").is_some();
-    let out = std::env::temp_dir().join(format!(
-        "rea-nav-overlay-{}-{name}-msaa{msaa}",
-        std::process::id()
-    ));
+    let out = std::env::temp_dir().join(format!("{stem}-{}-{name}-msaa{msaa}", std::process::id()));
     std::fs::create_dir_all(&out).unwrap();
     let rs_json = out.join("rs.json");
     let png_dir = out.join("rs");
@@ -258,8 +266,10 @@ fn compare_case(
     let _ = std::fs::remove_dir_all(&out);
 }
 
-/// The cases of a group: `rubber-` (F15) or `scale-` (F17); at `msaa` above 0 only the cases of that baseline's cases.txt.
-fn run_group(prefix: &str, msaa: u32) {
+/// The cases of a group of the case table `table` (an oracle directory with cases.txt) whose name starts with `prefix`, against
+/// the baselines `oracle/<stem>[-msaa<N>]-baseline`; at `msaa` above 0 only the cases of that baseline's cases.txt. At least `min`
+/// cases must run.
+fn run_set(table: &str, stem: &str, prefix: &str, msaa: u32, min: usize) {
     let root = PathBuf::from(env!("CARGO_MANIFEST_DIR"))
         .join("../..")
         .canonicalize()
@@ -271,14 +281,11 @@ fn run_group(prefix: &str, msaa: u32) {
         );
     }
 
-    let cases =
-        std::fs::read_to_string(root.join("oracle/synthetic-rea-nav-overlay/cases.txt")).unwrap();
+    let cases = std::fs::read_to_string(root.join(format!("oracle/{table}/cases.txt"))).unwrap();
     let only = std::env::var("REA_ONLY").ok();
     let listed = (msaa > 0).then(|| {
-        std::fs::read_to_string(root.join(format!(
-            "oracle/rea-nav-overlay-msaa{msaa}-baseline/cases.txt"
-        )))
-        .unwrap()
+        std::fs::read_to_string(root.join(format!("oracle/{stem}-msaa{msaa}-baseline/cases.txt")))
+            .unwrap()
     });
     let mut failures = vec![];
     let mut checked = 0;
@@ -296,17 +303,28 @@ fn run_group(prefix: &str, msaa: u32) {
             continue;
         }
 
-        compare_case(&root, name, world, script, msaa, &mut failures);
+        compare_case(&root, stem, name, world, script, msaa, &mut failures);
         checked += 1;
     }
 
-    eprintln!("{prefix} MSAA {msaa}: {checked} cases checked");
-    assert!(only.is_some() || checked > 5, "only {checked} cases ran");
+    eprintln!("{stem} {prefix} MSAA {msaa}: {checked} cases checked");
+    assert!(only.is_some() || checked >= min, "only {checked} cases ran");
     assert!(
         failures.is_empty(),
         "{} failures:\n{}",
         failures.len(),
         failures.join("\n")
+    );
+}
+
+/// The default set: `rubber-` (F15) or `scale-` (F17).
+fn run_group(prefix: &str, msaa: u32) {
+    run_set(
+        "synthetic-rea-nav-overlay",
+        "rea-nav-overlay",
+        prefix,
+        msaa,
+        6,
     );
 }
 
@@ -323,4 +341,37 @@ fn rea_nav_overlay_rubber_band_msaa4_matches_x_ite() {
 #[test]
 fn rea_nav_overlay_content_scale_matches_x_ite() {
     run_group("scale-", 0);
+}
+
+#[test]
+fn rea_nav_overlay_rubber_band_options_msaa4_matches_x_ite() {
+    run_set(
+        "synthetic-rea-nav-overlay",
+        "rea-nav-overlay-options",
+        "rubber-",
+        4,
+        4,
+    );
+}
+
+#[test]
+fn rea_nav_overlay_viewport_matches_x_ite() {
+    run_set(
+        "synthetic-rea-nav-overlay-viewport",
+        "rea-nav-overlay-viewport",
+        "vp-",
+        0,
+        9,
+    );
+}
+
+#[test]
+fn rea_nav_overlay_viewport_msaa4_matches_x_ite() {
+    run_set(
+        "synthetic-rea-nav-overlay-viewport",
+        "rea-nav-overlay-viewport",
+        "vp-",
+        4,
+        9,
+    );
 }
