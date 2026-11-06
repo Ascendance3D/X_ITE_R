@@ -1,0 +1,102 @@
+{
+ "angle_backend": "metal",
+ "chrome": "156.0.8078.79",
+ "gl_renderer": "ANGLE (Apple, ANGLE Metal Renderer: Apple M1, Unspecified Version)",
+ "hardware": "Apple M1 (8-core GPU, vendor 0x106b), macOS 27.0.1 (26A434)",
+ "issue": "#461",
+ "kept": {
+  "point-tie-1.wrl.png": {
+   "png": "7fda548763beb356b6b56b91f12180a4865dda115819614bcea8e9aeb64381f2",
+   "runs_png_sha256": [
+    "7fda548763beb356b6b56b91f12180a4865dda115819614bcea8e9aeb64381f2",
+    "7fda548763beb356b6b56b91f12180a4865dda115819614bcea8e9aeb64381f2",
+    "7fda548763beb356b6b56b91f12180a4865dda115819614bcea8e9aeb64381f2"
+   ]
+  },
+  "point-tie-2.wrl.png": {
+   "png": "aa5cf85a737e0fb51044917cd1624adf6e90a680217c27c7241cc0801d56b0e6",
+   "runs_png_sha256": [
+    "aa5cf85a737e0fb51044917cd1624adf6e90a680217c27c7241cc0801d56b0e6",
+    "aa5cf85a737e0fb51044917cd1624adf6e90a680217c27c7241cc0801d56b0e6",
+    "aa5cf85a737e0fb51044917cd1624adf6e90a680217c27c7241cc0801d56b0e6"
+   ]
+  },
+  "point-tie-2p5.wrl.png": {
+   "png": "f05a53f4de438adc7bbe24218420569174590140dedce9708ec33f0ef38f42e7",
+   "runs_png_sha256": [
+    "f05a53f4de438adc7bbe24218420569174590140dedce9708ec33f0ef38f42e7",
+    "f05a53f4de438adc7bbe24218420569174590140dedce9708ec33f0ef38f42e7",
+    "f05a53f4de438adc7bbe24218420569174590140dedce9708ec33f0ef38f42e7"
+   ]
+  },
+  "point-tie-3.wrl.png": {
+   "png": "7cd87068fc40734ab35b7bacaf67070d244c8471d50e9e7c92de82841a934cc0",
+   "runs_png_sha256": [
+    "7cd87068fc40734ab35b7bacaf67070d244c8471d50e9e7c92de82841a934cc0",
+    "7cd87068fc40734ab35b7bacaf67070d244c8471d50e9e7c92de82841a934cc0",
+    "7cd87068fc40734ab35b7bacaf67070d244c8471d50e9e7c92de82841a934cc0"
+   ]
+  },
+  "point-tie-4.wrl.png": {
+   "png": "a10bb63fd02059211cf15af8245e2988dc72bf5c5e07c7439453bc8a3523335b",
+   "runs_png_sha256": [
+    "a10bb63fd02059211cf15af8245e2988dc72bf5c5e07c7439453bc8a3523335b",
+    "a10bb63fd02059211cf15af8245e2988dc72bf5c5e07c7439453bc8a3523335b",
+    "a10bb63fd02059211cf15af8245e2988dc72bf5c5e07c7439453bc8a3523335b"
+   ]
+  },
+  "point-tie-5.wrl.png": {
+   "png": "3a2fb748a427811c243b6aa99cf09643dfbb98a4c487e5c4c57fa5020c4560f1",
+   "runs_png_sha256": [
+    "3a2fb748a427811c243b6aa99cf09643dfbb98a4c487e5c4c57fa5020c4560f1",
+    "3a2fb748a427811c243b6aa99cf09643dfbb98a4c487e5c4c57fa5020c4560f1",
+    "3a2fb748a427811c243b6aa99cf09643dfbb98a4c487e5c4c57fa5020c4560f1"
+   ]
+  },
+  "point-tie-6.wrl.png": {
+   "png": "357ec9dd2dc19c321940a3a155ae2e57d10670d28dfa54a21ed939b38fdfff93",
+   "runs_png_sha256": [
+    "357ec9dd2dc19c321940a3a155ae2e57d10670d28dfa54a21ed939b38fdfff93",
+    "357ec9dd2dc19c321940a3a155ae2e57d10670d28dfa54a21ed939b38fdfff93",
+    "357ec9dd2dc19c321940a3a155ae2e57d10670d28dfa54a21ed939b38fdfff93"
+   ]
+  },
+  "point-tie-8p5.wrl.png": {
+   "png": "52ecc850274a28440fcdbdf7d61678e210b9d763e9e07a23269e62ef0dc19ca7",
+   "runs_png_sha256": [
+    "52ecc850274a28440fcdbdf7d61678e210b9d763e9e07a23269e62ef0dc19ca7",
+    "52ecc850274a28440fcdbdf7d61678e210b9d763e9e07a23269e62ef0dc19ca7",
+    "52ecc850274a28440fcdbdf7d61678e210b9d763e9e07a23269e62ef0dc19ca7"
+   ]
+  },
+  "point-tie-9.wrl.png": {
+   "png": "9050cebdc5a1daa66fc00cc9573271f375a3db4dd6503da96552151fd9cb0de5",
+   "runs_png_sha256": [
+    "9050cebdc5a1daa66fc00cc9573271f375a3db4dd6503da96552151fd9cb0de5",
+    "9050cebdc5a1daa66fc00cc9573271f375a3db4dd6503da96552151fd9cb0de5",
+    "9050cebdc5a1daa66fc00cc9573271f375a3db4dd6503da96552151fd9cb0de5"
+   ]
+  },
+  "point-tie-snap.wrl.png": {
+   "png": "f17dfc554c0db0b00348fe03dee9dd79b76db3c4d6d47165678b9041ca30b25f",
+   "runs_png_sha256": [
+    "f17dfc554c0db0b00348fe03dee9dd79b76db3c4d6d47165678b9041ca30b25f",
+    "f17dfc554c0db0b00348fe03dee9dd79b76db3c4d6d47165678b9041ca30b25f",
+    "f17dfc554c0db0b00348fe03dee9dd79b76db3c4d6d47165678b9041ca30b25f"
+   ]
+  }
+ },
+ "ms": null,
+ "nvidia_reference": "oracle/render-point-tie-baseline (unchanged)",
+ "pinned": "34cdf9f97",
+ "platform": "apple-m1",
+ "recorded": "2026-11-06",
+ "recorder": "oracle/x_ite-shot.mjs",
+ "recorder_args": "oracle/synthetic-point-tie <out> --size 256x256",
+ "rule": "kept only where the three runs are pixel-identical and differ from the NVIDIA picture in oracle/render-point-tie-baseline",
+ "runs": 3,
+ "same_as_nvidia": [
+  "point-tie-control.wrl.png",
+  "point-tie-control3.wrl.png"
+ ]
+}

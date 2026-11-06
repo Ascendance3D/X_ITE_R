@@ -16,10 +16,17 @@
 //!   the worst world before the fix).
 //! * `point_tie_renders_are_exact` asks for 0 pixels over 8 in every world at MSAA 0 and 4: the worlds are made of
 //!   flat colored squares at exact positions, so a single pixel over 8 is a wrong tie.
+//!
+//! The pictures are the NVIDIA host's unless `X3D_REFERENCE_PLATFORM` names a platform (`common::reference`). On the physical
+//! Apple M1 the pinned page draws some worlds differently (issue #461): ANGLE on Metal rounds a point position half a 1/256
+//! pixel step up (GL on the NVIDIA host rounds it to even), and its 4-sample pattern covers other pixels at MSAA 4.
+//! `oracle/render-point-tie-apple-m1-baseline` and `oracle/render-msaa4-point-tie-apple-m1-baseline` hold the M1 pictures of
+//! the worlds that differ (three identical runs, `PROVENANCE.json`).
 
 mod common;
 
 use common::gpu::gpu;
+use common::reference::{check_adapter, platform, png_for};
 use std::path::PathBuf;
 
 const WORLDS: [&str; 12] = [
@@ -54,6 +61,8 @@ fn measure_all() -> Option<Vec<(&'static str, u32, usize, u8, usize)>> {
         .join("../../oracle")
         .canonicalize()
         .unwrap();
+    let platform = platform();
+    check_adapter(platform.as_deref(), &g.adapter_info);
     let mut out = vec![];
 
     for samples in [0u32, 4] {
@@ -66,7 +75,12 @@ fn measure_all() -> Option<Vec<(&'static str, u32, usize, u8, usize)>> {
         }
 
         for world in WORLDS {
-            let key = root.join(format!("{}/{world}.wrl.png", key_dir(samples)));
+            let key = png_for(
+                &root,
+                key_dir(samples),
+                &format!("{world}.wrl.png"),
+                platform.as_deref(),
+            );
             let (w, h, want) = x3d_render::compare::load_png(&key)
                 .unwrap_or_else(|e| panic!("{world} MSAA {samples}: no answer key {key:?}: {e}"));
             let shot = x3d_render::render_file(
