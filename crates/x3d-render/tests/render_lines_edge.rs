@@ -58,7 +58,7 @@ const KNOWN: &[(&str, u32, usize, u8)] = &[
 
 /// The record of the Apple M1 (`X3D_REFERENCE_PLATFORM=apple-m1`, Rust on Metal against the M1 pictures of
 /// oracle/render-lines-edge-apple-m1-baseline and oracle/render-msaa4-lines-edge-apple-m1-baseline, issue #461). Cases not listed are exact.
-const KNOWN_APPLE_M1: &[(&str, u32, usize, u8)] = &[];
+const KNOWN_APPLE_M1: &[(&str, u32, usize, u8)] = &[("lines-edge-cam4", 4, 1, 64)];
 
 /// The record of the reference in use.
 fn known() -> &'static [(&'static str, u32, usize, u8)] {

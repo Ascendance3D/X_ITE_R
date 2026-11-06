@@ -198,6 +198,7 @@ def record(only, jobs, platform=None, hardware=""):
         pinned = open(os.path.join(root, "oracle", "x_ite-pin", "PINNED_COMMIT")).read().strip()
         cur.update(platform=platform, hardware=hardware, chrome=chrome, angle_backend=os.environ["XITE_ANGLE_BACKEND"],
                    pinned_x_ite="16.5.0 " + pinned, recorder="oracle/tools/rea_nav_overlay.py record (oracle/x_ite-anim.mjs)",
+                   user_agent=os.environ.get("XITE_USER_AGENT", "(the browser's own)"),
                    recorded=datetime.date.today().isoformat(), rule="3 identical summaries; kept only where the NVIDIA summary differs")
         cur["cases"].update(prov)
         json.dump(cur, open(pfile, "w"), indent=1, sort_keys=True)
