@@ -332,6 +332,9 @@ pub struct WebBrowser {
     page_samples: Option<u32>,
     /// The Shading the page set ([`WebBrowser::set_shading`]); a world starts with it, like `page_samples`.
     page_shading: Option<&'static str>,
+    /// The page's Antialiased and Multisampling options ([`WebBrowser::set_sampling_options`]); a world starts with
+    /// them, so its Scripts read them (issue #480).
+    page_sampling: Option<(bool, i32)>,
     /// The audio engines the page has been told about ([`WebBrowser::take_audio_ops`]), by `AudioEngine::uid`.
     audio_known: std::collections::HashSet<u64>,
     /// The buffers of the last [`WebBrowser::take_audio_ops`] ([`WebBrowser::audio_buffer`]).
@@ -643,6 +646,7 @@ impl WebBrowser {
             engine_options: Vec::new(),
             page_samples: None,
             page_shading: None,
+            page_sampling: None,
             audio_known: Default::default(),
             audio_payloads: Default::default(),
             video_known: false,
@@ -700,6 +704,7 @@ impl WebBrowser {
         let event_sink = self.field_event_sink.clone();
         let engine_options = self.engine_options.clone();
         let (page_shading, page_samples) = (self.page_shading, self.page_samples);
+        let page_sampling = self.page_sampling;
         let mut session =
             Session::begin_with_scripts(world, now, self.config.width, self.config.height, |rt| {
                 // The page's options before the world's loads start (LoadUrlObjects is read when an Inline starts).
@@ -711,6 +716,13 @@ impl WebBrowser {
                 // and Multisampling, and a Script that sets them (in initialize, too) sets them after the page.
                 rt.browser_options
                     .set_page_rendering(page_shading, page_samples);
+
+                // The page's Antialiased and Multisampling options: a Script's Multisampling or Antialiased reads them
+                // (X_ITE set_Multisampling__, issue #480).
+                if let Some((antialiased, multisampling)) = page_sampling {
+                    rt.browser_options
+                        .set_page_sampling(antialiased, multisampling);
+                }
 
                 // The page's console and field callbacks run in the route chain (issue #202): the lines made before an
                 // event go to the console first, then the page's callbacks of the event are called.
@@ -2427,6 +2439,31 @@ impl WebBrowser {
         for w in self.worlds.values_mut() {
             w.session.set_page_rendering(None, Some(samples));
         }
+    }
+
+    /// The page's `Antialiased` and `Multisampling` browser options (not the computed sample count, see
+    /// [`Self::set_sample_count`]). X_ITE has one BrowserOptions for the page and its world: each world takes these
+    /// options without an event, so a world Script's `setBrowserOption ("Multisampling", n)` keeps 0 samples while
+    /// the page's Antialiased is false, as in X_ITE (issue #480).
+    #[wasm_bindgen(js_name = setSamplingOptions)]
+    pub fn set_sampling_options(&mut self, antialiased: bool, multisampling: i32) {
+        self.page_sampling = Some((antialiased, multisampling));
+
+        for w in self.worlds.values_mut() {
+            w.session.set_page_sampling(antialiased, multisampling);
+        }
+    }
+
+    /// The point sprite snap rule (issue #470): true rounds a half 1/256 pixel step up, false rounds it to even.
+    #[wasm_bindgen(js_name = setPointSnapHalfUp)]
+    pub fn set_point_snap_half_up(&mut self, on: bool) {
+        self.renderer.set_point_snap_half_up(on);
+    }
+
+    /// The point sprite snap rule the renderer uses now (issue #470), for tests and diagnostics.
+    #[wasm_bindgen(getter, js_name = pointSnapHalfUp)]
+    pub fn point_snap_half_up(&self) -> bool {
+        self.renderer.point_snap_half_up()
     }
 
     /// The sample count the renderer draws with now (1 without multisampling). For tests and diagnostics: the

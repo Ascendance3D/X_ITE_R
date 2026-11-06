@@ -15,6 +15,86 @@ import assert from "node:assert/strict";
 import { CASE_TIMEOUT, DESKTOP, ONLY, openPage } from "./runtime02_harness.mjs";
 import { fields, frames, touch } from "./runtime02_case.mjs";
 
+// Issue #472. Chromium delivers a DevTools touch event with two points as one `touchmove`, or, now and then, as two DOM
+// events 28 ms apart (touchdelivery.mjs): the first has the new position of one finger and the old of the other. The
+// page reads each `touchmove` whole, so a frame between the two halves drew the half step of the pinch: the last step
+// of this test ended with the fingers at 140 and 250 for one frame, and PLANE zoomed at the center 195 and then at 200,
+// which left x = -0.003346939 (reproduced by sending the halves as two events with frames between). The hosted runner's
+// SwiftShader draws a frame in 0.3 s, so a 28 ms gap holds a frame boundary about one run in ten. This is the delivery of
+// the browser, not the gesture the test is about (X_ITE, which handles each DOM event at once, would see the same
+// half step). The test holds the page's animation frames while it sends a two-finger event, until the page has received a
+// DOM touch event with every finger at its new position, so that the page draws no frame between the halves and a frame
+// sees the whole step. HOLD_LIMIT only bounds the wait: a step that never arrives whole fails the test.
+const HOLD_LIMIT = 5000;
+
+// Sends a two-finger event with the page's frames held. `requestAnimationFrame` is wrapped for the hold only and restored
+// after it; a callback asked for during the hold runs at the first frame after it. A callback that the page asked for
+// before the wrap is not held, so the hold waits for one frame before the event is sent: callbacks of a frame run in the
+// order they were asked for, so that frame runs the page's callback first, and the page asks for the next one through
+// the wrap.
+async function holdFrames (page, type, points, send)
+{
+   await page .evaluate (([ domType ]) =>
+   {
+      const real  = window .requestAnimationFrame;
+      const state = { held: true, touches: null };
+
+      state .listener = event => { state .touches = Array .from (event .targetTouches, t => [ t .clientX, t .clientY ]); };
+      state .restore  = () =>
+      {
+         state .held = false;
+         window .requestAnimationFrame = real;
+         removeEventListener (domType, state .listener, { capture: true });
+      };
+
+      addEventListener (domType, state .listener, { capture: true });
+      window .requestAnimationFrame = callback => real .call (window, function again (stamp) { state .held ? real .call (window, again) : callback (stamp); });
+      window .frameHold = state;
+
+      return new Promise (resolve => real .call (window, () => resolve ()));
+   }, [ type === "touchStart" ? "touchstart" : "touchmove" ]);
+
+   let failed = false;
+
+   try
+   {
+      await send ();
+
+      // The whole step has come when a DOM event has every finger at its new position (CDP x, y are client pixels).
+      await page .waitForFunction (points =>
+      {
+         const touches = window .frameHold .touches;
+
+         return touches ?.length === points .length &&
+            points .every (([ x, y ]) => touches .some (([ tx, ty ]) => Math .abs (tx - x) <= 0.5 && Math .abs (ty - y) <= 0.5));
+      }, points, { timeout: HOLD_LIMIT });
+   }
+   catch (error)
+   {
+      failed = true;
+      throw error;
+   }
+   finally
+   {
+      // After a failure the restore is best effort, so that its own error (a closed page) does not hide the first one.
+      const restore = page .evaluate (() => { window .frameHold ?.restore (); delete window .frameHold; });
+
+      await (failed ? restore .catch (() => { }) : restore);
+   }
+}
+
+// `touch` for the events with two points: the page draws no frame until the whole event has come.
+const touch2 = (page, type, points) => holdFrames (page, type, points, async () =>
+{
+   const cdp = page .cdp ??= await page .context () .newCDPSession (page);
+
+   await cdp .send ("Input.dispatchTouchEvent",
+   {
+      type,
+      touchPoints: points .map (([ x, y ], id) => ({ x, y, id, radiusX: 1, radiusY: 1, force: 1 })),
+   });
+});
+
 const WORLD = `#X3D V4.0 utf8
 PROFILE Immersive
 NavigationInfo { type [ "PLANE" "ANY" ] }
@@ -55,13 +135,13 @@ describe ("touch snapshot 01", { skip: Boolean (ONLY), timeout: CASE_TIMEOUT }, 
          const A = [ [ 170, 150 ], [ 230, 150 ] ];
 
          await touch (page, "touchStart", A .slice (0, 1));
-         await touch (page, "touchStart", A);
+         await touch2 (page, "touchStart", A);
          await frames (page, 2);
 
          // Two full steps of the pinch fix the zoom mode: fingers at 160/240, then 150/250.
-         await touch (page, "touchMove", [ [ 160, 150 ], [ 240, 150 ] ]);
+         await touch2 (page, "touchMove", [ [ 160, 150 ], [ 240, 150 ] ]);
          await frames (page, 3);
-         await touch (page, "touchMove", [ [ 150, 150 ], [ 250, 150 ] ]);
+         await touch2 (page, "touchMove", [ [ 150, 150 ], [ 250, 150 ] ]);
          await frames (page, 3);
          assert .deepEqual (await position (page), [ 0, 0, 10 ], "a centered pinch does not move the viewpoint");
 
@@ -83,7 +163,7 @@ describe ("touch snapshot 01", { skip: Boolean (ONLY), timeout: CASE_TIMEOUT }, 
          await frames (page, 4);
          assert .deepEqual (await position (page), [ 0, 0, 10 ], "the first finger alone has not moved the viewpoint");
 
-         await touch (page, "touchMove", [ [ 140, 150 ], [ 260, 150 ] ]);
+         await touch2 (page, "touchMove", [ [ 140, 150 ], [ 260, 150 ] ]);
          await frames (page, 4);
          assert .deepEqual (await position (page), [ 0, 0, 10 ], "the pinch ends where a pinch with both fingers moving ends");
 

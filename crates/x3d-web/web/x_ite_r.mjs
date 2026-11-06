@@ -2980,6 +2980,108 @@ const BROWSER_PROPERTIES = [
 // The aliases of BrowserOptions and RenderingProperties: AntiAliased is Antialiased.
 const ALIASES = Object .assign (Object .create (null), { AntiAliased: "Antialiased" });
 
+// How this page's WebGL2 rasterizer rounds a point position to its 1/256 pixel grid (issue #470): true when it rounds a
+// half step up, false when it rounds it to even or the measurement cannot be made. X_ITE draws its points with WebGL2
+// `gl_PointSize` and has no tie handling of its own, so the page's WebGL2 rasterizer decides where a point at a pixel tie
+// falls; the renderer's point sprites (x3d.wgsl, frame.layer.z) follow the measured rule on WebGPU and WebGL2 alike.
+// Measured once per page: three 1-pixel points at window y 4, 4 + 2/1024 and 4 + 4/1024 (4 is a pixel edge, so the first
+// point is a tie and 2/1024 is half a 1/256 step), and a fourth at 4 + 1/1024, below half a step. Half up moves the
+// second point to the row of the third; rounding to even keeps it on the row of the first. Any other result keeps false.
+let pointSnapHalfUpMeasured;
+
+function pointSnapHalfUp ()
+{
+   if (pointSnapHalfUpMeasured !== undefined)
+      return pointSnapHalfUpMeasured;
+
+   pointSnapHalfUpMeasured = false;
+
+   let gl;
+
+   try
+   {
+      const size = 8;
+
+      gl = new OffscreenCanvas (size, size) .getContext ("webgl2", { antialias: false, alpha: false, depth: false, stencil: false, preserveDrawingBuffer: true });
+
+      if (!gl)
+         return pointSnapHalfUpMeasured;
+
+      // A shader that does not compile, or a program that does not link, keeps false.
+      const shader = (type, source) =>
+      {
+         const s = gl .createShader (type);
+
+         gl .shaderSource (s, source);
+         gl .compileShader (s);
+         return gl .getShaderParameter (s, gl .COMPILE_STATUS) ? s : null;
+      };
+
+      const vertex   = shader (gl .VERTEX_SHADER, "#version 300 es\nin vec2 p;\nvoid main () { gl_Position = vec4 (p, 0.0, 1.0); gl_PointSize = 1.0; }\n");
+      const fragment = shader (gl .FRAGMENT_SHADER, "#version 300 es\nprecision highp float;\nout vec4 c;\nvoid main () { c = vec4 (1.0); }\n");
+
+      if (!vertex || !fragment)
+         return pointSnapHalfUpMeasured;
+
+      const program = gl .createProgram ();
+
+      gl .attachShader (program, vertex);
+      gl .attachShader (program, fragment);
+      gl .bindAttribLocation (program, 0, "p");
+      gl .linkProgram (program);
+
+      if (!gl .getProgramParameter (program, gl .LINK_STATUS))
+         return pointSnapHalfUpMeasured;
+
+      // Columns 1, 3, 5 and 7 (window x at the pixel centers); NDC = window / size * 2 - 1.
+      const offsets = [ 0, 2 / 1024, 4 / 1024, 1 / 1024 ];
+      const ndc     = w => w / size * 2 - 1;
+      const points  = new Float32Array (offsets .flatMap ((d, i) => [ ndc (2 * i + 1.5), ndc (4 + d) ]));
+
+      gl .bindBuffer (gl .ARRAY_BUFFER, gl .createBuffer ());
+      gl .bufferData (gl .ARRAY_BUFFER, points, gl .STATIC_DRAW);
+      gl .enableVertexAttribArray (0);
+      gl .vertexAttribPointer (0, 2, gl .FLOAT, false, 0, 0);
+      gl .viewport (0, 0, size, size);
+      gl .clearColor (0, 0, 0, 1);
+      gl .clear (gl .COLOR_BUFFER_BIT);
+      gl .useProgram (program);
+      gl .drawArrays (gl .POINTS, 0, offsets .length);
+
+      const pixels = new Uint8Array (size * size * 4);
+
+      gl .readPixels (0, 0, size, size, gl .RGBA, gl .UNSIGNED_BYTE, pixels);
+
+      // The lit row of each point (readPixels and window y both start at the bottom), -1 when none or more than one is lit.
+      const rows = offsets .map ((_, i) =>
+      {
+         const lit = [ ];
+
+         for (let y = 0; y < size; ++ y)
+         {
+            if (pixels [(y * size + 2 * i + 1) * 4] > 128)
+               lit .push (y);
+         }
+
+         return lit .length === 1 ? lit [0] : -1;
+      });
+
+      const [ tie, half, step, below ] = rows;
+
+      pointSnapHalfUpMeasured = tie !== -1 && step !== -1 && tie !== step && below === tie && half === step;
+   }
+   catch
+   {
+      pointSnapHalfUpMeasured = false;
+   }
+   finally
+   {
+      gl ?.getExtension ("WEBGL_lose_context") ?.loseContext ();
+   }
+
+   return pointSnapHalfUpMeasured;
+}
+
 // The rendering properties that are the value of a browser option (LogarithmicDepthBuffer). Shading, Antialiased,
 // ContentScale and Multisampling are derived from the options and the context (#derivedRendering); the rest describe
 // X_ITE's WebGL context and are not implemented.
@@ -5722,6 +5824,11 @@ class X3DBrowser
          if (timing !== null)
             WebBrowser .setMovieTiming (timing);
 
+         // The page's WebGL2 point rounding (issue #470), measured once per page before the first X_ITE_R context
+         // exists: the measurement holds one more WebGL2 context for one draw only, and at a browser's limit of live
+         // WebGL contexts it then makes no X_ITE_R context the oldest.
+         pointSnapHalfUp ();
+
          // The graphics backend: `backend="webgl2"` uses wgpu's WebGL2 backend instead of WebGPU.
          return WebBrowser .create (this .#canvas, element .getAttribute ("backend") ?? undefined);
       }) .then (engine =>
@@ -5733,6 +5840,10 @@ class X3DBrowser
          }
 
          this .#engine = engine;
+
+         // The point sprite snap follows this page's WebGL2 rasterizer, as X_ITE's points do (issue #470). The value was
+         // measured before WebBrowser.create.
+         engine .setPointSnapHalfUp (pointSnapHalfUp ());
 
          // A lost WebGL2 context: wgpu's GL backend reports no device loss, so the canvas's event does (the frame loop
          // then stops as for a lost WebGPU device).
@@ -5971,6 +6082,8 @@ class X3DBrowser
 
       this .#derived .Multisampling = this .#options .get ("Antialiased") .getValue () ? samples : 0;
       this .#derived .Antialiased   = samples > 0;
+      // The world's Scripts read the page's options (one BrowserOptions in X_ITE, issue #480).
+      this .#engine ?.setSamplingOptions (this .#options .get ("Antialiased") .getValue (), isNaN (requested) ? 4 : requested);
       this .#engine ?.setSampleCount (this .#derived .Multisampling);
    }
 
