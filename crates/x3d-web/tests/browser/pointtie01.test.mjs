@@ -7,7 +7,9 @@
 //   WebGL2 context of the same page, with points at other positions than the page module's measurement.
 // * On every backend: without a usable WebGL2 measurement (no context, an exception, or a picture without the points),
 //   the page starts and keeps the old rule (round to even).
-// * On every backend: the renderer uses the rule: the snap world with each rule gives other pictures.
+// * With XR_POINT_TIE_REFERENCE: the renderer uses the rule: the snap world with each rule gives other pictures. A
+//   rasterizer that does not resolve a 1/256 pixel step draws both the same (CI's SwiftShader WebGPU: the same picture,
+//   PR #481), so the case runs only on the platforms with pinned pictures and is NOT TESTED elsewhere.
 // * The pictures of oracle/synthetic-point-tie against the pinned X_ITE pictures, only when XR_POINT_TIE_REFERENCE names
 //   the platform the pictures were recorded on: `nvidia` (oracle/render-point-tie-baseline) or `apple-m1`
 //   (oracle/render-point-tie-apple-m1-baseline, which keeps only the worlds that differ from the NVIDIA pictures). Other
@@ -232,7 +234,9 @@ describe ("point tie 01", { skip: Boolean (ONLY) }, () =>
          });
       }
 
-      test (`${backend}: the renderer draws with the rule it has`, { timeout: CASE_TIMEOUT }, async () =>
+      const ruleSkip = PLATFORM === undefined && "no XR_POINT_TIE_REFERENCE: this rasterizer may not resolve a 1/256 pixel step (NOT TESTED)";
+
+      test (`${backend}: the renderer draws with the rule it has`, { skip: ruleSkip, timeout: CASE_TIMEOUT }, async () =>
       {
          const world = await readFile (join (WORLDS, "point-tie-snap.wrl"), "utf8");
          const page  = await open (backend);
