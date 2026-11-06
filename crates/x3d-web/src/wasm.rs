@@ -2429,6 +2429,18 @@ impl WebBrowser {
         }
     }
 
+    /// The point sprite snap rule (issue #470): true rounds a half 1/256 pixel step up, false rounds it to even.
+    #[wasm_bindgen(js_name = setPointSnapHalfUp)]
+    pub fn set_point_snap_half_up(&mut self, on: bool) {
+        self.renderer.set_point_snap_half_up(on);
+    }
+
+    /// The point sprite snap rule the renderer uses now (issue #470), for tests and diagnostics.
+    #[wasm_bindgen(getter, js_name = pointSnapHalfUp)]
+    pub fn point_snap_half_up(&self) -> bool {
+        self.renderer.point_snap_half_up()
+    }
+
     /// The sample count the renderer draws with now (1 without multisampling). For tests and diagnostics: the
     /// `Multisampling` property is what the page asked for, this is what the renderer uses (issue #471).
     #[wasm_bindgen(getter, js_name = sampleCount)]

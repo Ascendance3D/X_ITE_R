@@ -1448,6 +1448,17 @@ impl Renderer {
         self.oit
     }
 
+    /// The point sprite snap rule of x3d.wgsl (`frame.layer.z`): true rounds a half 1/256 pixel step up, false rounds
+    /// it to even. The renderer starts with [`point_snap_half_up`] of its backend.
+    pub fn set_point_snap_half_up(&mut self, on: bool) {
+        self.point_snap_half_up = on;
+    }
+
+    /// The point sprite snap rule in use ([`Renderer::set_point_snap_half_up`]): true rounds a half 1/256 pixel step up.
+    pub fn point_snap_half_up(&self) -> bool {
+        self.point_snap_half_up
+    }
+
     /// Debug: render object identity instead of shading. Each pixel of `render_to_rgba` is
     /// `(draw index + 1) & 255, (draw index + 1) >> 8, triangle & 255, triangle >> 8` (RGBA);
     /// background faces count as draws; no antialiasing or blending. Off by default and unused by
