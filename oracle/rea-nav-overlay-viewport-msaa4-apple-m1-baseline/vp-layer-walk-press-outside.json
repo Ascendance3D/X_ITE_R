@@ -1,0 +1,218 @@
+{
+"frames": {
+"10": {
+"background": [
+51,
+77,
+128
+],
+"pixels": [],
+"size": [
+512,
+512
+]
+},
+"2": {
+"background": [
+51,
+77,
+128
+],
+"pixels": [],
+"size": [
+512,
+512
+]
+},
+"29": {
+"background": [
+51,
+77,
+128
+],
+"pixels": [],
+"size": [
+512,
+512
+]
+},
+"3": {
+"background": [
+51,
+77,
+128
+],
+"pixels": [],
+"size": [
+512,
+512
+]
+},
+"31": {
+"background": [
+51,
+77,
+128
+],
+"pixels": [],
+"size": [
+512,
+512
+]
+}
+},
+"geometry": {
+"rect": [
+0,
+0,
+512,
+512
+],
+"scroll": [
+0,
+0
+],
+"viewport": [
+0,
+0,
+512,
+512
+]
+},
+"ok": true,
+"poses": {
+"10": {
+"centerOfRotation": [
+0,
+0,
+0
+],
+"description": "start",
+"fieldOfViewScale": 1,
+"orientation": [
+0,
+0,
+1,
+0
+],
+"position": [
+0,
+-0.06713605711147319,
+12
+],
+"viewer": "WALK",
+"viewpoint": ""
+},
+"2": {
+"centerOfRotation": [
+0,
+0,
+0
+],
+"description": "start",
+"fieldOfViewScale": 1,
+"orientation": [
+0,
+0,
+1,
+0
+],
+"position": [
+0,
+1.1096645579951936,
+12
+],
+"viewer": "WALK",
+"viewpoint": ""
+},
+"29": {
+"centerOfRotation": [
+0,
+0,
+0
+],
+"description": "start",
+"fieldOfViewScale": 1,
+"orientation": [
+0,
+0,
+1,
+0
+],
+"position": [
+0,
+-5.656932767989806,
+12
+],
+"viewer": "WALK",
+"viewpoint": ""
+},
+"3": {
+"centerOfRotation": [
+0,
+0,
+0
+],
+"description": "start",
+"fieldOfViewScale": 1,
+"orientation": [
+0,
+0,
+1,
+0
+],
+"position": [
+0,
+1.0007014533290823,
+12
+],
+"viewer": "WALK",
+"viewpoint": ""
+},
+"31": {
+"centerOfRotation": [
+0,
+0,
+0
+],
+"description": "start",
+"fieldOfViewScale": 1,
+"orientation": [
+0,
+0,
+1,
+0
+],
+"position": [
+0,
+-6.474154255099807,
+12
+],
+"viewer": "WALK",
+"viewpoint": ""
+},
+"40": {
+"centerOfRotation": [
+0,
+0,
+0
+],
+"description": "start",
+"fieldOfViewScale": 1,
+"orientation": [
+0,
+0,
+1,
+0
+],
+"position": [
+0,
+-10.691016697094804,
+12
+],
+"viewer": "WALK",
+"viewpoint": ""
+}
+},
+"warmupFrames": 8
+}

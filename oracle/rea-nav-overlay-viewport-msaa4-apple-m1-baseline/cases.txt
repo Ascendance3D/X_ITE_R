@@ -1,0 +1,9 @@
+vp-group-walk-press-outside oracle/synthetic-rea-nav-overlay-viewport/vp-group-walk.wrl oracle/synthetic-rea-nav-overlay-viewport/vp-group-walk-press-outside.json
+vp-group-walk-up-right oracle/synthetic-rea-nav-overlay-viewport/vp-group-walk.wrl oracle/synthetic-rea-nav-overlay-viewport/vp-group-walk-up-right.json
+vp-layer-fly-down-left oracle/synthetic-rea-nav-overlay-viewport/vp-layer-fly.wrl oracle/synthetic-rea-nav-overlay-viewport/vp-layer-fly-down-left.json
+vp-layer-fly-pan-middle oracle/synthetic-rea-nav-overlay-viewport/vp-layer-fly.wrl oracle/synthetic-rea-nav-overlay-viewport/vp-layer-fly-pan-middle.json
+vp-layer-fly-scale-2 oracle/synthetic-rea-nav-overlay-viewport/vp-layer-fly.wrl oracle/synthetic-rea-nav-overlay-viewport/vp-layer-fly-scale-2.json
+vp-layer-walk-leave oracle/synthetic-rea-nav-overlay-viewport/vp-layer-walk.wrl oracle/synthetic-rea-nav-overlay-viewport/vp-layer-walk-leave.json
+vp-layer-walk-press-outside oracle/synthetic-rea-nav-overlay-viewport/vp-layer-walk.wrl oracle/synthetic-rea-nav-overlay-viewport/vp-layer-walk-press-outside.json
+vp-layer-walk-scale-0.5 oracle/synthetic-rea-nav-overlay-viewport/vp-layer-walk.wrl oracle/synthetic-rea-nav-overlay-viewport/vp-layer-walk-scale-0.5.json
+vp-layer-walk-up-right oracle/synthetic-rea-nav-overlay-viewport/vp-layer-walk.wrl oracle/synthetic-rea-nav-overlay-viewport/vp-layer-walk-up-right.json

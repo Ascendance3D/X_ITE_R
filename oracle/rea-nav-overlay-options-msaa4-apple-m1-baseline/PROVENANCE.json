@@ -1,0 +1,41 @@
+{
+ "angle_backend": "metal",
+ "cases": {
+  "rubber-option-off": {
+   "run_sha256": [
+    "2024dde487169eadcc3136bb460df6cf846642935b3f5189816d934de02277f8",
+    "2024dde487169eadcc3136bb460df6cf846642935b3f5189816d934de02277f8",
+    "2024dde487169eadcc3136bb460df6cf846642935b3f5189816d934de02277f8"
+   ]
+  },
+  "rubber-scale-0.5": {
+   "run_sha256": [
+    "b7c0413c1f7c9c185cdcf79bb6112bf7da1df385801098be099942fb6057360b",
+    "b7c0413c1f7c9c185cdcf79bb6112bf7da1df385801098be099942fb6057360b",
+    "b7c0413c1f7c9c185cdcf79bb6112bf7da1df385801098be099942fb6057360b"
+   ]
+  },
+  "rubber-scale-1.5": {
+   "run_sha256": [
+    "187bb0c105b146420483a4b1a043fc1209c15a5e654e4e4f7977e521a4b93f4c",
+    "187bb0c105b146420483a4b1a043fc1209c15a5e654e4e4f7977e521a4b93f4c",
+    "187bb0c105b146420483a4b1a043fc1209c15a5e654e4e4f7977e521a4b93f4c"
+   ]
+  },
+  "rubber-scale-2": {
+   "run_sha256": [
+    "d9c6c4c2c52eb85286bc668c8f886ca670c210f87de435e64d0e1063d867980b",
+    "d9c6c4c2c52eb85286bc668c8f886ca670c210f87de435e64d0e1063d867980b",
+    "d9c6c4c2c52eb85286bc668c8f886ca670c210f87de435e64d0e1063d867980b"
+   ]
+  }
+ },
+ "chrome": "Google Chrome 156.0.8078.79",
+ "hardware": "Apple M1 (8-core GPU), macOS 27.0.1 (26A434)",
+ "pinned_x_ite": "16.5.0 34cdf9f97",
+ "platform": "apple-m1",
+ "recorded": "2026-11-06",
+ "recorder": "oracle/tools/rea_nav_overlay.py record (oracle/x_ite-anim-msaa.mjs --ms 4)",
+ "rule": "3 identical summaries; kept only where the NVIDIA summary differs",
+ "user_agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/156.0.0.0 Safari/537.36"
+}
