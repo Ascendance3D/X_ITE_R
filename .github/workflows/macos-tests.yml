@@ -18,6 +18,15 @@ on:
       - "rust-toolchain*"
       - ".github/workflows/macos-tests.yml"
   workflow_dispatch:
+    inputs:
+      reference_platform:
+        # Issue #461: the platform whose recordings the hardware-difference tests compare with (X3D_REFERENCE_PLATFORM,
+        # crates/x3d-*/tests/common/reference.rs). Pushes and pull requests use apple-m1: hand-started run 42161785091 passed all
+        # 11 hardware-difference tests on the hosted "Apple Paravirtual device" (Metal) with the Apple M1 recordings. "none" selects
+        # the NVIDIA references. A named platform stops each such test when the adapter is not of that platform.
+        description: "X3D_REFERENCE_PLATFORM for this run (none: the NVIDIA references)"
+        required: false
+        default: "apple-m1"
 
 permissions:
   contents: read
@@ -33,6 +42,7 @@ env:
   X3D_EVIDENCE_ALLOW: no-gpu-adapter,backend-absent,x_ite-text.json,items-baseline.json,x0-baseline.json,x0-xml-baseline.json
   X3D_EVIDENCE_LOG: ${{ github.workspace }}/evidence-skips.tsv
   X3D_QUIET_NO_GPU: "1"
+  X3D_REFERENCE_PLATFORM: ${{ inputs.reference_platform != 'none' && (inputs.reference_platform || 'apple-m1') || '' }}
   GPU_TESTS: >-
     test(x1_runtime_matches_x_ite)
     | test(items_runtime_matches_x_ite)

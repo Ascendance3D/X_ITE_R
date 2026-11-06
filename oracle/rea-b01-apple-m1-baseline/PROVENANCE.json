@@ -1,0 +1,68 @@
+{
+ "angle_backend": "metal",
+ "cases": {
+  "shading-wireframe-msaa4": {
+   "differs_from_nvidia_in": [
+    "info"
+   ],
+   "pictures_differ_from_nvidia": {
+    "12.png": "5316e32ec529a08871607dd690b571cc096f002cfb340a986114725fed20cd00",
+    "3.png": "5316e32ec529a08871607dd690b571cc096f002cfb340a986114725fed20cd00"
+   },
+   "run_sha256": [
+    "096ed1ce87bb9e13c1f00bf2c2ca00c8b071f6876a3b44a07a875251ff0c000b",
+    "096ed1ce87bb9e13c1f00bf2c2ca00c8b071f6876a3b44a07a875251ff0c000b",
+    "096ed1ce87bb9e13c1f00bf2c2ca00c8b071f6876a3b44a07a875251ff0c000b"
+   ]
+  }
+ },
+ "chrome": "Google Chrome 156.0.8078.79",
+ "dropped": [
+  "browser-options-effects-msaa0",
+  "browser-options-friction-none-msaa0",
+  "browser-options-friction-some-msaa0",
+  "browser-options-horizon-false-msaa0",
+  "browser-options-horizon-true-msaa0",
+  "browser-options-inline-viewpoints-false-msaa0",
+  "browser-options-inline-viewpoints-true-msaa0",
+  "browser-options-loadurl-msaa0",
+  "browser-options-msaa0",
+  "browser-options-quality-msaa0",
+  "clip-pick-msaa0",
+  "clip-walk-msaa0",
+  "geolod-msaa0",
+  "geolod-msaa4",
+  "geolod-touch-msaa0",
+  "geoviewpoint-examine-msaa0",
+  "geoviewpoint-fly-msaa0",
+  "geoviewpoint-fly-msaa4",
+  "geoviewpoint-legacy-msaa0",
+  "geoviewpoint-legacy-xml-msaa0",
+  "geoviewpoint-walk-msaa0",
+  "shading-flat-msaa0",
+  "shading-flat-msaa4",
+  "shading-legacy-flat-msaa0",
+  "shading-legacy-flat-msaa4",
+  "shading-legacy-gouraud-msaa0",
+  "shading-legacy-gouraud-msaa4",
+  "shading-legacy-phong-msaa0",
+  "shading-legacy-phong-msaa4",
+  "shading-phong-msaa0",
+  "shading-phong-msaa4",
+  "shading-point-collision-msaa0",
+  "shading-point-msaa0",
+  "shading-point-msaa4",
+  "shading-wireframe-collision-msaa0",
+  "shading-wireframe-msaa0",
+  "textureprops-v33-dump-msaa0",
+  "twosided-console-msaa0",
+  "viewpoint-navigationinfo-msaa0"
+ ],
+ "hardware": "Apple M1 (8-core GPU), macOS 27.0.1 (26A434)",
+ "minimized": "Only the case that fails against the NVIDIA recording on the physical M1 is kept (rea_batch01 at c573592e: shading-wireframe MSAA 4, pictures 3 and 12, 1.532% over 8). The other 39 cases pass against NVIDIA on the M1. The first recording run took the 7 MSAA 0 cases of size 384 and 256 with x_ite-anim.mjs (fixed 512x512 canvas) instead of x_ite-anim-sized.mjs; the tool now selects the sized recorder (on Linux it gives the NVIDIA geolod js.json byte for byte); those recordings were not kept.",
+ "pinned_x_ite": "16.5.0 34cdf9f97",
+ "platform": "apple-m1",
+ "recorded": "2026-11-05",
+ "recorder": "oracle/x_ite-anim.mjs, oracle/x_ite-anim-msaa.mjs",
+ "rule": "3 identical runs; kept only where the NVIDIA recording differs"
+}

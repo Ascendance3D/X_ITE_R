@@ -1,0 +1,7 @@
+it-extra oracle/synthetic-instanced-text/it-extra.wrl oracle/synthetic-instanced-text/it-extra.json 4
+it-pick oracle/synthetic-instanced-text/it-pick.wrl oracle/synthetic-instanced-text/it-pick.json 0
+it-pick oracle/synthetic-instanced-text/it-pick.wrl oracle/synthetic-instanced-text/it-pick.json 4
+it-runtime oracle/synthetic-instanced-text/it-runtime.wrl oracle/synthetic-instanced-text/it-runtime.json 0
+it-runtime oracle/synthetic-instanced-text/it-runtime.wrl oracle/synthetic-instanced-text/it-runtime.json 4
+it-static oracle/synthetic-instanced-text/it-static.wrl oracle/synthetic-instanced-text/it-static.json 0
+it-static oracle/synthetic-instanced-text/it-static.wrl oracle/synthetic-instanced-text/it-static.json 4

@@ -9,6 +9,12 @@
       as oracle/rea-nav-overlay-baseline/NAME.json (one directory level) and the SHA-256 of the three are printed. A summary is the
       poses and, for a case with "pixels": true, for each captured frame the pixels that differ from the first pixel (the sky color):
       [x, y, r, g, b] with y from the top. A baseline is never taken from Rust.
+  python3 -I -B oracle/tools/rea_nav_overlay.py record --platform apple-m1 --hardware "Apple M1, macOS 27.0.1" [--only S] [--jobs N]
+      The same recording on another platform (owner decision 2026-11-04, issues #69, #89 and #461; XITE_CHROME and
+      XITE_ANGLE_BACKEND name the browser). The NVIDIA baseline is never written: a summary is kept as
+      oracle/rea-nav-overlay-<platform>-baseline/NAME.json only when the three runs are identical and differ from the NVIDIA
+      summary, with cases.txt and PROVENANCE.json (crates/x3d-viewer/tests/common/reference.rs reads it). Without PIL, the
+      pictures are read with oracle/tools/png_pixels.py (the same RGB values).
 """
 import hashlib, json, os, shutil, subprocess, sys
 from concurrent.futures import ThreadPoolExecutor
@@ -91,17 +97,43 @@ def gen():
     print(len(cases), "cases")
 
 
+def _rgb_reader():
+    """path -> ((w, h), px) with px[x, y] an (r, g, b) tuple: PIL where installed, else oracle/tools/png_pixels.py."""
+    try:
+        from PIL import Image
+
+        def read(path):
+            im = Image.open(path).convert("RGB")
+            return im.size, im.load()
+    except ImportError:
+        import importlib.util
+        spec = importlib.util.spec_from_file_location("png_pixels", os.path.join(os.path.dirname(os.path.abspath(__file__)), "png_pixels.py"))
+        module = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(module)
+
+        class Px:
+            def __init__(self, rows):
+                self.rows = rows
+
+            def __getitem__(self, xy):
+                x, y = xy
+                return tuple(self.rows[y][4 * x:4 * x + 3])
+
+        def read(path):
+            w, h, rows = module.pixels(path)
+            return (w, h), Px(rows)
+    return read
+
+
 def summary(d, with_pixels):
-    from PIL import Image
+    read = _rgb_reader()
     js = json.load(open(os.path.join(d, "js.json")))
     out = {"ok": js.get("ok"), "warmupFrames": js.get("warmupFrames"), "poses": js.get("poses"), "geometry": js.get("geometry")}
 
     if with_pixels:
         frames = {}
         for name in sorted(os.listdir(os.path.join(d, "png")), key=lambda n: int(n.split(".")[0])):
-            im = Image.open(os.path.join(d, "png", name)).convert("RGB")
-            w, h = im.size
-            px = im.load()
+            (w, h), px = read(os.path.join(d, "png", name))
             bg = px[0, 0]
             frames[name.split(".")[0]] = {"size": [w, h], "background": list(bg),
                                           "pixels": [[x, y, *px[x, y]] for y in range(h) for x in range(w) if px[x, y] != bg]}
@@ -110,18 +142,22 @@ def summary(d, with_pixels):
     return out
 
 
-def record(only, jobs):
+def record(only, jobs, platform=None, hardware=""):
     table = [l.split() for l in open(os.path.join(syn, "cases.txt")).read().splitlines() if l.strip()]
     table = [c for c in table if not only or only in c[0]]
-    dest = os.path.join(root, "oracle", "rea-nav-overlay-baseline")
-    os.makedirs(dest, exist_ok=True)
+    nvidia = os.path.join(root, "oracle", "rea-nav-overlay-baseline")
+    dest = os.path.join(root, "oracle", f"rea-nav-overlay-{platform}-baseline") if platform else nvidia
+    if platform:
+        assert os.environ.get("XITE_CHROME") and os.environ.get("XITE_ANGLE_BACKEND"), "set XITE_CHROME and XITE_ANGLE_BACKEND"
+    else:
+        os.makedirs(dest, exist_ok=True)
 
     def run(case):
         name, world, script_path = case
         pixels = json.load(open(os.path.join(root, script_path))).get("pixels", False)
         texts = []
         for i in (1, 2, 3):
-            d = f"/tmp/nav-overlay-record/{name}-{i}"
+            d = f"/tmp/nav-overlay-record{'-' + platform if platform else ''}/{name}-{i}"
             shutil.rmtree(d, ignore_errors=True)
             os.makedirs(d)
             subprocess.run(["node", os.path.join(root, "oracle", "x_ite-anim.mjs"), world, script_path, "--out", os.path.join(d, "js.json"),
@@ -133,14 +169,41 @@ def record(only, jobs):
     with ThreadPoolExecutor(jobs) as ex:
         results = list(ex.map(run, table))
 
-    bad = 0
+    bad, kept, prov = 0, [], {}
+    rows = {c[0]: " ".join(c) for c in table}
     for name, texts in results:
         digests = [hashlib.sha256(t.encode()).hexdigest() for t in texts]
         same = len(set(digests)) == 1
         bad += not same
         print(f"{name}: {'identical' if same else 'DIFFER'} {' '.join(x[:12] for x in digests)} {len(texts[0])} bytes")
-        if same:
-            open(os.path.join(dest, name + ".json"), "w").write(texts[0] + "\n")
+        if not same:
+            continue
+        if platform:
+            if open(os.path.join(nvidia, name + ".json")).read() == texts[0] + "\n":
+                print(f"{name}: equal to the NVIDIA summary, not kept")
+                continue
+            os.makedirs(dest, exist_ok=True)
+            kept.append(name)
+            prov[name] = dict(run_sha256=digests)
+        open(os.path.join(dest, name + ".json"), "w").write(texts[0] + "\n")
+    if platform and kept:
+        import datetime
+        table_path = os.path.join(dest, "cases.txt")
+        old = {l.split()[0]: l for l in open(table_path).read().splitlines() if l.strip()} if os.path.exists(table_path) else {}
+        old.update({n: rows[n] for n in kept})
+        open(table_path, "w").write("".join(old[k] + "\n" for k in sorted(old)))
+        pfile = os.path.join(dest, "PROVENANCE.json")
+        cur = json.load(open(pfile)) if os.path.exists(pfile) else {"cases": {}}
+        chrome = subprocess.run([os.environ["XITE_CHROME"], "--version"], capture_output=True, text=True).stdout.strip()
+        pinned = open(os.path.join(root, "oracle", "x_ite-pin", "PINNED_COMMIT")).read().strip()
+        cur.update(platform=platform, hardware=hardware, chrome=chrome, angle_backend=os.environ["XITE_ANGLE_BACKEND"],
+                   pinned_x_ite="16.5.0 " + pinned, recorder="oracle/tools/rea_nav_overlay.py record (oracle/x_ite-anim.mjs)",
+                   user_agent=os.environ.get("XITE_USER_AGENT", "(the browser's own)"),
+                   recorded=datetime.date.today().isoformat(), rule="3 identical summaries; kept only where the NVIDIA summary differs")
+        cur["cases"].update(prov)
+        json.dump(cur, open(pfile, "w"), indent=1, sort_keys=True)
+    if platform:
+        print(f"rea-nav-overlay/{platform}: {len(results)} cases; {len(kept)} overrides kept")
     sys.exit(1 if bad else 0)
 
 
@@ -150,6 +213,6 @@ if __name__ == "__main__":
     if a and a[0] == "gen":
         gen()
     elif a and a[0] == "record":
-        record(opt("--only"), int(opt("--jobs", "6")))
+        record(opt("--only"), int(opt("--jobs", "6")), opt("--platform"), opt("--hardware", ""))
     else:
         sys.exit(__doc__)

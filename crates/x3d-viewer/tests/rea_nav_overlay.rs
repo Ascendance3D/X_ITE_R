@@ -132,7 +132,7 @@ fn compare_pictures(
 }
 
 fn compare_case(root: &Path, name: &str, world: &str, script: &str, failures: &mut Vec<String>) {
-    let base = root.join(format!("oracle/rea-nav-overlay-baseline/{name}.json"));
+    let base = common::reference::flat_json(root, "rea-nav-overlay-baseline", name);
     let js: Value = serde_json::from_str(&std::fs::read_to_string(&base).unwrap()).unwrap();
     let pictures = js.get("frames").is_some();
     let out = std::env::temp_dir().join(format!("rea-nav-overlay-{}-{name}", std::process::id()));
