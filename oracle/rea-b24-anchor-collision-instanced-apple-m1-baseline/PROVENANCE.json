@@ -1,0 +1,106 @@
+{
+ "angle_backend": "metal",
+ "cases": {
+  "an-nested-msaa4": {
+   "differs_from_nvidia_in": [
+    "info"
+   ],
+   "run_sha256": [
+    "6f025fe700ee8df58de3ee8481fb14a3e121ceed8c2cd7cddf0113d125bc4cbb",
+    "6f025fe700ee8df58de3ee8481fb14a3e121ceed8c2cd7cddf0113d125bc4cbb",
+    "6f025fe700ee8df58de3ee8481fb14a3e121ceed8c2cd7cddf0113d125bc4cbb"
+   ]
+  },
+  "ci-events-msaa0": {
+   "differs_from_nvidia_in": [
+    "vrml"
+   ],
+   "run_sha256": [
+    "141c7150cee75b26a3ee9c47aa6c3aa8b5b5686daaf3f9036655059ec418d9c5",
+    "141c7150cee75b26a3ee9c47aa6c3aa8b5b5686daaf3f9036655059ec418d9c5",
+    "141c7150cee75b26a3ee9c47aa6c3aa8b5b5686daaf3f9036655059ec418d9c5"
+   ]
+  },
+  "ci-events-msaa4": {
+   "differs_from_nvidia_in": [
+    "info",
+    "vrml"
+   ],
+   "run_sha256": [
+    "28d4fdaff86f7688fe7b876b9b1975805444dc46972c6c986e6af73c0e78e4bf",
+    "28d4fdaff86f7688fe7b876b9b1975805444dc46972c6c986e6af73c0e78e4bf",
+    "28d4fdaff86f7688fe7b876b9b1975805444dc46972c6c986e6af73c0e78e4bf"
+   ]
+  },
+  "ci-pick-msaa0": {
+   "differs_from_nvidia_in": [
+    "pickProbes"
+   ],
+   "run_sha256": [
+    "e59263c47e0bc6a024c70080a7559b203a81f0b383cc97602edc44dfb6f33d80",
+    "e59263c47e0bc6a024c70080a7559b203a81f0b383cc97602edc44dfb6f33d80",
+    "e59263c47e0bc6a024c70080a7559b203a81f0b383cc97602edc44dfb6f33d80"
+   ]
+  },
+  "ci-pick-msaa4": {
+   "differs_from_nvidia_in": [
+    "info",
+    "pickProbes"
+   ],
+   "run_sha256": [
+    "92a400acf2b54178a39876863ca202aeb1a76efd9bc644af7485cacf42a6e34c",
+    "92a400acf2b54178a39876863ca202aeb1a76efd9bc644af7485cacf42a6e34c",
+    "92a400acf2b54178a39876863ca202aeb1a76efd9bc644af7485cacf42a6e34c"
+   ]
+  },
+  "cl-events-msaa0": {
+   "differs_from_nvidia_in": [
+    "vrml"
+   ],
+   "run_sha256": [
+    "c8367c97aeca40ccae02e5d77fd46124dc6e7f29b708712f40c4dc52c6757d8b",
+    "c8367c97aeca40ccae02e5d77fd46124dc6e7f29b708712f40c4dc52c6757d8b",
+    "c8367c97aeca40ccae02e5d77fd46124dc6e7f29b708712f40c4dc52c6757d8b"
+   ]
+  },
+  "cl-events-msaa4": {
+   "differs_from_nvidia_in": [
+    "info",
+    "vrml"
+   ],
+   "run_sha256": [
+    "2c0bf69c96f183930e4739f53ce7df2396c8a0f106ab614e1629a41ae4c2470b",
+    "2c0bf69c96f183930e4739f53ce7df2396c8a0f106ab614e1629a41ae4c2470b",
+    "2c0bf69c96f183930e4739f53ce7df2396c8a0f106ab614e1629a41ae4c2470b"
+   ]
+  },
+  "cl-render-msaa0": {
+   "differs_from_nvidia_in": [
+    "pickProbes"
+   ],
+   "run_sha256": [
+    "4ad8d6c2bf69ce42c50839486a4391b8c6341f16230e5451f6750cc55e7a0691",
+    "4ad8d6c2bf69ce42c50839486a4391b8c6341f16230e5451f6750cc55e7a0691",
+    "4ad8d6c2bf69ce42c50839486a4391b8c6341f16230e5451f6750cc55e7a0691"
+   ]
+  },
+  "cl-render-msaa4": {
+   "differs_from_nvidia_in": [
+    "info",
+    "pickProbes"
+   ],
+   "run_sha256": [
+    "7f551f64f02bd38001bdebeb47701b7cd7d3ebd9c0f3779e436bffa5e4f5e821",
+    "7f551f64f02bd38001bdebeb47701b7cd7d3ebd9c0f3779e436bffa5e4f5e821",
+    "7f551f64f02bd38001bdebeb47701b7cd7d3ebd9c0f3779e436bffa5e4f5e821"
+   ]
+  }
+ },
+ "chrome": "Google Chrome 156.0.8078.80",
+ "hardware": "Apple M1, macOS 27.0.1",
+ "pinned_x_ite": "16.5.0 34cdf9f97",
+ "platform": "apple-m1",
+ "recorded": "2026-11-06",
+ "recorder": "oracle/x_ite-anim.mjs, oracle/x_ite-anim-sized.mjs, oracle/x_ite-anim-msaa.mjs",
+ "rule": "3 identical runs; kept only where the NVIDIA recording differs"
+}
