@@ -51,6 +51,11 @@ pub fn is_active(world: u32) -> bool {
     ACTIVE.with(|a| a.get()).is_some_and(|(_, w)| w == world)
 }
 
+/// The world whose callback is running (see [`enter`]), if any.
+pub fn active_world() -> Option<u32> {
+    ACTIVE.with(|a| a.get()).map(|(_, w)| w)
+}
+
 /// Run `f` on the runtime of world `world` in the middle of its route chain. `Err`: no callback of that world is running, or
 /// `with_runtime` is already running (a closure must not call it).
 pub fn with_runtime<R>(world: u32, f: impl FnOnce(&mut Runtime) -> R) -> Result<R, String> {

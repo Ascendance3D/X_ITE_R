@@ -2347,7 +2347,7 @@ fn op<C: Cx>(ctx: &C, args: Vec<C::V>) -> Result<J<C::V>, C::E> {
                 OptionValue::String(_) => OptionValue::String(str_arg(ctx, a, 1)),
             };
 
-            rt().browser_options.set_option(&name, value);
+            rt().browser_options.set_script_option(&name, value);
             Ok(J::Undefined)
         }
         "time" => Ok(J::Number(rt().now)),
