@@ -84,6 +84,8 @@ fn log_shows_what_standard_cannot() {
     let Ok(mut g) = Gpu::new() else {
         return x3d_evidence::no_gpu("no adapter");
     };
+    let platform = platform();
+    check_adapter(platform.as_deref(), &g.adapter_info);
     let px = |rgba: &[u8], x: usize, y: usize| {
         [
             rgba[(y * 512 + x) * 4],
@@ -91,6 +93,25 @@ fn log_shows_what_standard_cannot() {
             rgba[(y * 512 + x) * 4 + 2],
         ]
     };
+    // The expected pixels are those of pinned X_ITE's far-range picture on this platform (`common::reference`), not
+    // fixed values: whether the standard buffer ties the center depends on the depth format of the device.
+    //
+    // Center: red (nearer) over green (5 units behind at z = -1e4). On NVIDIA (Depth24Plus) the standard buffer ties
+    // them and the later green wins; on Apple, Depth24Plus is Depth32Float and pinned X_ITE resolves the red (issue
+    // #469). The log buffer resolves it everywhere. The corner shows the blue quad at z = -2e5, beyond the standard
+    // far plane (1e5) but inside the log one (1e10): black in the standard picture, blue in the log one.
+    let want = |baseline: &str| {
+        decode(&png_for(
+            &oracle(),
+            baseline,
+            "far-range.wrl.png",
+            platform.as_deref(),
+        ))
+    };
+    let (want_std, want_log) = (
+        want("render-zfight-baseline"),
+        want("render-zfight-log-baseline"),
+    );
     let std = render(&mut g, DepthMode::Standard, "synthetic-zfight", "far-range");
     let log = render(
         &mut g,
@@ -98,13 +119,16 @@ fn log_shows_what_standard_cannot() {
         "synthetic-zfight",
         "far-range",
     );
-    // Center: red (nearer) over green (5 units behind at z = -1e4). Standard 24-bit depth ties them
-    // and the later green wins; the log buffer resolves it. The corner shows the blue quad at
-    // z = -2e5, beyond the standard far plane (1e5) but inside the log one (1e10).
-    assert_eq!(px(&std, 256, 256), [0, 255, 0]);
-    assert_eq!(px(&log, 256, 256), [255, 0, 0]);
-    assert_eq!(px(&std, 10, 10), [0, 0, 0]);
-    assert_eq!(px(&log, 10, 10), [0, 0, 255]);
+
+    for (x, y) in [(256, 256), (10, 10)] {
+        assert_eq!(px(&std, x, y), px(&want_std, x, y), "standard at {x},{y}");
+        assert_eq!(px(&log, x, y), px(&want_log, x, y), "log at {x},{y}");
+    }
+
+    // What the test is about: the log buffer shows the far quad, the standard one cannot (on every platform).
+    assert_eq!(px(&want_std, 10, 10), [0, 0, 0]);
+    assert_eq!(px(&want_log, 10, 10), [0, 0, 255]);
+    assert_eq!(px(&want_log, 256, 256), [255, 0, 0]);
 }
 
 /// Pixels on the wrong side of the plane crossing at x = 0 (screen column 256) in tilt-pair.
