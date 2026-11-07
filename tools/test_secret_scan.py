@@ -18,6 +18,9 @@ import zlib
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
+sys.path.insert(0, str(ROOT / "tools"))
+from secret_scan import grouped  # noqa: E402
+
 B62 = string.digits + string.ascii_uppercase + string.ascii_lowercase
 
 
@@ -79,12 +82,25 @@ def main():
             (repo / name).write_text(body)
         env = {**os.environ, "GIT_AUTHOR_NAME": "t", "GIT_AUTHOR_EMAIL": "t@example.invalid",
                "GIT_COMMITTER_NAME": "t", "GIT_COMMITTER_EMAIL": "t@example.invalid"}
-        for cmd in (["init", "-q"], ["add", "-A"], ["commit", "-q", "-m", "synthetic"]):
-            subprocess.run(["git", "-C", str(repo), *cmd], check=True, env=env)
+        # U: a truncated gzip file TruffleHog cannot open; a second commit writes a second blob of it.
+        (repo / "fixtures").mkdir()
+        (repo / "fixtures/cut.wrl.gz").write_bytes(b"\x1f\x8b\x00\x00")
+
+        def git(*cmd):
+            return subprocess.run(["git", "-C", str(repo), *cmd], check=True, env=env, capture_output=True,
+                                  text=True).stdout.strip()
+
+        git("init", "-q")
+        git("add", "-A")
+        git("commit", "-q", "-m", "synthetic")
+        blob1 = git("rev-parse", "HEAD:fixtures/cut.wrl.gz")
+        (repo / "fixtures/cut.wrl.gz").write_bytes(b"\x1f\x8b\x00\x00\x00")
+        git("commit", "-q", "-am", "second blob")
+        blob2 = git("rev-parse", "HEAD:fixtures/cut.wrl.gz")
 
         reviewed = Path(tmp) / "reviewed.tsv"
         token_sha = hashlib.sha256(token.encode()).hexdigest()
-        reviewed.write_text(f"Github\tsrc/settings.rs\t{token_sha}\tsynthetic test entry\n")
+        reviewed.write_text(f"Github\tsrc/settings.rs\t{grouped(token_sha)}\tsynthetic test entry\n")
 
         for mode in ("tree", "history"):
             rc, rows, out = run(repo, reviewed, mode)
@@ -99,6 +115,20 @@ def main():
             check(("reviewed", "Github", "src/settings.rs") in th, f"{mode}: P3 trufflehog finds it; exact review applies")
             check(("NEW", "Github", "src/other.rs") in th, f"{mode}: P4 same value, other path: NEW")
             check(token not in out and key not in out and digest not in out, f"{mode}: no planted value in the output")
+
+        # U: the reviewed list names only the first blob: history and tree both report the file NOT SCANNED.
+        cut = "fixtures/cut.wrl.gz"
+        reviewed.write_text(f"Github\tsrc/settings.rs\t{grouped(token_sha)}\tsynthetic test entry\n"
+                            f"unreadable\t{cut}\t{grouped(blob1)}\tsynthetic truncated gzip\n")
+        for mode in ("history", "tree"):
+            _, _, out = run(repo, reviewed, mode)
+            check(f"NOT SCANNED\t{mode}: {cut}" in out, f"{mode}: U unreviewed second blob is NOT SCANNED")
+        # U: both blobs reviewed: the file is no longer NOT SCANNED.
+        with reviewed.open("a") as f:
+            f.write(f"unreadable\t{cut}\t{grouped(blob2)}\tsynthetic truncated gzip\n")
+        for mode in ("history", "tree"):
+            _, _, out = run(repo, reviewed, mode)
+            check(f"{mode}: {cut}" not in out, f"{mode}: U all blobs reviewed: not reported")
 
         # Without the review entry the token is NEW in both files.
         reviewed.write_text("")

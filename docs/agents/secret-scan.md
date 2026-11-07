@@ -32,7 +32,7 @@ values in memory only, to hash them.
 | 0 | every finding is reviewed and every file was read |
 | 1 | at least one NEW finding |
 | 2 | tool error: missing tool, wrong version, no network namespace, a scanner failed or did not report its end |
-| 3 | files that TruffleHog could not read (`NOT SCANNED`); a coverage gap, not a pass |
+| 3 | files that TruffleHog could not read (`NOT SCANNED`); a coverage gap, not a pass. Exit 1 has precedence over 3 |
 
 A detector result is not a classification. Exit 0 means that the two detectors found nothing new; it does not prove
 that the history holds no secret. TruffleHog ran without verification, so a finding is never proof that a credential
@@ -48,7 +48,8 @@ There are no path exclusions. Each exception names an exact case:
   `oracle/cm5-modes-tokens.mjs` made (1,692 findings in commit `16b763ad`).
 - **TruffleHog**: `tools/secret-scan-reviewed.tsv`. An entry covers one detector, one exact path and one exact value
   (the SHA-256 of the raw value). The same value in another file, or another value in the same file, is NEW. An
-  `unreadable` entry covers one Git blob ID of a file that TruffleHog cannot read; a changed blob is NOT SCANNED again.
+  `unreadable` entry covers one Git blob ID of a file that TruffleHog cannot read; a changed blob is NOT SCANNED again. Digests and blob IDs are written in 8-digit groups joined by `:`, so the list itself has no long hex run for a
+  detector to match.
 
 To review a new TruffleHog finding, run with `--template FILE`. The file gets one line per new finding with the full
 value hash and `TODO classify`; it holds no value. Find the value in its blob and identify the structure around it
