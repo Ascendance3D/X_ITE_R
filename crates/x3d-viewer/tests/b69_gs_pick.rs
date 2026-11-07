@@ -221,7 +221,7 @@ fn want_of(p: &Value) -> Probe {
 
 #[test]
 fn splat_picks_match_pinned_x_ite() {
-    splat_picks(false);
+    splat_picks(x3d_viewer::embed::DepthMode::Standard);
 }
 
 /// Issue #69, the logarithmic depth pass: the same probes with the pinned page's `LogarithmicDepthBuffer` option on
@@ -231,10 +231,20 @@ fn splat_picks_match_pinned_x_ite() {
 /// pinned values (worst 7.1e-5, the standard-depth figure), so no mode is added to it.
 #[test]
 fn splat_picks_under_logarithmic_depth_match_pinned_x_ite() {
-    splat_picks(true);
+    splat_picks(x3d_viewer::embed::DepthMode::Logarithmic);
 }
 
-fn splat_picks(log: bool) {
+/// Issue #69, picking under the reversed depth buffer (`DepthMode::Reversed`, beyond X_ITE). Pinned X_ITE 16.5.0 has no
+/// reversed depth, so there is no recording of it. `Reversed` keeps the near and far planes (gpu.rs), so a pick must give
+/// the pinned standard-depth probes (oracle/b69-gs-pick-baseline), with the same limits, as
+/// render_b69_gs_reversed.rs does for the pictures.
+#[test]
+fn splat_picks_under_reversed_depth_match_the_pinned_standard_probes() {
+    splat_picks(x3d_viewer::embed::DepthMode::Reversed);
+}
+
+fn splat_picks(mode: x3d_viewer::embed::DepthMode) {
+    let log = mode == x3d_viewer::embed::DepthMode::Logarithmic;
     let Some((d, q)) = device() else {
         return x3d_evidence::no_gpu("no adapter, skipped");
     };
@@ -292,8 +302,8 @@ fn splat_picks(log: bool) {
         let got: Vec<Probe> = spawn_big_stack(move || {
             let mut v = EmbeddedViewer::new(device, queue, (512, 512));
 
-            if log {
-                v.set_depth_mode(x3d_viewer::embed::DepthMode::Logarithmic);
+            if mode != x3d_viewer::embed::DepthMode::Standard {
+                v.set_depth_mode(mode);
             }
 
             v.load(
