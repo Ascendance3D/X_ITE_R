@@ -5,7 +5,7 @@
 
 import init, {
    WebBrowser, parseFieldWithoutScene, printEmptyScene, configTable, htmlSupport, scriptOp,
-   chainExists, chainWorldGeneration, chainTakeReleasedNodes, chainFieldNames, chainFieldData, chainSetFieldData, chainTakeFieldChanges, chainObserveField,
+   chainExists, chainWorldGeneration, chainTakeReleasedNodes, chainFieldNames, chainFieldData, chainSetFieldData, chainTakeFieldChanges, chainTakeScriptOptions, chainObserveField,
    chainTypeName, chainNodeName, chainNamedNode, chainParseField, chainRootNodes, chainSetRootNodes, chainNodeValue, chainRoutes, chainGetRoute, chainAddRoute, chainDeleteRoute, chainFieldDefinitions,
 } from "./pkg/x3d_web.js";
 import { createScriptRealm } from "./pkg/script.mjs";
@@ -129,6 +129,7 @@ const CHAIN_OPERATIONS = {
    fieldData: (scene, node, name) => chainFieldData (scene, node, name),
    setFieldData: (scene, node, name, data) => chainSetFieldData (scene, node, name, data),
    takeFieldChanges: scene => chainTakeFieldChanges (scene),
+   takeScriptOptions: () => chainTakeScriptOptions (),
    observeField: (scene, node, name, on) => chainObserveField (scene, node, name, on),
    typeName: (scene, node) => chainTypeName (scene, node),
    nodeName: (scene, node) => chainNodeName (scene, node),
@@ -6095,14 +6096,63 @@ class X3DBrowser
       this .#updateMultisampling ();
    }
 
-   getBrowserOption (name) { return X3DBrowser .#field (this .#options, name, "BrowserOptions", true) .getValue (); }
+   // X_ITE has one BrowserOptions for the page and its world. Here the page keeps a copy and each world has its own, so
+   // the options a world Script set with setBrowserOption come back to the page's copy (issue #480): the page's reads
+   // and the worlds to come see them, and the last one set, the page's or a Script's, is in force. All values are
+   // stored first, then each option's effect runs once with the final values.
+   #syncWorldOptions ()
+   {
+      let changes;
+
+      // Inside a field callback that runs in the route chain, the engine is borrowed: the chain's own call takes the options
+      // the world's Scripts set so far, so the callback reads them at once, as with X_ITE's one BrowserOptions.
+      changes = this .#chain ? this .#chain .takeScriptOptions () : this .#engine ?.takeScriptOptions ();
+
+      if (!changes ?.length)
+         return;
+
+      const fields = [ ];
+
+      for (const [ name, value ] of changes)
+      {
+         const field = this .#options .get (name);
+
+         if (!field)
+            continue;
+
+         field .setValue (value);
+         fields .push ([ name, field ]);
+      }
+
+      // The effects need the engine itself, so in the route chain they wait for its end. They read each field's value then,
+      // so the last one set, the page's or a Script's, is in force.
+      this .#afterChain (() =>
+      {
+         for (const [ name, field ] of fields)
+            this .#optionEffects (name, field);
+      });
+   }
+
+   getBrowserOption (name)
+   {
+      this .#syncWorldOptions ();
+
+      return X3DBrowser .#field (this .#options, name, "BrowserOptions", true) .getValue ();
+   }
 
    setBrowserOption (name, value)
    {
+      this .#syncWorldOptions ();
+
       const field = X3DBrowser .#field (this .#options, name, "BrowserOptions", true);
 
       field .setValue (value);
 
+      this .#optionEffects (name, field);
+   }
+
+   #optionEffects (name, field)
+   {
       this .#ui ?.optionChanged (field === this .#options .get ("Timings") ? "Timings" : name);
 
       // BrowserOptions.addInterest: the options with an effect that is not read when it is needed. ContentScale and
@@ -6245,6 +6295,8 @@ class X3DBrowser
    // MaxAnisotropicDegree, MaxSamples, PixelsPerPoint, SoundDestinations, XRSession) are not implemented (API.md).
    getRenderingProperty (name)
    {
+      this .#syncWorldOptions ();
+
       if (typeof name !== "string")
          name .match (/^/); // X_ITE's getField throws the TypeError of `name.match` for a name that is not a string.
 
@@ -6359,6 +6411,8 @@ class X3DBrowser
    // X3DBrowser.loadURL (url [, parameter]): replace the world with the first url that loads.
    loadURL (url, parameter = new Fields .MFString ())
    {
+      this .#syncWorldOptions ();
+
       return new Promise ((resolve, reject) =>
       {
          if (!(url instanceof Fields .MFString))
@@ -6898,6 +6952,8 @@ class X3DBrowser
    // scheduled at once (X_ITE: `await nextFrame ()` in the call), before frames the page asks for after the call.
    replaceWorld (scene)
    {
+      this .#syncWorldOptions ();
+
       if (!this .#engine)
       {
          return this .#ready .then (() =>
@@ -7921,6 +7977,7 @@ class X3DBrowser
             this .#videoMirror ?.push ();
             engine .frame (time, width, height);
             frameMs = performance .now () - begin;
+            this .#syncWorldOptions ();
 
             // X3DSoundContext.startAudioElement: a media element started in this frame tries the waiting resume ()
             // again, so a user activation from outside the canvas also unlocks the context. The resume () comes before the

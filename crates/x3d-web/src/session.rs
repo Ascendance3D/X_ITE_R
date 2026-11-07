@@ -521,6 +521,13 @@ impl Session {
         self.rt_mut().browser_options.set_option(name, value);
     }
 
+    /// The options this world's Scripts set with `setBrowserOption` since the last call, for the page's copy (issue #480).
+    pub fn take_script_options(
+        &mut self,
+    ) -> Vec<(&'static str, x3d_runtime::browser_options::OptionValue)> {
+        self.rt_mut().browser_options.take_script_changes()
+    }
+
     /// The page's Antialiased and Multisampling options ([`x3d_runtime::browser_options::BrowserOptions::set_page_sampling`])
     /// in this world, without an event (issue #480).
     pub fn set_page_sampling(&mut self, antialiased: bool, multisampling: i32) {

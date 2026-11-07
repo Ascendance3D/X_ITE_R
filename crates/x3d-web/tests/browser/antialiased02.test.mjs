@@ -8,9 +8,8 @@
 // edge pixels as in antialiased01): A 0 samples / 0 edge pixels, B 4 / 335, C 4 / 335, D 0 / 0, E 4 / 340.
 // The test looks at the pixels and the renderer's sample count, as antialiased01 does.
 //
-// The page's own getRenderingProperty ("Multisampling") does not see a world Script's option change yet: X_ITE_R's
-// page and world keep separate copies of the options, and only the page's go to the world. In B and C pinned X_ITE
-// reports 4 and X_ITE_R's page reports its own 0. That check is a `todo` case, so it is reported, not hidden.
+// The page's own getRenderingProperty ("Multisampling") sees a world Script's option change too (B and C: 4): the
+// page takes the options a world Script set (X3DBrowser.#syncWorldOptions), so page and world are one BrowserOptions.
 
 import { describe, test } from "node:test";
 import assert from "node:assert/strict";
@@ -114,7 +113,7 @@ describe ("antialiased 02", { skip: Boolean (ONLY) }, () =>
          if (gap)
          {
             test (`${backend}: ${name}: the page reports the Script's Multisampling`,
-               { timeout: CASE_TIMEOUT, todo: "the page does not see a world Script's option change (issue #480 comment)" }, async () =>
+               { timeout: CASE_TIMEOUT }, async () =>
             {
                const page = await open (backend, { antialiased, scripts: "true" });
 
