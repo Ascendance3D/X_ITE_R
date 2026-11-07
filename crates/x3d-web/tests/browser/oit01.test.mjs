@@ -61,19 +61,30 @@ async function open (backend, extra, signal)
 }
 
 // Runs `before` in the page, loads `world` (null: the world stays; with `replace`, by replaceWorld instead of loadURL),
-// lets frames pass until the picture is the same after two frames in sequence (at most 20 frames), and returns its hash.
+// and returns the hash of the picture of that state. `option` is the page's OrderIndependentTransparency that the page
+// itself set (the attribute or `before`), or null when the world's Script sets the option: in pinned X_ITE a Script's
+// option is the page's too, in X_ITE_R it is the world's (the todo case), so the page's value is not a fact to check there.
+//
+// A picture counts only when the state is the expected one: the new scene is the current scene (the same scene when no
+// world loads), the page's option has the expected value (when `option` is not null), and the engine has processed 2 frames since the load (the
+// world's Scripts have run their initialize and the rendering changes are applied). Then the picture must be the same
+// after one more processed frame. With no such picture in 20 frames, the case fails.
 //
 // readPixels draws the current state into its own texture, so the canvas frames only let the world's events run. A
 // fixed 20 frames per picture made the WebGPU case with 7 pictures take 105 s to more than 180 s on the CI runners'
 // SwiftShader adapter (about 0.4 s to 1.5 s a frame): the picture was final after the first frame in every measured
 // picture, on a GPU and on SwiftShader.
-async function draw (page, { before = () => { }, world = WORLD, replace = false } = { })
+async function draw (page, { before = () => { }, world = WORLD, replace = false, option })
 {
-   return page .evaluate (async ([ text, beforeText, replace ]) =>
+   assert .ok (option === true || option === false || option === null, "draw needs the expected page option or null");
+
+   const result = await page .evaluate (async ([ text, beforeText, replace, option ]) =>
    {
-      const browser = document .querySelector ("x3d-canvas") .browser;
-      const engine  = browser [Symbol .for ("X_ITE_R.engine")];
-      const frame   = () => new Promise (r => requestAnimationFrame (r));
+      const browser   = document .querySelector ("x3d-canvas") .browser;
+      const engine    = browser [Symbol .for ("X_ITE_R.engine")];
+      const processed = () => browser [Symbol .for ("X_ITE_R.frameLoop")] .processed;
+      const frame     = () => new Promise (r => requestAnimationFrame (r));
+      const previous  = browser .currentScene;
 
       const picture = async () =>
       {
@@ -88,30 +99,64 @@ async function draw (page, { before = () => { }, world = WORLD, replace = false 
 
       await (0, eval) (beforeText) (browser);
 
+      let scene = previous;
+
       if (text !== null && replace)
-         await browser .replaceWorld (await browser .createX3DFromString (text));
+      {
+         scene = await browser .createX3DFromString (text);
+
+         await browser .replaceWorld (scene);
+      }
       else if (text !== null)
+      {
          await browser .loadURL (new window .X3D_NS .MFString ("data:model/x3d-vrml," + encodeURIComponent (text)));
 
-      await frame ();
-      await frame ();
+         scene = browser .currentScene;
+      }
 
-      let hash = await picture ();
+      const start = processed ();
 
-      for (let frames = 2; frames < 20; ++ frames)
+      const state = () => ({
+         scene: text === null ? browser .currentScene === previous
+            : replace ? browser .currentScene === scene
+            : browser .currentScene === scene && scene !== previous,
+         option: option === null || browser .getBrowserOption ("OrderIndependentTransparency") === option,
+         processed: processed () - start,
+      });
+
+      let hash = null, at = 0;
+
+      for (let frames = 0; frames < 20; ++ frames)
       {
          await frame ();
+
+         const now = state ();
+
+         if (!now .scene || !now .option || now .processed < 2)
+            continue;
+
+         if (hash === null || now .processed === at)
+         {
+            hash ??= await picture ();
+            at   = now .processed;
+            continue;
+         }
 
          const next = await picture ();
 
          if (next === hash)
-            break;
+            return { hash, option: browser .getBrowserOption ("OrderIndependentTransparency"), backend: engine .backend, frames: frames + 1 };
 
          hash = next;
+         at   = now .processed;
       }
 
-      return { hash, option: browser .getBrowserOption ("OrderIndependentTransparency"), backend: engine .backend };
-   }, [ world, `(${before .toString ()})`, replace ]);
+      return { error: `no stable picture of the expected state in 20 frames: ${JSON .stringify (state ())}` };
+   }, [ world, `(${before .toString ()})`, replace, option ]);
+
+   assert .equal (result .error, undefined, result .error);
+
+   return result;
 }
 
 const BACKENDS = [ "webgpu", "webgl2" ];
@@ -123,8 +168,8 @@ describe ("oit 01", { skip: Boolean (ONLY) }, () =>
       // The "OIT off" and "OIT on" pictures: the page's option false, and a world Script's option true.
       async function references (page)
       {
-         const off = await draw (page, { world: scripted (false) });
-         const on  = await draw (page, { world: scripted (true) });
+         const off = await draw (page, { world: scripted (false), option: null });
+         const on  = await draw (page, { world: scripted (true), option: null });
 
          assert .equal (off .backend, backend);
          assert .notEqual (on .hash, off .hash, "OIT on and off give different pictures");
@@ -138,7 +183,7 @@ describe ("oit 01", { skip: Boolean (ONLY) }, () =>
 
          try
          {
-            const first = await draw (page);
+            const first = await draw (page, { option: true });
             const { off, on } = await references (page);
 
             assert .equal (first .option, true);
@@ -158,11 +203,11 @@ describe ("oit 01", { skip: Boolean (ONLY) }, () =>
          {
             const { off, on } = await references (page);
             // The page sets false first: in X_ITE the Script's true of the second reference world stays for the next world.
-            const plain = await draw (page, { before: b => b .setBrowserOption ("OrderIndependentTransparency", false) });
-            const live  = await draw (page, { world: null, before: b => b .setBrowserOption ("OrderIndependentTransparency", true) });
-            const next  = await draw (page);
-            const replaced = await draw (page, { replace: true });
-            const back  = await draw (page, { world: null, before: b => b .setBrowserOption ("OrderIndependentTransparency", false) });
+            const plain = await draw (page, { before: b => b .setBrowserOption ("OrderIndependentTransparency", false), option: false });
+            const live  = await draw (page, { world: null, before: b => b .setBrowserOption ("OrderIndependentTransparency", true), option: true });
+            const next  = await draw (page, { option: true });
+            const replaced = await draw (page, { replace: true, option: true });
+            const back  = await draw (page, { world: null, before: b => b .setBrowserOption ("OrderIndependentTransparency", false), option: false });
 
             assert .equal (plain .hash, off .hash, "with the option false the page draws without OIT");
             assert .equal (live .hash, on .hash, `the option set on the live world: ${JSON .stringify ({ live, on, off })}`);
@@ -187,7 +232,7 @@ describe ("oit 01", { skip: Boolean (ONLY) }, () =>
          try
          {
             const { off, on } = await references (page);
-            const after = await draw (page);
+            const after = await draw (page, { option: null });
 
             assert .equal (after .hash, on .hash, `the plain world after the Script's true: ${JSON .stringify ({ after, on, off })}`);
          }
@@ -204,8 +249,8 @@ describe ("oit 01", { skip: Boolean (ONLY) }, () =>
          try
          {
             const { off, on } = await references (page);
-            const script = await draw (page, { world: scripted (false), before: b => b .setBrowserOption ("OrderIndependentTransparency", true) });
-            const later  = await draw (page, { world: null, before: b => b .setBrowserOption ("OrderIndependentTransparency", true) });
+            const script = await draw (page, { world: scripted (false), before: b => b .setBrowserOption ("OrderIndependentTransparency", true), option: null });
+            const later  = await draw (page, { world: null, before: b => b .setBrowserOption ("OrderIndependentTransparency", true), option: true });
 
             assert .equal (script .hash, off .hash, "the Script's false, set after the page's true, is in force");
             assert .equal (later .hash, on .hash, `the page's true, set after the Script's false, is in force: ${JSON .stringify ({ later, on, off })}`);
@@ -216,6 +261,23 @@ describe ("oit 01", { skip: Boolean (ONLY) }, () =>
          }
       });
    }
+
+   // draw accepts no picture of a state other than the expected one: here the page's option stays false where the
+   // caller expects true, so two equal pictures of that state do not count, and draw fails.
+   test ("a stable picture of an unexpected state is not accepted", { timeout: CASE_TIMEOUT }, async t =>
+   {
+      const page = await open ("webgl2", { scripts: "true" }, t .signal);
+
+      try
+      {
+         await draw (page, { option: false });
+         await assert .rejects (draw (page, { world: null, option: true }), /no stable picture of the expected state in 20 frames: .*"option":false/);
+      }
+      finally
+      {
+         await page .context () .close ();
+      }
+   });
 
    // When node:test cancels a test at its timeout, the test function runs on and its page draws on until the function
    // ends. In a CI run (SwiftShader) the next test's page then did not start in 30 s. The page of a cancelled test closes.
