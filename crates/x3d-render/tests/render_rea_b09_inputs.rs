@@ -5,6 +5,10 @@
 //! The bound is the one of `x3d-shot compare`: at most 0.5% of the pixels more than 8 off.
 //! `REA_ONLY=<substring>` restricts the worlds.
 
+mod common;
+
+use common::reference::{check_adapter, platform, png_for};
+
 use std::path::PathBuf;
 use x3d_render::gpu::Gpu;
 
@@ -13,6 +17,8 @@ fn rea_b09_inputs_renders_match_x_ite() {
     let Ok(mut g) = Gpu::new() else {
         return x3d_evidence::no_gpu("no adapter");
     };
+    let platform = platform();
+    check_adapter(platform.as_deref(), &g.adapter_info);
     let root = PathBuf::from(env!("CARGO_MANIFEST_DIR"))
         .join("../../oracle")
         .canonicalize()
@@ -48,9 +54,13 @@ fn rea_b09_inputs_renders_match_x_ite() {
         names.sort();
 
         for name in names {
-            let (w, h, want) =
-                x3d_render::compare::load_png(&root.join(format!("{baseline}/{name}.png")))
-                    .unwrap();
+            let (w, h, want) = x3d_render::compare::load_png(&png_for(
+                &root,
+                baseline,
+                &format!("{name}.png"),
+                platform.as_deref(),
+            ))
+            .unwrap();
             let world = name.split('@').next().unwrap();
             let shot = x3d_render::render_file(
                 &mut g,
