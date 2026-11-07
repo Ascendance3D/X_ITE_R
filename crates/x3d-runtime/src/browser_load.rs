@@ -422,7 +422,7 @@ impl Runtime {
             Input::Text(text) => x3d_parse::parse_string(text, url),
         };
 
-        let mut scene = match parsed {
+        let scene = match parsed {
             Ok(scene) => scene,
             Err(x3d_parse::LoadError::Parse(e))
                 if e.line == 0
