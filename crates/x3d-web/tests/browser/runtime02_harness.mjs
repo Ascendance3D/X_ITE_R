@@ -66,6 +66,21 @@ const EVIDENCE = process .env .XR_WEB_EVIDENCE;
 export const ONLY     = process .env .XR_CASE;
 const SELECTED        = process .env .XR_CASES ? new Set (process .env .XR_CASES .split (",")) : null;
 
+// XR_FORCE_WEBGL2=1: every page of this harness starts without WebGPU (no `navigator.gpu`), so each <x3d-canvas> takes
+// the engine's own WebGL2 fallback, as on a browser without WebGPU. It runs the whole suite on the WebGL2 backend on
+// the same GPU. Off by default (CI runs WebGPU). Tests that assert WebGPU itself are expected to fail in this mode;
+// classify each failure, do not change a reference or a tolerance for it.
+export const FORCE_WEBGL2 = process .env .XR_FORCE_WEBGL2 === "1";
+
+// The engine's own fallback notices (src/device_request.rs, src/wasm.rs): in XR_FORCE_WEBGL2 mode every page prints them
+// at start, and the pinned X_ITE (WebGL only) has nothing like them. Only in that mode are these exact lines left out of
+// a page's log; every other line stays, so a case still compares all other console output.
+const FALLBACK_NOTICES = [
+   /^warning: X_ITE_R: graphics adapter request \d+ of \d+ failed \(no WebGPU adapter: .*\); asking again\.$/,
+   /^warning: X_ITE_R: WebGPU cannot start \(no WebGPU adapter: .*\); starting with WebGL2\.$/,
+   /^warning: X_ITE_R: the WebGL2 adapter is below the WebGPU default limits: .*$/,
+];
+
 // The recordings: the runtime 02 cases, the web resource fallback 01 cases (fallback01_case.mjs, recorded with
 // `--suite fallback01` into oracle/web-browser-fallback-01-baseline) and the web loadURL messages 01 cases
 // (loadurl01_case.mjs, `--suite loadurl01` into oracle/web-browser-loadurl-01-baseline), and the web data URL
@@ -652,7 +667,7 @@ async function logAdapter ()
          return i ? { vendor: i .vendor, architecture: i .architecture, device: i .device, description: i .description } : null;
       });
 
-      console .log (`WebGPU adapter: ${JSON .stringify (info) ?? "unknown"}`);
+      console .log (`WebGPU adapter: ${JSON .stringify (info) ?? "unknown"}${FORCE_WEBGL2 ? " (XR_FORCE_WEBGL2: test pages use WebGL2)" : ""}`);
       await evidence ("webgpu-adapter.json", JSON .stringify (info, null, 1) + "\n");
    }
    catch (error)
@@ -710,13 +725,22 @@ export async function openPage (contextOptions, { init, signal } = { })
 
    await context .route (url => !allowed .some (origin => url .href .startsWith (origin)), route => route .abort ());
 
+   if (FORCE_WEBGL2)
+      await context .addInitScript (() => { delete Navigator .prototype .gpu; delete globalThis .WorkerNavigator ?.prototype .gpu; });
+
    if (init)
       await context .addInitScript (init);
 
    const page = await context .newPage ();
 
    page .log = [ ];
-   page .on ("console", m => page .log .push (`${m .type ()}: ${m .text () .split ("\n") [0]}`));
+   page .on ("console", m =>
+   {
+      const line = `${m .type ()}: ${m .text () .split ("\n") [0]}`;
+
+      if (!(FORCE_WEBGL2 && FALLBACK_NOTICES .some (r => r .test (line))))
+         page .log .push (line);
+   });
    page .on ("pageerror", e => page .log .push (`pageerror: ${e .message}`));
 
    await page .goto (`${server .base}/tests/browser/runtime02.html`);
@@ -727,6 +751,22 @@ export async function openPage (contextOptions, { init, signal } = { })
       const startError = await page .evaluate (() => window .startError);
 
       assert .equal (startError, undefined, `X_ITE_R did not start: ${startError}\n${page .log .join ("\n")}`);
+   }
+
+   // XR_FORCE_WEBGL2: the run is a WebGL2 run only if the page has no WebGPU and the engine chose WebGL2. A browser that
+   // keeps `navigator.gpu` (an own property, a non-configurable one) stops the test here instead of running on WebGPU.
+   if (FORCE_WEBGL2)
+   {
+      const state = await page .evaluate (() => ({
+         gpu:     "gpu" in navigator,
+         backend: document .querySelector ("x3d-canvas") ?.browser ?.[Symbol .for ("X_ITE_R.engine")] ?.backend ?? null,
+         startError: window .startError !== undefined,
+      }));
+
+      assert .equal (state .gpu, false, "XR_FORCE_WEBGL2: navigator.gpu is still there");
+      // No engine is allowed only for a page whose init script made the start fail on purpose (it reports startError).
+      assert .ok (state .backend === "webgl2" || (init && state .backend === null && state .startError),
+         `XR_FORCE_WEBGL2: the engine runs on ${state .backend}, not webgl2`);
    }
 
    return page;
