@@ -245,6 +245,61 @@ describe ("oit 01", { skip: Boolean (ONLY) }, () =>
          }
       });
 
+      // Pinned X_ITE has one BrowserOptions, so a page field callback that runs in the route chain right after a world
+      // Script's setBrowserOption reads the Script's value at once (issue #480). The callback runs inside the engine's
+      // frame, where the page takes the options through the chain (chainTakeScriptOptions); the option's effect follows
+      // at the end of the chain.
+      test (`${backend}: a page callback in the route chain sees a world Script's option at once`, { timeout: CASE_TIMEOUT }, async t =>
+      {
+         const page = await open (backend, { scripts: "true" }, t .signal);
+
+         try
+         {
+            const result = await page .evaluate (async text =>
+            {
+               const browser = document .querySelector ("x3d-canvas") .browser;
+               const frame   = () => new Promise (r => requestAnimationFrame (r));
+
+               await browser .replaceWorld (await browser .createX3DFromString (text));
+
+               const scene = browser .currentScene;
+               const [ A, B ] = [ "A", "B" ] .map (n => scene .getNamedNode (n));
+               const seen = [ ];
+
+               B .getField ("translation") .addFieldCallback ("seen", () => seen .push (browser .getBrowserOption ("OrderIndependentTransparency")));
+
+               const before = browser .getBrowserOption ("OrderIndependentTransparency");
+
+               A .translation = new window .X3D_NS .SFVec3f (1, 2, 3);
+
+               for (let i = 0; i < 4 && !seen .length; ++ i)
+                  await frame ();
+
+               await frame ();
+
+               return { before, seen, after: browser .getBrowserOption ("OrderIndependentTransparency") };
+            }, `#X3D V4.0 utf8
+PROFILE Immersive
+COMPONENT Scripting:1
+DEF A Transform { }
+DEF B Transform { }
+DEF S Script {
+   inputOnly SFVec3f set_go
+   outputOnly SFVec3f go_changed
+   url "ecmascript: function set_go (value) { Browser .setBrowserOption ('OrderIndependentTransparency', true); go_changed = value; }"
+}
+ROUTE A.translation_changed TO S.set_go
+ROUTE S.go_changed TO B.set_translation
+`);
+
+            assert .deepEqual (result, { before: false, seen: [ true ], after: true });
+         }
+         finally
+         {
+            await page .context () .close ();
+         }
+      });
+
       test (`${backend}: the last one set is in force, the page's or a world Script's`, { timeout: CASE_TIMEOUT }, async t =>
       {
          const page = await open (backend, { scripts: "true" }, t .signal);

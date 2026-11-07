@@ -2459,25 +2459,10 @@ impl WebBrowser {
     /// one with it, so its `getBrowserOption` and `getRenderingProperty` and the next world see them (issue #480).
     #[wasm_bindgen(js_name = takeScriptOptions)]
     pub fn take_script_options(&mut self) -> js_sys::Array {
-        use x3d_runtime::browser_options::OptionValue;
-
-        let out = js_sys::Array::new();
-        let changes = match self.current.and_then(|id| self.worlds.get_mut(&id)) {
-            Some(w) => w.session.take_script_options(),
-            None => return out,
-        };
-
-        for (name, value) in changes {
-            let v = match value {
-                OptionValue::Bool(b) => JsValue::from_bool(b),
-                OptionValue::String(s) => JsValue::from_str(&s),
-                other => JsValue::from_f64(other.as_f64()),
-            };
-
-            out.push(&js_sys::Array::of2(&JsValue::from_str(name), &v));
+        match self.current.and_then(|id| self.worlds.get_mut(&id)) {
+            Some(w) => script_options_js(w.session.take_script_options()),
+            None => js_sys::Array::new(),
         }
-
-        out
     }
 
     /// The point sprite snap rule (issue #470): true rounds a half 1/256 pixel step up, false rounds it to even.
@@ -3039,6 +3024,41 @@ pub fn html_support() -> js_sys::Array {
 
 fn chain_run<R>(world: u32, f: impl FnOnce(&mut x3d_runtime::Runtime) -> R) -> Result<R, JsError> {
     crate::chain::with_runtime(world, f).map_err(|e| JsError::new(&e))
+}
+
+/// `[name, value]` pairs of [`WebBrowser::take_script_options`].
+fn script_options_js(
+    changes: Vec<(&'static str, x3d_runtime::browser_options::OptionValue)>,
+) -> js_sys::Array {
+    use x3d_runtime::browser_options::OptionValue;
+
+    let out = js_sys::Array::new();
+
+    for (name, value) in changes {
+        let v = match value {
+            OptionValue::Bool(b) => JsValue::from_bool(b),
+            OptionValue::String(s) => JsValue::from_str(&s),
+            other => JsValue::from_f64(other.as_f64()),
+        };
+
+        out.push(&js_sys::Array::of2(&JsValue::from_str(name), &v));
+    }
+
+    out
+}
+
+/// `WebBrowser.takeScriptOptions` inside a field callback: the options the Scripts of the world whose route chain runs set
+/// so far, so a page callback in the chain sees them as X_ITE's one BrowserOptions does (issue #480). Draining the list is a
+/// change-list operation of the kind `chain.rs` allows.
+#[wasm_bindgen(js_name = chainTakeScriptOptions)]
+pub fn chain_take_script_options() -> Result<js_sys::Array, JsError> {
+    let Some(world) = crate::chain::active_world() else {
+        return Ok(js_sys::Array::new());
+    };
+
+    chain_run(world, |rt| {
+        script_options_js(rt.browser_options.take_script_changes())
+    })
 }
 
 /// `WebBrowser.exists` for the world whose callback is running.
