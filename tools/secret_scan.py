@@ -115,7 +115,8 @@ def gitleaks(mode, target, cwd, config):
                "--report-format", "json", "--report-path", report, "--exit-code", "0", "--log-level", "error", target]
         p = subprocess.run(offline(cmd), cwd=cwd, capture_output=True, text=True, timeout=TIMEOUT_S)
         if p.returncode != 0 or not os.path.exists(report):
-            die(f"gitleaks {mode} failed (exit {p.returncode}): {p.stderr.strip()[-400:]}")
+            # Scanner diagnostics are not printed: they could hold source text. Rerun Gitleaks by hand to read them.
+            die(f"gitleaks {mode} failed (exit {p.returncode}; {len(p.stderr)} bytes of diagnostics not printed)")
         rows = json.load(open(report))
     return [{"tool": "gitleaks", "scan": mode, "rule": r["RuleID"], "file": r["File"], "commit": r.get("Commit", "")[:12],
              "line": r["StartLine"], "len": None, "sha256_12": None, "reviewed": False} for r in rows]
