@@ -596,9 +596,12 @@ fn get_shadow_intensity(light: Light, vertex: vec3<f32>) -> f32 {
     return intensity * value;
 }
 
-// Perlin2.glsl
+// Perlin2.glsl. The hash is `dot`, as in X_ITE (issue #469). The shader compiler of each driver gives `dot` its own
+// rounding, and pinned X_ITE's noise follows it: on the same NVIDIA GPU, ANGLE on OpenGL computes fma(y, b, x * a) and
+// ANGLE on Vulkan fma(x, a, y * b). With `dot`, every backend draws what pinned X_ITE draws through the same driver
+// path (Vulkan, Metal, browser WebGPU and WebGL2), measured with tests/noise_dot_forms.rs and the texgen worlds.
 fn rand1(co: vec2<f32>) -> f32 {
-    return fract(sin(fma(co.y, 78.233, co.x * 12.9898)) * 43758.5453);
+    return fract(sin(dot(co, vec2<f32>(12.9898, 78.233))) * 43758.5453);
 }
 
 fn rand3(co: vec2<f32>, l: f32, t: f32) -> f32 {

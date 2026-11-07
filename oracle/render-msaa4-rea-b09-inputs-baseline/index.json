@@ -526,10 +526,19 @@
    "log": [],
    "width": 512,
    "height": 512,
-   "rgbaSha256": "4b84735cf7025829ac70a8a4fcc1db595d31c3646f7ee884e29ffe26913b9bb2",
-   "pngSha256": "22d0716a0b2b54bc0be4d215f3bf48b4a30f142bd259c5d9b19ed886e1a5dd23",
+   "rgbaSha256": "48aaaae766f4b7d956f835408761d5be04c4d73dcba6f60434dc2c0e00336395",
+   "pngSha256": "cc9b425c8375a1e829bc25e21337fc62e344876c817d6678da872e95f6bdef63",
    "splashVisible": false,
-   "canvasDisplay": "block"
+   "canvasDisplay": "block",
+   "recordedWith": {
+    "issue": "#469",
+    "date": "2026-11-06",
+    "chrome": "151.0.7922.34",
+    "renderer": "ANGLE (NVIDIA, Vulkan 1.4.329 (NVIDIA NVIDIA GeForce RTX 3060 Ti (0x00002414)), NVIDIA)",
+    "angle": "vulkan",
+    "identicalRuns": 3,
+    "why": "pinned X_ITE draws this world differently on ANGLE OpenGL and ANGLE Vulkan (Perlin2 dot rounding); the native renderer runs Vulkan, so this picture is the one of the same driver path (owner decision 2026-11-06)"
+   }
   },
   {
    "file": "texgen-prims.wrl",
