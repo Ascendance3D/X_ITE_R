@@ -672,10 +672,25 @@ after (async () =>
 });
 
 // A new page with the test canvas in a new context, ready (engine and WebGPU device made).
-export async function openPage (contextOptions, { init } = { })
+//
+// `signal`: the test's signal (TestContext.signal). node:test aborts it when the test times out, but the test function
+// runs on, so a `finally` that closes the page runs only when the function ends. Until then the page draws on the one
+// browser of the file, and on a CPU adapter (SwiftShader) it slows the next test's page: in a CI run the next page did
+// not start in 30 s. With the signal, the page's context closes when the test is cancelled.
+export async function openPage (contextOptions, { init, signal } = { })
 {
    const context = await browser .newContext (contextOptions);
    const allowed = [ server .base, server .foreign ];
+
+   if (signal)
+   {
+      const close = () => context .close () .catch (() => { });
+
+      if (signal .aborted)
+         await close ();
+      else
+         signal .addEventListener ("abort", close, { once: true });
+   }
 
    await context .route (url => !allowed .some (origin => url .href .startsWith (origin)), route => route .abort ());
 
