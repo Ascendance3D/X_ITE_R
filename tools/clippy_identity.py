@@ -10,11 +10,14 @@ diagnostic has the same crate, lint and level and differs in only one of message
 "changed": a rename or an edit of the same source, to check by hand. Only the rest are "new".
 
     clippy_identity.py export CARGO.json > BASELINE.jsonl
-    clippy_identity.py compare BASELINE.jsonl CARGO.json [--github] [--strict]
+    clippy_identity.py compare BASELINE.jsonl CARGO.json [--github] [--strict] [--incomplete]
     clippy_identity.py --self-test
 
 `compare` exits 0 (the CI step is a report, not a gate) unless `--strict` is given and a new diagnostic is found.
 `--github` adds a warning annotation for each new and changed diagnostic. Old diagnostics never fail the compare.
+`--incomplete` marks a run where `cargo clippy` failed: its diagnostics are compared, but a baseline diagnostic that the
+run did not report is "not reported", not "removed". A line that starts with "{" but is not JSON (for example from a
+procedural macro) is skipped and counted.
 The baseline is not edited to hide a new diagnostic: a new one is fixed, or the owner accepts it.
 """
 import collections
@@ -24,6 +27,9 @@ import sys
 FIELDS = ("crate", "lint", "level", "message", "file", "span")
 
 
+SKIPPED = []
+
+
 def from_cargo(lines):
     """The diagnostics of `cargo clippy --message-format=json` output, one per identity and location."""
     out, seen = [], set()
@@ -31,7 +37,11 @@ def from_cargo(lines):
         line = line.strip()
         if not line.startswith("{"):
             continue
-        rec = json.loads(line)
+        try:
+            rec = json.loads(line)
+        except json.JSONDecodeError:
+            SKIPPED.append(line[:120])
+            continue
         if rec.get("reason") != "compiler-message":
             continue
         msg = rec["message"]
@@ -101,16 +111,19 @@ def annotate(d, title):
     return f"::warning file={d['file']},line={d['line']},title={title}::{text}"
 
 
-def run_compare(base, head, github=False, strict=False, out=sys.stdout):
+def run_compare(base, head, github=False, strict=False, incomplete=False, out=sys.stdout):
     new, changed, removed, moved = compare(base, head)
-    print(f"Clippy identity compare: baseline {len(base)}, head {len(head)}: new {len(new)}, changed {len(changed)}, "
-          f"removed {len(removed)}, moved {len(moved)}", file=out)
+    gone = "not reported" if incomplete else "removed"
+    print(f"Clippy identity compare{' (INCOMPLETE: cargo clippy failed)' if incomplete else ''}: baseline {len(base)}, "
+          f"head {len(head)}: new {len(new)}, changed {len(changed)}, {gone} {len(removed)}, moved {len(moved)}", file=out)
+    if SKIPPED:
+        print(f"SKIPPED {len(SKIPPED)} line(s) that are not JSON, first: {SKIPPED[0]}", file=out)
     for d in new:
         print(f"NEW {show(d)}", file=out)
     for old, d in changed:
         print(f"CHANGED {show(d)}\n    was {show(old)}  (check the source identity: a rename or an edit)", file=out)
     for d in removed:
-        print(f"REMOVED {show(d)}", file=out)
+        print(f"{'NOT REPORTED' if incomplete else 'REMOVED'} {show(d)}", file=out)
     for d in moved:
         print(f"MOVED {show(d)}", file=out)
     if github:
@@ -143,7 +156,16 @@ def self_test():
     sink = open("/dev/null", "w")
     assert run_compare(base, base + [diag(4, 40, lint="clippy::other")], strict=True, out=sink) == 1
     assert run_compare(base, base + [diag(4, 40, lint="clippy::other")], out=sink) == 0
-    print(f"clippy_identity self-test: {len(cases) + 2} cases pass")
+    import io
+    text = io.StringIO()
+    run_compare(base, base[:2], incomplete=True, out=text)
+    assert "INCOMPLETE" in text.getvalue() and "NOT REPORTED" in text.getvalue() and "REMOVED" not in text.getvalue()
+    good = json.dumps({"reason": "compiler-message", "package_id": "path+file:///w/crates/c#0.1.0", "message": {
+        "level": "warning", "code": {"code": "clippy::l"}, "message": "m", "spans": [
+            {"is_primary": True, "file_name": "f.rs", "line_start": 1, "column_start": 1, "text": [{"text": "x"}]}]}})
+    assert len(from_cargo(["{not json", good])) == 1 and SKIPPED == ["{not json"]
+    SKIPPED.clear()
+    print(f"clippy_identity self-test: {len(cases) + 4} cases pass")
 
 
 def load_baseline(path):
@@ -160,10 +182,10 @@ def main(args):
             for d in sorted(from_cargo(f), key=lambda d: (d["crate"], d["file"], d["line"], d["column"], d["lint"])):
                 print(json.dumps(d, ensure_ascii=False, sort_keys=True))
         return 0
-    if len(args) >= 3 and args[0] == "compare" and set(args[3:]) <= {"--github", "--strict"}:
+    if len(args) >= 3 and args[0] == "compare" and set(args[3:]) <= {"--github", "--strict", "--incomplete"}:
         with open(args[2], encoding="utf-8") as f:
             head = from_cargo(f)
-        return run_compare(load_baseline(args[1]), head, "--github" in args, "--strict" in args)
+        return run_compare(load_baseline(args[1]), head, "--github" in args, "--strict" in args, "--incomplete" in args)
     sys.exit(__doc__)
 
 

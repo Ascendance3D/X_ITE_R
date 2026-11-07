@@ -218,8 +218,12 @@ jobs:
 
       - name: Clippy identity compare
         run: |
-          cargo clippy -p x3d-web --lib --target wasm32-unknown-unknown --message-format=json > clippy.json
-          python3 -I -B tools/clippy_identity.py compare tools/clippy-baseline/wasm32.jsonl clippy.json --github > clippy-identity.txt
+          # A failed Clippy run is still compared, marked incomplete: a diagnostic it did not report is not "removed".
+          status=0
+          cargo clippy -p x3d-web --lib --target wasm32-unknown-unknown --message-format=json > clippy.json || status=$?
+          incomplete=""
+          if [ "$status" -ne 0 ]; then incomplete="--incomplete"; fi
+          python3 -I -B tools/clippy_identity.py compare tools/clippy-baseline/wasm32.jsonl clippy.json --github $incomplete > clippy-identity.txt
           grep '^::' clippy-identity.txt | head -50 || true
           { echo '### Clippy identity compare (wasm32)'; echo '```'; grep -v '^::' clippy-identity.txt | head -300; echo '```'; } >> "$GITHUB_STEP_SUMMARY"
           head -1 clippy-identity.txt
