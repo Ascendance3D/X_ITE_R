@@ -1010,6 +1010,9 @@ impl WebBrowser {
                     self.retired.insert(key, w.session);
                 }
             }
+
+            // The old world's meshes and textures, unless a retired world still holds them.
+            self.renderer.release_unreferenced();
         }
 
         let w = self.worlds.get_mut(&id).ok_or_else(no_world)?;
