@@ -58,16 +58,23 @@ pub fn is_gzip(data: &[u8]) -> bool {
 /// What a parsed scene contains.
 #[derive(Clone, Debug, Default, PartialEq, Eq)]
 pub struct Summary {
+    /// The specification version from the file header, e.g. `"2.0"` or `"3.3"`.
     pub specification_version: String,
+    /// The `PROFILE` statement of an X3D file; `None` when the file has none.
     pub profile: Option<String>,
+    /// The nodes at the top level of the file.
     pub root_nodes: usize,
     /// Every node instance, including those inside PROTO bodies.
     pub nodes: usize,
     /// Node count per type name, sorted by name.
     pub node_types: BTreeMap<String, usize>,
+    /// PROTO declarations in the whole scene, nested declarations included.
     pub protos: usize,
+    /// EXTERNPROTO declarations in the whole scene, nested declarations included.
     pub externprotos: usize,
+    /// ROUTE statements in every execution context, PROTO bodies included.
     pub routes: usize,
+    /// Console messages (warnings and errors) that X_ITE would print while it loads the scene.
     pub warnings: usize,
 }
 
