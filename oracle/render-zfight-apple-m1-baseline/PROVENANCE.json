@@ -1,0 +1,33 @@
+{
+ "angle_backend": "metal",
+ "chrome": "Google Chrome 156.0.8078.80",
+ "gl_renderer": "ANGLE (Apple, ANGLE Metal Renderer: Apple M1, Unspecified Version)",
+ "hardware": "Apple M1, macOS 27.0.1",
+ "kept": {
+  "far-range.wrl.png": {
+   "png": "29505d722447d599814f56ee5661eb65e5d292d4d645dfc87cb8373b9f82cdf8",
+   "runs_png_sha256": [
+    "29505d722447d599814f56ee5661eb65e5d292d4d645dfc87cb8373b9f82cdf8",
+    "29505d722447d599814f56ee5661eb65e5d292d4d645dfc87cb8373b9f82cdf8",
+    "29505d722447d599814f56ee5661eb65e5d292d4d645dfc87cb8373b9f82cdf8"
+   ]
+  },
+  "tilt-pair.wrl.png": {
+   "png": "7356c89c47e86dc24dcc13b129a33c620d060888cd1b306acefb5a9cc564a67a",
+   "runs_png_sha256": [
+    "7356c89c47e86dc24dcc13b129a33c620d060888cd1b306acefb5a9cc564a67a",
+    "7356c89c47e86dc24dcc13b129a33c620d060888cd1b306acefb5a9cc564a67a",
+    "7356c89c47e86dc24dcc13b129a33c620d060888cd1b306acefb5a9cc564a67a"
+   ]
+  }
+ },
+ "nvidia_reference": "oracle/render-zfight-baseline (unchanged)",
+ "pinned": "34cdf9f97",
+ "platform": "apple-m1",
+ "recorded": "2026-11-06",
+ "recorder": "oracle/x_ite-shot.mjs",
+ "recorder_args": "oracle/synthetic-zfight <out> --size 512x512",
+ "rule": "kept only where the three runs are pixel-identical and differ from the NVIDIA picture in oracle/render-zfight-baseline",
+ "runs": 3,
+ "same_as_nvidia": []
+}
