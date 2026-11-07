@@ -6,6 +6,9 @@
 //! * `Reversed` is not in X_ITE: it must resolve near-coplanar surfaces better than the standard
 //!   buffer and leave a scene without such surfaces unchanged.
 
+mod common;
+
+use common::reference::{check_adapter, platform, png_for};
 use std::path::PathBuf;
 use std::sync::Mutex;
 use x3d_render::gpu::{DepthMode, Gpu};
@@ -51,13 +54,20 @@ fn standard_and_log_match_x_ite() {
     let Ok(mut g) = Gpu::new() else {
         return x3d_evidence::no_gpu("no adapter");
     };
+    let platform = platform();
+    check_adapter(platform.as_deref(), &g.adapter_info);
 
     for (mode, baseline) in [
         (DepthMode::Standard, "render-zfight-baseline"),
         (DepthMode::Logarithmic, "render-zfight-log-baseline"),
     ] {
         for name in ["tilt-pair", "far-range"] {
-            let want = decode(&oracle().join(format!("{baseline}/{name}.wrl.png")));
+            let want = decode(&png_for(
+                &oracle(),
+                baseline,
+                &format!("{name}.wrl.png"),
+                platform.as_deref(),
+            ));
             let got = render(&mut g, mode, "synthetic-zfight", name);
             let n = over(&got, &want);
             assert!(
