@@ -42,6 +42,15 @@ TIMEOUT_S = 900
 # A file TruffleHog could not read (it takes raw f32 samples for Brotli, and truncated gzip fixtures fail to open).
 # Reviewed only for the exact Git blob IDs listed; a changed or new blob at that path is NOT SCANNED again.
 UNREADABLE = "unreadable"
+# Files TruffleHog leaves out by its built-in extension list (images, video, audio, fonts, glTF binaries), per scan mode
+# and extension. Reported as a coverage limit; they are not content-scanned by TruffleHog.
+SKIPPED = {"git": {}, "filesystem": {}}
+# TruffleHog stops reading a Git diff at a line longer than this (it does not log it as an error).
+LONG_LINE = 10 * 1024 * 1024
+# Text formats that BOTH scanners leave out by extension (Gitleaks' default allowlist and TruffleHog's extension list,
+# checked 2026-11-07 with a planted token). Their blobs are copied as .txt files and scanned by both tools.
+BOTH_SKIP = (".svg", ".gltf")
+COPY_HEADER = b"secret_scan.py text copy\n"
 
 
 def die(msg):
@@ -78,7 +87,11 @@ def sha(value):
 
 def load_reviewed(path):
     reviewed = set()
-    for n, line in enumerate(Path(path).read_text().splitlines(), 1):
+    try:
+        text = Path(path).read_text()
+    except OSError as e:
+        die(f"cannot read the reviewed list {path}: {e}")
+    for n, line in enumerate(text.splitlines(), 1):
         if not line.strip() or line.startswith("#"):
             continue
         cols = line.split("\t")
@@ -108,7 +121,8 @@ def gitleaks(mode, target, cwd, config):
 
 
 def trufflehog(mode, target, cwd, reviewed, template):
-    cmd = ["trufflehog", mode, target, "--no-verification", "--no-update", "--json", "--log-level=0"]
+    # Log level 5: the "skipping file" lines (files TruffleHog leaves out by extension) are debug output.
+    cmd = ["trufflehog", mode, target, "--no-verification", "--no-update", "--json", "--log-level=5"]
     p = subprocess.run(offline(cmd), cwd=cwd, capture_output=True, text=True, timeout=TIMEOUT_S)
     if p.returncode != 0:
         die(f"trufflehog {mode} failed (exit {p.returncode})")
@@ -122,6 +136,9 @@ def trufflehog(mode, target, cwd, reviewed, template):
             finished = True
         elif log.get("level") == "error" and log.get("path"):
             unread.add(log["path"])
+        elif str(log.get("msg", "")).startswith("skipping file") and log.get("path"):
+            ext = Path(log["path"]).suffix.lower() or log.get("ext") or "(none)"
+            SKIPPED[mode][ext] = SKIPPED[mode].get(ext, 0) + 1
     if not finished:
         die(f"trufflehog {mode} did not report the end of the scan")
     out = []
@@ -132,7 +149,7 @@ def trufflehog(mode, target, cwd, reviewed, template):
         digest = sha(r.get("Raw", ""))
         out.append({"tool": "trufflehog", "scan": mode, "rule": r["DetectorName"], "file": src.get("file", ""),
                     "commit": src.get("commit", "")[:12], "line": src.get("line"), "len": len(r.get("Raw", "")),
-                    "sha256_12": digest[:12],
+                    "sha256_12": digest[:12], "sha256": digest,
                     "reviewed": (r["DetectorName"], src.get("file", ""), digest) in reviewed})
         if template is not None and not out[-1]["reviewed"]:
             template.add(f"{r['DetectorName']}\t{src.get('file', '')}\t{grouped(digest)}\tTODO classify")
@@ -151,6 +168,62 @@ def blobs(repo, mode, path):
     out = subprocess.run(cmd, capture_output=True, text=True).stdout.split("\n")
     ids = {line.split()[3] if mode == "history" else line for line in out if line.strip()}
     return sorted(i for i in ids if re.fullmatch("[0-9a-f]{40}", i) and i != "0" * 40)
+
+
+def text_copies(repo, mode, config, reviewed, template):
+    """Scan the BOTH_SKIP blobs (at HEAD, or every one in history) as .txt copies; findings name the real path."""
+    git = ["git", "-C", str(repo)]
+    if mode == "tree":
+        rows = subprocess.run(git + ["ls-tree", "-r", "HEAD"], capture_output=True, text=True, check=True).stdout
+        pairs = [(l.split("\t", 1)[1], l.split()[2]) for l in rows.splitlines() if l.split()[1] == "blob"]
+    else:
+        rows = subprocess.run(git + ["rev-list", "--all", "--objects"], capture_output=True, text=True, check=True).stdout
+        pairs = [(l.split(" ", 1)[1], l.split(" ", 1)[0]) for l in rows.splitlines() if " " in l]
+    pairs = [(p, o) for p, o in pairs if p.lower().endswith(BOTH_SKIP)]
+    names, findings, gap = {}, [], []
+    if not pairs:
+        return findings, gap, 0
+    with tempfile.TemporaryDirectory(prefix="secret-scan-text-") as tmp:
+        for i, (path, oid) in enumerate(sorted(set(pairs))):
+            data = subprocess.run(git + ["cat-file", "blob", oid], capture_output=True, check=True).stdout
+            name = f"t{i:06d}.txt"
+            # A neutral first line: TruffleHog also skips by sniffed content type (an SVG with its xmlns header is an
+            # image to it even as .txt). Line numbers of these findings are corrected by one below.
+            Path(tmp, name).write_bytes(COPY_HEADER + data)
+            names[name] = path
+        label = "git" if mode == "history" else None
+        def fix_line(n):
+            return n - 1 if isinstance(n, int) and n > 1 else n
+
+        for f in gitleaks("dir", ".", tmp, config):
+            f.update(file=names.get(f["file"], f["file"]), scan=label or "dir", via="text copy", line=fix_line(f["line"]))
+            findings.append(f)
+        th, unread = trufflehog("filesystem", ".", tmp, set(), None)
+        for f in th:
+            f.update(file=names.get(f["file"], f["file"]), scan=label or "filesystem", via="text copy",
+                     line=fix_line(f["line"]))
+            f["reviewed"] = (f["rule"], f["file"], f["sha256"]) in reviewed
+            if template is not None and not f["reviewed"]:
+                template.add(f"{f['rule']}\t{f['file']}\t{grouped(f['sha256'])}\tTODO classify")
+            findings.append(f)
+        gap = [names.get(u, u) for u in unread]
+    return findings, gap, len(names)
+
+
+def long_line_blobs(repo):
+    """Paths of history blobs with a line longer than LONG_LINE bytes (TruffleHog skips the rest of such a diff)."""
+    objs = subprocess.run(["git", "-C", str(repo), "rev-list", "--all", "--objects"], capture_output=True,
+                          check=True).stdout
+    sizes = subprocess.run(["git", "-C", str(repo), "cat-file", "--batch-check=%(objecttype) %(objectname) %(objectsize) %(rest)"],
+                           input=objs, capture_output=True, check=True).stdout.decode("utf-8", "replace")
+    out = set()
+    for line in sizes.splitlines():
+        kind, oid, size, *rest = line.split(" ", 3) + [""]
+        if kind == "blob" and int(size) > LONG_LINE:
+            data = subprocess.run(["git", "-C", str(repo), "cat-file", "blob", oid], capture_output=True, check=True).stdout
+            if max(map(len, data.split(b"\n"))) > LONG_LINE:
+                out.add(rest[0] or oid)
+    return sorted(out)
 
 
 def export_head(repo, dest):
@@ -192,12 +265,18 @@ def main():
         if mode == "history":
             findings += gitleaks("git", ".", repo, config)
             th, gap = trufflehog("git", f"file://{repo}", repo, reviewed, template)
+            unread += [f"history: {p} (a line over 10 MiB; TruffleHog skips the rest of the diff)"
+                       for p in long_line_blobs(repo)]
         else:
             with tempfile.TemporaryDirectory(prefix="secret-scan-tree-") as tmp:
                 export_head(repo, tmp)
                 findings += gitleaks("dir", ".", tmp, config)
                 th, gap = trufflehog("filesystem", ".", tmp, reviewed, template)
         findings += th
+        extra, extra_gap, copied = text_copies(repo, mode, config, reviewed, template)
+        findings += extra
+        print(f"coverage {mode}: {copied} {'/'.join(BOTH_SKIP)} blobs scanned as text copies by both tools")
+        unread += [f"{mode}: {p} (text copy)" for p in extra_gap]
         for p in gap:
             ids = blobs(repo, mode, p)
             if ids and all((UNREADABLE, p, i) in reviewed for i in ids):
@@ -210,11 +289,18 @@ def main():
 
     new = [f for f in findings if not f["reviewed"]]
     for f in findings:
+        f.pop("sha256", None)
+    for f in findings:
         state = "reviewed" if f["reviewed"] else "NEW"
         print(f"{state}\t{f['tool']}\t{f['scan']}\t{f['rule']}\t{f['file']}\t{f['commit']}\t{f['line']}\t"
               f"len={f['len']}\tsha256_12={f['sha256_12']}")
     for p in unread:
         print(f"NOT SCANNED\t{p}")
+    for mode, exts in SKIPPED.items():
+        if exts:
+            listed = ", ".join(f"{e} {n}" for e, n in sorted(exts.items(), key=lambda x: -x[1]))
+            print(f"coverage {'history' if mode == 'git' else 'tree'}: TruffleHog skipped {sum(exts.values())} files by"
+                  f" its extension list (not content-scanned by TruffleHog): {listed}")
     for mode in modes:
         n = [f for f in findings if f["scan"] in ({"git"} if mode == "history" else {"dir", "filesystem"})]
         print(f"summary {mode}: gitleaks {sum(f['tool'] == 'gitleaks' for f in n)} new; trufflehog "

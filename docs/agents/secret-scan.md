@@ -34,6 +34,15 @@ values in memory only, to hash them.
 | 2 | tool error: missing tool, wrong version, no network namespace, a scanner failed or did not report its end |
 | 3 | files that TruffleHog could not read (`NOT SCANNED`); a coverage gap, not a pass. Exit 1 has precedence over 3 |
 
+TruffleHog leaves out files by its built-in extension list and by sniffed content type; the scan prints them as
+`coverage` lines. On 2026-11-07 that was 7,116 tracked files (mostly PNG, also 378 `.svg`, 376 `.gltf`, 47 `.glb`,
+fonts and audio) and 9,190 history files. Gitleaks' default allowlist also leaves out `.svg` and `.gltf` (and images).
+So the scan copies every `.svg` and `.gltf` blob (769 at HEAD, 696 in history) as a `.txt` file with a neutral first
+line, scans the copies with both tools, and reports findings under the real path. The self-test checks that both
+tools find a token in an `.svg` this way. Binary media (images, video, audio, fonts) is content-scanned by neither
+tool. In history, a blob with a line over 10 MiB is reported NOT SCANNED, because TruffleHog skips the rest of such
+a diff without an error.
+
 A detector result is not a classification. Exit 0 means that the two detectors found nothing new; it does not prove
 that the history holds no secret. TruffleHog ran without verification, so a finding is never proof that a credential
 is inactive.

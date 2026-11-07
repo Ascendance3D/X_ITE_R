@@ -54,9 +54,12 @@ def main():
             failures.append(what)
 
     # The namespace the scanners run in has no outbound network (an IP literal: no DNS needed to try).
-    probe = "import socket; socket.create_connection(('192.0.2.1', 443), 3)"
+    # The probe itself reports whether connect() failed, so a namespace that cannot start (no "result" line) is a
+    # failure of this check, and any refusal (ENETUNREACH, EPERM from a seccomp policy, ...) counts as blocked.
+    probe = ("import socket\ntry:\n socket.create_connection(('192.0.2.1', 443), 3)\n print('result: connected')\n"
+             "except OSError:\n print('result: blocked')")
     net = subprocess.run(["unshare", "-rn", "--", sys.executable, "-I", "-c", probe], capture_output=True, text=True)
-    check(net.returncode != 0 and "unreachable" in net.stderr.lower(), "scanner namespace: outbound connection refused")
+    check(net.returncode == 0 and net.stdout.strip() == "result: blocked", "scanner namespace: outbound connection refused")
 
     with tempfile.TemporaryDirectory(prefix="secret-scan-test-") as tmp:
         repo = Path(tmp) / "repo"
@@ -74,6 +77,8 @@ def main():
             "oracle/other-baseline.json": f'{{"tokenHash":"{digest}"}}\n',
             # P3: a credential-format token in source: both scanners.
             "src/settings.rs": f'const TOKEN: &str = "{token}";\n',
+            # G: a text format that TruffleHog skips by extension (.svg): Gitleaks must still find the token.
+            "assets/icon.svg": f'<svg xmlns="http://www.w3.org/2000/svg"><desc>{token}</desc></svg>\n',
             # P4: the same token in a second file; the review list names only src/settings.rs.
             "src/other.rs": f'const TOKEN: &str = "{token}";\n',
         }
@@ -105,6 +110,8 @@ def main():
         for mode in ("tree", "history"):
             rc, rows, out = run(repo, reviewed, mode)
             gl = {(r[3], r[4]) for r in rows if r[1] == "gitleaks"}
+            if os.environ.get("SECRET_SCAN_TEST_DEBUG"):
+                print("\n".join("\t".join(r[:5]) for r in rows))
             th = {(r[0], r[3], r[4]) for r in rows if r[1] == "trufflehog"}
             check(rc == 1, f"{mode}: exit 1 with new findings (got {rc})")
             check(not any(f == "oracle/cm5-xml-baseline.json" for _, f in gl), f"{mode}: N1 reviewed tokenHash not reported")
@@ -114,6 +121,8 @@ def main():
             check(("github-pat", "src/other.rs") in gl, f"{mode}: P4 gitleaks finds the second copy")
             check(("reviewed", "Github", "src/settings.rs") in th, f"{mode}: P3 trufflehog finds it; exact review applies")
             check(("NEW", "Github", "src/other.rs") in th, f"{mode}: P4 same value, other path: NEW")
+            check(("github-pat", "assets/icon.svg") in gl, f"{mode}: G gitleaks finds the token in a skipped .svg")
+            check(("NEW", "Github", "assets/icon.svg") in th, f"{mode}: G trufflehog finds it in the .svg text copy")
             check(token not in out and key not in out and digest not in out, f"{mode}: no planted value in the output")
 
         # U: the reviewed list names only the first blob: history and tree both report the file NOT SCANNED.
@@ -130,11 +139,19 @@ def main():
             _, _, out = run(repo, reviewed, mode)
             check(f"{mode}: {cut}" not in out, f"{mode}: U all blobs reviewed: not reported")
 
+        # L: a blob with a line over 10 MiB (TruffleHog skips the rest of that diff): history reports it NOT SCANNED.
+        (repo / "fixtures/long.txt").write_text("x" * (10 * 1024 * 1024 + 16) + "\n")
+        git("add", "fixtures/long.txt")
+        git("commit", "-q", "-m", "long line")
+        _, _, out = run(repo, reviewed, "history")
+        check("NOT SCANNED\thistory: fixtures/long.txt" in out, "history: L line over 10 MiB is NOT SCANNED")
+
         # Without the review entry the token is NEW in both files.
         reviewed.write_text("")
         rc, rows, _ = run(repo, reviewed, "tree")
-        check(sum(r[0] == "NEW" and r[1] == "trufflehog" and r[3] == "Github" for r in rows) == 2,
-              "tree: empty review list: trufflehog reports both copies NEW")
+        check({r[4] for r in rows if r[0] == "NEW" and r[1] == "trufflehog" and r[3] == "Github"}
+              == {"src/settings.rs", "src/other.rs", "assets/icon.svg"},
+              "tree: empty review list: trufflehog reports every copy NEW")
 
     print(f"{'FAIL' if failures else 'PASS'}: {len(failures)} failed")
     sys.exit(1 if failures else 0)
