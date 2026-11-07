@@ -1,6 +1,7 @@
-//! Live heap bytes of the WASM module, for memory tests (issue #462). The global allocator is the target's own
-//! allocator; this wrapper only counts what it hands out and takes back. The counts let a test tell objects the engine
-//! keeps from pages the allocator touched once and keeps (a high-water mark of WebAssembly linear memory).
+//! Requested heap bytes of the WASM module, for memory tests (issue #462). The global allocator is the target's own
+//! allocator; this wrapper only counts what Rust asks it for and gives back (`Layout::size`). The counts do not include
+//! the allocator's own metadata, padding, size-class rounding or free memory it keeps, and WebAssembly linear memory never
+//! shrinks; so they tell objects the engine keeps from memory the allocator touched once and keeps.
 
 use std::alloc::{GlobalAlloc, Layout, System};
 use std::sync::atomic::{AtomicUsize, Ordering};
@@ -55,7 +56,7 @@ unsafe impl GlobalAlloc for Counting {
     }
 }
 
-/// Live bytes, the highest live bytes so far, and live allocations.
+/// Requested bytes now allocated, the highest such value so far, and allocations now live.
 pub fn stats() -> (usize, usize, usize) {
     (
         LIVE.load(Ordering::Relaxed),

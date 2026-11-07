@@ -4440,7 +4440,9 @@ impl Renderer {
     }
 
     /// Every cache of the renderer by name, for memory tests (issue #462): the entry count, and for the vertex caches the
-    /// buffer bytes. Sub-renderers give the sum of their [`resources`](crate::splats_gpu::SplatGpu::resources) counts.
+    /// buffer bytes. `...Capacity` entries are the reserved capacity of per-frame scratch vectors (memory they keep, not a
+    /// count). The sub-renderers give the sum of their `resources` counts (modules, pipelines, buffers and bind groups);
+    /// `slotGroups` and `styleGroups` are the renderer's own bind-group caches. `frameNo` is not a cache: it dates the rest.
     pub fn cache_stats(&self) -> Vec<(&'static str, u64)> {
         let bytes = |m: &HashMap<*const crate::geometry::Geometry, GeoGpu>| {
             m.values().map(|e| e.buffer.size()).sum::<u64>()
@@ -4464,10 +4466,10 @@ impl Renderer {
             ("thick", self.thick.len() as u64),
             ("pipelines", self.pipelines.len() as u64),
             ("frameBuffers", self.frame_buffers.len() as u64),
-            ("calls", self.calls.capacity() as u64),
-            ("drawBytes", self.draw_bytes.capacity() as u64),
-            ("scratchData", self.scratch_data.capacity() as u64),
-            ("debugDraws", self.debug_draws.capacity() as u64),
+            ("callsCapacity", self.calls.capacity() as u64),
+            ("drawBytesCapacity", self.draw_bytes.capacity() as u64),
+            ("scratchDataCapacity", self.scratch_data.capacity() as u64),
+            ("debugDrawsCapacity", self.debug_draws.capacity() as u64),
             (
                 "volume",
                 self.volume.resources().iter().sum::<usize>() as u64,

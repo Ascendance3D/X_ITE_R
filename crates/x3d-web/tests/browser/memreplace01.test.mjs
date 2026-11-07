@@ -1,7 +1,8 @@
 // Memory over world replacement (issue #462 section D), in real headless Chromium on WebGPU or, with XR_FORCE_WEBGL2=1,
 // WebGL2. The page replaces a synthetic world again and again; after the first cycles the engine must keep exactly what
-// one world needs: the same live WASM heap bytes and allocations, one world, no retired world, and the same renderer
-// caches (geometries, textures, bind groups, pipelines, vertex buffers). The counts come from the engine itself
+// one world needs: one world, no retired world, the same renderer caches (geometries and their vertex buffer bytes,
+// textures, the slot and style bind-group caches, pipelines, the sub-renderers' resources), and no more requested WASM
+// heap bytes and allocations than after the first cycles, within a small allowance for collection capacity. The counts come from the engine itself
 // (`resourceStats`), not from process RSS: the test browser enables the DevTools Network domain, which keeps response
 // bodies in the renderer process, so RSS grows in every test page and does not show what the engine keeps.
 // Not compared with X_ITE: X_ITE has no such counters.
@@ -31,10 +32,12 @@ function world (seed)
    return s;
 }
 
-// The engine's counters that depend on the world kept, not on the frame number or on buffer capacities.
-const KEPT = [ "heapLive", "heapAllocs", "worlds", "loads", "retired", "geometries", "geometryBytes", "sprites", "spriteBytes",
+// The engine's counters that depend on the world kept, not on the frame number or on buffer capacities: equal.
+const KEPT = [ "worlds", "loads", "retired", "geometries", "geometryBytes", "sprites", "spriteBytes",
    "textures", "slotGroups", "styleGroups", "generated", "rendered", "thick", "pipelines", "frameBuffers", "volume",
    "splats", "custom" ];
+
+const HEAP_ALLOWANCE = 512 * 1024, ALLOCS_ALLOWANCE = 256;
 
 test ("world replacement keeps no old world (#462 D)", { timeout: CASE_TIMEOUT }, async t =>
 {
@@ -72,7 +75,7 @@ test ("world replacement keeps no old world (#462 D)", { timeout: CASE_TIMEOUT }
       await cycles (0, 6);
       const first = await stats ();
 
-      for (const k of KEPT)
+      for (const k of [ ...KEPT, "heapLive", "heapAllocs" ])
          assert .equal (typeof first [k], "number", `resourceStats.${k} is missing`);
 
       assert .equal (first .worlds, 1);
@@ -84,6 +87,11 @@ test ("world replacement keeps no old world (#462 D)", { timeout: CASE_TIMEOUT }
 
       // Same parity of cycles: the same world is current, so every count is exactly the same.
       assert .deepEqual (kept (last), kept (first));
+
+      // The heap may differ by the capacity a collection grew to (HashMap, Vec), not by a world: one world here is
+      // several MB (without the #505 release the heap grew by 117 MB).
+      assert .ok (last .heapLive <= first .heapLive + HEAP_ALLOWANCE, `requested heap grew ${last .heapLive - first .heapLive} bytes`);
+      assert .ok (last .heapAllocs <= first .heapAllocs + ALLOCS_ALLOWANCE, `live allocations grew ${last .heapAllocs - first .heapAllocs}`);
       assert .deepEqual (page .log .filter (l => !l .startsWith ("log:") && !l .startsWith ("info:")), [ ]);
    }
    finally

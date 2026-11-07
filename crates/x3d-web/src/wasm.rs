@@ -817,7 +817,8 @@ impl WebBrowser {
         self.retired.len() as u32
     }
 
-    /// For memory tests (issue #462): the WASM heap's live bytes, peak live bytes and live allocations, the worlds,
+    /// For memory tests (issue #462): the bytes Rust has allocated and not freed (requested sizes, without allocator
+    /// overhead), their peak and the live allocations ([`crate::alloc_stats`]), the worlds,
     /// loads and retired worlds the engine keeps, and every renderer cache by name ([`Renderer::cache_stats`]).
     #[wasm_bindgen(getter, js_name = resourceStats)]
     pub fn resource_stats(&self) -> js_sys::Object {
