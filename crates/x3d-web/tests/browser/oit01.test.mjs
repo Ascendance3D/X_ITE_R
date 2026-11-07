@@ -48,9 +48,10 @@ const attributes = ({ backend, extra }) =>
    }) .observe (document, { childList: true, subtree: true });
 };
 
-async function open (backend, extra = { })
+// `signal`: the test's signal; the page closes when the test is cancelled (openPage).
+async function open (backend, extra, signal)
 {
-   const page = await openPage (DESKTOP, { init: `(${attributes .toString ()}) (${JSON .stringify ({ backend, extra })})` });
+   const page = await openPage (DESKTOP, { init: `(${attributes .toString ()}) (${JSON .stringify ({ backend, extra })})`, signal });
 
    const error = await page .evaluate (() => window .startError);
 
@@ -60,14 +61,30 @@ async function open (backend, extra = { })
 }
 
 // Runs `before` in the page, loads `world` (null: the world stays; with `replace`, by replaceWorld instead of loadURL),
-// lets frames pass and returns the picture's hash.
+// lets frames pass until the picture is the same after two frames in sequence (at most 20 frames), and returns its hash.
+//
+// readPixels draws the current state into its own texture, so the canvas frames only let the world's events run. A
+// fixed 20 frames per picture made the WebGPU case with 7 pictures take 105 s to more than 180 s on the CI runners'
+// SwiftShader adapter (about 0.4 s to 1.5 s a frame): the picture was final after the first frame in every measured
+// picture, on a GPU and on SwiftShader.
 async function draw (page, { before = () => { }, world = WORLD, replace = false } = { })
 {
    return page .evaluate (async ([ text, beforeText, replace ]) =>
    {
       const browser = document .querySelector ("x3d-canvas") .browser;
       const engine  = browser [Symbol .for ("X_ITE_R.engine")];
-      const frames  = async n => { for (let i = 0; i < n; ++ i) await new Promise (r => requestAnimationFrame (r)); };
+      const frame   = () => new Promise (r => requestAnimationFrame (r));
+
+      const picture = async () =>
+      {
+         const pixels = await engine .readPixels ();
+         let hash = 0;
+
+         for (let i = 0; i < pixels .length; i += 4)
+            hash = (hash * 31 + pixels [i] + pixels [i + 1] * 3 + pixels [i + 2] * 7) % 1000003;
+
+         return hash;
+      };
 
       await (0, eval) (beforeText) (browser);
 
@@ -76,13 +93,22 @@ async function draw (page, { before = () => { }, world = WORLD, replace = false 
       else if (text !== null)
          await browser .loadURL (new window .X3D_NS .MFString ("data:model/x3d-vrml," + encodeURIComponent (text)));
 
-      await frames (20);
+      await frame ();
+      await frame ();
 
-      const pixels = await engine .readPixels ();
-      let hash = 0;
+      let hash = await picture ();
 
-      for (let i = 0; i < pixels .length; i += 4)
-         hash = (hash * 31 + pixels [i] + pixels [i + 1] * 3 + pixels [i + 2] * 7) % 1000003;
+      for (let frames = 2; frames < 20; ++ frames)
+      {
+         await frame ();
+
+         const next = await picture ();
+
+         if (next === hash)
+            break;
+
+         hash = next;
+      }
 
       return { hash, option: browser .getBrowserOption ("OrderIndependentTransparency"), backend: engine .backend };
    }, [ world, `(${before .toString ()})`, replace ]);
@@ -106,9 +132,9 @@ describe ("oit 01", { skip: Boolean (ONLY) }, () =>
          return { off, on };
       }
 
-      test (`${backend}: the attribute set before the world loads`, { timeout: CASE_TIMEOUT }, async () =>
+      test (`${backend}: the attribute set before the world loads`, { timeout: CASE_TIMEOUT }, async t =>
       {
-         const page = await open (backend, { orderIndependentTransparency: "true", scripts: "true" });
+         const page = await open (backend, { orderIndependentTransparency: "true", scripts: "true" }, t .signal);
 
          try
          {
@@ -124,9 +150,9 @@ describe ("oit 01", { skip: Boolean (ONLY) }, () =>
          }
       });
 
-      test (`${backend}: setBrowserOption on the live world, then loadURL and replaceWorld`, { timeout: CASE_TIMEOUT }, async () =>
+      test (`${backend}: setBrowserOption on the live world, then loadURL and replaceWorld`, { timeout: CASE_TIMEOUT }, async t =>
       {
-         const page = await open (backend, { scripts: "true" });
+         const page = await open (backend, { scripts: "true" }, t .signal);
 
          try
          {
@@ -154,9 +180,9 @@ describe ("oit 01", { skip: Boolean (ONLY) }, () =>
       // OrderIndependentTransparency true stays for the next loadURL (the plain world after it draws with OIT on, and
       // getBrowserOption gives true). X_ITE_R starts each world with the page's options.
       test (`${backend}: a world Script's option stays for the next world`,
-         { timeout: CASE_TIMEOUT, todo: "a world Script's browser option does not stay for the next world, as in X_ITE" }, async () =>
+         { timeout: CASE_TIMEOUT, todo: "a world Script's browser option does not stay for the next world, as in X_ITE" }, async t =>
       {
-         const page = await open (backend, { scripts: "true" });
+         const page = await open (backend, { scripts: "true" }, t .signal);
 
          try
          {
@@ -171,9 +197,9 @@ describe ("oit 01", { skip: Boolean (ONLY) }, () =>
          }
       });
 
-      test (`${backend}: the last one set is in force, the page's or a world Script's`, { timeout: CASE_TIMEOUT }, async () =>
+      test (`${backend}: the last one set is in force, the page's or a world Script's`, { timeout: CASE_TIMEOUT }, async t =>
       {
-         const page = await open (backend, { scripts: "true" });
+         const page = await open (backend, { scripts: "true" }, t .signal);
 
          try
          {
@@ -190,4 +216,28 @@ describe ("oit 01", { skip: Boolean (ONLY) }, () =>
          }
       });
    }
+
+   // When node:test cancels a test at its timeout, the test function runs on and its page draws on until the function
+   // ends. In a CI run (SwiftShader) the next test's page then did not start in 30 s. The page of a cancelled test closes.
+   test ("the page of a cancelled test closes", { timeout: CASE_TIMEOUT }, async () =>
+   {
+      const cancel = new AbortController ();
+      const page   = await open ("webgl2", { }, cancel .signal);
+      const closed = new Promise (resolve => page .context () .once ("close", resolve));
+
+      let timer;
+
+      cancel .abort ();
+
+      const result = await Promise .race ([ closed .then (() => "closed"),
+         new Promise (resolve => timer = setTimeout (resolve, 10_000, "open after 10 s")) ]);
+
+      clearTimeout (timer);
+
+      if (result !== "closed")
+         await page .context () .close ();
+
+      assert .equal (result, "closed", "the page of the cancelled test");
+      assert .ok (page .isClosed (), "the page is closed");
+   });
 });
