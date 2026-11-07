@@ -1,0 +1,114 @@
+#!/usr/bin/env python3
+"""Self-test of tools/secret_scan.py and the repository rules: python3 -I tools/test_secret_scan.py
+
+Makes a disposable Git repository in a temporary directory with this repository's .gitleaks.toml, plants synthetic
+values made at run time (random; no credential is stored in this file), and runs the scan in tree and history modes.
+It checks that the reviewed exceptions hold only for their exact case, and that a planted credential outside them is
+found by both scanners. Needs what tools/secret_scan.py needs (Gitleaks, TruffleHog, unshare -rn).
+"""
+import hashlib
+import os
+import secrets
+import shutil
+import string
+import subprocess
+import sys
+import tempfile
+import zlib
+from pathlib import Path
+
+ROOT = Path(__file__).resolve().parent.parent
+B62 = string.digits + string.ascii_uppercase + string.ascii_lowercase
+
+
+def b62(n, width):
+    s = ""
+    while n:
+        n, r = divmod(n, 62)
+        s = B62[r] + s
+    return s.rjust(width, "0")
+
+
+def github_token():
+    """A token in the GitHub classic-PAT format (30 random base62 characters and their CRC32 check). Not a real token."""
+    body = "".join(secrets.choice(B62) for _ in range(30))
+    return "ghp" + "_" + body + b62(zlib.crc32(body.encode()), 6)
+
+
+def run(repo, reviewed, mode):
+    p = subprocess.run([sys.executable, "-I", str(ROOT / "tools/secret_scan.py"), f"--{mode}", "--repo", str(repo),
+                        "--reviewed", str(reviewed)], capture_output=True, text=True, timeout=600)
+    rows = [line.split("\t") for line in p.stdout.splitlines() if line.startswith(("NEW\t", "reviewed\t"))]
+    return p.returncode, rows, p.stdout + p.stderr
+
+
+def main():
+    failures = []
+
+    def check(ok, what):
+        print(("PASS " if ok else "FAIL ") + what)
+        if not ok:
+            failures.append(what)
+
+    # The namespace the scanners run in has no outbound network (an IP literal: no DNS needed to try).
+    probe = "import socket; socket.create_connection(('192.0.2.1', 443), 3)"
+    net = subprocess.run(["unshare", "-rn", "--", sys.executable, "-I", "-c", probe], capture_output=True, text=True)
+    check(net.returncode != 0 and "unreachable" in net.stderr.lower(), "scanner namespace: outbound connection refused")
+
+    with tempfile.TemporaryDirectory(prefix="secret-scan-test-") as tmp:
+        repo = Path(tmp) / "repo"
+        repo.mkdir()
+        shutil.copy(ROOT / ".gitleaks.toml", repo / ".gitleaks.toml")
+        digest = hashlib.sha256(secrets.token_bytes(32)).hexdigest()
+        key = "".join(secrets.choice(B62) for _ in range(40))
+        token = github_token()
+        files = {
+            # N1: the reviewed shape, in a reviewed file: no finding.
+            "oracle/cm5-xml-baseline.json": f'{{"tokenHash":"{digest}"}}\n',
+            # P1: another key in the same reviewed file: a finding.
+            "oracle/cm5-css-baseline.json": f'{{"apiKey":"{key}"}}\n',
+            # P2: the reviewed shape in another file: a finding.
+            "oracle/other-baseline.json": f'{{"tokenHash":"{digest}"}}\n',
+            # P3: a credential-format token in source: both scanners.
+            "src/settings.rs": f'const TOKEN: &str = "{token}";\n',
+            # P4: the same token in a second file; the review list names only src/settings.rs.
+            "src/other.rs": f'const TOKEN: &str = "{token}";\n',
+        }
+        for name, body in files.items():
+            (repo / name).parent.mkdir(parents=True, exist_ok=True)
+            (repo / name).write_text(body)
+        env = {**os.environ, "GIT_AUTHOR_NAME": "t", "GIT_AUTHOR_EMAIL": "t@example.invalid",
+               "GIT_COMMITTER_NAME": "t", "GIT_COMMITTER_EMAIL": "t@example.invalid"}
+        for cmd in (["init", "-q"], ["add", "-A"], ["commit", "-q", "-m", "synthetic"]):
+            subprocess.run(["git", "-C", str(repo), *cmd], check=True, env=env)
+
+        reviewed = Path(tmp) / "reviewed.tsv"
+        token_sha = hashlib.sha256(token.encode()).hexdigest()
+        reviewed.write_text(f"Github\tsrc/settings.rs\t{token_sha}\tsynthetic test entry\n")
+
+        for mode in ("tree", "history"):
+            rc, rows, out = run(repo, reviewed, mode)
+            gl = {(r[3], r[4]) for r in rows if r[1] == "gitleaks"}
+            th = {(r[0], r[3], r[4]) for r in rows if r[1] == "trufflehog"}
+            check(rc == 1, f"{mode}: exit 1 with new findings (got {rc})")
+            check(not any(f == "oracle/cm5-xml-baseline.json" for _, f in gl), f"{mode}: N1 reviewed tokenHash not reported")
+            check(("generic-api-key", "oracle/cm5-css-baseline.json") in gl, f"{mode}: P1 other key in reviewed file found")
+            check(("generic-api-key", "oracle/other-baseline.json") in gl, f"{mode}: P2 tokenHash in other file found")
+            check(("github-pat", "src/settings.rs") in gl, f"{mode}: P3 gitleaks finds the token")
+            check(("github-pat", "src/other.rs") in gl, f"{mode}: P4 gitleaks finds the second copy")
+            check(("reviewed", "Github", "src/settings.rs") in th, f"{mode}: P3 trufflehog finds it; exact review applies")
+            check(("NEW", "Github", "src/other.rs") in th, f"{mode}: P4 same value, other path: NEW")
+            check(token not in out and key not in out and digest not in out, f"{mode}: no planted value in the output")
+
+        # Without the review entry the token is NEW in both files.
+        reviewed.write_text("")
+        rc, rows, _ = run(repo, reviewed, "tree")
+        check(sum(r[0] == "NEW" and r[1] == "trufflehog" and r[3] == "Github" for r in rows) == 2,
+              "tree: empty review list: trufflehog reports both copies NEW")
+
+    print(f"{'FAIL' if failures else 'PASS'}: {len(failures)} failed")
+    sys.exit(1 if failures else 0)
+
+
+if __name__ == "__main__":
+    main()

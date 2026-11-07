@@ -1,0 +1,19 @@
+# Gitleaks rules of this repository: the default rules, and one reviewed exception.
+# Run through tools/secret_scan.py (offline, redacted output). Review: docs/agents/secret-scan.md.
+title = "X_ITE_R secret scan"
+
+[extend]
+useDefault = true
+
+# Removed CodeMirror 5 baselines (deleted from master by #174; history only). Each token stream record has a
+# "tokenHash": the SHA-256 hex digest that oracle/cm5-modes-tokens.mjs made (`th.digest("hex")`). generic-api-key
+# reads the key name "tokenHash" as a credential name. The exception needs all three: the rule, one of the five
+# exact file paths, and a match that is exactly `"tokenHash":"<64 lowercase hex digits>"`. Any other key, value
+# shape or file still gives a finding.
+[[allowlists]]
+description = "CodeMirror 5 baseline tokenHash (SHA-256 hex digest), removed files"
+targetRules = ["generic-api-key"]
+condition = "AND"
+paths = ['''^oracle/cm5-(css|htmlmixed|javascript|vrml|xml)-baseline\.json$''']
+regexTarget = "match"
+regexes = ['''^tokenHash":"[0-9a-f]{64}"$''']
