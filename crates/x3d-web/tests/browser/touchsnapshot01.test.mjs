@@ -16,15 +16,20 @@ import { CASE_TIMEOUT, DESKTOP, ONLY, openPage } from "./runtime02_harness.mjs";
 import { fields, frames, touch } from "./runtime02_case.mjs";
 
 // Issue #472. Chromium delivers a DevTools touch event with two points as one `touchmove`, or, now and then, as two DOM
-// events 28 ms apart (touchdelivery.mjs): the first has the new position of one finger and the old of the other. The
-// page reads each `touchmove` whole, so a frame between the two halves drew the half step of the pinch: the last step
-// of this test ended with the fingers at 140 and 250 for one frame, and PLANE zoomed at the center 195 and then at 200,
-// which left x = -0.003346939 (reproduced by sending the halves as two events with frames between). The hosted runner's
-// SwiftShader draws a frame in 0.3 s, so a 28 ms gap holds a frame boundary about one run in ten. This is the delivery of
-// the browser, not the gesture the test is about (X_ITE, which handles each DOM event at once, would see the same
-// half step). The test holds the page's animation frames while it sends a two-finger event, until the page has received a
-// DOM touch event with every finger at its new position, so that the page draws no frame between the halves and a frame
-// sees the whole step. HOLD_LIMIT only bounds the wait: a step that never arrives whole fails the test.
+// events 28 ms apart (touchdelivery.mjs): the first has the new position of one finger and the old position of the other.
+// The page reads each `touchmove` whole, so a frame between the two halves draws the half step of the pinch. PLANE then
+// zooms at the center of the half step (195) and then at the center of the whole step (200), and the camera keeps the
+// offset. One cause gave both failures that CI showed: a split of the last step (fingers at 140 and 250 for one frame)
+// left x = -0.003346939 at the last assertion, and a split of the second step (fingers at 150 and 240 for one frame)
+// left x = -0.003572172 at the assertion "a centered pinch does not move the viewpoint". If the second finger moves
+// first, the sign of x is the other one. Both values were reproduced by sending the halves as two events with frames
+// between them. A split of the first step does no harm: it fixes no zoom mode.
+// The hosted runner's SwiftShader draws a frame in 0.3 s, so a 28 ms gap holds a frame boundary about one run in ten.
+// This is the delivery of the browser, not the gesture the test is about (X_ITE, which handles each DOM event at once,
+// would see the same half step). The test holds the page's animation frames while it sends a two-finger event, until the
+// page has received a DOM touch event with every finger at its new position, so that the page draws no frame between
+// the halves and a frame sees the whole step. The second case sends the second step as two halves on purpose, and
+// shows that the hold covers a split. HOLD_LIMIT only bounds the wait: a step that never arrives whole fails the test.
 const HOLD_LIMIT = 5000;
 
 // Sends a two-finger event with the page's frames held. `requestAnimationFrame` is wrapped for the hold only and restored
@@ -93,6 +98,18 @@ const touch2 = (page, type, points) => holdFrames (page, type, points, async () 
       type,
       touchPoints: points .map (([ x, y ], id) => ({ x, y, id, radiusX: 1, radiusY: 1, force: 1 })),
    });
+});
+
+// `touch2` for a step that arrives as two events: first the half step (`first`: some fingers new, the others old), then
+// the whole step. The page's frames are held, so the 60 ms between the two events is wall time.
+const touch2Split = (page, type, first, points) => holdFrames (page, type, points, async () =>
+{
+   const cdp  = page .cdp ??= await page .context () .newCDPSession (page);
+   const send = touchPoints => cdp .send ("Input.dispatchTouchEvent", { type, touchPoints: touchPoints .map (([ x, y ], id) => ({ x, y, id, radiusX: 1, radiusY: 1, force: 1 })) });
+
+   await send (first);
+   await page .waitForTimeout (60);
+   await send (points);
 });
 
 const WORLD = `#X3D V4.0 utf8
@@ -168,6 +185,47 @@ describe ("touch snapshot 01", { skip: Boolean (ONLY), timeout: CASE_TIMEOUT }, 
          assert .deepEqual (await position (page), [ 0, 0, 10 ], "the pinch ends where a pinch with both fingers moving ends");
 
          await touch (page, "touchEnd", [ [ 140, 150 ] ]);
+         await touch (page, "touchEnd", [ ]);
+      }
+      finally
+      {
+         await page .context () .close ();
+      }
+   });
+});
+
+describe ("touch snapshot 01, split second step", { skip: Boolean (ONLY), timeout: CASE_TIMEOUT }, () =>
+{
+   // Issue #472, the assertion "a centered pinch does not move the viewpoint" (x = -0.003572172 without the hold).
+   for (const [ name, first ] of [ [ "first finger", [ [ 150, 150 ], [ 240, 150 ] ] ], [ "second finger", [ [ 160, 150 ], [ 250, 150 ] ] ] ])
+   test (`a second pinch step that arrives as two events, the ${name} first, does not move the viewpoint`, async () =>
+   {
+      const page = await openPage ({ ... DESKTOP, hasTouch: true });
+
+      try
+      {
+         await page .evaluate (async text =>
+         {
+            const browser = document .querySelector ("x3d-canvas") .browser;
+
+            await browser .replaceWorld (await browser .createX3DFromString (text));
+         }, WORLD);
+
+         await frames (page, 3);
+
+         const A = [ [ 170, 150 ], [ 230, 150 ] ];
+
+         await touch (page, "touchStart", A .slice (0, 1));
+         await touch2 (page, "touchStart", A);
+         await frames (page, 2);
+
+         await touch2 (page, "touchMove", [ [ 160, 150 ], [ 240, 150 ] ]);
+         await frames (page, 3);
+         await touch2Split (page, "touchMove", first, [ [ 150, 150 ], [ 250, 150 ] ]);
+         await frames (page, 3);
+         assert .deepEqual (await position (page), [ 0, 0, 10 ], "a centered pinch does not move the viewpoint");
+
+         await touch (page, "touchEnd", [ [ 150, 150 ] ]);
          await touch (page, "touchEnd", [ ]);
       }
       finally
