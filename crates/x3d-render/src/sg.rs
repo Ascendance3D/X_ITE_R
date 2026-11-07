@@ -166,6 +166,16 @@ impl<'a> Sg<'a> {
         }
     }
 
+    /// Whether any of the SFNode fields `names` of `n` holds a node ([`Sg::node`] is `Some`): the same as
+    /// `names.iter().any(|f| self.node(n, f).is_some())` (a node's predefined field names are unique), in one pass
+    /// over the node's fields instead of one search per name.
+    pub fn any_node(&self, n: NodeId, names: &[&str]) -> bool {
+        self.rt.scene.node(n).fields.iter().any(|f| {
+            matches!(f.value, FieldValue::SFNode(Some(c)) if self.inner(c).is_some())
+                && names.contains(&f.name.as_str())
+        })
+    }
+
     pub fn nodes(&self, n: NodeId, name: &str) -> Vec<NodeId> {
         match self.value(n, name) {
             Some(FieldValue::MFNode(v)) => {
