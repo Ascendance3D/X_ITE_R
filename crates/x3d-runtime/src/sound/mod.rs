@@ -35,7 +35,7 @@ pub mod wave_shaper;
 use ops::{Arg, Op};
 use std::pin::Pin;
 use std::sync::Arc;
-use std::task::{Context as TaskContext, Poll};
+use std::task::{Context as TaskContext, Poll, Waker};
 use web_audio_api::context::{
     AudioContext, AudioContextOptions, BaseAudioContext, ConcreteBaseAudioContext,
     OfflineAudioContext,
@@ -312,23 +312,9 @@ fn param_name(name: &str) -> &'static str {
 /// The render quantum size of Web Audio.
 pub const RENDER_QUANTUM: usize = 128;
 
-fn noop_waker() -> std::task::Waker {
-    use std::task::{RawWaker, RawWakerVTable};
-
-    fn clone(_: *const ()) -> RawWaker {
-        RawWaker::new(std::ptr::null(), &VTABLE)
-    }
-    fn noop(_: *const ()) {}
-
-    static VTABLE: RawWakerVTable = RawWakerVTable::new(clone, noop, noop, noop);
-
-    unsafe { std::task::Waker::from_raw(RawWaker::new(std::ptr::null(), &VTABLE)) }
-}
-
 /// Wait for a future on this thread (the render thread wakes nobody; poll with short sleeps).
 fn block_on<F: std::future::Future + ?Sized>(mut f: Pin<&mut F>) -> F::Output {
-    let waker = noop_waker();
-    let mut cx = TaskContext::from_waker(&waker);
+    let mut cx = TaskContext::from_waker(Waker::noop());
 
     loop {
         if let Poll::Ready(v) = f.as_mut().poll(&mut cx) {
@@ -1916,8 +1902,7 @@ impl AudioEngine {
     pub fn arm(&mut self, quanta: &[usize]) {
         let Ctx::Offline(ctx) = &self.ctx else { return };
         let rate = ctx.sample_rate() as f64;
-        let waker = noop_waker();
-        let mut cx = TaskContext::from_waker(&waker);
+        let mut cx = TaskContext::from_waker(Waker::noop());
         let mut suspends: Vec<Pin<Box<dyn std::future::Future<Output = ()> + Send>>> = vec![];
 
         for &q in quanta {
