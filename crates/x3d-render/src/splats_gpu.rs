@@ -39,19 +39,37 @@ pub struct SplatInput<'a> {
     pub slot: Option<usize>,
 }
 
+/// A splat array on the GPU: a storage buffer, or on a downlevel device (WebGL2: no storage buffer in the vertex stage) a data
+/// texture that the vertex shader reads with textureLoad, as X_ITE keeps it (GaussianSplatsShape: RGB32F positions and
+/// scales, RGBA16F orientations, R16F opacities, an RGB16F array texture of spherical harmonics, all of width
+/// ceil (sqrt (count))).
+enum Res {
+    Buffer(wgpu::Buffer),
+    Texture(wgpu::Texture, wgpu::TextureView),
+}
+
+impl Res {
+    fn binding(&self) -> wgpu::BindingResource<'_> {
+        match self {
+            Res::Buffer(b) => b.as_entire_binding(),
+            Res::Texture(_, v) => wgpu::BindingResource::TextureView(v),
+        }
+    }
+}
+
 struct DataGpu {
-    positions: wgpu::Buffer,
-    orientations: wgpu::Buffer,
-    scales: wgpu::Buffer,
-    opacities: wgpu::Buffer,
-    sh: wgpu::Buffer,
+    positions: Res,
+    orientations: Res,
+    scales: Res,
+    opacities: Res,
+    sh: Res,
     used: u64,
     /// Keeps the data alive for the pointer key.
     _data: Rc<crate::splats::SplatData>,
 }
 
 struct IndexGpu {
-    buffer: wgpu::Buffer,
+    buffer: Res,
     /// The model-view matrix of the last sort (sortModelViewMatrix), `None` before the first.
     sorted_for: Option<[f32; 16]>,
     count: usize,
@@ -95,6 +113,8 @@ pub struct SplatGpu {
     scratch: SortScratch,
     /// Sorts run so far (for tests).
     pub sorts: usize,
+    /// The module is the downlevel one (data textures in place of storage buffers).
+    downlevel: bool,
 }
 
 fn between<'a>(source: &'a str, from: &str, to: &str) -> &'a str {
@@ -109,6 +129,13 @@ fn between<'a>(source: &'a str, from: &str, to: &str) -> &'a str {
 
 /// splats.wgsl with the frame structs, the tone map and the fog functions of x3d.wgsl filled in.
 pub fn assemble(logarithmic: bool) -> String {
+    assemble_for(logarithmic, false)
+}
+
+/// [`assemble`], and with `downlevel` the profile of a device without storage buffers in the vertex stage: the six splat
+/// arrays are data textures read with textureLoad at the texel of the array index (row-major, `u.counts.y` texels per row
+/// for the per-splat arrays and the index list, `u.counts.z` for the spherical harmonics), the layout of the arrays.
+pub fn assemble_for(logarithmic: bool, downlevel: bool) -> String {
     let x3d = include_str!("x3d.wgsl");
     let structs = between(x3d, "struct Light {", "struct DrawUniforms {");
     let tone = between(x3d, "// ToneMapping2.glsl linearToSRGB", "fn f_schlick(");
@@ -121,6 +148,51 @@ pub fn assemble(logarithmic: bool) -> String {
     let mut src = SPLATS_WGSL
         .replace("//@FRAME_STRUCTS@", structs)
         .replace("//@TONE_AND_FOG@", &format!("{tone}\n{fog}"));
+
+    if downlevel {
+        let mut patch = |a: &str, b: &str| {
+            assert_eq!(src.matches(a).count(), 1, "splat shader patch anchor {a:?}");
+            src = src.replacen(a, b, 1);
+        };
+
+        patch(
+            "@group(1) @binding(1) var<storage, read> positions: array<vec4<f32>>;\n\
+             @group(1) @binding(2) var<storage, read> orientations: array<vec4<f32>>;\n\
+             @group(1) @binding(3) var<storage, read> scales: array<vec4<f32>>;\n\
+             @group(1) @binding(4) var<storage, read> opacities: array<f32>;\n\
+             @group(1) @binding(5) var<storage, read> spherical_harmonics: array<vec4<f32>>;\n\
+             @group(1) @binding(6) var<storage, read> indices: array<u32>;\n",
+            "@group(1) @binding(1) var positions: texture_2d<f32>;\n\
+             @group(1) @binding(2) var orientations: texture_2d<f32>;\n\
+             @group(1) @binding(3) var scales: texture_2d<f32>;\n\
+             @group(1) @binding(4) var opacities: texture_2d<f32>;\n\
+             @group(1) @binding(5) var spherical_harmonics: texture_2d<f32>;\n\
+             @group(1) @binding(6) var indices: texture_2d<u32>;\n\
+             \n\
+             fn data_texel(i: u32) -> vec2<u32> {\n    return vec2<u32>(i % u.counts.y, i / u.counts.y);\n}\n",
+        );
+        patch(
+            "spherical_harmonics[(layer * width + texel.y) * width + texel.x].xyz",
+            "textureLoad(spherical_harmonics, vec2<u32>(texel.x, layer * width + texel.y), 0).xyz",
+        );
+        patch("indices[ii]", "textureLoad(indices, data_texel(ii), 0).x");
+        patch(
+            "positions[index].xyz",
+            "textureLoad(positions, data_texel(index), 0).xyz",
+        );
+        patch(
+            "orientations[index]",
+            "textureLoad(orientations, data_texel(index), 0)",
+        );
+        patch(
+            "scales[index].xyz",
+            "textureLoad(scales, data_texel(index), 0).xyz",
+        );
+        patch(
+            "opacities[index]",
+            "textureLoad(opacities, data_texel(index), 0).x",
+        );
+    }
 
     if logarithmic {
         // The Logarithmic include of GaussianSplats.vs.js (`logarithmic (gl_Position)`) and .fs.js (`logarithmic ()`):
@@ -183,6 +255,96 @@ fn storage(device: &wgpu::Device, label: &str, bytes: &[u8]) -> wgpu::Buffer {
     buffer
 }
 
+/// A data texture of `width` texels per row holding `values` (`channels` floats per texel, `Rgba32Float` or `R32Float`),
+/// padded with zeros to whole rows; one row of one texel when empty.
+fn data_texture(
+    device: &wgpu::Device,
+    queue: &wgpu::Queue,
+    label: &str,
+    values: &[f32],
+    channels: usize,
+    width: usize,
+) -> Res {
+    let width = width.max(1);
+    let texels = values.len() / channels;
+    let rows = texels.div_ceil(width).max(1);
+    let mut padded = values.to_vec();
+    padded.resize(width * rows * channels, 0.0);
+    texture_with(
+        device,
+        queue,
+        label,
+        bytemuck::cast_slice(&padded),
+        if channels == 4 {
+            wgpu::TextureFormat::Rgba32Float
+        } else {
+            wgpu::TextureFormat::R32Float
+        },
+        width,
+        rows,
+    )
+}
+
+fn texture_with(
+    device: &wgpu::Device,
+    queue: &wgpu::Queue,
+    label: &str,
+    bytes: &[u8],
+    format: wgpu::TextureFormat,
+    width: usize,
+    rows: usize,
+) -> Res {
+    let size = wgpu::Extent3d {
+        width: width as u32,
+        height: rows as u32,
+        depth_or_array_layers: 1,
+    };
+    let texture = device.create_texture(&wgpu::TextureDescriptor {
+        label: Some(label),
+        size,
+        mip_level_count: 1,
+        sample_count: 1,
+        dimension: wgpu::TextureDimension::D2,
+        format,
+        usage: wgpu::TextureUsages::TEXTURE_BINDING | wgpu::TextureUsages::COPY_DST,
+        view_formats: &[],
+    });
+    write_texture(queue, &texture, bytes, format, width, rows);
+    let view = texture.create_view(&wgpu::TextureViewDescriptor::default());
+    Res::Texture(texture, view)
+}
+
+fn write_texture(
+    queue: &wgpu::Queue,
+    texture: &wgpu::Texture,
+    bytes: &[u8],
+    format: wgpu::TextureFormat,
+    width: usize,
+    rows: usize,
+) {
+    let texel = format.block_copy_size(None).unwrap_or(4) as usize;
+    queue.write_texture(
+        wgpu::TexelCopyTextureInfo {
+            texture,
+            mip_level: 0,
+            origin: wgpu::Origin3d::ZERO,
+            aspect: wgpu::TextureAspect::All,
+        },
+        bytes,
+        wgpu::TexelCopyBufferLayout {
+            offset: 0,
+            bytes_per_row: Some((width * texel) as u32),
+            rows_per_image: Some(rows as u32),
+        },
+        wgpu::Extent3d {
+            width: width as u32,
+            height: rows as u32,
+            depth_or_array_layers: 1,
+        },
+    );
+    crate::transfer::upload(crate::transfer::Kind::Other, bytes.len());
+}
+
 /// `values` with `per` floats per element padded to four.
 fn pad4(values: &[f32], per: usize) -> Vec<f32> {
     let mut out = Vec::with_capacity(values.len() / per * 4);
@@ -223,7 +385,9 @@ impl SplatGpu {
     }
 
     fn ensure_module(&mut self, device: &wgpu::Device, logarithmic: bool) {
-        if self.module.is_some() && self.module_log == logarithmic {
+        let downlevel = crate::gpu::is_downlevel(device);
+
+        if self.module.is_some() && self.module_log == logarithmic && self.downlevel == downlevel {
             return;
         }
 
@@ -231,18 +395,40 @@ impl SplatGpu {
         self.pipelines.clear();
         self.groups.clear();
         self.module_log = logarithmic;
+        // Another profile: the data sets and index lists of the other resource kind go too.
+        if self.downlevel != downlevel {
+            self.data.clear();
+            self.indices.clear();
+        }
+        self.downlevel = downlevel;
 
+        // The frame structs come from x3d.wgsl: on a downlevel device the frame group binds the shorter downlevel frame
+        // block (as volume_gpu.rs).
         let module = device.create_shader_module(wgpu::ShaderModuleDescriptor {
             label: Some("splats"),
-            source: wgpu::ShaderSource::Wgsl(assemble(logarithmic).into()),
+            source: wgpu::ShaderSource::Wgsl(
+                crate::gpu::wgsl_for(device, &assemble_for(logarithmic, downlevel)).into(),
+            ),
         });
         let storage_entry = |binding: u32| wgpu::BindGroupLayoutEntry {
             binding,
             visibility: wgpu::ShaderStages::VERTEX,
-            ty: wgpu::BindingType::Buffer {
-                ty: wgpu::BufferBindingType::Storage { read_only: true },
-                has_dynamic_offset: false,
-                min_binding_size: None,
+            ty: if !downlevel {
+                wgpu::BindingType::Buffer {
+                    ty: wgpu::BufferBindingType::Storage { read_only: true },
+                    has_dynamic_offset: false,
+                    min_binding_size: None,
+                }
+            } else {
+                wgpu::BindingType::Texture {
+                    sample_type: if binding == 6 {
+                        wgpu::TextureSampleType::Uint
+                    } else {
+                        wgpu::TextureSampleType::Float { filterable: false }
+                    },
+                    view_dimension: wgpu::TextureViewDimension::D2,
+                    multisampled: false,
+                }
             },
             count: None,
         };
@@ -309,33 +495,95 @@ impl SplatGpu {
             let data = &d.data;
 
             // The data set.
+            // A data set whose data textures exceed the device's 2D texture size (WebGL2 guarantees 2048) is not drawn on a
+            // downlevel device: the texture could not be made.
+            if self.downlevel {
+                let limit = device.limits().max_texture_dimension_2d as usize;
+                let rows = data.count.div_ceil(data.width.max(1));
+                let sh_rows = data.sh.texels.len() / 4 / data.sh.width.max(1);
+
+                if data.width > limit || rows > limit || data.sh.width > limit || sh_rows > limit {
+                    continue;
+                }
+            }
+
+            if !self.data.contains_key(&data_key) && self.downlevel {
+                let w = data.width;
+                let g = DataGpu {
+                    positions: data_texture(
+                        device,
+                        queue,
+                        "splat positions",
+                        &pad4(&data.positions, 3),
+                        4,
+                        w,
+                    ),
+                    orientations: data_texture(
+                        device,
+                        queue,
+                        "splat orientations",
+                        &data.orientations,
+                        4,
+                        w,
+                    ),
+                    scales: data_texture(
+                        device,
+                        queue,
+                        "splat scales",
+                        &pad4(&data.scales, 3),
+                        4,
+                        w,
+                    ),
+                    opacities: data_texture(
+                        device,
+                        queue,
+                        "splat opacities",
+                        &data.opacities,
+                        1,
+                        w,
+                    ),
+                    // The layers of X_ITE's array texture one under the other: `sh.width` texels per row.
+                    sh: data_texture(
+                        device,
+                        queue,
+                        "splat spherical harmonics",
+                        &data.sh.texels,
+                        4,
+                        data.sh.width,
+                    ),
+                    used: frame_no,
+                    _data: d.data.clone(),
+                };
+                self.data.insert(data_key, g);
+            }
+
             if !self.data.contains_key(&data_key) {
                 let g = DataGpu {
-                    positions: storage(
+                    positions: Res::Buffer(storage(
                         device,
                         "splat positions",
                         bytemuck::cast_slice(&pad4(&data.positions, 3)),
-                    ),
-                    orientations: storage(
+                    )),
+                    orientations: Res::Buffer(storage(
                         device,
                         "splat orientations",
                         bytemuck::cast_slice(&data.orientations),
-                    ),
-                    scales: storage(
+                    )),
+                    scales: Res::Buffer(storage(
                         device,
                         "splat scales",
                         bytemuck::cast_slice(&pad4(&data.scales, 3)),
-                    ),
-                    opacities: storage(
+                    )),
+                    opacities: Res::Buffer(storage(
                         device,
                         "splat opacities",
                         bytemuck::cast_slice(&data.opacities),
-                    ),
-                    sh: storage(
+                    )),
+                    sh: Res::Buffer(storage(
                         device,
                         "splat spherical harmonics",
                         bytemuck::cast_slice(&data.sh.texels),
-                    ),
+                    )),
                     used: frame_no,
                     _data: d.data.clone(),
                 };
@@ -354,12 +602,27 @@ impl SplatGpu {
                 .is_some_and(|e| e.count == count);
 
             if fresh {
-                let buffer = device.create_buffer(&wgpu::BufferDescriptor {
-                    label: Some("splat indices"),
-                    size: ((count.max(1) * 4) as u64).next_multiple_of(4),
-                    usage: wgpu::BufferUsages::STORAGE | wgpu::BufferUsages::COPY_DST,
-                    mapped_at_creation: false,
-                });
+                let buffer = if self.downlevel {
+                    // The sorted list as an R32Uint texture of the data sets' row width, read at data_texel (ii).
+                    let w = data.width.max(1);
+                    let rows = count.div_ceil(w).max(1);
+                    texture_with(
+                        device,
+                        queue,
+                        "splat indices",
+                        &vec![0u8; w * rows * 4],
+                        wgpu::TextureFormat::R32Uint,
+                        w,
+                        rows,
+                    )
+                } else {
+                    Res::Buffer(device.create_buffer(&wgpu::BufferDescriptor {
+                        label: Some("splat indices"),
+                        size: ((count.max(1) * 4) as u64).next_multiple_of(4),
+                        usage: wgpu::BufferUsages::STORAGE | wgpu::BufferUsages::COPY_DST,
+                        mapped_at_creation: false,
+                    }))
+                };
                 self.indices.insert(
                     index_key,
                     IndexGpu {
@@ -377,11 +640,30 @@ impl SplatGpu {
 
             if entry.sorted_for != Some(mv) {
                 let sorted = sort_indices(&data.positions, count, &mv, &mut self.scratch);
-                queue.write_buffer(&entry.buffer, 0, bytemuck::cast_slice(&sorted));
-                crate::transfer::upload(
-                    crate::transfer::Kind::Other,
-                    std::mem::size_of_val(sorted.as_slice()),
-                );
+
+                match &entry.buffer {
+                    Res::Buffer(b) => {
+                        queue.write_buffer(b, 0, bytemuck::cast_slice(&sorted));
+                        crate::transfer::upload(
+                            crate::transfer::Kind::Other,
+                            std::mem::size_of_val(sorted.as_slice()),
+                        );
+                    }
+                    Res::Texture(t, _) => {
+                        let w = data.width.max(1);
+                        let rows = count.div_ceil(w).max(1);
+                        let mut padded = sorted.to_vec();
+                        padded.resize(w * rows, 0);
+                        write_texture(
+                            queue,
+                            t,
+                            bytemuck::cast_slice(&padded),
+                            wgpu::TextureFormat::R32Uint,
+                            w,
+                            rows,
+                        );
+                    }
+                }
                 entry.sorted_for = Some(mv);
                 self.sorts += 1;
             }
@@ -657,27 +939,27 @@ impl SplatGpu {
                         },
                         wgpu::BindGroupEntry {
                             binding: 1,
-                            resource: data.positions.as_entire_binding(),
+                            resource: data.positions.binding(),
                         },
                         wgpu::BindGroupEntry {
                             binding: 2,
-                            resource: data.orientations.as_entire_binding(),
+                            resource: data.orientations.binding(),
                         },
                         wgpu::BindGroupEntry {
                             binding: 3,
-                            resource: data.scales.as_entire_binding(),
+                            resource: data.scales.binding(),
                         },
                         wgpu::BindGroupEntry {
                             binding: 4,
-                            resource: data.opacities.as_entire_binding(),
+                            resource: data.opacities.binding(),
                         },
                         wgpu::BindGroupEntry {
                             binding: 5,
-                            resource: data.sh.as_entire_binding(),
+                            resource: data.sh.binding(),
                         },
                         wgpu::BindGroupEntry {
                             binding: 6,
-                            resource: index.buffer.as_entire_binding(),
+                            resource: index.buffer.binding(),
                         },
                     ];
                     let group = device.create_bind_group(&wgpu::BindGroupDescriptor {

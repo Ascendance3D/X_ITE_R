@@ -94,3 +94,43 @@ fn every_downlevel_uniform_block_fits_in_16_kib() {
         }
     }
 }
+
+#[test]
+fn splats_wgsl_downlevel_reads_data_textures_and_is_valid() {
+    // GaussianSplats on WebGL2: the full profile reads six storage buffers in the vertex stage, which wgpu's GL backend
+    // refuses (DownlevelFlags::VERTEX_STORAGE). The downlevel profile reads data textures and the downlevel frame block.
+    let caps = naga::valid::Capabilities::all() - naga::valid::Capabilities::CUBE_ARRAY_TEXTURES;
+
+    for logarithmic in [false, true] {
+        let full = x3d_render::splats_gpu::assemble_for(logarithmic, false);
+        assert_eq!(full.matches("var<storage, read>").count(), 6);
+
+        let s = downlevel_wgsl(&x3d_render::splats_gpu::assemble_for(logarithmic, true));
+
+        assert!(!s.contains("var<storage"), "a storage buffer is left");
+        assert_eq!(s.matches("textureLoad(").count(), 6, "{logarithmic}");
+        assert!(s.contains("var indices: texture_2d<u32>;"));
+        validate(&s).unwrap_or_else(|e| panic!("logarithmic {logarithmic}: {e}"));
+
+        let module = naga::front::wgsl::parse_str(&s).unwrap();
+        naga::valid::Validator::new(naga::valid::ValidationFlags::all(), caps)
+            .validate(&module)
+            .unwrap();
+        for (_, var) in module.global_variables.iter() {
+            if var.space == naga::AddressSpace::Uniform {
+                let size = module.types[var.ty].inner.size(module.to_ctx());
+                assert!(
+                    size as usize <= DOWNLEVEL_UNIFORM_BLOCK,
+                    "uniform {:?} has {size} bytes",
+                    var.name
+                );
+            }
+        }
+    }
+
+    // The full profile is unchanged by the downlevel patch.
+    assert_eq!(
+        x3d_render::splats_gpu::assemble_for(false, false),
+        x3d_render::splats_gpu::assemble(false)
+    );
+}
