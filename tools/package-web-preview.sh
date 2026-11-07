@@ -29,6 +29,9 @@ if [[ -e "$dir" || -e "$out/$release.tar.gz" ]]; then
   exit 1
 fi
 
+# The crate notices are generated; a stale file must not ship.
+python3 -I -B tools/third_party_notices.py --check
+
 commit=$(git rev-parse HEAD)
 epoch=$(git log -1 --format=%ct HEAD)
 cargo_home=${CARGO_HOME:-$HOME/.cargo}
@@ -72,6 +75,7 @@ mkdir -p "$dir/docs"
 git show "$commit:$web/API.md" > "$dir/docs/API.md"
 git show "$commit:LICENSE" > "$dir/LICENSE"
 git show "$commit:THIRD_PARTY_NOTICES.md" > "$dir/THIRD_PARTY_NOTICES.md"
+git show "$commit:THIRD_PARTY_CRATES.md" > "$dir/THIRD_PARTY_CRATES.md"
 mv "$dir/preview/DEPLOY.md" "$dir/README.md"
 mv "$dir/preview/COMPATIBILITY.md" "$dir/COMPATIBILITY.md"
 mv "$dir/preview/htaccess.example" "$dir/htaccess.example"
