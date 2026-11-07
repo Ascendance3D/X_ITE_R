@@ -323,8 +323,12 @@ jobs:
         if: success() || failure()
         continue-on-error: true
         run: |
-          cargo clippy --release --workspace --all-targets --features r0-2-c-tests/future_gate,x3d-http/test-server --message-format=json > clippy.json
-          python3 -I -B tools/clippy_identity.py compare tools/clippy-baseline/native.jsonl clippy.json --github > clippy-identity.txt
+          # A failed Clippy run is still compared, marked incomplete: a diagnostic it did not report is not "removed".
+          status=0
+          cargo clippy --release --workspace --all-targets --features r0-2-c-tests/future_gate,x3d-http/test-server --message-format=json > clippy.json || status=$?
+          incomplete=""
+          if [ "$status" -ne 0 ]; then incomplete="--incomplete"; fi
+          python3 -I -B tools/clippy_identity.py compare tools/clippy-baseline/native.jsonl clippy.json --github $incomplete > clippy-identity.txt
           grep '^::' clippy-identity.txt | head -50 || true
           { echo '### Clippy identity compare (native)'; echo '```'; grep -v '^::' clippy-identity.txt | head -300; echo '```'; } >> "$GITHUB_STEP_SUMMARY"
           head -1 clippy-identity.txt
