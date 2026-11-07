@@ -2,8 +2,11 @@
 //!
 //! X_ITE's `Perlin2.glsl.js` hashes with `fract (sin (dot (co, vec2 (12.9898, 78.233))) * 43758.5453)`. The value of `dot`
 //! depends on how the shader compiler evaluates it: two products and an add, or a fused multiply-add in one order or the
-//! other. `x3d.wgsl` writes `fma (co.y, 78.233, co.x * 12.9898)`. This test evaluates the argument and the whole
-//! `rand3` chain on the device for each WGSL form, and prints which CPU (IEEE binary32) form each device result equals.
+//! other. This test evaluates the argument, `rand1` and the `rand3 (co, 1, 0)` chain of `x3d.wgsl` (`rand3` is
+//! `rand1 (rand1 (rand1 (co), l), t)`, and `perlin3` calls it with dim 1 and time 0) on the device for four WGSL forms,
+//! and prints which CPU binary32 form each device argument equals. The CPU forms are references for the comparison;
+//! none of them is a required device result. The regression test of the production shader is
+//! `render_rea_b09_inputs.rs` (`texgen-params` against pinned X_ITE).
 //! The inputs are the lattice points of the TextureCoordinateGenerator NOISE modes and the inputs of the chain's later
 //! stages. Lines start with `diag: noise-dot` so that a job can pick them out.
 
@@ -35,24 +38,26 @@ const FORMS: &[(&str, &str)] = &[
     ("wgsl-mul-add", "co.x * 12.9898 + co.y * 78.233"),
 ];
 
-/// Evaluates `arg(co)` and the whole chain `rand1(rand1(rand1(co), 1), 0)` with `form` for each item on the device.
-fn run(
-    device: &wgpu::Device,
-    queue: &wgpu::Queue,
-    form: &str,
-    items: &[[u32; 2]],
-) -> (Vec<u32>, Vec<u32>) {
+/// The device bits of `arg(co)`, `rand1(co)` and `rand3(co, 1, 0)` with `form` for each item.
+struct Run {
+    arg: Vec<u32>,
+    rand1: Vec<u32>,
+    chain: Vec<u32>,
+}
+
+/// Evaluates `arg(co)`, `rand1(co)` and the chain `rand1(rand1(rand1(co), 1), 0)` with `form` for each item on the device.
+fn run(device: &wgpu::Device, queue: &wgpu::Queue, form: &str, items: &[[u32; 2]]) -> Run {
     let source = format!(
         "
 @group(0) @binding(0) var<storage, read> inp: array<vec2<u32>>;
-@group(0) @binding(1) var<storage, read_write> out: array<vec2<u32>>;
+@group(0) @binding(1) var<storage, read_write> out: array<vec4<u32>>;
 fn arg(co: vec2<f32>) -> f32 {{ return {form}; }}
 fn rand1(co: vec2<f32>) -> f32 {{ return fract(sin(arg(co)) * 43758.5453); }}
 @compute @workgroup_size(64) fn main(@builtin(global_invocation_id) id: vec3<u32>) {{
     let i = id.x;
     if (i >= arrayLength(&inp)) {{ return; }}
     let co = vec2<f32>(bitcast<f32>(inp[i].x), bitcast<f32>(inp[i].y));
-    out[i] = vec2<u32>(bitcast<u32>(arg(co)), bitcast<u32>(rand1(vec2<f32>(rand1(vec2<f32>(rand1(co), 1.0)), 0.0))));
+    out[i] = vec4<u32>(bitcast<u32>(arg(co)), bitcast<u32>(rand1(co)), bitcast<u32>(rand1(vec2<f32>(rand1(vec2<f32>(rand1(co), 1.0)), 0.0))), 0u);
 }}
 "
     );
@@ -68,7 +73,7 @@ fn rand1(co: vec2<f32>) -> f32 {{ return fract(sin(arg(co)) * 43758.5453); }}
         compilation_options: Default::default(),
         cache: None,
     });
-    let bytes = (items.len() * 8) as u64;
+    let bytes = (items.len() * 16) as u64;
     let make = |usage| {
         device.create_buffer(&wgpu::BufferDescriptor {
             label: None,
@@ -80,7 +85,8 @@ fn rand1(co: vec2<f32>) -> f32 {{ return fract(sin(arg(co)) * 43758.5453); }}
     let input = make(wgpu::BufferUsages::STORAGE | wgpu::BufferUsages::COPY_DST);
     let output = make(wgpu::BufferUsages::STORAGE | wgpu::BufferUsages::COPY_SRC);
     let read = make(wgpu::BufferUsages::MAP_READ | wgpu::BufferUsages::COPY_DST);
-    queue.write_buffer(&input, 0, bytemuck::cast_slice(items));
+    let input_bytes: &[u8] = bytemuck::cast_slice(items);
+    queue.write_buffer(&input, 0, input_bytes);
     let group = device.create_bind_group(&wgpu::BindGroupDescriptor {
         label: None,
         layout: &pipeline.get_bind_group_layout(0),
@@ -108,11 +114,13 @@ fn rand1(co: vec2<f32>) -> f32 {{ return fract(sin(arg(co)) * 43758.5453); }}
     slice.map_async(wgpu::MapMode::Read, |_| {});
     device.poll(wgpu::PollType::wait_indefinitely()).unwrap();
     let data = slice.get_mapped_range().unwrap();
-    let v = bytemuck::cast_slice::<u8, u32>(&data)[..items.len() * 2].to_vec();
-    (
-        v.iter().step_by(2).copied().collect(),
-        v.iter().skip(1).step_by(2).copied().collect(),
-    )
+    let v = &bytemuck::cast_slice::<u8, u32>(&data)[..items.len() * 4];
+    let lane = |k: usize| v.iter().skip(k).step_by(4).copied().collect();
+    Run {
+        arg: lane(0),
+        rand1: lane(1),
+        chain: lane(2),
+    }
 }
 
 /// The CPU forms of the argument.
@@ -160,7 +168,7 @@ fn noise_dot_forms() {
         .collect();
 
     for &(name, form) in FORMS {
-        let (args, _) = run(&d, &q, form, &free);
+        let args = run(&d, &q, form, &free).arg;
         let cells: Vec<String> = cpu_forms()
             .iter()
             .map(|(n, f)| {
@@ -183,8 +191,8 @@ fn noise_dot_forms() {
         let mut total = 0;
 
         for (s, next_y) in [(0usize, 1.0f32), (1, 0.0), (2, 0.0)] {
-            let (args, _) = run(&d, &q, form, &stage);
-            for (it, &g) in stage.iter().zip(&args) {
+            let r = run(&d, &q, form, &stage);
+            for (it, &g) in stage.iter().zip(&r.arg) {
                 let (x, y) = (f32::from_bits(it[0]), f32::from_bits(it[1]));
                 for (k, (_, f)) in cpu_forms().iter().enumerate() {
                     if f(x, y).to_bits() == g {
@@ -194,8 +202,7 @@ fn noise_dot_forms() {
             }
             total = stage.len();
             // The next stage's input: (rand1 (co), next_y) with the device's rand1 of this form.
-            let r1 = rand1_device(&d, &q, form, &stage);
-            stage = r1.iter().map(|&v| [v, next_y.to_bits()]).collect();
+            stage = r.rand1.iter().map(|&v| [v, next_y.to_bits()]).collect();
         }
 
         for (s, row) in equal.iter().enumerate() {
@@ -207,13 +214,8 @@ fn noise_dot_forms() {
             println!("diag: noise-dot {name} stage{} {}", s + 1, cells.join(" "));
         }
 
-        let (_, chain) = run(&d, &q, form, &lattice);
+        let chain = run(&d, &q, form, &lattice).chain;
         let hex: Vec<String> = chain.iter().map(|g| format!("{g:08x}")).collect();
         println!("diag: noise-dot {name} chain {}", hex.join(" "));
     }
-}
-
-/// `rand1(co)` of `form` on the device: `run` with `fract(sin(form) * 43758.5453)` as the argument returns it.
-fn rand1_device(d: &wgpu::Device, q: &wgpu::Queue, form: &str, items: &[[u32; 2]]) -> Vec<u32> {
-    run(d, q, &format!("fract(sin({form}) * 43758.5453)"), items).0
 }
