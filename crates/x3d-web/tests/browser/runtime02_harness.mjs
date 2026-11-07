@@ -66,6 +66,12 @@ const EVIDENCE = process .env .XR_WEB_EVIDENCE;
 export const ONLY     = process .env .XR_CASE;
 const SELECTED        = process .env .XR_CASES ? new Set (process .env .XR_CASES .split (",")) : null;
 
+// XR_FORCE_WEBGL2=1: every page of this harness starts without WebGPU (no `navigator.gpu`), so each <x3d-canvas> takes
+// the engine's own WebGL2 fallback, as on a browser without WebGPU. It runs the whole suite on the WebGL2 backend on
+// the same GPU. Off by default (CI runs WebGPU). Tests that assert WebGPU itself are expected to fail in this mode;
+// classify each failure, do not change a reference or a tolerance for it.
+export const FORCE_WEBGL2 = process .env .XR_FORCE_WEBGL2 === "1";
+
 // The recordings: the runtime 02 cases, the web resource fallback 01 cases (fallback01_case.mjs, recorded with
 // `--suite fallback01` into oracle/web-browser-fallback-01-baseline) and the web loadURL messages 01 cases
 // (loadurl01_case.mjs, `--suite loadurl01` into oracle/web-browser-loadurl-01-baseline), and the web data URL
@@ -652,7 +658,7 @@ async function logAdapter ()
          return i ? { vendor: i .vendor, architecture: i .architecture, device: i .device, description: i .description } : null;
       });
 
-      console .log (`WebGPU adapter: ${JSON .stringify (info) ?? "unknown"}`);
+      console .log (`WebGPU adapter: ${JSON .stringify (info) ?? "unknown"}${FORCE_WEBGL2 ? " (XR_FORCE_WEBGL2: test pages use WebGL2)" : ""}`);
       await evidence ("webgpu-adapter.json", JSON .stringify (info, null, 1) + "\n");
    }
    catch (error)
@@ -709,6 +715,9 @@ export async function openPage (contextOptions, { init, signal } = { })
    }
 
    await context .route (url => !allowed .some (origin => url .href .startsWith (origin)), route => route .abort ());
+
+   if (FORCE_WEBGL2)
+      await context .addInitScript (() => { delete Navigator .prototype .gpu; delete globalThis .WorkerNavigator ?.prototype .gpu; });
 
    if (init)
       await context .addInitScript (init);
