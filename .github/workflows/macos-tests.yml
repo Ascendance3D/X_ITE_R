@@ -87,16 +87,14 @@ env:
   #    negative base (a PR of issue #89), the cause of their differences on the virtualized device.
   #  - splats_in_logarithmic_depth_match_x_ite is no longer skipped: a flat-colour Background cube is scaled to the view
   #    (tests/background_ortho.rs), the cause of the missing Background of gs-ortho on the virtualized device.
+  #  - The six tests of issue #469 are no longer skipped (rea_batch07_vol_cases_match_x_ite, standard_and_log_match_x_ite,
+  #    rea_b24_anchor_collision_instanced_match_x_ite, log_shows_what_standard_cannot, rea_b07_vol_renders_match_x_ite,
+  #    rea_b09_inputs_renders_match_x_ite): their differences are hardware reference differences, and they compare with the
+  #    owner-approved Apple M1 recordings of pinned X_ITE (oracle/*-apple-m1-baseline, X3D_REFERENCE_PLATFORM=apple-m1).
   MACOS_HOSTED_SKIPS: >-
     test(late_connected_oscillator_keeps_its_phase)
     | test(same_rate_mp3_and_flac_are_bit_identical)
     | test(vrml_audio_matches_x_ite)
-    | test(rea_batch07_vol_cases_match_x_ite)
-    | test(standard_and_log_match_x_ite)
-    | test(rea_b24_anchor_collision_instanced_match_x_ite)
-    | test(log_shows_what_standard_cannot)
-    | test(rea_b07_vol_renders_match_x_ite)
-    | test(rea_b09_inputs_renders_match_x_ite)
 
 jobs:
   macos:
