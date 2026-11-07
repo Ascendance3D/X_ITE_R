@@ -146,11 +146,25 @@ def main():
         _, _, out = run(repo, reviewed, "history")
         check("NOT SCANNED\thistory: fixtures/long.txt" in out, "history: L line over 10 MiB is NOT SCANNED")
 
+        # Q: a non-ASCII .svg name (git quotes it unless -z): still scanned as a text copy.
+        (repo / "assets/café.svg").write_text(f"<svg><desc>{token}</desc></svg>\n")
+        git("add", "-A")
+        git("commit", "-q", "-m", "quoted name")
+        _, rows, _ = run(repo, reviewed, "tree")
+        check(any(r[1] == "gitleaks" and r[4] == "assets/café.svg" for r in rows), "tree: Q non-ASCII .svg is scanned")
+
+        # S: a shallow clone cannot give a history result (exit 2).
+        shallow = Path(tmp) / "shallow"
+        subprocess.run(["git", "clone", "-q", "--depth", "1", f"file://{repo}", str(shallow)], check=True)
+        shutil.copy(repo / ".gitleaks.toml", shallow / ".gitleaks.toml")
+        rc, _, _ = run(shallow, reviewed, "history")
+        check(rc == 2, f"history: S shallow clone stops with exit 2 (got {rc})")
+
         # Without the review entry the token is NEW in both files.
         reviewed.write_text("")
         rc, rows, _ = run(repo, reviewed, "tree")
         check({r[4] for r in rows if r[0] == "NEW" and r[1] == "trufflehog" and r[3] == "Github"}
-              == {"src/settings.rs", "src/other.rs", "assets/icon.svg"},
+              == {"src/settings.rs", "src/other.rs", "assets/icon.svg", "assets/café.svg"},
               "tree: empty review list: trufflehog reports every copy NEW")
 
     print(f"{'FAIL' if failures else 'PASS'}: {len(failures)} failed")

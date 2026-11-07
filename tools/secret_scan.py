@@ -174,8 +174,9 @@ def text_copies(repo, mode, config, reviewed, template):
     """Scan the BOTH_SKIP blobs (at HEAD, or every one in history) as .txt copies; findings name the real path."""
     git = ["git", "-C", str(repo)]
     if mode == "tree":
-        rows = subprocess.run(git + ["ls-tree", "-r", "HEAD"], capture_output=True, text=True, check=True).stdout
-        pairs = [(l.split("\t", 1)[1], l.split()[2]) for l in rows.splitlines() if l.split()[1] == "blob"]
+        # -z: paths unquoted (core.quotePath would quote non-ASCII names and end them with '"').
+        rows = subprocess.run(git + ["ls-tree", "-r", "-z", "HEAD"], capture_output=True, text=True, check=True).stdout
+        pairs = [(l.split("\t", 1)[1], l.split()[2]) for l in rows.split("\0") if l and l.split()[1] == "blob"]
     else:
         rows = subprocess.run(git + ["rev-list", "--all", "--objects"], capture_output=True, text=True, check=True).stdout
         pairs = [(l.split(" ", 1)[1], l.split(" ", 1)[0]) for l in rows.splitlines() if " " in l]
@@ -242,6 +243,13 @@ def export_head(repo, dest):
 
 
 def main():
+    try:
+        run()
+    except (subprocess.CalledProcessError, subprocess.TimeoutExpired, tarfile.TarError, OSError) as e:
+        die(f"{type(e).__name__}: {e}")
+
+
+def run():
     ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     ap.add_argument("--tree", action="store_true")
     ap.add_argument("--history", action="store_true")
@@ -259,6 +267,10 @@ def main():
         die(f"{config} not found")
     check_tools()
     modes = [m for m, on in (("tree", a.tree), ("history", a.history)) if on] or ["tree", "history"]
+    shallow = subprocess.run(["git", "-C", str(repo), "rev-parse", "--is-shallow-repository"], capture_output=True,
+                             text=True).stdout.strip()
+    if "history" in modes and shallow != "false":
+        die(f"the history scan needs a full clone (is-shallow-repository: {shallow or 'unknown'})")
 
     findings, unread, template = [], [], set() if a.template else None
     for mode in modes:
