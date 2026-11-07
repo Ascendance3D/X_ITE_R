@@ -736,9 +736,7 @@ pub fn js_int32(v: f64) -> i32 {
 mod tests {
     use super::*;
 
-    /// Issue #480: the page's Antialiased and Multisampling options are the world's (X_ITE has one BrowserOptions), so
-    /// a Script's Multisampling keeps 0 samples while the page's Antialiased is false, and a Script's Antialiased true
-    /// gives the page's Multisampling (pinned X_ITE 16.5.0 in Chrome: 0 and 4 samples).
+    /// Issue #480: a world Script's options are kept, in order, for the page; the page's own sets are not.
     #[test]
     fn script_options_go_back_to_the_page_in_order() {
         let mut b = BrowserOptions::new(512, 512);
@@ -761,6 +759,9 @@ mod tests {
         assert!(b.take_script_changes().is_empty());
     }
 
+    /// Issue #480: the page's Antialiased and Multisampling options are the world's (X_ITE has one BrowserOptions), so
+    /// a Script's Multisampling keeps 0 samples while the page's Antialiased is false, and a Script's Antialiased true
+    /// gives the page's Multisampling (pinned X_ITE 16.5.0 in Chrome: 0 and 4 samples).
     #[test]
     fn script_sampling_reads_the_page_options() {
         let mut b = BrowserOptions::new(512, 512);
