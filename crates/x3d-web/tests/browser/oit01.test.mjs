@@ -49,7 +49,7 @@ const attributes = ({ backend, extra }) =>
 };
 
 // `signal`: the test's signal; the page closes when the test is cancelled (openPage).
-async function open (backend, extra, signal)
+async function open (backend, extra = { }, signal)
 {
    const page = await openPage (DESKTOP, { init: `(${attributes .toString ()}) (${JSON .stringify ({ backend, extra })})`, signal });
 
@@ -68,7 +68,7 @@ async function open (backend, extra, signal)
 // A picture counts only when the state is the expected one: the new scene is the current scene (the same scene when no
 // world loads), the page's option has the expected value (when `option` is not null), and the engine has processed 2 frames since the load (the
 // world's Scripts have run their initialize and the rendering changes are applied). Then the picture must be the same
-// after one more processed frame. With no such picture in 20 frames, the case fails.
+// after one more processed frame (all RGBA bytes equal). With no such picture in 20 frames, the case fails.
 //
 // readPixels draws the current state into its own texture, so the canvas frames only let the world's events run. A
 // fixed 20 frames per picture made the WebGPU case with 7 pictures take 105 s to more than 180 s on the CI runners'
@@ -86,6 +86,7 @@ async function draw (page, { before = () => { }, world = WORLD, replace = false,
       const frame     = () => new Promise (r => requestAnimationFrame (r));
       const previous  = browser .currentScene;
 
+      // The pixels (RGBA, compared byte for byte for the stability) and the hash that the cases compare.
       const picture = async () =>
       {
          const pixels = await engine .readPixels ();
@@ -94,8 +95,10 @@ async function draw (page, { before = () => { }, world = WORLD, replace = false,
          for (let i = 0; i < pixels .length; i += 4)
             hash = (hash * 31 + pixels [i] + pixels [i + 1] * 3 + pixels [i + 2] * 7) % 1000003;
 
-         return hash;
+         return { pixels, hash };
       };
+
+      const same = (a, b) => a .pixels .length === b .pixels .length && a .pixels .every ((v, i) => v === b .pixels [i]);
 
       await (0, eval) (beforeText) (browser);
 
@@ -124,7 +127,7 @@ async function draw (page, { before = () => { }, world = WORLD, replace = false,
          processed: processed () - start,
       });
 
-      let hash = null, at = 0;
+      let shot = null, at = 0;
 
       for (let frames = 0; frames < 20; ++ frames)
       {
@@ -135,19 +138,19 @@ async function draw (page, { before = () => { }, world = WORLD, replace = false,
          if (!now .scene || !now .option || now .processed < 2)
             continue;
 
-         if (hash === null || now .processed === at)
+         if (shot === null || now .processed === at)
          {
-            hash ??= await picture ();
+            shot ??= await picture ();
             at   = now .processed;
             continue;
          }
 
          const next = await picture ();
 
-         if (next === hash)
-            return { hash, option: browser .getBrowserOption ("OrderIndependentTransparency"), backend: engine .backend, frames: frames + 1 };
+         if (same (next, shot))
+            return { hash: next .hash, option: browser .getBrowserOption ("OrderIndependentTransparency"), backend: engine .backend, frames: frames + 1 };
 
-         hash = next;
+         shot = next;
          at   = now .processed;
       }
 
@@ -281,6 +284,8 @@ describe ("oit 01", { skip: Boolean (ONLY) }, () =>
 
    // When node:test cancels a test at its timeout, the test function runs on and its page draws on until the function
    // ends. In a CI run (SwiftShader) the next test's page then did not start in 30 s. The page of a cancelled test closes.
+   // node:test cancels a test by aborting its signal (TestContext.signal, Node 24); this case aborts a signal of its own,
+   // because a case that times out fails. The path through a real timeout was checked apart (lane report).
    test ("the page of a cancelled test closes", { timeout: CASE_TIMEOUT }, async () =>
    {
       const cancel = new AbortController ();
