@@ -29,7 +29,7 @@ values in memory only, to hash them.
 
 | exit | meaning |
 | ---: | --- |
-| 0 | every finding is reviewed and every file was read |
+| 0 | every finding is reviewed and no file is NOT SCANNED. Files a tool leaves out by design (below) are `coverage` lines, not a failure: exit 0 is not full coverage |
 | 1 | at least one NEW finding |
 | 2 | tool error: missing tool, wrong version, no network namespace, a scanner failed or did not report its end |
 | 3 | files that TruffleHog could not read (`NOT SCANNED`); a coverage gap, not a pass. Exit 1 has precedence over 3 |
@@ -37,7 +37,7 @@ values in memory only, to hash them.
 TruffleHog leaves out files by its built-in extension list and by sniffed content type; the scan prints them as
 `coverage` lines. On 2026-11-07 that was 7,116 tracked files (mostly PNG, also 378 `.svg`, 376 `.gltf`, 47 `.glb`,
 fonts and audio) and 9,190 history files. Gitleaks' default allowlist also leaves out `.svg` and `.gltf` (and images).
-So the scan copies every `.svg` and `.gltf` blob (769 at HEAD, 696 in history) as a `.txt` file with a neutral first
+So the scan copies every `.svg` and `.gltf` blob (769 at HEAD; 770 path and blob pairs in history) as a `.txt` file with a neutral first
 line, scans the copies with both tools, and reports findings under the real path. The self-test checks that both
 tools find a token in an `.svg` this way. Binary media (images, video, audio, fonts) is content-scanned by neither
 tool. In history, a blob with a line over 10 MiB is reported NOT SCANNED, because TruffleHog skips the rest of such
@@ -59,6 +59,9 @@ There are no path exclusions. Each exception names an exact case:
   (the SHA-256 of the raw value). The same value in another file, or another value in the same file, is NEW. An
   `unreadable` entry covers one Git blob ID of a file that TruffleHog cannot read; a changed blob is NOT SCANNED again. Digests and blob IDs are written in 8-digit groups joined by `:`, so the list itself has no long hex run for a
   detector to match.
+
+A full run (both modes) lists `stale reviewed entry` lines for entries that no finding used; remove them in a
+review.
 
 To review a new TruffleHog finding, run with `--template FILE`. The file gets one line per new finding with the full
 value hash and `TODO classify`; it holds no value. Find the value in its blob and identify the structure around it

@@ -19,7 +19,8 @@ Exceptions, both exact:
 Output: per finding the tool, rule or detector, file, commit (12 digits), line, value length and the first 12 hex digits
 of the SHA-256 of the value. Values are read in memory only, to hash them; Gitleaks runs with --redact=100.
 
-Exit: 0 when every finding is reviewed and every file was read; 1 when there is a new finding; 2 on a tool error
+Exit: 0 when every finding is reviewed and no file was left NOT SCANNED (files a tool skips by design are coverage
+lines, not a failure; see docs/agents/secret-scan.md); 1 when there is a new finding; 2 on a tool error
 (missing tool, wrong version, no network namespace, a scanner that failed or did not report its end); 3 when files
 could not be read (listed as NOT SCANNED; a coverage gap, not a pass). Precedence: 2 stops the scan at once; else 1
 when there is a new finding, whether or not files were also NOT SCANNED; else 3.
@@ -157,16 +158,29 @@ def trufflehog(mode, target, cwd, reviewed, template):
     return out, sorted(unread)
 
 
+def written(repo, *pathspec):
+    """Every (path, blob ID) pair that some reachable commit wrote: the raw diff of each commit against each parent
+    (-m) and of each root commit (--root). Every path/blob pair of any reachable tree is written by at least one of
+    these diffs. --no-renames: a rename is a delete and an add, so the new path is listed with its blob."""
+    cmd = ["git", "-C", str(repo), "log", "--all", "-m", "--root", "--no-renames", "--no-abbrev", "--raw", "-z",
+           "--format=", "--", *pathspec]
+    tokens = subprocess.run(cmd, capture_output=True, text=True, check=True).stdout.split("\0")
+    pairs = set()
+    for head, path in zip(tokens, tokens[1:]):
+        # -z raw: ":<mode> <mode> <old blob> <new blob> <status>" NUL "<path>" NUL
+        fields = head.lstrip("\n").split()
+        if head.lstrip("\n").startswith(":") and len(fields) == 5 and fields[3] != "0" * 40:
+            pairs.add((path, fields[3]))
+    return pairs
+
+
 def blobs(repo, mode, path):
     """The Git blob IDs of `path`: at HEAD (tree), or every one it had in any commit (history)."""
     if mode == "tree":
-        cmd = ["git", "-C", str(repo), "rev-parse", f"HEAD:{path}"]
+        out = subprocess.run(["git", "-C", str(repo), "rev-parse", f"HEAD:{path}"], capture_output=True, text=True)
+        ids = {out.stdout.strip()}
     else:
-        # Raw lines are ":<mode> <mode> <old blob> <new blob> <status>\t<path>": field 3 is the blob a commit wrote.
-        # -m: a blob that only a merge commit wrote is listed too.
-        cmd = ["git", "-C", str(repo), "log", "--all", "-m", "--no-abbrev", "--raw", "--format=", "--", path]
-    out = subprocess.run(cmd, capture_output=True, text=True).stdout.split("\n")
-    ids = {line.split()[3] if mode == "history" else line for line in out if line.strip()}
+        ids = {oid for p, oid in written(repo, f":(literal){path}") if p == path}
     return sorted(i for i in ids if re.fullmatch("[0-9a-f]{40}", i) and i != "0" * 40)
 
 
@@ -178,37 +192,49 @@ def text_copies(repo, mode, config, reviewed, template):
         rows = subprocess.run(git + ["ls-tree", "-r", "-z", "HEAD"], capture_output=True, text=True, check=True).stdout
         pairs = [(l.split("\t", 1)[1], l.split()[2]) for l in rows.split("\0") if l and l.split()[1] == "blob"]
     else:
-        rows = subprocess.run(git + ["rev-list", "--all", "--objects"], capture_output=True, text=True, check=True).stdout
-        pairs = [(l.split(" ", 1)[1], l.split(" ", 1)[0]) for l in rows.splitlines() if " " in l]
+        # Not rev-list --objects: it names only one path for a blob that is at several paths.
+        pairs = written(repo)
     pairs = [(p, o) for p, o in pairs if p.lower().endswith(BOTH_SKIP)]
     names, findings, gap = {}, [], []
     if not pairs:
         return findings, gap, 0
     with tempfile.TemporaryDirectory(prefix="secret-scan-text-") as tmp:
-        for i, (path, oid) in enumerate(sorted(set(pairs))):
+        paths_of = {}
+        for path, oid in pairs:
+            paths_of.setdefault(oid, set()).add(path)
+        # One copy per blob; a finding in it is reported at every path that blob has.
+        for i, oid in enumerate(sorted(paths_of)):
             data = subprocess.run(git + ["cat-file", "blob", oid], capture_output=True, check=True).stdout
             name = f"t{i:06d}.txt"
             # A neutral first line: TruffleHog also skips by sniffed content type (an SVG with its xmlns header is an
             # image to it even as .txt). Line numbers of these findings are corrected by one below.
             Path(tmp, name).write_bytes(COPY_HEADER + data)
-            names[name] = path
+            names[name] = sorted(paths_of[oid])
         label = "git" if mode == "history" else None
         def fix_line(n):
             return n - 1 if isinstance(n, int) and n > 1 else n
 
+        def real_paths(reported):
+            # The scanners may write the copy as "t000001.txt", "./t000001.txt" or an absolute path; an unknown
+            # name is a tool error, never a silently wrong path.
+            base = os.path.basename(reported)
+            if base not in names:
+                die(f"a scanner reported an unknown text copy {reported!r}")
+            return names[base]
+
         for f in gitleaks("dir", ".", tmp, config):
-            f.update(file=names.get(f["file"], f["file"]), scan=label or "dir", via="text copy", line=fix_line(f["line"]))
-            findings.append(f)
+            for path in real_paths(f["file"]):
+                findings.append({**f, "file": path, "scan": label or "dir", "via": "text copy", "line": fix_line(f["line"])})
         th, unread = trufflehog("filesystem", ".", tmp, set(), None)
         for f in th:
-            f.update(file=names.get(f["file"], f["file"]), scan=label or "filesystem", via="text copy",
-                     line=fix_line(f["line"]))
-            f["reviewed"] = (f["rule"], f["file"], f["sha256"]) in reviewed
-            if template is not None and not f["reviewed"]:
-                template.add(f"{f['rule']}\t{f['file']}\t{grouped(f['sha256'])}\tTODO classify")
-            findings.append(f)
-        gap = [names.get(u, u) for u in unread]
-    return findings, gap, len(names)
+            for path in real_paths(f["file"]):
+                g = {**f, "file": path, "scan": label or "filesystem", "via": "text copy", "line": fix_line(f["line"])}
+                g["reviewed"] = (g["rule"], path, g["sha256"]) in reviewed
+                if template is not None and not g["reviewed"]:
+                    template.add(f"{g['rule']}\t{path}\t{grouped(g['sha256'])}\tTODO classify")
+                findings.append(g)
+        gap = [p for u in unread for p in real_paths(u)]
+    return findings, gap, len(pairs)
 
 
 def long_line_blobs(repo):
@@ -236,6 +262,10 @@ def export_head(repo, dest):
             for m in t.getmembers():
                 if m.name.startswith("/") or ".." in Path(m.name).parts or not (m.isfile() or m.isdir() or m.issym()):
                     die(f"git archive member {m.name!r} is not a plain repository path")
+                # A symlink must stay inside the export (the fallback extraction below has no filter to check it).
+                target = os.path.normpath(os.path.join(os.path.dirname(m.name), m.linkname)) if m.issym() else ""
+                if m.issym() and (os.path.isabs(m.linkname) or target == ".." or target.startswith("../")):
+                    die(f"git archive symlink {m.name!r} points outside the repository")
             try:
                 t.extractall(dest, filter="data")
             except TypeError:  # Python without tarfile extraction filters (before 3.12 and its backports)
@@ -272,7 +302,7 @@ def run():
     if "history" in modes and shallow != "false":
         die(f"the history scan needs a full clone (is-shallow-repository: {shallow or 'unknown'})")
 
-    findings, unread, template = [], [], set() if a.template else None
+    findings, unread, template, used = [], [], set() if a.template else None, set()
     for mode in modes:
         if mode == "history":
             findings += gitleaks("git", ".", repo, config)
@@ -291,6 +321,7 @@ def run():
         unread += [f"{mode}: {p} (text copy)" for p in extra_gap]
         for p in gap:
             ids = blobs(repo, mode, p)
+            used.update((UNREADABLE, p, i) for i in ids)
             if ids and all((UNREADABLE, p, i) in reviewed for i in ids):
                 continue
             unread.append(f"{mode}: {p}")
@@ -300,6 +331,7 @@ def run():
                     template.add(f"# {UNREADABLE}\t{p}\t(no Git blob found for this path; cannot be reviewed)")
 
     new = [f for f in findings if not f["reviewed"]]
+    used.update((f["rule"], f["file"], f["sha256"]) for f in findings if f["tool"] == "trufflehog")
     for f in findings:
         f.pop("sha256", None)
     for f in findings:
@@ -313,6 +345,10 @@ def run():
             listed = ", ".join(f"{e} {n}" for e, n in sorted(exts.items(), key=lambda x: -x[1]))
             print(f"coverage {'history' if mode == 'git' else 'tree'}: TruffleHog skipped {sum(exts.values())} files by"
                   f" its extension list (not content-scanned by TruffleHog): {listed}")
+    if modes == ["tree", "history"]:
+        # Informational: a reviewed entry that no finding or unread file of either scan used (the file or value is gone).
+        for d, p, v in sorted(reviewed - used):
+            print(f"stale reviewed entry\t{d}\t{p}\t{grouped(v)[:17]}")
     for mode in modes:
         n = [f for f in findings if f["scan"] in ({"git"} if mode == "history" else {"dir", "filesystem"})]
         print(f"summary {mode}: gitleaks {sum(f['tool'] == 'gitleaks' for f in n)} new; trufflehog "

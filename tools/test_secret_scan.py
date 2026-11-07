@@ -79,6 +79,12 @@ def main():
             "src/settings.rs": f'const TOKEN: &str = "{token}";\n',
             # G: a text format that TruffleHog skips by extension (.svg): Gitleaks must still find the token.
             "assets/icon.svg": f'<svg xmlns="http://www.w3.org/2000/svg"><desc>{token}</desc></svg>\n',
+            # D: the same .svg blob at a second path: the text copy names both paths.
+            "assets/dup.svg": f'<svg xmlns="http://www.w3.org/2000/svg"><desc>{token}</desc></svg>\n',
+            # X1-X3: near misses of the Gitleaks exception: a similar path, uppercase hex, 63 digits.
+            "oracle/cm5-xml-baseline.json.orig": f'{{"tokenHash":"{digest}"}}\n',
+            "oracle/cm5-vrml-baseline.json": f'{{"tokenHash":"{digest.upper()}"}}\n',
+            "oracle/cm5-javascript-baseline.json": f'{{"tokenHash":"{digest[:63]}"}}\n',
             # P4: the same token in a second file; the review list names only src/settings.rs.
             "src/other.rs": f'const TOKEN: &str = "{token}";\n',
         }
@@ -123,6 +129,12 @@ def main():
             check(("NEW", "Github", "src/other.rs") in th, f"{mode}: P4 same value, other path: NEW")
             check(("github-pat", "assets/icon.svg") in gl, f"{mode}: G gitleaks finds the token in a skipped .svg")
             check(("NEW", "Github", "assets/icon.svg") in th, f"{mode}: G trufflehog finds it in the .svg text copy")
+            check({("github-pat", "assets/dup.svg"), ("github-pat", "assets/icon.svg")} <= gl,
+                  f"{mode}: D one .svg blob at two paths: gitleaks names both")
+            check(("NEW", "Github", "assets/dup.svg") in th, f"{mode}: D trufflehog names the second path")
+            for x in ("oracle/cm5-xml-baseline.json.orig", "oracle/cm5-vrml-baseline.json",
+                      "oracle/cm5-javascript-baseline.json"):
+                check(("generic-api-key", x) in gl, f"{mode}: X near miss {x} is found")
             check(token not in out and key not in out and digest not in out, f"{mode}: no planted value in the output")
 
         # U: the reviewed list names only the first blob: history and tree both report the file NOT SCANNED.
@@ -164,7 +176,7 @@ def main():
         reviewed.write_text("")
         rc, rows, _ = run(repo, reviewed, "tree")
         check({r[4] for r in rows if r[0] == "NEW" and r[1] == "trufflehog" and r[3] == "Github"}
-              == {"src/settings.rs", "src/other.rs", "assets/icon.svg", "assets/café.svg"},
+              == {"src/settings.rs", "src/other.rs", "assets/icon.svg", "assets/dup.svg", "assets/café.svg"},
               "tree: empty review list: trufflehog reports every copy NEW")
 
     print(f"{'FAIL' if failures else 'PASS'}: {len(failures)} failed")
