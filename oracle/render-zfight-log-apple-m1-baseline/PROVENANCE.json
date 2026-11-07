@@ -38,5 +38,5 @@
   }
  },
  "size": "512x512",
- "note_paths": "machine paths in 'command' replaced by placeholders for this repository; the exact command is in the lane evidence"
+ "note_paths": "machine paths in 'command' are replaced by placeholders in this repository; the exact command is in the private lane report"
 }
