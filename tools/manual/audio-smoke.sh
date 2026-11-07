@@ -31,6 +31,7 @@ sink="$(timeout 10 pactl get-default-sink 2>/dev/null)" || skip "no PulseAudio/P
 [ -n "${WAYLAND_DISPLAY:-}${DISPLAY:-}" ] || skip "no display for x3d-view"
 echo "audio server: $(timeout 10 pactl info | sed -n 's/^Server Name: //p')"
 echo "default sink: $sink"
+timeout 10 pactl list short sources 2>/dev/null | cut -f2 | grep -qxF "$sink.monitor" || skip "the default sink has no monitor source ($sink.monitor)"
 
 view_bin="${X3D_VIEW:-}"
 if [ -z "$view_bin" ]; then
@@ -46,9 +47,16 @@ sleep 1
 timeout "$secs" "$view_bin" "$world" >"$tmp/view.out" 2>&1 &
 view=$!
 wait "$view" 2>/dev/null
+view_status=$?
 sleep 0.5
 kill "$rec" 2>/dev/null; wait "$rec" 2>/dev/null
 rec=""; view=""
+# 124: timeout ended the viewer, as planned. Any other status is the viewer's own failure.
+if [ "$view_status" -ne 0 ] && [ "$view_status" -ne 124 ]; then
+  echo "FAIL: x3d-view exited with status $view_status"
+  sed -n '1,60p' "$tmp/view.out"
+  exit 1
+fi
 
 python3 -I - "$tmp/cap.raw" "$rate" 880 "$sink" <<'PY'
 import array, math, sys
