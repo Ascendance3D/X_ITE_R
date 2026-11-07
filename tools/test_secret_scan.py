@@ -167,6 +167,17 @@ def main():
         _, rows, _ = run(repo, reviewed, "tree")
         check(any(r[1] == "gitleaks" and r[4] == "assets/café.svg" for r in rows), "tree: Q non-ASCII .svg is scanned")
 
+        # M: one commit that writes many paths (one starting with ":"): history lists every one of them.
+        from secret_scan import written
+        many = [f"many/f{i:02d}.txt" for i in range(12)] + [":colon start.txt"]
+        for n, name in enumerate(many):
+            (repo / name).parent.mkdir(parents=True, exist_ok=True)
+            (repo / name).write_text(f"value {n}\n")
+        git("add", "-A")
+        git("commit", "-q", "-m", "many paths")
+        listed = {p for p, _ in written(repo)}
+        check(set(many) <= listed, "history: M every path of a many-path commit is listed")
+
         # S: a shallow clone cannot give a history result (exit 2).
         shallow = Path(tmp) / "shallow"
         subprocess.run(["git", "clone", "-q", "--depth", "1", f"file://{repo}", str(shallow)], check=True)
