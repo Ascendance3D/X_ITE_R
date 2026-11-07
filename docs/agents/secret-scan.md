@@ -29,14 +29,14 @@ values in memory only, to hash them.
 
 | exit | meaning |
 | ---: | --- |
-| 0 | every finding is reviewed and no file is NOT SCANNED. Files a tool leaves out by design (below) are `coverage` lines, not a failure: exit 0 is not full coverage |
+| 0 | every finding is reviewed and no file is NOT SCANNED. Files a tool leaves out by design (below) are not a failure: exit 0 is not full coverage |
 | 1 | at least one NEW finding |
 | 2 | tool error: missing tool, wrong version, no network namespace, a scanner failed or did not report its end |
 | 3 | files that TruffleHog could not read (`NOT SCANNED`); a coverage gap, not a pass. Exit 1 has precedence over 3 |
 
 TruffleHog leaves out files by its built-in extension list and by sniffed content type; the scan prints them as
 `coverage` lines. On 2026-11-07 that was 7,116 tracked files (mostly PNG, also 378 `.svg`, 376 `.gltf`, 47 `.glb`,
-fonts and audio) and 9,190 history files. Gitleaks' default allowlist also leaves out `.svg` and `.gltf` (and images).
+fonts and audio) and 9,190 history files. Gitleaks' default allowlist also leaves out `.svg` and `.gltf` (and images); Gitleaks does not report what it leaves out, so only TruffleHog's skips are `coverage` lines.
 So the scan copies every `.svg` and `.gltf` blob (769 at HEAD; 770 path and blob pairs in history) as a `.txt` file with a neutral first
 line, scans the copies with both tools, and reports findings under the real path. The self-test checks that both
 tools find a token in an `.svg` this way. Binary media (images, video, audio, fonts) is content-scanned by neither
