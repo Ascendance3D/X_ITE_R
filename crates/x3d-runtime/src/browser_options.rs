@@ -493,7 +493,8 @@ impl BrowserOptions {
         true
     }
 
-    /// The options world Scripts set since the last call, in order.
+    /// The options world Scripts set since the last call, in order. The call empties the list: the caller (the page's
+    /// copy of the options) must apply what it takes. The list belongs to this world's options only.
     pub fn take_script_changes(&mut self) -> Vec<(&'static str, OptionValue)> {
         std::mem::take(&mut self.script_changes)
     }
@@ -745,17 +746,29 @@ mod tests {
         b.set_option("Multisampling", OptionValue::Int32(2));
         assert!(b.take_script_changes().is_empty());
 
+        // A failed set leaves nothing to take.
+        assert!(!b.set_script_option("NoSuchOption", OptionValue::Bool(true)));
+        assert!(b.take_script_changes().is_empty());
+
         b.set_script_option("OrderIndependentTransparency", OptionValue::Bool(true));
         b.set_script_option("Multisampling", OptionValue::Int32(4));
-        assert!(!b.set_script_option("NoSuchOption", OptionValue::Bool(true)));
+        b.set_script_option("Multisampling", OptionValue::Int32(2));
 
-        let names: Vec<_> = b
+        let changes: Vec<_> = b
             .take_script_changes()
             .into_iter()
-            .map(|(n, _)| n)
+            .map(|(n, v)| (n, v.as_f64()))
             .collect();
 
-        assert_eq!(names, ["OrderIndependentTransparency", "Multisampling"]);
+        // Every set, in order, with its value: the page applies them in order, so the last one is in force.
+        assert_eq!(
+            changes,
+            [
+                ("OrderIndependentTransparency", 1.0),
+                ("Multisampling", 4.0),
+                ("Multisampling", 2.0)
+            ]
+        );
         assert!(b.take_script_changes().is_empty());
     }
 
