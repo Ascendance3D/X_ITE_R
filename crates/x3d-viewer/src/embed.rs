@@ -343,6 +343,8 @@ impl EmbeddedViewer {
             self.leave();
             self.closed_prints.append(&mut c.rt.prints);
             self.detach_gpu(&mut c);
+            drop(c);
+            self.renderer.release_unreferenced();
         }
     }
 

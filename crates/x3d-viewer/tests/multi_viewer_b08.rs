@@ -843,12 +843,12 @@ fn resources_released_per_viewer() {
             }
         }
 
-        // The renderer drops what a world stopped using after KEEP_FRAMES (120) unused frames, checked every
-        // 30: right after a reload the old world's buffers are still cached (2 per reload alone, too).
+        // A world that goes releases what only the renderer still held (Renderer::release_unreferenced, #505):
+        // right after the reloads nothing of the old worlds is cached, before any KEEP_FRAMES aging.
         let after_reloads = vb.renderer().resource_counts();
         assert!(
-            after_reloads[0] > b_run[0],
-            "old buffers are cached for a while: {after_reloads:?}"
+            after_reloads.iter().zip(b_run.iter()).all(|(a, b)| a <= b),
+            "nothing of the old worlds is cached: {after_reloads:?} vs {b_run:?}"
         );
 
         for k in 0..200 {
