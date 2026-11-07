@@ -1303,14 +1303,6 @@ impl Session {
         crate::chain::delete_route(self.rt_mut(), id)
     }
 
-    fn route_nodes(&self, source: NodeId, destination: NodeId) -> Result<(), String> {
-        if !self.node_exists(source) || !self.node_exists(destination) {
-            return Err("node is not in the world".to_string());
-        }
-
-        Ok(())
-    }
-
     /// X3DNode.getNodeTypeName.
     pub fn type_name(&self, node: NodeId) -> Option<String> {
         crate::chain::type_name(self.rt(), node)

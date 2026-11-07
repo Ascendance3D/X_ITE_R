@@ -148,8 +148,6 @@ fn muladdmul(a: f32, b: f32, c: f32, d: f32) -> f32 {
 }
 
 impl SkM {
-    const IDENTITY: SkM = SkM([1.0, 0.0, 0.0, 0.0, 1.0, 0.0]);
-
     fn concat(a: &SkM, b: &SkM) -> SkM {
         let (a, b) = (&a.0, &b.0);
 
