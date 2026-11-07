@@ -702,7 +702,10 @@ export async function openPage (contextOptions, { init, signal } = { })
       if (signal .aborted)
          await close ();
       else
+      {
          signal .addEventListener ("abort", close, { once: true });
+         context .once ("close", () => signal .removeEventListener ("abort", close));
+      }
    }
 
    await context .route (url => !allowed .some (origin => url .href .startsWith (origin)), route => route .abort ());
