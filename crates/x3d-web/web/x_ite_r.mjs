@@ -5,7 +5,7 @@
 
 import init, {
    WebBrowser, parseFieldWithoutScene, printEmptyScene, configTable, htmlSupport, scriptOp,
-   chainExists, chainWorldGeneration, chainTakeReleasedNodes, chainFieldNames, chainFieldData, chainSetFieldData, chainTakeFieldChanges, chainObserveField,
+   chainExists, chainWorldGeneration, chainTakeReleasedNodes, chainFieldNames, chainFieldData, chainSetFieldData, chainTakeFieldChanges, chainTakeScriptOptions, chainObserveField,
    chainTypeName, chainNodeName, chainNamedNode, chainParseField, chainRootNodes, chainSetRootNodes, chainNodeValue, chainRoutes, chainGetRoute, chainAddRoute, chainDeleteRoute, chainFieldDefinitions,
 } from "./pkg/x3d_web.js";
 import { createScriptRealm } from "./pkg/script.mjs";
@@ -129,6 +129,7 @@ const CHAIN_OPERATIONS = {
    fieldData: (scene, node, name) => chainFieldData (scene, node, name),
    setFieldData: (scene, node, name, data) => chainSetFieldData (scene, node, name, data),
    takeFieldChanges: scene => chainTakeFieldChanges (scene),
+   takeScriptOptions: () => chainTakeScriptOptions (),
    observeField: (scene, node, name, on) => chainObserveField (scene, node, name, on),
    typeName: (scene, node) => chainTypeName (scene, node),
    nodeName: (scene, node) => chainNodeName (scene, node),
@@ -6103,15 +6104,9 @@ class X3DBrowser
    {
       let changes;
 
-      try
-      {
-         changes = this .#engine ?.takeScriptOptions ();
-      }
-      catch
-      {
-         // Called from a callback inside the engine's own frame: the engine is borrowed, the next call takes them.
-         return;
-      }
+      // Inside a field callback that runs in the route chain, the engine is borrowed: the chain's own call takes the options
+      // the world's Scripts set so far, so the callback reads them at once, as with X_ITE's one BrowserOptions.
+      changes = this .#chain ? this .#chain .takeScriptOptions () : this .#engine ?.takeScriptOptions ();
 
       if (!changes ?.length)
          return;
@@ -6129,8 +6124,13 @@ class X3DBrowser
          fields .push ([ name, field ]);
       }
 
-      for (const [ name, field ] of fields)
-         this .#optionEffects (name, field);
+      // The effects need the engine itself, so in the route chain they wait for its end. They read each field's value then,
+      // so the last one set, the page's or a Script's, is in force.
+      this .#afterChain (() =>
+      {
+         for (const [ name, field ] of fields)
+            this .#optionEffects (name, field);
+      });
    }
 
    getBrowserOption (name)
