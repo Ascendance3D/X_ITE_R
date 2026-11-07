@@ -1,0 +1,4 @@
+rt-segmented-life oracle/synthetic-rea-b07-vol/stepped/rt-segmented-life.wrl oracle/synthetic-rea-b07-vol/stepped/rt-segmented-life.json 0
+rt-segmented-life oracle/synthetic-rea-b07-vol/stepped/rt-segmented-life.wrl oracle/synthetic-rea-b07-vol/stepped/rt-segmented-life.json 4
+rt-segmented oracle/synthetic-rea-b07-vol/stepped/rt-segmented.wrl oracle/synthetic-rea-b07-vol/stepped/rt-segmented.json 0
+rt-segmented oracle/synthetic-rea-b07-vol/stepped/rt-segmented.wrl oracle/synthetic-rea-b07-vol/stepped/rt-segmented.json 4

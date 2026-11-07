@@ -58,6 +58,13 @@ difference and the defect above are closed on the virtualized device). Eleven re
 | `render_rea_i92_items::rea_i92_render_items_match_x_ite` | i92-tr-opaque MSAA 4: 0.9%, max 64 |
 | `render_rea_b07_vol::rea_b07_vol_renders_match_x_ite` | 0.6% to 1.1% over 8, max 98 |
 | `rea_batch07_vol::rea_batch07_vol_cases_match_x_ite` | 14 failures, 0.6% over 8, max 112 |
+
+Resolved for the six tests of issue #469 (`depth` x2, `render_rea_b07_vol`, `render_rea_b09_inputs`, `rea_batch07_vol`,
+`rea_b24_anchor_collision_instanced`): they are hardware reference differences. Rust on Metal equals pinned X_ITE on ANGLE Metal
+on the physical M1, and the owner approved the Apple M1 recordings of pinned X_ITE (`oracle/*-apple-m1-baseline`, three
+identical runs, 2026-11-07). On macOS they compare with those recordings (`X3D_REFERENCE_PLATFORM=apple-m1`) and are no longer
+skipped. `log_shows_what_standard_cannot` reads its expected pixels from the platform's pinned `far-range` pictures. The NVIDIA
+references and the comparison limits are unchanged.
 | `rea_batch01::rea_batch01_cases_match_x_ite` | shading-wireframe MSAA 4: 0.9%, max 109 |
 | `rea_b24_anchor_collision_instanced::rea_b24_anchor_collision_instanced_match_x_ite` | 14 failures, 516 of 2601 pick probes differ |
 

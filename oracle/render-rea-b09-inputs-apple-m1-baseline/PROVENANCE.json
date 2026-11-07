@@ -1,0 +1,387 @@
+{
+ "angle_backend": "metal",
+ "chrome": "Google Chrome 156.0.8078.80",
+ "gl_renderer": "ANGLE (Apple, ANGLE Metal Renderer: Apple M1, Unspecified Version)",
+ "hardware": "Apple M1, macOS 27.0.1",
+ "kept": {
+  "attrib-dup-name.wrl.png": {
+   "png": "c3b5c059c504529a8721e7bf1324a0d6c94ed39b6cbe4bb5c7851453220dadba",
+   "runs_png_sha256": [
+    "c3b5c059c504529a8721e7bf1324a0d6c94ed39b6cbe4bb5c7851453220dadba",
+    "c3b5c059c504529a8721e7bf1324a0d6c94ed39b6cbe4bb5c7851453220dadba",
+    "c3b5c059c504529a8721e7bf1324a0d6c94ed39b6cbe4bb5c7851453220dadba"
+   ]
+  },
+  "attrib-float2-float4.wrl.png": {
+   "png": "a7303e5809d0afe4c101b36b10c9f96546c2304a151815df1c5840a98d31bd04",
+   "runs_png_sha256": [
+    "a7303e5809d0afe4c101b36b10c9f96546c2304a151815df1c5840a98d31bd04",
+    "a7303e5809d0afe4c101b36b10c9f96546c2304a151815df1c5840a98d31bd04",
+    "a7303e5809d0afe4c101b36b10c9f96546c2304a151815df1c5840a98d31bd04"
+   ]
+  },
+  "attrib-matrix4.wrl.png": {
+   "png": "d41eee061266f32d5e407b533f3f82b5c9da15ed14686bc5d40d4b3d4ab6c5e7",
+   "runs_png_sha256": [
+    "d41eee061266f32d5e407b533f3f82b5c9da15ed14686bc5d40d4b3d4ab6c5e7",
+    "d41eee061266f32d5e407b533f3f82b5c9da15ed14686bc5d40d4b3d4ab6c5e7",
+    "d41eee061266f32d5e407b533f3f82b5c9da15ed14686bc5d40d4b3d4ab6c5e7"
+   ]
+  },
+  "attrib-short-array.wrl.png": {
+   "png": "d43b558e87df58aab6665a8bfd3e49e0cfaa73fc9ae531fc3a94db517a7c15a4",
+   "runs_png_sha256": [
+    "d43b558e87df58aab6665a8bfd3e49e0cfaa73fc9ae531fc3a94db517a7c15a4",
+    "d43b558e87df58aab6665a8bfd3e49e0cfaa73fc9ae531fc3a94db517a7c15a4",
+    "d43b558e87df58aab6665a8bfd3e49e0cfaa73fc9ae531fc3a94db517a7c15a4"
+   ]
+  },
+  "attrib-tangent-fogdepth.wrl.png": {
+   "png": "d0443cbf76075ab40a3d58ba97bb4ca1fe5abdfe1ad3607a57123caa17a27abe",
+   "runs_png_sha256": [
+    "d0443cbf76075ab40a3d58ba97bb4ca1fe5abdfe1ad3607a57123caa17a27abe",
+    "d0443cbf76075ab40a3d58ba97bb4ca1fe5abdfe1ad3607a57123caa17a27abe",
+    "d0443cbf76075ab40a3d58ba97bb4ca1fe5abdfe1ad3607a57123caa17a27abe"
+   ]
+  },
+  "fogcoord-disabled-fog.wrl.png": {
+   "png": "eccb555cf26472411264aaf7cfdfbe84071a23804ed462698e2701d6c3007ff4",
+   "runs_png_sha256": [
+    "eccb555cf26472411264aaf7cfdfbe84071a23804ed462698e2701d6c3007ff4",
+    "eccb555cf26472411264aaf7cfdfbe84071a23804ed462698e2701d6c3007ff4",
+    "eccb555cf26472411264aaf7cfdfbe84071a23804ed462698e2701d6c3007ff4"
+   ]
+  },
+  "fogcoord-exponential.wrl.png": {
+   "png": "84fb4aa15fa6d06d0d07e43e20df4fc0951ca92b93e5480ae01692a96de0e4ad",
+   "runs_png_sha256": [
+    "84fb4aa15fa6d06d0d07e43e20df4fc0951ca92b93e5480ae01692a96de0e4ad",
+    "84fb4aa15fa6d06d0d07e43e20df4fc0951ca92b93e5480ae01692a96de0e4ad",
+    "84fb4aa15fa6d06d0d07e43e20df4fc0951ca92b93e5480ae01692a96de0e4ad"
+   ]
+  },
+  "fogcoord-geometries.wrl.png": {
+   "png": "3c887fc505f5d113b93828661a9bc992ed014f43628dc2f2a3f07948f6800314",
+   "runs_png_sha256": [
+    "3c887fc505f5d113b93828661a9bc992ed014f43628dc2f2a3f07948f6800314",
+    "3c887fc505f5d113b93828661a9bc992ed014f43628dc2f2a3f07948f6800314",
+    "3c887fc505f5d113b93828661a9bc992ed014f43628dc2f2a3f07948f6800314"
+   ]
+  },
+  "fogcoord-linear.wrl.png": {
+   "png": "a02613c506987ff0d1caf584b4dbb9d6929212b5f9b40189e6b51d7054a98960",
+   "runs_png_sha256": [
+    "a02613c506987ff0d1caf584b4dbb9d6929212b5f9b40189e6b51d7054a98960",
+    "a02613c506987ff0d1caf584b4dbb9d6929212b5f9b40189e6b51d7054a98960",
+    "a02613c506987ff0d1caf584b4dbb9d6929212b5f9b40189e6b51d7054a98960"
+   ]
+  },
+  "fogcoord-mixed.wrl.png": {
+   "png": "c55af924c315f310626311ac53bac9b9d2cc1bac3301e54a1ca7183768f4a797",
+   "runs_png_sha256": [
+    "c55af924c315f310626311ac53bac9b9d2cc1bac3301e54a1ca7183768f4a797",
+    "c55af924c315f310626311ac53bac9b9d2cc1bac3301e54a1ca7183768f4a797",
+    "c55af924c315f310626311ac53bac9b9d2cc1bac3301e54a1ca7183768f4a797"
+   ]
+  },
+  "fogcoord-nofog.wrl.png": {
+   "png": "eccb555cf26472411264aaf7cfdfbe84071a23804ed462698e2701d6c3007ff4",
+   "runs_png_sha256": [
+    "eccb555cf26472411264aaf7cfdfbe84071a23804ed462698e2701d6c3007ff4",
+    "eccb555cf26472411264aaf7cfdfbe84071a23804ed462698e2701d6c3007ff4",
+    "eccb555cf26472411264aaf7cfdfbe84071a23804ed462698e2701d6c3007ff4"
+   ]
+  },
+  "fogcoord-pbr.wrl.png": {
+   "png": "db99642ec0cfeca316f613a3bc4891ed235bd0ee56901dd0cec142f70df9dd61",
+   "runs_png_sha256": [
+    "db99642ec0cfeca316f613a3bc4891ed235bd0ee56901dd0cec142f70df9dd61",
+    "db99642ec0cfeca316f613a3bc4891ed235bd0ee56901dd0cec142f70df9dd61",
+    "db99642ec0cfeca316f613a3bc4891ed235bd0ee56901dd0cec142f70df9dd61"
+   ]
+  },
+  "fogcoord-short.wrl.png": {
+   "png": "79fd2e95d64ed99de5c395805e84bdb240fe4d7bd463de3a660838f89b80f5f0",
+   "runs_png_sha256": [
+    "79fd2e95d64ed99de5c395805e84bdb240fe4d7bd463de3a660838f89b80f5f0",
+    "79fd2e95d64ed99de5c395805e84bdb240fe4d7bd463de3a660838f89b80f5f0",
+    "79fd2e95d64ed99de5c395805e84bdb240fe4d7bd463de3a660838f89b80f5f0"
+   ]
+  },
+  "fogcoord-unlit.wrl.png": {
+   "png": "0141522c5364c3bbd0f25a66b5f0c4b17e966349df22b1d86bc23e1572f92b84",
+   "runs_png_sha256": [
+    "0141522c5364c3bbd0f25a66b5f0c4b17e966349df22b1d86bc23e1572f92b84",
+    "0141522c5364c3bbd0f25a66b5f0c4b17e966349df22b1d86bc23e1572f92b84",
+    "0141522c5364c3bbd0f25a66b5f0c4b17e966349df22b1d86bc23e1572f92b84"
+   ]
+  },
+  "gs-bboxdisplay-explicit.wrl.png": {
+   "png": "e1a668b403a142a0431d6798e79cdbe19e5b6452063d510fea79ec37d38a4dc9",
+   "runs_png_sha256": [
+    "e1a668b403a142a0431d6798e79cdbe19e5b6452063d510fea79ec37d38a4dc9",
+    "e1a668b403a142a0431d6798e79cdbe19e5b6452063d510fea79ec37d38a4dc9",
+    "e1a668b403a142a0431d6798e79cdbe19e5b6452063d510fea79ec37d38a4dc9"
+   ]
+  },
+  "gs-bboxdisplay.wrl.png": {
+   "png": "4ead51f2564fb9407f814c27d4d5a7ae3dfa008515356902db9030fc7dc04f0d",
+   "runs_png_sha256": [
+    "4ead51f2564fb9407f814c27d4d5a7ae3dfa008515356902db9030fc7dc04f0d",
+    "4ead51f2564fb9407f814c27d4d5a7ae3dfa008515356902db9030fc7dc04f0d",
+    "4ead51f2564fb9407f814c27d4d5a7ae3dfa008515356902db9030fc7dc04f0d"
+   ]
+  },
+  "gs-flags.wrl.png": {
+   "png": "7c9bc2a16c55236ef1a93ce5e7bdf216f442f1b1da70fa218a01c81cfd5b3639",
+   "runs_png_sha256": [
+    "7c9bc2a16c55236ef1a93ce5e7bdf216f442f1b1da70fa218a01c81cfd5b3639",
+    "7c9bc2a16c55236ef1a93ce5e7bdf216f442f1b1da70fa218a01c81cfd5b3639",
+    "7c9bc2a16c55236ef1a93ce5e7bdf216f442f1b1da70fa218a01c81cfd5b3639"
+   ]
+  },
+  "gs-localfog.wrl.png": {
+   "png": "8fcaa7c7503b86bbb02efab3a6249067f91b1db8e52cb39154edea087cb063c3",
+   "runs_png_sha256": [
+    "8fcaa7c7503b86bbb02efab3a6249067f91b1db8e52cb39154edea087cb063c3",
+    "8fcaa7c7503b86bbb02efab3a6249067f91b1db8e52cb39154edea087cb063c3",
+    "8fcaa7c7503b86bbb02efab3a6249067f91b1db8e52cb39154edea087cb063c3"
+   ]
+  },
+  "localfog-basic.wrl.png": {
+   "png": "c7cf322857b2bed726c786230c9be42155771850efe1eab3902ce0fc6bcbe272",
+   "runs_png_sha256": [
+    "c7cf322857b2bed726c786230c9be42155771850efe1eab3902ce0fc6bcbe272",
+    "c7cf322857b2bed726c786230c9be42155771850efe1eab3902ce0fc6bcbe272",
+    "c7cf322857b2bed726c786230c9be42155771850efe1eab3902ce0fc6bcbe272"
+   ]
+  },
+  "localfog-disabled.wrl.png": {
+   "png": "7d949175ec6a3f3bb7852f9c08366b030ea21ad27e1b9ba430edc2573217170f",
+   "runs_png_sha256": [
+    "7d949175ec6a3f3bb7852f9c08366b030ea21ad27e1b9ba430edc2573217170f",
+    "7d949175ec6a3f3bb7852f9c08366b030ea21ad27e1b9ba430edc2573217170f",
+    "7d949175ec6a3f3bb7852f9c08366b030ea21ad27e1b9ba430edc2573217170f"
+   ]
+  },
+  "localfog-fogcoord.wrl.png": {
+   "png": "c9f118951b06b2f76e862aa3ae2e61e5cbe07384836ee5a00555da47f2373d94",
+   "runs_png_sha256": [
+    "c9f118951b06b2f76e862aa3ae2e61e5cbe07384836ee5a00555da47f2373d94",
+    "c9f118951b06b2f76e862aa3ae2e61e5cbe07384836ee5a00555da47f2373d94",
+    "c9f118951b06b2f76e862aa3ae2e61e5cbe07384836ee5a00555da47f2373d94"
+   ]
+  },
+  "localfog-global.wrl.png": {
+   "png": "c294deb2de20136c7253590c0abecc3bbfb45ec5006f1043ae274d5bee48970e",
+   "runs_png_sha256": [
+    "c294deb2de20136c7253590c0abecc3bbfb45ec5006f1043ae274d5bee48970e",
+    "c294deb2de20136c7253590c0abecc3bbfb45ec5006f1043ae274d5bee48970e",
+    "c294deb2de20136c7253590c0abecc3bbfb45ec5006f1043ae274d5bee48970e"
+   ]
+  },
+  "localfog-nested.wrl.png": {
+   "png": "c9664a0c2a695bf3ba8c5bfcab2c9766029a11d3e1c3d56a713eeb40960a7cdd",
+   "runs_png_sha256": [
+    "c9664a0c2a695bf3ba8c5bfcab2c9766029a11d3e1c3d56a713eeb40960a7cdd",
+    "c9664a0c2a695bf3ba8c5bfcab2c9766029a11d3e1c3d56a713eeb40960a7cdd",
+    "c9664a0c2a695bf3ba8c5bfcab2c9766029a11d3e1c3d56a713eeb40960a7cdd"
+   ]
+  },
+  "localfog-nofog-range0.wrl.png": {
+   "png": "7d949175ec6a3f3bb7852f9c08366b030ea21ad27e1b9ba430edc2573217170f",
+   "runs_png_sha256": [
+    "7d949175ec6a3f3bb7852f9c08366b030ea21ad27e1b9ba430edc2573217170f",
+    "7d949175ec6a3f3bb7852f9c08366b030ea21ad27e1b9ba430edc2573217170f",
+    "7d949175ec6a3f3bb7852f9c08366b030ea21ad27e1b9ba430edc2573217170f"
+   ]
+  },
+  "localfog-pbr-tex.wrl.png": {
+   "png": "0a612984fcc73fceb2d8dc1a51001070bac086efff65a5f898c23473f1a042b3",
+   "runs_png_sha256": [
+    "0a612984fcc73fceb2d8dc1a51001070bac086efff65a5f898c23473f1a042b3",
+    "0a612984fcc73fceb2d8dc1a51001070bac086efff65a5f898c23473f1a042b3",
+    "0a612984fcc73fceb2d8dc1a51001070bac086efff65a5f898c23473f1a042b3"
+   ]
+  },
+  "localfog-start.wrl.png": {
+   "png": "0c75a9bad36ebbfcc520cb701e7041c788cc7e9b5dfea75cd382be730722afcd",
+   "runs_png_sha256": [
+    "0c75a9bad36ebbfcc520cb701e7041c788cc7e9b5dfea75cd382be730722afcd",
+    "0c75a9bad36ebbfcc520cb701e7041c788cc7e9b5dfea75cd382be730722afcd",
+    "0c75a9bad36ebbfcc520cb701e7041c788cc7e9b5dfea75cd382be730722afcd"
+   ]
+  },
+  "localfog-transparent.wrl.png": {
+   "png": "d050a59d9806e16b9b37e5b28532cb9979526414488ab058949501bb4fc6ec7a",
+   "runs_png_sha256": [
+    "d050a59d9806e16b9b37e5b28532cb9979526414488ab058949501bb4fc6ec7a",
+    "d050a59d9806e16b9b37e5b28532cb9979526414488ab058949501bb4fc6ec7a",
+    "d050a59d9806e16b9b37e5b28532cb9979526414488ab058949501bb4fc6ec7a"
+   ]
+  },
+  "localfog-twin.wrl.png": {
+   "png": "2afabe14471c385f7036a97b883d667ca5ebf5b156723934bf8dd1e4788769ad",
+   "runs_png_sha256": [
+    "2afabe14471c385f7036a97b883d667ca5ebf5b156723934bf8dd1e4788769ad",
+    "2afabe14471c385f7036a97b883d667ca5ebf5b156723934bf8dd1e4788769ad",
+    "2afabe14471c385f7036a97b883d667ca5ebf5b156723934bf8dd1e4788769ad"
+   ]
+  },
+  "multitex-channels.wrl.png": {
+   "png": "788e1f651250050493be38c89cb56fd85079b1831a402f1738df77e2cc7e237e",
+   "runs_png_sha256": [
+    "788e1f651250050493be38c89cb56fd85079b1831a402f1738df77e2cc7e237e",
+    "788e1f651250050493be38c89cb56fd85079b1831a402f1738df77e2cc7e237e",
+    "788e1f651250050493be38c89cb56fd85079b1831a402f1738df77e2cc7e237e"
+   ]
+  },
+  "phong-textures-mapping.wrl.png": {
+   "png": "2e3e9dc3756f212e9397a0d37400e35af31c7e45b1b224a10a9837cc51e67f2d",
+   "runs_png_sha256": [
+    "2e3e9dc3756f212e9397a0d37400e35af31c7e45b1b224a10a9837cc51e67f2d",
+    "2e3e9dc3756f212e9397a0d37400e35af31c7e45b1b224a10a9837cc51e67f2d",
+    "2e3e9dc3756f212e9397a0d37400e35af31c7e45b1b224a10a9837cc51e67f2d"
+   ]
+  },
+  "phong-textures-prims.wrl.png": {
+   "png": "a6ea9c0b914a2d4d26e9b16722cf42b809335af6ce99433b07d71a610ff49ee1",
+   "runs_png_sha256": [
+    "a6ea9c0b914a2d4d26e9b16722cf42b809335af6ce99433b07d71a610ff49ee1",
+    "a6ea9c0b914a2d4d26e9b16722cf42b809335af6ce99433b07d71a610ff49ee1",
+    "a6ea9c0b914a2d4d26e9b16722cf42b809335af6ce99433b07d71a610ff49ee1"
+   ]
+  },
+  "phong-textures-v33.wrl.png": {
+   "png": "2bca8b8af009a17b678d59c81d293e760dcbdced043fe85926e075be363a5833",
+   "runs_png_sha256": [
+    "2bca8b8af009a17b678d59c81d293e760dcbdced043fe85926e075be363a5833",
+    "2bca8b8af009a17b678d59c81d293e760dcbdced043fe85926e075be363a5833",
+    "2bca8b8af009a17b678d59c81d293e760dcbdced043fe85926e075be363a5833"
+   ]
+  },
+  "phong-textures.wrl.png": {
+   "png": "da91ff772e8bc8eaa80fd7b9573c92093017e9f59a4c80365fba232052e43423",
+   "runs_png_sha256": [
+    "da91ff772e8bc8eaa80fd7b9573c92093017e9f59a4c80365fba232052e43423",
+    "da91ff772e8bc8eaa80fd7b9573c92093017e9f59a4c80365fba232052e43423",
+    "da91ff772e8bc8eaa80fd7b9573c92093017e9f59a4c80365fba232052e43423"
+   ]
+  },
+  "tangent-gen-pbr.wrl.png": {
+   "png": "cbf7de2e520a1dae0caf0ca8cd9782ce94dbf5733ed6f26692b1cb7812a374d1",
+   "runs_png_sha256": [
+    "cbf7de2e520a1dae0caf0ca8cd9782ce94dbf5733ed6f26692b1cb7812a374d1",
+    "cbf7de2e520a1dae0caf0ca8cd9782ce94dbf5733ed6f26692b1cb7812a374d1",
+    "cbf7de2e520a1dae0caf0ca8cd9782ce94dbf5733ed6f26692b1cb7812a374d1"
+   ]
+  },
+  "tangent-gen-phong.wrl.png": {
+   "png": "3aa669b195d23b3994923bf073108d461297a6f580b58573300b74c5a7eeaea2",
+   "runs_png_sha256": [
+    "3aa669b195d23b3994923bf073108d461297a6f580b58573300b74c5a7eeaea2",
+    "3aa669b195d23b3994923bf073108d461297a6f580b58573300b74c5a7eeaea2",
+    "3aa669b195d23b3994923bf073108d461297a6f580b58573300b74c5a7eeaea2"
+   ]
+  },
+  "tangent-grids-pbr.wrl.png": {
+   "png": "ffefce95cb3f2beb1c8685f9802e2a468f2e094bf4eec98f911002520cd007e0",
+   "runs_png_sha256": [
+    "ffefce95cb3f2beb1c8685f9802e2a468f2e094bf4eec98f911002520cd007e0",
+    "ffefce95cb3f2beb1c8685f9802e2a468f2e094bf4eec98f911002520cd007e0",
+    "ffefce95cb3f2beb1c8685f9802e2a468f2e094bf4eec98f911002520cd007e0"
+   ]
+  },
+  "tangent-grids-phong.wrl.png": {
+   "png": "6f7037ac8c98023fa8227a925bef9f9736f6de8eaf81fc8ed8bbcdf00c403b89",
+   "runs_png_sha256": [
+    "6f7037ac8c98023fa8227a925bef9f9736f6de8eaf81fc8ed8bbcdf00c403b89",
+    "6f7037ac8c98023fa8227a925bef9f9736f6de8eaf81fc8ed8bbcdf00c403b89",
+    "6f7037ac8c98023fa8227a925bef9f9736f6de8eaf81fc8ed8bbcdf00c403b89"
+   ]
+  },
+  "tangent-pbr.wrl.png": {
+   "png": "4510cbb848d8bcb4e538e0697e0948279c79ee50b07d27b4282ec01b99f09375",
+   "runs_png_sha256": [
+    "4510cbb848d8bcb4e538e0697e0948279c79ee50b07d27b4282ec01b99f09375",
+    "4510cbb848d8bcb4e538e0697e0948279c79ee50b07d27b4282ec01b99f09375",
+    "4510cbb848d8bcb4e538e0697e0948279c79ee50b07d27b4282ec01b99f09375"
+   ]
+  },
+  "tangent-phong.wrl.png": {
+   "png": "877ee0507ff0a48f451b40eafdd9d06a957b11d8ad69dabf4e2f1ca324a6d9e9",
+   "runs_png_sha256": [
+    "877ee0507ff0a48f451b40eafdd9d06a957b11d8ad69dabf4e2f1ca324a6d9e9",
+    "877ee0507ff0a48f451b40eafdd9d06a957b11d8ad69dabf4e2f1ca324a6d9e9",
+    "877ee0507ff0a48f451b40eafdd9d06a957b11d8ad69dabf4e2f1ca324a6d9e9"
+   ]
+  },
+  "tangent-prims-pbr.wrl.png": {
+   "png": "bf0ed08b0565e11ae4a1d2b43abf2801aa3a659bfe3ac49a8ab831abd3d549ed",
+   "runs_png_sha256": [
+    "bf0ed08b0565e11ae4a1d2b43abf2801aa3a659bfe3ac49a8ab831abd3d549ed",
+    "bf0ed08b0565e11ae4a1d2b43abf2801aa3a659bfe3ac49a8ab831abd3d549ed",
+    "bf0ed08b0565e11ae4a1d2b43abf2801aa3a659bfe3ac49a8ab831abd3d549ed"
+   ]
+  },
+  "tangent-prims-phong.wrl.png": {
+   "png": "d438c46c3c92524181bfd5d8bf0db44a7fcfc2fde24cc3b96deaed99b7961f84",
+   "runs_png_sha256": [
+    "d438c46c3c92524181bfd5d8bf0db44a7fcfc2fde24cc3b96deaed99b7961f84",
+    "d438c46c3c92524181bfd5d8bf0db44a7fcfc2fde24cc3b96deaed99b7961f84",
+    "d438c46c3c92524181bfd5d8bf0db44a7fcfc2fde24cc3b96deaed99b7961f84"
+   ]
+  },
+  "texcoord-mapping.wrl.png": {
+   "png": "4c8cd2efb41eb07682cc17c9097feb507feab98fff369d52d2d16e85a957ba98",
+   "runs_png_sha256": [
+    "4c8cd2efb41eb07682cc17c9097feb507feab98fff369d52d2d16e85a957ba98",
+    "4c8cd2efb41eb07682cc17c9097feb507feab98fff369d52d2d16e85a957ba98",
+    "4c8cd2efb41eb07682cc17c9097feb507feab98fff369d52d2d16e85a957ba98"
+   ]
+  },
+  "texgen-modes.wrl.png": {
+   "png": "9f161f11d5e083033f5c7852038dca54797e1ee4b82726a59ecf8f969dadffff",
+   "runs_png_sha256": [
+    "9f161f11d5e083033f5c7852038dca54797e1ee4b82726a59ecf8f969dadffff",
+    "9f161f11d5e083033f5c7852038dca54797e1ee4b82726a59ecf8f969dadffff",
+    "9f161f11d5e083033f5c7852038dca54797e1ee4b82726a59ecf8f969dadffff"
+   ]
+  },
+  "texgen-params.wrl.png": {
+   "png": "8cef989069b251570629d953d2e93e316e72d37cc75f94f296ca30ee9846556d",
+   "runs_png_sha256": [
+    "8cef989069b251570629d953d2e93e316e72d37cc75f94f296ca30ee9846556d",
+    "8cef989069b251570629d953d2e93e316e72d37cc75f94f296ca30ee9846556d",
+    "8cef989069b251570629d953d2e93e316e72d37cc75f94f296ca30ee9846556d"
+   ]
+  },
+  "texgen-prims.wrl.png": {
+   "png": "fb47320a7d8fa65ff35635db4bb4e1c7ed39ba9bd36e63c333facc9b5df6773b",
+   "runs_png_sha256": [
+    "fb47320a7d8fa65ff35635db4bb4e1c7ed39ba9bd36e63c333facc9b5df6773b",
+    "fb47320a7d8fa65ff35635db4bb4e1c7ed39ba9bd36e63c333facc9b5df6773b",
+    "fb47320a7d8fa65ff35635db4bb4e1c7ed39ba9bd36e63c333facc9b5df6773b"
+   ]
+  },
+  "unlit-emissive-texture.wrl.png": {
+   "png": "be37f683c45b2b9dbe2294e8f0eeec57f3b536cf82e66938d0eb736c7be39813",
+   "runs_png_sha256": [
+    "be37f683c45b2b9dbe2294e8f0eeec57f3b536cf82e66938d0eb736c7be39813",
+    "be37f683c45b2b9dbe2294e8f0eeec57f3b536cf82e66938d0eb736c7be39813",
+    "be37f683c45b2b9dbe2294e8f0eeec57f3b536cf82e66938d0eb736c7be39813"
+   ]
+  }
+ },
+ "nvidia_reference": "oracle/render-rea-b09-inputs-baseline (unchanged)",
+ "pinned": "34cdf9f97",
+ "platform": "apple-m1",
+ "recorded": "2026-11-06",
+ "recorder": "oracle/x_ite-shot.mjs",
+ "recorder_args": "oracle/synthetic-rea-b09-inputs <out> --size 512x512",
+ "rule": "kept only where the three runs are pixel-identical and differ from the NVIDIA picture in oracle/render-rea-b09-inputs-baseline",
+ "runs": 3,
+ "same_as_nvidia": [
+  "localfog-scaled.wrl.png"
+ ]
+}

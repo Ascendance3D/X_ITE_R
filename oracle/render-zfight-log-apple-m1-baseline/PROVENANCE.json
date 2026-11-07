@@ -1,0 +1,42 @@
+{
+ "angle_backend": "metal",
+ "chrome": "Google Chrome 156.0.8078.80",
+ "command": "XITE_TESTS=<pinned-mac shim> node oracle/x_ite-shot-log.mjs oracle/synthetic-zfight <out>/N --size 512x512",
+ "depth": "logarithmic (LogarithmicDepthBuffer, page x_ite-pin/src/shot-log.html)",
+ "gl_renderer": "ANGLE (Apple, ANGLE Metal Renderer: Apple M1, Unspecified Version)",
+ "hardware": "Apple M1, macOS 27.0.1 (26A434)",
+ "kept": {
+  "tilt-pair.wrl.png": {
+   "max_channel_diff_vs_nvidia": 255,
+   "png": "fc6925cd0348a95d9e5287910f16db134a328c2e3107e1349aac73b666ac318f",
+   "runs_png_sha256": [
+    "fc6925cd0348a95d9e5287910f16db134a328c2e3107e1349aac73b666ac318f",
+    "fc6925cd0348a95d9e5287910f16db134a328c2e3107e1349aac73b666ac318f",
+    "fc6925cd0348a95d9e5287910f16db134a328c2e3107e1349aac73b666ac318f"
+   ]
+  }
+ },
+ "multisampling": 0,
+ "note": "far-range.wrl.png is pixel-identical to the NVIDIA log picture, so it is not kept. The earlier lane candidate pinned-zfight-log (tilt-pair and far-range, no PROVENANCE) is pixel-identical to this recording for both files.",
+ "nvidia_reference": "oracle/render-zfight-log-baseline (unchanged; recorded with Chrome 155.0.8059.39, ANGLE NVIDIA GL)",
+ "pinned": "34cdf9f97",
+ "pinned_x_ite": "16.5.0",
+ "platform": "apple-m1",
+ "recorded": "2026-11-07",
+ "recorder": "oracle/x_ite-shot-log.mjs (staged copy; Chrome path and ANGLE args changed for the Mac exactly as in the earlier lane pinned-mac copy: executablePath \"/Applications/Google Chrome.app/Contents/MacOS/Google Chrome\", args --use-angle=metal in place of --use-gl=angle --use-angle=gl)",
+ "recorder_args": "oracle/synthetic-zfight <out> --size 512x512 (3 separate invocations)",
+ "rule": "kept only where the three runs are pixel-identical (byte-identical sha256 here) and differ from the NVIDIA picture in oracle/render-zfight-log-baseline (any pixel)",
+ "runs": 3,
+ "same_as_nvidia": {
+  "far-range.wrl.png": {
+   "max_channel_diff_vs_nvidia": 0,
+   "runs_png_sha256": [
+    "36ca1760f97f4a2a628d37619cc50b37e010f474369dae118bb4d1831d6a5877",
+    "36ca1760f97f4a2a628d37619cc50b37e010f474369dae118bb4d1831d6a5877",
+    "36ca1760f97f4a2a628d37619cc50b37e010f474369dae118bb4d1831d6a5877"
+   ]
+  }
+ },
+ "size": "512x512",
+ "note_paths": "machine paths in 'command' replaced by placeholders for this repository; the exact command is in the lane evidence"
+}
