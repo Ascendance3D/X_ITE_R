@@ -102,7 +102,7 @@ def load_reviewed(path):
                 die(f"{path}:{n}: write the digest in 8-digit groups joined by ':'")
             cols[2] = "".join(groups)
         width = 40 if cols[0] == UNREADABLE else 64
-        if len(cols) < 4 or not re.fullmatch(f"[0-9a-f]{{{width}}}", cols[2]) or not cols[3].strip():
+        if len(cols) != 4 or not re.fullmatch(f"[0-9a-f]{{{width}}}", cols[2]) or not cols[3].strip():
             die(f"{path}:{n}: want detector<TAB>path<TAB>sha256 (or Git blob ID)<TAB>classification")
         reviewed.add((cols[0], cols[1], cols[2]))
     return reviewed
@@ -166,12 +166,18 @@ def written(repo, *pathspec):
     cmd = ["git", "-C", str(repo), "log", "--all", "-m", "--root", "--no-renames", "--no-abbrev", "--raw", "-z",
            "--format=", "--", *pathspec]
     tokens = subprocess.run(cmd, capture_output=True, text=True, check=True).stdout.split("\0")
-    pairs = set()
-    for head, path in zip(tokens, tokens[1:]):
-        # -z raw: ":<mode> <mode> <old blob> <new blob> <status>" NUL "<path>" NUL
-        fields = head.lstrip("\n").split()
-        if head.lstrip("\n").startswith(":") and len(fields) == 5 and fields[3] != "0" * 40:
-            pairs.add((path, fields[3]))
+    pairs, i = set(), 0
+    # -z raw: ":<mode> <mode> <old blob> <new blob> <status>" NUL "<path>" NUL, record after record. Read in order, so a
+    # path is never taken for a record (even a path that starts with ":").
+    while i < len(tokens):
+        head = tokens[i].lstrip("\n")
+        fields = head.split()
+        if head.startswith(":") and len(fields) == 5 and i + 1 < len(tokens):
+            if fields[3] != "0" * 40:
+                pairs.add((tokens[i + 1], fields[3]))
+            i += 2
+        else:
+            i += 1
     return pairs
 
 
