@@ -830,7 +830,6 @@ impl<'j, 's> P<'j, 's> {
         self.setup(multi_tex_coord);
 
         self.skins[index] = Some(Skin {
-            j: skin,
             joints,
             skeleton: skeleton_list,
             inverse_bind,
