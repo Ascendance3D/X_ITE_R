@@ -17,7 +17,7 @@
 //! One native context serves every AudioDestination of the browser, where X_ITE gives each node its own
 //! `<audio>` element, so the last `mediaDeviceID` that was set decides the device of the context.
 
-use web_audio_api::context::{AudioContext, BaseAudioContext};
+use web_audio_api::context::AudioContext;
 use web_audio_api::media_devices::{self, MediaDeviceInfoKind};
 
 /// What [`select_sink`] did.
