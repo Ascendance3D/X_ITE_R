@@ -760,10 +760,12 @@ export async function openPage (contextOptions, { init, signal } = { })
       const state = await page .evaluate (() => ({
          gpu:     "gpu" in navigator,
          backend: document .querySelector ("x3d-canvas") ?.browser ?.[Symbol .for ("X_ITE_R.engine")] ?.backend ?? null,
+         startError: window .startError !== undefined,
       }));
 
       assert .equal (state .gpu, false, "XR_FORCE_WEBGL2: navigator.gpu is still there");
-      assert .ok (state .backend === "webgl2" || (init && state .backend === null),
+      // No engine is allowed only for a page whose init script made the start fail on purpose (it reports startError).
+      assert .ok (state .backend === "webgl2" || (init && state .backend === null && state .startError),
          `XR_FORCE_WEBGL2: the engine runs on ${state .backend}, not webgl2`);
    }
 
