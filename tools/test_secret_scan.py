@@ -153,10 +153,12 @@ def main():
 
         # L: a blob with a line over 10 MiB (TruffleHog skips the rest of that diff): history reports it NOT SCANNED.
         (repo / "fixtures/long.txt").write_text("x" * (10 * 1024 * 1024 + 16) + "\n")
-        git("add", "fixtures/long.txt")
+        shutil.copy(repo / "fixtures/long.txt", repo / "fixtures/long-copy.txt")
+        git("add", "fixtures/long.txt", "fixtures/long-copy.txt")
         git("commit", "-q", "-m", "long line")
         _, _, out = run(repo, reviewed, "history")
         check("NOT SCANNED\thistory: fixtures/long.txt" in out, "history: L line over 10 MiB is NOT SCANNED")
+        check("NOT SCANNED\thistory: fixtures/long-copy.txt" in out, "history: L the same blob at a second path too")
 
         # Q: a non-ASCII .svg name (git quotes it unless -z): still scanned as a text copy.
         (repo / "assets/café.svg").write_text(f"<svg><desc>{token}</desc></svg>\n")

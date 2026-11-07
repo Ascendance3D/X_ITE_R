@@ -45,7 +45,7 @@ TIMEOUT_S = 900
 UNREADABLE = "unreadable"
 # Files TruffleHog leaves out by its built-in extension list (images, video, audio, fonts, glTF binaries), per scan mode
 # and extension. Reported as a coverage limit; they are not content-scanned by TruffleHog.
-SKIPPED = {"git": {}, "filesystem": {}}
+SKIPPED = {"tree": {}, "history": {}}  # by outer scan, not by TruffleHog mode (text copies run as filesystem)
 # TruffleHog stops reading a Git diff at a line longer than this (it does not log it as an error).
 LONG_LINE = 10 * 1024 * 1024
 # Text formats that BOTH scanners leave out by extension (Gitleaks' default allowlist and TruffleHog's extension list,
@@ -121,7 +121,7 @@ def gitleaks(mode, target, cwd, config):
              "line": r["StartLine"], "len": None, "sha256_12": None, "reviewed": False} for r in rows]
 
 
-def trufflehog(mode, target, cwd, reviewed, template):
+def trufflehog(mode, target, cwd, reviewed, template, scan=None):
     # Log level 5: the "skipping file" lines (files TruffleHog leaves out by extension) are debug output.
     cmd = ["trufflehog", mode, target, "--no-verification", "--no-update", "--json", "--log-level=5"]
     p = subprocess.run(offline(cmd), cwd=cwd, capture_output=True, text=True, timeout=TIMEOUT_S)
@@ -139,7 +139,8 @@ def trufflehog(mode, target, cwd, reviewed, template):
             unread.add(log["path"])
         elif str(log.get("msg", "")).startswith("skipping file") and log.get("path"):
             ext = Path(log["path"]).suffix.lower() or log.get("ext") or "(none)"
-            SKIPPED[mode][ext] = SKIPPED[mode].get(ext, 0) + 1
+            bucket = SKIPPED[scan or ("history" if mode == "git" else "tree")]
+            bucket[ext] = bucket.get(ext, 0) + 1
     if not finished:
         die(f"trufflehog {mode} did not report the end of the scan")
     out = []
@@ -225,7 +226,7 @@ def text_copies(repo, mode, config, reviewed, template):
         for f in gitleaks("dir", ".", tmp, config):
             for path in real_paths(f["file"]):
                 findings.append({**f, "file": path, "scan": label or "dir", "via": "text copy", "line": fix_line(f["line"])})
-        th, unread = trufflehog("filesystem", ".", tmp, set(), None)
+        th, unread = trufflehog("filesystem", ".", tmp, set(), None, scan=mode)
         for f in th:
             for path in real_paths(f["file"]):
                 g = {**f, "file": path, "scan": label or "filesystem", "via": "text copy", "line": fix_line(f["line"])}
@@ -238,18 +239,21 @@ def text_copies(repo, mode, config, reviewed, template):
 
 
 def long_line_blobs(repo):
-    """Paths of history blobs with a line longer than LONG_LINE bytes (TruffleHog skips the rest of such a diff)."""
-    objs = subprocess.run(["git", "-C", str(repo), "rev-list", "--all", "--objects"], capture_output=True,
-                          check=True).stdout
-    sizes = subprocess.run(["git", "-C", str(repo), "cat-file", "--batch-check=%(objecttype) %(objectname) %(objectsize) %(rest)"],
-                           input=objs, capture_output=True, check=True).stdout.decode("utf-8", "replace")
+    """Paths of history blobs with a line longer than LONG_LINE bytes (TruffleHog skips the rest of such a diff).
+    Every path of such a blob is listed (written(), not rev-list --objects, which names one path per blob)."""
+    paths_of = {}
+    for path, oid in written(repo):
+        paths_of.setdefault(oid, set()).add(path)
+    sizes = subprocess.run(["git", "-C", str(repo), "cat-file", "--batch-check=%(objecttype) %(objectname) %(objectsize)"],
+                           input="".join(f"{o}\n" for o in sorted(paths_of)).encode(), capture_output=True,
+                           check=True).stdout.decode("utf-8", "replace")
     out = set()
     for line in sizes.splitlines():
-        kind, oid, size, *rest = line.split(" ", 3) + [""]
+        kind, oid, size = (line.split(" ") + ["", ""])[:3]
         if kind == "blob" and int(size) > LONG_LINE:
             data = subprocess.run(["git", "-C", str(repo), "cat-file", "blob", oid], capture_output=True, check=True).stdout
             if max(map(len, data.split(b"\n"))) > LONG_LINE:
-                out.add(rest[0] or oid)
+                out.update(paths_of[oid])
     return sorted(out)
 
 
@@ -275,7 +279,8 @@ def export_head(repo, dest):
 def main():
     try:
         run()
-    except (subprocess.CalledProcessError, subprocess.TimeoutExpired, tarfile.TarError, OSError) as e:
+    # ValueError: also UnicodeDecodeError (a non-UTF-8 path) and JSONDecodeError (malformed scanner output).
+    except (subprocess.CalledProcessError, subprocess.TimeoutExpired, tarfile.TarError, OSError, ValueError) as e:
         die(f"{type(e).__name__}: {e}")
 
 
@@ -343,7 +348,7 @@ def run():
     for mode, exts in SKIPPED.items():
         if exts:
             listed = ", ".join(f"{e} {n}" for e, n in sorted(exts.items(), key=lambda x: -x[1]))
-            print(f"coverage {'history' if mode == 'git' else 'tree'}: TruffleHog skipped {sum(exts.values())} files by"
+            print(f"coverage {mode}: TruffleHog skipped {sum(exts.values())} files by"
                   f" its extension list (not content-scanned by TruffleHog): {listed}")
     if modes == ["tree", "history"]:
         # Informational: a reviewed entry that no finding or unread file of either scan used (the file or value is gone).
