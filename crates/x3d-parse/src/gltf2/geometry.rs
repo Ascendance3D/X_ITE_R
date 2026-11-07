@@ -313,7 +313,7 @@ impl<'j, 's> P<'j, 's> {
 
         self.set(node, "colorSpace", FieldValue::SFString(cs.to_uppercase()));
 
-        let mut take = |me: &mut Self, name: &str, attr: Option<usize>| -> R<Vec<f64>> {
+        let take = |me: &mut Self, name: &str, attr: Option<usize>| -> R<Vec<f64>> {
             let _ = name;
 
             match attr {
