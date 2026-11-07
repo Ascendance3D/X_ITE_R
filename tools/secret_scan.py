@@ -21,7 +21,8 @@ of the SHA-256 of the value. Values are read in memory only, to hash them; Gitle
 
 Exit: 0 when every finding is reviewed and every file was read; 1 when there is a new finding; 2 on a tool error
 (missing tool, wrong version, no network namespace, a scanner that failed or did not report its end); 3 when files
-could not be read (listed as NOT SCANNED; a coverage gap, not a pass).
+could not be read (listed as NOT SCANNED; a coverage gap, not a pass). Precedence: 2 stops the scan at once; else 1
+when there is a new finding, whether or not files were also NOT SCANNED; else 3.
 """
 import argparse
 import hashlib
@@ -66,6 +67,11 @@ def check_tools():
             die(f"{tool} {' '.join(have)}: version {want} expected")
 
 
+def grouped(digest):
+    """A digest as 8-digit groups joined by ":", the form of the reviewed list."""
+    return ":".join(digest[i:i + 8] for i in range(0, len(digest), 8))
+
+
 def sha(value):
     return hashlib.sha256(value.encode("utf-8", "surrogatepass")).hexdigest()
 
@@ -76,6 +82,11 @@ def load_reviewed(path):
         if not line.strip() or line.startswith("#"):
             continue
         cols = line.split("\t")
+        if len(cols) >= 3:
+            groups = cols[2].split(":")
+            if any(len(g) != 8 for g in groups):
+                die(f"{path}:{n}: write the digest in 8-digit groups joined by ':'")
+            cols[2] = "".join(groups)
         width = 40 if cols[0] == UNREADABLE else 64
         if len(cols) < 4 or not re.fullmatch(f"[0-9a-f]{{{width}}}", cols[2]) or not cols[3].strip():
             die(f"{path}:{n}: want detector<TAB>path<TAB>sha256 (or Git blob ID)<TAB>classification")
@@ -124,7 +135,7 @@ def trufflehog(mode, target, cwd, reviewed, template):
                     "sha256_12": digest[:12],
                     "reviewed": (r["DetectorName"], src.get("file", ""), digest) in reviewed})
         if template is not None and not out[-1]["reviewed"]:
-            template.add(f"{r['DetectorName']}\t{src.get('file', '')}\t{digest}\tTODO classify")
+            template.add(f"{r['DetectorName']}\t{src.get('file', '')}\t{grouped(digest)}\tTODO classify")
         del r
     return out, sorted(unread)
 
@@ -134,7 +145,9 @@ def blobs(repo, mode, path):
     if mode == "tree":
         cmd = ["git", "-C", str(repo), "rev-parse", f"HEAD:{path}"]
     else:
-        cmd = ["git", "-C", str(repo), "log", "--all", "--no-abbrev", "--raw", "--format=", "--", path]
+        # Raw lines are ":<mode> <mode> <old blob> <new blob> <status>\t<path>": field 3 is the blob a commit wrote.
+        # -m: a blob that only a merge commit wrote is listed too.
+        cmd = ["git", "-C", str(repo), "log", "--all", "-m", "--no-abbrev", "--raw", "--format=", "--", path]
     out = subprocess.run(cmd, capture_output=True, text=True).stdout.split("\n")
     ids = {line.split()[3] if mode == "history" else line for line in out if line.strip()}
     return sorted(i for i in ids if re.fullmatch("[0-9a-f]{40}", i) and i != "0" * 40)
@@ -146,7 +159,13 @@ def export_head(repo, dest):
         f.write(p.stdout)
         f.seek(0)
         with tarfile.open(fileobj=f) as t:
-            t.extractall(dest, filter="data")
+            for m in t.getmembers():
+                if m.name.startswith("/") or ".." in Path(m.name).parts or not (m.isfile() or m.isdir() or m.issym()):
+                    die(f"git archive member {m.name!r} is not a plain repository path")
+            try:
+                t.extractall(dest, filter="data")
+            except TypeError:  # Python without tarfile extraction filters (before 3.12 and its backports)
+                t.extractall(dest)
 
 
 def main():
@@ -185,7 +204,9 @@ def main():
                 continue
             unread.append(f"{mode}: {p}")
             if template is not None:
-                template.update(f"{UNREADABLE}\t{p}\t{i}\tTODO reason" for i in ids if (UNREADABLE, p, i) not in reviewed)
+                template.update(f"{UNREADABLE}\t{p}\t{grouped(i)}\tTODO reason" for i in ids if (UNREADABLE, p, i) not in reviewed)
+                if not ids:
+                    template.add(f"# {UNREADABLE}\t{p}\t(no Git blob found for this path; cannot be reviewed)")
 
     new = [f for f in findings if not f["reviewed"]]
     for f in findings:
