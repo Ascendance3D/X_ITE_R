@@ -97,13 +97,6 @@ impl<'a> V<'a> {
         }
     }
 
-    pub fn bool_(self) -> Option<bool> {
-        match self.0 {
-            Some(J::Bool(b)) => Some(*b),
-            _ => None,
-        }
-    }
-
     /// JS truthiness.
     pub fn truthy(self) -> bool {
         match self.0 {
@@ -172,14 +165,6 @@ impl<'a> V<'a> {
             None | Some(J::Null) => String::new(),
             _ => self.to_js_string(),
         }
-    }
-
-    /// Numbers of a JSON array when every element is a number (`vectorValue` copies with
-    /// `vector .set (... array)`, which would pass other values through; they become NaN/0).
-    pub fn numbers(self) -> Option<Vec<f64>> {
-        let a = self.arr()?;
-
-        Some(a.iter().map(|v| V(Some(v)).to_number()).collect())
     }
 }
 

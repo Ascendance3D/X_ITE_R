@@ -143,7 +143,6 @@ pub(super) struct NodeObj<'j> {
 }
 
 pub(super) struct Skin<'j> {
-    pub j: V<'j>,
     pub joints: Vec<V<'j>>,
     pub skeleton: Vec<V<'j>>,
     pub inverse_bind: Vec<Matrix4>,

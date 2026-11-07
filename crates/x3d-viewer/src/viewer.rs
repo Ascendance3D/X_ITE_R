@@ -8,7 +8,7 @@ use crate::layer::{DEFAULT, Layer, NavInfo, VpBase, is_default};
 use crate::lookat::Box3;
 use crate::nav::{Cx, Env, Input, LookAtRequest, Touches, Viewer};
 use crate::pointer::{AnchorActivation, Hit, PickCamera, Pointer, pick};
-use crate::walk::{LayerWalk, NodeRef, Scan, ShapeInst, rt_at, rt_at_mut, scan, scan_screens};
+use crate::walk::{LayerWalk, NodeRef, Scan, ShapeInst, rt_at, rt_at_mut, scan_screens};
 use std::collections::HashMap;
 #[cfg(feature = "script")]
 use std::path::Path;
