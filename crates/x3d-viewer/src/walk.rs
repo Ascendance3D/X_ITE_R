@@ -698,19 +698,21 @@ fn pointing_appearance(
     let textures = appearance.map_or((false, false), |a| {
         let material = sg.node(a, "material");
         let material_texture = material.is_some_and(|m| {
-            [
-                "ambientTexture",
-                "diffuseTexture",
-                "specularTexture",
-                "emissiveTexture",
-                "shininessTexture",
-                "occlusionTexture",
-                "normalTexture",
-                "baseTexture",
-                "metallicRoughnessTexture",
-            ]
-            .iter()
-            .any(|field| sg.node(m, field).is_some())
+            sg.any_node(
+                m,
+                [
+                    "ambientTexture",
+                    "diffuseTexture",
+                    "specularTexture",
+                    "emissiveTexture",
+                    "shininessTexture",
+                    "occlusionTexture",
+                    "normalTexture",
+                    "baseTexture",
+                    "metallicRoughnessTexture",
+                ]
+                .as_slice(),
+            )
         });
         (sg.node(a, "texture").is_some(), material_texture)
     });

@@ -1398,11 +1398,16 @@ impl Viewer3d {
         self.camera_pass();
         self.phase("cameraEvents");
 
-        // Collision (gravity): the COLLISION traversal starts from the view of this frame.
-        self.refresh_display_scan();
-        let collision = web_time::Instant::now();
-        self.collision_pass();
-        self.collision_time += collision.elapsed();
+        // Collision (gravity): the COLLISION traversal starts from the view of this frame. X3DBrowserContext runs it
+        // only `if (this .getCollisionCount () || this .getViewer () .isCollidable ())`, and this walk and the
+        // collision pass do nothing else: with no Collision node that can be enabled and a viewer that neither walks
+        // nor is collidable, both are skipped (a scene walk per frame).
+        if self.collision_may_run() {
+            self.refresh_display_scan();
+            let collision = web_time::Instant::now();
+            self.collision_pass();
+            self.collision_time += collision.elapsed();
+        }
 
         // Sensor events.
         self.sensor_pass();
@@ -1945,6 +1950,31 @@ impl Viewer3d {
         }
 
         self.swap_to(home);
+    }
+
+    /// Whether the COLLISION traversal of this frame can do anything: the viewer walks or is collidable, or the
+    /// scene has a Collision node whose `enabled` (read as the walk reads it) is TRUE. It is conservative: a
+    /// Collision that is not in the scene graph (a released node, a PROTO body not instanced) counts too, and the
+    /// walk then finds what X_ITE's activeCollisions holds.
+    fn collision_may_run(&self) -> bool {
+        if self.nav.is_collidable() || self.nav.kind() == "WALK" {
+            return true;
+        }
+
+        let scene = &self.rt.scene;
+        let Some(collision) = scene.table.types.iter().position(|t| t.name == "Collision") else {
+            return true;
+        };
+        let mut found = (0..scene.nodes.len() as NodeId)
+            .filter(|&n| matches!(scene.node(n).kind, x3d_scene::scene::NodeKind::Builtin(t) if t == collision))
+            .peekable();
+
+        if found.peek().is_none() {
+            return false;
+        }
+
+        let sg = x3d_render::sg::Sg::new(&self.rt);
+        found.any(|n| sg.bool(n, "enabled", true))
     }
 
     /// The COLLISION traversal of the current layer; `active`: it is the active layer.
@@ -3674,4 +3704,92 @@ fn percent_decode(s: &str) -> String {
     }
 
     String::from_utf8(out).unwrap_or_else(|_| s.to_string())
+}
+
+#[cfg(test)]
+mod collision_gate_tests {
+    use super::Viewer3d;
+
+    /// Loads `world` (a new, synthetic scene) and runs `frames` frames.
+    fn viewer(name: &str, world: &str, frames: usize) -> Viewer3d {
+        let dir =
+            std::env::temp_dir().join(format!("x3d-collision-gate-{}-{name}", std::process::id()));
+        std::fs::create_dir_all(&dir).unwrap();
+        let file = dir.join(if world.starts_with("#VRML") {
+            "w.wrl"
+        } else {
+            "w.x3dv"
+        });
+        std::fs::write(&file, world).unwrap();
+        let t0 = 946684800.0;
+        let mut v = Viewer3d::load_opts(&file, None, t0, 32, 32, None, true).expect("viewer load");
+
+        for i in 1..=frames {
+            v.step(t0 + i as f64 / 60.0);
+        }
+
+        std::fs::remove_dir_all(&dir).ok();
+        v
+    }
+
+    const X3D: &str = "#X3D V4.0 utf8\nPROFILE Immersive\n";
+
+    #[test]
+    fn no_collision_node_and_an_examine_viewer_skip_the_collision_walk() {
+        let v = viewer(
+            "none",
+            &format!("{X3D}Transform {{ children Shape {{ geometry Box {{ }} }} }}\n"),
+            2,
+        );
+        assert_eq!(v.nav.kind(), "EXAMINE");
+        assert!(!v.collision_may_run());
+    }
+
+    #[test]
+    fn an_enabled_collision_runs_the_collision_walk() {
+        let v = viewer(
+            "on",
+            &format!("{X3D}Collision {{ children Shape {{ geometry Box {{ }} }} }}\n"),
+            2,
+        );
+        assert!(v.collision_may_run());
+    }
+
+    #[test]
+    fn a_vrml97_collision_runs_the_collision_walk() {
+        let world =
+            "#VRML V2.0 utf8\nCollision { collide TRUE children Shape { geometry Box { } } }\n";
+        assert!(viewer("vrml", world, 2).collision_may_run());
+    }
+
+    #[test]
+    fn a_walk_viewer_runs_the_collision_walk_without_a_collision_node() {
+        let world =
+            format!("{X3D}NavigationInfo {{ type \"WALK\" }}\nShape {{ geometry Box {{ }} }}\n");
+        let v = viewer("walk", &world, 2);
+        assert_eq!(v.nav.kind(), "WALK");
+        assert!(v.collision_may_run());
+    }
+
+    /// A disabled Collision skips the walk; once an event enables it, the next frame walks again.
+    #[test]
+    fn a_collision_enabled_by_an_event_runs_the_collision_walk_again() {
+        let world = format!(
+            "{X3D}DEF C Collision {{ enabled FALSE children Shape {{ geometry Box {{ }} }} }}
+DEF T TimeSensor {{ loop TRUE cycleInterval 0.01 }}
+DEF S Script {{
+  inputOnly SFTime set_time
+  outputOnly SFBool enabled
+  initializeOnly SFInt32 n 0
+  url \"ecmascript:
+function set_time (value) {{ if (++ n === 5) enabled = true; }}
+\"
+}}
+ROUTE T.time TO S.set_time
+ROUTE S.enabled TO C.set_enabled
+"
+        );
+        assert!(!viewer("off", &world, 2).collision_may_run());
+        assert!(viewer("enabled", &world, 12).collision_may_run());
+    }
 }
