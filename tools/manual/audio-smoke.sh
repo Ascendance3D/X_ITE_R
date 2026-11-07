@@ -9,15 +9,23 @@
 # Env: X3D_VIEW=<path to a built x3d-view> skips the build.
 # Not covered: macOS (CoreAudio), keyboard input, and that sound leaves the speakers (the monitor taps the sink).
 set -u
-cd "$(dirname "$0")/../.." || exit 1
+skip() { echo "SKIPPED: $*"; exit 77; }
+fail() { echo "FAIL: $*"; exit 1; }
 secs="${1:-6}"
+[[ "$secs" =~ ^[1-9][0-9]?$ ]] || fail "seconds must be an integer from 1 to 99 (got '$secs')"
+# A relative X3D_VIEW is relative to the caller's directory, so resolve it before the cd.
+if [ -n "${X3D_VIEW:-}" ]; then
+  X3D_VIEW="$(realpath -- "$X3D_VIEW")" || fail "X3D_VIEW does not resolve: $X3D_VIEW"
+fi
+cd "$(dirname "$0")/../.." || exit 1
 world="tools/manual/audio-tone.x3dv"
 tmp="$(mktemp -d /tmp/audio-smoke.XXXXXX)"
 trap 'kill "${rec:-}" "${view:-}" 2>/dev/null; rm -rf "$tmp"' EXIT
-skip() { echo "SKIPPED: $*"; exit 77; }
 
 echo "session: ${XDG_SESSION_TYPE:-unknown} (WAYLAND_DISPLAY=${WAYLAND_DISPLAY:-none}, DISPLAY=${DISPLAY:-none})"
-command -v parec >/dev/null 2>&1 || skip "parec not installed"
+for tool in timeout python3 pactl parec; do
+  command -v "$tool" >/dev/null 2>&1 || skip "$tool not installed"
+done
 sink="$(timeout 10 pactl get-default-sink 2>/dev/null)" || skip "no PulseAudio/PipeWire server"
 [ -n "$sink" ] || skip "no default sink"
 [ -n "${WAYLAND_DISPLAY:-}${DISPLAY:-}" ] || skip "no display for x3d-view"
