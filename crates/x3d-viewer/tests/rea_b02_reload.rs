@@ -110,7 +110,12 @@ fn rea_b02_textures_survive_reload_and_are_released() {
             }
             let first = shot(&mut v, &device, &queue, now);
             let counts = v.renderer().resource_counts();
-            assert!(counts[2] > 0, "{name}: textures in use {counts:?}");
+            // A texture or a generated cube map in use (pbr-ibl-generated has only a GeneratedCubeMapTexture). Before
+            // #505 the count also held the previous world's textures, which this world does not use.
+            assert!(
+                counts[2] + counts[5] > 0,
+                "{name}: textures in use {counts:?}"
+            );
 
             for round in 0..5 {
                 v.reload().unwrap();
