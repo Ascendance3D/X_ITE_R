@@ -43,7 +43,10 @@ ASSETS = [
 
 def metadata():
     cmd = ["cargo", "metadata", "--format-version", "1", "--locked", "--offline", "--filter-platform", TARGET]
-    return json.loads(subprocess.run(cmd, cwd=ROOT, check=True, capture_output=True, text=True).stdout)
+    r = subprocess.run(cmd, cwd=ROOT, capture_output=True, encoding="utf-8", errors="replace")
+    if r.returncode != 0:
+        sys.exit(f"third_party_notices: cargo metadata failed (exit {r.returncode}):\n{r.stderr.strip()}")
+    return json.loads(r.stdout)
 
 
 def shipped(meta):
@@ -77,6 +80,16 @@ def license_files(pkg):
     return [(n, read_text(os.path.join(d, n))) for n in sorted(names)]
 
 
+SPDX_DIR = os.path.join(ROOT, "tools", "spdx-texts")
+SPDX_IDS = ["Apache-2.0", "BSD-2-Clause", "BSD-3-Clause", "MIT", "MPL-2.0", "Zlib"]
+
+
+def standard_texts(expr):
+    """(id, text) of the standard SPDX texts for the identifiers in a license expression."""
+    ids = set(re.split(r"[^A-Za-z0-9.+-]+", expr or ""))
+    return [(i, read_text(os.path.join(SPDX_DIR, i + ".txt"))) for i in SPDX_IDS if i in ids]
+
+
 def fence(text):
     n = 3
     while "`" * n in text:
@@ -102,11 +115,18 @@ def render():
             texts[sha] = text
             users[sha].append((f"{p['name']} {p['version']}", name))
             refs.append((name, sha))
-        entries.append((p, refs))
+        std = []
+        if not refs:
+            for i, text in standard_texts(p.get("license")):
+                sha = hashlib.sha256(text.encode()).hexdigest()
+                texts[sha] = text
+                users[sha].append((f"{p['name']} {p['version']}", f"standard SPDX {i}"))
+                std.append((f"standard SPDX {i}", sha))
+        entries.append((p, refs, std))
     order = sorted(texts, key=lambda s: (users[s][0][0], s))
     tid = {s: f"T{i + 1}" for i, s in enumerate(order)}
 
-    missing = [p for p, refs in entries if not refs]
+    missing = [p for p, refs, std in entries if not refs]
     nolic = [p for p in third if not p.get("license")]
     counts = Counter(p.get("license") or "(none declared)" for p in third)
 
@@ -132,7 +152,8 @@ def render():
     for k in sorted(counts):
         w(f"| {k} | {counts[k]} |")
     w("")
-    w("Packages with no license file in the published crate: " +
+    w("Packages with no license file found in their published crate source (the script looked at the top level of "
+      "`<name>-<version>`): " +
       (", ".join(f"`{p['name']} {p['version']}`" for p in missing) if missing else "none") + ".")
     w("Packages with no declared license expression: " +
       (", ".join(f"`{p['name']} {p['version']}`" for p in nolic) if nolic else "none") + ".\n")
@@ -145,17 +166,23 @@ def render():
         w("| " + " | ".join(row) + " |")
     w("")
     w("## Packages\n")
-    for p, refs in entries:
+    for p, refs, std in entries:
         w(f"### {p['name']} {p['version']}\n")
         w(f"- License: {p.get('license') or 'not declared in the manifest'}")
         w(f"- Repository: {p.get('repository') or 'not declared'}")
         if refs:
             w("- License and notice files: " + ", ".join(f"`{n}` ({tid[s]})" for n, s in refs))
         else:
-            w("- License file not present in the published crate.")
+            w(f"- No license file found in the published crate source at {p['name']}-{p['version']}.")
+            if std:
+                w("- Standard SPDX text (not from the crate; the crate has no license file and no copyright line; no "
+                  "copyright holder is named here): " + ", ".join(f"{n.split()[-1]} ({tid[s]})" for n, s in std))
+            else:
+                w("- No standard text is stored for this license expression. UNKNOWN - needs owner review.")
         w("")
     w("## License and notice texts\n")
-    w("Identical texts are listed once. NOTICE files are copied verbatim.\n")
+    w("Identical texts are listed once. NOTICE files are copied verbatim. Entries marked \"standard SPDX\" are the "
+      "standard license text, stored in `tools/spdx-texts/`; they carry no copyright line.\n")
     for s in order:
         us = users[s]
         w(f"### {tid[s]}\n")
