@@ -45,6 +45,7 @@ def check(d):
     cur = {i["id"]: i for i in d["items"]}
     if set(cur) != set(snap) or len(d["items"]) != 346: bad.append("ID set or total changed")
     if [i["id"] for i in d["items"]] != [i["id"] for i in load(SNAP)["items"]]: bad.append("ID order changed")
+    bad += [f"{k}: not in the snapshot" for k in sorted(set(C) - set(snap))]
     built = build()
     if {k: v for k, v in d.items() if k != "items"} != {k: v for k, v in built.items() if k != "items"}: bad.append("top-level fields differ from what apply writes")
     want = {i["id"]: i for i in built["items"]}
