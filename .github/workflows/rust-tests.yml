@@ -156,6 +156,10 @@ jobs:
           python3 -I -B tools/check_vendored_wgpu_hal.py --self-test
           python3 -I -B tools/check_vendored_wgpu_hal.py
 
+      # The Clippy identity compare on synthetic diagnostics: removed, moved, new, a renamed symbol ("changed").
+      - name: Clippy identity compare self-test
+        run: python3 -I -B tools/clippy_identity.py --self-test
+
       # Pins the path classification of tools/ci_changes.py (issue #180).
       - name: CI path classification
         run: python3 -I -B tools/test_ci_changes.py
@@ -308,6 +312,22 @@ jobs:
       - name: Clippy (deny-by-default lints)
         if: success() || failure()
         run: cargo clippy --release --workspace --all-targets
+
+      # Owner decision 2026-11-07: a report, not a gate. It compares this run's Clippy diagnostics with the recorded
+      # baseline tools/clippy-baseline/native.jsonl (master df5e5b5e, Rust 1.95.0, the features below) by identity:
+      # crate, lint, level, message, file and span text, not the line. It lists new, changed (a rename or an edit of the
+      # same source: check it by hand), removed and moved diagnostics in the job summary, with a warning annotation for
+      # each new and changed one. Old warnings never fail it, and continue-on-error keeps a tool failure out of the
+      # result. Do not edit the baseline to hide a new diagnostic. `--release` shares the graph of the step above.
+      - name: Clippy identity compare (report only)
+        if: success() || failure()
+        continue-on-error: true
+        run: |
+          cargo clippy --release --workspace --all-targets --features r0-2-c-tests/future_gate,x3d-http/test-server --message-format=json > clippy.json
+          python3 -I -B tools/clippy_identity.py compare tools/clippy-baseline/native.jsonl clippy.json --github > clippy-identity.txt
+          grep '^::' clippy-identity.txt | head -50 || true
+          { echo '### Clippy identity compare (native)'; echo '```'; grep -v '^::' clippy-identity.txt | head -300; echo '```'; } >> "$GITHUB_STEP_SUMMARY"
+          head -1 clippy-identity.txt
 
       # The account's artifact storage can be full; the logs are then only in the job log.
       - uses: actions/upload-artifact@v7

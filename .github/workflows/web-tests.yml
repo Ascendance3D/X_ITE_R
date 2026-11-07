@@ -192,6 +192,38 @@ jobs:
             web-evidence/
           if-no-files-found: ignore
 
+  # Owner decision 2026-11-07: the Clippy identity compare of the browser module (x3d-web, wasm32) against the recorded
+  # baseline tools/clippy-baseline/wasm32.jsonl (master df5e5b5e, Rust 1.95.0). A report, not a gate: no result check
+  # needs this job, and old warnings never fail it. See the native step in rust-tests.yml and tools/clippy_identity.py.
+  clippy-wasm:
+    name: Clippy identity compare (wasm32, report only)
+    needs: changes
+    if: github.event_name == 'pull_request' && needs.changes.outputs.web == 'true'
+    runs-on: ${{ fromJSON((github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository) && (vars.XITE_RUNNER_LABELS || '["self-hosted","Linux","X64"]') || '"ubuntu-24.04"') }}
+    timeout-minutes: 30
+    continue-on-error: true
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+
+      - uses: dtolnay/rust-toolchain@1.95.0
+        with:
+          targets: wasm32-unknown-unknown
+          components: clippy
+
+      - uses: Swatinem/rust-cache@v2
+        with:
+          shared-key: web-clippy
+
+      - name: Clippy identity compare
+        run: |
+          cargo clippy -p x3d-web --lib --target wasm32-unknown-unknown --message-format=json > clippy.json
+          python3 -I -B tools/clippy_identity.py compare tools/clippy-baseline/wasm32.jsonl clippy.json --github > clippy-identity.txt
+          grep '^::' clippy-identity.txt | head -50 || true
+          { echo '### Clippy identity compare (wasm32)'; echo '```'; grep -v '^::' clippy-identity.txt | head -300; echo '```'; } >> "$GITHUB_STEP_SUMMARY"
+          head -1 clippy-identity.txt
+
   # On a push to master: the browser test dependencies, so that master's cache holds apt's .deb files for every PR.
   warm-deps:
     name: Warm browser dependencies
