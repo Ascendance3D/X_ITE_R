@@ -1,0 +1,19 @@
+#X3D V4.0 utf8
+PROFILE Full
+COMPONENT Sound:2
+# Audio smoke world (issue #88): a quiet 880 Hz sine through the native realtime output. Newly authored; no historical content.
+# tools/manual/audio-smoke.sh records the default sink's monitor and looks for this tone.
+# A Script starts the oscillator on the third clock tick, as oracle/synthetic-rea-b05/osc-square.wrl does.
+AudioDestination { children Gain { gain 0.05 children DEF O OscillatorSource { frequency 880 } } }
+Shape { geometry Box { size 1 1 1 } }
+DEF T TimeSensor { loop TRUE cycleInterval 0.1 }
+DEF S Script {
+  inputOnly SFTime set_time
+  outputOnly SFTime start
+  initializeOnly SFInt32 n 0
+  url "ecmascript:
+function set_time (value) { if (++ n === 3) start = value; }
+"
+}
+ROUTE T.time TO S.set_time
+ROUTE S.start TO O.startTime
