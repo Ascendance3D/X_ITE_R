@@ -2454,6 +2454,32 @@ impl WebBrowser {
         }
     }
 
+    /// The options the current world's Scripts set with `setBrowserOption` since the last call, as `[name, value]` pairs in
+    /// order. X_ITE has one BrowserOptions for the page and its world; the page keeps its own copy and takes these to stay
+    /// one with it, so its `getBrowserOption` and `getRenderingProperty` and the next world see them (issue #480).
+    #[wasm_bindgen(js_name = takeScriptOptions)]
+    pub fn take_script_options(&mut self) -> js_sys::Array {
+        use x3d_runtime::browser_options::OptionValue;
+
+        let out = js_sys::Array::new();
+        let changes = match self.current.and_then(|id| self.worlds.get_mut(&id)) {
+            Some(w) => w.session.take_script_options(),
+            None => return out,
+        };
+
+        for (name, value) in changes {
+            let v = match value {
+                OptionValue::Bool(b) => JsValue::from_bool(b),
+                OptionValue::String(s) => JsValue::from_str(&s),
+                other => JsValue::from_f64(other.as_f64()),
+            };
+
+            out.push(&js_sys::Array::of2(&JsValue::from_str(name), &v));
+        }
+
+        out
+    }
+
     /// The point sprite snap rule (issue #470): true rounds a half 1/256 pixel step up, false rounds it to even.
     #[wasm_bindgen(js_name = setPointSnapHalfUp)]
     pub fn set_point_snap_half_up(&mut self, on: bool) {

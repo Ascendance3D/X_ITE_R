@@ -226,9 +226,9 @@ describe ("oit 01", { skip: Boolean (ONLY) }, () =>
 
       // Pinned X_ITE 16.5.0 (Chrome 156): BrowserOptions.reset runs only when the browser starts, so a world Script's
       // OrderIndependentTransparency true stays for the next loadURL (the plain world after it draws with OIT on, and
-      // getBrowserOption gives true). X_ITE_R starts each world with the page's options.
+      // getBrowserOption gives true). X_ITE_R's page takes a world Script's option, so the next world starts with it.
       test (`${backend}: a world Script's option stays for the next world`,
-         { timeout: CASE_TIMEOUT, todo: "a world Script's browser option does not stay for the next world, as in X_ITE" }, async t =>
+         { timeout: CASE_TIMEOUT }, async t =>
       {
          const page = await open (backend, { scripts: "true" }, t .signal);
 

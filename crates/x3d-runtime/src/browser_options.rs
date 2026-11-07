@@ -191,6 +191,9 @@ pub struct BrowserOptions {
     tainted: Vec<&'static str>,
     /// Mute or SoundIntensity was processed (the runtime runs set_SoundIntensity__).
     sound_intensity_changed: bool,
+    /// Options a world Script set with `setBrowserOption` since the page last took them, in order (issue #480). X_ITE has
+    /// one BrowserOptions for the page and its world; the page keeps its own copy, so it takes these to stay one with it.
+    script_changes: Vec<(&'static str, OptionValue)>,
 }
 
 fn option_fields() -> Fields {
@@ -368,6 +371,7 @@ impl BrowserOptions {
             shading: ShadingMode::Gouraud,
             tainted: vec![],
             sound_intensity_changed: false,
+            script_changes: vec![],
         };
 
         b.set_limits(RenderingLimits::default());
@@ -470,6 +474,28 @@ impl BrowserOptions {
         }
 
         true
+    }
+
+    /// `setBrowserOption (name, value)` made by a world Script: [`Self::set_option`], and the change is kept for the page
+    /// ([`Self::take_script_changes`]) so that the page's `getBrowserOption`, `getRenderingProperty` and the next world
+    /// see it, as the one BrowserOptions of X_ITE does (issue #480).
+    pub fn set_script_option(&mut self, name: &str, value: OptionValue) -> bool {
+        if !self.set_option(name, value.clone()) {
+            return false;
+        }
+
+        if let Some(i) = self.options.index(name) {
+            let field = self.options.fields[i].0;
+
+            self.script_changes.push((field, value));
+        }
+
+        true
+    }
+
+    /// The options world Scripts set since the last call, in order.
+    pub fn take_script_changes(&mut self) -> Vec<(&'static str, OptionValue)> {
+        std::mem::take(&mut self.script_changes)
     }
 
     /// An option's value as the world starts, without an event: the page's options the engine reads itself reach a new
@@ -713,6 +739,28 @@ mod tests {
     /// Issue #480: the page's Antialiased and Multisampling options are the world's (X_ITE has one BrowserOptions), so
     /// a Script's Multisampling keeps 0 samples while the page's Antialiased is false, and a Script's Antialiased true
     /// gives the page's Multisampling (pinned X_ITE 16.5.0 in Chrome: 0 and 4 samples).
+    #[test]
+    fn script_options_go_back_to_the_page_in_order() {
+        let mut b = BrowserOptions::new(512, 512);
+
+        // The page's own set is not a Script's.
+        b.set_option("Multisampling", OptionValue::Int32(2));
+        assert!(b.take_script_changes().is_empty());
+
+        b.set_script_option("OrderIndependentTransparency", OptionValue::Bool(true));
+        b.set_script_option("Multisampling", OptionValue::Int32(4));
+        assert!(!b.set_script_option("NoSuchOption", OptionValue::Bool(true)));
+
+        let names: Vec<_> = b
+            .take_script_changes()
+            .into_iter()
+            .map(|(n, _)| n)
+            .collect();
+
+        assert_eq!(names, ["OrderIndependentTransparency", "Multisampling"]);
+        assert!(b.take_script_changes().is_empty());
+    }
+
     #[test]
     fn script_sampling_reads_the_page_options() {
         let mut b = BrowserOptions::new(512, 512);
