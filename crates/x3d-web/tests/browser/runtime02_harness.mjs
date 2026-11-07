@@ -753,6 +753,20 @@ export async function openPage (contextOptions, { init, signal } = { })
       assert .equal (startError, undefined, `X_ITE_R did not start: ${startError}\n${page .log .join ("\n")}`);
    }
 
+   // XR_FORCE_WEBGL2: the run is a WebGL2 run only if the page has no WebGPU and the engine chose WebGL2. A browser that
+   // keeps `navigator.gpu` (an own property, a non-configurable one) stops the test here instead of running on WebGPU.
+   if (FORCE_WEBGL2)
+   {
+      const state = await page .evaluate (() => ({
+         gpu:     "gpu" in navigator,
+         backend: document .querySelector ("x3d-canvas") ?.browser ?.[Symbol .for ("X_ITE_R.engine")] ?.backend ?? null,
+      }));
+
+      assert .equal (state .gpu, false, "XR_FORCE_WEBGL2: navigator.gpu is still there");
+      assert .ok (state .backend === "webgl2" || (init && state .backend === null),
+         `XR_FORCE_WEBGL2: the engine runs on ${state .backend}, not webgl2`);
+   }
+
    return page;
 }
 
