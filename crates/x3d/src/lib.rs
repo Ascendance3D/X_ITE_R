@@ -60,6 +60,7 @@ pub fn profiles() -> impl Iterator<Item = (&'static str, &'static [(String, i32)
 }
 
 impl Node {
+    /// The node type name, e.g. `"Transform"`.
     pub fn name(&self) -> &'static str {
         &self.inner.name
     }
@@ -92,6 +93,7 @@ impl Node {
 }
 
 impl Field {
+    /// The field name, e.g. `"translation"`.
     pub fn name(&self) -> &'static str {
         &self.inner.name
     }

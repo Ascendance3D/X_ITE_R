@@ -409,7 +409,7 @@ impl<'a> Parser<'a> {
         }
 
         // getLastLine (twice)
-        let mut last_line = |last_index: &mut isize| {
+        let last_line = |last_index: &mut isize| {
             let mut line: Vec<u16> = vec![];
 
             *last_index = (*last_index).min(len - 1);
