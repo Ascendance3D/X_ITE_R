@@ -676,15 +676,28 @@ after (async () =>
 // `signal`: the test's signal (TestContext.signal). node:test aborts it when the test times out, but the test function
 // runs on, so a `finally` that closes the page runs only when the function ends. Until then the page draws on the one
 // browser of the file, and on a CPU adapter (SwiftShader) it slows the next test's page: in a CI run the next page did
-// not start in 30 s. With the signal, the page's context closes when the test is cancelled.
+// not start in 30 s. With the signal, the page's context closes when the test is cancelled, and the next openPage waits
+// until that close is complete (node:test starts the next test at once).
+const closing = new Set ();
+
 export async function openPage (contextOptions, { init, signal } = { })
 {
+   await Promise .all (closing);
+
    const context = await browser .newContext (contextOptions);
    const allowed = [ server .base, server .foreign ];
 
    if (signal)
    {
-      const close = () => context .close () .catch (() => { });
+      const close = () =>
+      {
+         const done = context .close () .catch (() => { });
+
+         closing .add (done);
+         done .then (() => closing .delete (done));
+
+         return done;
+      };
 
       if (signal .aborted)
          await close ();
