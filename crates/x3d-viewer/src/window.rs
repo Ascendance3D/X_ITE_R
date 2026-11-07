@@ -24,7 +24,7 @@ use crate::backend::{self, GpuErrors};
 use crate::embed::{EmbeddedViewer, FrameInfo, LoadOptions, realtime_now};
 use crate::keys::{KeyAction, KeyTracker, Platform, Shortcut};
 use crate::script::apply;
-use crate::touch::{Phase as TouchPhase2, TouchTracker};
+use crate::touch::{Phase as TrackerPhase, TouchTracker};
 use crate::ui::UiRequest;
 use crate::viewer::UiEvent;
 use serde_json::Value;
@@ -952,10 +952,10 @@ impl ApplicationHandler for ViewerWindow {
                     .map(|g| g.viewer.size())
                     .map_or((0.0, 0.0), |(w, h)| (w as f64, h as f64));
                 let phase = match touch.phase {
-                    TouchPhase::Started => TouchPhase2::Started,
-                    TouchPhase::Moved => TouchPhase2::Moved,
-                    TouchPhase::Ended => TouchPhase2::Ended,
-                    TouchPhase::Cancelled => TouchPhase2::Cancelled,
+                    TouchPhase::Started => TrackerPhase::Started,
+                    TouchPhase::Moved => TrackerPhase::Moved,
+                    TouchPhase::Ended => TrackerPhase::Ended,
+                    TouchPhase::Cancelled => TrackerPhase::Cancelled,
                 };
                 let pos = (touch.location.x, h - touch.location.y);
 
