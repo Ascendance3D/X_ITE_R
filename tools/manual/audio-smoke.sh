@@ -41,10 +41,10 @@ fi
 [ -x "$view_bin" ] || { echo "FAIL: no x3d-view binary at $view_bin"; exit 1; }
 
 rate=48000
-timeout $((secs + 20)) parec -d "$sink.monitor" --rate=$rate --format=s16le --channels=1 --raw >"$tmp/cap.raw" 2>"$tmp/rec.err" &
+timeout -k 5 $((secs + 20)) parec -d "$sink.monitor" --rate=$rate --format=s16le --channels=1 --raw >"$tmp/cap.raw" 2>"$tmp/rec.err" &
 rec=$!
 sleep 1
-timeout "$secs" "$view_bin" "$world" >"$tmp/view.out" 2>&1 &
+timeout -k 5 "$secs" "$view_bin" "$world" >"$tmp/view.out" 2>&1 &
 view=$!
 wait "$view" 2>/dev/null
 view_status=$?
