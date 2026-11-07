@@ -2361,6 +2361,33 @@ impl Renderer {
         r
     }
 
+    /// A world went (unload, replaceWorld, reload): drop the GPU entries of the geometries and textures nothing but
+    /// this renderer still holds. Without it they stay until they age out (KEEP_FRAMES frames), so a page that loads
+    /// worlds one after the other keeps the meshes of the last ones it drew (issue #462 section D: the WASM memory
+    /// grew with each reload). What another world still holds stays; the bind groups that point at the textures are
+    /// made again when used.
+    pub fn release_unreferenced(&mut self) {
+        let frame_no = self.frame_no;
+        let free = &mut self.free_vertices;
+
+        for map in [&mut self.geometries, &mut self.sprites] {
+            map.retain(|_, e| {
+                if Rc::strong_count(&e.geometry) > 1 {
+                    return true;
+                }
+                free.push(FreeBuffer {
+                    buffer: e.buffer.clone(),
+                    freed: frame_no,
+                });
+                false
+            });
+        }
+
+        self.textures.retain(|_, t| Rc::strong_count(&t._image) > 1);
+        self.style_groups.retain(|_, e| Rc::strong_count(&e.0) > 1);
+        self.slot_groups.clear();
+    }
+
     pub fn device(&self) -> &wgpu::Device {
         &self.device
     }
