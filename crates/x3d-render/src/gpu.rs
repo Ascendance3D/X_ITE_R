@@ -4445,6 +4445,53 @@ impl Renderer {
         ]
     }
 
+    /// Every cache of the renderer by name, for memory tests (issue #462): the entry count, and for the vertex caches the
+    /// buffer bytes. `...Capacity` entries are the reserved capacity of per-frame scratch vectors (memory they keep, not a
+    /// count). The sub-renderers give the sum of their `resources` counts (modules, pipelines, buffers and bind groups);
+    /// `slotGroups` and `styleGroups` are the renderer's own bind-group caches. `frameNo` is not a cache: it dates the rest.
+    pub fn cache_stats(&self) -> Vec<(&'static str, u64)> {
+        let bytes = |m: &HashMap<*const crate::geometry::Geometry, GeoGpu>| {
+            m.values().map(|e| e.buffer.size()).sum::<u64>()
+        };
+
+        vec![
+            ("geometries", self.geometries.len() as u64),
+            ("geometryBytes", bytes(&self.geometries)),
+            ("sprites", self.sprites.len() as u64),
+            ("spriteBytes", bytes(&self.sprites)),
+            ("freeVertices", self.free_vertices.len() as u64),
+            (
+                "freeVertexBytes",
+                self.free_vertices.iter().map(|f| f.buffer.size()).sum(),
+            ),
+            ("textures", self.textures.len() as u64),
+            ("slotGroups", self.slot_groups.len() as u64),
+            ("styleGroups", self.style_groups.len() as u64),
+            ("generated", self.generated.len() as u64),
+            ("rendered", self.rendered.len() as u64),
+            ("thick", self.thick.len() as u64),
+            ("pipelines", self.pipelines.len() as u64),
+            ("frameBuffers", self.frame_buffers.len() as u64),
+            ("callsCapacity", self.calls.capacity() as u64),
+            ("drawBytesCapacity", self.draw_bytes.capacity() as u64),
+            ("scratchDataCapacity", self.scratch_data.capacity() as u64),
+            ("debugDrawsCapacity", self.debug_draws.capacity() as u64),
+            (
+                "volume",
+                self.volume.resources().iter().sum::<usize>() as u64,
+            ),
+            (
+                "splats",
+                self.splats.resources().iter().sum::<usize>() as u64,
+            ),
+            (
+                "custom",
+                self.custom.resources().iter().sum::<usize>() as u64,
+            ),
+            ("frameNo", self.frame_no),
+        ]
+    }
+
     /// Only the GeneratedCubeMapTexture passes of `frame`: a host that steps frames it does not
     /// show (x3d-drive) keeps the textures as current as a browser that draws every frame.
     pub fn render_cube_passes(&mut self, frame: &Frame) -> Result<(), String> {

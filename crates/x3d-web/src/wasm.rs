@@ -825,6 +825,31 @@ impl WebBrowser {
         self.retired.len() as u32
     }
 
+    /// For memory tests (issue #462): the bytes Rust has allocated and not freed (requested sizes, without allocator
+    /// overhead), their peak and the live allocations ([`crate::alloc_stats`]), the worlds,
+    /// loads and retired worlds the engine keeps, and every renderer cache by name ([`Renderer::cache_stats`]).
+    #[wasm_bindgen(getter, js_name = resourceStats)]
+    pub fn resource_stats(&self) -> js_sys::Object {
+        let o = js_sys::Object::new();
+        let set = |k: &str, v: f64| {
+            let _ = js_sys::Reflect::set(&o, &k.into(), &v.into());
+        };
+        let (live, peak, allocs) = crate::alloc_stats::stats();
+        set("heapLive", live as f64);
+        set("heapPeak", peak as f64);
+        set("heapAllocs", allocs as f64);
+        set("worlds", self.worlds.len() as f64);
+        set("loads", self.loads.len() as f64);
+        set("retired", self.retired.len() as f64);
+        set("retiredLog", self.retired_log.len() as f64);
+
+        for (k, v) in self.renderer.cache_stats() {
+            set(k, v as f64);
+        }
+
+        o
+    }
+
     /// X3DBrowser.loadURL (url) of the page: start the world's FileLoader with the candidates `urls`, resolved against
     /// `base`. The id of the load: [`WebBrowser::load_step`] goes on with it, [`WebBrowser::take_log`] gives its
     /// messages, [`WebBrowser::progress`] waits for its responses and [`WebBrowser::discard`] ends it.

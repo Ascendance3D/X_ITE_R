@@ -7,6 +7,8 @@
 //! natively. `wasm` (wasm32 only) adds the WebGPU device and canvas surface and exports [`wasm::WebBrowser`] through
 //! wasm-bindgen. Build the page module with `tools/build-web.sh`.
 
+#[cfg(target_arch = "wasm32")]
+pub mod alloc_stats;
 pub mod chain;
 pub mod device_request;
 pub mod session;
@@ -17,6 +19,10 @@ pub mod script;
 pub mod wasm;
 #[cfg(target_arch = "wasm32")]
 pub mod webgl_probe;
+
+#[cfg(target_arch = "wasm32")]
+#[global_allocator]
+static ALLOCATOR: alloc_stats::Counting = alloc_stats::Counting;
 
 /// X_ITE's default `Multisampling` rendering property (RenderingProperties.js), as x3d-viewer's embedding API uses.
 pub const DEFAULT_MULTISAMPLING: u32 = 4;
