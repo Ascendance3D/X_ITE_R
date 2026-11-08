@@ -198,7 +198,16 @@ test ("the XR button starts a session that draws into the layer, and its end ret
          out .deviceCallbacks = ran;
          out .processedInSession = loop () .processed - processed;
          out .halves = record .layers [0] .halves ();
-         out .planes = session .renderStates .filter (s => "depthNear" in s) .length > 0;
+         const planes = session .renderStates .filter (s => "depthNear" in s);
+         out .planes = planes .length > 0;
+         out .lastPlanes = planes .at (-1);
+
+         // X3DWebXRContext.xrUpdateNearFarPlanes follows the bound NavigationInfo: avatarSize [0] 0.6 gives a near
+         // distance of 0.3, visibilityLimit 250 the far distance.
+         await browser .replaceWorld (await browser .createX3DFromString (world .replace ("PROFILE Interchange",
+            "PROFILE Interchange\nNavigationInfo { avatarSize [ 0.6 1.6 0.75 ] visibilityLimit 250 }")));
+         session .runFrame (performance .now () + 200);
+         out .worldPlanes = session .renderStates .filter (s => "depthNear" in s) .at (-1);
 
          await session .end ();
          await wait (() => !browser .getRenderingProperty ("XRSession"), "XRSession FALSE");
@@ -232,6 +241,10 @@ test ("the XR button starts a session that draws into the layer, and its end ret
       assert .equal (result .deviceCallbacks, 3, "the browser did not wait for each device frame");
       assert .equal (result .processedInSession, 3);
       assert .ok (result .planes, "no depth planes were set");
+      // The default NavigationInfo: near avatarSize [0] / 2 = 0.125, far getMaxFarValue () = 1e5.
+      assert .deepEqual (result .lastPlanes, { depthNear: 0.125, depthFar: 1e5 });
+      // MFFloat avatarSize is single precision in X_ITE too (Float32Array).
+      assert .deepEqual (result .worldPlanes, { depthNear: Math .fround (0.6) / 2, depthFar: 250 });
 
       for (const [ i, half ] of result .halves .entries ())
       {

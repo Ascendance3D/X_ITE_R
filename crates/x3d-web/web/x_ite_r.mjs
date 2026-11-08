@@ -6297,6 +6297,13 @@ class X3DBrowser
          // and 3) and buttons 0 and 1. X_ITE reads `buttons [1] .pressed` without a check; a missing button is not pressed.
          gamepads: pads => this .#engine ?.xrGamepads (Float64Array .from (pads .flatMap (({ axes, buttons }) =>
             [ axes [2], axes [3], buttons [0] ?.pressed ? 1 : 0, buttons [1] ?.pressed ? 1 : 0 ]))),
+         // X3DWebXRContext.xrUpdateNearFarPlanes: the active viewpoint's planes; without a world, 0.1 and 10 000.
+         getNearFar: () =>
+         {
+            const planes = this .#engine ?.xrNearFar ();
+
+            return planes ? { depthNear: planes [0], depthFar: planes [1] } : null;
+         },
       });
 
       await controller .start ();

@@ -364,8 +364,9 @@ Status: PARTIAL. #146 is split by what DOMIntegration.js does: the root element 
 
 - As in X_ITE 16.5.0, the browser shows the XR button when `navigator.xr.isSessionSupported` accepts the `XRSessionMode` option (`IMMERSIVE_VR` by default). The check runs at start and again when the option changes. The button starts the session and stops it.
 - A session uses the `local` reference space. The engine's WebGL2 context is made XR-compatible, and the session gets an `XRWebGLLayer` with X_ITE's options. The frame loop then runs on the session's `requestAnimationFrame`, and each view of the viewer pose is drawn into its viewport of the layer. When the session ends, the loop goes back to the window.
+- Each frame sets the session's `depthNear` and `depthFar` to the active viewpoint's near and far distance (X3DWebXRContext.xrUpdateNearFarPlanes); without a world, 0.1 and 10 000.
 - **Difference:** X_ITE_R draws XR only on its WebGL2 backend (`backend="webgl2"`). A WebGPU canvas has no XR layer in a stable browser, so on WebGPU the button stays hidden.
 - Gamepad navigation follows X_ITE's `xrExamineViewer.js` and `xrX3DFlyViewer.js`. Each frame, the gamepads with four axes or more go to the viewer. EXAMINE rotates with the thumbstick, zooms with button 0 and pans with button 1; FLY and WALK fly with the thumbstick (button 0 doubles the speed) and pan with button 1. NONE, PLANE and LOOKAT ignore the gamepads.
 - **Difference:** X_ITE reads `buttons [1]` of a gamepad without a check. X_ITE_R takes a missing button as not pressed.
-- **Not implemented:** the input-ray pointing of X3DWebXRContext.xrUpdatePointers. The depth planes are fixed at 0.1 and 10 000; X_ITE uses the active viewpoint's planes.
+- **Not implemented:** the input-ray pointing of X3DWebXRContext.xrUpdatePointers.
 - Tested with an emulated device only (`tests/browser/xrsession01.test.mjs`). No headset has run it.

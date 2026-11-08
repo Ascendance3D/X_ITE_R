@@ -1033,6 +1033,16 @@ impl Viewer3d {
         }
     }
 
+    /// X3DWebXRContext.xrUpdateNearFarPlanes: the bound viewpoint's `getNearDistance` and `getFarDistance` with the bound
+    /// NavigationInfo, the `depthNear` and `depthFar` of the XR session's render state.
+    pub fn xr_near_far(&mut self) -> (f64, f64) {
+        let base = self.base();
+        let nav = self.nav_info();
+        let vp = self.layer.vp(self.layer.viewpoint());
+
+        (vp.near_distance(&base, &nav), vp.far_distance(&base, &nav))
+    }
+
     /// The pointing camera for the bound viewpoint.
     pub fn pick_camera(&mut self) -> PickCamera {
         let base = self.base();
