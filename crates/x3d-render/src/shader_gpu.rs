@@ -783,7 +783,9 @@ pub struct ShaderGpu {
     modules: HashMap<u64, Module>,
     pipelines: HashMap<PipelineKey, (wgpu::RenderPipeline, u64)>,
     vertices: HashMap<(usize, u64), VertexBuffer>,
-    groups: HashMap<(u64, Vec<usize>), (wgpu::BindGroup, u64)>,
+    /// Keyed by the texture addresses; each entry holds its textures, so no other texture can get one of the
+    /// addresses while the group binds the views of the old ones.
+    groups: HashMap<(u64, Vec<usize>), (wgpu::BindGroup, u64, Vec<Option<Rc<TextureImage>>>)>,
     uniform: Option<(wgpu::Buffer, u64)>,
     uniform_groups: HashMap<u64, wgpu::BindGroup>,
     /// 1x1 black textures (2D, 3D, cube) for the sampler uniforms no texture was given to.
@@ -1212,7 +1214,8 @@ impl ShaderGpu {
                             entries: &entries,
                         })
                     };
-                    self.groups.insert(gkey.clone(), (group, frame_no));
+                    self.groups
+                        .insert(gkey.clone(), (group, frame_no, textures.clone()));
                 }
             }
 
@@ -1238,6 +1241,12 @@ impl ShaderGpu {
         pass.set_bind_group(1, &self.groups[&p.group1].0, &[]);
         pass.set_vertex_buffer(0, vb.buffer.slice(..));
         pass.draw(0..p.count.min(vb.count), 0..1);
+    }
+
+    /// A world went (Renderer::release_unreferenced): drop the texture bind groups, so the textures only they still
+    /// hold are freed. They are made again when used.
+    pub fn release_texture_groups(&mut self) {
+        self.groups.clear();
     }
 
     /// Drop what no frame used for [`KEEP_FRAMES`] frames.

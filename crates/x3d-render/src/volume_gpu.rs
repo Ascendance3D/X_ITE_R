@@ -53,7 +53,9 @@ struct Prepared {
 pub struct VolumeGpu {
     modules: HashMap<u64, Module>,
     pipelines: HashMap<PipelineKey, (wgpu::RenderPipeline, u64)>,
-    groups: HashMap<(u64, Vec<usize>), (wgpu::BindGroup, u64)>,
+    /// Keyed by the texture addresses; each entry holds its textures, so no other texture can get one of the
+    /// addresses while the group binds the views of the old ones.
+    groups: HashMap<(u64, Vec<usize>), (wgpu::BindGroup, u64, Vec<std::rc::Rc<TextureImage>>)>,
     buffer: Option<(wgpu::Buffer, u64)>,
     prepared: Vec<Prepared>,
     /// Pipelines created so far (for tests).
@@ -452,7 +454,8 @@ impl VolumeGpu {
                         layout: &m.layout,
                         entries: &entries,
                     });
-                    self.groups.insert(group_key.clone(), (group, frame_no));
+                    self.groups
+                        .insert(group_key.clone(), (group, frame_no, d.textures.clone()));
                 }
             }
 
@@ -471,6 +474,12 @@ impl VolumeGpu {
         pass.set_pipeline(&self.pipelines[&p.pipeline].0);
         pass.set_bind_group(1, &self.groups[&p.group].0, &[p.offset]);
         pass.draw(0..p.vertices, 0..1);
+    }
+
+    /// A world went (Renderer::release_unreferenced): drop the bind groups, so the textures only they still hold are
+    /// freed. They are made again when used.
+    pub fn release_texture_groups(&mut self) {
+        self.groups.clear();
     }
 
     /// Drop what no frame has used for [`KEEP_FRAMES`] frames.
