@@ -238,10 +238,28 @@ jobs:
         with:
           tool: cargo-nextest@0.9.150
 
-      # The runner's CPUs and memory: nextest runs as many tests at once as there are CPUs (profile ci).
+      # The runner's CPUs and memory. nextest runs as many tests at once as there are CPUs (profile ci), but at most one
+      # test per 1280 MiB of the job's memory: the tightest of the machine's memory and the memory.high/memory.max of
+      # the job's cgroup and its parents (a self-hosted runner service has a limit). Without a GPU the render tests draw
+      # with software Vulkan at up to about 1 GB each; at 8 tests in a 5 GiB service limit the runner thrashed and
+      # GitHub marked it offline (#162). NEXTEST_TEST_THREADS overrides the profile.
       - name: Runner resources
         run: |
-          { echo "CPUs: $(nproc)"; free -m | awk '/^Mem:/ {print "Memory: " $2 " MiB"}'; } | tee -a "$GITHUB_STEP_SUMMARY"
+          mem=$(awk '/^MemTotal:/ {print int($2 / 1024)}' /proc/meminfo)
+          limit=$mem
+          dir=/sys/fs/cgroup$(sed -n 's/^0:://p' /proc/self/cgroup)
+          while [ -n "$dir" ] && [ "$dir" != /sys/fs ]; do
+            for f in "$dir/memory.high" "$dir/memory.max"; do
+              v=$(cat "$f" 2>/dev/null || echo max)
+              if [ "$v" != max ] && [ $((v / 1048576)) -lt "$limit" ]; then limit=$((v / 1048576)); fi
+            done
+            dir=${dir%/*}
+          done
+          threads=$((limit / 1280))
+          [ "$threads" -lt 1 ] && threads=1
+          [ "$threads" -gt "$(nproc)" ] && threads=$(nproc)
+          echo "NEXTEST_TEST_THREADS=$threads" >> "$GITHUB_ENV"
+          { echo "CPUs: $(nproc)"; echo "Memory: $mem MiB"; echo "Job memory limit: $limit MiB"; echo "Tests at once: $threads"; } | tee -a "$GITHUB_STEP_SUMMARY"
 
       # The shared key gives "Warm cache" the same cache; it is also the name the job-based key had.
       - uses: Swatinem/rust-cache@v2
