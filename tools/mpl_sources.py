@@ -110,21 +110,29 @@ def write(out):
     if bad:
         print("\n".join(f"ERROR: {b}" for b in bad), file=sys.stderr)
         return 1
-    dest = Path(out) / SUB / "mpl-2.0"
-    if dest.exists():
-        print(f"ERROR: {dest} exists", file=sys.stderr)
+    final = Path(out) / SUB
+    if final.exists():
+        print(f"ERROR: {final} exists", file=sys.stderr)
         return 1
-    dest.mkdir(parents=True)
+    Path(out).mkdir(parents=True, exist_ok=True)
     caches = registry_caches()
-    for name, version, checksum in rows:
-        file = f"{name}-{version}.crate"
-        hits = [c / file for c in caches if (c / file).is_file() and sha256(c / file) == checksum]
-        if not hits:
-            print(f"ERROR: {file} with SHA-256 {checksum} is not in the Cargo registry cache (run cargo fetch)", file=sys.stderr)
-            return 1
-        shutil.copyfile(hits[0], dest / file)
-    (dest.parent / "README.md").write_text(readme(rows), encoding="utf-8")
-    (dest.parent / "MPL-2.0.txt").write_text(mpl_text(), encoding="utf-8")
+    # Built in a temporary directory beside the target and renamed into place only when complete, so a failure leaves
+    # nothing behind and a retry (after cargo fetch) can run.
+    with tempfile.TemporaryDirectory(dir=out, prefix=".mpl-sources-") as tmp:
+        base = Path(tmp) / SUB
+        dest = base / "mpl-2.0"
+        dest.mkdir(parents=True)
+        for name, version, checksum in rows:
+            file = f"{name}-{version}.crate"
+            hits = [c / file for c in caches if (c / file).is_file() and sha256(c / file) == checksum]
+            if not hits:
+                print(f"ERROR: {file} with SHA-256 {checksum} is not in the Cargo registry cache (run cargo fetch)", file=sys.stderr)
+                return 1
+            shutil.copyfile(hits[0], dest / file)
+        (base / "README.md").write_text(readme(rows), encoding="utf-8")
+        (base / "MPL-2.0.txt").write_text(mpl_text(), encoding="utf-8")
+        base.rename(final)
+    dest = final / "mpl-2.0"
     print(f"OK: {len(rows)} MPL-2.0 crate archives in {dest}")
     return 0
 
@@ -138,9 +146,11 @@ def verify(out):
     for file, checksum in want.items():
         if file not in have:
             bad.append(f"missing {SUB}/mpl-2.0/{file}")
-        elif sha256(dest / file) != checksum:
+        elif not (dest / file).is_file() or sha256(dest / file) != checksum:
             bad.append(f"{file}: SHA-256 differs from Cargo.lock")
     bad += [f"unexpected {SUB}/mpl-2.0/{f}" for f in sorted(have - set(want))]
+    if base.exists() and not dest.is_dir():
+        bad.append(f"{SUB}/mpl-2.0 is not a directory")
     readme_path = base / "README.md"
     if not readme_path.is_file() or readme_path.read_text(encoding="utf-8") != readme(rows):
         bad.append(f"{SUB}/README.md is missing or not the generated text")
@@ -175,6 +185,30 @@ def self_test():
             failures.append("a wrong license text passed")
         if write(d) != 1:
             failures.append("write into an existing directory did not fail")
+        shutil.rmtree(Path(d) / SUB)
+        first.unlink(missing_ok=True)
+    with tempfile.TemporaryDirectory() as d:
+        if write(d) != 0:
+            failures.append("second write did not pass")
+        dest = Path(d) / SUB / "mpl-2.0"
+        first = sorted(dest.glob("*.crate"))[0]
+        first.unlink()
+        first.mkdir()
+        if verify(d) != 1:
+            failures.append("a directory in place of an archive passed")
+    with tempfile.TemporaryDirectory() as d, tempfile.TemporaryDirectory() as empty:
+        old_home = os.environ.get("CARGO_HOME")
+        os.environ["CARGO_HOME"] = empty
+        try:
+            if write(d) != 1:
+                failures.append("write without the registry cache did not fail")
+        finally:
+            if old_home is None:
+                del os.environ["CARGO_HOME"]
+            else:
+                os.environ["CARGO_HOME"] = old_home
+        if any(Path(d).iterdir()):
+            failures.append("a failed write left files behind")
     print("\n".join(failures) or "self-test OK")
     return 1 if failures else 0
 
