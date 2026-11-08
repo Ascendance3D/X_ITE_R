@@ -596,7 +596,7 @@ const KNOWN_DIFFERENCES = {
       [ [ "MaxLights" ], 8, notImplemented ("MaxLights") ], [ [ "ColorDepth" ], 32, notImplemented ("ColorDepth") ],
       [ [ "TextureMemory" ], "number:NaN", notImplemented ("TextureMemory") ], [ [ "MaxAnisotropicDegree" ], 16, notImplemented ("MaxAnisotropicDegree") ],
       [ [ "MaxSamples" ], 8, notImplemented ("MaxSamples") ], [ [ "PixelsPerPoint" ], 1.3333333333333333, notImplemented ("PixelsPerPoint") ],
-      [ [ "SoundDestinations" ], 0, notImplemented ("SoundDestinations") ], [ [ "XRSession" ], false, notImplemented ("XRSession") ],
+      [ [ "SoundDestinations" ], 0, notImplemented ("SoundDestinations") ],
    ],
    // The events of the first, empty world (see startEventDifferences).
    "entryPoints.createBrowser": startEventDifferences ("entryPoints.createBrowser", [ [ "stillDetached", "events" ], [ "afterAttach", "events" ] ]),

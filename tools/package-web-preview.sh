@@ -59,9 +59,8 @@ from_commit() {
   git archive --format=tar "$commit" "$1" | tar -x -C "$2" --strip-components="$(( $(tr -cd / <<<"$1" | wc -c) + 1 ))" --no-same-permissions
 }
 
-# The runtime: the adapter, the audio and video mirrors and the generated module. xr_session.mjs is not part of it
-# (x_ite_r.mjs does not import it; WebXR is not supported, issue #83).
-for f in x_ite_r.mjs audio_mirror.mjs video_mirror.mjs; do
+# The runtime: the adapter, the audio and video mirrors, the WebXR session and layer (issue #83) and the generated module.
+for f in x_ite_r.mjs audio_mirror.mjs video_mirror.mjs xr_session.mjs xr_layer.mjs; do
   git show "$commit:$web/$f" > "$dir/$f"
 done
 cp -r "$web/pkg" "$dir/pkg"

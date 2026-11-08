@@ -11,6 +11,8 @@ import init, {
 import { createScriptRealm } from "./pkg/script.mjs";
 import { AudioMirror } from "./audio_mirror.mjs";
 import { VideoMirror } from "./video_mirror.mjs";
+import { XRSessionController } from "./xr_session.mjs";
+import { prepareLayer, drawXRFrame } from "./xr_layer.mjs";
 import
 {
    __bridge, X3DConstants, X3DChildObject, X3DField, X3DArrayField, X3DFieldDefinition, FieldDefinitionArray, SFNodeCache,
@@ -3088,7 +3090,7 @@ function pointSnapHalfUp ()
 // X_ITE's WebGL context and are not implemented.
 const RENDERING_OPTIONS     = [ "LogarithmicDepthBuffer" ];
 const RENDERING_DERIVED     = [ "Shading", "Antialiased", "AntiAliased", "ContentScale", "Multisampling" ];
-const RENDERING_UNSUPPORTED = [ "MaxTextureSize", "TextureUnits", "MaxLights", "ColorDepth", "TextureMemory", "MaxAnisotropicDegree", "MaxSamples", "PixelsPerPoint", "SoundDestinations", "XRSession" ];
+const RENDERING_UNSUPPORTED = [ "MaxTextureSize", "TextureUnits", "MaxLights", "ColorDepth", "TextureMemory", "MaxAnisotropicDegree", "MaxSamples", "PixelsPerPoint", "SoundDestinations" ];
 
 // Shading.js: the names of the shading option; "POINTSET" is "POINT", any other text is GOURAUD.
 const SHADINGS = [ "POINT", "WIREFRAME", "FLAT", "GOURAUD", "PHONG" ];
@@ -5745,8 +5747,17 @@ class X3DBrowser
    #callbacks = new Map ([ "CONNECTION_ERROR", "BROWSER_EVENT", "INITIALIZED_EVENT", "SHUTDOWN_EVENT", "INITIALIZED_ERROR" ]
       .map (name => [ X3DConstants [name], new Map () ]));
    #frame = 0;
+   // What #frame was requested from: `window`, or the XR session while one runs (X3DBrowserContext.setSession).
+   #frameSource = window;
    #frames = 0;
    #live = true;
+   // The WebXR session (issue #83): { controller, gl, layer } while one runs, else null; the button of
+   // X3DWebXRContext.xrAddButton; the wrapper that holds the buttons.
+   #xr = null;
+   #xrController = null;
+   #xrButton = null;
+   #xrButtonCheck = Promise .resolve ();
+   #wrapper;
    #fileLoader = null;
 
    // The createVrmlFromURL requests in the world's runtime: request id → { field, handle of the node }.
@@ -5788,6 +5799,7 @@ class X3DBrowser
 
       wrapper .classList .add ("x_ite-private-browser");
       element .shadowRoot .append (wrapper);
+      this .#wrapper = wrapper;
       wrapper .append (this .#canvas);
 
       // Notification.initialize: `div.x_ite-private-notification > span`, in a zero-height box before the canvas that
@@ -5853,6 +5865,8 @@ class X3DBrowser
          // they run with the privileges of the page, in its JavaScript engine (API.md, "Script nodes").
          // A Script's print and console lines go to the page's console in the Script's call, as X_ITE logs them.
          this .#engine .setLogSink (printLogLine);
+         // BrowserOptions.set_XRSessionMode__ at start: the XR button when the device supports the mode.
+         this .#xrUpdateButton ();
          // The field callbacks run in the route chain, as X_ITE's do.
          this .#engine .setFieldEventSink ((scene, node, name, data) => deliverChainEvent (this, scene, node, name, data));
          this .#engine .setScriptRealm (host =>
@@ -6177,6 +6191,152 @@ class X3DBrowser
 
       if (field === this .#options .get ("Multisampling") || field === this .#options .get ("Antialiased"))
          this .#updateMultisampling ();
+
+      // BrowserOptions.set_XRSessionMode__: X3DRenderingContext.xrUpdateButton.
+      if (field === this .#options .get ("XRSessionMode"))
+         this .#xrUpdateButton ();
+   }
+
+   // --- WebXR (issue #83) -----------------------------------------------------------------------------------------
+   //
+   // X_ITE 16.5.0 X3DRenderingContext.xrCheckSupport and xrUpdateButton, X3DWebXRContext.xrAddButton, xrStartSession,
+   // xrStopSession and xrFrame. The session part is XRSessionController (xr_session.mjs), the layer and the draw are
+   // xr_layer.mjs and the engine's `xrFrame`. X_ITE draws with WebGL; X_ITE_R draws XR only on its WebGL2 backend
+   // (`backend="webgl2"`), because a WebGPU canvas has no XR layer in a stable browser: on WebGPU the button stays hidden.
+
+   #xrSessionMode () { return this .#options .get ("XRSessionMode") .getValue (); }
+
+   async #xrCheckSupport ()
+   {
+      if (this .#engine ?.backend !== "webgl2" || !("xr" in navigator))
+         return false;
+
+      const mode = this .#xrSessionMode () .toLowerCase () .replaceAll ("_", "-");
+
+      try
+      {
+         return await navigator .xr .isSessionSupported (mode);
+      }
+      catch
+      {
+         return false;
+      }
+   }
+
+   #xrUpdateButton ()
+   {
+      this .#xrButtonCheck = this .#xrButtonCheck .then (async () =>
+      {
+         const supported = await this .#xrCheckSupport ();
+
+         if (this .#disposed)
+            return;
+
+         if (!supported)
+         {
+            this .#xrButton ?.classList .add ("x_ite-private-hidden");
+            return;
+         }
+
+         this .#xrButton ??= (() =>
+         {
+            let buttons = this .#wrapper .querySelector (".x_ite-private-buttons");
+
+            if (!buttons)
+            {
+               buttons = document .createElement ("div");
+               buttons .classList .add ("x_ite-private-buttons");
+               this .#wrapper .append (buttons);
+            }
+
+            const button = document .createElement ("div");
+
+            const toggle = () =>
+            {
+               this .#resumeAudio ();
+
+               if (this .#xr)
+                  this .#xrStop ();
+               else
+                  this .#xrStart () .catch (error => console .error (error));
+            };
+
+            button .classList .add ("x_ite-private-xr-button", "x_ite-private-button", "x_ite-private-fade");
+            button .part ?.add ("xr-button");
+            button .title      = "Start WebXR session.";
+            button .onmouseup  = toggle;
+            button .ontouchend = toggle;
+            buttons .append (button);
+
+            return button;
+         })();
+
+         this .#xrButton .classList .remove ("x_ite-private-hidden");
+      })
+      .catch (error => console .error (error));
+
+      return this .#xrButtonCheck;
+   }
+
+   // X3DWebXRContext.xrStartSession: the session, the `local` space, an XR-compatible context and the base layer; the
+   // frame loop then runs on the session (setSession). A start that fails leaves no session.
+   async #xrStart ()
+   {
+      if (this .#xr || this .#disposed)
+         return;
+
+      let bound = null;
+
+      const controller = this .#xrController ??= new XRSessionController ({
+         xr: navigator .xr,
+         getSessionMode: () => this .#xrSessionMode (),
+         prepare: async session => { bound = await prepareLayer (this .#canvas, session, { contentScale: this .#derived .ContentScale }); },
+         layer: () => this .#xr ?.layer ?? bound ?.layer ?? null,
+         log: event => { if (event === "session-end") this .#xrEnded (); },
+         // X3DWebXRContext.xrUpdateNearFarPlanes: the active viewpoint's planes; without a world, 0.1 and 10 000.
+         getNearFar: () =>
+         {
+            const planes = this .#engine ?.xrNearFar ();
+
+            return planes ? { depthNear: planes [0], depthFar: planes [1] } : null;
+         },
+      });
+
+      await controller .start ();
+
+      if (!controller .active || !bound)
+         return;
+
+      this .#xr = { controller, gl: bound .gl, layer: bound .layer };
+
+      if (this .#xrButton)
+         this .#xrButton .title = "Stop WebXR session.";
+
+      // The session's frame times are its own clock: the MaximumFrameRate interval starts again on each switch.
+      this .#stop ();
+      this .#lastStamp = -Infinity;
+      this .#start ();
+   }
+
+   // X3DWebXRContext.xrStopSession; the session's `end` event comes here too (XRSessionController.stop).
+   #xrStop ()
+   {
+      return this .#xr ?.controller .stop ();
+   }
+
+   #xrEnded ()
+   {
+      if (!this .#xr)
+         return;
+
+      this .#stop ();
+      this .#xr = null;
+
+      if (this .#xrButton)
+         this .#xrButton .title = "Start WebXR session.";
+
+      this .#lastStamp = -Infinity;
+      this .#start ();
    }
 
    // The options the shared engine reads itself (WebBrowser.setEngineOption): EnableInlineViewpoints
@@ -6305,6 +6465,10 @@ class X3DBrowser
 
       if (RENDERING_DERIVED .includes (name))
          return this .#derived [ALIASES [name] ?? name];
+
+      // X3DWebXRContext: `_XRSession` is TRUE while a WebXR session runs.
+      if (name === "XRSession")
+         return this .#xr !== null;
 
       if (RENDERING_UNSUPPORTED .includes (name))
          throw new Error (`X_ITE_R: the rendering property '${name}' is not implemented.`);
@@ -7923,9 +8087,12 @@ class X3DBrowser
       if (this .#frame || !this .#engine || this .#disposed || !this .#element .isConnected || document .visibilityState === "hidden")
          return;
 
-      const tick = stamp =>
+      // X3DBrowserContext.addBrowserEvent: `getSession () .requestAnimationFrame`, the window or the XR session.
+      const source = this .#xr ?.controller .session ?? window;
+
+      const tick = (stamp, xrFrame) =>
       {
-         this .#frame = requestAnimationFrame (tick);
+         this .#frame = source .requestAnimationFrame (tick);
          ++ this .#frames;
 
          const engine = this .#engine;
@@ -7955,7 +8122,10 @@ class X3DBrowser
 
          this .#flushTouches ();
 
-         const [ width, height ] = this .#framebufferSize ();
+         // In an XR session the canvas has the size of the layer's framebuffer, which the engine draws each view into
+         // (X3DWebXRContext.xrUpdateBaseLayer `setDefaultFramebuffer (baseLayer .framebuffer)`).
+         const xr = this .#xr;
+         const [ width, height ] = xr ? [ xr .layer .framebufferWidth, xr .layer .framebufferHeight ] : this .#framebufferSize ();
 
          // Assigning the size, even the same one, replaces the canvas texture: only on a change.
          if (this .#canvas .width !== width || this .#canvas .height !== height)
@@ -7975,7 +8145,22 @@ class X3DBrowser
 
             this .#audioClock (engine);
             this .#videoMirror ?.push ();
-            engine .frame (time, width, height);
+            if (xr)
+            {
+               // X3DWebXRContext.xrFrame: the planes, the gamepads and the viewer pose, then one draw per view. A frame
+               // without a pose (tracking lost) draws nothing; the last pose is kept (XRSessionController.updatePose).
+               xr .controller .frameUpdate (xrFrame);
+
+               const pose = xrFrame ?.getViewerPose (xr .controller .referenceSpace);
+
+               if (pose)
+                  drawXRFrame (engine, xr .gl, xr .layer, pose, time);
+            }
+            else
+            {
+               engine .frame (time, width, height);
+            }
+
             frameMs = performance .now () - begin;
             this .#syncWorldOptions ();
 
@@ -8009,12 +8194,14 @@ class X3DBrowser
          this .#afterEngine ();
       };
 
-      this .#frame = requestAnimationFrame (tick);
+      this .#frameSource = source;
+      this .#frame = source .requestAnimationFrame (tick);
    }
 
    #stop ()
    {
-      cancelAnimationFrame (this .#frame);
+      this .#frameSource .cancelAnimationFrame (this .#frame);
+      this .#frameSource = window;
       this .#frame = 0;
    }
 
@@ -8165,6 +8352,7 @@ class X3DBrowser
       }
 
       this .#fileLoader = null;
+      this .#xrStop () ?.catch (Function .prototype);
       this .#releaseInput ();
       this .#listeners .abort ();
       clearTimeout (this .#notificationTime);
