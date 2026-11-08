@@ -8,6 +8,7 @@
 // What no case records is the frames between a view change and the worker's answer: they depend on the wall clock (the worker's
 // run time) and are not reproducible. web/API.md, "GaussianSplats", states the decision.
 
+import assert from "node:assert/strict";
 import { DESKTOP } from "./runtime02_case.mjs";
 
 // Two large translucent splats that overlap at the middle of the picture, a red one near the viewer and a blue one far from it,
@@ -35,7 +36,9 @@ async function scenario (page, env, name)
    const out = { };
 
    // The calls that show X_ITE's asynchronous sort in the frames after a view change: the messages to and from its sort worker
-   // and its instanced draws of the splat quads. X_ITE_R has no worker and draws with WebGPU, so it records none of them.
+   // and its instanced draws of the splat quads (WebGL2 drawArraysInstanced, or WebGPU pass.draw when the page runs X_ITE_R on
+   // WebGPU: the same event on every backend, a draw of 6 vertices and n instances). X_ITE_R has no worker, so it records no
+   // message; it draws the splats in every frame, so its trace is the first eight draws, WebGPU or WebGL2 alike.
    await page .evaluate (() =>
    {
       window .trace = [ ];
@@ -64,7 +67,30 @@ async function scenario (page, env, name)
 
          return draw .call (this, mode, first, count, n);
       };
+
+      // On WebGPU the trace needs this patch: a page that has WebGPU but cannot be patched fails the case (below), it never
+      // compares an empty trace.
+      window .traceGpuPatched = false;
+
+      if (window .GPURenderPassEncoder ?.prototype ?.draw)
+      {
+         window .traceGpuPatched = true;
+
+         const gpuDraw = GPURenderPassEncoder .prototype .draw;
+
+         GPURenderPassEncoder .prototype .draw = function (vertexCount, instanceCount, ... rest)
+         {
+            if (vertexCount === 6)
+               window .trace .push (`draw ${instanceCount ?? 1}`);
+
+            return gpuDraw .call (this, vertexCount, instanceCount, ... rest);
+         };
+      }
    });
+
+   const patched = await page .evaluate (() => ({ backend: document .querySelector ("x3d-canvas") .browser ?.[Symbol .for ("X_ITE_R.engine")] ?.backend, patched: window .traceGpuPatched }));
+
+   assert .ok (patched .backend !== "webgpu" || patched .patched, "splatsort01: X_ITE_R runs on WebGPU but GPURenderPassEncoder.prototype.draw cannot be patched, so the trace would be empty");
 
    await page .evaluate (async text =>
    {

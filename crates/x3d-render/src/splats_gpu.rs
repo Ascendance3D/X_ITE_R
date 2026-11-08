@@ -4,7 +4,7 @@
 //! used it for [`KEEP_FRAMES`] frames, so after an unload every counter of
 //! [`SplatGpu::resources`] returns to 0.
 
-use crate::splats::{SortScratch, SplatDraw, sort_indices};
+use crate::splats::{SortScratch, SplatData, SplatDraw, sort_indices};
 use std::collections::HashMap;
 use std::rc::Rc;
 use x3d_fields::math::Matrix4;
@@ -115,6 +115,47 @@ pub struct SplatGpu {
     pub sorts: usize,
     /// The module is the downlevel one (data textures in place of storage buffers).
     downlevel: bool,
+    /// The data sets that a downlevel (WebGL2) device cannot hold and that a notice already told about, by address, with
+    /// the set's weak handle and the last frame that asked. The weak handle keeps the address from being reused while the
+    /// entry lives; an entry whose set is gone, or that no frame asked about for [`KEEP_FRAMES`] frames, is dropped in
+    /// [`SplatGpu::prune`].
+    too_large: HashMap<usize, (std::rc::Weak<SplatData>, u64)>,
+    /// The notices not yet read by the embedding application ([`SplatGpu::take_notices`]).
+    notices: Vec<String>,
+}
+
+impl SplatGpu {
+    /// Whether the data textures of `data` fit the 2D texture size `limit` of a downlevel (WebGL2) device. A set that does
+    /// not fit is not drawn, and a notice tells about it once while the set lives (no silent empty node).
+    fn fits(&mut self, data: &Rc<SplatData>, limit: usize, frame_no: u64) -> bool {
+        let rows = data.count.div_ceil(data.width.max(1));
+        let sh_rows = data.sh.texels.len() / 4 / data.sh.width.max(1);
+
+        if data.width <= limit && rows <= limit && data.sh.width <= limit && sh_rows <= limit {
+            return true;
+        }
+
+        let key = Rc::as_ptr(data) as usize;
+        let known = self
+            .too_large
+            .get(&key)
+            .is_some_and(|(weak, _)| weak.upgrade().is_some_and(|d| Rc::ptr_eq(&d, data)));
+
+        if !known {
+            self.notices.push(format!(
+                "a GaussianSplats node with {} splats is not drawn: its data textures ({} x {} texels, spherical harmonics {} x {}) are larger than the 2D texture size of {limit} of this downlevel (WebGL2) device",
+                data.count, data.width, rows, data.sh.width, sh_rows,
+            ));
+        }
+
+        self.too_large.insert(key, (Rc::downgrade(data), frame_no));
+        false
+    }
+
+    /// The notices since the last call (a data set too large for a downlevel device is not drawn).
+    pub fn take_notices(&mut self) -> Vec<String> {
+        std::mem::take(&mut self.notices)
+    }
 }
 
 fn between<'a>(source: &'a str, from: &str, to: &str) -> &'a str {
@@ -499,10 +540,8 @@ impl SplatGpu {
             // downlevel device: the texture could not be made.
             if self.downlevel {
                 let limit = device.limits().max_texture_dimension_2d as usize;
-                let rows = data.count.div_ceil(data.width.max(1));
-                let sh_rows = data.sh.texels.len() / 4 / data.sh.width.max(1);
 
-                if data.width > limit || rows > limit || data.sh.width > limit || sh_rows > limit {
+                if !self.fits(data, limit, frame_no) {
                     continue;
                 }
             }
@@ -1027,6 +1066,8 @@ impl SplatGpu {
         self.groups.retain(|_, e| e.1 + KEEP_FRAMES >= frame_no);
         self.indices.retain(|_, e| e.used + KEEP_FRAMES >= frame_no);
         self.data.retain(|_, e| e.used + KEEP_FRAMES >= frame_no);
+        self.too_large
+            .retain(|_, (weak, seen)| weak.strong_count() > 0 && *seen + KEEP_FRAMES >= frame_no);
 
         // A bind group refers to its buffers.
         let (data, indices) = (&self.data, &self.indices);
@@ -1038,5 +1079,76 @@ impl SplatGpu {
             self.groups.clear();
             self.module = None;
         }
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use crate::splats::{SplatFields, build};
+
+    /// A two-splat set whose texture width is `width` (the count of a real set that large is too big for a test).
+    fn set(width: usize) -> Rc<SplatData> {
+        let none: [&[f32]; 16] = [&[]; 16];
+        let mut data = build(
+            &SplatFields {
+                positions: &[0.0; 6],
+                orientations: &[0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0],
+                scales: &[1.0; 6],
+                opacities: &[1.0; 2],
+                sh: none,
+            },
+            None,
+        );
+
+        data.width = width;
+        Rc::new(data)
+    }
+
+    /// WebGL2 downlevel notice: a set larger than the 2D texture size gets one notice while it lives, a second set its own,
+    /// a set that fits none, and a new set at the address of a dropped one is told about again.
+    #[test]
+    fn a_too_large_splat_set_gets_one_notice_for_each_set() {
+        let mut gpu = SplatGpu::default();
+        let a = set(5000);
+
+        assert!(!gpu.fits(&a, 4096, 1));
+        assert!(!gpu.fits(&a, 4096, 2));
+        assert_eq!(
+            gpu.take_notices().len(),
+            1,
+            "one notice for a set, however many frames"
+        );
+        assert!(
+            gpu.take_notices().is_empty(),
+            "take_notices () empties the list"
+        );
+
+        let b = set(6000);
+
+        assert!(!gpu.fits(&b, 4096, 3));
+        assert_eq!(
+            gpu.take_notices().len(),
+            1,
+            "a second set has its own notice"
+        );
+
+        let small = set(64);
+
+        assert!(gpu.fits(&small, 4096, 4));
+        assert!(
+            gpu.take_notices().is_empty(),
+            "a set within the limit gives none"
+        );
+
+        // A set that is gone leaves no entry after the prune, so a later set (at any address) is told about.
+        drop(a);
+        gpu.prune(5);
+        assert_eq!(gpu.too_large.len(), 1);
+
+        let c = set(5000);
+
+        assert!(!gpu.fits(&c, 4096, 6));
+        assert_eq!(gpu.take_notices().len(), 1);
     }
 }

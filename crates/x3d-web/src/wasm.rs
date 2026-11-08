@@ -39,6 +39,14 @@ enum Entry {
     Failed(String),
 }
 
+/// The renderer's notices (a GaussianSplats data set larger than the 2D texture size of a downlevel (WebGL2) device is not drawn)
+/// to the page's console, once each.
+fn print_renderer_notices(renderer: &mut Renderer) {
+    for notice in renderer.take_notices() {
+        web_sys::console::warn_1(&format!("X_ITE_R: {notice}").into());
+    }
+}
+
 impl FetchCache {
     fn new() -> Rc<RefCell<FetchCache>> {
         Rc::new(RefCell::new(FetchCache {
@@ -2700,9 +2708,13 @@ impl WebBrowser {
             None => crate::empty_frame(),
         };
 
-        self.renderer
-            .render(&frame, &view, self.view_format, width, height)
-            .map_err(|e| JsError::new(&e))?;
+        let rendered = self
+            .renderer
+            .render(&frame, &view, self.view_format, width, height);
+
+        // The notices of the frame are printed also when the render failed.
+        print_renderer_notices(&mut self.renderer);
+        rendered.map_err(|e| JsError::new(&e))?;
         self.renderer.queue().present(texture);
         Ok(())
     }
@@ -2735,15 +2747,16 @@ impl WebBrowser {
             view_formats: &[],
         });
 
-        self.renderer
-            .render(
-                &frame,
-                &texture.create_view(&Default::default()),
-                format,
-                width,
-                height,
-            )
-            .map_err(|e| JsError::new(&e))?;
+        let rendered = self.renderer.render(
+            &frame,
+            &texture.create_view(&Default::default()),
+            format,
+            width,
+            height,
+        );
+
+        print_renderer_notices(&mut self.renderer);
+        rendered.map_err(|e| JsError::new(&e))?;
 
         let row = width * 4;
         let padded =

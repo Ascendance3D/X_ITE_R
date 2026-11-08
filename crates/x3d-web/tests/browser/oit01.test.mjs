@@ -9,7 +9,7 @@
 
 import { describe, test } from "node:test";
 import assert from "node:assert/strict";
-import { CASE_TIMEOUT, DESKTOP, ONLY, openPage } from "./runtime02_harness.mjs";
+import { CASE_TIMEOUT, DESKTOP, ONLY, openPage, webgpuOnly } from "./runtime02_harness.mjs";
 
 // Two overlapping transparent quads: sorted blending and weighted blended OIT mix them differently.
 const WORLD = `#X3D V4.0 utf8
@@ -168,6 +168,7 @@ describe ("oit 01", { skip: Boolean (ONLY) }, () =>
 {
    for (const backend of BACKENDS)
    {
+      // `references` asserts the engine's backend, so a case that calls it needs WebGPU on the webgpu pass.
       // The "OIT off" and "OIT on" pictures: the page's option false, and a world Script's option true.
       async function references (page)
       {
@@ -180,7 +181,7 @@ describe ("oit 01", { skip: Boolean (ONLY) }, () =>
          return { off, on };
       }
 
-      test (`${backend}: the attribute set before the world loads`, { timeout: CASE_TIMEOUT }, async t =>
+      test (`${backend}: the attribute set before the world loads`, { skip: webgpuOnly (backend), timeout: CASE_TIMEOUT }, async t =>
       {
          const page = await open (backend, { orderIndependentTransparency: "true", scripts: "true" }, t .signal);
 
@@ -198,7 +199,7 @@ describe ("oit 01", { skip: Boolean (ONLY) }, () =>
          }
       });
 
-      test (`${backend}: setBrowserOption on the live world, then loadURL and replaceWorld`, { timeout: CASE_TIMEOUT }, async t =>
+      test (`${backend}: setBrowserOption on the live world, then loadURL and replaceWorld`, { skip: webgpuOnly (backend), timeout: CASE_TIMEOUT }, async t =>
       {
          const page = await open (backend, { scripts: "true" }, t .signal);
 
@@ -228,7 +229,7 @@ describe ("oit 01", { skip: Boolean (ONLY) }, () =>
       // OrderIndependentTransparency true stays for the next loadURL (the plain world after it draws with OIT on, and
       // getBrowserOption gives true). X_ITE_R's page takes a world Script's option, so the next world starts with it.
       test (`${backend}: a world Script's option stays for the next world`,
-         { timeout: CASE_TIMEOUT }, async t =>
+         { skip: webgpuOnly (backend), timeout: CASE_TIMEOUT }, async t =>
       {
          const page = await open (backend, { scripts: "true" }, t .signal);
 
@@ -300,7 +301,7 @@ ROUTE S.go_changed TO B.set_translation
          }
       });
 
-      test (`${backend}: the last one set is in force, the page's or a world Script's`, { timeout: CASE_TIMEOUT }, async t =>
+      test (`${backend}: the last one set is in force, the page's or a world Script's`, { skip: webgpuOnly (backend), timeout: CASE_TIMEOUT }, async t =>
       {
          const page = await open (backend, { scripts: "true" }, t .signal);
 

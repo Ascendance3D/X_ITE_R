@@ -72,6 +72,13 @@ const SELECTED        = process .env .XR_CASES ? new Set (process .env .XR_CASES
 // classify each failure, do not change a reference or a tolerance for it.
 export const FORCE_WEBGL2 = process .env .XR_FORCE_WEBGL2 === "1";
 
+// The `skip` option of a test that needs WebGPU itself (it reads `navigator.gpu`, makes a WebGPU device, asserts the engine's
+// backend "webgpu", the WebGPU sample count, WebGPU device loss or WebGPU startup). In XR_FORCE_WEBGL2 mode the page has no WebGPU, so
+// the test is reported as skipped with this reason; otherwise it runs. Never use it on a test that is neutral of the backend:
+// such a test that fails on WebGL2 is a defect to report. `backend` is for the cases that run once for each backend.
+export const WEBGPU_ONLY_REASON = "requires WebGPU (XR_FORCE_WEBGL2)";
+export const webgpuOnly = (backend = "webgpu") => FORCE_WEBGL2 && backend === "webgpu" ? WEBGPU_ONLY_REASON : false;
+
 // The engine's own fallback notices (src/device_request.rs, src/wasm.rs): in XR_FORCE_WEBGL2 mode every page prints them
 // at start, and the pinned X_ITE (WebGL only) has nothing like them. Only in that mode are these exact lines left out of
 // a page's log; every other line stays, so a case still compares all other console output.
@@ -302,8 +309,10 @@ const KNOWN_DIFFERENCES = {
    ],
    // Issue #69 (web/API.md, "GaussianSplats"): X_ITE sorts the splats in a worker and draws the frame of a view change with the
    // last sorted order, then again when the worker answers; X_ITE_R sorts in the frame it draws, so that frame is right at once.
-   // The pictures once the sorts are done are equal (0 levels).
-   "splatSort.flip": [ [ [ "trace" ], [ "post sort", "draw 2", "recv sorted", "draw 2" ], [ ] ] ],
+   // The pictures once the sorts are done are equal (0 levels). The trace sees the draws of the splat quads on both backends
+   // (splatsort01_case.mjs): X_ITE_R draws them in every frame (the first eight of the 60 frames after the view change), X_ITE
+   // only when the view or the sort answer changes something, so its trace ends after the answer's draw.
+   "splatSort.flip": [ [ [ "trace" ], [ "post sort", "draw 2", "recv sorted", "draw 2" ], Array (8) .fill ("draw 2") ] ],
    "browserUi.splash": UI01_DIFFERENCES,
    "browserUi.menuEntries": [
       [ [ "menu", 0, "text" ], MENU_TITLE_X, MENU_TITLE_R ],
@@ -667,7 +676,20 @@ async function logAdapter ()
          return i ? { vendor: i .vendor, architecture: i .architecture, device: i .device, description: i .description } : null;
       });
 
+      // The WebGL2 limits of the page's GPU: a splat data set larger than the 2D texture size is not drawn on WebGL2
+      // (crates/x3d-render/src/splats_gpu.rs), so a run in XR_FORCE_WEBGL2 mode records them. Read in a page that has
+      // WebGPU too: only `navigator.gpu` is removed in that mode, not WebGL2.
+      const gl2 = FORCE_WEBGL2 ? await page .evaluate (() =>
+      {
+         const gl = new OffscreenCanvas (1, 1) .getContext ("webgl2");
+
+         return gl ? { maxTextureSize: gl .getParameter (gl .MAX_TEXTURE_SIZE), max3DTextureSize: gl .getParameter (gl .MAX_3D_TEXTURE_SIZE) } : null;
+      }) : undefined;
+
       console .log (`WebGPU adapter: ${JSON .stringify (info) ?? "unknown"}${FORCE_WEBGL2 ? " (XR_FORCE_WEBGL2: test pages use WebGL2)" : ""}`);
+      if (FORCE_WEBGL2)
+         console .log (`WebGL2 limits: ${JSON .stringify (gl2)}`);
+
       await evidence ("webgpu-adapter.json", JSON .stringify (info, null, 1) + "\n");
    }
    catch (error)

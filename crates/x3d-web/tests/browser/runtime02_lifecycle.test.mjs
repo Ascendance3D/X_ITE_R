@@ -3,7 +3,7 @@
 
 import { describe, test } from "node:test";
 import assert from "node:assert/strict";
-import { CASE_TIMEOUT, DESKTOP, ONLY, frameLoop, loadURL, openPage, server } from "./runtime02_harness.mjs";
+import { CASE_TIMEOUT, DESKTOP, ONLY, frameLoop, loadURL, openPage, server, webgpuOnly } from "./runtime02_harness.mjs";
 
 describe ("runtime 02 lifecycle", { skip: Boolean (ONLY), timeout: CASE_TIMEOUT }, () =>
 {
@@ -146,7 +146,8 @@ describe ("runtime 02 lifecycle", { skip: Boolean (ONLY), timeout: CASE_TIMEOUT 
       }
    });
 
-   test ("a lost device calls CONNECTION_ERROR, stops the loop and shows a message", async () =>
+   // WebGPU device loss: the message and the loseDevice call are WebGPU's.
+   test ("a lost device calls CONNECTION_ERROR, stops the loop and shows a message", { skip: webgpuOnly () }, async () =>
    {
       const page = await openPage (DESKTOP);
 
@@ -183,7 +184,7 @@ describe ("runtime 02 lifecycle", { skip: Boolean (ONLY), timeout: CASE_TIMEOUT 
 
    // The three cases of the backend choice: WebGPU with an adapter (this test), WebGL2 without WebGPU (the next test),
    // neither (api.test.mjs 13). The test browser has WebGPU (runtime02_harness.mjs flags): no adapter is a failure here.
-   test ("with a WebGPU adapter the element starts with WebGPU, without a fallback", async () =>
+   test ("with a WebGPU adapter the element starts with WebGPU, without a fallback", { skip: webgpuOnly () }, async () =>
    {
       const page = await openPage (DESKTOP);
 

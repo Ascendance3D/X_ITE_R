@@ -20,7 +20,7 @@ import { readFile, readdir } from "node:fs/promises";
 import { existsSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
-import { CASE_TIMEOUT, ONLY, openPage } from "./runtime02_harness.mjs";
+import { CASE_TIMEOUT, ONLY, openPage, webgpuOnly } from "./runtime02_harness.mjs";
 
 const REPO      = join (dirname (fileURLToPath (import.meta .url)), "../../../..");
 const WORLDS    = join (REPO, "oracle/synthetic-point-tie");
@@ -197,7 +197,7 @@ describe ("point tie 01", { skip: Boolean (ONLY) }, () =>
 {
    for (const backend of BACKENDS)
    {
-      test (`${backend}: the point snap rule is the page's WebGL2 rule`, { timeout: CASE_TIMEOUT }, async () =>
+      test (`${backend}: the point snap rule is the page's WebGL2 rule`, { skip: webgpuOnly (backend), timeout: CASE_TIMEOUT }, async () =>
       {
          const page = await open (backend);
 
@@ -219,7 +219,7 @@ describe ("point tie 01", { skip: Boolean (ONLY) }, () =>
 
       for (const fault of [ "null", "throw", "black" ])
       {
-         test (`${backend}: WebGL2 measurement fault "${fault}": the page starts and rounds to even`, { timeout: CASE_TIMEOUT }, async () =>
+         test (`${backend}: WebGL2 measurement fault "${fault}": the page starts and rounds to even`, { skip: webgpuOnly (backend), timeout: CASE_TIMEOUT }, async () =>
          {
             const page = await open (backend, fault);
 
@@ -238,7 +238,7 @@ describe ("point tie 01", { skip: Boolean (ONLY) }, () =>
 
       const ruleSkip = PLATFORM === undefined && "no XR_POINT_TIE_REFERENCE: this rasterizer may not resolve a 1/256 pixel step (NOT TESTED)";
 
-      test (`${backend}: the renderer draws with the rule it has`, { skip: ruleSkip, timeout: CASE_TIMEOUT }, async () =>
+      test (`${backend}: the renderer draws with the rule it has`, { skip: webgpuOnly (backend) || ruleSkip, timeout: CASE_TIMEOUT }, async () =>
       {
          const world = await readFile (join (WORLDS, "point-tie-snap.wrl"), "utf8");
          const page  = await open (backend);
@@ -295,7 +295,7 @@ describe ("point tie 01", { skip: Boolean (ONLY) }, () =>
       {
          const skip = PLATFORM === undefined && "no XR_POINT_TIE_REFERENCE: no pinned pictures for this GPU (NOT TESTED)";
 
-         test (`${backend}: ${file} matches the pinned X_ITE picture`, { skip, timeout: CASE_TIMEOUT }, async () =>
+         test (`${backend}: ${file} matches the pinned X_ITE picture`, { skip: webgpuOnly (backend) || skip, timeout: CASE_TIMEOUT }, async () =>
          {
             const world = await readFile (join (WORLDS, file), "utf8");
             const png   = (await readFile (reference (file))) .toString ("base64");
