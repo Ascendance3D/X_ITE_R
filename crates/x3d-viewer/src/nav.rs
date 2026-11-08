@@ -141,6 +141,121 @@ fn js_sign(v: f64) -> f64 {
     }
 }
 
+/// The viewer call of one ExamineViewer gamepad frame, with its arguments.
+#[derive(Clone, Copy, Debug, PartialEq)]
+pub enum ExamineGamepadStep {
+    /// `zoom (factor, deltaY)`.
+    Zoom { factor: f64, delta_y: f64 },
+    /// `startPan (0, 0)`, then `pan (x, y)`.
+    Pan { x: f64, y: f64 },
+    /// `startRotate (0, 0, 1)`, then `rotate (x, y)`.
+    Rotate { x: f64, y: f64 },
+}
+
+/// What xrExamineViewer.js `gamepads` does in one frame: whether it calls `disconnect ()` first, then its step.
+#[derive(Clone, Copy, Debug, PartialEq)]
+pub struct ExamineGamepadPlan {
+    pub disconnect: bool,
+    pub step: Option<ExamineGamepadStep>,
+}
+
+/// xrExamineViewer.js `gamepads` without the viewer: the gamepad array's `action`, `button0` and `button1` change in
+/// `state`. With no moved thumbstick, it disconnects once (`action`). A change of the two buttons disconnects. The step
+/// is scaled to 60 frames per second (`60 / currentFrameRate`).
+pub fn examine_gamepad_plan(
+    gamepads: &[Gamepad],
+    state: &mut GamepadState,
+    frame_rate: f64,
+) -> ExamineGamepadPlan {
+    let Some(gamepad) = moved_gamepad(gamepads) else {
+        let disconnect = state.action;
+        state.action = false;
+        return ExamineGamepadPlan {
+            disconnect,
+            step: None,
+        };
+    };
+
+    let [x, y] = gamepad.axes;
+    let (button0, button1) = (gamepad.button0, gamepad.button1);
+    let mut disconnect = false;
+
+    if state.button0 != Some(button0) || state.button1 != Some(button1) {
+        state.button0 = Some(button0);
+        state.button1 = Some(button1);
+        disconnect = true;
+    }
+
+    let f = 60.0 / frame_rate;
+
+    state.action = true;
+
+    let step = if button0 {
+        ExamineGamepadStep::Zoom {
+            factor: y * GAMEPAD_ZOOM_FACTOR * f,
+            delta_y: js_sign(y),
+        }
+    } else if button1 {
+        ExamineGamepadStep::Pan {
+            x: -x * GAMEPAD_PAN_FACTOR * f,
+            y: y * GAMEPAD_PAN_FACTOR * f,
+        }
+    } else {
+        ExamineGamepadStep::Rotate {
+            x: -x * GAMEPAD_SPIN_FACTOR * f,
+            y: y * GAMEPAD_SPIN_FACTOR * f,
+        }
+    };
+
+    ExamineGamepadPlan {
+        disconnect,
+        step: Some(step),
+    }
+}
+
+/// The viewer call of one X3DFlyViewer gamepad frame.
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub enum FlyGamepadStep {
+    /// No moved thumbstick: `this .startTime = Date .now ()`.
+    Restart,
+    /// `this .pan ()`.
+    Pan,
+    /// `this .fly ()`.
+    Fly,
+}
+
+/// xrX3DFlyViewer.js `gamepads` without the viewer: `direction` becomes the moving average of itself and the
+/// thumbstick vector times 300 (button 1: x, -y, 0; else x, 0, y, doubled with button 0).
+pub fn fly_gamepad_plan(gamepads: &[Gamepad], direction: &mut Vector3) -> FlyGamepadStep {
+    let Some(gamepad) = moved_gamepad(gamepads) else {
+        return FlyGamepadStep::Restart;
+    };
+
+    let [x, y] = gamepad.axes;
+
+    let mut axis = if gamepad.button1 {
+        Vector3::new(x, -y, 0.0)
+    } else {
+        Vector3::new(x, 0.0, y)
+    };
+
+    axis.multiply(GAMEPAD_SPEED_FACTOR);
+
+    if !gamepad.button1 && gamepad.button0 {
+        axis.multiply(2.0);
+    }
+
+    // Moving average: `direction .add (axis) .divide (2)`.
+    direction.add(&axis);
+    direction.multiply(0.5);
+
+    if gamepad.button1 {
+        FlyGamepadStep::Pan
+    } else {
+        FlyGamepadStep::Fly
+    }
+}
+
 /// X3DViewer.lookAtPoint / lookAtBBox, requested by a viewer's dblclick handler. The viewer
 /// calls `this .disconnect ()` first, then the browser picks at (x, y) and the viewpoint starts
 /// its lookAt transition (Viewer3d does that part, it owns the pointing device and the layer).
@@ -797,44 +912,27 @@ impl Examine {
         }
     }
 
-    /// xrExamineViewer.js `gamepads`: button 0 zooms, button 1 pans, else the thumbstick rotates. A change of the two
-    /// buttons disconnects first; the step is scaled to 60 frames per second.
+    /// xrExamineViewer.js `gamepads` ([`examine_gamepad_plan`]): button 0 zooms, button 1 pans, else the thumbstick
+    /// rotates.
     fn gamepads(&mut self, gamepads: &[Gamepad], state: &mut GamepadState, cx: &mut Cx) {
-        let Some(gamepad) = moved_gamepad(gamepads) else {
-            if state.action {
-                state.action = false;
-                self.disconnect(cx.env.date_now);
-            }
+        let plan = examine_gamepad_plan(gamepads, state, cx.env.frame_rate);
 
-            return;
-        };
-
-        let [x, y] = gamepad.axes;
-        let (button0, button1) = (gamepad.button0, gamepad.button1);
-
-        if state.button0 != Some(button0) || state.button1 != Some(button1) {
-            state.button0 = Some(button0);
-            state.button1 = Some(button1);
+        if plan.disconnect {
             self.disconnect(cx.env.date_now);
         }
 
-        let f = 60.0 / cx.env.frame_rate;
-
-        state.action = true;
-
-        if button0 {
-            self.zoom(y * GAMEPAD_ZOOM_FACTOR * f, js_sign(y), cx);
-        } else if button1 {
-            // startPan (0, 0), then pan.
-            self.from_point = point_on_center_plane(cx, 0.0, 0.0);
-            self.pan(-x * GAMEPAD_PAN_FACTOR * f, y * GAMEPAD_PAN_FACTOR * f, cx);
-        } else {
-            self.start_rotate(0.0, 0.0, 1.0, cx);
-            self.rotate(
-                -x * GAMEPAD_SPIN_FACTOR * f,
-                y * GAMEPAD_SPIN_FACTOR * f,
-                cx,
-            );
+        match plan.step {
+            None => {}
+            Some(ExamineGamepadStep::Zoom { factor, delta_y }) => self.zoom(factor, delta_y, cx),
+            Some(ExamineGamepadStep::Pan { x, y }) => {
+                // startPan (0, 0), then pan.
+                self.from_point = point_on_center_plane(cx, 0.0, 0.0);
+                self.pan(x, y, cx);
+            }
+            Some(ExamineGamepadStep::Rotate { x, y }) => {
+                self.start_rotate(0.0, 0.0, 1.0, cx);
+                self.rotate(x, y, cx);
+            }
         }
     }
 
@@ -1393,35 +1491,13 @@ impl Fly {
         }
     }
 
-    /// xrX3DFlyViewer.js `gamepads`: button 1 pans, else the thumbstick flies (button 0 at double speed). The direction
-    /// is the moving average of the last direction and the thumbstick; with no moved thumbstick the step clock restarts.
+    /// xrX3DFlyViewer.js `gamepads` ([`fly_gamepad_plan`]): button 1 pans, else the thumbstick flies. With no moved
+    /// thumbstick the step clock restarts.
     fn gamepads(&mut self, gamepads: &[Gamepad], cx: &mut Cx) {
-        let Some(gamepad) = moved_gamepad(gamepads) else {
-            self.start_time = cx.env.date_now * 1000.0;
-            return;
-        };
-
-        let [x, y] = gamepad.axes;
-
-        let mut axis = if gamepad.button1 {
-            Vector3::new(x, -y, 0.0)
-        } else {
-            Vector3::new(x, 0.0, y)
-        };
-
-        axis.multiply(GAMEPAD_SPEED_FACTOR);
-
-        if !gamepad.button1 && gamepad.button0 {
-            axis.multiply(2.0);
-        }
-
-        self.direction.add(&axis);
-        self.direction.multiply(0.5);
-
-        if gamepad.button1 {
-            self.pan(cx);
-        } else {
-            self.fly(cx);
+        match fly_gamepad_plan(gamepads, &mut self.direction) {
+            FlyGamepadStep::Restart => self.start_time = cx.env.date_now * 1000.0,
+            FlyGamepadStep::Pan => self.pan(cx),
+            FlyGamepadStep::Fly => self.fly(cx),
         }
     }
 

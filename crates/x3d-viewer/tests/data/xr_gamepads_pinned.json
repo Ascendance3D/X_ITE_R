@@ -1,0 +1,356 @@
+{
+ "source": "oracle/x_ite-pin 16.5.0 Browser/WebXR/xrExamineViewer.js, xrX3DFlyViewer.js",
+ "examine": [
+  {
+   "pads": [],
+   "rate": 60,
+   "calls": [
+    [
+     "disconnect"
+    ]
+   ]
+  },
+  {
+   "pads": [],
+   "rate": 60,
+   "calls": []
+  },
+  {
+   "pads": [
+    [
+     0.5,
+     0,
+     false,
+     false
+    ]
+   ],
+   "rate": 60,
+   "calls": [
+    [
+     "disconnect"
+    ],
+    [
+     "startRotate",
+     0,
+     0,
+     1
+    ],
+    [
+     "rotate",
+     -5,
+     0
+    ]
+   ]
+  },
+  {
+   "pads": [
+    [
+     0.5,
+     0,
+     false,
+     false
+    ]
+   ],
+   "rate": 30,
+   "calls": [
+    [
+     "startRotate",
+     0,
+     0,
+     1
+    ],
+    [
+     "rotate",
+     -10,
+     0
+    ]
+   ]
+  },
+  {
+   "pads": [
+    [
+     0,
+     -0.8,
+     true,
+     false
+    ]
+   ],
+   "rate": 72,
+   "calls": [
+    [
+     "disconnect"
+    ],
+    [
+     "zoom",
+     -0.0033333333333333335,
+     -1
+    ]
+   ]
+  },
+  {
+   "pads": [
+    [
+     0.25,
+     0,
+     true,
+     false
+    ]
+   ],
+   "rate": 72,
+   "calls": [
+    [
+     "zoom",
+     0,
+     0
+    ]
+   ]
+  },
+  {
+   "pads": [
+    [
+     0.3,
+     0.25,
+     false,
+     true
+    ]
+   ],
+   "rate": 90,
+   "calls": [
+    [
+     "disconnect"
+    ],
+    [
+     "startPan",
+     0,
+     0
+    ],
+    [
+     "pan",
+     -1,
+     0.8333333333333333
+    ]
+   ]
+  },
+  {
+   "pads": [
+    [
+     "NaN",
+     0,
+     false,
+     false
+    ]
+   ],
+   "rate": 60,
+   "calls": [
+    [
+     "disconnect"
+    ]
+   ]
+  },
+  {
+   "pads": [
+    [
+     0,
+     0,
+     true,
+     true
+    ]
+   ],
+   "rate": 60,
+   "calls": []
+  },
+  {
+   "pads": [
+    [
+     0,
+     0,
+     false,
+     false
+    ],
+    [
+     -0.7,
+     0.1,
+     false,
+     false
+    ]
+   ],
+   "rate": 57.3,
+   "calls": [
+    [
+     "disconnect"
+    ],
+    [
+     "startRotate",
+     0,
+     0,
+     1
+    ],
+    [
+     "rotate",
+     7.329842931937173,
+     1.0471204188481675
+    ]
+   ]
+  },
+  {
+   "pads": [
+    [
+     0.1,
+     0.2,
+     true,
+     true
+    ]
+   ],
+   "rate": 61,
+   "calls": [
+    [
+     "disconnect"
+    ],
+    [
+     "zoom",
+     0.0009836065573770492,
+     1
+    ]
+   ]
+  }
+ ],
+ "fly": [
+  {
+   "pads": [],
+   "calls": [
+    "restart"
+   ],
+   "direction": [
+    0,
+    0,
+    0
+   ]
+  },
+  {
+   "pads": [
+    [
+     0,
+     -1,
+     false,
+     false
+    ]
+   ],
+   "calls": [
+    "fly"
+   ],
+   "direction": [
+    0,
+    0,
+    -150
+   ]
+  },
+  {
+   "pads": [
+    [
+     0,
+     -1,
+     false,
+     false
+    ]
+   ],
+   "calls": [
+    "fly"
+   ],
+   "direction": [
+    0,
+    0,
+    -225
+   ]
+  },
+  {
+   "pads": [
+    [
+     0.2,
+     -1,
+     true,
+     false
+    ]
+   ],
+   "calls": [
+    "fly"
+   ],
+   "direction": [
+    60,
+    0,
+    -412.5
+   ]
+  },
+  {
+   "pads": [
+    [
+     1,
+     0.5,
+     false,
+     true
+    ]
+   ],
+   "calls": [
+    "pan"
+   ],
+   "direction": [
+    180,
+    -75,
+    -206.25
+   ]
+  },
+  {
+   "pads": [
+    [
+     1,
+     0.5,
+     true,
+     true
+    ]
+   ],
+   "calls": [
+    "pan"
+   ],
+   "direction": [
+    240,
+    -112.5,
+    -103.125
+   ]
+  },
+  {
+   "pads": [
+    [
+     "NaN",
+     0,
+     false,
+     false
+    ]
+   ],
+   "calls": [
+    "restart"
+   ],
+   "direction": [
+    240,
+    -112.5,
+    -103.125
+   ]
+  },
+  {
+   "pads": [
+    [
+     0,
+     0.3,
+     false,
+     false
+    ]
+   ],
+   "calls": [
+    "fly"
+   ],
+   "direction": [
+    120,
+    -56.25,
+    -6.5625
+   ]
+  }
+ ]
+}

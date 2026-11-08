@@ -6,7 +6,10 @@
 
 use std::path::{Path, PathBuf};
 use x3d_fields::math::{Rotation4, Vector3};
-use x3d_viewer::nav::Gamepad;
+use x3d_viewer::nav::{
+    ExamineGamepadStep, FlyGamepadStep, Gamepad, GamepadState, examine_gamepad_plan,
+    fly_gamepad_plan,
+};
 use x3d_viewer::viewer::{ORACLE_PAGE_ATTRIBUTES, Viewer3d};
 
 const T0: f64 = 946684800.0;
@@ -196,5 +199,109 @@ fn none_plane_and_lookat_ignore_the_gamepads() {
         w.frames(&[stick(1.0, -1.0, true, false)], 20);
 
         assert!(same(&start, &w.pose()), "{kind} moved");
+    }
+}
+
+/// The calls pinned X_ITE's gamepad viewers made on a fixed frame sequence (`crates/x3d-web/tests/xr/gamepads_pinned.test.mjs`
+/// runs the pinned source and checks this record). The plan functions must make the same calls with the same numbers.
+fn pinned_record() -> serde_json::Value {
+    let text = std::fs::read_to_string(
+        Path::new(env!("CARGO_MANIFEST_DIR")).join("tests/data/xr_gamepads_pinned.json"),
+    )
+    .unwrap();
+    serde_json::from_str(&text).unwrap()
+}
+
+/// JSON equality with every number as an f64 and compared exactly (JSON has one number type; -0 is written as 0).
+fn same_json(a: &serde_json::Value, b: &serde_json::Value) -> bool {
+    use serde_json::Value::{Array, Number};
+
+    match (a, b) {
+        (Number(x), Number(y)) => x.as_f64() == y.as_f64(),
+        (Array(x), Array(y)) => x.len() == y.len() && x.iter().zip(y).all(|(x, y)| same_json(x, y)),
+        _ => a == b,
+    }
+}
+
+fn pads(frame: &serde_json::Value) -> Vec<Gamepad> {
+    let num = |v: &serde_json::Value| {
+        if v.as_str() == Some("NaN") {
+            f64::NAN
+        } else {
+            v.as_f64().unwrap()
+        }
+    };
+
+    frame["pads"]
+        .as_array()
+        .unwrap()
+        .iter()
+        .map(|p| Gamepad {
+            axes: [num(&p[0]), num(&p[1])],
+            button0: p[2].as_bool().unwrap(),
+            button1: p[3].as_bool().unwrap(),
+        })
+        .collect()
+}
+
+#[test]
+fn examine_plan_makes_the_calls_of_pinned_x_ite() {
+    let record = pinned_record();
+    let mut state = GamepadState {
+        action: true,
+        ..GamepadState::default()
+    };
+
+    for (i, frame) in record["examine"].as_array().unwrap().iter().enumerate() {
+        let plan = examine_gamepad_plan(&pads(frame), &mut state, frame["rate"].as_f64().unwrap());
+        let mut calls: Vec<serde_json::Value> = vec![];
+
+        if plan.disconnect {
+            calls.push(serde_json::json!(["disconnect"]));
+        }
+
+        match plan.step {
+            None => {}
+            Some(ExamineGamepadStep::Zoom { factor, delta_y }) => {
+                calls.push(serde_json::json!(["zoom", factor, delta_y]))
+            }
+            Some(ExamineGamepadStep::Pan { x, y }) => {
+                calls.push(serde_json::json!(["startPan", 0, 0]));
+                calls.push(serde_json::json!(["pan", x, y]));
+            }
+            Some(ExamineGamepadStep::Rotate { x, y }) => {
+                calls.push(serde_json::json!(["startRotate", 0, 0, 1]));
+                calls.push(serde_json::json!(["rotate", x, y]));
+            }
+        }
+
+        let calls = serde_json::Value::from(calls);
+        assert!(
+            same_json(&calls, &frame["calls"]),
+            "examine frame {i}: {calls} vs {}",
+            frame["calls"]
+        );
+    }
+}
+
+#[test]
+fn fly_plan_makes_the_calls_of_pinned_x_ite() {
+    let record = pinned_record();
+    let mut direction = Vector3::ZERO;
+
+    for (i, frame) in record["fly"].as_array().unwrap().iter().enumerate() {
+        let call = match fly_gamepad_plan(&pads(frame), &mut direction) {
+            FlyGamepadStep::Restart => "restart",
+            FlyGamepadStep::Pan => "pan",
+            FlyGamepadStep::Fly => "fly",
+        };
+
+        assert_eq!(serde_json::json!([call]), frame["calls"], "fly frame {i}");
+        let got = serde_json::json!([direction.x, direction.y, direction.z]);
+        assert!(
+            same_json(&got, &frame["direction"]),
+            "fly frame {i}: {got} vs {}",
+            frame["direction"]
+        );
     }
 }
