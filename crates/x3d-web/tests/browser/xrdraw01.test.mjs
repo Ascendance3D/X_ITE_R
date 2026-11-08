@@ -104,14 +104,24 @@ test ("an XR frame draws each view into its viewport of the XRWebGLLayer (#83)",
             for (let x = 0; x < 100; ++ x)
                if (at (x, y) .some ((v, i) => Math .abs (v - at (x + 100, y) [i]) > 2)) ++ differ;
 
+         const left = half (0), right = half (100);
+         const centers = [ at (50, 50), at (150, 50) ], corners = [ at (2, 2), at (197, 97) ];
+
+         // A second frame whose right view is left out (width 0): its half shows nothing of the first frame.
+         drawXRFrame (engine, gl, layer, { transform: rigid, views: [ view ({ x: 0, y: 0, width: 100, height: 100 }),
+            view ({ x: 100, y: 0, width: 0, height: 100 }) ] }, performance .now () / 1000);
+         gl .bindFramebuffer (gl .READ_FRAMEBUFFER, layer .framebuffer);
+         gl .readPixels (0, 0, W, H, gl .RGBA, gl .UNSIGNED_BYTE, pixels);
+         gl .bindFramebuffer (gl .READ_FRAMEBUFFER, null);
+
          return {
             backend: engine .backend,
             options: layer .options,
             expected: layerOptions (1),
             compatible: compatible .length === 1 && compatible [0] === gl && gl .canvas === canvas,
             baseLayerSet: session .states .length === 1 && session .states [0] .baseLayer === layer,
-            left: half (0), right: half (100), differ,
-            centers: [ at (50, 50), at (150, 50) ], corners: [ at (2, 2), at (197, 97) ],
+            left, right, differ, second: { left: half (0), right: half (100) },
+            centers, corners,
             glError: gl .getError (),
          };
       },
@@ -136,6 +146,10 @@ test ("an XR frame draws each view into its viewport of the XRWebGLLayer (#83)",
 
       // The same pose and projection in both views: the two halves are the same picture.
       assert .equal (result .differ, 0);
+
+      // The second frame: the left view drew again; the right half, with no view, kept nothing of the first frame.
+      assert .ok (result .second .left .red > 600 && result .second .left .blue > 7000, `second frame left: ${JSON .stringify (result .second .left)}`);
+      assert .deepEqual (result .second .right, { red: 0, blue: 0 }, "the right half kept the first frame");
       assert .deepEqual (page .log .filter (l => !l .startsWith ("log:") && !l .startsWith ("info:") && !FALLBACK .some (r => r .test (l))), [ ]);
    }
    finally

@@ -88,14 +88,16 @@ no XR runtime (Chrome 156 on Linux reports `immersive-vr` unsupported, `XRGPUBin
 
 ## Not implemented, and the specific blocker
 
-* **Drawing into the session: the WebGL2 path exists, the session does not use it yet.** `XRGPUBinding` (the WebGPU layer) is
-  not in the stable browser the tests use, so XR draws on the engine's WebGL2 backend. `engine.xrFrame` (`src/wasm.rs`) draws
-  each view of a pose into its viewport, with the shared `x3d_render::xr::view_frame` and `set_xr_eye`. `web/xr_layer.mjs`
-  makes the context XR-compatible, makes the `XRWebGLLayer` with X_ITE's options, and copies the canvas into
-  `baseLayer.framebuffer`. `tests/browser/xrdraw01.test.mjs` checks this in headless Chromium with an emulated layer that has
-  a real framebuffer (two views, each in its own viewport); the device and `makeXRCompatible` are emulated. Remaining: connect
-  `XRSessionController` and `xr_layer.mjs` in `x_ite_r.mjs` (an immersive session switches the element to the WebGL2 backend).
-  No headset has run it.
+* **Drawing into the session: WebGL2 only, emulated device only.** `XRGPUBinding` (the WebGPU layer) is not in the stable
+  browser the tests use, so XR draws on the engine's WebGL2 backend. `engine.xrFrame` (`src/wasm.rs`) draws each view of a
+  pose into its viewport, with the shared `x3d_render::xr::view_frame` and `set_xr_eye`, and clears the area no view covers
+  each frame. `web/xr_layer.mjs` makes the context XR-compatible, makes the `XRWebGLLayer` with X_ITE's options, and copies
+  the canvas into `baseLayer.framebuffer`. `x_ite_r.mjs` connects `XRSessionController` and `xr_layer.mjs`: the XR button
+  starts the session, the frame loop runs on the session, and the session end returns to the window loop
+  (`tests/browser/xrsession01.test.mjs`). `tests/browser/xrdraw01.test.mjs` checks the drawing with an emulated layer that
+  has a real framebuffer. The element does not switch backends: XR is available only when the element already runs on
+  WebGL2 (`graphicsBackend="webgl2"`, or the WebGL2 fallback); on WebGPU the XR button stays hidden and `xrFrame` refuses.
+  The device and `makeXRCompatible` are emulated. No headset has run it.
 * **The input ray, hit point drawing and hit-driven pointing** (`xrUpdatePointers` after the target-ray loop): they need the XR render path.
 * **Wiring to the public API.** `getRenderingProperty("XRSession")` and the `xrSessionMode` option still behave as documented in
   `web/API.md` (no XR); they change when the draw path exists.
