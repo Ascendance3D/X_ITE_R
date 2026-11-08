@@ -87,6 +87,8 @@ Update 2026-11-08 (technical, not a legal finding): the browser package now carr
 
 Update 2026-11-08 (technical, not a legal finding): the MPEG-1 decoder moved behind `native-video`. Before, the browser module compiled it, but the browser loader hands every MovieTexture to the page's `<video>` element first (`crates/x3d-runtime/src/loader.rs`, `plays_video`), so the wasm never ran it. Browser behavior does not change: Chromium cannot play MPEG-1, and pinned X_ITE shows nothing for it. `tools/check_no_native_video.py --binary` now also refuses the `mpeg1/` source path in an artifact.
 
+Update 2026-11-08 (technical, not a legal finding): the browser package carries the Source Code Form of its 29 MPL-2.0 crates (`symphonia` 0.5.5 and 0.6.1, unmodified) in `third-party-source/`. These are the published crate archives, each checked against its `Cargo.lock` checksum, with a README and the MPL-2.0 text (`tools/mpl_sources.py`, run by `tools/package-web-preview.sh`; about 1.1 MB). The owner still decides the delivery method (archive or link) after legal review.
+
 ## What a release needs from this file
 
 1. Every row has a patent position that someone qualified has reviewed, and a disposition the owner has approved in writing.
