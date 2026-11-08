@@ -2857,6 +2857,15 @@ impl WebBrowser {
         Ok(())
     }
 
+    /// X3DWebXRContext.xrUpdateNearFarPlanes: `[depthNear, depthFar]` of the current world's bound viewpoint and
+    /// NavigationInfo, or nothing without a world (X_ITE then uses 0.1 and 10 000).
+    #[wasm_bindgen(js_name = xrNearFar)]
+    pub fn xr_near_far(&mut self) -> Option<Vec<f64>> {
+        let (near, far) = self.current_mut()?.viewer()?.xr_near_far();
+
+        Some(vec![near, far])
+    }
+
     /// Step the current world to `now` and draw it once per view of a WebXR viewer pose into the canvas, sized `width` x
     /// `height` device pixels (the XR layer's framebuffer size), each view into its own viewport (issue #83). This is the
     /// draw loop of X_ITE 16.5.0 X3DWebXRContext.xrUpdatePose with X3DRenderObject.draw (`x3d_render::xr`): the views

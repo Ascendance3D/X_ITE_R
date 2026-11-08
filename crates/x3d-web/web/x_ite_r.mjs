@@ -6293,6 +6293,13 @@ class X3DBrowser
          prepare: async session => { bound = await prepareLayer (this .#canvas, session, { contentScale: this .#derived .ContentScale }); },
          layer: () => this .#xr ?.layer ?? bound ?.layer ?? null,
          log: event => { if (event === "session-end") this .#xrEnded (); },
+         // X3DWebXRContext.xrUpdateNearFarPlanes: the active viewpoint's planes; without a world, 0.1 and 10 000.
+         getNearFar: () =>
+         {
+            const planes = this .#engine ?.xrNearFar ();
+
+            return planes ? { depthNear: planes [0], depthFar: planes [1] } : null;
+         },
       });
 
       await controller .start ();
