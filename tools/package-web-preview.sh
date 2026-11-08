@@ -48,6 +48,7 @@ web=crates/x3d-web/web
 
 # The decoder exclusions of the web CI (issue #90, docs/media-architecture.md 8.2).
 python3 -I -B tools/check_no_aac.py --binary "$web"/pkg/*.wasm
+python3 -I -B tools/check_no_opus.py --binary "$web"/pkg/*.wasm
 python3 -I -B tools/check_no_native_video.py --cargo --binary "$web"/pkg/*.wasm
 
 mkdir -p "$dir"
