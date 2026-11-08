@@ -2386,6 +2386,9 @@ impl Renderer {
         self.textures.retain(|_, t| Rc::strong_count(&t._image) > 1);
         self.style_groups.retain(|_, e| Rc::strong_count(&e.0) > 1);
         self.slot_groups.clear();
+        // VolumeRendering and ComposedShader bind groups: keyed by texture addresses, they hold the textures.
+        self.volume.release_texture_groups();
+        self.custom.release_texture_groups();
     }
 
     pub fn device(&self) -> &wgpu::Device {
