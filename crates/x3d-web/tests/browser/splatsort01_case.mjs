@@ -8,6 +8,7 @@
 // What no case records is the frames between a view change and the worker's answer: they depend on the wall clock (the worker's
 // run time) and are not reproducible. web/API.md, "GaussianSplats", states the decision.
 
+import assert from "node:assert/strict";
 import { DESKTOP } from "./runtime02_case.mjs";
 
 // Two large translucent splats that overlap at the middle of the picture, a red one near the viewer and a blue one far from it,
@@ -67,8 +68,14 @@ async function scenario (page, env, name)
          return draw .call (this, mode, first, count, n);
       };
 
-      if (window .GPURenderPassEncoder)
+      // On WebGPU the trace needs this patch: a page that has WebGPU but cannot be patched fails the case (below), it never
+      // compares an empty trace.
+      window .traceGpuPatched = false;
+
+      if (window .GPURenderPassEncoder ?.prototype ?.draw)
       {
+         window .traceGpuPatched = true;
+
          const gpuDraw = GPURenderPassEncoder .prototype .draw;
 
          GPURenderPassEncoder .prototype .draw = function (vertexCount, instanceCount, ... rest)
@@ -80,6 +87,10 @@ async function scenario (page, env, name)
          };
       }
    });
+
+   const patched = await page .evaluate (() => ({ backend: document .querySelector ("x3d-canvas") .browser ?.[Symbol .for ("X_ITE_R.engine")] ?.backend, patched: window .traceGpuPatched }));
+
+   assert .ok (patched .backend !== "webgpu" || patched .patched, "splatsort01: X_ITE_R runs on WebGPU but GPURenderPassEncoder.prototype.draw cannot be patched, so the trace would be empty");
 
    await page .evaluate (async text =>
    {
