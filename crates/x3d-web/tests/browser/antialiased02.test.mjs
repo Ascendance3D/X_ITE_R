@@ -13,7 +13,7 @@
 
 import { describe, test } from "node:test";
 import assert from "node:assert/strict";
-import { CASE_TIMEOUT, DESKTOP, ONLY, openPage } from "./runtime02_harness.mjs";
+import { CASE_TIMEOUT, DESKTOP, ONLY, openPage, webgpuOnly } from "./runtime02_harness.mjs";
 
 const WORLD = `#X3D V4.0 utf8
 PROFILE Immersive
@@ -130,7 +130,8 @@ describe ("antialiased 02", { skip: Boolean (ONLY) }, () =>
             });
          }
 
-         test (`${backend}: ${name}`, { timeout: CASE_TIMEOUT }, async () =>
+         // This case asserts the engine's backend and its sample count on WebGPU.
+         test (`${backend}: ${name}`, { skip: webgpuOnly (backend), timeout: CASE_TIMEOUT }, async () =>
          {
             const page = await open (backend, { antialiased, scripts: "true" });
 

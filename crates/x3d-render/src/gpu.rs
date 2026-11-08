@@ -2392,6 +2392,12 @@ impl Renderer {
         &self.device
     }
 
+    /// The notices the renderer has for the embedding application since the last call (a GaussianSplats data set that a
+    /// downlevel device cannot hold is not drawn).
+    pub fn take_notices(&mut self) -> Vec<String> {
+        self.splats.take_notices()
+    }
+
     pub fn queue(&self) -> &wgpu::Queue {
         &self.queue
     }

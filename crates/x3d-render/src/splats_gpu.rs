@@ -115,6 +115,17 @@ pub struct SplatGpu {
     pub sorts: usize,
     /// The module is the downlevel one (data textures in place of storage buffers).
     downlevel: bool,
+    /// The data sets (by address) that a downlevel device cannot hold and that a notice already told about.
+    too_large: std::collections::HashSet<usize>,
+    /// The notices not yet read by the embedding application ([`SplatGpu::take_notices`]).
+    notices: Vec<String>,
+}
+
+impl SplatGpu {
+    /// The notices since the last call (a data set too large for a downlevel device is not drawn).
+    pub fn take_notices(&mut self) -> Vec<String> {
+        std::mem::take(&mut self.notices)
+    }
 }
 
 fn between<'a>(source: &'a str, from: &str, to: &str) -> &'a str {
@@ -503,6 +514,17 @@ impl SplatGpu {
                 let sh_rows = data.sh.texels.len() / 4 / data.sh.width.max(1);
 
                 if data.width > limit || rows > limit || data.sh.width > limit || sh_rows > limit {
+                    // The set is not drawn, and the page is told once for each set: no silent empty node.
+                    if self.too_large.insert(data_key) {
+                        self.notices.push(format!(
+                            "a GaussianSplats node with {} splats is not drawn: its data textures ({} x {} texels, spherical harmonics {} x {}) are larger than the device's 2D texture size of {limit}",
+                            data.count,
+                            data.width,
+                            rows,
+                            data.sh.width,
+                            sh_rows,
+                        ));
+                    }
                     continue;
                 }
             }

@@ -35,7 +35,9 @@ async function scenario (page, env, name)
    const out = { };
 
    // The calls that show X_ITE's asynchronous sort in the frames after a view change: the messages to and from its sort worker
-   // and its instanced draws of the splat quads. X_ITE_R has no worker and draws with WebGPU, so it records none of them.
+   // and its instanced draws of the splat quads (WebGL2 drawArraysInstanced, or WebGPU pass.draw when the page runs X_ITE_R on
+   // WebGPU: the same event on every backend, a draw of 6 vertices and n instances). X_ITE_R has no worker, so it records no
+   // message; it draws the splats in every frame, so its trace is the first eight draws, WebGPU or WebGL2 alike.
    await page .evaluate (() =>
    {
       window .trace = [ ];
@@ -64,6 +66,19 @@ async function scenario (page, env, name)
 
          return draw .call (this, mode, first, count, n);
       };
+
+      if (window .GPURenderPassEncoder)
+      {
+         const gpuDraw = GPURenderPassEncoder .prototype .draw;
+
+         GPURenderPassEncoder .prototype .draw = function (vertexCount, instanceCount, ... rest)
+         {
+            if (vertexCount === 6)
+               window .trace .push (`draw ${instanceCount ?? 1}`);
+
+            return gpuDraw .call (this, vertexCount, instanceCount, ... rest);
+         };
+      }
    });
 
    await page .evaluate (async text =>

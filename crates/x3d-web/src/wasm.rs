@@ -39,6 +39,14 @@ enum Entry {
     Failed(String),
 }
 
+/// The renderer's notices (a GaussianSplats data set larger than the device's 2D texture size is not drawn on WebGL2)
+/// to the page's console, once each.
+fn print_renderer_notices(renderer: &mut Renderer) {
+    for notice in renderer.take_notices() {
+        web_sys::console::warn_1(&format!("X_ITE_R: {notice}").into());
+    }
+}
+
 impl FetchCache {
     fn new() -> Rc<RefCell<FetchCache>> {
         Rc::new(RefCell::new(FetchCache {
@@ -2703,6 +2711,7 @@ impl WebBrowser {
         self.renderer
             .render(&frame, &view, self.view_format, width, height)
             .map_err(|e| JsError::new(&e))?;
+        print_renderer_notices(&mut self.renderer);
         self.renderer.queue().present(texture);
         Ok(())
     }
@@ -2744,6 +2753,7 @@ impl WebBrowser {
                 height,
             )
             .map_err(|e| JsError::new(&e))?;
+        print_renderer_notices(&mut self.renderer);
 
         let row = width * 4;
         let padded =
