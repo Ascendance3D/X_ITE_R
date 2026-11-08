@@ -71,7 +71,7 @@ function emulatedDevice ()
       // The device's next frame: every waiting callback gets the frame, as the user agent does.
       runFrame (time)
       {
-         const frame = { session: this, getViewerPose: () => ({ transform: rigid, views }) };
+         const frame = { session: this, getViewerPose: () => ({ transform: rigid, views }), getPose: (space) => space .pose ?? null };
          const callbacks = [ ... this .callbacks .values () ];
 
          this .callbacks .clear ();
@@ -256,6 +256,164 @@ test ("the XR button starts a session that draws into the layer, and its end ret
       assert .equal (result .sessionCallbacksLeft, 0, "a frame is still requested from the ended session");
       assert .equal (result .startTitle, "Start WebXR session.");
       assert .deepEqual (page .log .filter (l => !l .startsWith ("log:") && !l .startsWith ("info:") && !FALLBACK .some (r => r .test (l))), [ ]);
+   }
+   finally
+   {
+      await page .context () .close ();
+   }
+});
+
+// X3DWebXRContext.xrFrame hands the gamepads of the input sources (four axes or more) to the viewer before each frame
+// (xrExamineViewer.js): the thumbstick turns the EXAMINE viewer about its center, and nothing moves once it is back at the
+// center. A controller with two axes does not navigate.
+test ("the thumbstick of an XR gamepad turns the EXAMINE viewer (#83)", { timeout: CASE_TIMEOUT }, async t =>
+{
+   const page = await openPage (DESKTOP, { init: emulatedDevice, signal: t .signal });
+
+   try
+   {
+      const result = await page .evaluate (async (world) =>
+      {
+         const record  = globalThis .xrRecord;
+         const element = document .querySelector ("x3d-canvas");
+         const browser = element .browser;
+         const engine  = browser [Symbol .for ("X_ITE_R.engine")];
+         const wait    = async (test, what) => { for (let i = 0; i < 200; ++ i) { if (test ()) return; await new Promise (r => setTimeout (r, 10)); } throw new Error (`timeout: ${what}`); };
+
+         await browser .replaceWorld (await browser .createX3DFromString (world));
+         await new Promise (r => requestAnimationFrame (() => requestAnimationFrame (r)));
+
+         const button = () => element .shadowRoot .querySelector (".x_ite-private-xr-button");
+
+         await wait (() => button (), "the XR button");
+         button () .dispatchEvent (new MouseEvent ("mouseup"));
+         await wait (() => browser .getRenderingProperty ("XRSession"), "XRSession TRUE");
+
+         const session = record .session;
+         const pad     = (axes) => ({ axes, buttons: [ { pressed: false }, { pressed: false } ] });
+         const thumb   = pad ([ 0, 0, 0, 0 ]);
+         const twoAxes = pad ([ 0.9, 0.9 ]);
+         const changed = new Event ("inputsourceschange");
+
+         changed .added   = [ { targetRaySpace: { }, gamepad: twoAxes }, { targetRaySpace: { }, gamepad: thumb } ];
+         changed .removed = [ ];
+         session .dispatchEvent (changed);
+
+         let time = performance .now ();
+         // The viewer's chasers run on the browser time (Date.now ()), so the device frames come 50 ms apart in real time.
+         const run = async n => { for (let i = 0; i < n; ++ i) { await new Promise (r => setTimeout (r, 50)); session .runFrame (time += 50); } };
+         const pose = () => [ ... engine .userPose () ];
+
+         await run (2);
+         const start = pose ();
+
+         // Two axes only: not a navigation gamepad.
+         await run (5);
+         const afterTwoAxes = pose ();
+
+         thumb .axes [2] = 0.5;
+         await run (10);
+         const turned = pose ();
+
+         thumb .axes [2] = 0;
+         await run (1);
+         const released = pose ();
+         await run (10);
+         const later = pose ();
+
+         await session .end ();
+
+         return { start, afterTwoAxes, turned, released, later };
+      },
+      WORLD);
+
+      const distance = p => Math .hypot (p [0] - p [7], p [1] - p [8], p [2] - p [9]);
+      const close    = (a, b) => a .every ((v, i) => Math .abs (v - b [i]) < 1e-9);
+
+      assert .ok (close (result .start, result .afterTwoAxes), `a two-axis controller moved the viewer: ${result .afterTwoAxes}`);
+      assert .ok (Math .abs (result .turned [6]) > 0.01, `no rotation: ${result .turned}`);
+      assert .ok (Math .abs (distance (result .turned) - distance (result .start)) < 1e-4, "the distance to the center changed");
+      assert .ok (close (result .released, result .later), `the viewer moved after the release: ${result .released} ${result .later}`);
+   }
+   finally
+   {
+      await page .context () .close ();
+   }
+});
+
+// X3DWebXRContext.xrUpdatePointers after each display: the ray of an input source picks, button 0 activates the sensor,
+// and a ray that starts to hit a sensor pulses the gamepad's haptic actuator once.
+test ("the ray and button 0 of an XR controller drive a TouchSensor (#83)", { timeout: CASE_TIMEOUT }, async t =>
+{
+   const page = await openPage (DESKTOP, { init: emulatedDevice, signal: t .signal });
+
+   try
+   {
+      const result = await page .evaluate (async (world) =>
+      {
+         const record  = globalThis .xrRecord;
+         const element = document .querySelector ("x3d-canvas");
+         const browser = element .browser;
+         const wait    = async (test, what) => { for (let i = 0; i < 200; ++ i) { if (test ()) return; await new Promise (r => setTimeout (r, 10)); } throw new Error (`timeout: ${what}`); };
+
+         await browser .replaceWorld (await browser .createX3DFromString (world .replace ("Shape {", "DEF T TouchSensor { }\nShape {")));
+         await new Promise (r => requestAnimationFrame (() => requestAnimationFrame (r)));
+
+         const events = [ ];
+         const sensor = browser .currentScene .getNamedNode ("T");
+
+         for (const name of [ "isOver", "isActive", "touchTime" ])
+            sensor .getField (name) .addFieldCallback ("xr", value => events .push (name === "touchTime" ? name : `${name} ${value}`));
+
+         const button = () => element .shadowRoot .querySelector (".x_ite-private-xr-button");
+
+         await wait (() => button (), "the XR button");
+         button () .dispatchEvent (new MouseEvent ("mouseup"));
+         await wait (() => browser .getRenderingProperty ("XRSession"), "XRSession TRUE");
+
+         const session = record .session;
+         const at      = x => ({ transform: { matrix: Float32Array .of (1,0,0,0, 0,1,0,0, 0,0,1,0, x,0,0,1), inverse: { matrix: Float32Array .of (1,0,0,0, 0,1,0,0, 0,0,1,0, -x,0,0,1) } } });
+         const space   = { pose: at (20) };
+         const pulses  = [ ];
+         const gamepad = { axes: [ 0, 0, 0, 0 ], buttons: [ { pressed: false }, { pressed: false } ], hapticActuators: [ { pulse: (v, ms) => pulses .push ([ v, ms ]) } ] };
+         const changed = new Event ("inputsourceschange");
+
+         changed .added   = [ { targetRaySpace: space, gamepad } ];
+         changed .removed = [ ];
+         session .dispatchEvent (changed);
+
+         let time = performance .now ();
+         const run  = async n => { for (let i = 0; i < n; ++ i) { await new Promise (r => setTimeout (r, 50)); session .runFrame (time += 50); } };
+         const step = async () => { await run (3); return events .splice (0); };
+         const out  = { };
+
+         out .away      = await step ();
+         space .pose    = at (0);
+         out .onto      = await step ();
+         out .pulses    = pulses .length;
+         gamepad .buttons [0] .pressed = true;
+         out .pressed   = await step ();
+         gamepad .buttons [0] .pressed = false;
+         out .released  = await step ();
+         space .pose    = at (20);
+         out .off       = await step ();
+         out .pulsesEnd = pulses .length;
+         out .pulse     = pulses [0];
+
+         await session .end ();
+
+         return out;
+      },
+      WORLD);
+
+      assert .deepEqual (result .away, [ ]);
+      assert .deepEqual (result .onto, [ "isOver true" ]);
+      assert .equal (result .pulses, 1);
+      assert .deepEqual (result .pulse, [ 0.25, 10 ]);
+      assert .deepEqual (result .pressed, [ "isActive true" ]);
+      assert .deepEqual (result .released, [ "isActive false", "touchTime" ]);
+      assert .deepEqual (result .off, [ "isOver false" ]);
+      assert .equal (result .pulsesEnd, 1);
    }
    finally
    {

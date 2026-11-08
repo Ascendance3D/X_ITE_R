@@ -21,6 +21,8 @@ use wasm_bindgen::prelude::*;
 use x3d_render::gpu::Renderer;
 use x3d_runtime::FetchPoll;
 use x3d_runtime::data::Data;
+use x3d_viewer::nav::Gamepad;
+use x3d_viewer::viewer::XrSource;
 
 /// The responses of one world's fetches, by URL without its fragment.
 struct FetchCache {
@@ -2857,6 +2859,40 @@ impl WebBrowser {
         Ok(())
     }
 
+    /// X3DWebXRContext.xrStartSession `Object .assign (this [_gamepads], { action: true })`: the viewer's next frame
+    /// without a moved thumbstick disconnects it (xrExamineViewer.js).
+    #[wasm_bindgen(js_name = xrSessionStarted)]
+    pub fn xr_session_started(&mut self) {
+        if let Some(v) = self.current_mut().and_then(|s| s.viewer()) {
+            v.xr_session_started();
+        }
+    }
+
+    /// `viewer .gamepads (gamepads)` of X3DWebXRContext.xrFrame (xrExamineViewer.js, xrX3DFlyViewer.js), before
+    /// `xrFrame` steps the world: 4 numbers per gamepad with at least four axes, `axes [2]`, `axes [3]`, then buttons 0
+    /// and 1 (1 pressed, 0 not).
+    #[wasm_bindgen(js_name = xrGamepads)]
+    pub fn xr_gamepads(&mut self, pads: &[f64]) -> Result<(), JsError> {
+        if !pads.len().is_multiple_of(4) {
+            return Err(JsError::new("xrGamepads needs 4 numbers per gamepad"));
+        }
+
+        let gamepads: Vec<Gamepad> = pads
+            .chunks_exact(4)
+            .map(|p| Gamepad {
+                axes: [p[0], p[1]],
+                button0: p[2] != 0.0,
+                button1: p[3] != 0.0,
+            })
+            .collect();
+
+        if let Some(v) = self.current_mut().and_then(|s| s.viewer()) {
+            v.xr_gamepads(&gamepads);
+        }
+
+        Ok(())
+    }
+
     /// X3DWebXRContext.xrUpdateNearFarPlanes: `[depthNear, depthFar]` of the current world's bound viewpoint and
     /// NavigationInfo, or nothing without a world (X_ITE then uses 0.1 and 10 000).
     #[wasm_bindgen(js_name = xrNearFar)]
@@ -2864,6 +2900,32 @@ impl WebBrowser {
         let (near, far) = self.current_mut()?.viewer()?.xr_near_far();
 
         Some(vec![near, far])
+    }
+
+    /// X3DWebXRContext.xrUpdatePointers after the frame's display (displayFinishEvents), without the ray drawing: 19
+    /// numbers per input source, its page id, `active` (1 or 0), button 0 pressed (1 or 0), then the target-ray pose's
+    /// `transform.inverse.matrix`. Returns the ids of the sources due a haptic pulse.
+    #[wasm_bindgen(js_name = xrPointers)]
+    pub fn xr_pointers(&mut self, sources: &[f64]) -> Result<Vec<u32>, JsError> {
+        if !sources.len().is_multiple_of(19) {
+            return Err(JsError::new("xrPointers needs 19 numbers per input source"));
+        }
+
+        let sources: Vec<XrSource> = sources
+            .chunks_exact(19)
+            .map(|s| XrSource {
+                id: s[0] as u32,
+                active: s[1] != 0.0,
+                button0: s[2] != 0.0,
+                inverse: x3d_fields::math::Matrix4(s[3..19].try_into().expect("16 numbers")),
+            })
+            .collect();
+
+        Ok(self
+            .current_mut()
+            .and_then(|s| s.viewer())
+            .map(|v| v.xr_pointers(&sources))
+            .unwrap_or_default())
     }
 
     /// Step the current world to `now` and draw it once per view of a WebXR viewer pose into the canvas, sized `width` x

@@ -6,7 +6,7 @@
 use crate::collision::{CShape, World};
 use crate::layer::{DEFAULT, Layer, NavInfo, VpBase, is_default};
 use crate::lookat::Box3;
-use crate::nav::{Cx, Env, Input, LookAtRequest, Touches, Viewer};
+use crate::nav::{Cx, Env, Gamepad, GamepadState, Input, LookAtRequest, Touches, Viewer};
 use crate::pointer::{AnchorActivation, Hit, PickCamera, Pointer, pick};
 use crate::walk::{LayerWalk, NodeRef, Scan, ShapeInst, rt_at, rt_at_mut, scan_screens};
 use std::collections::HashMap;
@@ -194,6 +194,8 @@ pub struct Viewer3d {
     pub rt: Runtime,
     pub layer: Layer,
     pub nav: Viewer,
+    /// The properties of X3DWebXRContext's gamepad array (`action`, `button0`, `button1`).
+    gamepad_state: GamepadState,
     nav_info_node: NodeId,
     /// The bound NavigationInfo's `_viewer` (set_type__) the browser's viewer follows.
     nav_viewer: String,
@@ -310,6 +312,12 @@ pub struct Viewer3d {
     /// X3DPointingDeviceSensorContext.getPointingLayer: the layer of the pressed hit while the
     /// button is down.
     pointing_layer: Option<LayerKey>,
+    /// While an XR input source picks (X3DWebXRContext.xrUpdatePointers): its target-ray `inverse` matrix in the
+    /// reference space ([`Viewer3d::xr_touch`]).
+    xr_ray: Option<Matrix4>,
+    /// The `hit` of each XR input source by its page id (X3DWebXRContext.xrUpdateInputSources): its last pick and the
+    /// `button`, `pressed` and `pulse` state of xrUpdatePointers.
+    xr_sources: std::collections::HashMap<u32, XrSourceHit>,
     /// ContextMenu and Notification ([`crate::ui`]).
     pub ui: crate::ui::BrowserUi,
     /// The host is the native window ([`crate::embed::EmbeddedViewer`]): the viewer runs the browser UI of
@@ -532,6 +540,7 @@ impl Viewer3d {
             rt,
             layer: Layer::new(),
             nav: Viewer::None,
+            gamepad_state: GamepadState::default(),
             nav_info_node: DEFAULT,
             nav_viewer: String::new(),
             viewer_field: String::new(),
@@ -587,6 +596,8 @@ impl Viewer3d {
             drawn: vec![None],
             active: Some(None),
             pointing_layer: None,
+            xr_ray: None,
+            xr_sources: std::collections::HashMap::new(),
             ui: Default::default(),
             native_ui: false,
             command: false,
@@ -1480,6 +1491,38 @@ impl Viewer3d {
             requests: vec![],
         };
         self.nav.prepare(&mut cx);
+    }
+
+    /// X3DWebXRContext.xrStartSession: `Object .assign (this [_gamepads], { action: true })`.
+    pub fn xr_session_started(&mut self) {
+        self.gamepad_state.action = true;
+    }
+
+    /// `this .getViewer () .gamepads (this [_gamepads])` of X3DWebXRContext.xrFrame, before the frame's events: the
+    /// gamepads of the XR input sources with at least four axes, in input-source order.
+    pub fn xr_gamepads(&mut self, gamepads: &[Gamepad]) {
+        let base = self.base();
+        let nav = self.nav_info();
+        let env = self.env();
+        let vp_node = self.layer.viewpoint();
+        let world = self.collision_world();
+        let (bb, nv) = (base.clone(), nav.clone());
+        let vp = self.layer.vp(vp_node);
+        let wall_friction = self.rt.browser_options.wall_friction();
+        let mut constrain = |t: Vector3, v: &crate::layer::Vp| match &world {
+            Some(w) => w.constrain_translation(v, &bb, &nv, t, true, true, wall_friction),
+            None => t,
+        };
+        let mut cx = Cx {
+            env: &env,
+            base: &base,
+            vp,
+            nav: &nav,
+            constrain: &mut constrain,
+            requests: vec![],
+        };
+        self.nav
+            .gamepads(gamepads, &mut self.gamepad_state, &mut cx);
     }
 
     /// X3DLayerNode.camera and the NavigationContext reactions.
@@ -3232,6 +3275,114 @@ impl Viewer3d {
         self.do_pick(x, y)
     }
 
+    /// X3DWebXRContext.xrUpdatePointers `this .touch (viewport [2] / 2, viewport [3] / 2, hit, inputSource)`: the pick
+    /// along the target ray of an XR input source, `inverse` its `targetRaySpace` pose's `transform.inverse.matrix` in the
+    /// reference space. X3DLayerNode.camera (POINTER with an input source) then uses an orthographic projection
+    /// (-1 1 -1 1, near 0, the viewpoint's far distance) and the input source's matrices times the viewpoint's, so the
+    /// pointer at the middle of the canvas looks straight along the ray.
+    pub fn xr_touch(&mut self, inverse: &Matrix4) -> Hit {
+        let [_, _, w, h] = self.viewport();
+
+        self.xr_ray = Some(*inverse);
+        let hit = self.do_pick(w / 2.0, h / 2.0);
+        self.xr_ray = None;
+        hit
+    }
+
+    /// X3DWebXRContext.xrUpdatePointers without the ray drawing, at displayFinishEvents: every active input source picks
+    /// along its ray (`touch`, kept while the viewer is active), a source whose ray starts to hit a sensor gets one haptic
+    /// pulse, then button 0 of each active source presses once and releases once (buttonPressEvent, buttonReleaseEvent)
+    /// and the source moves the pointer (motionNotifyEvent). All sources share the browser's sensor state, as in X_ITE.
+    /// Returns the ids of the sources due a haptic pulse (`hapticActuators [0] .pulse (0.25, 10)`).
+    pub fn xr_pointers(&mut self, sources: &[XrSource]) -> Vec<u32> {
+        // X3DWebXRContext.xrUpdateInputSources `removeHit`: a source that went away loses its hit.
+        self.xr_sources
+            .retain(|id, _| sources.iter().any(|s| s.id == *id));
+
+        let mut pulses = vec![];
+
+        for s in sources.iter().filter(|s| s.active) {
+            // touch () returns at once while the viewer moves: the source keeps its last hit.
+            let picked = (!self.nav.is_active()).then(|| self.xr_touch(&s.inverse));
+            let state = self.xr_sources.entry(s.id).or_default();
+
+            if let Some(hit) = picked {
+                state.hit = hit;
+                state.inverse = s.inverse;
+            }
+
+            // xrSensorHitPulse.
+            if !state.hit.sensors.is_empty() {
+                if state.pulse {
+                    pulses.push(s.id);
+                    state.pulse = false;
+                }
+            } else {
+                state.pulse = true;
+            }
+        }
+
+        let now = if self.advance_only_time {
+            self.date_now
+        } else {
+            self.time
+        };
+
+        for s in sources.iter().filter(|s| s.active) {
+            let Some(state) = self.xr_sources.get(&s.id) else {
+                continue;
+            };
+            let (hit, inverse, button, pressed) = (
+                state.hit.clone(),
+                state.inverse,
+                state.button,
+                state.pressed,
+            );
+            let cam = xr_ray_camera(&self.pick_camera_of(hit.layer), &inverse);
+            let (mut button, mut pressed) = (button, pressed);
+
+            if s.button0 {
+                if !button {
+                    button = true;
+
+                    if !pressed {
+                        pressed = self
+                            .pointer
+                            .button_press(&mut self.rt, hit.clone(), &cam, now);
+
+                        if hit.id {
+                            self.pointing_layer = Some(hit.layer);
+                        }
+
+                        self.collect_pointer_output();
+                        self.browser_requests();
+                    }
+                }
+            } else {
+                button = false;
+
+                if pressed {
+                    pressed = false;
+                    self.pointing_layer = None;
+                    self.pointer.button_release(&mut self.rt, &cam, now);
+                    self.collect_pointer_output();
+                    self.browser_requests();
+                }
+            }
+
+            self.pointer.motion(&mut self.rt, hit, &cam, now);
+            self.collect_pointer_output();
+            self.browser_requests();
+
+            if let Some(state) = self.xr_sources.get_mut(&s.id) {
+                state.button = button;
+                state.pressed = pressed;
+            }
+        }
+
+        pulses
+    }
+
     fn do_pick(&mut self, x: f64, y: f64) -> Hit {
         // A lost device: the ray cast from now on.
         if self.pointing_gpu.as_ref().is_some_and(|g| g.lost()) {
@@ -3255,7 +3406,18 @@ impl Viewer3d {
 
             self.swap_to(key);
             let cam = self.pick_camera();
-            let scan = std::mem::take(&mut self.scan_display);
+            let mut scan = std::mem::take(&mut self.scan_display);
+            // An XR input source picks along its target ray: the shapes move into its space.
+            let (cam, held) = match self.xr_ray {
+                Some(inverse) => {
+                    let ray_scan = xr_ray_scan(&scan, &inverse);
+                    (
+                        xr_ray_camera(&cam, &inverse),
+                        Some(std::mem::replace(&mut scan, ray_scan)),
+                    )
+                }
+                None => (cam, None),
+            };
             // The ParticleSystems go in as runs: the pointing pass draws each at once, and only the CPU ray cast
             // expands them into a shape per particle (crate::pointer::PointingShapes).
             let shapes = crate::pointer::PointingShapes {
@@ -3274,7 +3436,7 @@ impl Viewer3d {
                 self.pointing_gpu.as_mut(),
             );
             self.geom_cache = cache;
-            self.scan_display = scan;
+            self.scan_display = held.unwrap_or(scan);
             h.layer = key;
 
             // No hit: the ray of the pointing layer (hit .pointingLayerNode .getHitRay ()).
@@ -3801,5 +3963,85 @@ ROUTE S.enabled TO C.set_enabled
         );
         assert!(!viewer("off", &world, 2).collision_may_run());
         assert!(viewer("enabled", &world, 12).collision_may_run());
+    }
+}
+
+/// X3DLayerNode.camera for POINTER with an XR input source: `Camera .ortho (-1, 1, -1, 1, 0, farValue)`, and the view
+/// matrix `inputSource .inverse` with the viewpoint's view matrix on its left.
+fn xr_ray_camera(cam: &PickCamera, inverse: &Matrix4) -> PickCamera {
+    let mut projection = Matrix4::IDENTITY;
+    crate::geom::Camera::ortho(-1.0, 1.0, -1.0, 1.0, 0.0, cam.far, &mut projection);
+
+    let mut view = cam.view;
+    view.mult_right(inverse);
+
+    PickCamera {
+        projection,
+        viewport: cam.viewport,
+        view,
+        near: 0.0,
+        far: cam.far,
+    }
+}
+
+/// The pointing objects of `scan` with every model-view matrix (shape, instance-folded and sensor) in the space of the
+/// input source's ray: the viewpoint's view times `inverse`.
+fn xr_ray_scan(scan: &crate::walk::Scan, inverse: &Matrix4) -> crate::walk::Scan {
+    let moved = |s: &crate::walk::ShapeInst| {
+        let mut s = s.clone();
+        s.model_view.mult_right(inverse);
+        s.shape_model_view.mult_right(inverse);
+        for sensor in &mut s.sensors {
+            sensor.model_view.mult_right(inverse);
+        }
+        s
+    };
+    let mut out = crate::walk::Scan::default();
+
+    out.shapes = scan.shapes.iter().map(moved).collect();
+    out.particle_pointing = scan
+        .particle_pointing
+        .iter()
+        .map(|r| crate::walk::ParticleRun {
+            at: r.at,
+            template: moved(&r.template),
+            matrices: r.matrices.clone(),
+        })
+        .collect();
+    out
+}
+
+/// One XR input source for [`Viewer3d::xr_pointers`].
+#[derive(Clone, Copy, Debug)]
+pub struct XrSource {
+    /// The page's id of the input source.
+    pub id: u32,
+    /// The frame has a target-ray pose for it (`inputSource .active`).
+    pub active: bool,
+    /// `gamepad ?.buttons [0] ?.pressed`.
+    pub button0: bool,
+    /// The target-ray pose's `transform.inverse.matrix` in the reference space.
+    pub inverse: Matrix4,
+}
+
+/// The `hit` X3DWebXRContext keeps on an input source.
+#[derive(Clone, Debug)]
+struct XrSourceHit {
+    hit: Hit,
+    inverse: Matrix4,
+    button: bool,
+    pressed: bool,
+    pulse: bool,
+}
+
+impl Default for XrSourceHit {
+    fn default() -> XrSourceHit {
+        XrSourceHit {
+            hit: Hit::default(),
+            inverse: Matrix4::IDENTITY,
+            button: false,
+            pressed: false,
+            pulse: true,
+        }
     }
 }
