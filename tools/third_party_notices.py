@@ -5,7 +5,9 @@
     python3 -I -B tools/third_party_notices.py --check    fail if the committed file is stale
 
 The crate set is x3d-web and its normal (not dev, not build) dependencies for wasm32-unknown-unknown, as
-`cargo tree -p x3d-web --target wasm32-unknown-unknown -e normal` shows them. Each license text is read from the
+`cargo tree -p x3d-web --target wasm32-unknown-unknown -e normal` shows them. That command resolves the features of the
+x3d-web build. `cargo metadata` alone does not: its graph joins the features of every workspace member, so it also holds
+crates that only a native build uses (vp9dec, winit, rustls). Each listed package must also be in that graph. Each license text is read from the
 license files in the package's own source directory (the cargo registry or vendor/). Nothing is invented: a package
 without a license file is marked so. The output holds no time stamp and no absolute path, and is sorted.
 Needs the registry sources (cargo fetch); the check runs offline.
@@ -49,7 +51,25 @@ def metadata():
     return json.loads(r.stdout)
 
 
+def tree_set():
+    """(name, version) of every package in the feature-resolved wasm32 build of x3d-web."""
+    cmd = ["cargo", "tree", "--locked", "--offline", "-q", "-p", ROOT_PACKAGE, "--target", TARGET, "-e", "normal",
+           "--prefix", "none", "-f", "{p}"]
+    r = subprocess.run(cmd, cwd=ROOT, capture_output=True, encoding="utf-8", errors="replace")
+    if r.returncode != 0:
+        sys.exit(f"third_party_notices: cargo tree failed (exit {r.returncode}):\n{r.stderr.strip()}")
+    found = set()
+    for line in r.stdout.splitlines():
+        parts = line.split()
+        if len(parts) >= 2 and parts[1].startswith("v"):
+            found.add((parts[0], parts[1][1:]))
+    if not found:
+        sys.exit("third_party_notices: cargo tree listed no packages")
+    return found
+
+
 def shipped(meta):
+    """The packages of the metadata graph (normal edges from x3d-web) that the feature-resolved build has."""
     pkgs = {p["id"]: p for p in meta["packages"]}
     nodes = {n["id"]: n for n in meta["resolve"]["nodes"]}
     start = next(i for i, p in pkgs.items() if p["name"] == ROOT_PACKAGE)
@@ -62,7 +82,12 @@ def shipped(meta):
         for d in nodes[i]["deps"]:
             if any(k["kind"] is None for k in d["dep_kinds"]):  # normal edge
                 todo.append(d["pkg"])
-    return [pkgs[i] for i in seen]
+    walked = [pkgs[i] for i in seen]
+    tree = tree_set()
+    lost = tree - {(p["name"], p["version"]) for p in walked}
+    if lost:
+        sys.exit(f"third_party_notices: cargo tree has packages the metadata graph does not: {sorted(lost)}")
+    return [p for p in walked if (p["name"], p["version"]) in tree]
 
 
 def read_text(path):
@@ -195,6 +220,9 @@ def render():
 
 
 def main():
+    if any(a != "--check" for a in sys.argv[1:]):
+        print(__doc__)
+        return 2
     text, missing, nolic, n = render()
     if "--check" in sys.argv[1:]:
         have = open(OUT, encoding="utf-8").read() if os.path.exists(OUT) else None

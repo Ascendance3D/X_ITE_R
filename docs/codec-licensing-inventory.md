@@ -35,7 +35,7 @@ Decoders reach `AudioClip` and `decodeAudioData` through `web-audio-api` 1.7.0 (
 | PCM, ADPCM, A-law, mu-law, AIFF/WAV/CAF | `symphonia-codec-pcm`, `symphonia-codec-adpcm`, `symphonia-format-riff`, `-caf` (0.6.1); `hound` 3.5.1 (Apache-2.0, WAV) | MPL-2.0 / Apache-2.0 | Not assessed. | Not assessed. |
 | ALAC | `symphonia-codec-alac` 0.5.5 and 0.6.1 | MPL-2.0 | Not assessed; in the build through `vendor/web-audio-api` (the MP4 demuxer `symphonia-format-isomp4` is kept). | Decide with the audio review. |
 | Matroska/WebM audio demux | `symphonia-format-mkv` 0.5.5 and 0.6.1 (`x3d-runtime` feature `mkv` of symphonia 0.6.1), with `symphonia-utils-xiph` 0.5.5 | MPL-2.0 | Container code; no codec of its own. Not assessed. | Not assessed. |
-| Opus | Not decodable natively (rejected). `Cargo.lock` at `e0e053ec` has no Opus decoder package. No exclusion check tool exists for Opus (see item 3 below). | | | None. |
+| Opus | Not decodable natively (rejected). `Cargo.lock` has no Opus decoder package; `tools/check_no_opus.py` checks this (item 3 below). | | | None. |
 
 Source-license note for the Symphonia crates (MPL-2.0), a reading to be confirmed by a qualified reviewer, not a procedure: MPL-2.0 is a file-level copyleft. We do not modify the Symphonia files, so the obligations that matter for a distribution are keeping each crate's license text and copyright notices with the distribution, and, if a binary form is distributed, making the source of those MPL-covered files available as the license's section 3.2 describes (an unmodified file's source is the crate on crates.io). Changes to MPL-covered files would have to stay under MPL-2.0 with their source available. The exact wording of the release notices is for the legal review.
 
@@ -83,9 +83,11 @@ Commands: `cargo tree --offline -q -p <crate> [--target wasm32-unknown-unknown] 
 
 `THIRD_PARTY_NOTICES.md` holds the notices of pl_mpeg, zvidlib-vp8, RFC 6386, rav1d, avif-rust and image-webp. It holds no section for `vp9dec` (MIT), the `symphonia` crates (MPL-2.0), `web-audio-api` (MIT), `creek` or `hound`. A release package must carry their license texts (item 2 below); the release notice set is not built yet.
 
+Update 2026-11-08 (technical, not a legal finding): the browser package now carries `THIRD_PARTY_CRATES.md` (PR #509, `tools/third_party_notices.py`; `tools/package-web-preview.sh` refuses a stale file). Its crate set is the feature-resolved `cargo tree` of the wasm32 `x3d-web` build: 231 packages at master `d36e0759`. It holds the license text of every `symphonia` crate in that build (with the MPL-2.0 text), `web-audio-api`, `creek`, `creek-core`, `creek-decode-symphonia`, `hound`, `image-webp` and `avif-rust`. `vp9dec` is not in the browser build (`tools/check_no_native_video.py --cargo`), so the browser package does not list it. A native release (`x3d-viewer`) has no notice set yet.
+
 ## What a release needs from this file
 
 1. Every row has a patent position that someone qualified has reviewed, and a disposition the owner has approved in writing.
 2. The notices listed are in the release package.
-3. `python3 -I tools/check_no_aac.py --binary <artifact>` passes on each native and wasm artifact (PR #357), and an equivalent check exists for any other excluded codec. On 2026-11-07 only the `Cargo.lock` form ran (OK); no release artifact exists to check. **Open: no exclusion check exists for Opus**, the other excluded codec; it is a release requirement that is not met.
+3. `python3 -I tools/check_no_aac.py --binary <artifact>` passes on each native and wasm artifact (PR #357), and an equivalent check exists for any other excluded codec. On 2026-11-07 only the `Cargo.lock` form ran (OK); no release artifact existed to check. On 2026-11-08, on the technical candidate `d36e0759`: the browser package's `pkg/x3d_web_bg.wasm` passes `check_no_aac.py --binary`, `check_no_native_video.py --cargo --binary` and `check_no_opus.py --binary`, and a release build of `x3d-drive` passes the AAC and Opus binary checks. `tools/check_no_opus.py` is the Opus check (lockfile, `--cargo`, `--binary`, `--self-test`); CI and the package script run it. The binary forms are supplemental smoke checks, not proof of absence.
 4. The owner's separate release authorization.

@@ -147,6 +147,9 @@ jobs:
       - name: AAC exclusion (lockfile and vendored crate)
         run: |
           python3 -I -B tools/check_no_aac.py
+          # Opus is excluded too (docs/codec-licensing-inventory.md, release item 3).
+          python3 -I -B tools/check_no_opus.py --self-test
+          python3 -I -B tools/check_no_opus.py
           python3 -I -B tools/check_vendored_web_audio_api.py --self-test
           # vendor/rav1d is rav1d 1.1.0 plus one recorded change to src/decode.rs (owner decision 2026-11-03, PR #363). The check
           # downloads the crate, verifies its sha256 and compares every file byte for byte; the review skips the identical files.
@@ -293,6 +296,7 @@ jobs:
         run: |
           cargo build --release -p x3d-viewer --bin x3d-drive
           python3 -I -B tools/check_no_aac.py --binary target/release/x3d-drive
+          python3 -I -B tools/check_no_opus.py --binary target/release/x3d-drive
           python3 -I -B oracle/tools/rea_b05.py check --target target/release --jobs 2 | tee rea_b05.log
           test "${PIPESTATUS[0]}" -eq 0
           tail -1 rea_b05.log >> "$GITHUB_STEP_SUMMARY"
