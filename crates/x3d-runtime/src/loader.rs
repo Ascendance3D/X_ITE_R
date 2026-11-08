@@ -1752,6 +1752,7 @@ impl Runtime {
                 }
 
                 // MPEG-1 (ISO/IEC 19775-1 18.4.2): decoded here; a failure is the usual unplayable-video error below.
+                #[cfg(feature = "native-video")]
                 if !self.mpeg1_unplayable
                     && crate::mpeg1::has_mpeg1_extension(&path)
                     && let Ok(data) = self.fetcher.fetch(&file_url)
