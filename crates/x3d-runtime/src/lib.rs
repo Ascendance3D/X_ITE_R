@@ -44,6 +44,9 @@ pub mod geo;
 pub mod inline;
 pub mod inline_geometry;
 pub mod loader;
+// MPEG-1 Video and Systems (issue #90): a native-video decoder. The browser build plays a MovieTexture in a <video>
+// element (`Fetcher::plays_video`) and never calls it, so the browser module leaves it out.
+#[cfg(feature = "native-video")]
 pub mod mpeg1;
 pub mod nodes;
 pub mod nurbs;

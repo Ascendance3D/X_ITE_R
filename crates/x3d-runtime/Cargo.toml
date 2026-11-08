@@ -8,7 +8,7 @@ description = "X3D scene runtime: event engine, PROTO instancing, loading; porte
 
 [features]
 default = ["native-video"]
-# The engine's own video decoders for a MovieTexture (webm.rs, vp8/, vp9dec). The browser build (x3d-web) turns it off:
+# The engine's own video decoders for a MovieTexture (webm.rs, vp8/, vp9dec, mpeg1/). The browser build (x3d-web) turns it off:
 # there the page plays the video in a <video> element (`Fetcher::plays_video`) and these decoders are never called.
 native-video = ["dep:vp9dec"]
 # AV1 video in MovieTexture (rav1d, BSD-2-Clause). OFF by default until the owner decides how to contain rav1d's
