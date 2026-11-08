@@ -1,8 +1,8 @@
 # WebXR: runtime options and what is implemented (issue #83)
 
 Rule BR4.1 (the options, their licenses and the choice recorded before WebXR code) and BR4.2 (the part that needs no headset is
-implemented and tested with an emulated device; what remains is listed with its blocker). The choice below is **proposed and
-pending owner approval**: issue #83 says the owner chooses the runtime or approves WebXR as a difference.
+implemented and tested with an emulated device; what remains is listed with its blocker). The choice below is the **owner decision
+of 2026-11-08** (issue #83): WebXR for the browser build, OpenXR for native XR applications, one shared Rust engine.
 
 ## What the pinned X_ITE does
 
@@ -21,11 +21,15 @@ the browser API, and the browser supplies the runtime (a headset runtime, or a W
 | An OpenXR runtime on Linux (Monado) | open-source runtime, also with a simulated device | BSL-1.0 (recalled, not verified here) | would allow a headset-free native test; not checked |
 | macOS | no OpenXR runtime from the platform (recalled, not verified here) | n/a | native XR on macOS is unavailable; the web build is the only route |
 
-## Proposed choice
+## Owner decision (2026-11-08)
 
 1. The web build uses **browser WebXR**, like the pinned X_ITE. No native runtime is needed for it.
-2. A native OpenXR viewer is **not started**: it needs an owner decision, a runtime to test against and the wgpu/OpenXR Vulkan
-   interop, none of which exist in this work. Recording it as an approved difference for `x3d-view` is the alternative.
+2. Native XR applications use **OpenXR** as the runtime interface, on the same Rust engine (no second renderer). It is not
+   started: it needs a runtime to test against and the wgpu/OpenXR Vulkan interop. It does not block an initial browser
+   release unless the release contract requires it.
+3. Order: the browser behavior of the pinned X_ITE first (established with REA), the shared engine interfaces before any
+   hardware-specific code, focused tests for each step. No hardware support is claimed without physical-device evidence;
+   unsupported devices and runtimes are listed as unsupported.
 
 ## Implemented without a headset
 
@@ -84,14 +88,18 @@ no XR runtime (Chrome 156 on Linux reports `immersive-vr` unsupported, `XRGPUBin
 
 ## Not implemented, and the specific blocker
 
-* **Drawing into the session.** X_ITE draws into an `XRWebGLLayer`. X_ITE_R draws with WebGPU, and the WebGPU layer for immersive
-  sessions (`XRGPUBinding`) is not available in the stable browser the tests use (to be verified when a browser that ships it is
-  chosen). `prepare` and `reshape` are the seams. Resource needed: a browser with WebXR-WebGPU support, or the owner's choice to
-  render XR through a WebGL path.
+* **Drawing into the session: the WebGL2 path exists, the session does not use it yet.** `XRGPUBinding` (the WebGPU layer) is
+  not in the stable browser the tests use, so XR draws on the engine's WebGL2 backend. `engine.xrFrame` (`src/wasm.rs`) draws
+  each view of a pose into its viewport, with the shared `x3d_render::xr::view_frame` and `set_xr_eye`. `web/xr_layer.mjs`
+  makes the context XR-compatible, makes the `XRWebGLLayer` with X_ITE's options, and copies the canvas into
+  `baseLayer.framebuffer`. `tests/browser/xrdraw01.test.mjs` checks this in headless Chromium with an emulated layer that has
+  a real framebuffer (two views, each in its own viewport); the device and `makeXRCompatible` are emulated. Remaining: connect
+  `XRSessionController` and `xr_layer.mjs` in `x_ite_r.mjs` (an immersive session switches the element to the WebGL2 backend).
+  No headset has run it.
 * **The input ray, hit point drawing and hit-driven pointing** (`xrUpdatePointers` after the target-ray loop): they need the XR render path.
 * **Wiring to the public API.** `getRenderingProperty("XRSession")` and the `xrSessionMode` option still behave as documented in
   `web/API.md` (no XR); they change when the draw path exists.
-* **A native OpenXR session:** see the proposed choice.
+* **A native OpenXR session:** see the owner decision, item 2.
 
 ## Known difference from the pinned X_ITE
 

@@ -41,6 +41,112 @@ enum Entry {
 
 /// The renderer's notices (a GaussianSplats data set larger than the 2D texture size of a downlevel (WebGL2) device is not drawn)
 /// to the page's console, once each.
+/// The WebXR pose of [`WebBrowser::xr_frame`]: 32 numbers for the pose, 36 per view (see there). The headlight is
+/// set by the caller from the bound NavigationInfo.
+fn xr_pose_of(pose: &[f64], views: &[f64]) -> Result<x3d_render::xr::XrPose, JsError> {
+    use x3d_fields::math::Matrix4;
+
+    let matrix = |a: &[f64]| Matrix4(a.try_into().expect("16 numbers"));
+
+    if pose.len() != 32 || views.is_empty() || !views.len().is_multiple_of(36) {
+        return Err(JsError::new(&format!(
+            "xrFrame: the pose needs 32 numbers and each view 36 (got {} and {})",
+            pose.len(),
+            views.len()
+        )));
+    }
+
+    if pose.iter().chain(views).any(|v| !v.is_finite()) {
+        return Err(JsError::new("xrFrame: a pose or view number is not finite"));
+    }
+
+    let views = views
+        .chunks_exact(36)
+        .map(|v| {
+            let viewport = std::array::from_fn(|i| v[32 + i].max(0.0) as u32);
+
+            x3d_render::xr::XrView {
+                projection: matrix(&v[0..16]),
+                view_matrix: matrix(&v[16..32]),
+                viewport,
+            }
+        })
+        .collect();
+
+    Ok(x3d_render::xr::XrPose {
+        camera_space: matrix(&pose[0..16]),
+        view_matrix: matrix(&pose[16..32]),
+        views,
+        headlight: true,
+    })
+}
+
+/// The pipeline of [`WebBrowser::xr_frame`] that draws a texture of the canvas size into the canvas, texel for texel.
+fn xr_blit_pipeline(
+    device: &wgpu::Device,
+    format: wgpu::TextureFormat,
+) -> (wgpu::RenderPipeline, wgpu::BindGroupLayout) {
+    const SHADER: &str = r#"
+@group(0) @binding(0) var source: texture_2d<f32>;
+
+@vertex
+fn vs(@builtin(vertex_index) i: u32) -> @builtin(position) vec4<f32> {
+    let p = vec2<f32>(f32((i << 1u) & 2u), f32(i & 2u));
+    return vec4<f32>(p * 2.0 - 1.0, 0.0, 1.0);
+}
+
+@fragment
+fn fs(@builtin(position) at: vec4<f32>) -> @location(0) vec4<f32> {
+    return textureLoad(source, vec2<i32>(at.xy), 0);
+}
+"#;
+    let module = device.create_shader_module(wgpu::ShaderModuleDescriptor {
+        label: Some("x3d-web xrFrame blit"),
+        source: wgpu::ShaderSource::Wgsl(SHADER.into()),
+    });
+    let layout = device.create_bind_group_layout(&wgpu::BindGroupLayoutDescriptor {
+        label: Some("x3d-web xrFrame blit"),
+        entries: &[wgpu::BindGroupLayoutEntry {
+            binding: 0,
+            visibility: wgpu::ShaderStages::FRAGMENT,
+            ty: wgpu::BindingType::Texture {
+                sample_type: wgpu::TextureSampleType::Float { filterable: false },
+                view_dimension: wgpu::TextureViewDimension::D2,
+                multisampled: false,
+            },
+            count: None,
+        }],
+    });
+    let pipeline_layout = device.create_pipeline_layout(&wgpu::PipelineLayoutDescriptor {
+        label: Some("x3d-web xrFrame blit"),
+        bind_group_layouts: &[Some(&layout)],
+        immediate_size: 0,
+    });
+    let pipeline = device.create_render_pipeline(&wgpu::RenderPipelineDescriptor {
+        label: Some("x3d-web xrFrame blit"),
+        layout: Some(&pipeline_layout),
+        vertex: wgpu::VertexState {
+            module: &module,
+            entry_point: Some("vs"),
+            compilation_options: Default::default(),
+            buffers: &[],
+        },
+        fragment: Some(wgpu::FragmentState {
+            module: &module,
+            entry_point: Some("fs"),
+            compilation_options: Default::default(),
+            targets: &[Some(format.into())],
+        }),
+        primitive: Default::default(),
+        depth_stencil: None,
+        multisample: Default::default(),
+        multiview_mask: None,
+        cache: None,
+    });
+
+    (pipeline, layout)
+}
+
 fn print_renderer_notices(renderer: &mut Renderer) {
     for notice in renderer.take_notices() {
         web_sys::console::warn_1(&format!("X_ITE_R: {notice}").into());
@@ -368,6 +474,11 @@ pub struct WebBrowser {
     webgl2: bool,
     /// Why WebGPU did not start, when `create` fell back to WebGL2.
     fallback_reason: Option<String>,
+    /// The targets of [`WebBrowser::xr_frame`] (kept while the layer size stays): each XR view is drawn into the first,
+    /// its viewport is copied into the second, and the second is drawn into the canvas.
+    xr_target: Option<(wgpu::Texture, wgpu::Texture)>,
+    /// The pipeline that draws the composed XR views into the canvas, made on first use.
+    xr_blit: Option<(wgpu::RenderPipeline, wgpu::BindGroupLayout)>,
 }
 
 /// A route as the array `routes` and its relatives give.
@@ -667,6 +778,8 @@ impl WebBrowser {
             retired_log: vec![],
             webgl2,
             fallback_reason: None,
+            xr_target: None,
+            xr_blit: None,
         })
     }
 }
@@ -2740,6 +2853,218 @@ impl WebBrowser {
         // The notices of the frame are printed also when the render failed.
         print_renderer_notices(&mut self.renderer);
         rendered.map_err(|e| JsError::new(&e))?;
+        self.renderer.queue().present(texture);
+        Ok(())
+    }
+
+    /// Step the current world to `now` and draw it once per view of a WebXR viewer pose into the canvas, sized `width` x
+    /// `height` device pixels (the XR layer's framebuffer size), each view into its own viewport (issue #83). This is the
+    /// draw loop of X_ITE 16.5.0 X3DWebXRContext.xrUpdatePose with X3DRenderObject.draw (`x3d_render::xr`): the views
+    /// share one display list, each with its projection, viewport and eye matrix.
+    ///
+    /// * `pose`: 32 numbers, the pose's `transform.matrix` then `transform.inverse.matrix` (column-major, as WebXR gives
+    ///   them).
+    /// * `views`: 36 numbers per view: `projectionMatrix`, `transform.inverse.matrix`, then the layer viewport `x, y,
+    ///   width, height` (y up, pixels). A view of width zero is left out, as X_ITE does.
+    ///
+    /// The page then copies the canvas into the session's `XRWebGLLayer` (`x_ite_r.mjs`). Only the WebGL2 backend can do
+    /// this: a WebGPU canvas has no XR layer in a stable browser, so `xrFrame` refuses WebGPU.
+    #[wasm_bindgen(js_name = xrFrame)]
+    pub fn xr_frame(
+        &mut self,
+        now: f64,
+        width: u32,
+        height: u32,
+        pose: &[f64],
+        views: &[f64],
+    ) -> Result<(), JsError> {
+        if !self.webgl2 {
+            return Err(JsError::new(
+                "XR drawing needs the WebGL2 backend (graphicsBackend \"webgl2\"); WebGPU has no XR layer",
+            ));
+        }
+
+        if self.lost() {
+            return Err(JsError::new("the graphics device is lost"));
+        }
+
+        let pose = xr_pose_of(pose, views)?;
+        let (width, height) = (width.max(1), height.max(1));
+
+        if (width, height) != (self.config.width, self.config.height) {
+            self.config.width = width;
+            self.config.height = height;
+            self.surface.configure(&self.device, &self.config);
+
+            for w in self.worlds.values_mut() {
+                w.session.resize(width, height);
+            }
+        }
+
+        let current = self.current.and_then(|id| self.worlds.get_mut(&id));
+        let (frame, headlight) = match current.map(|w| &mut w.session) {
+            Some(s) => {
+                s.step(now);
+
+                let changes = s.viewer().map(|v| v.take_rendering_changes());
+                let headlight = s.viewer().is_none_or(|v| v.nav_info().headlight);
+                let frame = s.build_frame();
+
+                if let Some(c) = changes {
+                    c.apply(&mut self.renderer);
+                }
+
+                (frame, headlight)
+            }
+            None => (crate::empty_frame(), true),
+        };
+        let pose = x3d_render::xr::XrPose { headlight, ..pose };
+
+        // Each view is drawn over the whole of one target, and only its viewport is copied into a second target (as
+        // `x3d_render::render_file_xr` does for its picture). The second target is then drawn into the canvas: wgpu's
+        // WebGL2 canvas is a render attachment only and takes no copy.
+        let format = self.config.format;
+        let reuse =
+            matches!(&self.xr_target, Some((t, _)) if t.width() == width && t.height() == height);
+
+        if !reuse {
+            let make = |label, usage| {
+                self.device.create_texture(&wgpu::TextureDescriptor {
+                    label: Some(label),
+                    size: wgpu::Extent3d {
+                        width,
+                        height,
+                        depth_or_array_layers: 1,
+                    },
+                    mip_level_count: 1,
+                    sample_count: 1,
+                    dimension: wgpu::TextureDimension::D2,
+                    format,
+                    usage,
+                    view_formats: &[],
+                })
+            };
+
+            self.xr_target = Some((
+                make(
+                    "x3d-web xrFrame view",
+                    wgpu::TextureUsages::RENDER_ATTACHMENT | wgpu::TextureUsages::COPY_SRC,
+                ),
+                make(
+                    "x3d-web xrFrame views",
+                    wgpu::TextureUsages::COPY_DST | wgpu::TextureUsages::TEXTURE_BINDING,
+                ),
+            ));
+        }
+
+        let (target, composed) = self.xr_target.as_ref().expect("made above");
+        let target_view = target.create_view(&Default::default());
+
+        for view in pose.drawn_views() {
+            let (view_frame, eye) = x3d_render::xr::view_frame(&frame, &pose, view);
+
+            self.renderer.set_xr_eye(Some(eye));
+
+            let rendered = self
+                .renderer
+                .render(&view_frame, &target_view, format, width, height);
+
+            self.renderer.set_xr_eye(None);
+            print_renderer_notices(&mut self.renderer);
+            rendered.map_err(|e| JsError::new(&e))?;
+
+            // The viewport is y up; a texture region is y down.
+            let [vx, vy, vw, vh] = view.viewport;
+            let (vw, vh) = (
+                vw.min(width.saturating_sub(vx)),
+                vh.min(height.saturating_sub(vy)),
+            );
+
+            if vw == 0 || vh == 0 {
+                continue;
+            }
+
+            let origin = wgpu::Origin3d {
+                x: vx,
+                y: height - vy - vh,
+                z: 0,
+            };
+            let mut encoder = self
+                .device
+                .create_command_encoder(&wgpu::CommandEncoderDescriptor {
+                    label: Some("x3d-web xrFrame copy"),
+                });
+
+            encoder.copy_texture_to_texture(
+                wgpu::TexelCopyTextureInfo {
+                    texture: target,
+                    mip_level: 0,
+                    origin,
+                    aspect: wgpu::TextureAspect::All,
+                },
+                wgpu::TexelCopyTextureInfo {
+                    texture: composed,
+                    mip_level: 0,
+                    origin,
+                    aspect: wgpu::TextureAspect::All,
+                },
+                wgpu::Extent3d {
+                    width: vw,
+                    height: vh,
+                    depth_or_array_layers: 1,
+                },
+            );
+            self.renderer.queue().submit([encoder.finish()]);
+        }
+
+        let texture = match self.surface.get_current_texture() {
+            wgpu::CurrentSurfaceTexture::Success(t)
+            | wgpu::CurrentSurfaceTexture::Suboptimal(t) => t,
+            other => return Err(JsError::new(&format!("canvas texture: {other:?}"))),
+        };
+        let canvas_view = texture.texture.create_view(&wgpu::TextureViewDescriptor {
+            format: Some(self.view_format),
+            ..Default::default()
+        });
+        let composed_view = composed.create_view(&Default::default());
+        let device = &self.device;
+        let view_format = self.view_format;
+        let (pipeline, layout) = self
+            .xr_blit
+            .get_or_insert_with(|| xr_blit_pipeline(device, view_format));
+        let bind_group = device.create_bind_group(&wgpu::BindGroupDescriptor {
+            label: Some("x3d-web xrFrame blit"),
+            layout,
+            entries: &[wgpu::BindGroupEntry {
+                binding: 0,
+                resource: wgpu::BindingResource::TextureView(&composed_view),
+            }],
+        });
+        let mut encoder = device.create_command_encoder(&wgpu::CommandEncoderDescriptor {
+            label: Some("x3d-web xrFrame blit"),
+        });
+
+        {
+            let mut pass = encoder.begin_render_pass(&wgpu::RenderPassDescriptor {
+                label: Some("x3d-web xrFrame blit"),
+                color_attachments: &[Some(wgpu::RenderPassColorAttachment {
+                    view: &canvas_view,
+                    depth_slice: None,
+                    resolve_target: None,
+                    ops: wgpu::Operations {
+                        load: wgpu::LoadOp::Clear(wgpu::Color::TRANSPARENT),
+                        store: wgpu::StoreOp::Store,
+                    },
+                })],
+                ..Default::default()
+            });
+
+            pass.set_pipeline(pipeline);
+            pass.set_bind_group(0, &bind_group, &[]);
+            pass.draw(0..3, 0..1);
+        }
+
+        self.renderer.queue().submit([encoder.finish()]);
         self.renderer.queue().present(texture);
         Ok(())
     }
