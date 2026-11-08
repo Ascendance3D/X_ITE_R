@@ -22,6 +22,7 @@
 
 use crate::*;
 
+#[cfg(feature = "native-video")]
 mod mpeg1_media;
 
 /// The next token of a page video element: unique across the runtimes of a page.

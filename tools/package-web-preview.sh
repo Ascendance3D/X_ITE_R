@@ -76,6 +76,11 @@ git show "$commit:$web/API.md" > "$dir/docs/API.md"
 git show "$commit:LICENSE" > "$dir/LICENSE"
 git show "$commit:THIRD_PARTY_NOTICES.md" > "$dir/THIRD_PARTY_NOTICES.md"
 git show "$commit:THIRD_PARTY_CRATES.md" > "$dir/THIRD_PARTY_CRATES.md"
+# The Source Code Form of the MPL-2.0 crates in the module (MPL-2.0 3.2 (a)): their published crate archives, each
+# checked against the Cargo.lock checksum, with a README and the license text. The method is an owner decision after
+# legal review (docs/codec-licensing-inventory.md); the package carries the archives until then.
+python3 -I -B tools/mpl_sources.py --write "$dir"
+python3 -I -B tools/mpl_sources.py --verify "$dir"
 mv "$dir/preview/DEPLOY.md" "$dir/README.md"
 mv "$dir/preview/COMPATIBILITY.md" "$dir/COMPATIBILITY.md"
 mv "$dir/preview/htaccess.example" "$dir/htaccess.example"

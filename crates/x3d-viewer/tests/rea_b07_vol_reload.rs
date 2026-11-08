@@ -428,3 +428,50 @@ fn rea_b07_iso_and_segmented_removal_release_resources() {
         );
     });
 }
+
+/// A world that goes releases its volume textures at once (Renderer::release_unreferenced). The volume bind groups hold
+/// their textures (so a freed texture address cannot reach a cached group); the release must drop the groups before it
+/// drops the textures only the renderer holds, or each texture stays until a later release.
+#[test]
+fn rea_b07_world_release_frees_volume_textures_at_once() {
+    let Some((device, queue)) = device() else {
+        return x3d_evidence::no_gpu("no adapter, skipped");
+    };
+    spawn_big_stack(move || {
+        let mut v = EmbeddedViewer::new(device.clone(), queue.clone(), (W, H));
+        let mut now = T0;
+        let options = || LoadOptions {
+            root: None,
+            start_time: Some(T0),
+        };
+        v.load(&dir().join("static/vd-two.wrl"), options()).unwrap();
+        settle(&mut v, &device, &queue, &mut now, 3);
+        assert!(
+            v.renderer().volume_resources()[2] > 0,
+            "vd-two drew no volume"
+        );
+        assert!(
+            v.renderer().resource_counts()[2] > 0,
+            "vd-two used no texture"
+        );
+
+        let empty = std::env::temp_dir().join(format!("rea-b07-empty-{}.wrl", std::process::id()));
+        std::fs::write(&empty, "#VRML V2.0 utf8\n").unwrap();
+        v.load(&empty, options()).unwrap();
+        let _ = std::fs::remove_file(&empty);
+
+        // Before any frame of the new world: nothing of vd-two is left.
+        assert_eq!(
+            v.renderer().volume_resources()[2],
+            0,
+            "volume bind groups left after the release"
+        );
+        // The one texture that may stay is the shared 1x1 white default of the traversal cache (traverse.rs `white`),
+        // which lives as long as the renderer. With the groups dropped after the textures, vd-two's 3 textures stayed.
+        let left = v.renderer().resource_counts()[2];
+        assert!(
+            left <= 1,
+            "{left} textures left after the release (held through a volume bind group)"
+        );
+    });
+}
