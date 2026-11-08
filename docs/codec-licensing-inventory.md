@@ -85,6 +85,8 @@ Commands: `cargo tree --offline -q -p <crate> [--target wasm32-unknown-unknown] 
 
 Update 2026-11-08 (technical, not a legal finding): the browser package now carries `THIRD_PARTY_CRATES.md` (PR #509, `tools/third_party_notices.py`; `tools/package-web-preview.sh` refuses a stale file). Its crate set is the feature-resolved `cargo tree` of the wasm32 `x3d-web` build: 231 packages at master `d36e0759`. It holds the license text of every `symphonia` crate in that build (with the MPL-2.0 text), `web-audio-api`, `creek`, `creek-core`, `creek-decode-symphonia`, `hound`, `image-webp` and `avif-rust`. `vp9dec` is not in the browser build (`tools/check_no_native_video.py --cargo`), so the browser package does not list it. A native release (`x3d-viewer`) has no notice set yet.
 
+Update 2026-11-08 (technical, not a legal finding): the browser package carries the Source Code Form of its 29 MPL-2.0 crates (`symphonia` 0.5.5 and 0.6.1, unmodified) in `third-party-source/`. These are the published crate archives, each checked against its `Cargo.lock` checksum, with a README and the MPL-2.0 text (`tools/mpl_sources.py`, run by `tools/package-web-preview.sh`; about 1.1 MB). The owner still decides the delivery method (archive or link) after legal review.
+
 ## What a release needs from this file
 
 1. Every row has a patent position that someone qualified has reviewed, and a disposition the owner has approved in writing.
