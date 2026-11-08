@@ -3,7 +3,7 @@
 
 Owner architecture decision 2026-11-02 (issue #90, docs/media-architecture.md section 8.2): the browser build plays a
 MovieTexture in the page's <video> element, so the engine's own video decoders (x3d-runtime feature `native-video`:
-webm.rs, vp8/, the vp9dec crate) are not part of the wasm module.
+webm.rs, vp8/, mpeg1/, the vp9dec crate) are not part of the wasm module.
 
     --cargo   `cargo tree` for x3d-web on wasm32-unknown-unknown must not contain vp9dec. This is the authoritative check:
               it reads the dependency graph Cargo resolves for the browser build.
@@ -19,7 +19,8 @@ import tempfile
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
-FORBIDDEN = (b"vp9dec", b"x3d-runtime/src/vp8/", b"x3d-runtime/src/webm.rs", b"x3d_runtime/src/vp8/")
+FORBIDDEN = (b"vp9dec", b"x3d-runtime/src/vp8/", b"x3d-runtime/src/webm.rs", b"x3d_runtime/src/vp8/",
+             b"x3d-runtime/src/mpeg1/", b"x3d_runtime/src/mpeg1/")
 CONTROL = (b"symphonia-bundle-mp3", b"symphonia_bundle_mp3")
 
 
@@ -61,6 +62,7 @@ def self_test():
             "clean": (b"..." + CONTROL[0] + b"...", 0),
             "has-vp9dec": (b"x " + CONTROL[0] + b" vp9dec-0.1.1/src/lib.rs", 1),
             "has-vp8": (b"x " + CONTROL[0] + b" crates/x3d-runtime/src/vp8/decoder.rs", 1),
+            "has-mpeg1": (b"x " + CONTROL[0] + b" crates/x3d-runtime/src/mpeg1/video.rs", 1),
             "no-control": (b"nothing here", 1),
         }
         for name, (data, want) in cases.items():

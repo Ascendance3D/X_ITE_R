@@ -1,3 +1,4 @@
+#![cfg(feature = "native-video")]
 //! MPEG-1 decoding for MovieTexture (issue #90; ISO/IEC 19775-1 18.4.2 requires MPEG-1 Systems and MPEG-1 Video;
 //! owner decision record a0acb58b). The decoder is `x3d_runtime::mpeg1`; the design is in docs/mpeg1-implementation.md.
 //!

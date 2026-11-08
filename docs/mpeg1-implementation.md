@@ -20,7 +20,8 @@ This change is **not** full MPEG-1 MovieTexture compliance and must not be descr
   Systems stream is decoded (Layer II, and Layer III) and plays through the node (`hasSound` true). Layer I is reported
   unsupported. Not done: the start offset between the audio and video streams is not applied.
 - **Browser build integration is NOT done.** In the browser build the page's `<video>` element loads the file and cannot play MPEG-1.
-  The ISO criterion is OPEN for the browser build.
+  The ISO criterion is OPEN for the browser build. Since 2026-11-08 the decoder is behind the `native-video` feature of
+  `x3d-runtime`, so the browser module, which never called it, no longer contains it.
 - Done: the picture (video) half of both formats in the native build, with the compatibility option. Clause numbers, reverse playback
   and the ISO time model are also open (other lanes or the owner).
 
