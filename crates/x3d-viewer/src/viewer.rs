@@ -312,6 +312,9 @@ pub struct Viewer3d {
     /// X3DPointingDeviceSensorContext.getPointingLayer: the layer of the pressed hit while the
     /// button is down.
     pointing_layer: Option<LayerKey>,
+    /// While an XR input source picks (X3DWebXRContext.xrUpdatePointers): its target-ray `inverse` matrix in the
+    /// reference space ([`Viewer3d::xr_touch`]).
+    xr_ray: Option<Matrix4>,
     /// ContextMenu and Notification ([`crate::ui`]).
     pub ui: crate::ui::BrowserUi,
     /// The host is the native window ([`crate::embed::EmbeddedViewer`]): the viewer runs the browser UI of
@@ -590,6 +593,7 @@ impl Viewer3d {
             drawn: vec![None],
             active: Some(None),
             pointing_layer: None,
+            xr_ray: None,
             ui: Default::default(),
             native_ui: false,
             command: false,
@@ -3267,6 +3271,20 @@ impl Viewer3d {
         self.do_pick(x, y)
     }
 
+    /// X3DWebXRContext.xrUpdatePointers `this .touch (viewport [2] / 2, viewport [3] / 2, hit, inputSource)`: the pick
+    /// along the target ray of an XR input source, `inverse` its `targetRaySpace` pose's `transform.inverse.matrix` in the
+    /// reference space. X3DLayerNode.camera (POINTER with an input source) then uses an orthographic projection
+    /// (-1 1 -1 1, near 0, the viewpoint's far distance) and the input source's matrices times the viewpoint's, so the
+    /// pointer at the middle of the canvas looks straight along the ray.
+    pub fn xr_touch(&mut self, inverse: &Matrix4) -> Hit {
+        let [_, _, w, h] = self.viewport();
+
+        self.xr_ray = Some(*inverse);
+        let hit = self.do_pick(w / 2.0, h / 2.0);
+        self.xr_ray = None;
+        hit
+    }
+
     fn do_pick(&mut self, x: f64, y: f64) -> Hit {
         // A lost device: the ray cast from now on.
         if self.pointing_gpu.as_ref().is_some_and(|g| g.lost()) {
@@ -3290,7 +3308,18 @@ impl Viewer3d {
 
             self.swap_to(key);
             let cam = self.pick_camera();
-            let scan = std::mem::take(&mut self.scan_display);
+            let mut scan = std::mem::take(&mut self.scan_display);
+            // An XR input source picks along its target ray: the shapes move into its space.
+            let (cam, held) = match self.xr_ray {
+                Some(inverse) => {
+                    let ray_scan = xr_ray_scan(&scan, &inverse);
+                    (
+                        xr_ray_camera(&cam, &inverse),
+                        Some(std::mem::replace(&mut scan, ray_scan)),
+                    )
+                }
+                None => (cam, None),
+            };
             // The ParticleSystems go in as runs: the pointing pass draws each at once, and only the CPU ray cast
             // expands them into a shape per particle (crate::pointer::PointingShapes).
             let shapes = crate::pointer::PointingShapes {
@@ -3309,7 +3338,7 @@ impl Viewer3d {
                 self.pointing_gpu.as_mut(),
             );
             self.geom_cache = cache;
-            self.scan_display = scan;
+            self.scan_display = held.unwrap_or(scan);
             h.layer = key;
 
             // No hit: the ray of the pointing layer (hit .pointingLayerNode .getHitRay ()).
@@ -3837,4 +3866,49 @@ ROUTE S.enabled TO C.set_enabled
         assert!(!viewer("off", &world, 2).collision_may_run());
         assert!(viewer("enabled", &world, 12).collision_may_run());
     }
+}
+
+/// X3DLayerNode.camera for POINTER with an XR input source: `Camera .ortho (-1, 1, -1, 1, 0, farValue)`, and the view
+/// matrix `inputSource .inverse` with the viewpoint's view matrix on its left.
+fn xr_ray_camera(cam: &PickCamera, inverse: &Matrix4) -> PickCamera {
+    let mut projection = Matrix4::IDENTITY;
+    crate::geom::Camera::ortho(-1.0, 1.0, -1.0, 1.0, 0.0, cam.far, &mut projection);
+
+    let mut view = cam.view;
+    view.mult_right(inverse);
+
+    PickCamera {
+        projection,
+        viewport: cam.viewport,
+        view,
+        near: 0.0,
+        far: cam.far,
+    }
+}
+
+/// The pointing objects of `scan` with every model-view matrix (shape, instance-folded and sensor) in the space of the
+/// input source's ray: the viewpoint's view times `inverse`.
+fn xr_ray_scan(scan: &crate::walk::Scan, inverse: &Matrix4) -> crate::walk::Scan {
+    let moved = |s: &crate::walk::ShapeInst| {
+        let mut s = s.clone();
+        s.model_view.mult_right(inverse);
+        s.shape_model_view.mult_right(inverse);
+        for sensor in &mut s.sensors {
+            sensor.model_view.mult_right(inverse);
+        }
+        s
+    };
+    let mut out = crate::walk::Scan::default();
+
+    out.shapes = scan.shapes.iter().map(moved).collect();
+    out.particle_pointing = scan
+        .particle_pointing
+        .iter()
+        .map(|r| crate::walk::ParticleRun {
+            at: r.at,
+            template: moved(&r.template),
+            matrices: r.matrices.clone(),
+        })
+        .collect();
+    out
 }
