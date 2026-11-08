@@ -6,7 +6,7 @@
 use crate::collision::{CShape, World};
 use crate::layer::{DEFAULT, Layer, NavInfo, VpBase, is_default};
 use crate::lookat::Box3;
-use crate::nav::{Cx, Env, Input, LookAtRequest, Touches, Viewer};
+use crate::nav::{Cx, Env, Gamepad, GamepadState, Input, LookAtRequest, Touches, Viewer};
 use crate::pointer::{AnchorActivation, Hit, PickCamera, Pointer, pick};
 use crate::walk::{LayerWalk, NodeRef, Scan, ShapeInst, rt_at, rt_at_mut, scan_screens};
 use std::collections::HashMap;
@@ -194,6 +194,8 @@ pub struct Viewer3d {
     pub rt: Runtime,
     pub layer: Layer,
     pub nav: Viewer,
+    /// The properties of X3DWebXRContext's gamepad array (`action`, `button0`, `button1`).
+    gamepad_state: GamepadState,
     nav_info_node: NodeId,
     /// The bound NavigationInfo's `_viewer` (set_type__) the browser's viewer follows.
     nav_viewer: String,
@@ -532,6 +534,7 @@ impl Viewer3d {
             rt,
             layer: Layer::new(),
             nav: Viewer::None,
+            gamepad_state: GamepadState::default(),
             nav_info_node: DEFAULT,
             nav_viewer: String::new(),
             viewer_field: String::new(),
@@ -1470,6 +1473,38 @@ impl Viewer3d {
             requests: vec![],
         };
         self.nav.prepare(&mut cx);
+    }
+
+    /// X3DWebXRContext.xrStartSession: `Object .assign (this [_gamepads], { action: true })`.
+    pub fn xr_session_started(&mut self) {
+        self.gamepad_state.action = true;
+    }
+
+    /// `this .getViewer () .gamepads (this [_gamepads])` of X3DWebXRContext.xrFrame, before the frame's events: the
+    /// gamepads of the XR input sources with at least four axes, in input-source order.
+    pub fn xr_gamepads(&mut self, gamepads: &[Gamepad]) {
+        let base = self.base();
+        let nav = self.nav_info();
+        let env = self.env();
+        let vp_node = self.layer.viewpoint();
+        let world = self.collision_world();
+        let (bb, nv) = (base.clone(), nav.clone());
+        let vp = self.layer.vp(vp_node);
+        let wall_friction = self.rt.browser_options.wall_friction();
+        let mut constrain = |t: Vector3, v: &crate::layer::Vp| match &world {
+            Some(w) => w.constrain_translation(v, &bb, &nv, t, true, true, wall_friction),
+            None => t,
+        };
+        let mut cx = Cx {
+            env: &env,
+            base: &base,
+            vp,
+            nav: &nav,
+            constrain: &mut constrain,
+            requests: vec![],
+        };
+        self.nav
+            .gamepads(gamepads, &mut self.gamepad_state, &mut cx);
     }
 
     /// X3DLayerNode.camera and the NavigationContext reactions.

@@ -250,7 +250,85 @@ test ("the XR button starts a session that draws into the layer, and its end ret
    }
 });
 
-test ("the XR button stays hidden on the WebGPU backend (#83)", { timeout: CASE_TIMEOUT }, async t =>
+// X3DWebXRContext.xrFrame hands the gamepads of the input sources (four axes or more) to the viewer before each frame
+// (xrExamineViewer.js): the thumbstick turns the EXAMINE viewer about its center, and nothing moves once it is back at the
+// center. A controller with two axes does not navigate.
+test ("the thumbstick of an XR gamepad turns the EXAMINE viewer (#83)", { timeout: CASE_TIMEOUT }, async t =>
+{
+   const page = await openPage (DESKTOP, { init: emulatedDevice, signal: t .signal });
+
+   try
+   {
+      const result = await page .evaluate (async (world) =>
+      {
+         const record  = globalThis .xrRecord;
+         const element = document .querySelector ("x3d-canvas");
+         const browser = element .browser;
+         const engine  = browser [Symbol .for ("X_ITE_R.engine")];
+         const wait    = async (test, what) => { for (let i = 0; i < 200; ++ i) { if (test ()) return; await new Promise (r => setTimeout (r, 10)); } throw new Error (`timeout: ${what}`); };
+
+         await browser .replaceWorld (await browser .createX3DFromString (world));
+         await new Promise (r => requestAnimationFrame (() => requestAnimationFrame (r)));
+
+         const button = () => element .shadowRoot .querySelector (".x_ite-private-xr-button");
+
+         await wait (() => button (), "the XR button");
+         button () .dispatchEvent (new MouseEvent ("mouseup"));
+         await wait (() => browser .getRenderingProperty ("XRSession"), "XRSession TRUE");
+
+         const session = record .session;
+         const pad     = (axes) => ({ axes, buttons: [ { pressed: false }, { pressed: false } ] });
+         const thumb   = pad ([ 0, 0, 0, 0 ]);
+         const twoAxes = pad ([ 0.9, 0.9 ]);
+         const changed = new Event ("inputsourceschange");
+
+         changed .added   = [ { targetRaySpace: { }, gamepad: twoAxes }, { targetRaySpace: { }, gamepad: thumb } ];
+         changed .removed = [ ];
+         session .dispatchEvent (changed);
+
+         let time = performance .now ();
+         // The viewer's chasers run on the browser time (Date.now ()), so the device frames come 50 ms apart in real time.
+         const run = async n => { for (let i = 0; i < n; ++ i) { await new Promise (r => setTimeout (r, 50)); session .runFrame (time += 50); } };
+         const pose = () => [ ... engine .userPose () ];
+
+         await run (2);
+         const start = pose ();
+
+         // Two axes only: not a navigation gamepad.
+         await run (5);
+         const afterTwoAxes = pose ();
+
+         thumb .axes [2] = 0.5;
+         await run (10);
+         const turned = pose ();
+
+         thumb .axes [2] = 0;
+         await run (1);
+         const released = pose ();
+         await run (10);
+         const later = pose ();
+
+         await session .end ();
+
+         return { start, afterTwoAxes, turned, released, later };
+      },
+      WORLD);
+
+      const distance = p => Math .hypot (p [0] - p [7], p [1] - p [8], p [2] - p [9]);
+      const close    = (a, b) => a .every ((v, i) => Math .abs (v - b [i]) < 1e-9);
+
+      assert .ok (close (result .start, result .afterTwoAxes), `a two-axis controller moved the viewer: ${result .afterTwoAxes}`);
+      assert .ok (Math .abs (result .turned [6]) > 0.01, `no rotation: ${result .turned}`);
+      assert .ok (Math .abs (distance (result .turned) - distance (result .start)) < 1e-4, "the distance to the center changed");
+      assert .ok (close (result .released, result .later), `the viewer moved after the release: ${result .released} ${result .later}`);
+   }
+   finally
+   {
+      await page .context () .close ();
+   }
+});
+
+test ("the XR button stays hidden on the WebGPU backend (#83)",{ timeout: CASE_TIMEOUT }, async t =>
 {
    const page = await openPage (DESKTOP, { signal: t .signal });
 

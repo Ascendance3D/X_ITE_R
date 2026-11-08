@@ -21,6 +21,7 @@ use wasm_bindgen::prelude::*;
 use x3d_render::gpu::Renderer;
 use x3d_runtime::FetchPoll;
 use x3d_runtime::data::Data;
+use x3d_viewer::nav::Gamepad;
 
 /// The responses of one world's fetches, by URL without its fragment.
 struct FetchCache {
@@ -2854,6 +2855,40 @@ impl WebBrowser {
         print_renderer_notices(&mut self.renderer);
         rendered.map_err(|e| JsError::new(&e))?;
         self.renderer.queue().present(texture);
+        Ok(())
+    }
+
+    /// X3DWebXRContext.xrStartSession `Object .assign (this [_gamepads], { action: true })`: the viewer's next frame
+    /// without a moved thumbstick disconnects it (xrExamineViewer.js).
+    #[wasm_bindgen(js_name = xrSessionStarted)]
+    pub fn xr_session_started(&mut self) {
+        if let Some(v) = self.current_mut().and_then(|s| s.viewer()) {
+            v.xr_session_started();
+        }
+    }
+
+    /// `viewer .gamepads (gamepads)` of X3DWebXRContext.xrFrame (xrExamineViewer.js, xrX3DFlyViewer.js), before
+    /// `xrFrame` steps the world: 4 numbers per gamepad with at least four axes, `axes [2]`, `axes [3]`, then buttons 0
+    /// and 1 (1 pressed, 0 not).
+    #[wasm_bindgen(js_name = xrGamepads)]
+    pub fn xr_gamepads(&mut self, pads: &[f64]) -> Result<(), JsError> {
+        if !pads.len().is_multiple_of(4) {
+            return Err(JsError::new("xrGamepads needs 4 numbers per gamepad"));
+        }
+
+        let gamepads: Vec<Gamepad> = pads
+            .chunks_exact(4)
+            .map(|p| Gamepad {
+                axes: [p[0], p[1]],
+                button0: p[2] != 0.0,
+                button1: p[3] != 0.0,
+            })
+            .collect();
+
+        if let Some(v) = self.current_mut().and_then(|s| s.viewer()) {
+            v.xr_gamepads(&gamepads);
+        }
+
         Ok(())
     }
 
