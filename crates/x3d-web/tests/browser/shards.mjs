@@ -27,7 +27,9 @@ const DIR = dirname (fileURLToPath (import.meta.url));
 // 195 s to 431 s in all (median 342 s). With ui01 (124 s to 216 s) they were 1085 s to 1648 s of the cases-2 shard, whose rest
 // takes about 890 s to 1070 s. Now the longest shard of those runs is 1008 s (median) and 1037 s (longest), was 1540 s and 1648 s.
 // Hosted runs at master 43e6e493 (run 42449798206): cases-2 took 31 min, phone 3 min and tablet 3 min. Of cases-2, nav02
-// (384 s), scriptlife01 (193 s) and inlinehold01 (160 s) moved to phone and tablet, so the longest shard is input (21 min).
+// (384 s) moved to phone, scriptlife01 (193 s) and inlinehold01 (160 s) to tablet; each runs once, so the longest shard is
+// input (21 min). A shard name sets no device: the phone and tablet emulation (PHONE, TABLET of runtime02_harness.mjs) is
+// only in runtime02_phone and runtime02_tablet, and the moved files keep their own desktop page.
 export const SHARDS = {
    phone:  [ "runtime02_phone.test.mjs", "nav02.test.mjs" ],
    tablet: [ "runtime02_tablet.test.mjs", "runtime02_lifecycle.test.mjs", "scriptlife01.test.mjs", "inlinehold01.test.mjs" ],
