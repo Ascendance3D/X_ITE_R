@@ -315,6 +315,9 @@ pub struct Viewer3d {
     /// While an XR input source picks (X3DWebXRContext.xrUpdatePointers): its target-ray `inverse` matrix in the
     /// reference space ([`Viewer3d::xr_touch`]).
     xr_ray: Option<Matrix4>,
+    /// The `hit` of each XR input source by its page id (X3DWebXRContext.xrUpdateInputSources): its last pick and the
+    /// `button`, `pressed` and `pulse` state of xrUpdatePointers.
+    xr_sources: std::collections::HashMap<u32, XrSourceHit>,
     /// ContextMenu and Notification ([`crate::ui`]).
     pub ui: crate::ui::BrowserUi,
     /// The host is the native window ([`crate::embed::EmbeddedViewer`]): the viewer runs the browser UI of
@@ -594,6 +597,7 @@ impl Viewer3d {
             active: Some(None),
             pointing_layer: None,
             xr_ray: None,
+            xr_sources: std::collections::HashMap::new(),
             ui: Default::default(),
             native_ui: false,
             command: false,
@@ -3285,6 +3289,100 @@ impl Viewer3d {
         hit
     }
 
+    /// X3DWebXRContext.xrUpdatePointers without the ray drawing, at displayFinishEvents: every active input source picks
+    /// along its ray (`touch`, kept while the viewer is active), a source whose ray starts to hit a sensor gets one haptic
+    /// pulse, then button 0 of each active source presses once and releases once (buttonPressEvent, buttonReleaseEvent)
+    /// and the source moves the pointer (motionNotifyEvent). All sources share the browser's sensor state, as in X_ITE.
+    /// Returns the ids of the sources due a haptic pulse (`hapticActuators [0] .pulse (0.25, 10)`).
+    pub fn xr_pointers(&mut self, sources: &[XrSource]) -> Vec<u32> {
+        // X3DWebXRContext.xrUpdateInputSources `removeHit`: a source that went away loses its hit.
+        self.xr_sources
+            .retain(|id, _| sources.iter().any(|s| s.id == *id));
+
+        let mut pulses = vec![];
+
+        for s in sources.iter().filter(|s| s.active) {
+            // touch () returns at once while the viewer moves: the source keeps its last hit.
+            let picked = (!self.nav.is_active()).then(|| self.xr_touch(&s.inverse));
+            let state = self.xr_sources.entry(s.id).or_default();
+
+            if let Some(hit) = picked {
+                state.hit = hit;
+                state.inverse = s.inverse;
+            }
+
+            // xrSensorHitPulse.
+            if !state.hit.sensors.is_empty() {
+                if state.pulse {
+                    pulses.push(s.id);
+                    state.pulse = false;
+                }
+            } else {
+                state.pulse = true;
+            }
+        }
+
+        let now = if self.advance_only_time {
+            self.date_now
+        } else {
+            self.time
+        };
+
+        for s in sources.iter().filter(|s| s.active) {
+            let Some(state) = self.xr_sources.get(&s.id) else {
+                continue;
+            };
+            let (hit, inverse, button, pressed) = (
+                state.hit.clone(),
+                state.inverse,
+                state.button,
+                state.pressed,
+            );
+            let cam = xr_ray_camera(&self.pick_camera_of(hit.layer), &inverse);
+            let (mut button, mut pressed) = (button, pressed);
+
+            if s.button0 {
+                if !button {
+                    button = true;
+
+                    if !pressed {
+                        pressed = self
+                            .pointer
+                            .button_press(&mut self.rt, hit.clone(), &cam, now);
+
+                        if hit.id {
+                            self.pointing_layer = Some(hit.layer);
+                        }
+
+                        self.collect_pointer_output();
+                        self.browser_requests();
+                    }
+                }
+            } else {
+                button = false;
+
+                if pressed {
+                    pressed = false;
+                    self.pointing_layer = None;
+                    self.pointer.button_release(&mut self.rt, &cam, now);
+                    self.collect_pointer_output();
+                    self.browser_requests();
+                }
+            }
+
+            self.pointer.motion(&mut self.rt, hit, &cam, now);
+            self.collect_pointer_output();
+            self.browser_requests();
+
+            if let Some(state) = self.xr_sources.get_mut(&s.id) {
+                state.button = button;
+                state.pressed = pressed;
+            }
+        }
+
+        pulses
+    }
+
     fn do_pick(&mut self, x: f64, y: f64) -> Hit {
         // A lost device: the ray cast from now on.
         if self.pointing_gpu.as_ref().is_some_and(|g| g.lost()) {
@@ -3911,4 +4009,39 @@ fn xr_ray_scan(scan: &crate::walk::Scan, inverse: &Matrix4) -> crate::walk::Scan
         })
         .collect();
     out
+}
+
+/// One XR input source for [`Viewer3d::xr_pointers`].
+#[derive(Clone, Copy, Debug)]
+pub struct XrSource {
+    /// The page's id of the input source.
+    pub id: u32,
+    /// The frame has a target-ray pose for it (`inputSource .active`).
+    pub active: bool,
+    /// `gamepad ?.buttons [0] ?.pressed`.
+    pub button0: bool,
+    /// The target-ray pose's `transform.inverse.matrix` in the reference space.
+    pub inverse: Matrix4,
+}
+
+/// The `hit` X3DWebXRContext keeps on an input source.
+#[derive(Clone, Debug)]
+struct XrSourceHit {
+    hit: Hit,
+    inverse: Matrix4,
+    button: bool,
+    pressed: bool,
+    pulse: bool,
+}
+
+impl Default for XrSourceHit {
+    fn default() -> XrSourceHit {
+        XrSourceHit {
+            hit: Hit::default(),
+            inverse: Matrix4::IDENTITY,
+            button: false,
+            pressed: false,
+            pulse: true,
+        }
+    }
 }

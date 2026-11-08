@@ -22,6 +22,7 @@ use x3d_render::gpu::Renderer;
 use x3d_runtime::FetchPoll;
 use x3d_runtime::data::Data;
 use x3d_viewer::nav::Gamepad;
+use x3d_viewer::viewer::XrSource;
 
 /// The responses of one world's fetches, by URL without its fragment.
 struct FetchCache {
@@ -2899,6 +2900,32 @@ impl WebBrowser {
         let (near, far) = self.current_mut()?.viewer()?.xr_near_far();
 
         Some(vec![near, far])
+    }
+
+    /// X3DWebXRContext.xrUpdatePointers after the frame's display (displayFinishEvents), without the ray drawing: 19
+    /// numbers per input source, its page id, `active` (1 or 0), button 0 pressed (1 or 0), then the target-ray pose's
+    /// `transform.inverse.matrix`. Returns the ids of the sources due a haptic pulse.
+    #[wasm_bindgen(js_name = xrPointers)]
+    pub fn xr_pointers(&mut self, sources: &[f64]) -> Result<Vec<u32>, JsError> {
+        if !sources.len().is_multiple_of(19) {
+            return Err(JsError::new("xrPointers needs 19 numbers per input source"));
+        }
+
+        let sources: Vec<XrSource> = sources
+            .chunks_exact(19)
+            .map(|s| XrSource {
+                id: s[0] as u32,
+                active: s[1] != 0.0,
+                button0: s[2] != 0.0,
+                inverse: x3d_fields::math::Matrix4(s[3..19].try_into().expect("16 numbers")),
+            })
+            .collect();
+
+        Ok(self
+            .current_mut()
+            .and_then(|s| s.viewer())
+            .map(|v| v.xr_pointers(&sources))
+            .unwrap_or_default())
     }
 
     /// Step the current world to `now` and draw it once per view of a WebXR viewer pose into the canvas, sized `width` x

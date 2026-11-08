@@ -5754,6 +5754,8 @@ class X3DBrowser
    // The WebXR session (issue #83): { controller, gl, layer } while one runs, else null; the button of
    // X3DWebXRContext.xrAddButton; the wrapper that holds the buttons.
    #xr = null;
+   #xrSourceIds = new WeakMap ();
+   #xrNextSourceId = 1;
    #xrController = null;
    #xrButton = null;
    #xrButtonCheck = Promise .resolve ();
@@ -6321,6 +6323,35 @@ class X3DBrowser
       this .#stop ();
       this .#lastStamp = -Infinity;
       this .#start ();
+   }
+
+   // X3DWebXRContext.xrUpdatePointers after the display, without the ray drawing: the target rays of the input sources,
+   // then the picks, button 0 and the pointer motion in the engine. A source whose ray starts to hit a sensor gets one
+   // haptic pulse (xrSensorHitPulse).
+   #xrPointers (engine, controller)
+   {
+      const sources = [ ... controller .inputSources ?? [ ] ];
+
+      if (!sources .length)
+         return;
+
+      controller .updateTargetRays ();
+
+      const data = new Float64Array (sources .length * 19);
+
+      for (const [i, source] of sources .entries ())
+      {
+         if (!this .#xrSourceIds .has (source))
+            this .#xrSourceIds .set (source, this .#xrNextSourceId ++);
+
+         data [i * 19]     = this .#xrSourceIds .get (source);
+         data [i * 19 + 1] = source .active ? 1 : 0;
+         data [i * 19 + 2] = source .gamepad ?.buttons [0] ?.pressed ? 1 : 0;
+         data .set (source .inverse, i * 19 + 3);
+      }
+
+      for (const id of engine .xrPointers (data))
+         sources .find (source => this .#xrSourceIds .get (source) === id) ?.gamepad ?.hapticActuators ?.[0] ?.pulse (0.25, 10);
    }
 
    // X3DWebXRContext.xrStopSession; the session's `end` event comes here too (XRSessionController.stop).
@@ -8159,7 +8190,10 @@ class X3DBrowser
                const pose = xrFrame ?.getViewerPose (xr .controller .referenceSpace);
 
                if (pose)
+               {
                   drawXRFrame (engine, xr .gl, xr .layer, pose, time);
+                  this .#xrPointers (engine, xr .controller);
+               }
             }
             else
             {

@@ -368,5 +368,6 @@ Status: PARTIAL. #146 is split by what DOMIntegration.js does: the root element 
 - **Difference:** X_ITE_R draws XR only on its WebGL2 backend (`backend="webgl2"`). A WebGPU canvas has no XR layer in a stable browser, so on WebGPU the button stays hidden.
 - Gamepad navigation follows X_ITE's `xrExamineViewer.js` and `xrX3DFlyViewer.js`. Each frame, the gamepads with four axes or more go to the viewer. EXAMINE rotates with the thumbstick, zooms with button 0 and pans with button 1; FLY and WALK fly with the thumbstick (button 0 doubles the speed) and pan with button 1. NONE, PLANE and LOOKAT ignore the gamepads.
 - **Difference:** X_ITE reads `buttons [1]` of a gamepad without a check. X_ITE_R takes a missing button as not pressed.
-- **Not implemented:** the input-ray pointing of X3DWebXRContext.xrUpdatePointers.
+- Input-ray pointing follows X3DWebXRContext.xrUpdatePointers after each display. Each active input source picks along its target ray, button 0 presses once and releases once, and the source moves the pointer, so a TouchSensor reports `isOver`, `isActive` and `touchTime`. A ray that starts to hit a sensor pulses `hapticActuators [0]` once (0.25, 10 ms).
+- **Not implemented:** the drawing of the input rays and hit points (ScreenLine, ScreenPoint), and the drag-sensor matrices of xrUpdatePointers (PlaneSensor, CylinderSensor and SphereSensor are not tested with a controller).
 - Tested with an emulated device only (`tests/browser/xrsession01.test.mjs`). No headset has run it.
