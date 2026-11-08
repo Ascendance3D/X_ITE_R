@@ -3023,13 +3023,41 @@ impl WebBrowser {
                 ),
                 make(
                     "x3d-web xrFrame views",
-                    wgpu::TextureUsages::COPY_DST | wgpu::TextureUsages::TEXTURE_BINDING,
+                    wgpu::TextureUsages::COPY_DST
+                        | wgpu::TextureUsages::TEXTURE_BINDING
+                        | wgpu::TextureUsages::RENDER_ATTACHMENT,
                 ),
             ));
         }
 
         let (target, composed) = self.xr_target.as_ref().expect("made above");
         let target_view = target.create_view(&Default::default());
+
+        // The views target is cleared each frame: an area no view of this frame covers (a view left out, a changed
+        // layout) shows nothing, as the session's framebuffer, which WebXR clears before each XR animation frame.
+        {
+            let composed_view = composed.create_view(&Default::default());
+            let mut encoder = self
+                .device
+                .create_command_encoder(&wgpu::CommandEncoderDescriptor {
+                    label: Some("x3d-web xrFrame clear"),
+                });
+
+            encoder.begin_render_pass(&wgpu::RenderPassDescriptor {
+                label: Some("x3d-web xrFrame clear"),
+                color_attachments: &[Some(wgpu::RenderPassColorAttachment {
+                    view: &composed_view,
+                    depth_slice: None,
+                    resolve_target: None,
+                    ops: wgpu::Operations {
+                        load: wgpu::LoadOp::Clear(wgpu::Color::TRANSPARENT),
+                        store: wgpu::StoreOp::Store,
+                    },
+                })],
+                ..Default::default()
+            });
+            self.renderer.queue().submit([encoder.finish()]);
+        }
 
         for view in pose.drawn_views() {
             let (view_frame, eye) = x3d_render::xr::view_frame(&frame, &pose, view);
