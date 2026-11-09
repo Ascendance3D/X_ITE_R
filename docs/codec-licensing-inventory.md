@@ -77,7 +77,7 @@ Commands: `cargo tree --offline -q -p <crate> [--target wasm32-unknown-unknown] 
 | WebP lossy (`image-webp`) | yes | yes | yes | not separable today |
 | MPEG-1 Video, Systems | yes | yes | no (since 2026-11-08; `tools/check_no_native_video.py`) | feature `native-video` off |
 | Audio: MP2/MP3, FLAC, Vorbis, PCM/ADPCM, ALAC, WAV (`symphonia`, `web-audio-api`, `hound`) | yes | yes | yes | not separable today |
-| AAC | no | no | no | excluded (`tools/check_no_aac.py`: `OK: no AAC decoder among 524 packages`) |
+| AAC | no (not in `Cargo.lock`; not detected) | no | no | excluded (`tools/check_no_aac.py`: `OK: no AAC decoder among 524 packages`) |
 
 ## Notice gaps found 2026-11-07 (technical, not legal findings)
 
@@ -93,19 +93,23 @@ Update 2026-11-08 (technical, not a legal finding): the browser package carries 
 
 Artifact under review: `x_ite_r-canary-0.2.0.tar.gz`, SHA-256 `a49423ae119b22099ead8f545729499ac4036e5f657ea76310e41949fb63e9d7`, commit `a6947a6b` (merge of PR #521), `pkg/x3d_web_bg.wasm` SHA-256 `0cc0cf58c067c390750d2c2b2c36e1125abd00342a27d09b88b14f310e8c328d`. The canary is not published. This section lists the evidence a reviewer has and the evidence that is missing. It assesses no patent and gives no advice.
 
-### Decoders in the canary browser module (binary string check and `cargo tree`)
+### Decoders in the canary browser module
+
+The second column has two kinds of evidence. "No" rows: the decoder is not in the build graph (`Cargo.lock` or `cargo tree` check), and the binary string scan does not detect it. "Yes" rows: the crate is in the build graph, and the binary string scan detects its crate paths in the WASM. A string scan is a supplemental check, not proof of presence or absence (item 3 below). It does not show whether a decoder is called.
 
 | decoder | in the canary WASM | evidence in this repository | evidence missing for the review |
 | --- | --- | --- | --- |
-| AAC | no | `tools/check_no_aac.py --binary`: OK; `Cargo.lock` form in CI | none for the exclusion |
-| Opus | no | `tools/check_no_opus.py --binary`: OK | none for the exclusion |
-| VP8, VP9, WebM video, MPEG-1 Video and Systems | no | `tools/check_no_native_video.py --cargo --binary`: OK | none for the browser package; still open for a native release |
-| AV1 intra (AVIF, `avif-rust`) | yes (default `avif` feature) | AOMedia Patent License 1.0 text read; disposition "with AV1 video" | qualified review of the AOMedia grant for this decoder; the owner's written disposition, or a build with `avif` off |
-| WebP lossy (`image-webp`, VP8 intra) | yes (not separable today) | VP8 documents listed in the Video table | qualified review with VP8; whether the Cross-License is needed |
-| MP3, MP2, MP1 (`symphonia-bundle-mp3` 0.5.5, 0.6.1) | yes | crate, version, features, `Cargo.lock` checksums | patent status of MPEG-1/2 Layer I to III verified by a qualified reviewer (only secondary sources here) |
-| FLAC, Vorbis/Ogg, PCM/ADPCM/A-law/mu-law, ALAC, WAV/AIFF/CAF, Matroska audio demux | yes | crate rows above; `hound` (WAV) | a patent position for each row ("Not assessed" today) |
+| AAC | no (not in `Cargo.lock`; not detected) | `tools/check_no_aac.py --binary`: OK; `Cargo.lock` form in CI | none for the exclusion |
+| Opus | no (not in `Cargo.lock`; not detected) | `tools/check_no_opus.py --binary`: OK | none for the exclusion |
+| VP8, VP9, WebM video, MPEG-1 Video and Systems | no (not in the wasm32 `cargo tree`; not detected) | `tools/check_no_native_video.py --cargo --binary`: OK | none for the browser package; still open for a native release |
+| AV1 intra (AVIF, `avif-rust`) | yes (default `avif` feature; detected) | AOMedia Patent License 1.0 text read; disposition "with AV1 video" | qualified review of the AOMedia grant for this decoder; the owner's written disposition, or a build with `avif` off |
+| WebP lossy (`image-webp`, VP8 intra) | yes (not separable today; detected) | VP8 documents listed in the Video table | qualified review with VP8; whether the Cross-License is needed |
+| MP3, MP2, MP1 (`symphonia-bundle-mp3` 0.5.5, 0.6.1) | yes (detected) | crate, version, features, `Cargo.lock` checksums | patent status of MPEG-1/2 Layer I to III verified by a qualified reviewer (only secondary sources here) |
+| FLAC, Vorbis/Ogg, PCM/ADPCM/A-law/mu-law, ALAC, WAV/AIFF/CAF, Matroska audio demux | yes (in the build graph; ALAC detected) | crate rows above; `hound` (WAV) | a patent position for each row ("Not assessed" today) |
 
 ### Copyright notices and source (MPL-2.0) in the canary package
+
+One commit gives all of this: `a6947a6b` (its `Cargo.lock`, `tools/third_party_notices.py`, `tools/mpl_sources.py` and `tools/package-web-preview.sh`). The package's `build-info.json` records that commit. The build command was `tools/package-web-preview.sh --release canary-0.2.0 <out>`. The script runs `tools/third_party_notices.py --check` (it stops on a stale `THIRD_PARTY_CRATES.md`), then builds the WASM from the same tree, then runs `tools/mpl_sources.py --write` and `--verify` on the package (`tools/package-web-preview.sh:44,96-97`).
 
 - `THIRD_PARTY_CRATES.md`: 231 packages of the feature-resolved wasm32 `x3d-web` build, with every license text, MPL-2.0 included (`tools/third_party_notices.py`).
 - `third-party-source/`: the 29 unmodified MPL-2.0 crate archives (symphonia 0.5.5 and 0.6.1), each equal to its `Cargo.lock` checksum, with `README.md` and `MPL-2.0.txt` (`tools/mpl_sources.py`).
@@ -114,7 +118,7 @@ Artifact under review: `x_ite_r-canary-0.2.0.tar.gz`, SHA-256 `a49423ae119b22099
 
 ### Facts of the published Browser Preview 0.1.0 (checked 2026-11-09 on the release asset)
 
-`x_ite_r-browser-preview-0.1.0.tar.gz` SHA-256 `d48b092b93270764e0bf566f22e8aea3661d397d22757099bd4b9797ddd1ded4` (the release asset; the same package is production on the alpha site):
+`x_ite_r-browser-preview-0.1.0.tar.gz` SHA-256 `d48b092b93270764e0bf566f22e8aea3661d397d22757099bd4b9797ddd1ded4` (the release asset; the same package is deployed at the alpha site):
 
 - AAC and Opus: absent (`check_no_aac.py --binary`, `check_no_opus.py --binary`: OK).
 - MPEG-1: **present**. `check_no_native_video.py --binary` reports `x3d-runtime/src/mpeg1/` in `pkg/x3d_web_bg.wasm`. The MPEG-1 row is "Not assessed. Release blocker until reviewed." The decoder was compiled in but the browser loader did not call it (see the 2026-11-08 update above).
