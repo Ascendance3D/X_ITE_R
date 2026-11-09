@@ -1,8 +1,10 @@
-# X_ITE_R Browser Preview 0.1.0
+# X_ITE_R Canary 0.2.0
 
 A pre-release of the X_ITE_R browser runtime: the Rust engine of X_ITE_R as WebAssembly, drawn with WebGPU, behind an
 `<x3d-canvas>` element with the X_ITE-named JavaScript API. It is for testing. It is **not** a full replacement for
 X_ITE 16.5.0; `COMPATIBILITY.md` tells what works and what does not.
+
+The official website is https://xiter.org.
 
 `build-info.json` records the Git commit, the Rust and wasm-bindgen versions and the SHA-256 of the module.
 `SHA256SUMS` has the SHA-256 of every file: `sha256sum -c SHA256SUMS`.
@@ -16,6 +18,7 @@ X_ITE 16.5.0; `COMPATIBILITY.md` tells what works and what does not.
 | `example/` | the two example pages of the repository |
 | `x_ite_r.mjs` | the page module: `<x3d-canvas>` and the JavaScript API |
 | `audio_mirror.mjs`, `video_mirror.mjs` | Web Audio and `<video>` support, imported by `x_ite_r.mjs` |
+| `xr_session.mjs`, `xr_layer.mjs` | experimental WebXR: the session and the XR layer, imported by `x_ite_r.mjs` (`COMPATIBILITY.md`, "Experimental: WebXR") |
 | `pkg/` | the generated engine: `x3d_web_bg.wasm`, its glue `x3d_web.js`, the X_ITE field classes `fields.mjs`, the Script realm `script.mjs` (used only with `scripts="true"`) |
 | `docs/API.md` | the API list: supported, different, not implemented |
 | `htaccess.example` | Apache MIME types, if the server does not send them |
@@ -73,5 +76,5 @@ From the commit in `build-info.json`, with Rust (the version in `build-info.json
 and `wasm-bindgen-cli` of the same version:
 
 ```sh
-tools/package-web-preview.sh /tmp/out
+tools/package-web-preview.sh --release canary-0.2.0 /tmp/out
 ```

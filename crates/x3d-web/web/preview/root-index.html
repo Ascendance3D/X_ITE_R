@@ -7,8 +7,8 @@
      package works at any path. Policy as the preview page's: no inline script, no 'unsafe-eval'; 'wasm-unsafe-eval'
      compiles the engine; style-src 'unsafe-inline' is for the <x3d-canvas> shadow <style>. -->
 <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'wasm-unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; media-src 'self' data: blob:; connect-src 'self' data:; font-src 'self'; object-src 'none'; base-uri 'self'">
-<meta name="description" content="X_ITE_R Browser Preview 0.1.0: the Rust port of the X_ITE X3D and VRML97 browser, as WebAssembly with WebGPU or WebGL2.">
-<title>X_ITE_R Browser Preview 0.1.0</title>
+<meta name="description" content="X_ITE_R Canary 0.2.0: the Rust port of the X_ITE X3D and VRML97 browser, as WebAssembly with WebGPU or WebGL2.">
+<title>X_ITE_R Canary 0.2.0</title>
 <link rel="stylesheet" href="site/theme.css">
 <link rel="stylesheet" href="site/site.css">
 <script type="module" src="x_ite_r.mjs"></script>
@@ -22,7 +22,7 @@
     <a class="brand" href="./" aria-label="X_ITE_R start page">
       <img src="site/exciter-wide.png" width="131" height="42" alt="eXciteR">
       <span class="brand-name">X_ITE_R</span>
-      <span class="tag">Alpha 0.1.0</span>
+      <span class="tag">Canary 0.2.0</span>
     </a>
     <nav aria-label="Main">
       <a href="./" aria-current="page">Overview</a>
@@ -38,7 +38,7 @@
 <main id="main">
   <section class="hero" aria-labelledby="title">
     <div class="hero-text">
-      <p class="label">Browser Preview 0.1.0</p>
+      <p class="label">Canary 0.2.0</p>
       <h1 id="title">X3D and VRML97 worlds, run by a Rust engine in the browser.</h1>
       <p class="lead">X_ITE_R is a port of the X_ITE browser to Rust. The engine runs as WebAssembly. It parses the world,
         runs the events, sensors and navigation, and draws with WebGPU. When the browser has no WebGPU, the same
@@ -69,7 +69,7 @@
         <span class="mono">sha256sum -c SHA256SUMS</span>.</p>
     </div>
     <dl class="facts">
-      <dt>Version</dt>        <dd class="mono" id="f-version">0.1.0</dd>
+      <dt>Version</dt>        <dd class="mono" id="f-version">0.2.0</dd>
       <dt>Commit</dt>         <dd class="mono" id="f-commit">see build-info.json</dd>
       <dt>Engine module</dt>  <dd class="mono" id="f-wasm">pkg/x3d_web_bg.wasm</dd>
       <dt>Toolchain</dt>      <dd class="mono" id="f-rustc">see build-info.json</dd>
@@ -84,8 +84,9 @@
     <div class="band-head">
       <p class="label">Tested</p>
       <h2 id="browsers">Browsers</h2>
-      <p>The release check (32 checks: drawing, navigation, sensors, field changes, Inline, EXTERNPROTO, reload,
-        device loss, dispose) on 2026-11-05. Other browsers and devices are not tested.</p>
+      <p>Results of Browser Preview 0.1.0 (<span class="mono">11e148db</span>): the release check (32 checks: drawing,
+        navigation, sensors, field changes, Inline, EXTERNPROTO, reload, device loss, dispose) on 2026-11-05. Canary 0.2.0
+        has not run these checks yet. Other browsers and devices are not tested.</p>
     </div>
     <div class="table-wrap">
       <table>
@@ -120,9 +121,13 @@
       <p class="label">Missing</p>
       <h2>Not available</h2>
       <ul>
-        <li>WebXR.</li>
         <li>WebGPU compatibility mode for OpenGL ES 3.1 class GPUs.</li>
         <li>Most X3DBrowserContext functions and the WebGL rendering properties.</li>
+      </ul>
+      <h2>Experimental</h2>
+      <ul>
+        <li>WebXR: on the WebGL2 backend only (on WebGPU the XR button stays hidden). Input rays are not drawn, and the
+          drag sensors do not work in XR. Tested with an emulated device only; no headset is supported.</li>
       </ul>
       <p><a href="compatibility.html">The full list</a></p>
     </div>

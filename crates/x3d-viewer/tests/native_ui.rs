@@ -206,7 +206,7 @@ EXPORT Animations
 }
 
 const MENU_MAIN: &[&str] = &[
-    "X_ITE_R v0.1.0",
+    "X_ITE_R v0.2.0",
     "",
     "Viewpoints",
     "Available Viewers",

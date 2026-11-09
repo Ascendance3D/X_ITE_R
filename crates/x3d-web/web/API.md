@@ -56,7 +56,7 @@ The Rust engine does all X3D work: parsing, events, sensors, picking, navigation
 | member | state |
 | --- | --- |
 | `name`, `getName ()` | `"X_ITE_R"` (X_ITE: `"X_ITE"`) |
-| `version`, `getVersion ()` | `"0.1.0"` (X_ITE: `"16.5.0"`) |
+| `version`, `getVersion ()` | `"0.2.0"` (X_ITE: `"16.5.0"`) |
 | `description`, `getDescription ()`, `setDescription (value)` | supported, compared (`options01`, case `notification`): the text of the notification, see "Notifications" |
 | `currentScene` | supported, compared |
 | `addRoute (...)`, `deleteRoute (...)` | supported, compared: those of the current scene, with its errors, returning nothing, as X_ITE. `deleteRoute (route)` with a route throws `Bad ROUTE specification: sourceNode must be of type X3DNode.`: the browser passes four arguments on. Not X_ITE members: `browser .getRoute`, `browser .routes` |
@@ -266,7 +266,7 @@ Issue #141; `x_ite_r.mjs` `BrowserUI`, in the element's shadow DOM; compared wit
 
 Known differences (also `KNOWN_DIFFERENCES` of `runtime02_harness.mjs` for the recorded ones):
 
-- Names: the menu title is "X_ITE_R v0.1.0" and the splash screen shows "X_ITE_R" (X_ITE's name and version are not ours).
+- Names: the menu title is "X_ITE_R v0.2.0" and the splash screen shows "X_ITE_R" (X_ITE's name and version are not ours).
 - Assets are not drawn (logo, spinner image, icons, backgrounds): the spinner and the checkbox and radio marks are CSS shapes; the font `X_ITE PT Sans` is not loaded; only the light theme exists. Texts are English only (no gettext).
 - Timings panel: X_ITE draws on demand, so its frame rate in an idle world is about 0; X_ITE_R draws every frame (the value is recorded in `detail`, not compared). The engine measures no speed, camera, picking, collision time or counts of primitives, shapes and sensors: those rows show 0; "Browser" and "X3D total" are the page's and the engine frame's time. The panel's type (More/Less) is not kept in localStorage.
 - Splash screen: the text is "Loading 1 file" while loading and "Failed loading world." on failure; the engine reports no load counts or percentages.
