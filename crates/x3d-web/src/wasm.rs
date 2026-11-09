@@ -27,6 +27,9 @@ use x3d_viewer::viewer::XrSource;
 /// The responses of one world's fetches, by URL without its fragment.
 struct FetchCache {
     entries: HashMap<String, Entry>,
+    /// The `Content-Type` header of each loaded response, as sent: FileLoader.js hands a `text/html` response to the page
+    /// (`FOREIGN_MIME_TYPES`) instead of reading it.
+    content_types: HashMap<String, String>,
     /// Aborts the requests in flight when the world goes (FileLoader.abort).
     controller: Option<web_sys::AbortController>,
     /// A response arrived since [`WebBrowser::loaded`] last looked.
@@ -159,6 +162,7 @@ impl FetchCache {
     fn new() -> Rc<RefCell<FetchCache>> {
         Rc::new(RefCell::new(FetchCache {
             entries: HashMap::new(),
+            content_types: HashMap::new(),
             controller: web_sys::AbortController::new().ok(),
             settled: false,
             waiters: vec![],
@@ -198,7 +202,10 @@ fn error_text(error: &JsValue) -> String {
 }
 
 /// FileLoader's `fetch (url, { cache: "default", signal })` + `checkResponse`: the body, or `String (error)`.
-async fn fetch_bytes(url: String, signal: Option<web_sys::AbortSignal>) -> Result<Vec<u8>, String> {
+async fn fetch_bytes(
+    url: String,
+    signal: Option<web_sys::AbortSignal>,
+) -> Result<(Vec<u8>, Option<String>), String> {
     let window = web_sys::window().ok_or("TypeError: Failed to fetch")?;
     let init = web_sys::RequestInit::new();
 
@@ -222,12 +229,13 @@ async fn fetch_bytes(url: String, signal: Option<web_sys::AbortSignal>) -> Resul
         });
     }
 
+    let content_type = response.headers().get("Content-Type").ok().flatten();
     let buffer =
         wasm_bindgen_futures::JsFuture::from(response.array_buffer().map_err(|e| error_text(&e))?)
             .await
             .map_err(|e| error_text(&e))?;
 
-    Ok(js_sys::Uint8Array::new(&buffer).to_vec())
+    Ok((js_sys::Uint8Array::new(&buffer).to_vec(), content_type))
 }
 
 /// Serves a world's Inline, EXTERNPROTO, texture and Anchor URLs with the page's asynchronous `fetch`. The runtime
@@ -256,13 +264,21 @@ impl WebFetcher {
             };
             let mut cache = cache.borrow_mut();
 
-            cache.entries.insert(
-                key,
-                match result {
-                    Ok(bytes) => Entry::Loaded(bytes.into()),
-                    Err(error) => Entry::Failed(error),
-                },
-            );
+            let entry = match result {
+                Ok((bytes, content_type)) => {
+                    match content_type {
+                        Some(t) => cache.content_types.insert(key.clone(), t),
+                        None => cache.content_types.remove(&key),
+                    };
+                    Entry::Loaded(bytes.into())
+                }
+                Err(error) => {
+                    cache.content_types.remove(&key);
+                    Entry::Failed(error)
+                }
+            };
+
+            cache.entries.insert(key, entry);
             cache.settled = true;
             cache.wake();
         });
@@ -328,6 +344,18 @@ impl x3d_runtime::Fetcher for WebFetcher {
             &format!("X_ITE_R: {url} was requested before it was loaded.").into(),
         );
         Err("TypeError: Failed to fetch".to_string())
+    }
+
+    // The response's Content-Type decides the foreign hand-off of an Anchor or loadURL (`FOREIGN_MIME_TYPES`).
+    fn fetch_response(&self, url: &url::Url) -> Result<x3d_runtime::loader::Response, String> {
+        let body = self.fetch(url)?;
+        let mut response = x3d_runtime::loader::Response::ok(url.clone(), body);
+
+        if let Some(t) = self.cache.borrow().content_types.get(&cache_key(url)) {
+            response.headers.push(("content-type".into(), t.clone()));
+        }
+
+        Ok(response)
     }
 
     fn refresh(&self, url: &url::Url) {

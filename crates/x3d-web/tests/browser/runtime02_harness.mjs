@@ -53,6 +53,7 @@ import { CASE_GROUPS as INLINEHOLD01_GROUPS } from "./inlinehold01_case.mjs";
 import { CASE_GROUPS as SPLATSORT01_GROUPS } from "./splatsort01_case.mjs";
 import { CASE_GROUPS as LOADURL01_GROUPS } from "./loadurl01_case.mjs";
 import { CASE_GROUPS as MOVIE01_GROUPS } from "./movie01_case.mjs";
+import { CASE_GROUPS as ANCHORPAGES01_GROUPS } from "./anchorpages01_case.mjs";
 import { CASE_GROUPS as SOUND01_GROUPS } from "./sound01_case.mjs";
 import { CASE_GROUPS as SOUND03_GROUPS } from "./sound03_case.mjs";
 import { CASE_GROUPS as SOUND04_GROUPS } from "./sound04_case.mjs";
@@ -140,6 +141,7 @@ const SUITES = {
    sound01: { dir: process .env .XR_SOUND01_BASELINE ?? join (REPO, "oracle/web-browser-sound-01-baseline"), file: "sound01-baseline.json", groups: SOUND01_GROUPS },
    sound03: { dir: process .env .XR_SOUND03_BASELINE ?? join (REPO, "oracle/web-browser-sound-03-baseline"), file: "sound03-baseline.json", groups: SOUND03_GROUPS },
    sound04: { dir: process .env .XR_SOUND04_BASELINE ?? join (REPO, "oracle/web-browser-sound-04-baseline"), file: SOUND04_REFERENCE === "runner" ? "sound04-runner-baseline.json" : "sound04-baseline.json", groups: SOUND04_GROUPS },
+   anchorpages01: { dir: process .env .XR_ANCHORPAGES01_BASELINE ?? join (REPO, "oracle/web-browser-anchor-pages-01-baseline"), file: "anchorpages01-baseline.json", groups: ANCHORPAGES01_GROUPS },
    movie01: { dir: process .env .XR_MOVIE01_BASELINE ?? join (REPO, "oracle/web-browser-movie-01-baseline"), file: "movie01-baseline.json", groups: MOVIE01_GROUPS },
    scriptlife01: { dir: process .env .XR_SCRIPTLIFE01_BASELINE ?? join (REPO, "oracle/web-browser-script-life-01-baseline"), file: "scriptlife01-baseline.json", groups: SCRIPTLIFE01_GROUPS },
    shutdown01: { dir: process .env .XR_SHUTDOWN01_BASELINE ?? join (REPO, "oracle/web-browser-shutdown-01-baseline"), file: "shutdown01-baseline.json", groups: SHUTDOWN01_GROUPS },
@@ -620,6 +622,18 @@ const KNOWN_DIFFERENCES = {
    ... scriptLifeDifferences (),
 };
 
+// Anchor pages 01 (anchorpages01_case.mjs; web/API.md, "Anchor"): X_ITE calls `window .open (url, target)`; X_ITE_R calls
+// `window .open (url, target, "noopener")`, so a page opened from a world gets no `window .opener`. Every case of the recording that
+// opens a window has this one difference.
+for (const [ key, value ] of Object .entries (SUITES .anchorpages01 .reference .values))
+{
+   for (let i = 0; i < (value .opened ?.length ?? 0); ++ i)
+      (KNOWN_DIFFERENCES [key] ??= [ ]) .push ([ [ "opened", i, "features" ], null, "noopener" ]);
+}
+
+// X_ITE logs `Done loading scene '<url>'.` (console.info) for a world an Anchor loaded; X_ITE_R does not log it.
+KNOWN_DIFFERENCES ["anchorPages.x3dTargetSelf"] = [ [ [ "lines" ], [ "info: Done loading scene 'http://test/worlds/anchor/other.wrl'." ], [ ] ] ];
+
 // The level of the page's output (sound04_case.mjs) differs from run to run in X_ITE itself: the recording of each case was made
 // with 8 runs (the raw levels are in the baseline, `levels`; the largest spread was 0.0029). The tolerance is set from that spread alone, before the
 // first X_ITE_R measurement; it is not widened to pass.
@@ -935,6 +949,7 @@ const GROUP_FILES = {
    inlineRetry: "scriptlife01.test.mjs",
    movieFrames: "movie01.test.mjs",
    movieFallback: "movie01.test.mjs",
+   anchorPages: "anchorpages01.test.mjs",
 };
 
 assert .deepEqual (Object .keys (GROUP_FILES) .sort (), Object .keys (CASE_GROUPS) .sort (), "GROUP_FILES must name every case group");
