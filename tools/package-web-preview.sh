@@ -58,7 +58,7 @@ commit=$(git rev-parse HEAD)
 web=crates/x3d-web/web
 version_mismatch=0
 need() { # need FILE TEXT: FILE at the commit holds TEXT.
-  if ! git show "$commit:$1" | grep -qF -- "$2"; then
+  if ! git show "$commit:$1" | grep -F -- "$2" > /dev/null; then
     echo "package-web-preview: $1 does not hold '$2'" >&2
     version_mismatch=1
   fi
