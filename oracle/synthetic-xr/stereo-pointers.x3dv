@@ -1,0 +1,7 @@
+#X3D V4.0 utf8
+PROFILE Full
+Viewpoint { position 0 0 0 }
+NavigationInfo { headlight TRUE }
+Transform { translation 0 0 -1.4 children Shape { appearance Appearance { material Material { diffuseColor 0.8 0.5 0.2 } } geometry Box { size 3 1.6 0.4 } } }
+Transform { translation 0.55 -0.1 -0.35 children Shape { appearance Appearance { material Material { diffuseColor 0.3 0.6 0.9 } } geometry Box { size 0.3 0.3 0.3 } } }
+Transform { translation -0.7 -0.1 -0.9 children Shape { appearance Appearance { material Material { diffuseColor 0.3 0.8 0.4 } } geometry Sphere { radius 0.3 } } }

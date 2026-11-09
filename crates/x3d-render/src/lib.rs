@@ -53,6 +53,7 @@ pub mod traverse;
 pub mod volume;
 pub mod volume_gpu;
 pub mod xr;
+pub mod xr_pointer;
 
 use std::path::Path;
 

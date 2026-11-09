@@ -98,7 +98,10 @@ no XR runtime (Chrome 156 on Linux reports `immersive-vr` unsupported, `XRGPUBin
   has a real framebuffer. The element does not switch backends: XR is available only when the element already runs on
   WebGL2 (`graphicsBackend="webgl2"`, or the WebGL2 fallback); on WebGPU the XR button stays hidden and `xrFrame` refuses.
   The device and `makeXRCompatible` are emulated. No headset has run it.
-* **The input ray, hit point drawing and hit-driven pointing** (`xrUpdatePointers` after the target-ray loop): they need the XR render path.
+* **Hit-driven pointing on a device.** The picks, buttons and haptic pulses of `xrUpdatePointers` run on the emulated device and are
+  compared with the pinned context. The input rays and hit points (`ScreenLine`, `ScreenPoint`: white or, with a button pressed, blue; the
+  hit point a ring and a disk in the plane of the hit) are drawn over each view of `xrFrame` on the WebGL2 backend and compared with
+  the pinned pixels (`xr_views.rs`, case `stereo-pointers`); no headset has shown them.
 * **Wiring to the public API.** `getRenderingProperty("XRSession")` and the `xrSessionMode` option still behave as documented in
   `web/API.md` (no XR); they change when the draw path exists.
 * **A native OpenXR session:** see the owner decision, item 2.

@@ -25,21 +25,27 @@ pub struct RubberBand {
 /// strip first, white strip second; `(2 * (width + 1) / 2, ...)` as in the ScreenLine constructor: the normal of the unit line is
 /// (0, 0.5), the black half width is `(1 + 1) * 0.5`, the white one `1 * 0.5`.
 const TIP_START: f32 = 0.4;
-const BLACK: f32 = 1.0;
-const WHITE: f32 = 0.5;
 
-fn local_vertices() -> [[f32; 6]; 12] {
-    let strip = |half: f32, color: f32| {
+pub(crate) fn local_vertices() -> [[f32; 6]; 12] {
+    local_vertices_of(1.0, 1.0, TIP_START)
+}
+
+/// The vertices of `new ScreenLine (browser, fromWidth, toWidth, tipStart)`: the normal of the unit line is (0, 0.5), the
+/// black strip has `(width + 1) * 0.5` on each side of the line at its ends and the white one `width * 0.5`; the widths are
+/// the one of `fromWidth` at the start and `toWidth` from `tipStart` on.
+pub(crate) fn local_vertices_of(from_width: f32, to_width: f32, tip_start: f32) -> [[f32; 6]; 12] {
+    let strip = |from: f32, to: f32, color: f32| {
         [
-            [0.0, half, color, color, color, 1.0],
-            [0.0, -half, color, color, color, 1.0],
-            [TIP_START, half, color, color, color, 1.0],
-            [TIP_START, -half, color, color, color, 1.0],
-            [1.0, half, color, color, color, 0.0],
-            [1.0, -half, color, color, color, 0.0],
+            [0.0, from, color, color, color, 1.0],
+            [0.0, -from, color, color, color, 1.0],
+            [tip_start, to, color, color, color, 1.0],
+            [tip_start, -to, color, color, color, 1.0],
+            [1.0, to, color, color, color, 0.0],
+            [1.0, -to, color, color, color, 0.0],
         ]
     };
-    let (black, white) = (strip(BLACK, 0.0), strip(WHITE, 1.0));
+    let black = strip((from_width + 1.0) * 0.5, (to_width + 1.0) * 0.5, 0.0);
+    let white = strip(from_width * 0.5, to_width * 0.5, 1.0);
     let mut out = [[0.0; 6]; 12];
     out[..6].copy_from_slice(&black);
     out[6..].copy_from_slice(&white);
@@ -47,7 +53,7 @@ fn local_vertices() -> [[f32; 6]; 12] {
 }
 
 /// ScreenLine's index buffer: for each strip the triangles (0 1 3) (0 3 2) (2 3 5) (2 5 4) of its six vertices.
-const INDICES: [u16; 24] = [
+pub(crate) const INDICES: [u16; 24] = [
     0, 1, 3, 0, 3, 2, 2, 3, 5, 2, 5, 4, 6, 7, 9, 6, 9, 8, 8, 9, 11, 8, 11, 10,
 ];
 

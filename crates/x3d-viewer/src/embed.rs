@@ -648,6 +648,7 @@ fn empty_frame() -> x3d_render::traverse::Frame {
         shadow_maps: vec![],
         projectors: vec![],
         rubber_band: None,
+        xr_pointers: Vec::new(),
     }
 }
 

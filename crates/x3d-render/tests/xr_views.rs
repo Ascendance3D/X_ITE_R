@@ -11,9 +11,9 @@
 
 use serde_json::Value;
 use std::path::{Path, PathBuf};
-use x3d_fields::math::Matrix4;
+use x3d_fields::math::{Matrix4, Vector3};
 use x3d_render::gpu::Gpu;
-use x3d_render::xr::{XrPose, XrView};
+use x3d_render::xr::{XrPose, XrRay, XrView};
 
 const CASES: &[&str] = &[
     "stereo-shapes",
@@ -62,7 +62,43 @@ fn matrix(v: &Value) -> Matrix4 {
     Matrix4(a.try_into().unwrap())
 }
 
-fn script(root: &Path, name: &str) -> (Value, XrPose) {
+/// The input sources of a script (`inputSources`: the target-ray pose and whether a button is pressed) with the hit the pinned
+/// page recorded for each beside its key (`hit .id`, `hit .originalPoint`, `hit .originalNormal`): the drawing is compared on its
+/// own, the picking is compared by `x3d-viewer`'s xr_pointers tests.
+fn rays(root: &Path, json: &Value, name: &str, samples: u32) -> Vec<XrRay> {
+    let Some(sources) = json["inputSources"].as_array() else {
+        return vec![];
+    };
+    let key: Value = serde_json::from_str(
+        &std::fs::read_to_string(root.join(format!("{}/{name}.json", baseline_dir(samples))))
+            .unwrap(),
+    )
+    .unwrap();
+    let vec3 = |v: &Value| {
+        let a = v.as_array().unwrap();
+        Vector3::new(
+            a[0].as_f64().unwrap(),
+            a[1].as_f64().unwrap(),
+            a[2].as_f64().unwrap(),
+        )
+    };
+
+    sources
+        .iter()
+        .zip(key["inputSources"].as_array().unwrap())
+        .filter(|(_, k)| k["active"].as_bool().unwrap())
+        .map(|(s, k)| XrRay {
+            matrix: matrix(&s["matrix"]),
+            pressed: s["pressed"].as_bool().unwrap(),
+            hit: k["id"]
+                .as_bool()
+                .unwrap()
+                .then(|| (vec3(&k["point"]), vec3(&k["normal"]))),
+        })
+        .collect()
+}
+
+fn script(root: &Path, name: &str, samples: u32) -> (Value, XrPose) {
     let text = std::fs::read_to_string(root.join(format!("synthetic-xr/{name}.json"))).unwrap();
     let json: Value = serde_json::from_str(&text).unwrap();
     let views = json["views"]
@@ -83,6 +119,9 @@ fn script(root: &Path, name: &str) -> (Value, XrPose) {
         view_matrix: matrix(&json["pose"]["inverse"]),
         headlight: json["headlight"].as_bool().unwrap_or(true),
         views,
+        rays: rays(root, &json, name, samples),
+        // The pinned page has contentScale="1".
+        content_scale: 1.0,
     };
 
     (json, pose)
@@ -113,7 +152,7 @@ fn measure_with(
     render_samples: u32,
     pose_for_rust: impl Fn(XrPose) -> XrPose,
 ) -> (usize, f64, u8) {
-    let (json, pose) = script(root, name);
+    let (json, pose) = script(root, name, samples);
     let (w, h) = size(&json);
     let dir = baseline_dir(samples);
     let (kw, kh, want) = x3d_render::compare::load_png(&root.join(format!("{dir}/{name}.png")))
@@ -334,12 +373,109 @@ fn xr_views_of_the_added_cases_with_a_part_left_out_differ_from_x_ite() {
     assert!(weak.is_empty(), "{}", weak.join("\n"));
 }
 
+/// The input rays and hit points of the XR input sources (X3DWebXRContext.xrUpdatePointers, ScreenLine, ScreenPoint): five sources,
+/// a ray that hits far away, one that hits within its length (the ray ends there), a pressed one that misses, and two
+/// that hit a sphere. Both keys, MSAA 0 and 4.
+const POINTER_CASES: &[&str] = &["stereo-pointers"];
+
+/// The bound of the ray cases, in percent of the pixels over 8, and the least a part left out must be over.
+const POINTER_BOUND: f64 = 0.05;
+const POINTER_TEETH: f64 = 0.2;
+
+#[test]
+fn xr_input_rays_match_x_ite() {
+    let Ok(mut g) = Gpu::new() else {
+        return x3d_evidence::no_gpu("no adapter");
+    };
+    let root = root();
+    let mut failures = vec![];
+
+    for &(samples, _) in SAMPLES {
+        for &name in POINTER_CASES {
+            let (_, pct, max) = measure(&mut g, &root, name, samples, |p| p);
+
+            // The rays are small: the bound is tighter than the 0.5% of the views (the drawing agrees with the key to
+            // 14 pixels of 131072 at MSAA 0 and exactly at MSAA 4).
+            if pct > POINTER_BOUND {
+                failures.push(format!(
+                    "{name} MSAA {samples}: {pct:.3}% of the pixels over 8, max {max}"
+                ));
+            }
+        }
+    }
+
+    assert!(failures.is_empty(), "{}", failures.join("\n"));
+}
+
+/// The comparison has teeth: the rays left out, the hit points left out, the rays all white, or an eye matrix left out of
+/// them, and the pictures are over the bound.
+#[test]
+fn xr_input_rays_with_a_part_left_out_differ_from_x_ite() {
+    let Ok(mut g) = Gpu::new() else {
+        return x3d_evidence::no_gpu("no adapter");
+    };
+    let root = root();
+    let mut results = vec![];
+
+    for &name in POINTER_CASES {
+        results.push((
+            "no rays",
+            measure(&mut g, &root, name, 0, |mut p| {
+                p.rays.clear();
+                p
+            })
+            .1,
+        ));
+        results.push((
+            "no hit points",
+            measure(&mut g, &root, name, 0, |mut p| {
+                for r in &mut p.rays {
+                    r.hit = None;
+                }
+                p
+            })
+            .1,
+        ));
+        results.push((
+            "no pressed color",
+            measure(&mut g, &root, name, 0, |mut p| {
+                for r in &mut p.rays {
+                    r.pressed = false;
+                }
+                p
+            })
+            .1,
+        ));
+        results.push((
+            "the ray not shortened to its hit",
+            measure(&mut g, &root, name, 0, |mut p| {
+                for r in &mut p.rays {
+                    r.hit = r.hit.map(|(point, normal)| {
+                        (Vector3::new(point.x, point.y, point.z * 100.0), normal)
+                    });
+                }
+                p
+            })
+            .1,
+        ));
+    }
+
+    let weak: Vec<String> = results
+        .iter()
+        .filter(|(_, pct)| *pct <= POINTER_TEETH)
+        .map(|(what, pct)| format!("{what}: {pct:.3}% over 8, not over the bound"))
+        .collect();
+
+    assert!(weak.is_empty(), "{}", weak.join("\n"));
+}
+
 /// An absent answer key fails; every case has its world, script and key.
 #[test]
 fn xr_keys_are_present() {
     let root = root();
     let missing: Vec<String> = CASES
         .iter()
+        .chain(POINTER_CASES.iter())
         .flat_map(|n| {
             let mut files = vec![format!("synthetic-xr/{n}.json")];
 

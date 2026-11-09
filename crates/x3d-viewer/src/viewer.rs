@@ -3383,6 +3383,34 @@ impl Viewer3d {
         pulses
     }
 
+    /// The `ContentScale` rendering property (1 when it is not set).
+    pub fn content_scale(&self) -> f64 {
+        self.rt
+            .browser_options
+            .rendering
+            .get("ContentScale")
+            .map_or(1.0, |v| v.as_f64())
+    }
+
+    /// X3DWebXRContext.xrUpdatePointers, "Draw input source rays": the active input sources with the pick of their last
+    /// `touch` (`hit .id`, `hit .originalPoint` and `hit .originalNormal`, the point and normal in the space of the ray), for
+    /// `x3d_render::xr::XrPose::rays`. Call it after [`Viewer3d::xr_pointers`] of the same frame.
+    pub fn xr_rays(&self, sources: &[XrSource]) -> Vec<x3d_render::xr::XrRay> {
+        sources
+            .iter()
+            .filter(|s| s.active)
+            .map(|s| x3d_render::xr::XrRay {
+                matrix: s.matrix,
+                pressed: s.pressed,
+                hit: self
+                    .xr_sources
+                    .get(&s.id)
+                    .filter(|state| state.hit.id)
+                    .map(|state| (state.hit.point, xr_ray_normal(&state.hit))),
+            })
+            .collect()
+    }
+
     fn do_pick(&mut self, x: f64, y: f64) -> Hit {
         // A lost device: the ray cast from now on.
         if self.pointing_gpu.as_ref().is_some_and(|g| g.lost()) {
@@ -4011,6 +4039,22 @@ fn xr_ray_scan(scan: &crate::walk::Scan, inverse: &Matrix4) -> crate::walk::Scan
     out
 }
 
+/// `hit .originalNormal` of X3DWebXRContext.xrUpdatePointers: the normal of the hit in the space of the ray, the hit's own
+/// normal (in the shape's frame, see `Hit::normal`) taken through the normal matrix of the shape's model-view matrix, which
+/// in an XR pick ends with the ray's inverse. The pinned page's value for the same pick (oracle/xr-shot-baseline/
+/// stereo-pointers.json) is what xr_rays.rs compares.
+fn xr_ray_normal(hit: &Hit) -> Vector3 {
+    let mut normal_matrix = hit.model_view.submatrix();
+
+    normal_matrix.inverse();
+    normal_matrix.transpose();
+
+    let mut normal = hit.normal;
+
+    normal_matrix.mult_vec_matrix3(&mut normal);
+    normal
+}
+
 /// One XR input source for [`Viewer3d::xr_pointers`].
 #[derive(Clone, Copy, Debug)]
 pub struct XrSource {
@@ -4022,6 +4066,10 @@ pub struct XrSource {
     pub button0: bool,
     /// The target-ray pose's `transform.inverse.matrix` in the reference space.
     pub inverse: Matrix4,
+    /// The target-ray pose's `transform.matrix` (`inputSource .matrix`), for the ray drawing.
+    pub matrix: Matrix4,
+    /// `gamepad ?.buttons .some (button => button .pressed)`: the ray is drawn blue.
+    pub pressed: bool,
 }
 
 /// The `hit` X3DWebXRContext keeps on an input source.

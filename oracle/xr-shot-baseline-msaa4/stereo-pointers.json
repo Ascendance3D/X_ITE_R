@@ -1,0 +1,95 @@
+{
+ "pinned": "34cdf9f97",
+ "world": "synthetic-xr/stereo-pointers.x3dv",
+ "script": "synthetic-xr/stereo-pointers.json",
+ "runs": 3,
+ "ms": 4,
+ "renderer": "ANGLE (NVIDIA Corporation, NVIDIA GeForce RTX 3060 Ti/PCIe/SSE2, OpenGL ES 3.2)",
+ "size": [
+  512,
+  256
+ ],
+ "requests": [
+  "supported:immersive-vr",
+  "supported:immersive-vr",
+  "session:immersive-vr",
+  "space:local",
+  "layer:{\"antialias\":false,\"alpha\":true,\"depth\":false,\"ignoreDepthValues\":true,\"framebufferScaleFactor\":1}"
+ ],
+ "numViews": 2,
+ "log": [],
+ "inputSources": [
+  {
+   "active": true,
+   "id": true,
+   "point": [
+    0.003908672370016575,
+    0.003904331009835005,
+    -1.223280668258667
+   ],
+   "normal": [
+    0.169182343503071,
+    0.29126021553993464,
+    0.9415650871514017
+   ]
+  },
+  {
+   "active": true,
+   "id": true,
+   "point": [
+    0.0038962301332503557,
+    0.0039132265374064445,
+    -0.10588565468788147
+   ],
+   "normal": [
+    0,
+    0.2955202021283755,
+    0.9553364655594465
+   ]
+  },
+  {
+   "active": true,
+   "id": false,
+   "point": [
+    0,
+    0,
+    0
+   ],
+   "normal": [
+    0,
+    0,
+    0
+   ]
+  },
+  {
+   "active": true,
+   "id": true,
+   "point": [
+    0.0039019817486405373,
+    0.003920312970876694,
+    -0.5864918828010559
+   ],
+   "normal": [
+    0.01206339469281309,
+    0.00803503361442795,
+    0.9983631168752589
+   ]
+  },
+  {
+   "active": true,
+   "id": true,
+   "point": [
+    0.0039111413061618805,
+    0.003909427206963301,
+    -0.6792620420455933
+   ],
+   "normal": [
+    0.6215687069164983,
+    0.1336000326541554,
+    0.7641099163042036
+   ]
+  }
+ ],
+ "rgbaSha256": "e15abad9ba361d12bf9e6a88256d766b6f167acdb224423db7c02c74d07580bc",
+ "pngSha256": "2e2796743bc9ee4564abc85154f1ef4bc8bb8603e3957e4fc747013956fd9a0f"
+}
