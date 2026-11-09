@@ -140,9 +140,6 @@ pub enum DecodeError {
     /// loadData's `catch`: the warning, the next URL, then FAILED_STATE. The JavaScript error name and message:
     /// libgif's on_error type (`Error: parse`) or what apng-js parseAPNG throws.
     Fail(&'static str, String),
-    /// apng-js parseAPNG returns (does not throw) its error for data that is not a PNG or not an animated PNG:
-    /// `setAPNG` is not awaited, its rejection is unhandled and the node stays IN_PROGRESS without a message.
-    NotAnimated,
     /// The decoded frames would be larger than [`MAX_DECODED_BYTES`]: an error message and the node stays
     /// IN_PROGRESS, as X_ITE does when the browser cannot create the frames ("Out of memory at ImageData
     /// creation").
@@ -220,10 +217,15 @@ struct ApngStructure {
     delays: Vec<f64>,
 }
 
-/// apng-js parseAPNG without the images: `Ok (None)` where it returns errNotPNG or errNotAPNG, `Err` with the
-/// name and message of what it throws. Its `DataView` reads past the end of the data throw; the frames' IHDR
+/// apng-js parseAPNG without the images: `Err` with the name and message of what it throws, and of what it returns:
+/// errNotPNG (`Not a PNG`) or errNotAPNG (`Not an animated PNG`). X_ITE 16.5.0 does not await `setAPNG`, so the
+/// returned error is an unhandled rejection and the node stays IN_PROGRESS without a message (MovieTexture.js:98).
+/// That hang is a defect and is not copied: the port treats the returned error as a thrown one, loadData's catch
+/// (docs/adr/0001-browser-build-known-differences.md, row 14). Its `DataView` reads past the end of the data throw; the frames' IHDR
 /// copies (`headerDataBytes .set`) throw without an IHDR or with one shorter than 8 bytes.
-fn apng_structure(b: &[u8]) -> Result<Option<ApngStructure>, DecodeError> {
+fn apng_structure(b: &[u8]) -> Result<ApngStructure, DecodeError> {
+    let not_png = || DecodeError::Fail("Error", "Not a PNG".into());
+    let not_apng = || DecodeError::Fail("Error", "Not an animated PNG".into());
     const SIGNATURE: [u8; 8] = [0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a];
     let range = || {
         DecodeError::Fail(
@@ -258,7 +260,7 @@ fn apng_structure(b: &[u8]) -> Result<Option<ApngStructure>, DecodeError> {
     };
 
     if b.get(..8) != Some(&SIGNATURE[..]) {
-        return Ok(None);
+        return Err(not_png());
     }
 
     let mut animated = false;
@@ -268,7 +270,7 @@ fn apng_structure(b: &[u8]) -> Result<Option<ApngStructure>, DecodeError> {
     })?;
 
     if !animated {
-        return Ok(None);
+        return Err(not_apng());
     }
 
     let (mut width, mut height, mut header, mut delays) = (0, 0, None, vec![]);
@@ -304,7 +306,7 @@ fn apng_structure(b: &[u8]) -> Result<Option<ApngStructure>, DecodeError> {
     })?;
 
     if delays.is_empty() {
-        return Ok(None);
+        return Err(not_apng());
     }
 
     match header {
@@ -316,11 +318,11 @@ fn apng_structure(b: &[u8]) -> Result<Option<ApngStructure>, DecodeError> {
             "RangeError",
             "offset is out of bounds".into(),
         )),
-        Some(_) => Ok(Some(ApngStructure {
+        Some(_) => Ok(ApngStructure {
             width,
             height,
             delays,
-        })),
+        }),
     }
 }
 
@@ -431,7 +433,7 @@ impl MovieMedia {
             width,
             height,
             delays,
-        } = apng_structure(data)?.ok_or(DecodeError::NotAnimated)?;
+        } = apng_structure(data)?;
         let one = frame_bytes(width, height, delays.len())?;
         let mut frames: Vec<Vec<u8>> = Vec::with_capacity(delays.len());
 
@@ -1657,7 +1659,7 @@ mod tests {
             .unwrap();
         assert_eq!(
             MovieMedia::decode_apng(&png).err(),
-            Some(DecodeError::NotAnimated)
+            Some(DecodeError::Fail("Error", "Not an animated PNG".into()))
         );
     }
 
@@ -1840,10 +1842,16 @@ mod tests {
 
     #[test]
     fn png_load_errors_follow_apng_js() {
-        for name in ["static.png", "notpng.png", "noframes.png"] {
+        // apng-js returns these errors; X_ITE does not await setAPNG and hangs (a defect, not copied): the
+        // load takes loadData's catch path with apng-js's message.
+        for (name, message) in [
+            ("static.png", "Not an animated PNG"),
+            ("notpng.png", "Not a PNG"),
+            ("noframes.png", "Not an animated PNG"),
+        ] {
             assert_eq!(
                 MovieMedia::decode_apng(&load_error_media(name)).err(),
-                Some(DecodeError::NotAnimated),
+                Some(DecodeError::Fail("Error", message.into())),
                 "{name}"
             );
         }

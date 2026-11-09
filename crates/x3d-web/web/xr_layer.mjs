@@ -66,16 +66,34 @@ export function poseArrays(pose, layer) {
   };
 }
 
+/** `engine.xrFrame`'s numbers for the input sources: id, active, button 0, any button, the target-ray pose's inverse and matrix. */
+export function xrSourceNumbers(sources) {
+  const data = new Float64Array(sources.length * 36);
+
+  for (const [i, { id, source }] of sources.entries()) {
+    data[i * 36] = id;
+    data[i * 36 + 1] = source.active ? 1 : 0;
+    data[i * 36 + 2] = source.gamepad?.buttons[0]?.pressed ? 1 : 0;
+    data[i * 36 + 3] = source.gamepad?.buttons.some((button) => button.pressed) ? 1 : 0;
+    data.set(source.inverse, i * 36 + 4);
+    data.set(source.matrix, i * 36 + 20);
+  }
+
+  return data;
+}
+
 /**
  * Draw one XR frame: the engine draws each view of `pose` into the canvas, then the canvas is copied into the layer's
- * framebuffer. `now` is the frame time in seconds, as for `engine.frame`.
+ * framebuffer. `now` is the frame time in seconds, as for `engine.frame`. `sources` is the Float64Array of the input
+ * sources (`xrSourceNumbers`): the engine picks along their rays and draws the rays and hit points over each view
+ * (X3DWebXRContext.xrUpdatePointers).
  */
-export function drawXRFrame(engine, gl, layer, pose, now) {
+export function drawXRFrame(engine, gl, layer, pose, now, sources) {
   const width = layer.framebufferWidth;
   const height = layer.framebufferHeight;
   const { pose: poseNumbers, views } = poseArrays(pose, layer);
 
-  engine.xrFrame(now, width, height, poseNumbers, views);
+  engine.xrFrame(now, width, height, poseNumbers, views, sources);
 
   // The canvas (the default framebuffer, which wgpu presented into) into the layer. Both are GL framebuffers, y up, so
   // the rows keep their order.

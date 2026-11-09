@@ -83,7 +83,31 @@ fn xr_pose_of(pose: &[f64], views: &[f64]) -> Result<x3d_render::xr::XrPose, JsE
         view_matrix: matrix(&pose[16..32]),
         views,
         headlight: true,
+        rays: vec![],
+        content_scale: 1.0,
     })
+}
+
+/// The input sources of [`WebBrowser::xr_frame`]: 36 numbers each, the page's id, `active` (1 or 0), button 0 pressed, any button
+/// pressed, then the target-ray pose's `transform.inverse.matrix` and `transform.matrix` (column-major, as WebXR gives them).
+fn xr_sources_of(sources: &[f64]) -> Result<Vec<XrSource>, JsError> {
+    if !sources.len().is_multiple_of(36) {
+        return Err(JsError::new(
+            "xrFrame: the input sources need 36 numbers each",
+        ));
+    }
+
+    Ok(sources
+        .chunks_exact(36)
+        .map(|s| XrSource {
+            id: s[0] as u32,
+            active: s[1] != 0.0,
+            button0: s[2] != 0.0,
+            pressed: s[3] != 0.0,
+            inverse: x3d_fields::math::Matrix4(s[4..20].try_into().expect("16 numbers")),
+            matrix: x3d_fields::math::Matrix4(s[20..36].try_into().expect("16 numbers")),
+        })
+        .collect())
 }
 
 /// The pipeline of [`WebBrowser::xr_frame`] that draws a texture of the canvas size into the canvas, texel for texel.
@@ -509,6 +533,8 @@ pub struct WebBrowser {
     xr_target: Option<(wgpu::Texture, wgpu::Texture)>,
     /// The pipeline that draws the composed XR views into the canvas, made on first use.
     xr_blit: Option<(wgpu::RenderPipeline, wgpu::BindGroupLayout)>,
+    /// The haptic pulses of the last `xrFrame` (`xrTakePulses`).
+    xr_pulses: Vec<u32>,
 }
 
 /// A route as the array `routes` and its relatives give.
@@ -810,6 +836,7 @@ impl WebBrowser {
             fallback_reason: None,
             xr_target: None,
             xr_blit: None,
+            xr_pulses: Vec::new(),
         })
     }
 }
@@ -859,9 +886,7 @@ impl WebBrowser {
         let mut session =
             Session::begin_with_scripts(world, now, self.config.width, self.config.height, |rt| {
                 // The page's options before the world's loads start (LoadUrlObjects is read when an Inline starts).
-                for (name, value) in engine_options {
-                    rt.browser_options.init_option(&name, value);
-                }
+                crate::session::init_page_options(rt, &engine_options);
 
                 // X_ITE's BrowserOptions belong to the browser, not to a world: the world starts with the page's Shading
                 // and Multisampling, and a Script that sets them (in initialize, too) sets them after the page.
@@ -1005,11 +1030,14 @@ impl WebBrowser {
         let scene = x3d_parse::parse_string("#X3D V4.0 utf8\n", base)
             .map_err(|e| JsError::new(&format!("{e:?}")))?;
         let id = next_world_id();
+        let mut rt = x3d_runtime::Runtime::new(scene, fetcher);
 
+        // The page's options, for the parse of a candidate (the SVG parser reads this browser's qualities).
+        crate::session::init_page_options(&mut rt, &self.engine_options);
         self.loads.insert(
             id,
             PageLoad {
-                rt: x3d_runtime::Runtime::new(scene, fetcher),
+                rt,
                 urls,
                 base: base.to_string(),
                 cache,
@@ -1121,6 +1149,8 @@ impl WebBrowser {
         let fetcher = Box::new(WebFetcher {
             cache: cache.clone(),
         });
+        self.apply_page_quality();
+
         let world = Session::parse_string(text, url, fetcher).map_err(|e| JsError::new(&e))?;
 
         Ok(self.add(world, cache, now))
@@ -2674,6 +2704,48 @@ impl WebBrowser {
             .unwrap_or(1)
     }
 
+    /// The page's `PrimitiveQuality` or `TextureQuality` (`LOW`, `MEDIUM` or `HIGH`; the page gives the field's string), for
+    /// the worlds and loads now and for those to come. The engine reads them itself: the primitives, the text and the
+    /// textures follow them in every frame (`x3d_render::traverse::set_browser_qualities`), and the SVG parser reads them
+    /// when a world is parsed (SVGParser.js lines 113-141). Returns whether the name is one of the two.
+    #[wasm_bindgen(js_name = setQualityOption)]
+    pub fn set_quality_option(&mut self, name: &str, value: &str) -> bool {
+        use x3d_runtime::browser_options::OptionValue;
+
+        if !matches!(name, "PrimitiveQuality" | "TextureQuality") {
+            return false;
+        }
+
+        let value = OptionValue::String(value.to_string());
+
+        self.engine_options.retain(|(n, _)| n != name);
+        self.engine_options.push((name.to_string(), value.clone()));
+
+        for w in self.worlds.values_mut() {
+            w.session.set_engine_option(name, value.clone());
+        }
+
+        for l in self.loads.values_mut() {
+            l.rt.browser_options.set_option(name, value.clone());
+        }
+
+        self.apply_page_quality();
+        true
+    }
+
+    /// The page's qualities for the next parse of a world that has no runtime yet. The thread is shared by every browser,
+    /// so each one gives its own before it parses.
+    fn apply_page_quality(&self) {
+        let get = |name: &str| {
+            self.engine_options
+                .iter()
+                .find(|(n, _)| n == name)
+                .map_or_else(String::new, |(_, v)| v.as_str().to_string())
+        };
+
+        crate::session::set_page_quality(&get("PrimitiveQuality"), &get("TextureQuality"));
+    }
+
     /// A browser option the shared engine reads itself, for the worlds and loads now and for those to come: the booleans
     /// `EnableInlineViewpoints` (X3DLayerNode.getUserViewpoints), `LoadUrlObjects` (X3DUrlObject.requestImmediateLoad), `Cache` (X3DExternProtoDeclaration.loadData) and
     /// `StraightenHorizon` (BrowserOptions.set_StraightenHorizon__, X3DBrowser.viewAll), and the number `Gravity`
@@ -2946,6 +3018,8 @@ impl WebBrowser {
                 active: s[1] != 0.0,
                 button0: s[2] != 0.0,
                 inverse: x3d_fields::math::Matrix4(s[3..19].try_into().expect("16 numbers")),
+                matrix: x3d_fields::math::Matrix4::IDENTITY,
+                pressed: s[2] != 0.0,
             })
             .collect();
 
@@ -2965,6 +3039,11 @@ impl WebBrowser {
     ///   them).
     /// * `views`: 36 numbers per view: `projectionMatrix`, `transform.inverse.matrix`, then the layer viewport `x, y,
     ///   width, height` (y up, pixels). A view of width zero is left out, as X_ITE does.
+    /// * `sources` (optional): the input sources of the frame, 36 numbers each, see `xr_sources_of`. After the world
+    ///   is stepped and the frame is built, X3DWebXRContext.xrUpdatePointers runs for them (`xrPointers`: the picks, the
+    ///   buttons, the pointer motion), and the rays and hit points of the active ones are drawn over each view, as
+    ///   ScreenLine and ScreenPoint draw them before the view is blitted. The sources due a haptic pulse are returned by
+    ///   `xrTakePulses`.
     ///
     /// The page then copies the canvas into the session's `XRWebGLLayer` (`x_ite_r.mjs`). Only the WebGL2 backend can do
     /// this: a WebGPU canvas has no XR layer in a stable browser, so `xrFrame` refuses WebGPU.
@@ -2976,6 +3055,7 @@ impl WebBrowser {
         height: u32,
         pose: &[f64],
         views: &[f64],
+        sources: Option<Vec<f64>>,
     ) -> Result<(), JsError> {
         if !self.webgl2 {
             return Err(JsError::new(
@@ -2988,6 +3068,7 @@ impl WebBrowser {
         }
 
         let pose = xr_pose_of(pose, views)?;
+        let sources = xr_sources_of(sources.as_deref().unwrap_or(&[]))?;
         let (width, height) = (width.max(1), height.max(1));
 
         if (width, height) != (self.config.width, self.config.height) {
@@ -3001,7 +3082,7 @@ impl WebBrowser {
         }
 
         let current = self.current.and_then(|id| self.worlds.get_mut(&id));
-        let (frame, headlight) = match current.map(|w| &mut w.session) {
+        let (frame, headlight, rays, content_scale) = match current.map(|w| &mut w.session) {
             Some(s) => {
                 s.step(now);
 
@@ -3013,11 +3094,25 @@ impl WebBrowser {
                     c.apply(&mut self.renderer);
                 }
 
-                (frame, headlight)
+                // X3DWebXRContext.xrUpdatePointers: the picks run on the frame just built, then the rays are drawn.
+                let (rays, content_scale) = match s.viewer() {
+                    Some(v) if !sources.is_empty() => {
+                        self.xr_pulses = v.xr_pointers(&sources);
+                        (v.xr_rays(&sources), v.content_scale())
+                    }
+                    _ => (vec![], 1.0),
+                };
+
+                (frame, headlight, rays, content_scale)
             }
-            None => (crate::empty_frame(), true),
+            None => (crate::empty_frame(), true, vec![], 1.0),
         };
-        let pose = x3d_render::xr::XrPose { headlight, ..pose };
+        let pose = x3d_render::xr::XrPose {
+            headlight,
+            rays,
+            content_scale,
+            ..pose
+        };
 
         // Each view is drawn over the whole of one target, and only its viewport is copied into a second target (as
         // `x3d_render::render_file_xr` does for its picture). The second target is then drawn into the canvas: wgpu's
@@ -3194,6 +3289,12 @@ impl WebBrowser {
         self.renderer.queue().submit([encoder.finish()]);
         self.renderer.queue().present(texture);
         Ok(())
+    }
+
+    /// The input sources due a haptic pulse (`hapticActuators [0] .pulse (0.25, 10)`) at the last `xrFrame`: their ids.
+    #[wasm_bindgen(js_name = xrTakePulses)]
+    pub fn xr_take_pulses(&mut self) -> Vec<u32> {
+        std::mem::take(&mut self.xr_pulses)
     }
 
     /// Draw the current state (no stepping) once more into an RGBA8 texture of the canvas size and read it back: a

@@ -11,6 +11,8 @@ use x3d_viewer::embed::{EmbeddedViewer, LoadOptions, spawn_big_stack};
 use x3d_viewer::viewer::UiEvent;
 
 const T0: f64 = 946684800.0;
+/// Seconds in one loop of the TimeSensor in ig/routes.x3dv.
+const ANIMATION_CYCLE: f64 = 2.0;
 const W: u32 = 128;
 const H: u32 = 128;
 
@@ -149,6 +151,7 @@ fn rea_b08_net_survive_reload_and_are_released() {
                 now += 1.0 / 30.0;
                 shot(&mut v, &device, &queue, now);
             }
+            let first_now = now;
             let first = shot(&mut v, &device, &queue, now);
             let counts = v.renderer().resource_counts();
             assert!(
@@ -157,6 +160,15 @@ fn rea_b08_net_survive_reload_and_are_released() {
             );
 
             for round in 0..5 {
+                if name == "ig-select.wrl" {
+                    // ig/routes.x3dv is driven by a looping TimeSensor (cycleInterval 2) whose phase follows the clock, and
+                    // reload reuses the first start time, so a reload restarts the world in the same state only when the
+                    // clock is at the same phase. Put the clock a whole number of cycles after the clock of the first picture,
+                    // so every reload is drawn at the phase (and elapsed time after the load) of that picture.
+                    let first_start = first_now - 4.0 / 30.0;
+                    now = first_start
+                        + ((now - first_start) / ANIMATION_CYCLE).ceil() * ANIMATION_CYCLE;
+                }
                 v.reload().unwrap();
                 for _ in 0..4 {
                     now += 1.0 / 30.0;
@@ -168,10 +180,8 @@ fn rea_b08_net_survive_reload_and_are_released() {
                     .zip(again.chunks_exact(4))
                     .filter(|(a, b)| a.iter().zip(b.iter()).any(|(x, y)| x.abs_diff(*y) > 8))
                     .count();
-                // ig-select holds ig/routes.x3dv, whose geometry is animated by a looping TimeSensor: its picture depends on the phase.
-                let animated = name == "ig-select.wrl";
                 assert!(
-                    animated || differ == 0,
+                    differ == 0,
                     "{name}: reload {round} draws a different picture ({differ} pixels)"
                 );
             }

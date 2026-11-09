@@ -620,11 +620,12 @@
    "behavior": "fields, events and observable behavior of the upstream class",
    "tests": [
     "oracle/synthetic-rea-verify/*",
-    "crates/x3d-viewer/tests/rea_batch09_inputs.rs::rea_batch09_inputs_cases_match_x_ite (background-runtime)"
+    "crates/x3d-viewer/tests/rea_batch09_inputs.rs::rea_batch09_inputs_cases_match_x_ite (background-runtime)",
+    "crates/x3d-viewer/tests/rea_batch09_inputs.rs (cases verify-switch-lod-billboard, verify-proximity-visibility, verify-collision-children, verify-anchor-static, verify-bind-stack: scene text, poses and log per frame against pinned X_ITE, oracle/rea-b09-inputs-baseline, 3 identical recordings, MSAA 0, PR #528)"
    ],
    "missing": "",
    "oracle": "",
-   "notes": "Batch 09 d8cce9b. TextureBackground stays NOT_TESTED."
+   "notes": "Batch 09 d8cce9b. TextureBackground stays NOT_TESTED. | PR #528 (2026-11-09): the oracle/synthetic-rea-verify worlds this entry cites had no runner and no baseline; they now run in rea_batch09_inputs and equal pinned X_ITE (scene text, poses, log; no pictures). Test reference only, the status does not change."
   },
   {
    "id": "node:Fog",
@@ -646,11 +647,12 @@
    "tests": [
     "oracle/synthetic-rea-verify/*",
     "crates/x3d-viewer/tests/rea_batch09_inputs.rs::rea_batch09_inputs_cases_match_x_ite (fog-runtime)",
-    "crates/x3d-render/tests/render_rea_b09_inputs.rs::rea_b09_inputs_renders_match_x_ite (fogcoord-*)"
+    "crates/x3d-render/tests/render_rea_b09_inputs.rs::rea_b09_inputs_renders_match_x_ite (fogcoord-*)",
+    "crates/x3d-viewer/tests/rea_batch09_inputs.rs (cases verify-switch-lod-billboard, verify-proximity-visibility, verify-collision-children, verify-anchor-static, verify-bind-stack: scene text, poses and log per frame against pinned X_ITE, oracle/rea-b09-inputs-baseline, 3 identical recordings, MSAA 0, PR #528)"
    ],
    "missing": "",
    "oracle": "",
-   "notes": "Batch 09 d8cce9b/d44ed6f."
+   "notes": "Batch 09 d8cce9b/d44ed6f. | PR #528 (2026-11-09): the oracle/synthetic-rea-verify worlds this entry cites had no runner and no baseline; they now run in rea_batch09_inputs and equal pinned X_ITE (scene text, poses, log; no pictures). Test reference only, the status does not change."
   },
   {
    "id": "node:FogCoordinate",
@@ -736,11 +738,12 @@
    "status": "COMPLETE",
    "behavior": "fields, events and observable behavior of the upstream class",
    "tests": [
-    "oracle/synthetic-rea-verify/{switch-lod-billboard,collision-children,proximity-visibility}.wrl"
+    "oracle/synthetic-rea-verify/{switch-lod-billboard,collision-children,proximity-visibility}.wrl",
+    "crates/x3d-viewer/tests/rea_batch09_inputs.rs (cases verify-switch-lod-billboard, verify-proximity-visibility, verify-collision-children, verify-anchor-static, verify-bind-stack: scene text, poses and log per frame against pinned X_ITE, oracle/rea-b09-inputs-baseline, 3 identical recordings, MSAA 0, PR #528)"
    ],
    "missing": "",
    "oracle": "x10_compare exact",
-   "notes": ""
+   "notes": "PR #528 (2026-11-09): the oracle/synthetic-rea-verify worlds this entry cites had no runner and no baseline; they now run in rea_batch09_inputs and equal pinned X_ITE (scene text, poses, log; no pictures). Test reference only, the status does not change."
   },
   {
    "id": "node:TransformSensor",
@@ -779,11 +782,12 @@
    "status": "COMPLETE",
    "behavior": "fields, events and observable behavior of the upstream class",
    "tests": [
-    "oracle/synthetic-rea-verify/{switch-lod-billboard,collision-children,proximity-visibility}.wrl"
+    "oracle/synthetic-rea-verify/{switch-lod-billboard,collision-children,proximity-visibility}.wrl",
+    "crates/x3d-viewer/tests/rea_batch09_inputs.rs (cases verify-switch-lod-billboard, verify-proximity-visibility, verify-collision-children, verify-anchor-static, verify-bind-stack: scene text, poses and log per frame against pinned X_ITE, oracle/rea-b09-inputs-baseline, 3 identical recordings, MSAA 0, PR #528)"
    ],
    "missing": "",
    "oracle": "x10_compare exact",
-   "notes": ""
+   "notes": "PR #528 (2026-11-09): the oracle/synthetic-rea-verify worlds this entry cites had no runner and no baseline; they now run in rea_batch09_inputs and equal pinned X_ITE (scene text, poses, log; no pictures). Test reference only, the status does not change."
   },
   {
    "id": "node:BooleanFilter",
@@ -1837,11 +1841,12 @@
    "behavior": "fields, events and observable behavior of the upstream class",
    "tests": [
     "oracle/synthetic-rea-verify/{switch-lod-billboard,collision-children,proximity-visibility}.wrl",
-    "crates/x3d-viewer/tests/rea_batch11_bbox.rs (bb-static, bb-others, bb-screen, bb-dynamic, MSAA 0/4)"
+    "crates/x3d-viewer/tests/rea_batch11_bbox.rs (bb-static, bb-others, bb-screen, bb-dynamic, MSAA 0/4)",
+    "crates/x3d-viewer/tests/rea_batch09_inputs.rs (cases verify-switch-lod-billboard, verify-proximity-visibility, verify-collision-children, verify-anchor-static, verify-bind-stack: scene text, poses and log per frame against pinned X_ITE, oracle/rea-b09-inputs-baseline, 3 identical recordings, MSAA 0, PR #528)"
    ],
    "missing": "",
    "oracle": "x10_compare exact",
-   "notes": "Batch 11 2026-10-21: bboxDisplay matches X_ITE (bb-static, bb-others, bb-dynamic). Billboard's own bboxDisplay is not covered."
+   "notes": "Batch 11 2026-10-21: bboxDisplay matches X_ITE (bb-static, bb-others, bb-dynamic). Billboard's own bboxDisplay is not covered. | PR #528 (2026-11-09): the oracle/synthetic-rea-verify worlds this entry cites had no runner and no baseline; they now run in rea_batch09_inputs and equal pinned X_ITE (scene text, poses, log; no pictures). Test reference only, the status does not change."
   },
   {
    "id": "node:StaticGroup",
@@ -1884,11 +1889,12 @@
    "status": "COMPLETE",
    "behavior": "fields, events and observable behavior of the upstream class",
    "tests": [
-    "oracle/synthetic-rea-verify/{switch-lod-billboard,collision-children,proximity-visibility}.wrl"
+    "oracle/synthetic-rea-verify/{switch-lod-billboard,collision-children,proximity-visibility}.wrl",
+    "crates/x3d-viewer/tests/rea_batch09_inputs.rs (cases verify-switch-lod-billboard, verify-proximity-visibility, verify-collision-children, verify-anchor-static, verify-bind-stack: scene text, poses and log per frame against pinned X_ITE, oracle/rea-b09-inputs-baseline, 3 identical recordings, MSAA 0, PR #528)"
    ],
    "missing": "",
    "oracle": "x10_compare exact",
-   "notes": ""
+   "notes": "PR #528 (2026-11-09): the oracle/synthetic-rea-verify worlds this entry cites had no runner and no baseline; they now run in rea_batch09_inputs and equal pinned X_ITE (scene text, poses, log; no pictures). Test reference only, the status does not change."
   },
   {
    "id": "node:Transform",
@@ -1910,11 +1916,12 @@
    "behavior": "fields, events and observable behavior of the upstream class",
    "tests": [
     "oracle/synthetic-rea-verify/{switch-lod-billboard,collision-children,proximity-visibility}.wrl",
-    "crates/x3d-viewer/tests/rea_batch11_bbox.rs (bb-static, bb-others, bb-screen, bb-dynamic, MSAA 0/4)"
+    "crates/x3d-viewer/tests/rea_batch11_bbox.rs (bb-static, bb-others, bb-screen, bb-dynamic, MSAA 0/4)",
+    "crates/x3d-viewer/tests/rea_batch09_inputs.rs (cases verify-switch-lod-billboard, verify-proximity-visibility, verify-collision-children, verify-anchor-static, verify-bind-stack: scene text, poses and log per frame against pinned X_ITE, oracle/rea-b09-inputs-baseline, 3 identical recordings, MSAA 0, PR #528)"
    ],
    "missing": "",
    "oracle": "x10_compare exact",
-   "notes": "Batch 11 2026-10-21: bboxDisplay matches X_ITE (bb-static, bb-dynamic)."
+   "notes": "Batch 11 2026-10-21: bboxDisplay matches X_ITE (bb-static, bb-dynamic). | PR #528 (2026-11-09): the oracle/synthetic-rea-verify worlds this entry cites had no runner and no baseline; they now run in rea_batch09_inputs and equal pinned X_ITE (scene text, poses, log; no pictures). Test reference only, the status does not change."
   },
   {
    "id": "node:HAnimDisplacer",
@@ -2986,11 +2993,12 @@
    "tests": [
     "oracle/synthetic-rea-verify/*",
     "crates/x3d-viewer/tests/rea_batch09_inputs.rs::rea_batch09_inputs_cases_match_x_ite (billboard-runtime)",
-    "crates/x3d-viewer/tests/rea_batch12.rs::rea_batch12_cases_match_x_ite (bbb-static, bbb-camera, bbb-dynamic, bbb-shadow, MSAA 0/4, 3 identical X_ITE recordings each)"
+    "crates/x3d-viewer/tests/rea_batch12.rs::rea_batch12_cases_match_x_ite (bbb-static, bbb-camera, bbb-dynamic, bbb-shadow, MSAA 0/4, 3 identical X_ITE recordings each)",
+    "crates/x3d-viewer/tests/rea_batch09_inputs.rs (cases verify-switch-lod-billboard, verify-proximity-visibility, verify-collision-children, verify-anchor-static, verify-bind-stack: scene text, poses and log per frame against pinned X_ITE, oracle/rea-b09-inputs-baseline, 3 identical recordings, MSAA 0, PR #528)"
    ],
    "missing": "",
    "oracle": "",
-   "notes": "Batch 09 d8cce9b. Batch 12 2026-10-21: bboxDisplay (all axisOfRotation kinds, transformed parents, empty, explicit bboxSize, nested, under a Group), camera moves, run-time changes and the SHADOW pass match X_ITE. Rust defect fixed: Billboard.getBBox and the SHADOW pass used no rotation; X_ITE keeps the rotation of the last DISPLAY traversal (Billboard.matrix). A negative check (identity matrix) fails bbb-static, bbb-camera and bbb-shadow."
+   "notes": "Batch 09 d8cce9b. Batch 12 2026-10-21: bboxDisplay (all axisOfRotation kinds, transformed parents, empty, explicit bboxSize, nested, under a Group), camera moves, run-time changes and the SHADOW pass match X_ITE. Rust defect fixed: Billboard.getBBox and the SHADOW pass used no rotation; X_ITE keeps the rotation of the last DISPLAY traversal (Billboard.matrix). A negative check (identity matrix) fails bbb-static, bbb-camera and bbb-shadow. | PR #528 (2026-11-09): the oracle/synthetic-rea-verify worlds this entry cites had no runner and no baseline; they now run in rea_batch09_inputs and equal pinned X_ITE (scene text, poses, log; no pictures). Test reference only, the status does not change."
   },
   {
    "id": "node:Collision",
@@ -3007,17 +3015,18 @@
     "crates/x3d-runtime/src/nodes/transform_sensor.rs",
     "crates/x3d-viewer/src/walk.rs"
    ],
-   "status": "PARTIAL",
+   "status": "COMPLETE",
    "behavior": "fields, events and observable behavior of the upstream class",
    "tests": [
     "oracle/synthetic-rea-verify/*",
     "crates/x3d-viewer/tests/rea_b24_anchor_collision_instanced.rs (ci-pick 2601 probes, ci-events, cl-render, cl-events, an-nested; MSAA 0/4, 3 identical X_ITE runs each; oracle/rea-b24-anchor-collision-instanced-baseline)",
     "crates/x3d-viewer/tests/rea_collision_time.rs (WALK-avatar Collision isActive and collideTime order and times: wall in/out/in, enabled, visible, proxy, nested, the collisionRadius * sqrt 2 threshold; Billboard axis 0 1 0 and 0 0 0 under Collision and Anchor; MSAA 0 and 4, three identical recordings each)",
-    "crates/x3d-viewer/tests/rea_collision_time.rs (ct-wall-pick, ct-nested-pick, ct-bb-ctl-pick: 256 pickProbes each, bit for bit, MSAA 0 and 4, PR #430)"
+    "crates/x3d-viewer/tests/rea_collision_time.rs (ct-wall-pick, ct-nested-pick, ct-bb-ctl-pick: 256 pickProbes each, bit for bit, MSAA 0 and 4, PR #430)",
+    "crates/x3d-viewer/tests/rea_collision_time.rs (ct-live-inline, ct-live-inline-two: the wall Collision inside an Inline whose load goes FALSE and TRUE again; poses, events, console and pictures against pinned X_ITE, 3 identical recordings, MSAA 0 and 4, PR #529)"
    ],
-   "missing": "only binding / static load / children paths and, since #408, the WALK-avatar collideTime path and Billboard under Collision are oracle-tested here",
+   "missing": "",
    "oracle": "",
-   "notes": "Recovery audit 2026-10-25 (origin/master cdfbffc): Collision isActive (exact) and collideTime (within 1e-9) are compared with X_ITE in particle collision scenes in crates/x3d-viewer/tests/rea_b15_particle_collision.rs (PR #26, merge d2666bd; CPU stand-in PR #32, merge d4cd4d5), so 'collideTime path not exercised' was removed. | Issue #94 2026-10-31 (PR #209): Anchor, Collision and InstancedShape pointer paths recorded from pinned X_ITE (batch 24). Rust defects fixed: pointerEvents FALSE on a Shape or InstancedShape was ignored by the pointing pass; a fragment Anchor click bound its Viewpoint one frame later than X_ITE (owner decision 2026-10-31: match X_ITE). | Issue #51 2026-11-03 (PR #408): Collision collideTime and Billboard orientation are compared with pinned X_ITE at MSAA 0 and 4. Status stays PARTIAL; the other gaps of the entry were not audited. | Issue #51 2026-11-04 (PR #430): pointing-buffer hit points 0.27 to 0.38 from a surface equal the pinned page bit for bit. The 3.05e-7 was the avatar's stop position before #423, not float32 depth. Status stays PARTIAL."
+   "notes": "Recovery audit 2026-10-25 (origin/master cdfbffc): Collision isActive (exact) and collideTime (within 1e-9) are compared with X_ITE in particle collision scenes in crates/x3d-viewer/tests/rea_b15_particle_collision.rs (PR #26, merge d2666bd; CPU stand-in PR #32, merge d4cd4d5), so 'collideTime path not exercised' was removed. | Issue #94 2026-10-31 (PR #209): Anchor, Collision and InstancedShape pointer paths recorded from pinned X_ITE (batch 24). Rust defects fixed: pointerEvents FALSE on a Shape or InstancedShape was ignored by the pointing pass; a fragment Anchor click bound its Viewpoint one frame later than X_ITE (owner decision 2026-10-31: match X_ITE). | Issue #51 2026-11-03 (PR #408): Collision collideTime and Billboard orientation are compared with pinned X_ITE at MSAA 0 and 4. Status stays PARTIAL; the other gaps of the entry were not audited. | Issue #51 2026-11-04 (PR #430): pointing-buffer hit points 0.27 to 0.38 from a surface equal the pinned page bit for bit. The 3.05e-7 was the avatar's stop position before #423, not float32 depth. Status stays PARTIAL. | Reconciliation 2026-11-09: the gap text named only the binding, static load and children paths and #408; it was not updated when the other paths were recorded. Compared with pinned X_ITE in the tests that ran at d79abe4c: isActive and collideTime for a wall, a graze, an edge, nested Collision nodes, enabled FALSE at load and enabled toggled at runtime, visible FALSE, a Shape proxy and an empty Group proxy, the collisionRadius * sqrt 2 threshold (rea_collision_time, oracle/synthetic-rea-collision-time/cases.txt; rea_batch09_inputs collision-runtime; rea_b24_anchor_collision_instanced cl-events, cl-render with bboxDisplay; rea_b11 bb-others bboxDisplay; rea_verify collision-children). Only set_live__ has no case, so the entry stays PARTIAL. | PR #529 (2026-11-09): the last uncompared path of Collision.js, set_live__ (lines 38-45: addCollision / removeCollision, no isActive FALSE), is compared: the avatar stops at the wall in the Inline, walks through after load FALSE, and stops again after load TRUE; X_ITE sends no isActive FALSE for the unloaded Collision, and Rust equals it on the first run (no engine change). Every path of the pinned Collision.js now has a case: COMPLETE. The Script shutdown of an unloaded Inline is a separate, owner-approved difference (README, Plain Inline reload and abort paths) and is kept out of the case."
   },
   {
    "id": "node:LOD",
@@ -3037,11 +3046,12 @@
    "status": "COMPLETE",
    "behavior": "fields, events and observable behavior of the upstream class",
    "tests": [
-    "oracle/synthetic-rea/lod.wrl, oracle/synthetic-rea-verify/switch-lod-billboard.wrl"
+    "oracle/synthetic-rea/lod.wrl, oracle/synthetic-rea-verify/switch-lod-billboard.wrl",
+    "crates/x3d-viewer/tests/rea_batch09_inputs.rs (cases verify-switch-lod-billboard, verify-proximity-visibility, verify-collision-children, verify-anchor-static, verify-bind-stack: scene text, poses and log per frame against pinned X_ITE, oracle/rea-b09-inputs-baseline, 3 identical recordings, MSAA 0, PR #528)"
    ],
    "missing": "",
    "oracle": "x10_compare exact (281 + 241 checks)",
-   "notes": "LOD.changeLevel in the DISPLAY walk, frame-rate mode, forceTransitions, USE, displayFinishEvents phase added"
+   "notes": "LOD.changeLevel in the DISPLAY walk, frame-rate mode, forceTransitions, USE, displayFinishEvents phase added | PR #528 (2026-11-09): the oracle/synthetic-rea-verify worlds this entry cites had no runner and no baseline; they now run in rea_batch09_inputs and equal pinned X_ITE (scene text, poses, log; no pictures). Test reference only, the status does not change."
   },
   {
    "id": "node:NavigationInfo",
@@ -3062,11 +3072,12 @@
    "status": "COMPLETE",
    "behavior": "fields, events and observable behavior of the upstream class",
    "tests": [
-    "oracle/synthetic-rea-verify/bind-stack.wrl + corpus suites"
+    "oracle/synthetic-rea-verify/bind-stack.wrl + corpus suites",
+    "crates/x3d-viewer/tests/rea_batch09_inputs.rs (cases verify-switch-lod-billboard, verify-proximity-visibility, verify-collision-children, verify-anchor-static, verify-bind-stack: scene text, poses and log per frame against pinned X_ITE, oracle/rea-b09-inputs-baseline, 3 identical recordings, MSAA 0, PR #528)"
    ],
    "missing": "",
    "oracle": "x10_compare exact (241 checks)",
-   "notes": ""
+   "notes": "PR #528 (2026-11-09): the oracle/synthetic-rea-verify worlds this entry cites had no runner and no baseline; they now run in rea_batch09_inputs and equal pinned X_ITE (scene text, poses, log; no pictures). Test reference only, the status does not change."
   },
   {
    "id": "node:OrthoViewpoint",
@@ -3120,11 +3131,12 @@
     "oracle/synthetic-rea-verify/*",
     "crates/x3d-viewer/tests/rea_batch09_inputs.rs::rea_batch09_inputs_cases_match_x_ite (viewpoint-runtime)",
     "crates/x3d-viewer/tests/rea_batch09_nav.rs::rea_batch09_nav_shard0..3_match_x_ite (transition worlds)",
-    "crates/x3d-viewer/tests/rea_batch12.rs::rea_batch12_cases_match_x_ite (vw-ortho, vw-persp, vw-geo, vw-layers, MSAA 0/4, 3 identical X_ITE recordings each)"
+    "crates/x3d-viewer/tests/rea_batch12.rs::rea_batch12_cases_match_x_ite (vw-ortho, vw-persp, vw-geo, vw-layers, MSAA 0/4, 3 identical X_ITE recordings each)",
+    "crates/x3d-viewer/tests/rea_batch09_inputs.rs (cases verify-switch-lod-billboard, verify-proximity-visibility, verify-collision-children, verify-anchor-static, verify-bind-stack: scene text, poses and log per frame against pinned X_ITE, oracle/rea-b09-inputs-baseline, 3 identical recordings, MSAA 0, PR #528)"
    ],
    "missing": "",
    "oracle": "",
-   "notes": "Batch 09 d8cce9b. Batch 12 2026-10-21: Browser.viewAll, StraightenHorizon and LookAt variants match X_ITE (vw-persp)."
+   "notes": "Batch 09 d8cce9b. Batch 12 2026-10-21: Browser.viewAll, StraightenHorizon and LookAt variants match X_ITE (vw-persp). | PR #528 (2026-11-09): the oracle/synthetic-rea-verify worlds this entry cites had no runner and no baseline; they now run in rea_batch09_inputs and equal pinned X_ITE (scene text, poses, log; no pictures). Test reference only, the status does not change."
   },
   {
    "id": "node:ViewpointGroup",
@@ -3171,11 +3183,12 @@
    "tests": [
     "oracle/synthetic-rea-verify/*",
     "crates/x3d-viewer/tests/rea_b24_anchor_collision_instanced.rs (ci-pick 2601 probes, ci-events, cl-render, cl-events, an-nested; MSAA 0/4, 3 identical X_ITE runs each; oracle/rea-b24-anchor-collision-instanced-baseline)",
-    "crates/x3d-viewer/tests/rea_collision_time.rs (Billboard under Anchor with pointing probes, pictures and poses; collideTime path; MSAA 0 and 4)"
+    "crates/x3d-viewer/tests/rea_collision_time.rs (Billboard under Anchor with pointing probes, pictures and poses; collideTime path; MSAA 0 and 4)",
+    "crates/x3d-viewer/tests/rea_batch09_inputs.rs (cases verify-switch-lod-billboard, verify-proximity-visibility, verify-collision-children, verify-anchor-static, verify-bind-stack: scene text, poses and log per frame against pinned X_ITE, oracle/rea-b09-inputs-baseline, 3 identical recordings, MSAA 0, PR #528)"
    ],
    "missing": "only binding / static load / children paths oracle-tested here; an Anchor to a non-X3D page or another window cannot be observed by the headless runner",
    "oracle": "",
-   "notes": "Issue #94 2026-10-31 (PR #209): Anchor, Collision and InstancedShape pointer paths recorded from pinned X_ITE (batch 24). Rust defects fixed: pointerEvents FALSE on a Shape or InstancedShape was ignored by the pointing pass; a fragment Anchor click bound its Viewpoint one frame later than X_ITE (owner decision 2026-10-31: match X_ITE). | Issue #51 2026-11-03 (PR #408): the collideTime path and Billboard orientation under an Anchor are compared (collideTime was already compared in rea_b15_particle_collision.rs). The gap about an Anchor to a non-X3D page or another window stays. Status stays PARTIAL."
+   "notes": "Issue #94 2026-10-31 (PR #209): Anchor, Collision and InstancedShape pointer paths recorded from pinned X_ITE (batch 24). Rust defects fixed: pointerEvents FALSE on a Shape or InstancedShape was ignored by the pointing pass; a fragment Anchor click bound its Viewpoint one frame later than X_ITE (owner decision 2026-10-31: match X_ITE). | Issue #51 2026-11-03 (PR #408): the collideTime path and Billboard orientation under an Anchor are compared (collideTime was already compared in rea_b15_particle_collision.rs). The gap about an Anchor to a non-X3D page or another window stays. Status stays PARTIAL. | PR #528 (2026-11-09): the oracle/synthetic-rea-verify worlds this entry cites had no runner and no baseline; they now run in rea_batch09_inputs and equal pinned X_ITE (scene text, poses, log; no pictures). Test reference only, the status does not change."
   },
   {
    "id": "node:Inline",
@@ -3227,18 +3240,18 @@
     "crates/x3d-runtime/src/inline_geometry.rs",
     "crates/x3d-runtime/src/nodes/load_sensor.rs"
    ],
-   "status": "PARTIAL",
+   "status": "COMPLETE",
    "behavior": "fields, events and observable behavior of the upstream class",
    "tests": [
     "render_rea_b08_net (ig-*)",
     "rea_batch08_net (ig-runtime)",
-    "rea_b08_net_reload",
+    "rea_b08_net_reload (every reload case compares its picture, ig-select included: the clock is set to a whole 2 s cycle of the ig/routes.x3dv TimeSensor before each reload, PR #525)",
     "rea_b08_net_unload",
     "crates/x3d-viewer/tests/rea_batch08_net.rs (rea_batch08_net_cases_match_x_ite, case ig-second --known-diff=ig-second: three InlineGeometry of ig/routes.x3dv and three of ig/routes-extrusion.x3dv; everything outside the decided region equal to X_ITE; in the region X_ITE's second and third copies stay still and Rust's move, ADR 0012)"
    ],
-   "missing": "ig-select reload picture check disabled",
+   "missing": "",
    "oracle": "pinned X_ITE 16.5.0 (34cdf9f97): oracle/rea-b08-net-baseline/ig-second-msaa0 (three identical recordings, rea_b08_net.py pin)",
-   "notes": "in node table since the 2026-10-16 regeneration | REA batch 08 (proposal 2026-10-18, pending local GPU gates): | Issue #68 2026-11-02 (ADR 0012 (Accepted 2026-11-02, PR #324)): decided as an approved difference. ISO/IEC 19775-1 V4.0 has no InlineGeometry node (it is an X_ITE node), so no clause decides it. Status stays PARTIAL because the difference has no test. | Issue #68 2026-11-06: the decided difference of ADR 0012 has a test now. oracle/rea-b08-net-baseline/ig-second-msaa0 (pinned X_ITE 16.5.0, three identical recordings, js.json sha256 0022e835ec69ba45bd39a645783f8d2c57a375e7a08125270107d0ac018b5db9) shows X_ITE's copies of the Extrusion with routes to set_spine still and the Coordinate copies moving (the copy shares the routed Coordinate node); rea_batch08_net compares everything else and asserts the difference in the region (red checks: without the mask 1.5 to 4.4% of the pixels over 8; a mask on a moving X_ITE cell fails). Text only: the ig-select reload picture check stays open, so the entry stays PARTIAL."
+   "notes": "in node table since the 2026-10-16 regeneration | REA batch 08 (proposal 2026-10-18, pending local GPU gates): | Issue #68 2026-11-02 (ADR 0012 (Accepted 2026-11-02, PR #324)): decided as an approved difference. ISO/IEC 19775-1 V4.0 has no InlineGeometry node (it is an X_ITE node), so no clause decides it. Status stays PARTIAL because the difference has no test. | Issue #68 2026-11-06: the decided difference of ADR 0012 has a test now. oracle/rea-b08-net-baseline/ig-second-msaa0 (pinned X_ITE 16.5.0, three identical recordings, js.json sha256 0022e835ec69ba45bd39a645783f8d2c57a375e7a08125270107d0ac018b5db9) shows X_ITE's copies of the Extrusion with routes to set_spine still and the Coordinate copies moving (the copy shares the routed Coordinate node); rea_batch08_net compares everything else and asserts the difference in the region (red checks: without the mask 1.5 to 4.4% of the pixels over 8; a mask on a moving X_ITE cell fails). Text only: the ig-select reload picture check stays open, so the entry stays PARTIAL. | PR #525 (2026-11-09): the only gap was the disabled ig-select reload picture check (rea_b08_net_reload.rs, `animated ||` bypass). The test now aligns the TimeSensor phase before each reload and compares the picture of every case; the negative control (+0.5 s) fails with 41 pixels. The remaining difference to X_ITE (ig-second, the second and third copies) is the owner-approved ADR 0012 difference with its own known-difference test, so nothing open remains: COMPLETE."
   },
   {
    "id": "node:LoadSensor",
@@ -5430,11 +5443,13 @@
     "crates/x3d-runtime/tests/mpeg1_audio.rs (15 cases: MPEG-1 Systems Layer II and III audio equals ffmpeg within 2e-4, truncation and mutation)",
     "crates/x3d-runtime/src/webm.rs av1_pictures_equal_the_reference_decoder_plane_by_plane (6 synthetic AV1 streams, 8 and 10 bit, 4:2:0 and 4:4:4, tiles, a second encoder, film grain: every plane of every picture equals libaom; feature av1)",
     "crates/x3d-runtime/tests/av1_safety.rs (2 cases: damaged AV1 files in child processes never crash the process; feature av1)",
-    "crates/x3d-viewer/tests/movie_anim.rs movie_video_av1_frames_match_x_ite and movie_video_av1_baseline_is_present (AV1 pictures at fixed movie times against pinned X_ITE, 5 frames per MSAA, oracle/synthetic-movie-video, MSAA 0 and 4; the first needs feature av1, the second fails when the baseline is missing)"
+    "crates/x3d-viewer/tests/movie_anim.rs movie_video_av1_frames_match_x_ite and movie_video_av1_baseline_is_present (AV1 pictures at fixed movie times against pinned X_ITE, 5 frames per MSAA, oracle/synthetic-movie-video, MSAA 0 and 4; the first needs feature av1, the second fails when the baseline is missing)",
+    "crates/x3d-web/tests/async_loading.rs (a static PNG then an APNG: warning, then the second url loads; a static PNG or non-PNG alone: FAILED and the load settles; PR #530)",
+    "crates/x3d-viewer/tests/movie_anim.rs KNOWN_DIFFERENCES (movie-load-errors-baseline static, notpng, noframes: the exact extra lines of the deliberate difference, everything else equal to pinned X_ITE)"
    ],
    "missing": "frames of MP4 urls are not decoded natively; AV1 WebM is decoded natively through rav1d only when the non-default av1 feature is built (#363), and a build without it does not decode AV1; MPEG-1: video is decoded natively with pl_mpeg and the Systems audio (Layer II and III) natively with symphonia (#381), the browser <video> integration and the audio/video start-offset alignment are open and ISO/IEC 11172 is not in the local library, so conformance is not claimed; the browser <video> element in ISO timing mode is only seeked and is silent (#384, not verified, no browser in that run); APNG frames between the first and the last are not recordable against the pinned page (apng-js runs on the wall clock), so the animated-media rendering comparison covers GIF, APNG first and last frames and VP8/VP9 WebM and, with the non-default av1 feature, AV1 WebM (#397), not those APNG frames (an owner record is pending); VP9 WebM is 8-bit only and assumes BT.709 whatever the stream's colour tags say",
    "oracle": "oracle/render-rea-b09-visual-baseline and oracle/render-msaa4-rea-b09-visual-baseline: vis-items-movie (pinned X_ITE 16.5.0 (oracle/x_ite-pin, 34cdf9f97), headless Chrome 156 / ANGLE on the RTX 3060 Ti, three identical recordings); oracle/movie-video-baseline: WebM VP8/VP9 pictures after inter frames, backward seeks and seeks into a group of pictures (oracle/synthetic-movie-video, MSAA 0 and 4, five identical recordings); oracle/movie-video-av1-baseline: AV1 WebM pictures at the same five movie times (oracle/synthetic-movie-video/movie-video-av1.wrl, MSAA 0 and 4, five identical recordings each)",
-   "notes": "b09 cloud checkpoint after b2e5b9f: node-texturing (3 identical X_ITE recordings, exact): field definitions (name, access type, data type, default value), a created node's VRML / XML / JSON text, and on a live node a callback on every field that sends events, every inputOnly / inputOutput field (not node fields) set to a sample value, the callbacks in order with their values, the node's text after | Issue #90 2026-10-29 (desktop GPU run, RTX 3060 Ti): vis-items-movie 78930 pixels over 8 at MSAA 0 (30.1%), 79936 at MSAA 4: stays PARTIAL. | Issue #139 2026-10-31 (browser build): a non-GIF/PNG candidate goes to a page <video> element (video_mirror.mjs); a video that fails logs X_ITE's two messages, then the next url is requested. Frame colors over time (GIF, APNG, WebM, MP4, data-URL GIF, loop FALSE, speed 0.5), width, height, colorDepth, duration_changed and the fallback messages match. Browser differences: video sound plays through the element, not X_ITE's createMediaElementSource graph (gain, Mute, spatialization do not reach it); video ops flush only from the frame tick, so a video does not start while the frame loop is stopped; the WebM and MP4 frame cases (movieFrames.webm, movieFrames.mp4) are skipped on CI because the hosted runner's video decode exceeds the sampling window, so they run only locally. | Issue #90 2026-11-02 (PR #332): animated GIF, APNG (earlier) and VP9 WebM (vp9dec 0.1.1, MIT, plus an in-repo WebM demuxer) are decoded natively. vis-items-movie matches pinned X_ITE 16.5.0: 0 pixels over 8 (max 1) at MSAA 0 and 4, three identical recordings each; it was 5.5% over 8 and the KNOWN_GAPS entry is removed. The pinned page converts the untagged stream with the BT.709 matrix and bilinear chroma interpolation (BT.601: 2.9% over 8; BT.709 replicated chroma: 0.57%). Playback maps elapsed time to frames as GifMedia does. ISO/IEC 19775-1 V4.0 MovieTexture clause number unverified (no local clause text); 19775-2 unverified. Status stays PARTIAL. | Issue #90 2026-11-02 (PR #346): the native WebM decode refuses pictures above 35 651 584 luma samples and stops at a 512 MiB budget per frame, and a crafted WebM no longer panics (mutation tests). No pinned behavior changed. Status stays PARTIAL. | Issue #90 2026-11-03: VP8 WebM frames decode natively; the Vorbis track of a WebM is decoded and equals the reference decode (the_vorbis_track_of_a_webm_equals_the_reference_decode); a seek request and its answer are carried between the runtime and the page (VideoOp::Seek, Runtime::video_seeked), and an unusable answer is asked again (PR #371, a_seek_answered_without_a_picture_is_asked_again_at_the_same_time); the timing of ISO/IEC 19775-1 18.4.2 (movie_time.rs, tests movie_iso_time) is the default and the pinned X_ITE timing stays an option (X3D_MOVIE_TIMING=pinned, page attribute movietiming=pinned). The browser module carries no native video decoder (tools/check_no_native_video.py). Status stays PARTIAL. | Issue #90 2026-11-03 (PRs #381, #384, #387): (1) ISO timing, sound (#384): the sound of a movie plays at the signed rate speed * max(pitch, 0), so a negative speed reads the buffer backwards from the end, starts at the movie time of the first picture, resumes at the engine's movie time after a pause, and a pause or stop keeps the picture of the movie time at that instant (ISO/IEC 19775-1 18.4.2: the frame at the time the node became inactive remains); the pinned timing is unchanged and kept by a test (movie_iso_audio 6 cases, movie_iso_time 2 added, 309 passed in x3d-runtime). Not verified: the browser <video> element in ISO mode. (2) MPEG-1 Systems audio (#381): Layer II and III decode natively and equal ffmpeg 6.1.1 within 2e-4 per sample on four synthetic streams (worst measured 5.3e-7); Layer I is reported unsupported; ISO/IEC 11172 is not in the local library, so no conformance claim. (3) Pictures (#387): WebM VP8 and VP9 frames at fixed movie times (0.25, 0.55 s, a backward seek to 0.05 s, a seek back into a group of pictures to 0.35 s, and before the start) match pinned X_ITE 16.5.0 at MSAA 0 and MSAA 4: 5 frames per MSAA, five identical pinned recordings, 0 pixels over 8, max delta 1; a control with one changed seek time fails (6.35% over 8). The comparison puts the pinned element at a media time with the harness's own pause and seek (movieSeek), so it compares the picture of a media time, not the pinned playback timing. ISO/IEC 19775-1 V4.0 MovieTexture clause number unverified (no local clause text; 18.4.2 is the timing clause named above); 19775-2 unverified. Status stays PARTIAL: AV1 decode awaits #363, the pinned APNG middle frames and MPEG-1 (the pinned Chrome cannot play it) need owner records, and the browser <video> audio in ISO mode is unverified. | Issue #90 2026-11-03 (PRs #363 and #397): AV1 in WebM is decoded natively through rav1d 1.1.0 (BSD-2-Clause, vendored in vendor/rav1d with the one recorded change to src/decode.rs; the other vendored files are checked byte for byte by tools/check_vendored_rav1d.py). It is the non-default av1 feature and CI builds it and runs its tests; the comparison with pinned X_ITE needs a GPU adapter, so on the hosted runner (no adapter) it is recorded as an allowed skip, and the figures below come from strict runs on the RTX 3060 Ti. Pictures: all six synthetic streams equal the libaom reference decoder plane by plane (av1_pictures_equal_the_reference_decoder_plane_by_plane). Safety: damaged files never crash the process (av1_safety, child processes; a panic inside rav1d's C interface cannot unwind, so the tests, not catch_unwind, are the proof). Against pinned X_ITE 16.5.0 at five movie times (0.25, 0.55, 0.05, 0.35 s; frames 28, 39, 47, 55, 63): 0 pixels over 8 and a largest channel difference of 2 or 3 at MSAA 0 and at MSAA 4, five identical pinned recordings each (oracle/movie-video-av1-baseline/recordings.json). The first comparison showed 5.1 to 5.2% of the pixels over 8, all in the 10-bit and the 4:4:4 stream; two defects in the port were fixed, not the tolerance: the pinned page converts an untagged AV1 picture with the BT.601 matrix when it is not 8-bit 4:2:0 (the port used BT.709), and takes the nearest chroma sample for more than 8 bits (the port interpolated). The 8-bit 4:2:0 streams matched at once. Not measured: pictures tagged with matrix coefficients other than BT.601 and BT.709 (identity, BT.2020) are converted as BT.709, as the shared converter has two matrices. Status stays PARTIAL: MP4 frames are not decoded natively, the pinned APNG middle frames and MPEG-1 need owner records, and the browser <video> audio in ISO mode is unverified."
+   "notes": "b09 cloud checkpoint after b2e5b9f: node-texturing (3 identical X_ITE recordings, exact): field definitions (name, access type, data type, default value), a created node's VRML / XML / JSON text, and on a live node a callback on every field that sends events, every inputOnly / inputOutput field (not node fields) set to a sample value, the callbacks in order with their values, the node's text after | Issue #90 2026-10-29 (desktop GPU run, RTX 3060 Ti): vis-items-movie 78930 pixels over 8 at MSAA 0 (30.1%), 79936 at MSAA 4: stays PARTIAL. | Issue #139 2026-10-31 (browser build): a non-GIF/PNG candidate goes to a page <video> element (video_mirror.mjs); a video that fails logs X_ITE's two messages, then the next url is requested. Frame colors over time (GIF, APNG, WebM, MP4, data-URL GIF, loop FALSE, speed 0.5), width, height, colorDepth, duration_changed and the fallback messages match. Browser differences: video sound plays through the element, not X_ITE's createMediaElementSource graph (gain, Mute, spatialization do not reach it); video ops flush only from the frame tick, so a video does not start while the frame loop is stopped; the WebM and MP4 frame cases (movieFrames.webm, movieFrames.mp4) are skipped on CI because the hosted runner's video decode exceeds the sampling window, so they run only locally. | Issue #90 2026-11-02 (PR #332): animated GIF, APNG (earlier) and VP9 WebM (vp9dec 0.1.1, MIT, plus an in-repo WebM demuxer) are decoded natively. vis-items-movie matches pinned X_ITE 16.5.0: 0 pixels over 8 (max 1) at MSAA 0 and 4, three identical recordings each; it was 5.5% over 8 and the KNOWN_GAPS entry is removed. The pinned page converts the untagged stream with the BT.709 matrix and bilinear chroma interpolation (BT.601: 2.9% over 8; BT.709 replicated chroma: 0.57%). Playback maps elapsed time to frames as GifMedia does. ISO/IEC 19775-1 V4.0 MovieTexture clause number unverified (no local clause text); 19775-2 unverified. Status stays PARTIAL. | Issue #90 2026-11-02 (PR #346): the native WebM decode refuses pictures above 35 651 584 luma samples and stops at a 512 MiB budget per frame, and a crafted WebM no longer panics (mutation tests). No pinned behavior changed. Status stays PARTIAL. | Issue #90 2026-11-03: VP8 WebM frames decode natively; the Vorbis track of a WebM is decoded and equals the reference decode (the_vorbis_track_of_a_webm_equals_the_reference_decode); a seek request and its answer are carried between the runtime and the page (VideoOp::Seek, Runtime::video_seeked), and an unusable answer is asked again (PR #371, a_seek_answered_without_a_picture_is_asked_again_at_the_same_time); the timing of ISO/IEC 19775-1 18.4.2 (movie_time.rs, tests movie_iso_time) is the default and the pinned X_ITE timing stays an option (X3D_MOVIE_TIMING=pinned, page attribute movietiming=pinned). The browser module carries no native video decoder (tools/check_no_native_video.py). Status stays PARTIAL. | Issue #90 2026-11-03 (PRs #381, #384, #387): (1) ISO timing, sound (#384): the sound of a movie plays at the signed rate speed * max(pitch, 0), so a negative speed reads the buffer backwards from the end, starts at the movie time of the first picture, resumes at the engine's movie time after a pause, and a pause or stop keeps the picture of the movie time at that instant (ISO/IEC 19775-1 18.4.2: the frame at the time the node became inactive remains); the pinned timing is unchanged and kept by a test (movie_iso_audio 6 cases, movie_iso_time 2 added, 309 passed in x3d-runtime). Not verified: the browser <video> element in ISO mode. (2) MPEG-1 Systems audio (#381): Layer II and III decode natively and equal ffmpeg 6.1.1 within 2e-4 per sample on four synthetic streams (worst measured 5.3e-7); Layer I is reported unsupported; ISO/IEC 11172 is not in the local library, so no conformance claim. (3) Pictures (#387): WebM VP8 and VP9 frames at fixed movie times (0.25, 0.55 s, a backward seek to 0.05 s, a seek back into a group of pictures to 0.35 s, and before the start) match pinned X_ITE 16.5.0 at MSAA 0 and MSAA 4: 5 frames per MSAA, five identical pinned recordings, 0 pixels over 8, max delta 1; a control with one changed seek time fails (6.35% over 8). The comparison puts the pinned element at a media time with the harness's own pause and seek (movieSeek), so it compares the picture of a media time, not the pinned playback timing. ISO/IEC 19775-1 V4.0 MovieTexture clause number unverified (no local clause text; 18.4.2 is the timing clause named above); 19775-2 unverified. Status stays PARTIAL: AV1 decode awaits #363, the pinned APNG middle frames and MPEG-1 (the pinned Chrome cannot play it) need owner records, and the browser <video> audio in ISO mode is unverified. | Issue #90 2026-11-03 (PRs #363 and #397): AV1 in WebM is decoded natively through rav1d 1.1.0 (BSD-2-Clause, vendored in vendor/rav1d with the one recorded change to src/decode.rs; the other vendored files are checked byte for byte by tools/check_vendored_rav1d.py). It is the non-default av1 feature and CI builds it and runs its tests; the comparison with pinned X_ITE needs a GPU adapter, so on the hosted runner (no adapter) it is recorded as an allowed skip, and the figures below come from strict runs on the RTX 3060 Ti. Pictures: all six synthetic streams equal the libaom reference decoder plane by plane (av1_pictures_equal_the_reference_decoder_plane_by_plane). Safety: damaged files never crash the process (av1_safety, child processes; a panic inside rav1d's C interface cannot unwind, so the tests, not catch_unwind, are the proof). Against pinned X_ITE 16.5.0 at five movie times (0.25, 0.55, 0.05, 0.35 s; frames 28, 39, 47, 55, 63): 0 pixels over 8 and a largest channel difference of 2 or 3 at MSAA 0 and at MSAA 4, five identical pinned recordings each (oracle/movie-video-av1-baseline/recordings.json). The first comparison showed 5.1 to 5.2% of the pixels over 8, all in the 10-bit and the 4:4:4 stream; two defects in the port were fixed, not the tolerance: the pinned page converts an untagged AV1 picture with the BT.601 matrix when it is not 8-bit 4:2:0 (the port used BT.709), and takes the nearest chroma sample for more than 8 bits (the port interpolated). The 8-bit 4:2:0 streams matched at once. Not measured: pictures tagged with matrix coefficients other than BT.601 and BT.709 (identity, BT.2020) are converted as BT.709, as the shared converter has two matrices. Status stays PARTIAL: MP4 frames are not decoded natively, the pinned APNG middle frames and MPEG-1 need owner records, and the browser <video> audio in ISO mode is unverified. | PR #530 (2026-11-09): pinned MovieTexture.js:92-99 does not await setAPNG, so the error that apng-js returns for a static PNG (Not an animated PNG) or non-PNG data (Not a PNG) becomes an unhandled rejection and the node stays IN_PROGRESS forever; the scene never finishes loading (measured 3 of 3 runs in the pinned page through a glTF EXT_texture_video source). This is a defect, not a compatibility requirement: the port takes loadData's catch path (warning, next url, FAILED_STATE), recorded as ADR 0001 row 14 and in web/API.md. The other gaps stay, so the status stays PARTIAL."
   },
   {
    "id": "node:MultiTexture",
@@ -6468,11 +6483,12 @@
    "tests": [
     "corpus X0/X1/Items/Items2",
     "crates/x3d-parse/tests/classic_edge.rs (oracle/classic-edge-baseline/classic-edge.json, 2157 cases, three identical pinned recordings)",
-    "crates/vrml97/tests/classic_edge_facade.rs (the same cases through the vrml97 facade)"
+    "crates/vrml97/tests/classic_edge_facade.rs (the same cases through the vrml97 facade)",
+    "crates/x3d-viewer/tests/classic_edge_runtime.rs (the 6 log rows of crates/x3d-parse/tests/classic-edge-known.tsv run through x3d-drive at the recorder's base URL; sorted first lines equal the pinned log)"
    ],
-   "missing": "corpus-exact; X3D classic edge cases are compared with the pinned parser (classic_edge, 2157 authored inputs, PR #427); open: 6 resource-load log differences (runtime side) and the Annotation owner decision",
+   "missing": "corpus-exact; X3D classic edge cases are compared with the pinned parser (classic_edge, 2157 authored inputs, PR #427); the 6 resource-load log differences of the parse-only test equal pinned X_ITE in the runtime (classic_edge_runtime: first line of each message; the multi-line tail of one fallback summary is console text and is not compared); open: the Annotation owner decision",
    "oracle": "pinned X_ITE 16.5.0 (34cdf9f97): oracle/classic-edge-baseline/classic-edge.json (2157 cases, three identical recordings)",
-   "notes": "Issue #51 2026-11-04 (PR #427): 2157 authored classic-encoding edge cases against the pinned parser; four parser defects fixed. The status stays PARTIAL; a status change is the owner's while the 6 resource-load log differences and the Annotation decision stand."
+   "notes": "Issue #51 2026-11-04 (PR #427): 2157 authored classic-encoding edge cases against the pinned parser; four parser defects fixed. The status stays PARTIAL; a status change is the owner's while the 6 resource-load log differences and the Annotation decision stand. | Reconciliation 2026-11-09: the 6 log rows were never run in the runtime (PR #427: the runtime side was not re-verified). classic_edge_runtime runs them through x3d-drive: Inline empty url, AudioClip 404, the two Script url aliases, the IMPORT route of an Inline with no url and the Script url list all print X_ITE's lines. They do not change scene loading, event order or the API: each is the console report of a failed resource load, which the runtime already does. The status stays PARTIAL; the notes leave a change to the owner while the Annotation decision stands."
   },
   {
    "id": "sub:parse.xml",
@@ -6531,9 +6547,9 @@
     "gltf_decoders_73 (Draco and meshopt compared with pinned X_ITE 16.5.0, oracle/gltf-decoders-73-baseline); x3d-render texture::ktx_tests (KTX2/BasisU, WebP, AVIF decode and malformed-input rejection)",
     "crates/x3d-viewer/tests/gltf_fetch.rs (oracle/gltf-fetch-baseline: gf-buffer 38, gf-image 26, gf-video 14 URL lists through Browser.createX3DFromURL; newly authored glTF/GLB files, 3 identical pinned recordings each)"
    ],
-   "missing": "EXT_texture_video: scene construction and load-failure diagnostics are compared (gltf_fetch gf-video), playback frames of a glTF video are not compared; the Inline buffer-fetch console text is compared and passes, only the leaked loading object (fallback.gltfFailed) differs; a MovieTexture whose video url is a PNG file leaves createX3DFromURL unsettled in the pinned page (measured once, Rust UNVERIFIED); stepped animation cases run only by x10_compare.py",
+   "missing": "EXT_texture_video: scene construction and load-failure diagnostics are compared (gltf_fetch gf-video), playback frames of a glTF video are not compared; the Inline buffer-fetch console text is compared and passes, only the leaked loading object (fallback.gltfFailed) differs; a MovieTexture whose video url is a PNG file leaves createX3DFromURL unsettled in the pinned page (3 of 3 runs; a missing await in MovieTexture.js, a defect); the port fails the texture and settles (deliberate difference, ADR 0001 row 14, PR #530; no pinned glTF baseline can exist for it); stepped animation cases run only by x10_compare.py",
    "oracle": "",
-   "notes": "REA batch 08 (proposal 2026-10-18, pending local GPU gates): Viewer3d top-level glTF now uses the runtime fetcher (integration fix). | Issues #128/#130/#131 2026-11-01: an Inline glTF rejects at the first failed buffer and follows the others (fixed, matches X_ITE); buffer failures log in arrival order and a newer loadURL does not abort followed buffers (no difference). Only the leaked loading object (fallback.gltfFailed) remains. | Issue #369 2026-11-03: the missing field no longer lists Draco, meshopt, BasisU, AVIF and WebP as undecoded. KHR_draco_mesh_compression and EXT_meshopt_compression decode and are compared with pinned X_ITE (#73, gltf_decoders_73, an input X_ITE rejects is rejected too); KHR_texture_basisu, EXT_texture_webp and EXT_texture_avif decode (x3d-render texture.rs). PR #377: the decoder crates' license notices are in THIRD_PARTY_NOTICES.md, and a KTX2 header with dimensions whose pixel count overflows is rejected (checked arithmetic, test truncated_ktx2_and_corrupt_webp_are_rejected). Status stays PARTIAL for the rows that remain. | Issue #51 2026-11-04 (PR #424): createX3DFromURL of a glTF or GLB whose buffer fails now follows the Inline buffer-failure path (the candidate FileLoader logs nothing and the attempt is not counted); an image without uri or bufferView gets url \"undefined\" as in the page. Known difference, pinned and not passed: the pinned page names a decoded image that fails by a random blob URL, the engine names the file or data URL itself (KNOWN_UNBLOBBED lists the 6 exact names). Status stays PARTIAL."
+   "notes": "REA batch 08 (proposal 2026-10-18, pending local GPU gates): Viewer3d top-level glTF now uses the runtime fetcher (integration fix). | Issues #128/#130/#131 2026-11-01: an Inline glTF rejects at the first failed buffer and follows the others (fixed, matches X_ITE); buffer failures log in arrival order and a newer loadURL does not abort followed buffers (no difference). Only the leaked loading object (fallback.gltfFailed) remains. | Issue #369 2026-11-03: the missing field no longer lists Draco, meshopt, BasisU, AVIF and WebP as undecoded. KHR_draco_mesh_compression and EXT_meshopt_compression decode and are compared with pinned X_ITE (#73, gltf_decoders_73, an input X_ITE rejects is rejected too); KHR_texture_basisu, EXT_texture_webp and EXT_texture_avif decode (x3d-render texture.rs). PR #377: the decoder crates' license notices are in THIRD_PARTY_NOTICES.md, and a KTX2 header with dimensions whose pixel count overflows is rejected (checked arithmetic, test truncated_ktx2_and_corrupt_webp_are_rejected). Status stays PARTIAL for the rows that remain. | Issue #51 2026-11-04 (PR #424): createX3DFromURL of a glTF or GLB whose buffer fails now follows the Inline buffer-failure path (the candidate FileLoader logs nothing and the attempt is not counted); an image without uri or bufferView gets url \"undefined\" as in the page. Known difference, pinned and not passed: the pinned page names a decoded image that fails by a random blob URL, the engine names the file or data URL itself (KNOWN_UNBLOBBED lists the 6 exact names). Status stays PARTIAL. | PR #530 (2026-11-09): the unsettled createX3DFromURL of a glTF whose EXT_texture_video source is a PNG is the MovieTexture setAPNG defect; the port does not copy it (see node:MovieTexture). Text only; the status stays PARTIAL."
   },
   {
    "id": "sub:parse.glb2",
@@ -6632,11 +6648,12 @@
     "svg_b08_lifecycle",
     "crates/x3d-parse/tests/rea_b24_css4_color.rs (3,233 CSS Color 4 values vs headless Chrome through convertColor: hwb, lab, lch, oklab, oklch, color; 85 hwb() half-level ties within one 8-bit level, proven exact ties)",
     "crates/x3d-parse/tests/svg_rea.rs svg_css4_colors_match_x_ite (4 SVG files, oracle/synthetic-rea-b24-css4/svg-baseline.json, incl. the gradient stop X_ITE rejects)",
-    "crates/x3d-parse/tests/rea_css5_relative_color.rs (1,794 exact + 317 converted CSS Color 5 relative colors vs Chrome, also through the scene-loading path; 5e-6 for 302 values, 1e-4 for 15 srgb-linear-origin values)"
+    "crates/x3d-parse/tests/rea_css5_relative_color.rs (1,794 exact + 317 converted CSS Color 5 relative colors vs Chrome, also through the scene-loading path; 5e-6 for 302 values, 1e-4 for 15 srgb-linear-origin values)",
+    "crates/x3d-runtime/tests/svg_quality_per_browser.rs (4 cases: the quality of each browser, two runtimes on one thread, an option change before the next parse, a world parse that does not take another browser's option; PR #524)"
    ],
-   "missing": "relative color syntax is parsed and evaluated (1,794 values exact at 1e-12 against Chrome; 302 converted values within 5e-6 and 15 values with an srgb-linear origin within 1e-4, both bounds approved by the owner for those groups only; achromatic and exact-zero noise after conversions and var() origins are not reproduced); 43 hsl() and 85 hwb() values one level off Chrome (half-level ties, owner decision #55); one radial-focal gradient pixel one level off; SVG quality is a thread-local not reset for a top-level world",
+   "missing": "relative color syntax is parsed and evaluated (1,794 values exact at 1e-12 against Chrome; 302 converted values within 5e-6 and 15 values with an srgb-linear origin within 1e-4, both bounds approved by the owner for those groups only; achromatic and exact-zero noise after conversions and var() origins are not reproduced); 43 hsl() and 85 hwb() values one level off Chrome (half-level ties, owner decision #55); one radial-focal gradient pixel one level off",
    "oracle": "",
-   "notes": "REA batch 08 (proposal 2026-10-18, pending local GPU gates): | Issue #75 2026-10-31: Chrome computes only hwb() to rgb(); lab(), lch(), oklab(), oklch() and color() stay as such a string, which X3DParser.convertColor reads as rgb(): the first channel is NaN and the rest shift one place (emissiveColor NaN ...). A NaN gradient stop color makes addColorStop throw and X_ITE reject the file; the port does the same. Baselines: oracle/synthetic-rea-b24-css4 (5 identical recordings). | Issue #51 2026-11-03 (PR #412): CSS Color 5 relative colors, oracle/css5-relative-colors-baseline and oracle/css5-relative-svg-baseline (13 SVG files, svg_css5_relative_colors_match_x_ite). Status stays PARTIAL: hsl/hwb ties, the radial-focal pixel and the SVG quality thread-local remain."
+   "notes": "REA batch 08 (proposal 2026-10-18, pending local GPU gates): | Issue #75 2026-10-31: Chrome computes only hwb() to rgb(); lab(), lch(), oklab(), oklch() and color() stay as such a string, which X3DParser.convertColor reads as rgb(): the first channel is NaN and the rest shift one place (emissiveColor NaN ...). A NaN gradient stop color makes addColorStop throw and X_ITE reject the file; the port does the same. Baselines: oracle/synthetic-rea-b24-css4 (5 identical recordings). | Issue #51 2026-11-03 (PR #412): CSS Color 5 relative colors, oracle/css5-relative-colors-baseline and oracle/css5-relative-svg-baseline (13 SVG files, svg_css5_relative_colors_match_x_ite). Status stays PARTIAL: hsl/hwb ties, the radial-focal pixel and the SVG quality thread-local remain. | PR #524 (2026-11-09): the SVG quality was a thread-local that a top-level world parse did not reset, so a second browser on the thread could inherit the option of the first. Runtime::parse_candidate now syncs the browser's own options and x3d_parse::reset_svg_quality runs before a world parse (native and web). The other gaps stay, so the status stays PARTIAL."
   },
   {
    "id": "sub:parse.html-support",
@@ -7018,11 +7035,12 @@
    "tests": [
     "crates/x3d-viewer/tests/rea_batch01.rs; crates/x3d-runtime/src/browser_options.rs unit tests",
     "crates/x3d-web/tests/browser/antialiased02.test.mjs (the page's antialiased attribute and a world Script's Multisampling and Antialiased in five orders, pixels and sample count against pinned X_ITE 16.5.0 measured in Chrome; WebGPU and WebGL2)",
-    "crates/x3d-runtime/src/browser_options.rs (script_sampling_reads_the_page_options)"
+    "crates/x3d-runtime/src/browser_options.rs (script_sampling_reads_the_page_options)",
+    "crates/x3d-web/tests/page_quality.rs (3 cases: the page options PrimitiveQuality and TextureQuality reach the SVG and primitive quality of the web session, also for a world loaded later; PR #526)"
    ],
    "missing": "",
    "oracle": "x10_compare: browser-options 107/107 probes; effects, horizon, quality, friction, loadurl, inline-viewpoints, shading (7 worlds, MSAA 0 and 4), shading-wireframe/point-collision",
-   "notes": "REA batch 01. Effects not ported, owned by other rows: OIT (sub:render.transparency-sorting), ToneMapping/Exposure (sub:render.tone-mapping), sound options (sub:sound.engine), UI options (sub:browser.keyboard-ui), XR (sub:browser.webxr); ColorSpace, DisplayColorSpace, QualityWhenMoving, AutoUpdate, Cache have no row | Issue #480 2026-11-06: PR #483. The world's Antialiased option stayed true under the page's antialiased=\"false\", so a world Script's Multisampling 4 drew 4 samples where X_ITE draws none (BrowserOptions.js set_Multisampling__). A world now takes the page's Antialiased and Multisampling options without an event. Not fixed: the page's getBrowserOption and getRenderingProperty do not see a world Script's option change (two todo cases in antialiased02; issue draft waits for the owner). Text only: the status does not change. | Issue #480 2026-11-07: PR #499 (merged at 3534b792). Pinned X_ITE has one BrowserOptions for the page and its world (X3DCoreContext.js:242, X3DBrowser.js:782-792; REA ev_579d581cde0e, ev_8fb7b33eacd5). A world Script's setBrowserOption is now kept in order (BrowserOptions.set_script_option) and the page takes it (takeScriptOptions, X3DBrowser.#syncWorldOptions) at getBrowserOption, setBrowserOption, getRenderingProperty, loadURL, replaceWorld and after each frame, then runs each option's effect once; the last one set, the page's or a Script's, is in force. Inside a page field callback that runs in the route chain, the page takes them through chainTakeScriptOptions, so the callback reads a Script's option at once, and the effects run at the end of the chain. The antialiased02 B and C and the oit01 next-world cases are no longer todo, and a new oit01 case covers the route-chain read (red 2 of 2, green 2 of 2): before the change 6 of 24 failed on both backends, after it antialiased01, antialiased02, oit01, options01 and reentry01 pass 72 of 72 on WebGPU and WebGL2. Text only: the status does not change."
+   "notes": "REA batch 01. Effects not ported, owned by other rows: OIT (sub:render.transparency-sorting), ToneMapping/Exposure (sub:render.tone-mapping), sound options (sub:sound.engine), UI options (sub:browser.keyboard-ui), XR (sub:browser.webxr); ColorSpace, DisplayColorSpace, QualityWhenMoving, AutoUpdate, Cache have no row | Issue #480 2026-11-06: PR #483. The world's Antialiased option stayed true under the page's antialiased=\"false\", so a world Script's Multisampling 4 drew 4 samples where X_ITE draws none (BrowserOptions.js set_Multisampling__). A world now takes the page's Antialiased and Multisampling options without an event. Not fixed: the page's getBrowserOption and getRenderingProperty do not see a world Script's option change (two todo cases in antialiased02; issue draft waits for the owner). Text only: the status does not change. | Issue #480 2026-11-07: PR #499 (merged at 3534b792). Pinned X_ITE has one BrowserOptions for the page and its world (X3DCoreContext.js:242, X3DBrowser.js:782-792; REA ev_579d581cde0e, ev_8fb7b33eacd5). A world Script's setBrowserOption is now kept in order (BrowserOptions.set_script_option) and the page takes it (takeScriptOptions, X3DBrowser.#syncWorldOptions) at getBrowserOption, setBrowserOption, getRenderingProperty, loadURL, replaceWorld and after each frame, then runs each option's effect once; the last one set, the page's or a Script's, is in force. Inside a page field callback that runs in the route chain, the page takes them through chainTakeScriptOptions, so the callback reads a Script's option at once, and the effects run at the end of the chain. The antialiased02 B and C and the oit01 next-world cases are no longer todo, and a new oit01 case covers the route-chain read (red 2 of 2, green 2 of 2): before the change 6 of 24 failed on both backends, after it antialiased01, antialiased02, oit01, options01 and reentry01 pass 72 of 72 on WebGPU and WebGL2. Text only: the status does not change. | PR #526 (2026-11-09): the web build's page options (WebBrowser.setQualityOption, #engineOptions in x_ite_r.mjs, web/API.md) now set PrimitiveQuality and TextureQuality as BrowserOptions.js does (unknown value: MEDIUM, lines 194-212). Test reference and note only; the status stays COMPLETE."
   },
   {
    "id": "sub:browser.properties",
@@ -7104,13 +7122,28 @@
    "component": "Browser",
    "upstream": "src/x_ite/Browser/WebXR/*",
    "upstream_version": "16.5.0 @ 34cdf9f97",
-   "rust": [],
-   "status": "MISSING",
-   "behavior": "",
-   "tests": [],
-   "missing": "",
-   "oracle": "",
-   "notes": ""
+   "rust": [
+    "crates/x3d-web/web/xr_session.mjs",
+    "crates/x3d-web/web/xr_layer.mjs",
+    "crates/x3d-web/src/wasm.rs",
+    "crates/x3d-render/src/xr.rs",
+    "crates/x3d-viewer/src/viewer.rs",
+    "crates/x3d-viewer/src/nav.rs"
+   ],
+   "status": "PARTIAL",
+   "behavior": "browser WebXR of the web build after X3DWebXRContext.js: session start and end, the mode from XRSessionMode, the local reference space, session events, input sources and gamepads, the viewer pose and per-view matrices, drawing each view, gamepad navigation, target-ray picking and pointing sensor events",
+   "tests": [
+    "crates/x3d-web/tests/xr/pinned_compare.test.mjs (the pinned X3DWebXRContext and the port driven by one emulated device: requests to navigator.xr, reference spaces, session events, render state, gamepads, framebuffer reshapes, viewer pose and every view matrix exact)",
+    "crates/x3d-web/tests/xr/xr_session.test.mjs, crates/x3d-web/tests/xr/gamepads_pinned.test.mjs (Node, 28 tests with the pinned comparison)",
+    "crates/x3d-render/tests/xr_views.rs (12 cases against pinned pictures oracle/xr-shot-baseline and -msaa4, MSAA 0 and 4)",
+    "crates/x3d-viewer/tests/xr_gamepads.rs (crates/x3d-viewer/tests/data/xr_gamepads_pinned.json), crates/x3d-viewer/tests/xr_pointers.rs, crates/x3d-viewer/tests/xr_ray_pick.rs",
+    "crates/x3d-web/tests/browser/xrsession01.test.mjs, crates/x3d-web/tests/browser/xrdraw01.test.mjs (headless Chromium, WebGL2, emulated session and layer)",
+    "crates/x3d-render/tests/xr_views.rs stereo-pointers (five input sources: rays and hit points against pinned pictures of oracle/xr-shot.html, 3 identical recordings, MSAA 0 and 4, bound 0.05%; PR #531)",
+    "crates/x3d-viewer/tests/xr_rays.rs (the hit points and ray-space normals of the input sources equal pinned X_ITE within 1e-4; PR #531)"
+   ],
+   "missing": "native OpenXR session not started (owner decision 2026-11-08, item 2: OpenXR for native applications on the shared engine; needs an OpenXR runtime and the wgpu Vulkan interop, issue #83); drawing into a session on WebGL2 only (XRGPUBinding is not in the stable browser), so on the WebGPU backend the XR button stays hidden; no physical headset or real runtime has run any of it, the device and makeXRCompatible are emulated, so no hardware support is claimed; a lost pose keeps the last good pose where X_ITE would throw (deliberate, docs/webxr-runtime-options.md)",
+   "oracle": "the pinned X3DWebXRContext in Node with an emulated device; pinned pictures of oracle/xr-shot.html",
+   "notes": "Reconciliation 2026-11-09 (origin/master d79abe4c): the entry was MISSING with no rust or tests, written before issue #83. PRs #513 and #515 (merged) implement the browser WebXR path; docs/webxr-runtime-options.md records the owner decision of 2026-11-08 and the limits. Evidence: node --test tests/xr/*.test.mjs 28 of 28 pass at d79abe4c; the strict suite at d79abe4c runs xr_views, xr_gamepads, xr_pointers and xr_ray_pick (counts in evidence/ledger-audit-2026-11-09/REPORT.md). getRenderingProperty XRSession is TRUE while a session runs and the XR button follows XRSessionMode (web/x_ite_r.mjs, web/API.md). PARTIAL, not COMPLETE: native XR and real devices are open. Native OpenXR stays a gap of this entry because the ledger has exactly 346 IDs; it is not a failure of the browser path. | PR #531 (2026-11-09): X3DWebXRContext.js:346-520 with ScreenLine.js and ScreenPoint.js draws a ray for every active input source (white, or 0.5 0.75 1 while a button is pressed, cut at the hit) and a ring and disk at a pick hit, blended without depth test, per view. The port draws the same in x3d-render (xr.rs, xr_pointer.rs) for the web XR frame. Before: 1472 pixels (1.12%) over 8 at MSAA 0 with no rays; after: 14 pixels (0.011%) at MSAA 0 and 0 at MSAA 4. Limits: WebGL2 only, emulated device, no physical headset; the projection viewport is each view's own size (pinned: the last reshaped framebuffer, equal for equal views). Native OpenXR (#83) stays open, so the status stays PARTIAL."
   },
   {
    "id": "sub:nav.examine",
@@ -7289,11 +7322,11 @@
    "behavior": "",
    "tests": [
     "crates/x3d-render/tests/render_rea_i92_items.rs (tr-* and fg-transparent, MSAA 0; MSAA 4 where X_ITE is reproducible)",
-    "crates/x3d-web/tests/browser/oit01.test.mjs (the page's OrderIndependentTransparency option before a world loads, on the live world, after loadURL and replaceWorld, and in last-writer order with a world Script, and a todo case for a world Script's option in the next world; WebGPU and WebGL2)"
+    "crates/x3d-web/tests/browser/oit01.test.mjs (the page's OrderIndependentTransparency option before a world loads, on the live world, after loadURL and replaceWorld, and in last-writer order with a world Script, and a world Script's option in the next world (todo until PR #499); WebGPU and WebGL2)"
    ],
-   "missing": "MSAA 4 of tr-many, tr-ortho and fg-transparent has no X_ITE reference (not reproducible); OIT is not compared in the reference worlds; the page's OIT option is compared with pinned X_ITE on one synthetic world (oit01, PR #484), and a world Script's option in the next world differs from X_ITE (two todo cases)",
+   "missing": "MSAA 4 of tr-many, tr-ortho and fg-transparent has no X_ITE reference (not reproducible); OIT is not compared in the reference worlds; the page's OIT option is compared with pinned X_ITE on one synthetic world (oit01, PR #484); a world Script's option stays for the next world as in X_ITE (PR #499, issue #480; the two former todo cases pass)",
    "oracle": "",
-   "notes": "Issue #92 2026-10-31 items: tr-order, tr-opaque, tr-nested (LOD cell), tr-points-lines, tr-textured, tr-many, tr-ortho, fg-transparent; all within the bound at MSAA 0. No MSAA 4 reference for tr-many, tr-ortho and fg-transparent: X_ITE's multisampled output differs between its own runs (oracle/rea-i92-render-items-baseline/msaa4/unstable.json). oracle/synthetic-rea-i92-render-items replayed by crates/x3d-render/tests/render_rea_i92_items.rs against oracle/rea-i92-render-items-baseline (pinned X_ITE 16.5.0, three identical recordings per world, MSAA 0 and 4; bound 8 / 0.5%). | Issue #479 2026-11-06: PR #484. The page's OrderIndependentTransparency option did not reach the browser renderer; only a world Script's did. It is now one of the page's engine options. Against pinned X_ITE 16.5.0 in Chrome (400x300, two overlapping transparent quads): 2 pixels over 8 with OIT on and with it off, pinned on against off 6489. Not fixed: a world Script's option does not stay for the next world, as it does in pinned X_ITE (BrowserOptions.reset runs only at start; two todo cases in oit01). Text only: the MSAA 4 reference gaps stay, so the entry stays PARTIAL."
+   "notes": "Issue #92 2026-10-31 items: tr-order, tr-opaque, tr-nested (LOD cell), tr-points-lines, tr-textured, tr-many, tr-ortho, fg-transparent; all within the bound at MSAA 0. No MSAA 4 reference for tr-many, tr-ortho and fg-transparent: X_ITE's multisampled output differs between its own runs (oracle/rea-i92-render-items-baseline/msaa4/unstable.json). oracle/synthetic-rea-i92-render-items replayed by crates/x3d-render/tests/render_rea_i92_items.rs against oracle/rea-i92-render-items-baseline (pinned X_ITE 16.5.0, three identical recordings per world, MSAA 0 and 4; bound 8 / 0.5%). | Issue #479 2026-11-06: PR #484. The page's OrderIndependentTransparency option did not reach the browser renderer; only a world Script's did. It is now one of the page's engine options. Against pinned X_ITE 16.5.0 in Chrome (400x300, two overlapping transparent quads): 2 pixels over 8 with OIT on and with it off, pinned on against off 6489. Not fixed: a world Script's option does not stay for the next world, as it does in pinned X_ITE (BrowserOptions.reset runs only at start; two todo cases in oit01). Text only: the MSAA 4 reference gaps stay, so the entry stays PARTIAL. | Reconciliation 2026-11-09: the gap text still listed the two oit01 todo cases; PR #499 (merged at 3534b792, required checks Rust tests result and Web tests result SUCCESS at its head) made them pass, recorded then under sub:browser.options only. Text only: MSAA 4 references and OIT in the reference worlds stay open, so the entry stays PARTIAL."
   },
   {
    "id": "sub:render.shadows",

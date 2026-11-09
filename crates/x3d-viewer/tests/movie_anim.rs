@@ -17,6 +17,12 @@
 //! the log), captured frames with at most 0.5% of the pixels more than 8 off. Without a GPU adapter the
 //! image part is skipped and reported (x3d_evidence::no_gpu).
 //!
+//! One known difference is pinned in oracle/movie-load-errors-baseline, not passed ([`KNOWN_DIFFERENCES`]): the cases `static`,
+//! `notpng` and `noframes`. X_ITE 16.5.0 hangs there (apng-js returns its error, `setAPNG` is not awaited, the node stays
+//! IN_PROGRESS without a message, MovieTexture.js:98); the port fails the node like any other load error. The baseline is not
+//! edited: the test requires the port's log and console to be the pinned ones plus exactly the listed lines, and fails as soon as
+//! the port stops differing or differs in another way (docs/adr/0001-browser-build-known-differences.md, row 14).
+//!
 //! `REA_ONLY=<substring>` restricts the cases.
 
 use serde_json::Value;
@@ -100,6 +106,60 @@ fn nums(v: &Value) -> Vec<f64> {
         .unwrap_or_default()
 }
 
+/// What the port prints in addition to the pinned page, per baseline: the warning and the error of the failed PNG loads (`log`)
+/// and the events of the nodes that fail (`console`: width, height, duration and `loaded false` of the LoadSensor, which the
+/// pinned page never sends because the node never leaves IN_PROGRESS). Each line is removed once, its last occurrence, before
+/// the comparison; a line that is not there is a failure.
+struct KnownDifferences {
+    baseline: &'static str,
+    reason: &'static str,
+    log: &'static [&'static str],
+    console: &'static [&'static str],
+}
+
+const KNOWN_DIFFERENCES: &[KnownDifferences] = &[KnownDifferences {
+    baseline: "movie-load-errors-baseline",
+    reason: "X_ITE does not await setAPNG: a static or non-PNG url hangs the node (MovieTexture.js:98); the port fails it (ADR 0001 row 14)",
+    log: &[
+        "error: Error: Not a PNG",
+        "error: Error: Not an animated PNG",
+        "error: Error: Not an animated PNG",
+        "warn: Error loading movie 'http://oracle/synthetic-movie-load-errors/media/static.png': Not an animated PNG",
+        "warn: Error loading movie 'http://oracle/synthetic-movie-load-errors/media/notpng.png': Not a PNG",
+        "warn: Error loading movie 'http://oracle/synthetic-movie-load-errors/media/noframes.png': Not an animated PNG",
+    ],
+    console: &[
+        "log: static width 0",
+        "log: static height 0",
+        "log: static duration -1",
+        "log: static loaded false",
+        "log: notpng width 0",
+        "log: notpng height 0",
+        "log: notpng duration -1",
+        "log: notpng loaded false",
+        "log: noframes width 0",
+        "log: noframes height 0",
+        "log: noframes duration -1",
+        "log: noframes loaded false",
+    ],
+}];
+
+/// `lines` without the last occurrence of each known extra line; `Err` names a line that is not there.
+fn without_known(lines: &[Value], known: &[&str]) -> Result<Vec<Value>, String> {
+    let mut rest = lines.to_vec();
+
+    for k in known {
+        let at = rest
+            .iter()
+            .rposition(|l| l.as_str() == Some(k))
+            .ok_or_else(|| format!("the known difference line is gone: {k}"))?;
+
+        rest.remove(at);
+    }
+
+    Ok(rest)
+}
+
 #[allow(clippy::too_many_arguments)]
 fn compare_case(
     root: &Path,
@@ -174,10 +234,6 @@ fn compare_case(
         }
     }
 
-    if js.get("log") != rs.get("log") {
-        fail(format!("log differs: {} / {}", js["log"], rs["log"]));
-    }
-
     let prints = |r: &Value| -> Vec<Value> {
         r["console"].as_array().map_or(vec![], |c| {
             c.iter()
@@ -186,8 +242,27 @@ fn compare_case(
                 .collect()
         })
     };
+    let known = KNOWN_DIFFERENCES.iter().find(|k| k.baseline == baseline);
+    let mut rs_log = rs["log"].as_array().cloned().unwrap_or_default();
+    let mut rs_prints = prints(&rs);
 
-    if prints(&js) != prints(&rs) {
+    if let Some(known) = known {
+        match without_known(&rs_log, known.log) {
+            Ok(l) => rs_log = l,
+            Err(e) => fail(format!("{e} ({})", known.reason)),
+        }
+
+        match without_known(&rs_prints, known.console) {
+            Ok(p) => rs_prints = p,
+            Err(e) => fail(format!("{e} ({})", known.reason)),
+        }
+    }
+
+    if js["log"].as_array().cloned().unwrap_or_default() != rs_log {
+        fail(format!("log differs: {} / {}", js["log"], rs["log"]));
+    }
+
+    if prints(&js) != rs_prints {
         fail(format!(
             "console differs: {:?} / {:?}",
             prints(&js),

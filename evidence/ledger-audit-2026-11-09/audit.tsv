@@ -1,0 +1,347 @@
+id	status	rust_paths	rust_pass	rust_fail	rust_skip	failing	mjs	py	class	traced_via
+node:AnnotationLayer	DIFFERENT	yes	1	0	0				RUST-PASS	
+node:AnnotationTarget	DIFFERENT	yes	1	0	0		oracle/x_ite-nodes-annotation.mjs		RUST-PASS	
+node:GroupAnnotation	DIFFERENT	yes	1	0	0		oracle/x_ite-nodes-annotation.mjs		RUST-PASS	
+node:IconAnnotation	DIFFERENT	yes	1	0	0				RUST-PASS	
+node:TextAnnotation	DIFFERENT	yes	1	0	0		oracle/x_ite-nodes-annotation.mjs		RUST-PASS	
+node:URLAnnotation	DIFFERENT	yes	1	0	0		oracle/x_ite-nodes-annotation.mjs		RUST-PASS	
+node:CADAssembly	COMPLETE	yes	1	0	0				TRACED-PASS	synthetic-rea-render
+node:CADFace	COMPLETE	yes	1	0	0				TRACED-PASS	synthetic-rea-render
+node:CADLayer	COMPLETE	yes	1	0	0				TRACED-PASS	synthetic-rea-render
+node:CADPart	COMPLETE	yes	1	0	0				TRACED-PASS	synthetic-rea-render
+node:IndexedQuadSet	COMPLETE	yes	492	0	0				TRACED-PASS	synthetic-rea synthetic-rea-render corpus
+node:QuadSet	COMPLETE	yes	492	0	0				TRACED-PASS	synthetic-rea synthetic-rea-render corpus
+node:MetadataBoolean	COMPLETE	yes	11	0	0				TRACED-PASS	 corpus
+node:MetadataDouble	COMPLETE	yes	11	0	0				TRACED-PASS	 corpus
+node:MetadataFloat	COMPLETE	yes	11	0	0				TRACED-PASS	 corpus
+node:MetadataInteger	COMPLETE	yes	11	0	0				TRACED-PASS	 corpus
+node:MetadataSet	COMPLETE	yes	2	0	0				RUST-PASS	
+node:MetadataString	COMPLETE	yes	11	0	0				TRACED-PASS	 corpus
+node:WorldInfo	COMPLETE	yes	483	0	0				TRACED-PASS	synthetic-rea
+node:ComposedCubeMapTexture	COMPLETE	yes	3	0	0				RUST-PASS	
+node:GeneratedCubeMapTexture	COMPLETE	yes	3	0	0				RUST-PASS	
+node:ImageCubeMapTexture	COMPLETE	yes	3	0	0				RUST-PASS	
+node:DISEntityManager	COMPLETE	yes	8	0	0				RUST-PASS	
+node:DISEntityTypeMapping	COMPLETE	yes	4	0	0				RUST-PASS	
+node:EspduTransform	COMPLETE	yes	2	0	0				RUST-PASS	
+node:ReceiverPdu	COMPLETE	yes	7	0	0				RUST-PASS	
+node:SignalPdu	COMPLETE	yes	7	0	0				RUST-PASS	
+node:TransmitterPdu	COMPLETE	yes	7	0	0				RUST-PASS	
+node:Background	COMPLETE	yes	1	0	0				RUST-PASS	
+node:Fog	COMPLETE	yes	2	0	0				RUST-PASS	
+node:FogCoordinate	COMPLETE	yes	1	0	0				RUST-PASS	
+node:LocalFog	COMPLETE	yes	2	0	0				RUST-PASS	
+node:TextureBackground	COMPLETE	yes	3	0	0				RUST-PASS	
+node:ProximitySensor	COMPLETE	yes	0	0	0				NO-TRACE	synthetic-rea-verify
+node:TransformSensor	COMPLETE	yes	483	0	0				TRACED-PASS	synthetic-rea
+node:VisibilitySensor	COMPLETE	yes	0	0	0				NO-TRACE	synthetic-rea-verify
+node:BooleanFilter	COMPLETE	yes	483	0	0				TRACED-PASS	synthetic-rea
+node:BooleanSequencer	COMPLETE	yes	483	0	0				TRACED-PASS	synthetic-rea
+node:BooleanToggle	COMPLETE	yes	483	0	0				TRACED-PASS	synthetic-rea
+node:BooleanTrigger	COMPLETE	yes	483	0	0				TRACED-PASS	synthetic-rea
+node:IntegerSequencer	COMPLETE	yes	483	0	0				TRACED-PASS	synthetic-rea
+node:IntegerTrigger	COMPLETE	yes	483	0	0				TRACED-PASS	synthetic-rea
+node:TimeTrigger	COMPLETE	yes	483	0	0				TRACED-PASS	synthetic-rea
+node:ColorChaser	COMPLETE	yes	6	0	0				TRACED-PASS	synthetic-followers
+node:ColorDamper	COMPLETE	yes	6	0	0				TRACED-PASS	synthetic-followers
+node:CoordinateChaser	COMPLETE	yes	6	0	0				TRACED-PASS	synthetic-followers
+node:CoordinateDamper	COMPLETE	yes	6	0	0				TRACED-PASS	synthetic-followers
+node:OrientationChaser	COMPLETE	yes	6	0	0				TRACED-PASS	synthetic-followers
+node:OrientationDamper	COMPLETE	yes	6	0	0				TRACED-PASS	synthetic-followers
+node:PositionChaser	COMPLETE	yes	6	0	0				TRACED-PASS	synthetic-followers
+node:PositionChaser2D	COMPLETE	yes	6	0	0				TRACED-PASS	synthetic-followers
+node:PositionDamper	COMPLETE	yes	6	0	0				TRACED-PASS	synthetic-followers
+node:PositionDamper2D	COMPLETE	yes	6	0	0				TRACED-PASS	synthetic-followers
+node:ScalarChaser	COMPLETE	yes	6	0	0				TRACED-PASS	synthetic-followers
+node:ScalarDamper	COMPLETE	yes	6	0	0				TRACED-PASS	synthetic-followers
+node:TexCoordChaser2D	COMPLETE	yes	6	0	0				TRACED-PASS	synthetic-followers
+node:TexCoordDamper2D	COMPLETE	yes	6	0	0				TRACED-PASS	synthetic-followers
+node:GaussianSplats	PARTIAL	yes	17	0	0		oracle/x_ite-splat-sort-timing.mjs oracle/x_ite-splat-sort-trace.mjs		RUST-PASS	
+node:Arc2D	COMPLETE	yes	483	0	0		x_ite-geometry-rea.mjs		TRACED-PASS	synthetic-rea synthetic-rea-render
+node:ArcClose2D	COMPLETE	yes	483	0	0		x_ite-geometry-rea.mjs		TRACED-PASS	synthetic-rea synthetic-rea-render
+node:Circle2D	COMPLETE	yes	483	0	0		x_ite-geometry-rea.mjs		TRACED-PASS	synthetic-rea synthetic-rea-render
+node:Disk2D	COMPLETE	yes	483	0	0		x_ite-geometry-rea.mjs		TRACED-PASS	synthetic-rea synthetic-rea-render
+node:Polyline2D	COMPLETE	yes	483	0	0		x_ite-geometry-rea.mjs		TRACED-PASS	synthetic-rea synthetic-rea-render
+node:Polypoint2D	COMPLETE	yes	483	0	0		x_ite-geometry-rea.mjs		TRACED-PASS	synthetic-rea synthetic-rea-render
+node:Rectangle2D	COMPLETE	yes	483	0	0		x_ite-geometry-rea.mjs		TRACED-PASS	synthetic-rea synthetic-rea-render
+node:TriangleSet2D	COMPLETE	yes	483	0	0		x_ite-geometry-rea.mjs		TRACED-PASS	synthetic-rea synthetic-rea-render
+node:Box	COMPLETE	yes	492	0	0				TRACED-PASS	synthetic-rea synthetic-rea-render corpus
+node:Cone	COMPLETE	yes	492	0	0				TRACED-PASS	synthetic-rea synthetic-rea-render corpus
+node:Cylinder	COMPLETE	yes	492	0	0				TRACED-PASS	synthetic-rea synthetic-rea-render corpus
+node:ElevationGrid	COMPLETE	yes	492	0	0				TRACED-PASS	synthetic-rea synthetic-rea-render corpus
+node:Extrusion	COMPLETE	yes	1	0	0				RUST-PASS	
+node:IndexedFaceSet	COMPLETE	yes	1	0	0				RUST-PASS	
+node:Sphere	COMPLETE	yes	492	0	0				TRACED-PASS	synthetic-rea synthetic-rea-render corpus
+node:GeoCoordinate	COMPLETE	yes	1	0	0				RUST-PASS	
+node:GeoElevationGrid	COMPLETE	yes	1	0	0				RUST-PASS	
+node:GeoLOD	COMPLETE	yes	1	0	0				RUST-PASS	
+node:GeoLocation	COMPLETE	yes	483	0	0				TRACED-PASS	synthetic-rea
+node:GeoMetadata	COMPLETE	yes	1	0	0				RUST-PASS	
+node:GeoOrigin	COMPLETE	yes	483	0	0				TRACED-PASS	synthetic-rea
+node:GeoPositionInterpolator	COMPLETE	yes	483	0	0				TRACED-PASS	synthetic-rea
+node:GeoProximitySensor	COMPLETE	yes	483	0	0				TRACED-PASS	synthetic-rea
+node:GeoTouchSensor	COMPLETE	yes	6	0	0				RUST-PASS	
+node:GeoTransform	COMPLETE	yes	483	0	0				TRACED-PASS	synthetic-rea
+node:GeoViewpoint	COMPLETE	yes	3	0	0				RUST-PASS	
+node:Group	COMPLETE	yes	1	0	0				RUST-PASS	
+node:StaticGroup	COMPLETE	yes	483	0	0				TRACED-PASS	synthetic-rea synthetic-rea-render
+node:Switch	COMPLETE	yes	0	0	0				NO-TRACE	synthetic-rea-verify
+node:Transform	COMPLETE	yes	1	0	0				RUST-PASS	
+node:HAnimDisplacer	COMPLETE	yes	3	0	0				RUST-PASS	
+node:HAnimHumanoid	COMPLETE	yes	3	0	0				RUST-PASS	
+node:HAnimJoint	COMPLETE	yes	2	0	0				RUST-PASS	
+node:HAnimMotion	COMPLETE	yes	3	0	0				RUST-PASS	
+node:HAnimPose	COMPLETE	yes	3	0	0				RUST-PASS	
+node:HAnimSegment	COMPLETE	yes	2	0	0				RUST-PASS	
+node:HAnimSite	COMPLETE	yes	2	0	0				RUST-PASS	
+node:ColorInterpolator	COMPLETE	yes	24	0	0				TRACED-PASS	synthetic-followers synthetic-x6 corpus
+node:CoordinateInterpolator	COMPLETE	yes	24	0	0				TRACED-PASS	synthetic-followers synthetic-x6 corpus
+node:CoordinateInterpolator2D	COMPLETE	yes	24	0	0				TRACED-PASS	synthetic-followers synthetic-x6 corpus
+node:EaseInEaseOut	COMPLETE	yes	483	0	0				TRACED-PASS	synthetic-rea
+node:NormalInterpolator	COMPLETE	yes	24	0	0				TRACED-PASS	synthetic-followers synthetic-x6 corpus
+node:OrientationInterpolator	COMPLETE	yes	24	0	0				TRACED-PASS	synthetic-followers synthetic-x6 corpus
+node:PositionInterpolator	COMPLETE	yes	24	0	0				TRACED-PASS	synthetic-followers synthetic-x6 corpus
+node:PositionInterpolator2D	COMPLETE	yes	24	0	0				TRACED-PASS	synthetic-followers synthetic-x6 corpus
+node:ScalarInterpolator	COMPLETE	yes	24	0	0				TRACED-PASS	synthetic-followers synthetic-x6 corpus
+node:SplinePositionInterpolator	DIFFERENT	yes	483	0	0				TRACED-PASS	synthetic-rea
+node:SplinePositionInterpolator2D	DIFFERENT	yes	483	0	0				TRACED-PASS	synthetic-rea
+node:SplineScalarInterpolator	COMPLETE	yes	483	0	0				TRACED-PASS	synthetic-rea
+node:SquadOrientationInterpolator	COMPLETE	yes	483	0	0				TRACED-PASS	synthetic-rea
+node:KeySensor	COMPLETE	yes	483	0	0				TRACED-PASS	synthetic-rea
+node:StringSensor	COMPLETE	yes	483	0	0				TRACED-PASS	synthetic-rea
+node:Layer	COMPLETE	yes	5	0	0				RUST-PASS	
+node:LayerSet	COMPLETE	yes	7	0	0				RUST-PASS	
+node:Viewport	COMPLETE	yes	5	0	0				RUST-PASS	
+node:Layout	COMPLETE	yes	5	0	0				RUST-PASS	
+node:LayoutGroup	COMPLETE	yes	7	0	0				RUST-PASS	
+node:LayoutLayer	COMPLETE	yes	5	0	0				RUST-PASS	
+node:ScreenFontStyle	COMPLETE	yes	4	0	0				RUST-PASS	
+node:ScreenGroup	COMPLETE	yes	3	0	0				RUST-PASS	
+node:DirectionalLight	COMPLETE	yes	2	0	0				RUST-PASS	
+node:EnvironmentLight	COMPLETE	yes	3	0	0				RUST-PASS	
+node:PointLight	COMPLETE	yes	2	0	0				RUST-PASS	
+node:SpotLight	COMPLETE	yes	2	0	0				RUST-PASS	
+node:Contour2D	COMPLETE	yes	13	0	0				TRACED-PASS	synthetic-rea-b04
+node:ContourPolyline2D	COMPLETE	yes	13	0	0				TRACED-PASS	synthetic-rea-b04
+node:NurbsCurve	DIFFERENT	yes	14	0	0		x_ite-geometry-rea.mjs		RUST-PASS	
+node:NurbsCurve2D	DIFFERENT	yes	14	0	0		x_ite-geometry-rea.mjs		RUST-PASS	
+node:NurbsOrientationInterpolator	DIFFERENT	yes	9	0	0				RUST-PASS	
+node:NurbsPatchSurface	DIFFERENT	yes	14	0	0		x_ite-geometry-rea.mjs		RUST-PASS	
+node:NurbsPositionInterpolator	DIFFERENT	yes	9	0	0				RUST-PASS	
+node:NurbsSet	DIFFERENT	yes	14	0	0		x_ite-geometry-rea.mjs		RUST-PASS	
+node:NurbsSurfaceInterpolator	DIFFERENT	yes	9	0	0				RUST-PASS	
+node:NurbsSweptSurface	DIFFERENT	yes	14	0	0		x_ite-geometry-rea.mjs		RUST-PASS	
+node:NurbsSwungSurface	DIFFERENT	yes	14	0	0		x_ite-geometry-rea.mjs		RUST-PASS	
+node:NurbsTextureCoordinate	DIFFERENT	yes	14	0	0		x_ite-geometry-rea.mjs		RUST-PASS	
+node:NurbsTrimmedSurface	DIFFERENT	yes	14	0	0		x_ite-geometry-rea.mjs		RUST-PASS	
+node:Billboard	COMPLETE	yes	3	0	0				RUST-PASS	
+node:Collision	PARTIAL	yes	7	0	0				RUST-PASS	
+node:LOD	COMPLETE	yes	483	0	0				TRACED-PASS	synthetic-rea synthetic-rea-verify
+node:NavigationInfo	COMPLETE	yes	11	0	0				TRACED-PASS	synthetic-rea-verify corpus
+node:OrthoViewpoint	COMPLETE	yes	4	0	0				RUST-PASS	
+node:Viewpoint	COMPLETE	yes	7	0	0				RUST-PASS	
+node:ViewpointGroup	COMPLETE	yes	2	0	0				RUST-PASS	
+node:Anchor	PARTIAL	yes	6	0	0				RUST-PASS	
+node:Inline	PARTIAL	yes	28	0	0		crates/x3d-web/tests/browser/gltfworld02_case.mjs crates/x3d-web/tests/browser/inlinehold01.test.mjs		RUST-PASS	
+node:InlineGeometry	PARTIAL	yes	8	0	0				RUST-PASS	
+node:LoadSensor	COMPLETE	yes	483	0	0				TRACED-PASS	synthetic-rea
+node:BoundedPhysicsModel	PARTIAL	yes	50	0	0			oracle/tools/rea_b06_particles.py oracle/tools/rea_b16_bounded.py	RUST-PASS	
+node:ConeEmitter	COMPLETE	yes	0	0	0			oracle/tools/rea_b06_particles.py	OTHER-EVIDENCE	
+node:ExplosionEmitter	COMPLETE	yes	0	0	0			oracle/tools/rea_b06_particles.py	OTHER-EVIDENCE	
+node:ForcePhysicsModel	COMPLETE	yes	9	0	0			oracle/tools/rea_b07_ps.py	RUST-PASS	
+node:ParticleSystem	PARTIAL	yes	111	0	0			oracle/tools/rea_b06_particles.py	RUST-PASS	
+node:PointEmitter	COMPLETE	yes	0	0	0			oracle/tools/rea_b06_particles.py	OTHER-EVIDENCE	
+node:PolylineEmitter	COMPLETE	yes	9	0	0			oracle/tools/rea_b07_ps.py	RUST-PASS	
+node:SurfaceEmitter	COMPLETE	yes	0	0	0			oracle/tools/rea_b06_particles.py	OTHER-EVIDENCE	
+node:VolumeEmitter	PARTIAL	yes	40	0	0			oracle/tools/rea_b06_particles.py oracle/tools/rea_b17_emitter_hits.py	RUST-PASS	
+node:WindPhysicsModel	PARTIAL	yes	9	0	0			oracle/tools/rea_b07_ps.py rea_b07_ps.py	RUST-PASS	
+node:LinePickSensor	COMPLETE	yes	4	0	0				RUST-PASS	
+node:PickableGroup	COMPLETE	yes	4	0	0				RUST-PASS	
+node:PointPickSensor	COMPLETE	yes	4	0	0				RUST-PASS	
+node:PrimitivePickSensor	COMPLETE	yes	4	0	0				RUST-PASS	
+node:VolumePickSensor	COMPLETE	yes	4	0	0				RUST-PASS	
+node:CylinderSensor	COMPLETE	yes	1	0	0				RUST-PASS	
+node:PlaneSensor	COMPLETE	yes	1	0	0				RUST-PASS	
+node:SphereSensor	COMPLETE	yes	1	0	0				RUST-PASS	
+node:TouchSensor	COMPLETE	yes	1	0	0				RUST-PASS	
+node:ClipPlane	COMPLETE	yes	4	0	0				RUST-PASS	
+node:Color	COMPLETE	yes	2	0	0				RUST-PASS	
+node:ColorRGBA	COMPLETE	yes	2	0	0				RUST-PASS	
+node:Coordinate	COMPLETE	yes	2	0	0				RUST-PASS	
+node:CoordinateDouble	COMPLETE	yes	2	0	0				RUST-PASS	
+node:IndexedLineSet	COMPLETE	yes	4	0	0				RUST-PASS	
+node:IndexedTriangleFanSet	COMPLETE	yes	492	0	0				TRACED-PASS	synthetic-rea synthetic-rea-render corpus
+node:IndexedTriangleSet	COMPLETE	yes	492	0	0				TRACED-PASS	synthetic-rea synthetic-rea-render corpus
+node:IndexedTriangleStripSet	COMPLETE	yes	492	0	0				TRACED-PASS	synthetic-rea synthetic-rea-render corpus
+node:LineSet	COMPLETE	yes	492	0	0				TRACED-PASS	synthetic-rea synthetic-rea-render corpus
+node:Normal	COMPLETE	yes	4	0	0				RUST-PASS	
+node:PointSet	COMPLETE	yes	6	0	0				RUST-PASS	
+node:Tangent	COMPLETE	yes	1	0	0				RUST-PASS	
+node:TriangleFanSet	COMPLETE	yes	492	0	0				TRACED-PASS	synthetic-rea synthetic-rea-render corpus
+node:TriangleSet	COMPLETE	yes	492	0	0				TRACED-PASS	synthetic-rea synthetic-rea-render corpus
+node:TriangleStripSet	COMPLETE	yes	492	0	0				TRACED-PASS	synthetic-rea synthetic-rea-render corpus
+node:BallJoint	COMPLETE	yes	120	0	0			oracle/tools/rea_b06.py	RUST-PASS	
+node:CollidableOffset	COMPLETE	yes	120	0	0			oracle/tools/rea_b06.py	RUST-PASS	
+node:CollidableShape	COMPLETE	yes	120	0	0			oracle/tools/rea_b06.py	RUST-PASS	
+node:CollisionCollection	COMPLETE	yes	120	0	0			oracle/tools/rea_b06.py	RUST-PASS	
+node:CollisionSensor	COMPLETE	yes	120	0	0			oracle/tools/rea_b06.py	RUST-PASS	
+node:CollisionSpace	COMPLETE	yes	120	0	0			oracle/tools/rea_b06.py	RUST-PASS	
+node:Contact	COMPLETE	yes	120	0	0			oracle/tools/rea_b06.py	RUST-PASS	
+node:DoubleAxisHingeJoint	COMPLETE	yes	120	0	0			oracle/tools/rea_b06.py	RUST-PASS	
+node:MotorJoint	COMPLETE	yes	48	0	0			rea_b06.py	RUST-PASS	
+node:RigidBody	COMPLETE	yes	120	0	0			oracle/tools/rea_b06.py	RUST-PASS	
+node:RigidBodyCollection	COMPLETE	yes	121	0	0			oracle/tools/rea_b06.py	RUST-PASS	
+node:SingleAxisHingeJoint	COMPLETE	yes	120	0	0			oracle/tools/rea_b06.py	RUST-PASS	
+node:SliderJoint	COMPLETE	yes	120	0	0			oracle/tools/rea_b06.py	RUST-PASS	
+node:UniversalJoint	COMPLETE	yes	48	0	0			rea_b06.py	RUST-PASS	
+node:Script	PARTIAL	yes	10	0	0				RUST-PASS	
+node:ComposedShader	COMPLETE	yes	30	0	0				RUST-PASS	
+node:FloatVertexAttribute	COMPLETE	yes	2	0	0				RUST-PASS	
+node:Matrix3VertexAttribute	COMPLETE	yes	2	0	0				RUST-PASS	
+node:Matrix4VertexAttribute	COMPLETE	yes	1	0	0				RUST-PASS	
+node:PackagedShader	COMPLETE	yes	5	0	0				RUST-PASS	
+node:ProgramShader	COMPLETE	yes	5	0	0				RUST-PASS	
+node:ShaderPart	PARTIAL	yes	23	0	0				RUST-PASS	
+node:ShaderProgram	COMPLETE	yes	5	0	0				RUST-PASS	
+node:AcousticProperties	COMPLETE	yes	1	0	0				RUST-PASS	
+node:Appearance	COMPLETE	yes	6	0	0				RUST-PASS	
+node:FillProperties	COMPLETE	yes	2	0	0				RUST-PASS	
+node:LineProperties	COMPLETE	yes	4	0	0				RUST-PASS	
+node:Material	COMPLETE	yes	2	0	0				RUST-PASS	
+node:PhysicalMaterial	COMPLETE	yes	3	0	0				RUST-PASS	
+node:PointProperties	COMPLETE	yes	4	0	0				RUST-PASS	
+node:Shape	COMPLETE	yes	2	0	0				RUST-PASS	
+node:TwoSidedMaterial	COMPLETE	yes	2	0	0				RUST-PASS	
+node:UnlitMaterial	COMPLETE	yes	2	0	0				RUST-PASS	
+node:Analyser	COMPLETE	yes	1	0	0			oracle/tools/rea_b05.py	RUST-PASS	
+node:AudioClip	PARTIAL	yes	13	0	0		crates/x3d-web/tests/browser/sound03.test.mjs crates/x3d-web/tests/browser/sound04.test.mjs oracle/x_ite-anim.mjs web/audio_mirror.mjs	oracle/tools/gen_rea_audio_repair.py rea_b05.py tools/check_no_aac.py	RUST-PASS	
+node:AudioDestination	PARTIAL	yes	8	0	0			oracle/tools/rea_b05.py	RUST-PASS	
+node:BiquadFilter	COMPLETE	yes	1	0	0			oracle/tools/rea_b05.py	RUST-PASS	
+node:BufferAudioSource	PARTIAL	yes	9	0	0			oracle/tools/rea_b05.py	RUST-PASS	
+node:ChannelMerger	COMPLETE	yes	1	0	0			oracle/tools/rea_b05.py	RUST-PASS	
+node:ChannelSelector	COMPLETE	yes	1	0	0			oracle/tools/rea_b05.py	RUST-PASS	
+node:ChannelSplitter	COMPLETE	yes	1	0	0			oracle/tools/rea_b05.py	RUST-PASS	
+node:Convolver	COMPLETE	yes	1	0	0			oracle/tools/rea_b05.py	RUST-PASS	
+node:Delay	COMPLETE	yes	1	0	0			oracle/tools/rea_b05.py	RUST-PASS	
+node:DynamicsCompressor	COMPLETE	yes	1	0	0			oracle/tools/rea_b05.py	RUST-PASS	
+node:Gain	COMPLETE	yes	1	0	0			oracle/tools/rea_b05.py	RUST-PASS	
+node:ListenerPointSource	COMPLETE	yes	1	0	0			oracle/tools/rea_b05.py	RUST-PASS	
+node:MicrophoneSource	COMPLETE	yes	1	0	0			oracle/tools/rea_b05.py	RUST-PASS	
+node:OscillatorSource	COMPLETE	yes	1	0	0			oracle/tools/rea_b05.py	RUST-PASS	
+node:PeriodicWave	COMPLETE	yes	1	0	0			oracle/tools/rea_b05.py	RUST-PASS	
+node:Sound	PARTIAL	yes	5	0	0		crates/x3d-web/tests/browser/sound03.test.mjs crates/x3d-web/tests/browser/sound04.test.mjs oracle/x_ite-anim.mjs web/audio_mirror.mjs	oracle/tools/gen_rea_audio_repair.py rea_b05.py	RUST-PASS	
+node:SpatialSound	DIFFERENT	yes	1	0	0			oracle/tools/rea_b05.py	RUST-PASS	
+node:StreamAudioDestination	COMPLETE	yes	1	0	0			oracle/tools/rea_b05.py	RUST-PASS	
+node:StreamAudioSource	COMPLETE	yes	1	0	0			oracle/tools/rea_b05.py	RUST-PASS	
+node:WaveShaper	COMPLETE	yes	1	0	0			oracle/tools/rea_b05.py	RUST-PASS	
+node:FontLibrary	PARTIAL	yes	14	0	0			oracle/tools/gen_cff_cid_fonts.py	RUST-PASS	
+node:FontStyle	COMPLETE	yes	2	0	0				RUST-PASS	
+node:Text	COMPLETE	yes	5	0	0				RUST-PASS	
+node:TextureProjector	COMPLETE	yes	3	0	0				RUST-PASS	
+node:TextureProjectorParallel	COMPLETE	yes	3	0	0				RUST-PASS	
+node:ImageTexture	COMPLETE	yes	2	0	0				RUST-PASS	
+node:MovieTexture	PARTIAL	yes	114	0	0		crates/x3d-web/tests/browser/movie01.test.mjs video_mirror.mjs	tools/check_no_native_video.py tools/check_vendored_rav1d.py	RUST-PASS	
+node:MultiTexture	COMPLETE	yes	3	0	0				RUST-PASS	
+node:MultiTextureCoordinate	COMPLETE	yes	1	0	0				RUST-PASS	
+node:MultiTextureTransform	COMPLETE	yes	3	0	0				RUST-PASS	
+node:PixelTexture	COMPLETE	yes	2	0	0				RUST-PASS	
+node:RenderedTexture	COMPLETE	yes	3	0	0				RUST-PASS	
+node:TextureCoordinate	COMPLETE	yes	1	0	0				RUST-PASS	
+node:TextureCoordinateGenerator	COMPLETE	yes	1	0	0				RUST-PASS	
+node:TextureProperties	COMPLETE	yes	2	0	0				RUST-PASS	
+node:TextureTransform	COMPLETE	yes	2	0	0				RUST-PASS	
+node:ComposedTexture3D	COMPLETE	yes	3	0	0				RUST-PASS	
+node:ImageTexture3D	COMPLETE	yes	4	0	0			oracle/tools/rea_b07_mat.py	RUST-PASS	
+node:ImageTextureAtlas	COMPLETE	yes	3	0	0				RUST-PASS	
+node:PixelTexture3D	COMPLETE	yes	3	0	0				RUST-PASS	
+node:TextureCoordinate3D	COMPLETE	yes	2	0	0				RUST-PASS	
+node:TextureCoordinate4D	COMPLETE	yes	2	0	0				RUST-PASS	
+node:TextureTransform3D	COMPLETE	yes	3	0	0				RUST-PASS	
+node:TextureTransformMatrix3D	COMPLETE	yes	3	0	0				RUST-PASS	
+node:TimeSensor	COMPLETE	yes	11	0	0				TRACED-PASS	 corpus
+node:BlendedVolumeStyle	PARTIAL	yes	8	0	0			oracle/tools/rea_b07_vol.py	RUST-PASS	
+node:BoundaryEnhancementVolumeStyle	COMPLETE	yes	5	0	0			oracle/tools/rea_b07_vol.py	RUST-PASS	
+node:CartoonVolumeStyle	COMPLETE	yes	5	0	0			oracle/tools/rea_b07_vol.py	RUST-PASS	
+node:ComposedVolumeStyle	COMPLETE	yes	5	0	0			oracle/tools/rea_b07_vol.py	RUST-PASS	
+node:EdgeEnhancementVolumeStyle	COMPLETE	yes	5	0	0			oracle/tools/rea_b07_vol.py	RUST-PASS	
+node:IsoSurfaceVolumeData	COMPLETE	yes	5	0	0			oracle/tools/rea_b07_vol.py	RUST-PASS	
+node:OpacityMapVolumeStyle	COMPLETE	yes	5	0	0			oracle/tools/rea_b07_vol.py	RUST-PASS	
+node:ProjectionVolumeStyle	COMPLETE	yes	5	0	0			oracle/tools/rea_b07_vol.py	RUST-PASS	
+node:SegmentedVolumeData	COMPLETE	yes	5	0	0			oracle/tools/rea_b07_vol.py	RUST-PASS	
+node:ShadedVolumeStyle	PARTIAL	yes	8	0	0			oracle/tools/rea_b07_vol.py	RUST-PASS	
+node:SilhouetteEnhancementVolumeStyle	COMPLETE	yes	5	0	0			oracle/tools/rea_b07_vol.py	RUST-PASS	
+node:ToneMappedVolumeStyle	COMPLETE	yes	5	0	0			oracle/tools/rea_b07_vol.py	RUST-PASS	
+node:VolumeData	COMPLETE	yes	5	0	0			oracle/tools/rea_b07_vol.py	RUST-PASS	
+node:AnisotropyMaterialExtension	COMPLETE	yes	3	0	0				RUST-PASS	
+node:BlendMode	COMPLETE	yes	2	0	0				RUST-PASS	
+node:ClearcoatMaterialExtension	COMPLETE	yes	3	0	0				RUST-PASS	
+node:DepthMode	COMPLETE	yes	13	0	0				RUST-PASS	
+node:DiffuseTransmissionMaterialExtension	COMPLETE	yes	3	0	0				RUST-PASS	
+node:DispersionMaterialExtension	COMPLETE	yes	4	0	0			oracle/tools/rea_b07_mat.py	RUST-PASS	
+node:EmissiveStrengthMaterialExtension	COMPLETE	yes	3	0	0				RUST-PASS	
+node:IORMaterialExtension	COMPLETE	yes	3	0	0				RUST-PASS	
+node:InstancedShape	PARTIAL	yes	6	0	0			oracle/tools/rea_b07_mat.py	RUST-PASS	
+node:IridescenceMaterialExtension	COMPLETE	yes	3	0	0				RUST-PASS	
+node:RetroreflectionMaterialExtension	COMPLETE	yes	4	0	0			oracle/tools/rea_b07_mat.py	RUST-PASS	
+node:SheenMaterialExtension	COMPLETE	yes	3	0	0				RUST-PASS	
+node:SpecularGlossinessMaterial	COMPLETE	yes	3	0	0				RUST-PASS	
+node:SpecularMaterialExtension	COMPLETE	yes	3	0	0				RUST-PASS	
+node:TransmissionMaterialExtension	COMPLETE	yes	3	0	0				RUST-PASS	
+node:VolumeMaterialExtension	COMPLETE	yes	3	0	0				RUST-PASS	
+node:VolumeScatterMaterialExtension	COMPLETE	yes	4	0	0				RUST-PASS	
+sub:parse.vrml-classic	PARTIAL	yes	2	0	0				RUST-PASS	
+sub:parse.xml	COMPLETE	yes	1	0	0				RUST-PASS	
+sub:parse.json	COMPLETE	yes	1	0	0				RUST-PASS	
+sub:parse.gltf2	PARTIAL	yes	13	0	0		crates/x3d-web/tests/browser/gltfworld02_case.mjs	x10_compare.py	RUST-PASS	
+sub:parse.glb2	PARTIAL	yes	10	0	0				RUST-PASS	
+sub:parse.obj	COMPLETE	yes	1	0	0				RUST-PASS	
+sub:parse.ply	COMPLETE	yes	1	0	0				RUST-PASS	
+sub:parse.stl	COMPLETE	yes	1	0	0				RUST-PASS	
+sub:parse.svg	PARTIAL	yes	16	0	0				RUST-PASS	
+sub:parse.html-support	COMPLETE	yes	1	0	0				RUST-PASS	
+sub:parse.golden-gate	PARTIAL	yes	23	0	0				RUST-PASS	
+sub:parse.optimizer	COMPLETE	yes	1	0	0				RUST-PASS	
+sub:serialize.vrml	COMPLETE	yes	11	0	0				TRACED-PASS	 corpus
+sub:serialize.xml	COMPLETE	yes	4	0	0				RUST-PASS	
+sub:serialize.json	COMPLETE	yes	4	0	0				RUST-PASS	
+sub:fields.types	PARTIAL	yes	11	0	0				RUST-PASS	
+sub:fields.math	COMPLETE	yes	3	0	0		oracle/tools/geom_xite.mjs oracle/tools/math_tostring_xite.mjs		RUST-PASS	
+sub:exec.context-api	PARTIAL	yes	1	0	0				RUST-PASS	
+sub:exec.scene	COMPLETE	check	483	0	0				TRACED-PASS	synthetic-rea
+sub:exec.bindable-stacks	COMPLETE	yes	1	0	0				RUST-PASS	
+sub:exec.import-export	COMPLETE	yes	1	0	0				RUST-PASS	
+sub:proto.proto	PARTIAL	yes	2	0	0				RUST-PASS	
+sub:proto.externproto	PARTIAL	yes	4	0	0				RUST-PASS	
+sub:routing.routes	COMPLETE	yes	11	0	0				TRACED-PASS	 corpus
+sub:routing.event-loop	COMPLETE	yes	0	0	0				NO-TRACE	
+sub:io.file-loader	PARTIAL	yes	48	0	0				RUST-PASS	
+sub:config.components-profiles	COMPLETE	yes	1	0	0				RUST-PASS	
+sub:browser.sai-api	COMPLETE	yes	3	0	0				RUST-PASS	
+sub:browser.options	COMPLETE	yes	2	0	0		crates/x3d-web/tests/browser/antialiased02.test.mjs		RUST-PASS	
+sub:browser.properties	COMPLETE	yes	1	0	0				RUST-PASS	
+sub:browser.multi-viewer-thread	PARTIAL	yes	25	0	0				RUST-PASS	
+sub:browser.keyboard-ui	PARTIAL	yes	18	0	0			ledger_i301.py ledger_i303.py x10_compare.py	RUST-PASS	
+sub:browser.dom-integration	DIFFERENT	yes	0	0	0				NO-TRACE	
+sub:browser.webxr	PARTIAL	yes	15	0	0		.test.mjs crates/x3d-web/tests/browser/xrdraw01.test.mjs crates/x3d-web/tests/browser/xrsession01.test.mjs crates/x3d-web/tests/xr/gamepads_pinned.test.mjs crates/x3d-web/tests/xr/pinned_compare.test.mjs crates/x3d-web/tests/xr/xr_session.test.mjs web/x_ite_r.mjs		RUST-PASS	
+sub:nav.examine	PARTIAL	yes	10	0	0		crates/x3d-web/tests/browser/nav01.test.mjs crates/x3d-web/tests/browser/nav04.test.mjs crates/x3d-web/tests/browser/touchsnapshot01.test.mjs nav01_case.mjs nav04_case.mjs oracle/x_ite-web-runtime-02.mjs touchsnapshot01.test.mjs		RUST-PASS	
+sub:nav.walk-fly	PARTIAL	yes	11	0	0		crates/x3d-web/tests/browser/nav02.test.mjs nav02_case.mjs oracle/x_ite-web-runtime-02.mjs touchsnapshot01.test.mjs		RUST-PASS	
+sub:nav.plane	COMPLETE	yes	5	0	0		crates/x3d-web/tests/browser/nav03.test.mjs nav03_case.mjs oracle/x_ite-web-runtime-02.mjs touchsnapshot01.test.mjs		RUST-PASS	
+sub:nav.lookat	COMPLETE	yes	5	0	0		crates/x3d-web/tests/browser/nav03.test.mjs nav03_case.mjs oracle/x_ite-web-runtime-02.mjs touchsnapshot01.test.mjs		RUST-PASS	
+sub:nav.none	COMPLETE	yes	4	0	0				RUST-PASS	
+sub:nav.collision-gravity	PARTIAL	yes	3	0	0				RUST-PASS	
+sub:nav.transitions	COMPLETE	yes	4	0	0				RUST-PASS	
+sub:render.core	PARTIAL	yes	5	0	0		crates/x3d-web/tests/browser/pointtie01.test.mjs		RUST-PASS	
+sub:render.transparency-sorting	PARTIAL	yes	1	0	0		crates/x3d-web/tests/browser/oit01.test.mjs		RUST-PASS	
+sub:render.shadows	COMPLETE	yes	3	0	0				RUST-PASS	
+sub:render.pbr	COMPLETE	yes	3	0	0				RUST-PASS	
+sub:render.tone-mapping	COMPLETE	yes	3	0	0				RUST-PASS	
+sub:render.clip-planes	COMPLETE	yes	2	0	0				RUST-PASS	
+sub:render.multi-texture	COMPLETE	yes	3	0	0				RUST-PASS	
+sub:render.lighting-model	COMPLETE	yes	2	0	0				RUST-PASS	
+sub:render.headlight	COMPLETE	yes	1	0	0				RUST-PASS	
+sub:render.fog	COMPLETE	yes	3	0	0				RUST-PASS	
+sub:text.fonts	PARTIAL	yes	15	0	0				RUST-PASS	
+sub:sound.engine	PARTIAL	yes	1	0	0			oracle/tools/rea_b05.py	RUST-PASS	
+sub:picking.engine	COMPLETE	check	4	0	0				RUST-PASS	
+sub:physics.engine	COMPLETE	yes	190	0	0			oracle/tools/rea_b06.py	RUST-PASS	
+sub:pointer.picking	PARTIAL	yes	23	0	0				RUST-PASS	

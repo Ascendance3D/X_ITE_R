@@ -110,6 +110,14 @@ HISTORY = [
     ("before-r481-484", "ledger_r481_484.py C", lambda: _first("ledger_r481_484", "C")),
     ("before-r486", "ledger_r486.py C", lambda: _first("ledger_r486", "C")),
     ("before-r496-500", "ledger_r496_500.py C", lambda: _first("ledger_r496_500", "C")),
+    ("before-reconcile-1109", "ledger_reconcile_1109.py C", lambda: _first("ledger_reconcile_1109", "C")),
+    ("before-ig525", "ledger_ig525.py C", lambda: _first("ledger_ig525", "C")),
+    ("before-verify528", "ledger_verify528.py C", lambda: _first("ledger_verify528", "C")),
+    ("before-coll529", "ledger_coll529.py C", lambda: _first("ledger_coll529", "C")),
+    ("before-svg524", "ledger_svg524.py C", lambda: _first("ledger_svg524", "C")),
+    ("before-opt526", "ledger_opt526.py C", lambda: _first("ledger_opt526", "C")),
+    ("before-movie530", "ledger_movie530.py C", lambda: _first("ledger_movie530", "C")),
+    ("before-xr531", "ledger_xr531.py C", lambda: _first("ledger_xr531", "C")),
 ]
 
 def load(p): return json.load(open(p))["items"]

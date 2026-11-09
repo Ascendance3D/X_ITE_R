@@ -1392,6 +1392,15 @@ ct-wall, ct-nested and ct-bb-ctl with a 16 x 16 `pickProbes` grid, three identic
 points (0.27 to 0.38 from the surface) equal the page's bit for bit; the 3.05e-7 once measured there was the avatar's stop position
 (before #423), not float32 depth.
 
+The same group holds `ct-live-inline` and `ct-live-inline-two` (Collision.set_live__, ledger node:Collision): the wall Collision sits inside an Inline
+(`ct-live-inline-inner.wrl`, EXPORTed and IMPORTed as C1); a parent Script sets the Inline's `load` FALSE at 2.6 s of page time (the avatar has been
+stopped against the wall since frame 59) and TRUE at 4.3 s, and the avatar walks through the gap and back at the wall. The pinned page: the wall stops
+the avatar, `isActive` TRUE and `collideTime` at 1.933 s; after `load` FALSE the avatar walks through; no `isActive` FALSE is ever seen (the Collision is
+disposed with the Inline's scene: `set_live__` only calls `removeCollision`, and the parent's routes die with the scene; a Script inside the Inline
+prints nothing more); after `load` TRUE the new Collision stops the avatar again, `isActive` TRUE at 6.233 s. `-two` adds a never-reached Collision
+in the parent, so that the browser's collision count stays above 0 while the Inline is unloaded: the same events. The test also compares the
+recorded `console`. Three identical recordings at MSAA 0 and 4; Rust equals them.
+
 ## ShaderPart at MSAA 4 (issue #95, 2026-11-04)
 
 `rea-b24-shaderpart-baseline/` holds the 16 stepped ShaderPart cases at MSAA 0 (`NAME-msaa0/js.json` and pictures) and at MSAA 4
@@ -1557,6 +1566,11 @@ Keys `oracle/xr-shot-baseline/NAME.png` (MSAA 0) and `oracle/xr-shot-baseline-ms
 requests of the mock, the renderer and the hashes) are compared by `cargo nextest run -p x3d-render --test xr_views`. A missing
 key fails; no adapter fails in strict mode and records a skip otherwise. `XR_CASES=a,b` runs other cases, `XR_DUMP=dir` writes the
 Rust pictures.
+
+A script with `inputSources` (`[{ "matrix": target-ray pose, column-major, "pressed": bool }]`) gives the page mock tracked-pointer input sources
+(`inputsourceschange`, `frame.getPose`): the pinned context then draws their rays and hit points (ScreenLine, ScreenPoint), and the key's JSON
+records what it found per source (`inputSources`: `active`, `id`, `point`, `normal` = `hit .id`, `hit .originalPoint`, `hit .originalNormal`).
+`xr_views.rs` draws from those recorded hits and `x3d-viewer`'s `xr_rays.rs` compares the viewer's own picks with them (case `stereo-pointers`).
 
 ## GoldenGate binary dispatch (sub:parse.golden-gate)
 
