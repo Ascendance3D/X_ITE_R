@@ -24,7 +24,9 @@ A file name or a test name alone is not taken as proof: the class says whether t
 | PARTIAL (41 after this step) | 41 | 0 | 0 | 0 |
 | DIFFERENT (21) | 18 | 2 | 0 | 1 |
 
-No matched Rust test failed. The ledger.json audited is the one after this step (sub:browser.webxr names its tests now).
+No matched Rust test failed or was skipped (a skipped match would be RUST-SKIP, not a pass; the strict-suite log has no
+SKIP line). OTHER-EVIDENCE is a reference only: the audit does not run the named .mjs / .py checks; they are traced by hand
+below. The ledger.json audited is the one after this step (sub:browser.webxr names its tests now).
 
 ## Manual traces (the 9 rows without a Rust match)
 

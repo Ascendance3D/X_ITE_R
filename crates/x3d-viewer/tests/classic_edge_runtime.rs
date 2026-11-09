@@ -39,6 +39,15 @@ fn log_cases(root: &std::path::Path) -> Vec<String> {
         .collect()
 }
 
+/// Removes the temporary root also when an assertion panics.
+struct TempDir(PathBuf);
+
+impl Drop for TempDir {
+    fn drop(&mut self) {
+        let _ = std::fs::remove_dir_all(&self.0);
+    }
+}
+
 fn first_lines(v: &Value) -> Vec<String> {
     let mut lines: Vec<String> = v
         .as_array()
@@ -69,9 +78,20 @@ fn classic_edge_load_logs_match_x_ite_in_the_runtime() {
     )
     .unwrap();
     let results = baseline["results"].as_array().unwrap();
-    let tmp = std::env::temp_dir().join(format!("classic-edge-runtime-{}", std::process::id()));
+    let nonce = std::time::SystemTime::now()
+        .duration_since(std::time::UNIX_EPOCH)
+        .unwrap()
+        .as_nanos();
+    let guard = TempDir(std::env::temp_dir().join(format!(
+        "classic-edge-runtime-{}-{nonce}",
+        std::process::id()
+    )));
+    let tmp = &guard.0;
     let src = tmp.join("x_ite-pin/src");
 
+    // A new directory: an old one with the same name is an error, not reused.
+    std::fs::create_dir_all(tmp.parent().unwrap()).unwrap();
+    std::fs::create_dir(tmp).unwrap();
     std::fs::create_dir_all(&src).unwrap();
 
     let script = tmp.join("script.json");
@@ -105,7 +125,7 @@ fn classic_edge_load_logs_match_x_ite_in_the_runtime() {
             .arg(&world)
             .arg(&script)
             .arg("--oracle")
-            .arg(&tmp)
+            .arg(tmp)
             .arg("--out")
             .arg(&out)
             .status()
@@ -123,8 +143,6 @@ fn classic_edge_load_logs_match_x_ite_in_the_runtime() {
             failures.push(format!("{name}:\n  pinned: {pinned:?}\n  port:   {port:?}"));
         }
     }
-
-    let _ = std::fs::remove_dir_all(&tmp);
 
     assert!(failures.is_empty(), "{}", failures.join("\n"));
 }

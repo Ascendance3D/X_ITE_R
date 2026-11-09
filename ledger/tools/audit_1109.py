@@ -1,19 +1,19 @@
 #!/usr/bin/env python3
-"""Ledger audit of 2026-11-09: python3 -I -B audit_1109.py <nextest log> [<node test log> ...] > audit.tsv
+"""Ledger audit of 2026-11-09: python3 -I -B audit_1109.py <nextest log> > audit.tsv
 
 Maps every ledger entry to the tests that ran, without changing anything. A test counts for an entry when the entry's
 tests, notes or missing text names its Rust test binary (crates/<crate>/tests/<name>.rs, or <name> / <name>.rs alone) or
-its test function (a name without an underscore only when written as <name>.rs). The nextest log is the output of tools/strict-suite.sh (PASS / FAIL / SKIP lines). A Node test log
-(node --test) names the .mjs files it ran on lines `# file <path>` that this audit writes itself; .mjs, .py and browser
-references without a run in this audit are listed, not judged.
+its test function (a name without an underscore only when written as <name>.rs). The nextest log is the output of tools/strict-suite.sh (PASS / FAIL / SKIP lines). The .mjs, .py and browser
+references of an entry are listed only: this audit does not run them or read their logs (see OTHER-EVIDENCE).
 
 Columns: id, status, rust paths present, Rust tests that ran for the entry (passed / failed / skipped), failing tests,
 .mjs references, .py references, class:
-  RUST-PASS      at least one named Rust test ran and every named Rust test passed
+  RUST-PASS      at least one named Rust test ran and every named Rust test passed (none failed, none skipped)
+  RUST-SKIP      no named Rust test failed, but at least one was skipped: not counted as a pass
   RUST-FAIL      a named Rust test failed (needs a manual trace before any status change)
-  OTHER-EVIDENCE only browser / Node / Python evidence is named (checked by CI or by its own run, see the report)
+  OTHER-EVIDENCE only browser / Node / Python evidence is named; an unaudited reference, traced by hand in the report
   TRACED-PASS    no binary is named, but the oracle directories / synthetic suites / corpus it names are read by Rust
-                 tests that ran, and every one of them passed
+                 tests that ran, and every one of them passed (none skipped)
   NO-TRACE       no test is named; the coverage needs a manual trace
 """
 import collections, json, os, re, sys
@@ -65,7 +65,7 @@ def trace(text, sources, ran):
 
 
 def main():
-    if len(sys.argv) < 2: raise SystemExit(__doc__)
+    if len(sys.argv) != 2: raise SystemExit(__doc__)
     ran = results(sys.argv[1])
     by_binary = collections.defaultdict(list)  # binary short name (after "crate::") -> [(full, test, verdict)]
     by_test = collections.defaultdict(list)
@@ -97,6 +97,7 @@ def main():
         mjs = sorted(set(re.findall(r"[\w./-]+\.test\.mjs|[\w./-]+\.mjs", text)))
         py = sorted(set(re.findall(r"[\w./-]+\.py", text)))
         if failing: cls = "RUST-FAIL"
+        elif c["SKIP"]: cls = "RUST-SKIP"
         elif c["PASS"] and via: cls = "TRACED-PASS"
         elif c["PASS"]: cls = "RUST-PASS"
         elif mjs or py: cls = "OTHER-EVIDENCE"
