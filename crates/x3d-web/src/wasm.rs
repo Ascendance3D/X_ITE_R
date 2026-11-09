@@ -831,9 +831,7 @@ impl WebBrowser {
         let mut session =
             Session::begin_with_scripts(world, now, self.config.width, self.config.height, |rt| {
                 // The page's options before the world's loads start (LoadUrlObjects is read when an Inline starts).
-                for (name, value) in engine_options {
-                    rt.browser_options.init_option(&name, value);
-                }
+                crate::session::init_page_options(rt, &engine_options);
 
                 // X_ITE's BrowserOptions belong to the browser, not to a world: the world starts with the page's Shading
                 // and Multisampling, and a Script that sets them (in initialize, too) sets them after the page.
@@ -977,11 +975,14 @@ impl WebBrowser {
         let scene = x3d_parse::parse_string("#X3D V4.0 utf8\n", base)
             .map_err(|e| JsError::new(&format!("{e:?}")))?;
         let id = next_world_id();
+        let mut rt = x3d_runtime::Runtime::new(scene, fetcher);
 
+        // The page's options, for the parse of a candidate (the SVG parser reads this browser's qualities).
+        crate::session::init_page_options(&mut rt, &self.engine_options);
         self.loads.insert(
             id,
             PageLoad {
-                rt: x3d_runtime::Runtime::new(scene, fetcher),
+                rt,
                 urls,
                 base: base.to_string(),
                 cache,
@@ -1093,6 +1094,8 @@ impl WebBrowser {
         let fetcher = Box::new(WebFetcher {
             cache: cache.clone(),
         });
+        self.apply_page_quality();
+
         let world = Session::parse_string(text, url, fetcher).map_err(|e| JsError::new(&e))?;
 
         Ok(self.add(world, cache, now))
@@ -2644,6 +2647,48 @@ impl WebBrowser {
             .copied()
             .max()
             .unwrap_or(1)
+    }
+
+    /// The page's `PrimitiveQuality` or `TextureQuality` (`LOW`, `MEDIUM` or `HIGH`; the page gives the field's string), for
+    /// the worlds and loads now and for those to come. The engine reads them itself: the primitives, the text and the
+    /// textures follow them in every frame (`x3d_render::traverse::set_browser_qualities`), and the SVG parser reads them
+    /// when a world is parsed (SVGParser.js lines 113-141). Returns whether the name is one of the two.
+    #[wasm_bindgen(js_name = setQualityOption)]
+    pub fn set_quality_option(&mut self, name: &str, value: &str) -> bool {
+        use x3d_runtime::browser_options::OptionValue;
+
+        if !matches!(name, "PrimitiveQuality" | "TextureQuality") {
+            return false;
+        }
+
+        let value = OptionValue::String(value.to_string());
+
+        self.engine_options.retain(|(n, _)| n != name);
+        self.engine_options.push((name.to_string(), value.clone()));
+
+        for w in self.worlds.values_mut() {
+            w.session.set_engine_option(name, value.clone());
+        }
+
+        for l in self.loads.values_mut() {
+            l.rt.browser_options.set_option(name, value.clone());
+        }
+
+        self.apply_page_quality();
+        true
+    }
+
+    /// The page's qualities for the next parse of a world that has no runtime yet. The thread is shared by every browser,
+    /// so each one gives its own before it parses.
+    fn apply_page_quality(&self) {
+        let get = |name: &str| {
+            self.engine_options
+                .iter()
+                .find(|(n, _)| n == name)
+                .map_or_else(String::new, |(_, v)| v.as_str().to_string())
+        };
+
+        crate::session::set_page_quality(&get("PrimitiveQuality"), &get("TextureQuality"));
     }
 
     /// A browser option the shared engine reads itself, for the worlds and loads now and for those to come: the booleans

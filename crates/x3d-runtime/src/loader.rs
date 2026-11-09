@@ -2027,6 +2027,9 @@ impl Runtime {
     /// response is not in, the result has `buffers_pending`, and the chain waits for it when the caller's `accept`
     /// rejects with no error (`await buffersArray`: the scene is built when the buffers are in).
     pub fn parse_candidate(&mut self, data: &[u8], url: &str) -> ParseBytesResult {
+        // SVGParser reads the options of its own browser: this runtime's, not the last one that parsed on this thread.
+        self.sync_svg_quality();
+
         let parsed = parse_bytes_waiting(&*self.fetcher, data, url, self.accept_waits, true);
 
         if parsed.buffers_pending {
@@ -2120,7 +2123,11 @@ impl Runtime {
 
 /// `x3d_parse::parse_bytes`, with GLTF2Parser / GLB2Parser loading the buffers of a glTF through
 /// `fetcher` (FileLoader resolves them against the scene's url).
+///
+/// The world has no runtime yet, so it has no browser options of its own: the SVG parser takes the defaults
+/// (MEDIUM, MEDIUM), not what another browser on this thread set last.
 pub fn parse_bytes_with_fetcher(fetcher: &dyn Fetcher, data: &[u8], url: &str) -> ParseBytesResult {
+    x3d_parse::reset_svg_quality();
     parse_bytes_waiting(fetcher, data, url, false, false)
 }
 

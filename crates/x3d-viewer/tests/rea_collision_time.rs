@@ -22,6 +22,10 @@
 //! the avatar stops at the same position. Before #423 (the walk on the page's millisecond clock) Rust stopped 2.2e-7 short (z 4.4736009 against
 //! 4.4736011) and every probe's hit point z differed by 2.4e-7 (normal 0.99999994 against 1); the pose bound of 1e-4 hid it.
 //!
+//! ct-live-inline and ct-live-inline-two put the wall Collision inside an Inline whose `load` a parent Script sets FALSE and TRUE
+//! again (Collision.set_live__: removeCollision / addCollision). The parent's routes die with the Inline's scene, so a Script inside
+//! the Inline prints the Collision's events and the recorded `console` is compared too.
+//!
 //! The cases are split over `SHARDS` tests so that they run side by side. `REA_ONLY=<substring>` restricts the cases.
 
 mod common;
@@ -266,6 +270,16 @@ fn compare_case(
                 break;
             }
         }
+    }
+
+    // `console` (script key "console": the page's print / console.log lines, in order) is recorded for the Inline cases, where a Script
+    // inside the unloaded Inline is the only witness of the Collision's events after the parent's routes are gone.
+    if js.get("console").is_some() && js.get("console") != rs.get("console") {
+        fail(format!(
+            "console differs: {} / {}",
+            js["console"],
+            rs.get("console").unwrap_or(&Value::Null)
+        ));
     }
 
     if js.get("log") != rs.get("log") {

@@ -124,8 +124,34 @@ fn print_scene_of(scene: &x3d_scene::Scene, kind: &str) -> Result<String, String
     }
 }
 
+/// The page's PrimitiveQuality and TextureQuality for the worlds it parses next (a world has no runtime, so no options of
+/// its own, until it is parsed). The page calls this when it sets either option or a world Script has set one, and before
+/// it parses a world; an option other than `LOW` or `HIGH` is `MEDIUM`, as `PrimitiveQuality .get (value) ?? MEDIUM`.
+pub fn set_page_quality(primitive: &str, texture: &str) {
+    let quality = |value: &str| match value {
+        "LOW" => x3d_parse::SvgQuality::Low,
+        "HIGH" => x3d_parse::SvgQuality::High,
+        _ => x3d_parse::SvgQuality::Medium,
+    };
+
+    x3d_parse::set_svg_default_quality(quality(primitive), quality(texture));
+}
+
+/// The page's options the engine reads itself, as a world (or a page load) starts with them: [`WebBrowser::set_engine_option`].
+pub fn init_page_options(
+    rt: &mut Runtime,
+    options: &[(String, x3d_runtime::browser_options::OptionValue)],
+) {
+    for (name, value) in options {
+        rt.browser_options.init_option(name, value.clone());
+    }
+}
+
 /// The browser's constant setup of every parse.
 fn parse_setup() {
+    // A world that is parsed before its runtime exists has the page's options (set_page_quality), not the SVG quality of
+    // another browser.
+    x3d_parse::reset_svg_quality();
     x3d_fields::jsmath::set_flavor(x3d_fields::jsmath::MathFlavor::Chrome);
     x3d_render::traverse::install_particle_geometry();
 }
