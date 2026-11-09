@@ -32,6 +32,10 @@ ct-graze oracle/synthetic-rea-collision-time/ct-graze.wrl oracle/synthetic-rea-c
 ct-graze oracle/synthetic-rea-collision-time/ct-graze.wrl oracle/synthetic-rea-collision-time/scripts/ct-graze.json 4
 ct-invisible oracle/synthetic-rea-collision-time/ct-invisible.wrl oracle/synthetic-rea-collision-time/scripts/ct-invisible.json 0
 ct-invisible oracle/synthetic-rea-collision-time/ct-invisible.wrl oracle/synthetic-rea-collision-time/scripts/ct-invisible.json 4
+ct-live-inline oracle/synthetic-rea-collision-time/ct-live-inline.wrl oracle/synthetic-rea-collision-time/scripts/ct-live-inline.json 0
+ct-live-inline oracle/synthetic-rea-collision-time/ct-live-inline.wrl oracle/synthetic-rea-collision-time/scripts/ct-live-inline.json 4
+ct-live-inline-two oracle/synthetic-rea-collision-time/ct-live-inline-two.wrl oracle/synthetic-rea-collision-time/scripts/ct-live-inline-two.json 0
+ct-live-inline-two oracle/synthetic-rea-collision-time/ct-live-inline-two.wrl oracle/synthetic-rea-collision-time/scripts/ct-live-inline-two.json 4
 ct-nested oracle/synthetic-rea-collision-time/ct-nested.wrl oracle/synthetic-rea-collision-time/scripts/ct-nested.json 0
 ct-nested oracle/synthetic-rea-collision-time/ct-nested.wrl oracle/synthetic-rea-collision-time/scripts/ct-nested.json 4
 ct-nested-pick oracle/synthetic-rea-collision-time/ct-nested-pick.wrl oracle/synthetic-rea-collision-time/scripts/ct-nested-pick.json 0

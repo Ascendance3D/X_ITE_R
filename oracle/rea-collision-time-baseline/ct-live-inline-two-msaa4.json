@@ -1,0 +1,769 @@
+{
+  "ok": true,
+  "poses": {
+    "60": {
+      "position": [
+        0,
+        1.6,
+        4.4736006562499995
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "start",
+      "viewer": "WALK",
+      "fieldOfViewScale": 1
+    },
+    "78": {
+      "position": [
+        0,
+        1.6,
+        4.4736006562499995
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "start",
+      "viewer": "WALK",
+      "fieldOfViewScale": 1
+    },
+    "79": {
+      "position": [
+        0,
+        1.6,
+        4.3392004921875
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "start",
+      "viewer": "WALK",
+      "fieldOfViewScale": 1
+    },
+    "81": {
+      "position": [
+        0,
+        1.6,
+        4.0704006562499995
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "start",
+      "viewer": "WALK",
+      "fieldOfViewScale": 1
+    },
+    "82": {
+      "position": [
+        0,
+        1.6,
+        3.9360004921874996
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "start",
+      "viewer": "WALK",
+      "fieldOfViewScale": 1
+    },
+    "90": {
+      "position": [
+        0,
+        1.6,
+        2.8608006562499995
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "start",
+      "viewer": "WALK",
+      "fieldOfViewScale": 1
+    },
+    "128": {
+      "position": [
+        0,
+        1.6,
+        -2.2463991796875007
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "start",
+      "viewer": "WALK",
+      "fieldOfViewScale": 1
+    },
+    "129": {
+      "position": [
+        0,
+        1.6,
+        -2.3807993437500006
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "start",
+      "viewer": "WALK",
+      "fieldOfViewScale": 1
+    },
+    "131": {
+      "position": [
+        0,
+        1.6,
+        -2.6495991796875007
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "start",
+      "viewer": "WALK",
+      "fieldOfViewScale": 1
+    },
+    "132": {
+      "position": [
+        0,
+        1.6,
+        -2.7839993437500006
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "start",
+      "viewer": "WALK",
+      "fieldOfViewScale": 1
+    },
+    "135": {
+      "position": [
+        0,
+        1.6,
+        -2.7839993437500006
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "start",
+      "viewer": "WALK",
+      "fieldOfViewScale": 1
+    },
+    "160": {
+      "position": [
+        0,
+        1.6,
+        -0.0959990156250008
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "start",
+      "viewer": "WALK",
+      "fieldOfViewScale": 1
+    },
+    "235": {
+      "position": [
+        0,
+        1.6,
+        3.5328009843749992
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "start",
+      "viewer": "WALK",
+      "fieldOfViewScale": 1
+    },
+    "240": {
+      "position": [
+        0,
+        1.6,
+        3.5328009843749992
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "start",
+      "viewer": "WALK",
+      "fieldOfViewScale": 1
+    }
+  },
+  "vrml": {
+    "60": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Full\n\nCOMPONENT Scripting : 1\n\nNavigationInfo {\n  type \"WALK\"\n  speed 4\n  transitionType \"TELEPORT\"\n}\n\nViewpoint {\n  description \"start\"\n  position 0 1.6 12\n}\n\nTransform {\n  translation 0 -0.1 0\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.4 0.4 0.4\n      }\n    }\n    geometry Box {\n      size 60 0.2 60\n    }\n  }\n}\n\nDEF INL Inline {\n  url \"ct-live-inline-inner.wrl\"\n}\n\nDEF C0 Collision {\n  children Transform {\n    translation 0 1.5 -40\n    children Shape {\n      appearance Appearance {\n        material Material {\n          diffuseColor 0.3 0.3 0.8\n        }\n      }\n      geometry Box {\n        size 8 3 0.4\n      }\n    }\n  }\n}\n\nTransform {\n  translation 5 0.5 6\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.9 0.9 0.2\n      }\n    }\n    geometry Box {\n      size 1 1 1\n    }\n  }\n}\n\nTransform {\n  translation -6 1 9\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.2 0.9 0.9\n      }\n    }\n    geometry Box {\n      size 1 2 1\n    }\n  }\n}\n\nTransform {\n  translation 0 2.5 -9\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.9 0.2 0.9\n      }\n    }\n    geometry Box {\n      size 6 0.4 0.4\n    }\n  }\n}\n\nDEF LOG Script {\n  inputOutput    SFString hist \" C1.isActive=true@1.933333 C1.collideTime=1.933333\"\n  initializeOnly SFInt32  step 0\n  outputOnly     SFBool   load_out\n  inputOnly      SFBool   C1_a\n  inputOnly      SFTime   C1_t\n  inputOnly      SFBool   C0_a\n  inputOnly      SFTime   C0_t\n\n  url \"ecmascript:\n    function C1_a (v, t) { hist = hist + ' ' + 'C1.isActive=' + v + '@' + (t - 946684800) .toFixed (6); }\n    function C1_t (v, t) { hist = hist + ' ' + 'C1.collideTime=' + (v - 946684800) .toFixed (6); }\n    function C0_a (v, t) { hist = hist + ' ' + 'C0.isActive=' + v + '@' + (t - 946684800) .toFixed (6); }\n    function C0_t (v, t) { hist = hist + ' ' + 'C0.collideTime=' + (v - 946684800) .toFixed (6); }\n    function prepareEvents (t) { var e = t - 946684800;\n      if (step == 0 && e >= 2.6) { step = 1; hist = hist + ' ' + 'load=FALSE@' + e .toFixed (6); load_out = false; }\n      else if (step == 1 && e >= 4.3) { step = 2; hist = hist + ' ' + 'load=TRUE@' + e .toFixed (6); load_out = true; } }\n\"\n}\n\nIMPORT INL.C1\n\nROUTE C1.isActive TO LOG.C1_a\nROUTE C1.collideTime TO LOG.C1_t\nROUTE C0.isActive TO LOG.C0_a\nROUTE C0.collideTime TO LOG.C0_t\nROUTE LOG.load_out TO INL.set_load\n",
+    "78": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Full\n\nCOMPONENT Scripting : 1\n\nNavigationInfo {\n  type \"WALK\"\n  speed 4\n  transitionType \"TELEPORT\"\n}\n\nViewpoint {\n  description \"start\"\n  position 0 1.6 12\n}\n\nTransform {\n  translation 0 -0.1 0\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.4 0.4 0.4\n      }\n    }\n    geometry Box {\n      size 60 0.2 60\n    }\n  }\n}\n\nDEF INL Inline {\n  load FALSE\n  url \"ct-live-inline-inner.wrl\"\n}\n\nDEF C0 Collision {\n  children Transform {\n    translation 0 1.5 -40\n    children Shape {\n      appearance Appearance {\n        material Material {\n          diffuseColor 0.3 0.3 0.8\n        }\n      }\n      geometry Box {\n        size 8 3 0.4\n      }\n    }\n  }\n}\n\nTransform {\n  translation 5 0.5 6\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.9 0.9 0.2\n      }\n    }\n    geometry Box {\n      size 1 1 1\n    }\n  }\n}\n\nTransform {\n  translation -6 1 9\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.2 0.9 0.9\n      }\n    }\n    geometry Box {\n      size 1 2 1\n    }\n  }\n}\n\nTransform {\n  translation 0 2.5 -9\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.9 0.2 0.9\n      }\n    }\n    geometry Box {\n      size 6 0.4 0.4\n    }\n  }\n}\n\nDEF LOG Script {\n  inputOutput    SFString hist \" C1.isActive=true@1.933333 C1.collideTime=1.933333 load=FALSE@2.600000\"\n  initializeOnly SFInt32  step 1\n  outputOnly     SFBool   load_out\n  inputOnly      SFBool   C1_a\n  inputOnly      SFTime   C1_t\n  inputOnly      SFBool   C0_a\n  inputOnly      SFTime   C0_t\n\n  url \"ecmascript:\n    function C1_a (v, t) { hist = hist + ' ' + 'C1.isActive=' + v + '@' + (t - 946684800) .toFixed (6); }\n    function C1_t (v, t) { hist = hist + ' ' + 'C1.collideTime=' + (v - 946684800) .toFixed (6); }\n    function C0_a (v, t) { hist = hist + ' ' + 'C0.isActive=' + v + '@' + (t - 946684800) .toFixed (6); }\n    function C0_t (v, t) { hist = hist + ' ' + 'C0.collideTime=' + (v - 946684800) .toFixed (6); }\n    function prepareEvents (t) { var e = t - 946684800;\n      if (step == 0 && e >= 2.6) { step = 1; hist = hist + ' ' + 'load=FALSE@' + e .toFixed (6); load_out = false; }\n      else if (step == 1 && e >= 4.3) { step = 2; hist = hist + ' ' + 'load=TRUE@' + e .toFixed (6); load_out = true; } }\n\"\n}\n\nIMPORT INL.C1\n\nROUTE C1.isActive TO LOG.C1_a\nROUTE C1.collideTime TO LOG.C1_t\nROUTE C0.isActive TO LOG.C0_a\nROUTE C0.collideTime TO LOG.C0_t\nROUTE LOG.load_out TO INL.set_load\n",
+    "79": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Full\n\nCOMPONENT Scripting : 1\n\nNavigationInfo {\n  type \"WALK\"\n  speed 4\n  transitionType \"TELEPORT\"\n}\n\nViewpoint {\n  description \"start\"\n  position 0 1.6 12\n}\n\nTransform {\n  translation 0 -0.1 0\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.4 0.4 0.4\n      }\n    }\n    geometry Box {\n      size 60 0.2 60\n    }\n  }\n}\n\nDEF INL Inline {\n  load FALSE\n  url \"ct-live-inline-inner.wrl\"\n}\n\nDEF C0 Collision {\n  children Transform {\n    translation 0 1.5 -40\n    children Shape {\n      appearance Appearance {\n        material Material {\n          diffuseColor 0.3 0.3 0.8\n        }\n      }\n      geometry Box {\n        size 8 3 0.4\n      }\n    }\n  }\n}\n\nTransform {\n  translation 5 0.5 6\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.9 0.9 0.2\n      }\n    }\n    geometry Box {\n      size 1 1 1\n    }\n  }\n}\n\nTransform {\n  translation -6 1 9\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.2 0.9 0.9\n      }\n    }\n    geometry Box {\n      size 1 2 1\n    }\n  }\n}\n\nTransform {\n  translation 0 2.5 -9\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.9 0.2 0.9\n      }\n    }\n    geometry Box {\n      size 6 0.4 0.4\n    }\n  }\n}\n\nDEF LOG Script {\n  inputOutput    SFString hist \" C1.isActive=true@1.933333 C1.collideTime=1.933333 load=FALSE@2.600000\"\n  initializeOnly SFInt32  step 1\n  outputOnly     SFBool   load_out\n  inputOnly      SFBool   C1_a\n  inputOnly      SFTime   C1_t\n  inputOnly      SFBool   C0_a\n  inputOnly      SFTime   C0_t\n\n  url \"ecmascript:\n    function C1_a (v, t) { hist = hist + ' ' + 'C1.isActive=' + v + '@' + (t - 946684800) .toFixed (6); }\n    function C1_t (v, t) { hist = hist + ' ' + 'C1.collideTime=' + (v - 946684800) .toFixed (6); }\n    function C0_a (v, t) { hist = hist + ' ' + 'C0.isActive=' + v + '@' + (t - 946684800) .toFixed (6); }\n    function C0_t (v, t) { hist = hist + ' ' + 'C0.collideTime=' + (v - 946684800) .toFixed (6); }\n    function prepareEvents (t) { var e = t - 946684800;\n      if (step == 0 && e >= 2.6) { step = 1; hist = hist + ' ' + 'load=FALSE@' + e .toFixed (6); load_out = false; }\n      else if (step == 1 && e >= 4.3) { step = 2; hist = hist + ' ' + 'load=TRUE@' + e .toFixed (6); load_out = true; } }\n\"\n}\n\nIMPORT INL.C1\n\nROUTE C1.isActive TO LOG.C1_a\nROUTE C1.collideTime TO LOG.C1_t\nROUTE C0.isActive TO LOG.C0_a\nROUTE C0.collideTime TO LOG.C0_t\nROUTE LOG.load_out TO INL.set_load\n",
+    "81": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Full\n\nCOMPONENT Scripting : 1\n\nNavigationInfo {\n  type \"WALK\"\n  speed 4\n  transitionType \"TELEPORT\"\n}\n\nViewpoint {\n  description \"start\"\n  position 0 1.6 12\n}\n\nTransform {\n  translation 0 -0.1 0\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.4 0.4 0.4\n      }\n    }\n    geometry Box {\n      size 60 0.2 60\n    }\n  }\n}\n\nDEF INL Inline {\n  load FALSE\n  url \"ct-live-inline-inner.wrl\"\n}\n\nDEF C0 Collision {\n  children Transform {\n    translation 0 1.5 -40\n    children Shape {\n      appearance Appearance {\n        material Material {\n          diffuseColor 0.3 0.3 0.8\n        }\n      }\n      geometry Box {\n        size 8 3 0.4\n      }\n    }\n  }\n}\n\nTransform {\n  translation 5 0.5 6\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.9 0.9 0.2\n      }\n    }\n    geometry Box {\n      size 1 1 1\n    }\n  }\n}\n\nTransform {\n  translation -6 1 9\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.2 0.9 0.9\n      }\n    }\n    geometry Box {\n      size 1 2 1\n    }\n  }\n}\n\nTransform {\n  translation 0 2.5 -9\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.9 0.2 0.9\n      }\n    }\n    geometry Box {\n      size 6 0.4 0.4\n    }\n  }\n}\n\nDEF LOG Script {\n  inputOutput    SFString hist \" C1.isActive=true@1.933333 C1.collideTime=1.933333 load=FALSE@2.600000\"\n  initializeOnly SFInt32  step 1\n  outputOnly     SFBool   load_out\n  inputOnly      SFBool   C1_a\n  inputOnly      SFTime   C1_t\n  inputOnly      SFBool   C0_a\n  inputOnly      SFTime   C0_t\n\n  url \"ecmascript:\n    function C1_a (v, t) { hist = hist + ' ' + 'C1.isActive=' + v + '@' + (t - 946684800) .toFixed (6); }\n    function C1_t (v, t) { hist = hist + ' ' + 'C1.collideTime=' + (v - 946684800) .toFixed (6); }\n    function C0_a (v, t) { hist = hist + ' ' + 'C0.isActive=' + v + '@' + (t - 946684800) .toFixed (6); }\n    function C0_t (v, t) { hist = hist + ' ' + 'C0.collideTime=' + (v - 946684800) .toFixed (6); }\n    function prepareEvents (t) { var e = t - 946684800;\n      if (step == 0 && e >= 2.6) { step = 1; hist = hist + ' ' + 'load=FALSE@' + e .toFixed (6); load_out = false; }\n      else if (step == 1 && e >= 4.3) { step = 2; hist = hist + ' ' + 'load=TRUE@' + e .toFixed (6); load_out = true; } }\n\"\n}\n\nIMPORT INL.C1\n\nROUTE C1.isActive TO LOG.C1_a\nROUTE C1.collideTime TO LOG.C1_t\nROUTE C0.isActive TO LOG.C0_a\nROUTE C0.collideTime TO LOG.C0_t\nROUTE LOG.load_out TO INL.set_load\n",
+    "82": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Full\n\nCOMPONENT Scripting : 1\n\nNavigationInfo {\n  type \"WALK\"\n  speed 4\n  transitionType \"TELEPORT\"\n}\n\nViewpoint {\n  description \"start\"\n  position 0 1.6 12\n}\n\nTransform {\n  translation 0 -0.1 0\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.4 0.4 0.4\n      }\n    }\n    geometry Box {\n      size 60 0.2 60\n    }\n  }\n}\n\nDEF INL Inline {\n  load FALSE\n  url \"ct-live-inline-inner.wrl\"\n}\n\nDEF C0 Collision {\n  children Transform {\n    translation 0 1.5 -40\n    children Shape {\n      appearance Appearance {\n        material Material {\n          diffuseColor 0.3 0.3 0.8\n        }\n      }\n      geometry Box {\n        size 8 3 0.4\n      }\n    }\n  }\n}\n\nTransform {\n  translation 5 0.5 6\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.9 0.9 0.2\n      }\n    }\n    geometry Box {\n      size 1 1 1\n    }\n  }\n}\n\nTransform {\n  translation -6 1 9\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.2 0.9 0.9\n      }\n    }\n    geometry Box {\n      size 1 2 1\n    }\n  }\n}\n\nTransform {\n  translation 0 2.5 -9\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.9 0.2 0.9\n      }\n    }\n    geometry Box {\n      size 6 0.4 0.4\n    }\n  }\n}\n\nDEF LOG Script {\n  inputOutput    SFString hist \" C1.isActive=true@1.933333 C1.collideTime=1.933333 load=FALSE@2.600000\"\n  initializeOnly SFInt32  step 1\n  outputOnly     SFBool   load_out\n  inputOnly      SFBool   C1_a\n  inputOnly      SFTime   C1_t\n  inputOnly      SFBool   C0_a\n  inputOnly      SFTime   C0_t\n\n  url \"ecmascript:\n    function C1_a (v, t) { hist = hist + ' ' + 'C1.isActive=' + v + '@' + (t - 946684800) .toFixed (6); }\n    function C1_t (v, t) { hist = hist + ' ' + 'C1.collideTime=' + (v - 946684800) .toFixed (6); }\n    function C0_a (v, t) { hist = hist + ' ' + 'C0.isActive=' + v + '@' + (t - 946684800) .toFixed (6); }\n    function C0_t (v, t) { hist = hist + ' ' + 'C0.collideTime=' + (v - 946684800) .toFixed (6); }\n    function prepareEvents (t) { var e = t - 946684800;\n      if (step == 0 && e >= 2.6) { step = 1; hist = hist + ' ' + 'load=FALSE@' + e .toFixed (6); load_out = false; }\n      else if (step == 1 && e >= 4.3) { step = 2; hist = hist + ' ' + 'load=TRUE@' + e .toFixed (6); load_out = true; } }\n\"\n}\n\nIMPORT INL.C1\n\nROUTE C1.isActive TO LOG.C1_a\nROUTE C1.collideTime TO LOG.C1_t\nROUTE C0.isActive TO LOG.C0_a\nROUTE C0.collideTime TO LOG.C0_t\nROUTE LOG.load_out TO INL.set_load\n",
+    "90": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Full\n\nCOMPONENT Scripting : 1\n\nNavigationInfo {\n  type \"WALK\"\n  speed 4\n  transitionType \"TELEPORT\"\n}\n\nViewpoint {\n  description \"start\"\n  position 0 1.6 12\n}\n\nTransform {\n  translation 0 -0.1 0\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.4 0.4 0.4\n      }\n    }\n    geometry Box {\n      size 60 0.2 60\n    }\n  }\n}\n\nDEF INL Inline {\n  load FALSE\n  url \"ct-live-inline-inner.wrl\"\n}\n\nDEF C0 Collision {\n  children Transform {\n    translation 0 1.5 -40\n    children Shape {\n      appearance Appearance {\n        material Material {\n          diffuseColor 0.3 0.3 0.8\n        }\n      }\n      geometry Box {\n        size 8 3 0.4\n      }\n    }\n  }\n}\n\nTransform {\n  translation 5 0.5 6\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.9 0.9 0.2\n      }\n    }\n    geometry Box {\n      size 1 1 1\n    }\n  }\n}\n\nTransform {\n  translation -6 1 9\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.2 0.9 0.9\n      }\n    }\n    geometry Box {\n      size 1 2 1\n    }\n  }\n}\n\nTransform {\n  translation 0 2.5 -9\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.9 0.2 0.9\n      }\n    }\n    geometry Box {\n      size 6 0.4 0.4\n    }\n  }\n}\n\nDEF LOG Script {\n  inputOutput    SFString hist \" C1.isActive=true@1.933333 C1.collideTime=1.933333 load=FALSE@2.600000\"\n  initializeOnly SFInt32  step 1\n  outputOnly     SFBool   load_out\n  inputOnly      SFBool   C1_a\n  inputOnly      SFTime   C1_t\n  inputOnly      SFBool   C0_a\n  inputOnly      SFTime   C0_t\n\n  url \"ecmascript:\n    function C1_a (v, t) { hist = hist + ' ' + 'C1.isActive=' + v + '@' + (t - 946684800) .toFixed (6); }\n    function C1_t (v, t) { hist = hist + ' ' + 'C1.collideTime=' + (v - 946684800) .toFixed (6); }\n    function C0_a (v, t) { hist = hist + ' ' + 'C0.isActive=' + v + '@' + (t - 946684800) .toFixed (6); }\n    function C0_t (v, t) { hist = hist + ' ' + 'C0.collideTime=' + (v - 946684800) .toFixed (6); }\n    function prepareEvents (t) { var e = t - 946684800;\n      if (step == 0 && e >= 2.6) { step = 1; hist = hist + ' ' + 'load=FALSE@' + e .toFixed (6); load_out = false; }\n      else if (step == 1 && e >= 4.3) { step = 2; hist = hist + ' ' + 'load=TRUE@' + e .toFixed (6); load_out = true; } }\n\"\n}\n\nIMPORT INL.C1\n\nROUTE C1.isActive TO LOG.C1_a\nROUTE C1.collideTime TO LOG.C1_t\nROUTE C0.isActive TO LOG.C0_a\nROUTE C0.collideTime TO LOG.C0_t\nROUTE LOG.load_out TO INL.set_load\n",
+    "128": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Full\n\nCOMPONENT Scripting : 1\n\nNavigationInfo {\n  type \"WALK\"\n  speed 4\n  transitionType \"TELEPORT\"\n}\n\nViewpoint {\n  description \"start\"\n  position 0 1.6 12\n}\n\nTransform {\n  translation 0 -0.1 0\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.4 0.4 0.4\n      }\n    }\n    geometry Box {\n      size 60 0.2 60\n    }\n  }\n}\n\nDEF INL Inline {\n  load FALSE\n  url \"ct-live-inline-inner.wrl\"\n}\n\nDEF C0 Collision {\n  children Transform {\n    translation 0 1.5 -40\n    children Shape {\n      appearance Appearance {\n        material Material {\n          diffuseColor 0.3 0.3 0.8\n        }\n      }\n      geometry Box {\n        size 8 3 0.4\n      }\n    }\n  }\n}\n\nTransform {\n  translation 5 0.5 6\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.9 0.9 0.2\n      }\n    }\n    geometry Box {\n      size 1 1 1\n    }\n  }\n}\n\nTransform {\n  translation -6 1 9\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.2 0.9 0.9\n      }\n    }\n    geometry Box {\n      size 1 2 1\n    }\n  }\n}\n\nTransform {\n  translation 0 2.5 -9\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.9 0.2 0.9\n      }\n    }\n    geometry Box {\n      size 6 0.4 0.4\n    }\n  }\n}\n\nDEF LOG Script {\n  inputOutput    SFString hist \" C1.isActive=true@1.933333 C1.collideTime=1.933333 load=FALSE@2.600000\"\n  initializeOnly SFInt32  step 1\n  outputOnly     SFBool   load_out\n  inputOnly      SFBool   C1_a\n  inputOnly      SFTime   C1_t\n  inputOnly      SFBool   C0_a\n  inputOnly      SFTime   C0_t\n\n  url \"ecmascript:\n    function C1_a (v, t) { hist = hist + ' ' + 'C1.isActive=' + v + '@' + (t - 946684800) .toFixed (6); }\n    function C1_t (v, t) { hist = hist + ' ' + 'C1.collideTime=' + (v - 946684800) .toFixed (6); }\n    function C0_a (v, t) { hist = hist + ' ' + 'C0.isActive=' + v + '@' + (t - 946684800) .toFixed (6); }\n    function C0_t (v, t) { hist = hist + ' ' + 'C0.collideTime=' + (v - 946684800) .toFixed (6); }\n    function prepareEvents (t) { var e = t - 946684800;\n      if (step == 0 && e >= 2.6) { step = 1; hist = hist + ' ' + 'load=FALSE@' + e .toFixed (6); load_out = false; }\n      else if (step == 1 && e >= 4.3) { step = 2; hist = hist + ' ' + 'load=TRUE@' + e .toFixed (6); load_out = true; } }\n\"\n}\n\nIMPORT INL.C1\n\nROUTE C1.isActive TO LOG.C1_a\nROUTE C1.collideTime TO LOG.C1_t\nROUTE C0.isActive TO LOG.C0_a\nROUTE C0.collideTime TO LOG.C0_t\nROUTE LOG.load_out TO INL.set_load\n",
+    "129": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Full\n\nCOMPONENT Scripting : 1\n\nNavigationInfo {\n  type \"WALK\"\n  speed 4\n  transitionType \"TELEPORT\"\n}\n\nViewpoint {\n  description \"start\"\n  position 0 1.6 12\n}\n\nTransform {\n  translation 0 -0.1 0\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.4 0.4 0.4\n      }\n    }\n    geometry Box {\n      size 60 0.2 60\n    }\n  }\n}\n\nDEF INL Inline {\n  load FALSE\n  url \"ct-live-inline-inner.wrl\"\n}\n\nDEF C0 Collision {\n  children Transform {\n    translation 0 1.5 -40\n    children Shape {\n      appearance Appearance {\n        material Material {\n          diffuseColor 0.3 0.3 0.8\n        }\n      }\n      geometry Box {\n        size 8 3 0.4\n      }\n    }\n  }\n}\n\nTransform {\n  translation 5 0.5 6\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.9 0.9 0.2\n      }\n    }\n    geometry Box {\n      size 1 1 1\n    }\n  }\n}\n\nTransform {\n  translation -6 1 9\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.2 0.9 0.9\n      }\n    }\n    geometry Box {\n      size 1 2 1\n    }\n  }\n}\n\nTransform {\n  translation 0 2.5 -9\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.9 0.2 0.9\n      }\n    }\n    geometry Box {\n      size 6 0.4 0.4\n    }\n  }\n}\n\nDEF LOG Script {\n  inputOutput    SFString hist \" C1.isActive=true@1.933333 C1.collideTime=1.933333 load=FALSE@2.600000\"\n  initializeOnly SFInt32  step 1\n  outputOnly     SFBool   load_out\n  inputOnly      SFBool   C1_a\n  inputOnly      SFTime   C1_t\n  inputOnly      SFBool   C0_a\n  inputOnly      SFTime   C0_t\n\n  url \"ecmascript:\n    function C1_a (v, t) { hist = hist + ' ' + 'C1.isActive=' + v + '@' + (t - 946684800) .toFixed (6); }\n    function C1_t (v, t) { hist = hist + ' ' + 'C1.collideTime=' + (v - 946684800) .toFixed (6); }\n    function C0_a (v, t) { hist = hist + ' ' + 'C0.isActive=' + v + '@' + (t - 946684800) .toFixed (6); }\n    function C0_t (v, t) { hist = hist + ' ' + 'C0.collideTime=' + (v - 946684800) .toFixed (6); }\n    function prepareEvents (t) { var e = t - 946684800;\n      if (step == 0 && e >= 2.6) { step = 1; hist = hist + ' ' + 'load=FALSE@' + e .toFixed (6); load_out = false; }\n      else if (step == 1 && e >= 4.3) { step = 2; hist = hist + ' ' + 'load=TRUE@' + e .toFixed (6); load_out = true; } }\n\"\n}\n\nIMPORT INL.C1\n\nROUTE C1.isActive TO LOG.C1_a\nROUTE C1.collideTime TO LOG.C1_t\nROUTE C0.isActive TO LOG.C0_a\nROUTE C0.collideTime TO LOG.C0_t\nROUTE LOG.load_out TO INL.set_load\n",
+    "131": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Full\n\nCOMPONENT Scripting : 1\n\nNavigationInfo {\n  type \"WALK\"\n  speed 4\n  transitionType \"TELEPORT\"\n}\n\nViewpoint {\n  description \"start\"\n  position 0 1.6 12\n}\n\nTransform {\n  translation 0 -0.1 0\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.4 0.4 0.4\n      }\n    }\n    geometry Box {\n      size 60 0.2 60\n    }\n  }\n}\n\nDEF INL Inline {\n  url \"ct-live-inline-inner.wrl\"\n}\n\nDEF C0 Collision {\n  children Transform {\n    translation 0 1.5 -40\n    children Shape {\n      appearance Appearance {\n        material Material {\n          diffuseColor 0.3 0.3 0.8\n        }\n      }\n      geometry Box {\n        size 8 3 0.4\n      }\n    }\n  }\n}\n\nTransform {\n  translation 5 0.5 6\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.9 0.9 0.2\n      }\n    }\n    geometry Box {\n      size 1 1 1\n    }\n  }\n}\n\nTransform {\n  translation -6 1 9\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.2 0.9 0.9\n      }\n    }\n    geometry Box {\n      size 1 2 1\n    }\n  }\n}\n\nTransform {\n  translation 0 2.5 -9\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.9 0.2 0.9\n      }\n    }\n    geometry Box {\n      size 6 0.4 0.4\n    }\n  }\n}\n\nDEF LOG Script {\n  inputOutput    SFString hist \" C1.isActive=true@1.933333 C1.collideTime=1.933333 load=FALSE@2.600000 load=TRUE@4.333333\"\n  initializeOnly SFInt32  step 2\n  outputOnly     SFBool   load_out\n  inputOnly      SFBool   C1_a\n  inputOnly      SFTime   C1_t\n  inputOnly      SFBool   C0_a\n  inputOnly      SFTime   C0_t\n\n  url \"ecmascript:\n    function C1_a (v, t) { hist = hist + ' ' + 'C1.isActive=' + v + '@' + (t - 946684800) .toFixed (6); }\n    function C1_t (v, t) { hist = hist + ' ' + 'C1.collideTime=' + (v - 946684800) .toFixed (6); }\n    function C0_a (v, t) { hist = hist + ' ' + 'C0.isActive=' + v + '@' + (t - 946684800) .toFixed (6); }\n    function C0_t (v, t) { hist = hist + ' ' + 'C0.collideTime=' + (v - 946684800) .toFixed (6); }\n    function prepareEvents (t) { var e = t - 946684800;\n      if (step == 0 && e >= 2.6) { step = 1; hist = hist + ' ' + 'load=FALSE@' + e .toFixed (6); load_out = false; }\n      else if (step == 1 && e >= 4.3) { step = 2; hist = hist + ' ' + 'load=TRUE@' + e .toFixed (6); load_out = true; } }\n\"\n}\n\nIMPORT INL.C1\n\nROUTE C1.isActive TO LOG.C1_a\nROUTE C1.collideTime TO LOG.C1_t\nROUTE C0.isActive TO LOG.C0_a\nROUTE C0.collideTime TO LOG.C0_t\nROUTE LOG.load_out TO INL.set_load\n",
+    "132": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Full\n\nCOMPONENT Scripting : 1\n\nNavigationInfo {\n  type \"WALK\"\n  speed 4\n  transitionType \"TELEPORT\"\n}\n\nViewpoint {\n  description \"start\"\n  position 0 1.6 12\n}\n\nTransform {\n  translation 0 -0.1 0\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.4 0.4 0.4\n      }\n    }\n    geometry Box {\n      size 60 0.2 60\n    }\n  }\n}\n\nDEF INL Inline {\n  url \"ct-live-inline-inner.wrl\"\n}\n\nDEF C0 Collision {\n  children Transform {\n    translation 0 1.5 -40\n    children Shape {\n      appearance Appearance {\n        material Material {\n          diffuseColor 0.3 0.3 0.8\n        }\n      }\n      geometry Box {\n        size 8 3 0.4\n      }\n    }\n  }\n}\n\nTransform {\n  translation 5 0.5 6\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.9 0.9 0.2\n      }\n    }\n    geometry Box {\n      size 1 1 1\n    }\n  }\n}\n\nTransform {\n  translation -6 1 9\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.2 0.9 0.9\n      }\n    }\n    geometry Box {\n      size 1 2 1\n    }\n  }\n}\n\nTransform {\n  translation 0 2.5 -9\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.9 0.2 0.9\n      }\n    }\n    geometry Box {\n      size 6 0.4 0.4\n    }\n  }\n}\n\nDEF LOG Script {\n  inputOutput    SFString hist \" C1.isActive=true@1.933333 C1.collideTime=1.933333 load=FALSE@2.600000 load=TRUE@4.333333\"\n  initializeOnly SFInt32  step 2\n  outputOnly     SFBool   load_out\n  inputOnly      SFBool   C1_a\n  inputOnly      SFTime   C1_t\n  inputOnly      SFBool   C0_a\n  inputOnly      SFTime   C0_t\n\n  url \"ecmascript:\n    function C1_a (v, t) { hist = hist + ' ' + 'C1.isActive=' + v + '@' + (t - 946684800) .toFixed (6); }\n    function C1_t (v, t) { hist = hist + ' ' + 'C1.collideTime=' + (v - 946684800) .toFixed (6); }\n    function C0_a (v, t) { hist = hist + ' ' + 'C0.isActive=' + v + '@' + (t - 946684800) .toFixed (6); }\n    function C0_t (v, t) { hist = hist + ' ' + 'C0.collideTime=' + (v - 946684800) .toFixed (6); }\n    function prepareEvents (t) { var e = t - 946684800;\n      if (step == 0 && e >= 2.6) { step = 1; hist = hist + ' ' + 'load=FALSE@' + e .toFixed (6); load_out = false; }\n      else if (step == 1 && e >= 4.3) { step = 2; hist = hist + ' ' + 'load=TRUE@' + e .toFixed (6); load_out = true; } }\n\"\n}\n\nIMPORT INL.C1\n\nROUTE C1.isActive TO LOG.C1_a\nROUTE C1.collideTime TO LOG.C1_t\nROUTE C0.isActive TO LOG.C0_a\nROUTE C0.collideTime TO LOG.C0_t\nROUTE LOG.load_out TO INL.set_load\n",
+    "135": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Full\n\nCOMPONENT Scripting : 1\n\nNavigationInfo {\n  type \"WALK\"\n  speed 4\n  transitionType \"TELEPORT\"\n}\n\nViewpoint {\n  description \"start\"\n  position 0 1.6 12\n}\n\nTransform {\n  translation 0 -0.1 0\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.4 0.4 0.4\n      }\n    }\n    geometry Box {\n      size 60 0.2 60\n    }\n  }\n}\n\nDEF INL Inline {\n  url \"ct-live-inline-inner.wrl\"\n}\n\nDEF C0 Collision {\n  children Transform {\n    translation 0 1.5 -40\n    children Shape {\n      appearance Appearance {\n        material Material {\n          diffuseColor 0.3 0.3 0.8\n        }\n      }\n      geometry Box {\n        size 8 3 0.4\n      }\n    }\n  }\n}\n\nTransform {\n  translation 5 0.5 6\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.9 0.9 0.2\n      }\n    }\n    geometry Box {\n      size 1 1 1\n    }\n  }\n}\n\nTransform {\n  translation -6 1 9\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.2 0.9 0.9\n      }\n    }\n    geometry Box {\n      size 1 2 1\n    }\n  }\n}\n\nTransform {\n  translation 0 2.5 -9\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.9 0.2 0.9\n      }\n    }\n    geometry Box {\n      size 6 0.4 0.4\n    }\n  }\n}\n\nDEF LOG Script {\n  inputOutput    SFString hist \" C1.isActive=true@1.933333 C1.collideTime=1.933333 load=FALSE@2.600000 load=TRUE@4.333333\"\n  initializeOnly SFInt32  step 2\n  outputOnly     SFBool   load_out\n  inputOnly      SFBool   C1_a\n  inputOnly      SFTime   C1_t\n  inputOnly      SFBool   C0_a\n  inputOnly      SFTime   C0_t\n\n  url \"ecmascript:\n    function C1_a (v, t) { hist = hist + ' ' + 'C1.isActive=' + v + '@' + (t - 946684800) .toFixed (6); }\n    function C1_t (v, t) { hist = hist + ' ' + 'C1.collideTime=' + (v - 946684800) .toFixed (6); }\n    function C0_a (v, t) { hist = hist + ' ' + 'C0.isActive=' + v + '@' + (t - 946684800) .toFixed (6); }\n    function C0_t (v, t) { hist = hist + ' ' + 'C0.collideTime=' + (v - 946684800) .toFixed (6); }\n    function prepareEvents (t) { var e = t - 946684800;\n      if (step == 0 && e >= 2.6) { step = 1; hist = hist + ' ' + 'load=FALSE@' + e .toFixed (6); load_out = false; }\n      else if (step == 1 && e >= 4.3) { step = 2; hist = hist + ' ' + 'load=TRUE@' + e .toFixed (6); load_out = true; } }\n\"\n}\n\nIMPORT INL.C1\n\nROUTE C1.isActive TO LOG.C1_a\nROUTE C1.collideTime TO LOG.C1_t\nROUTE C0.isActive TO LOG.C0_a\nROUTE C0.collideTime TO LOG.C0_t\nROUTE LOG.load_out TO INL.set_load\n",
+    "160": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Full\n\nCOMPONENT Scripting : 1\n\nNavigationInfo {\n  type \"WALK\"\n  speed 4\n  transitionType \"TELEPORT\"\n}\n\nViewpoint {\n  description \"start\"\n  position 0 1.6 12\n}\n\nTransform {\n  translation 0 -0.1 0\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.4 0.4 0.4\n      }\n    }\n    geometry Box {\n      size 60 0.2 60\n    }\n  }\n}\n\nDEF INL Inline {\n  url \"ct-live-inline-inner.wrl\"\n}\n\nDEF C0 Collision {\n  children Transform {\n    translation 0 1.5 -40\n    children Shape {\n      appearance Appearance {\n        material Material {\n          diffuseColor 0.3 0.3 0.8\n        }\n      }\n      geometry Box {\n        size 8 3 0.4\n      }\n    }\n  }\n}\n\nTransform {\n  translation 5 0.5 6\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.9 0.9 0.2\n      }\n    }\n    geometry Box {\n      size 1 1 1\n    }\n  }\n}\n\nTransform {\n  translation -6 1 9\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.2 0.9 0.9\n      }\n    }\n    geometry Box {\n      size 1 2 1\n    }\n  }\n}\n\nTransform {\n  translation 0 2.5 -9\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.9 0.2 0.9\n      }\n    }\n    geometry Box {\n      size 6 0.4 0.4\n    }\n  }\n}\n\nDEF LOG Script {\n  inputOutput    SFString hist \" C1.isActive=true@1.933333 C1.collideTime=1.933333 load=FALSE@2.600000 load=TRUE@4.333333\"\n  initializeOnly SFInt32  step 2\n  outputOnly     SFBool   load_out\n  inputOnly      SFBool   C1_a\n  inputOnly      SFTime   C1_t\n  inputOnly      SFBool   C0_a\n  inputOnly      SFTime   C0_t\n\n  url \"ecmascript:\n    function C1_a (v, t) { hist = hist + ' ' + 'C1.isActive=' + v + '@' + (t - 946684800) .toFixed (6); }\n    function C1_t (v, t) { hist = hist + ' ' + 'C1.collideTime=' + (v - 946684800) .toFixed (6); }\n    function C0_a (v, t) { hist = hist + ' ' + 'C0.isActive=' + v + '@' + (t - 946684800) .toFixed (6); }\n    function C0_t (v, t) { hist = hist + ' ' + 'C0.collideTime=' + (v - 946684800) .toFixed (6); }\n    function prepareEvents (t) { var e = t - 946684800;\n      if (step == 0 && e >= 2.6) { step = 1; hist = hist + ' ' + 'load=FALSE@' + e .toFixed (6); load_out = false; }\n      else if (step == 1 && e >= 4.3) { step = 2; hist = hist + ' ' + 'load=TRUE@' + e .toFixed (6); load_out = true; } }\n\"\n}\n\nIMPORT INL.C1\n\nROUTE C1.isActive TO LOG.C1_a\nROUTE C1.collideTime TO LOG.C1_t\nROUTE C0.isActive TO LOG.C0_a\nROUTE C0.collideTime TO LOG.C0_t\nROUTE LOG.load_out TO INL.set_load\n",
+    "235": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Full\n\nCOMPONENT Scripting : 1\n\nNavigationInfo {\n  type \"WALK\"\n  speed 4\n  transitionType \"TELEPORT\"\n}\n\nViewpoint {\n  description \"start\"\n  position 0 1.6 12\n}\n\nTransform {\n  translation 0 -0.1 0\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.4 0.4 0.4\n      }\n    }\n    geometry Box {\n      size 60 0.2 60\n    }\n  }\n}\n\nDEF INL Inline {\n  url \"ct-live-inline-inner.wrl\"\n}\n\nDEF C0 Collision {\n  children Transform {\n    translation 0 1.5 -40\n    children Shape {\n      appearance Appearance {\n        material Material {\n          diffuseColor 0.3 0.3 0.8\n        }\n      }\n      geometry Box {\n        size 8 3 0.4\n      }\n    }\n  }\n}\n\nTransform {\n  translation 5 0.5 6\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.9 0.9 0.2\n      }\n    }\n    geometry Box {\n      size 1 1 1\n    }\n  }\n}\n\nTransform {\n  translation -6 1 9\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.2 0.9 0.9\n      }\n    }\n    geometry Box {\n      size 1 2 1\n    }\n  }\n}\n\nTransform {\n  translation 0 2.5 -9\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.9 0.2 0.9\n      }\n    }\n    geometry Box {\n      size 6 0.4 0.4\n    }\n  }\n}\n\nDEF LOG Script {\n  inputOutput    SFString hist \" C1.isActive=true@1.933333 C1.collideTime=1.933333 load=FALSE@2.600000 load=TRUE@4.333333 C1.isActive=true@6.233333 C1.collideTime=6.233333\"\n  initializeOnly SFInt32  step 2\n  outputOnly     SFBool   load_out\n  inputOnly      SFBool   C1_a\n  inputOnly      SFTime   C1_t\n  inputOnly      SFBool   C0_a\n  inputOnly      SFTime   C0_t\n\n  url \"ecmascript:\n    function C1_a (v, t) { hist = hist + ' ' + 'C1.isActive=' + v + '@' + (t - 946684800) .toFixed (6); }\n    function C1_t (v, t) { hist = hist + ' ' + 'C1.collideTime=' + (v - 946684800) .toFixed (6); }\n    function C0_a (v, t) { hist = hist + ' ' + 'C0.isActive=' + v + '@' + (t - 946684800) .toFixed (6); }\n    function C0_t (v, t) { hist = hist + ' ' + 'C0.collideTime=' + (v - 946684800) .toFixed (6); }\n    function prepareEvents (t) { var e = t - 946684800;\n      if (step == 0 && e >= 2.6) { step = 1; hist = hist + ' ' + 'load=FALSE@' + e .toFixed (6); load_out = false; }\n      else if (step == 1 && e >= 4.3) { step = 2; hist = hist + ' ' + 'load=TRUE@' + e .toFixed (6); load_out = true; } }\n\"\n}\n\nIMPORT INL.C1\n\nROUTE C1.isActive TO LOG.C1_a\nROUTE C1.collideTime TO LOG.C1_t\nROUTE C0.isActive TO LOG.C0_a\nROUTE C0.collideTime TO LOG.C0_t\nROUTE LOG.load_out TO INL.set_load\n",
+    "240": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Full\n\nCOMPONENT Scripting : 1\n\nNavigationInfo {\n  type \"WALK\"\n  speed 4\n  transitionType \"TELEPORT\"\n}\n\nViewpoint {\n  description \"start\"\n  position 0 1.6 12\n}\n\nTransform {\n  translation 0 -0.1 0\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.4 0.4 0.4\n      }\n    }\n    geometry Box {\n      size 60 0.2 60\n    }\n  }\n}\n\nDEF INL Inline {\n  url \"ct-live-inline-inner.wrl\"\n}\n\nDEF C0 Collision {\n  children Transform {\n    translation 0 1.5 -40\n    children Shape {\n      appearance Appearance {\n        material Material {\n          diffuseColor 0.3 0.3 0.8\n        }\n      }\n      geometry Box {\n        size 8 3 0.4\n      }\n    }\n  }\n}\n\nTransform {\n  translation 5 0.5 6\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.9 0.9 0.2\n      }\n    }\n    geometry Box {\n      size 1 1 1\n    }\n  }\n}\n\nTransform {\n  translation -6 1 9\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.2 0.9 0.9\n      }\n    }\n    geometry Box {\n      size 1 2 1\n    }\n  }\n}\n\nTransform {\n  translation 0 2.5 -9\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.9 0.2 0.9\n      }\n    }\n    geometry Box {\n      size 6 0.4 0.4\n    }\n  }\n}\n\nDEF LOG Script {\n  inputOutput    SFString hist \" C1.isActive=true@1.933333 C1.collideTime=1.933333 load=FALSE@2.600000 load=TRUE@4.333333 C1.isActive=true@6.233333 C1.collideTime=6.233333\"\n  initializeOnly SFInt32  step 2\n  outputOnly     SFBool   load_out\n  inputOnly      SFBool   C1_a\n  inputOnly      SFTime   C1_t\n  inputOnly      SFBool   C0_a\n  inputOnly      SFTime   C0_t\n\n  url \"ecmascript:\n    function C1_a (v, t) { hist = hist + ' ' + 'C1.isActive=' + v + '@' + (t - 946684800) .toFixed (6); }\n    function C1_t (v, t) { hist = hist + ' ' + 'C1.collideTime=' + (v - 946684800) .toFixed (6); }\n    function C0_a (v, t) { hist = hist + ' ' + 'C0.isActive=' + v + '@' + (t - 946684800) .toFixed (6); }\n    function C0_t (v, t) { hist = hist + ' ' + 'C0.collideTime=' + (v - 946684800) .toFixed (6); }\n    function prepareEvents (t) { var e = t - 946684800;\n      if (step == 0 && e >= 2.6) { step = 1; hist = hist + ' ' + 'load=FALSE@' + e .toFixed (6); load_out = false; }\n      else if (step == 1 && e >= 4.3) { step = 2; hist = hist + ' ' + 'load=TRUE@' + e .toFixed (6); load_out = true; } }\n\"\n}\n\nIMPORT INL.C1\n\nROUTE C1.isActive TO LOG.C1_a\nROUTE C1.collideTime TO LOG.C1_t\nROUTE C0.isActive TO LOG.C0_a\nROUTE C0.collideTime TO LOG.C0_t\nROUTE LOG.load_out TO INL.set_load\n"
+  },
+  "prints": [],
+  "log": [],
+  "anchors": [],
+  "info": {
+    "renderer": "ANGLE (NVIDIA Corporation, NVIDIA GeForce RTX 3060 Ti/PCIe/SSE2, OpenGL ES 3.2)",
+    "x_ite": "16.5.0",
+    "multisampling": 4,
+    "antialiased": true,
+    "maxSamples": 8,
+    "contextAttributes": {
+      "alpha": true,
+      "antialias": false,
+      "depth": true,
+      "desynchronized": false,
+      "failIfMajorPerformanceCaveat": false,
+      "powerPreference": "default",
+      "premultipliedAlpha": true,
+      "preserveDrawingBuffer": true,
+      "stencil": false,
+      "xrCompatible": false
+    }
+  },
+  "loadFrames": 3,
+  "warmupFrames": 8,
+  "geometry": {
+    "rect": [
+      0,
+      0,
+      512,
+      512
+    ],
+    "viewport": [
+      0,
+      0,
+      512,
+      512
+    ],
+    "scroll": [
+      0,
+      0
+    ]
+  },
+  "collisionProbes": [
+    {
+      "distance": 0.16362278153475862,
+      "id": 1,
+      "normal": [
+        0,
+        -1.1102230246251568e-16,
+        -1
+      ]
+    },
+    {
+      "distance": 0.13192624441843948,
+      "id": 1,
+      "normal": [
+        0,
+        0,
+        -1
+      ]
+    },
+    {
+      "distance": 1.3765842363605147,
+      "id": 0,
+      "normal": [
+        -2.7755575615628907e-17,
+        1,
+        1.1102230246251563e-16
+      ]
+    },
+    {
+      "distance": 0.1515878914554598,
+      "id": 1,
+      "normal": [
+        -1.1102230246251573e-16,
+        -5.551115123125787e-16,
+        -1
+      ]
+    },
+    {
+      "distance": 0.16082112085673628,
+      "id": 1,
+      "normal": [
+        3.6977854932234945e-32,
+        -3.330669073875471e-16,
+        -1
+      ]
+    },
+    {
+      "distance": 0.1515925967067273,
+      "id": 1,
+      "normal": [
+        1.1102230246251573e-16,
+        -5.551115123125787e-16,
+        -1
+      ]
+    },
+    {
+      "distance": 1.3765843280026575,
+      "id": 0,
+      "normal": [
+        2.7755575615628907e-17,
+        1,
+        1.1102230246251563e-16
+      ]
+    },
+    {
+      "distance": 0.13172626694384526,
+      "id": 1,
+      "normal": [
+        0,
+        1.1102230246251568e-16,
+        -1
+      ]
+    },
+    {
+      "distance": 0.16236714098805405,
+      "id": 1,
+      "normal": [
+        0,
+        0,
+        -1
+      ]
+    },
+    {
+      "distance": 0.14641038817958152,
+      "id": 1,
+      "normal": [
+        0,
+        -5.551115123125783e-17,
+        -1
+      ]
+    },
+    {
+      "distance": 1.7873888362939,
+      "id": 0,
+      "normal": [
+        -6.938881496196561e-18,
+        1,
+        -1.1102231569740703e-16
+      ]
+    },
+    {
+      "distance": 0.14957799598037624,
+      "id": 1,
+      "normal": [
+        -1.1102230246251565e-16,
+        -5.551115123125783e-17,
+        -1
+      ]
+    },
+    {
+      "distance": 0.1840726626884044,
+      "id": 1,
+      "normal": [
+        1.2325951644078315e-32,
+        -1.110223024625157e-16,
+        -1
+      ]
+    },
+    {
+      "distance": 0.14951345413751826,
+      "id": 1,
+      "normal": [
+        1.1102230246251565e-16,
+        -5.551115123125783e-17,
+        -1
+      ]
+    },
+    {
+      "distance": 1.7873892028624712,
+      "id": 0,
+      "normal": [
+        6.938881496196561e-18,
+        1,
+        -1.1102231569740703e-16
+      ]
+    },
+    {
+      "distance": 0.1463573402660978,
+      "id": 1,
+      "normal": [
+        0,
+        -5.551115123125783e-17,
+        -1
+      ]
+    },
+    {
+      "distance": 3.200000047683716,
+      "id": -1,
+      "normal": [
+        0.816496580927726,
+        -0.49999991106389685,
+        -0.28867528863660674
+      ]
+    },
+    {
+      "distance": 3.200000047683716,
+      "id": -1,
+      "normal": [
+        0.8164965809277263,
+        -0.4999999110638969,
+        -0.28867528863660674
+      ]
+    },
+    {
+      "distance": 3.200000047683716,
+      "id": -1,
+      "normal": [
+        0.37322601503369723,
+        -0.49999991106389713,
+        -0.7814745233455542
+      ]
+    },
+    {
+      "distance": 0.14355410162493,
+      "id": 1,
+      "normal": [
+        0,
+        0,
+        -1
+      ]
+    },
+    {
+      "distance": 0.2671989135143067,
+      "id": 1,
+      "normal": [
+        0,
+        0,
+        -1
+      ]
+    },
+    {
+      "distance": 0.14355410162493,
+      "id": 1,
+      "normal": [
+        0,
+        0,
+        -1
+      ]
+    },
+    {
+      "distance": 3.200000047683716,
+      "id": -1,
+      "normal": [
+        1.2819751242557097e-16,
+        -0.577350269189626,
+        0.8164965809277259
+      ]
+    },
+    {
+      "distance": 3.200000047683716,
+      "id": -1,
+      "normal": [
+        -0.816496580927726,
+        -0.5773502691896258,
+        1.922962686383564e-16
+      ]
+    },
+    {
+      "distance": 3.200000047683716,
+      "id": -1,
+      "normal": [
+        -0.5773502691896258,
+        -0.5773502691896258,
+        -0.5773502691896257
+      ]
+    },
+    {
+      "distance": 3.200000047683716,
+      "id": -1,
+      "normal": [
+        -0.5773502691896258,
+        -0.7886751772596577,
+        -0.21132470617775417
+      ]
+    },
+    {
+      "distance": 3.200000047683716,
+      "id": -1,
+      "normal": [
+        -0.5576774232344073,
+        -0.5536029694503403,
+        0.618481724734367
+      ]
+    },
+    {
+      "distance": 0.1278692968751074,
+      "id": 1,
+      "normal": [
+        -1.1102230246251565e-16,
+        5.551115123125783e-17,
+        -1
+      ]
+    },
+    {
+      "distance": 0.15523422921859886,
+      "id": 1,
+      "normal": [
+        -1.2325951644078315e-32,
+        1.110223024625157e-16,
+        -1
+      ]
+    },
+    {
+      "distance": 0.12780608957095319,
+      "id": 1,
+      "normal": [
+        0,
+        5.5511144613813703e-17,
+        -1
+      ]
+    },
+    {
+      "distance": 3.200000047683716,
+      "id": -1,
+      "normal": [
+        0,
+        -0.09175140275203991,
+        0.9957819440485116
+      ]
+    },
+    {
+      "distance": 3.200000047683716,
+      "id": -1,
+      "normal": [
+        -0.9957819440485116,
+        -0.07945903635417216,
+        0.0458757174181878
+      ]
+    },
+    {
+      "distance": 3.200000047683716,
+      "id": -1,
+      "normal": [
+        -0.7365631960980242,
+        -0.40465627818485156,
+        -0.5419667468391833
+      ]
+    },
+    {
+      "distance": 3.200000047683716,
+      "id": -1,
+      "normal": [
+        -0.7365631960980242,
+        -0.6716851259037631,
+        0.07945910768130592
+      ]
+    },
+    {
+      "distance": 3.200000047683716,
+      "id": -1,
+      "normal": [
+        -0.4646427568648662,
+        0.16386724339391584,
+        0.8702037893709129
+      ]
+    },
+    {
+      "distance": 0.12757799370952405,
+      "id": 1,
+      "normal": [
+        0,
+        6.66133735365765e-16,
+        -1
+      ]
+    },
+    {
+      "distance": 0.15988629081367622,
+      "id": 1,
+      "normal": [
+        3.6977854932234945e-32,
+        -3.330669073875471e-16,
+        1
+      ]
+    },
+    {
+      "distance": 0.12766013370760954,
+      "id": 1,
+      "normal": [
+        1.1102230246251573e-16,
+        5.551115123125787e-16,
+        -1
+      ]
+    },
+    {
+      "distance": 3.200000047683716,
+      "id": -1,
+      "normal": [
+        0,
+        0.4184318977088037,
+        0.9082481747737284
+      ]
+    },
+    {
+      "distance": 3.200000047683716,
+      "id": -1,
+      "normal": [
+        -0.9082481747737284,
+        0.20921602201464254,
+        -0.3623726109304611
+      ]
+    },
+    {
+      "distance": 1.599999899193037,
+      "id": 0,
+      "normal": [
+        0,
+        1,
+        -1.110223024625157e-16
+      ]
+    },
+    {
+      "distance": 3.200000047683716,
+      "id": -1,
+      "normal": [
+        0.5773502691896261,
+        0.5773502691896255,
+        -0.5773502691896257
+      ]
+    },
+    {
+      "distance": 0.22366138104605704,
+      "id": 1,
+      "normal": [
+        0,
+        1.6653345369377348e-16,
+        -1
+      ]
+    },
+    {
+      "distance": 0.1278285404640218,
+      "id": 1,
+      "normal": [
+        0,
+        0,
+        -1
+      ]
+    }
+  ]
+}
