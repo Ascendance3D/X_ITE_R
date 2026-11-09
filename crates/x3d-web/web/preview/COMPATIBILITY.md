@@ -1,4 +1,4 @@
-# X_ITE_R Browser Preview 0.1.0 — compatibility
+# X_ITE_R Canary 0.2.0 — compatibility
 
 Reference: X_ITE 16.5.0 (`34cdf9f97`). This is a pre-release. It is **not** a drop-in replacement for X_ITE.
 `docs/API.md` lists each API member and its state. This page is the short form.
@@ -26,7 +26,7 @@ Reference: X_ITE 16.5.0 (`34cdf9f97`). This is a pre-release. It is **not** a dr
 
 ## Different from X_ITE
 
-- `browser.name` is `"X_ITE_R"`, `browser.version` is `"0.1.0"`.
+- `browser.name` is `"X_ITE_R"`, `browser.version` is `"0.2.0"`.
 - Script nodes are off by default (`scripts="true"` turns them on, with the page's privileges and `'unsafe-eval'`).
 - A lost graphics device stops the engine (X_ITE's CONNECTION_ERROR) and the element shows why. The preview page offers
   one restart (on WebGL2 after WebGPU); the engine never restarts by itself.
@@ -46,9 +46,17 @@ WebGL2 has no storage buffers, no compute shaders and no cube map arrays. On Web
   not light anything.
 - Environment lights sample their cube maps as faces of a 2D array: the filtering does not cross cube faces.
 
+## Experimental: WebXR (issue #83)
+
+WebXR is experimental in this canary. Do not rely on it.
+
+- The session modules (`xr_session.mjs`, `xr_layer.mjs`) follow X_ITE 16.5.0 `X3DWebXRContext.js`: the XR button, the session start and stop, the viewer pose, the near and far planes, gamepad navigation, and input-ray pointing with TouchSensor events.
+- XR drawing works only on the WebGL2 backend (`backend="webgl2"`). On WebGPU the XR button stays hidden, because a WebGPU canvas has no XR layer in a stable browser.
+- Not implemented: the drawing of input rays and hit points, and the drag sensors (PlaneSensor, CylinderSensor, SphereSensor) in XR.
+- Tested only with an emulated XR device. No physical headset or XR browser has run it, so no headset is supported.
+
 ## Not available
 
-- WebXR (issue #83).
 - WebGPU compatibility mode for OpenGL ES 3.1 class GPUs (issue #142).
 - The WebGL rendering properties (`MaxTextureSize`, `MaxLights`, ...), `getUserViewpoints` and the other
   X3DBrowserContext functions.
@@ -57,6 +65,7 @@ WebGL2 has no storage buffers, no compute shaders and no cube map arrays. On Web
 ## Browsers
 
 Release check of 2026-11-05 (`tests/preview/smoke.mjs`, 32 checks; `tests/preview/touch.mjs`, 8 checks).
+These results are for Browser Preview 0.1.0 (`11e148db`). Canary 0.2.0 has not run these checks yet; its release notes give its own results.
 
 | browser | system | state |
 | --- | --- | --- |

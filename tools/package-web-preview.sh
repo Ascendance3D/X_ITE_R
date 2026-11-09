@@ -1,9 +1,12 @@
 #!/usr/bin/env bash
-# Build and package the X_ITE_R Browser Preview: the browser module of crates/x3d-web, the preview page, its clean-room
-# test worlds and the example, as a directory and a .tar.gz with SHA-256 checksums.
+# Build and package an X_ITE_R browser release (Browser Preview or Canary): the browser module of crates/x3d-web, the
+# preview page, its clean-room test worlds and the example, as a directory and a .tar.gz with SHA-256 checksums.
 #
-#   tools/package-web-preview.sh [OUT_DIR]
+#   tools/package-web-preview.sh --release <ID> [OUT_DIR]
 #
+# ID is the release identity and Git tag, for example canary-0.2.0 or browser-preview-0.1.0. It gives the package name
+# (x_ite_r-<ID>), the version, and the title on the pages. The tracked sources must carry the same version (browser.version,
+# the x3d-viewer crate version of the menu title, the page tags and titles); a mismatch stops the package.
 # OUT_DIR (default target/web-preview) must not hold the package yet. The working tree must be clean: the package
 # records the commit it is built from (build-info.json), and the same commit and toolchain give the same files. The
 # source files come from that commit (git archive), so an untracked or changed file never enters the package; pkg/ is
@@ -15,7 +18,24 @@ set -euo pipefail
 cd "$(dirname "$0")/.."
 repo=$(pwd)
 
-release=x_ite_r-browser-preview-0.1.0
+if [[ "${1:-}" != --release || -z "${2:-}" ]]; then
+  echo "usage: tools/package-web-preview.sh --release <ID> [OUT_DIR]   (ID: canary-X.Y.Z or browser-preview-X.Y.Z)" >&2
+  exit 2
+fi
+release_id=$2
+shift 2
+if [[ ! "$release_id" =~ ^(canary|browser-preview)-(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)$ ]]; then
+  echo "package-web-preview: release ID '$release_id' is not canary-X.Y.Z or browser-preview-X.Y.Z" >&2
+  exit 2
+fi
+version=${release_id#*-}
+version=${version#preview-}
+case "${release_id%%-*}" in
+  canary) channel=Canary ;;
+  browser) channel="Browser Preview" ;;
+esac
+title="$channel $version"
+release=x_ite_r-$release_id
 out=${1:-target/web-preview}
 dir=$out/$release
 
@@ -33,6 +53,33 @@ fi
 python3 -I -B tools/third_party_notices.py --check
 
 commit=$(git rev-parse HEAD)
+
+# The tracked sources at the commit must carry this version, so the package, the pages and the engine agree.
+web=crates/x3d-web/web
+version_mismatch=0
+need() { # need FILE TEXT: FILE at the commit holds TEXT.
+  if ! git show "$commit:$1" | grep -qF -- "$2"; then
+    echo "package-web-preview: $1 does not hold '$2'" >&2
+    version_mismatch=1
+  fi
+}
+need "$web/x_ite_r.mjs" "get version () { return \"$version\"; }"
+need crates/x3d-viewer/Cargo.toml "version = \"$version\""
+need "$web/preview/DEPLOY.md" "# X_ITE_R $title"
+need "$web/preview/COMPATIBILITY.md" "# X_ITE_R $title"
+need "$web/preview/COMPATIBILITY.md" "\`browser.version\` is \`\"$version\"\`"
+need "$web/preview/root-index.html" "<title>X_ITE_R $title</title>"
+need "$web/preview/root-index.html" "id=\"f-version\">$version<"
+# No page tag or title names another version (Alpha/Canary/Browser Preview X.Y.Z).
+other=$(git grep -h -o -E "(Alpha|Canary|Browser Preview) [0-9]+\.[0-9]+\.[0-9]+" "$commit" -- "$web/preview" "$web/example" "$web/site" \
+  "$web/API.md" tools/md_page.py | sed 's/^[^:]*://' | grep -vxF -e "Canary $version" -e "Browser Preview $version" -e "Alpha $version" | sort -u || true)
+if [[ -n "$other" ]]; then
+  echo "package-web-preview: the pages name another version: $other" >&2
+  version_mismatch=1
+fi
+if (( version_mismatch )); then
+  exit 1
+fi
 epoch=$(git log -1 --format=%ct HEAD)
 cargo_home=${CARGO_HOME:-$HOME/.cargo}
 sysroot=$(rustc --print sysroot)
@@ -43,8 +90,6 @@ export RUSTFLAGS="${RUSTFLAGS:-} --remap-path-prefix=$cargo_home=/cargo --remap-
 # pkg/ is generated (gitignored): a file left by an older build must not enter the package.
 rm -rf crates/x3d-web/web/pkg
 tools/build-web.sh
-
-web=crates/x3d-web/web
 
 # The decoder exclusions of the web CI (issue #90, docs/media-architecture.md 8.2).
 python3 -I -B tools/check_no_aac.py --binary "$web"/pkg/*.wasm
@@ -89,20 +134,20 @@ rm "$dir/preview/root-index.html"
 
 # HTML pages of the two documents, in the package's design; the Markdown files stay beside them.
 python3 -I -B tools/md_page.py "$dir/docs/API.md" "$dir/docs/api.html" --root ../ --current API \
-  --eyebrow "Documentation · JavaScript API" --source-link API.md
+  --eyebrow "Documentation · JavaScript API" --tag "$title" --source-link API.md
 python3 -I -B tools/md_page.py "$dir/COMPATIBILITY.md" "$dir/compatibility.html" --root "" --current Compatibility \
-  --eyebrow "Compatibility · Browser Preview 0.1.0" --source-link COMPATIBILITY.md
+  --eyebrow "Compatibility · $title" --tag "$title" --source-link COMPATIBILITY.md
 
 wasm_bindgen=$(awk '/^name = "wasm-bindgen"$/ { getline; gsub(/version = |"/, ""); print; exit }' Cargo.lock)
 
-python3 -I - "$dir" "$commit" "$epoch" "$(rustc --version)" "$wasm_bindgen" <<'PY'
+python3 -I - "$dir" "$commit" "$epoch" "$(rustc --version)" "$wasm_bindgen" "$release" "$version" <<'PY'
 import hashlib, json, pathlib, sys, datetime
-d, commit, epoch, rustc, bindgen = sys.argv[1:]
+d, commit, epoch, rustc, bindgen, release, version = sys.argv[1:]
 d = pathlib.Path(d)
 wasm = (d / "pkg/x3d_web_bg.wasm").read_bytes()
 info = {
-    "release": "x_ite_r-browser-preview-0.1.0",
-    "version": "0.1.0",
+    "release": release,
+    "version": version,
     "kind": "pre-release",
     "commit": commit,
     "commit_time": datetime.datetime.fromtimestamp(int(epoch), datetime.timezone.utc).isoformat(),

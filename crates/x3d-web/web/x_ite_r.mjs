@@ -5987,7 +5987,7 @@ class X3DBrowser
 
    // X3DBrowser.name, version, getName, getVersion: this engine's own name and version.
    get name ()    { return "X_ITE_R"; }
-   get version () { return "0.1.0"; }
+   get version () { return "0.2.0"; }
    getName ()     { return this .name; }
    getVersion ()  { return this .version; }
 

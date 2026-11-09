@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Write an HTML page of the package from one of its Markdown documents, in the package's design (site/theme.css).
 
-md_page.py SOURCE.md OUT.html --root REL --current NAV --eyebrow TEXT --source-link REL
+md_page.py SOURCE.md OUT.html --root REL --current NAV --eyebrow TEXT --tag TEXT --source-link REL
 
 Standard library only, so the package build needs nothing new. It converts the Markdown subset the package documents use:
 ATX headings, paragraphs, "-" and "*" lists (nested by indentation), numbered lists, fenced code blocks, pipe tables,
@@ -16,6 +16,7 @@ ap.add_argument("out")
 ap.add_argument("--root", required=True, help="relative URL of the package root from the page, e.g. '../' or ''")
 ap.add_argument("--current", required=True, help="the navigation entry of this page")
 ap.add_argument("--eyebrow", required=True)
+ap.add_argument("--tag", required=True, help="the release tag of the header, e.g. 'Canary 0.2.0'")
 ap.add_argument("--source-link", required=True, help="relative URL of the Markdown file from the page")
 args = ap.parse_args()
 
@@ -158,7 +159,7 @@ page = f'''<!DOCTYPE html>
     <a class="brand" href="{r or './'}" aria-label="X_ITE_R start page">
       <img src="{r}site/exciter-wide.png" width="131" height="42" alt="eXciteR">
       <span class="brand-name">X_ITE_R</span>
-      <span class="tag">Alpha 0.1.0</span>
+      <span class="tag">{html.escape(args.tag)}</span>
     </a>
     <nav aria-label="Main">
 {nav_html}

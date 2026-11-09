@@ -216,12 +216,12 @@ const REPLACE_GUARD_LOGS =
 ];
 
 // The browser user interface 01 cases (ui01_case.mjs; web/API.md, "Browser user interface"). X_ITE_R names itself: the menu title is
-// "X_ITE_R v0.1.0" and the splash screen shows "X_ITE_R" for "X_ITE"; its dispose () removes the interface's elements (X_ITE leaves
+// "X_ITE_R v0.2.0" and the splash screen shows "X_ITE_R" for "X_ITE"; its dispose () removes the interface's elements (X_ITE leaves
 // the menu, the splash screen and the timings panel in the shadow DOM); X_ITE's shadow root also holds the stylesheet <link>.
 const SPLASH_TITLE_X = "\n            X_ITEX3D\n         ";
 const SPLASH_TITLE_R = "\n            X_ITE_RX3D\n         ";
 const MENU_TITLE_X   = "X_ITE v16.5.0";
-const MENU_TITLE_R   = "X_ITE_R v0.1.0";
+const MENU_TITLE_R   = "X_ITE_R v0.2.0";
 
 const UI01_DIFFERENCES =
 [
