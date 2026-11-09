@@ -21,3 +21,8 @@ anchor-load-hash oracle/synthetic-rea-b09-stepped/anchor-load-runtime.wrl oracle
 anchor-load-disabled oracle/synthetic-rea-b09-stepped/anchor-load-runtime.wrl oracle/synthetic-rea-b09-stepped/anchor-load-disabled.json 0
 sensors-drag oracle/synthetic-rea-verify/drag-sensors.wrl oracle/synthetic-rea-verify/scripts/drag-sensors.json 0
 sensors-touch oracle/synthetic-rea-verify/touch-sensor.wrl oracle/synthetic-rea-verify/scripts/touch-sensor.json 0
+verify-switch-lod-billboard oracle/synthetic-rea-verify/switch-lod-billboard.wrl oracle/synthetic-rea-verify/scripts/switch-lod-billboard.json 0
+verify-proximity-visibility oracle/synthetic-rea-verify/proximity-visibility.wrl oracle/synthetic-rea-verify/scripts/proximity-visibility.json 0
+verify-collision-children oracle/synthetic-rea-verify/collision-children.wrl oracle/synthetic-rea-verify/scripts/collision-children.json 0
+verify-anchor-static oracle/synthetic-rea-verify/anchor-static.wrl oracle/synthetic-rea-verify/scripts/anchor-static.json 0
+verify-bind-stack oracle/synthetic-rea-verify/bind-stack.wrl oracle/synthetic-rea-verify/scripts/bind-stack.json 0
