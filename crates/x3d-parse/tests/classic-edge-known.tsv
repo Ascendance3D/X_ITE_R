@@ -2,6 +2,7 @@
 # Format: <case><TAB><field or *><TAB>fnv1a-64 of the port output<TAB>cause. The test fails when the port output changes and when the case matches (stale entry).
 # `*` is the whole case: the hash covers every differing part (field NUL text NUL, in the order of the test).
 # The first six differ because X_ITE loads a node's resource after the parse (Inline, AudioClip, Script url, the import of an Inline) and prints that result; the loads run in x3d-runtime (inline.rs, the script and sound loaders), and this test parses only. The port's log is empty here (hash of the empty string).
+# crates/x3d-viewer/tests/classic_edge_runtime.rs runs these six inputs in the runtime (x3d-drive) and compares the first line of each log message with the pinned log: equal.
 err-090	log	cbf29ce484222325	Inline url "": X_ITE prints "Inline: Couldn't load empty URL. Error: Empty URL." when the Inline loads (x3d-runtime inline.rs); a parse-only run prints nothing
 err-107	log	cbf29ce484222325	AudioClip url "a.wav": the 404 of the load is printed by the sound loader of x3d-runtime, not by the parse
 field-054	log	cbf29ce484222325	Script url "x" (set_url alias): the failed load is printed by the Script loader of x3d-runtime, not by the parse
