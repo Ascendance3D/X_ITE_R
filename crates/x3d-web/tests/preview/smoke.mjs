@@ -18,6 +18,7 @@
 import { chromium, firefox, webkit } from "playwright";
 import { webDriverPage } from "./webdriver.mjs";
 import { versionFacts } from "./release_facts.mjs";
+import { wheelZoomFacts } from "./wheel_facts.mjs";
 import { mkdir, writeFile } from "node:fs/promises";
 import { join } from "node:path";
 
@@ -368,8 +369,10 @@ await check ("EXAMINE: drag turns the view, wheel zooms", async () =>
    await page .waitForTimeout (600);
    const p2 = vec (await field ("Viewer", "position_changed"));
    const s  = await shot ("examine");
+   // One wheel event is one SCROLL_FACTOR step, and the factor depends on the user agent (wheel_facts.mjs).
+   const z  = wheelZoomFacts (await preview (() => navigator .userAgent), dist (p1, [ 0, 0, 0 ]), dist (p2, [ 0, 0, 0 ]));
 
-   return { pass: dist (p0, p1) > 0.5 && Math .abs (dist (p2, [ 0, 0, 0 ]) - dist (p1, [ 0, 0, 0 ])) > 0.2, detail: { start: p0, rotated: p1, zoomed: p2, file: s .file } };
+   return { pass: dist (p0, p1) > 0.5 && z .pass, detail: { start: p0, rotated: p1, zoomed: p2, wheel: z .detail, file: s .file } };
 });
 
 // World selection through the page's own control.
