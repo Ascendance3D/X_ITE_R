@@ -1835,3 +1835,17 @@ surrogate `%ED%A0%80`, a five-byte `%F8...`, a continuation byte `%80`) makes `d
 other escape too. The recordings confirm it for `createX3DFromURL` (`ff-data-utf8`: 24 lists, also as the first entry of a fallback list) and for Inline
 (`ff-inline-data`, cases `utf8-*`), with and without a byte order mark before the malformed sequence. The port matches (`decode_uri_component` returns
 `None`, and `data_url_text` keeps the string); it needed no change. A decoder that replaces the malformed bytes by U+FFFD fails both tests.
+
+## Web Anchor pages 01: pages, targets, unreachable URLs (node:Anchor)
+
+- `x_ite-web-runtime-02.mjs --suite anchorpages01` runs the 25 cases of `crates/x3d-web/tests/browser/anchorpages01_case.mjs`
+  (fixtures in `crates/x3d-web/tests/browser/worlds/anchor/`) and records
+  `web-browser-anchor-pages-01-baseline/anchorpages01-baseline.json` (no pictures). Each case clicks an Anchor with the real mouse
+  and records the `window.open` arguments (a recorder replaces it), the main-frame navigation requests, the server's requests, the
+  browser events, whether the world is the same, and the engine's console lines.
+- Three invocations of `--runs 3` (run at the same time) gave identical values (Chrome 156). Known X_ITE_R differences, in
+  `KNOWN_DIFFERENCES`: `window.open` gets the feature `noopener`; no `Done loading scene` info line.
+
+```
+node oracle/x_ite-web-runtime-02.mjs oracle/web-browser-anchor-pages-01-baseline --runs 3 --suite anchorpages01
+```

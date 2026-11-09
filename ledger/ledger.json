@@ -3178,17 +3178,18 @@
     "crates/x3d-viewer/src/pointer.rs",
     "crates/x3d-viewer/src/walk.rs"
    ],
-   "status": "PARTIAL",
+   "status": "COMPLETE",
    "behavior": "fields, events and observable behavior of the upstream class",
    "tests": [
     "oracle/synthetic-rea-verify/*",
     "crates/x3d-viewer/tests/rea_b24_anchor_collision_instanced.rs (ci-pick 2601 probes, ci-events, cl-render, cl-events, an-nested; MSAA 0/4, 3 identical X_ITE runs each; oracle/rea-b24-anchor-collision-instanced-baseline)",
     "crates/x3d-viewer/tests/rea_collision_time.rs (Billboard under Anchor with pointing probes, pictures and poses; collideTime path; MSAA 0 and 4)",
-    "crates/x3d-viewer/tests/rea_batch09_inputs.rs (cases verify-switch-lod-billboard, verify-proximity-visibility, verify-collision-children, verify-anchor-static, verify-bind-stack: scene text, poses and log per frame against pinned X_ITE, oracle/rea-b09-inputs-baseline, 3 identical recordings, MSAA 0, PR #528)"
+    "crates/x3d-viewer/tests/rea_batch09_inputs.rs (cases verify-switch-lod-billboard, verify-proximity-visibility, verify-collision-children, verify-anchor-static, verify-bind-stack: scene text, poses and log per frame against pinned X_ITE, oracle/rea-b09-inputs-baseline, 3 identical recordings, MSAA 0, PR #528)",
+    "crates/x3d-web/tests/browser/anchorpages01.test.mjs (25 cases clicked in headless Chromium against pinned X_ITE: viewpoint fragments, target parameters, window.open arguments, .html / text/html pages, unreachable and 404 urls, url lists; oracle/web-browser-anchor-pages-01-baseline, 3 identical recordings; PR #532)"
    ],
-   "missing": "only binding / static load / children paths oracle-tested here; an Anchor to a non-X3D page or another window cannot be observed by the headless runner",
+   "missing": "",
    "oracle": "",
-   "notes": "Issue #94 2026-10-31 (PR #209): Anchor, Collision and InstancedShape pointer paths recorded from pinned X_ITE (batch 24). Rust defects fixed: pointerEvents FALSE on a Shape or InstancedShape was ignored by the pointing pass; a fragment Anchor click bound its Viewpoint one frame later than X_ITE (owner decision 2026-10-31: match X_ITE). | Issue #51 2026-11-03 (PR #408): the collideTime path and Billboard orientation under an Anchor are compared (collideTime was already compared in rea_b15_particle_collision.rs). The gap about an Anchor to a non-X3D page or another window stays. Status stays PARTIAL. | PR #528 (2026-11-09): the oracle/synthetic-rea-verify worlds this entry cites had no runner and no baseline; they now run in rea_batch09_inputs and equal pinned X_ITE (scene text, poses, log; no pictures). Test reference only, the status does not change."
+   "notes": "Issue #94 2026-10-31 (PR #209): Anchor, Collision and InstancedShape pointer paths recorded from pinned X_ITE (batch 24). Rust defects fixed: pointerEvents FALSE on a Shape or InstancedShape was ignored by the pointing pass; a fragment Anchor click bound its Viewpoint one frame later than X_ITE (owner decision 2026-10-31: match X_ITE). | Issue #51 2026-11-03 (PR #408): the collideTime path and Billboard orientation under an Anchor are compared (collideTime was already compared in rea_b15_particle_collision.rs). The gap about an Anchor to a non-X3D page or another window stays. Status stays PARTIAL. | PR #528 (2026-11-09): the oracle/synthetic-rea-verify worlds this entry cites had no runner and no baseline; they now run in rea_batch09_inputs and equal pinned X_ITE (scene text, poses, log; no pictures). Test reference only, the status does not change. | PR #532 (2026-11-09): the headless web build observes what the native runner cannot. Pinned Anchor.js requestImmediateLoad and FileLoader.js loadDocumentAsync were compared in 25 cases: 24 matched at once; a text/html response whose url does not end in .html was parsed as X3D because the web fetcher kept no Content-Type, fixed (wasm.rs WebFetcher). Recorded differences in KNOWN_DIFFERENCES: window.open gets noopener (documented in web/API.md, a safety choice), and X_ITE's info line Done loading scene for an Anchor-loaded world is not printed (console text only). Limits: window.open is observed through a recorder, a navigation only as its request. With the binding, static load, children (rea_b09, rea_batch09_inputs verify-anchor-static, rea_b24 an-nested) and these page paths compared, nothing open remains: COMPLETE."
   },
   {
    "id": "node:Inline",

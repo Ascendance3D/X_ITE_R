@@ -1,0 +1,372 @@
+{
+ "pinned": "34cdf9f97",
+ "chrome": "156.0.8078.47",
+ "gl": "ANGLE (NVIDIA Corporation, NVIDIA GeForce RTX 3060 Ti/PCIe/SSE2, OpenGL ES 3.2)",
+ "runs": 3,
+ "identicalValues": true,
+ "pictures": {},
+ "values": {
+  "anchorPages.page": {
+   "page": "navigated",
+   "opened": null,
+   "sameWorld": null,
+   "events": null,
+   "viewpointBound": null,
+   "navigations": [
+    "http://test/worlds/anchor/page.html"
+   ],
+   "served": [
+    "/worlds/anchor/page.html"
+   ],
+   "lines": []
+  },
+  "anchorPages.pageHtm": {
+   "page": "navigated",
+   "opened": null,
+   "sameWorld": null,
+   "events": null,
+   "viewpointBound": null,
+   "navigations": [
+    "http://test/worlds/anchor/page.htm"
+   ],
+   "served": [
+    "/worlds/anchor/page.htm"
+   ],
+   "lines": []
+  },
+  "anchorPages.pageUpper": {
+   "page": "stayed",
+   "opened": [],
+   "sameWorld": true,
+   "events": [],
+   "viewpointBound": false,
+   "navigations": [],
+   "served": [
+    "/worlds/anchor/page.HTML"
+   ],
+   "lines": [
+    "error: Anchor: Couldn't load URL 'http://test/worlds/anchor/page.HTML'. Error: Not Found"
+   ]
+  },
+  "anchorPages.pageQuery": {
+   "page": "navigated",
+   "opened": null,
+   "sameWorld": null,
+   "events": null,
+   "viewpointBound": null,
+   "navigations": [
+    "http://test/worlds/anchor/page.html?a=1"
+   ],
+   "served": [
+    "/worlds/anchor/page.html",
+    "/worlds/anchor/page.html"
+   ],
+   "lines": []
+  },
+  "anchorPages.targetBlank": {
+   "page": "stayed",
+   "opened": [
+    {
+     "url": "http://test/worlds/anchor/page.html",
+     "target": "_blank",
+     "features": null
+    }
+   ],
+   "sameWorld": true,
+   "events": [],
+   "viewpointBound": false,
+   "navigations": [],
+   "served": [],
+   "lines": []
+  },
+  "anchorPages.targetName": {
+   "page": "stayed",
+   "opened": [
+    {
+     "url": "http://test/worlds/anchor/page.html",
+     "target": "frame1",
+     "features": null
+    }
+   ],
+   "sameWorld": true,
+   "events": [],
+   "viewpointBound": false,
+   "navigations": [],
+   "served": [],
+   "lines": []
+  },
+  "anchorPages.targetSelf": {
+   "page": "stayed",
+   "opened": [
+    {
+     "url": "http://test/worlds/anchor/page.html",
+     "target": "_self",
+     "features": null
+    }
+   ],
+   "sameWorld": true,
+   "events": [],
+   "viewpointBound": false,
+   "navigations": [],
+   "served": [],
+   "lines": []
+  },
+  "anchorPages.targetEmpty": {
+   "page": "navigated",
+   "opened": null,
+   "sameWorld": null,
+   "events": null,
+   "viewpointBound": null,
+   "navigations": [
+    "http://test/worlds/anchor/page.html"
+   ],
+   "served": [
+    "/worlds/anchor/page.html"
+   ],
+   "lines": []
+  },
+  "anchorPages.paramFirstWins": {
+   "page": "stayed",
+   "opened": [
+    {
+     "url": "http://test/worlds/anchor/page.html",
+     "target": "first",
+     "features": null
+    }
+   ],
+   "sameWorld": true,
+   "events": [],
+   "viewpointBound": false,
+   "navigations": [],
+   "served": [],
+   "lines": []
+  },
+  "anchorPages.paramMalformed": {
+   "page": "navigated",
+   "opened": null,
+   "sameWorld": null,
+   "events": null,
+   "viewpointBound": null,
+   "navigations": [
+    "http://test/worlds/anchor/page.html"
+   ],
+   "served": [
+    "/worlds/anchor/page.html"
+   ],
+   "lines": []
+  },
+  "anchorPages.x3dTargetBlank": {
+   "page": "stayed",
+   "opened": [
+    {
+     "url": "http://test/worlds/anchor/other.wrl",
+     "target": "_blank",
+     "features": null
+    }
+   ],
+   "sameWorld": true,
+   "events": [],
+   "viewpointBound": false,
+   "navigations": [],
+   "served": [],
+   "lines": []
+  },
+  "anchorPages.x3dTargetName": {
+   "page": "stayed",
+   "opened": [
+    {
+     "url": "http://test/worlds/anchor/other.wrl",
+     "target": "win2",
+     "features": null
+    }
+   ],
+   "sameWorld": true,
+   "events": [],
+   "viewpointBound": false,
+   "navigations": [],
+   "served": [],
+   "lines": []
+  },
+  "anchorPages.x3dTargetSelf": {
+   "page": "stayed",
+   "opened": [],
+   "sameWorld": false,
+   "events": [
+    "shutdown",
+    "initialized",
+    "load"
+   ],
+   "viewpointBound": null,
+   "navigations": [],
+   "served": [
+    "/worlds/anchor/other.wrl"
+   ],
+   "lines": [
+    "info: Done loading scene 'http://test/worlds/anchor/other.wrl'."
+   ]
+  },
+  "anchorPages.fragment": {
+   "page": "stayed",
+   "opened": [],
+   "sameWorld": true,
+   "events": [],
+   "viewpointBound": true,
+   "navigations": [],
+   "served": [],
+   "lines": []
+  },
+  "anchorPages.fragmentTarget": {
+   "page": "stayed",
+   "opened": [],
+   "sameWorld": true,
+   "events": [],
+   "viewpointBound": true,
+   "navigations": [],
+   "served": [],
+   "lines": []
+  },
+  "anchorPages.missingThenPage": {
+   "page": "navigated",
+   "opened": null,
+   "sameWorld": null,
+   "events": null,
+   "viewpointBound": null,
+   "navigations": [
+    "http://test/worlds/anchor/page.html"
+   ],
+   "served": [
+    "/status/404/missing.wrl",
+    "/worlds/anchor/page.html"
+   ],
+   "lines": [
+    "warning: Anchor: Couldn't load URL 'http://test/status/404/missing.wrl', trying URL 2 of 2. Error: Not Found"
+   ]
+  },
+  "anchorPages.pageThenX3d": {
+   "page": "navigated",
+   "opened": null,
+   "sameWorld": null,
+   "events": null,
+   "viewpointBound": null,
+   "navigations": [
+    "http://test/worlds/anchor/page.html"
+   ],
+   "served": [
+    "/worlds/anchor/page.html"
+   ],
+   "lines": []
+  },
+  "anchorPages.unreachablePage": {
+   "page": "navigated",
+   "opened": null,
+   "sameWorld": null,
+   "events": null,
+   "viewpointBound": null,
+   "navigations": [
+    "http://unreachable.invalid/page.html"
+   ],
+   "served": [],
+   "lines": []
+  },
+  "anchorPages.unreachablePageTarget": {
+   "page": "stayed",
+   "opened": [
+    {
+     "url": "http://unreachable.invalid/page.html",
+     "target": "_blank",
+     "features": null
+    }
+   ],
+   "sameWorld": true,
+   "events": [],
+   "viewpointBound": false,
+   "navigations": [],
+   "served": [],
+   "lines": []
+  },
+  "anchorPages.unreachableWorld": {
+   "page": "stayed",
+   "opened": [],
+   "sameWorld": true,
+   "events": [],
+   "viewpointBound": false,
+   "navigations": [],
+   "served": [],
+   "lines": [
+    "error: Anchor: Couldn't load URL 'http://unreachable.invalid/world.wrl'. TypeError: Failed to fetch"
+   ]
+  },
+  "anchorPages.unreachableWorldTarget": {
+   "page": "stayed",
+   "opened": [
+    {
+     "url": "http://unreachable.invalid/world.wrl",
+     "target": "_blank",
+     "features": null
+    }
+   ],
+   "sameWorld": true,
+   "events": [],
+   "viewpointBound": false,
+   "navigations": [],
+   "served": [],
+   "lines": []
+  },
+  "anchorPages.notFoundText": {
+   "page": "stayed",
+   "opened": [],
+   "sameWorld": true,
+   "events": [],
+   "viewpointBound": false,
+   "navigations": [],
+   "served": [
+    "/status/404/doc.txt"
+   ],
+   "lines": [
+    "error: Anchor: Couldn't load URL 'http://test/status/404/doc.txt'. Error: Not Found"
+   ]
+  },
+  "anchorPages.notFoundPage": {
+   "page": "navigated",
+   "opened": null,
+   "sameWorld": null,
+   "events": null,
+   "viewpointBound": null,
+   "navigations": [
+    "http://test/status/404/page.html"
+   ],
+   "served": [
+    "/status/404/page.html"
+   ],
+   "lines": []
+  },
+  "anchorPages.emptyUrl": {
+   "page": "stayed",
+   "opened": [],
+   "sameWorld": true,
+   "events": [],
+   "viewpointBound": false,
+   "navigations": [],
+   "served": [],
+   "lines": [
+    "error: Anchor: Couldn't load empty URL. Error: Empty URL."
+   ]
+  },
+  "anchorPages.foreignOrigin": {
+   "page": "stayed",
+   "opened": [
+    {
+     "url": "http://foreign/worlds/anchor/page.html",
+     "target": "_blank",
+     "features": null
+    }
+   ],
+   "sameWorld": true,
+   "events": [],
+   "viewpointBound": false,
+   "navigations": [],
+   "served": [],
+   "lines": []
+  }
+ }
+}
