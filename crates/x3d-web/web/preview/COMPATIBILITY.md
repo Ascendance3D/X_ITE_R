@@ -65,7 +65,7 @@ WebXR is experimental in this canary. Do not rely on it.
 ## Browsers
 
 Release check of 2026-11-05 (`tests/preview/smoke.mjs`, 32 checks; `tests/preview/touch.mjs`, 8 checks).
-These results are for Browser Preview 0.1.0 (`11e148db`). Canary 0.2.0 has not run these checks yet; its release notes give its own results.
+These results are for the earlier preview package, version 0.1.0 (`11e148db`). Canary 0.2.0 has not run these checks yet; its release notes give its own results.
 
 | browser | system | state |
 | --- | --- | --- |
