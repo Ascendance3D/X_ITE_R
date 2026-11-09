@@ -620,11 +620,12 @@
    "behavior": "fields, events and observable behavior of the upstream class",
    "tests": [
     "oracle/synthetic-rea-verify/*",
-    "crates/x3d-viewer/tests/rea_batch09_inputs.rs::rea_batch09_inputs_cases_match_x_ite (background-runtime)"
+    "crates/x3d-viewer/tests/rea_batch09_inputs.rs::rea_batch09_inputs_cases_match_x_ite (background-runtime)",
+    "crates/x3d-viewer/tests/rea_batch09_inputs.rs (cases verify-switch-lod-billboard, verify-proximity-visibility, verify-collision-children, verify-anchor-static, verify-bind-stack: scene text, poses and log per frame against pinned X_ITE, oracle/rea-b09-inputs-baseline, 3 identical recordings, MSAA 0, PR #528)"
    ],
    "missing": "",
    "oracle": "",
-   "notes": "Batch 09 d8cce9b. TextureBackground stays NOT_TESTED."
+   "notes": "Batch 09 d8cce9b. TextureBackground stays NOT_TESTED. | PR #528 (2026-11-09): the oracle/synthetic-rea-verify worlds this entry cites had no runner and no baseline; they now run in rea_batch09_inputs and equal pinned X_ITE (scene text, poses, log; no pictures). Test reference only, the status does not change."
   },
   {
    "id": "node:Fog",
@@ -646,11 +647,12 @@
    "tests": [
     "oracle/synthetic-rea-verify/*",
     "crates/x3d-viewer/tests/rea_batch09_inputs.rs::rea_batch09_inputs_cases_match_x_ite (fog-runtime)",
-    "crates/x3d-render/tests/render_rea_b09_inputs.rs::rea_b09_inputs_renders_match_x_ite (fogcoord-*)"
+    "crates/x3d-render/tests/render_rea_b09_inputs.rs::rea_b09_inputs_renders_match_x_ite (fogcoord-*)",
+    "crates/x3d-viewer/tests/rea_batch09_inputs.rs (cases verify-switch-lod-billboard, verify-proximity-visibility, verify-collision-children, verify-anchor-static, verify-bind-stack: scene text, poses and log per frame against pinned X_ITE, oracle/rea-b09-inputs-baseline, 3 identical recordings, MSAA 0, PR #528)"
    ],
    "missing": "",
    "oracle": "",
-   "notes": "Batch 09 d8cce9b/d44ed6f."
+   "notes": "Batch 09 d8cce9b/d44ed6f. | PR #528 (2026-11-09): the oracle/synthetic-rea-verify worlds this entry cites had no runner and no baseline; they now run in rea_batch09_inputs and equal pinned X_ITE (scene text, poses, log; no pictures). Test reference only, the status does not change."
   },
   {
    "id": "node:FogCoordinate",
@@ -736,11 +738,12 @@
    "status": "COMPLETE",
    "behavior": "fields, events and observable behavior of the upstream class",
    "tests": [
-    "oracle/synthetic-rea-verify/{switch-lod-billboard,collision-children,proximity-visibility}.wrl"
+    "oracle/synthetic-rea-verify/{switch-lod-billboard,collision-children,proximity-visibility}.wrl",
+    "crates/x3d-viewer/tests/rea_batch09_inputs.rs (cases verify-switch-lod-billboard, verify-proximity-visibility, verify-collision-children, verify-anchor-static, verify-bind-stack: scene text, poses and log per frame against pinned X_ITE, oracle/rea-b09-inputs-baseline, 3 identical recordings, MSAA 0, PR #528)"
    ],
    "missing": "",
    "oracle": "x10_compare exact",
-   "notes": ""
+   "notes": "PR #528 (2026-11-09): the oracle/synthetic-rea-verify worlds this entry cites had no runner and no baseline; they now run in rea_batch09_inputs and equal pinned X_ITE (scene text, poses, log; no pictures). Test reference only, the status does not change."
   },
   {
    "id": "node:TransformSensor",
@@ -779,11 +782,12 @@
    "status": "COMPLETE",
    "behavior": "fields, events and observable behavior of the upstream class",
    "tests": [
-    "oracle/synthetic-rea-verify/{switch-lod-billboard,collision-children,proximity-visibility}.wrl"
+    "oracle/synthetic-rea-verify/{switch-lod-billboard,collision-children,proximity-visibility}.wrl",
+    "crates/x3d-viewer/tests/rea_batch09_inputs.rs (cases verify-switch-lod-billboard, verify-proximity-visibility, verify-collision-children, verify-anchor-static, verify-bind-stack: scene text, poses and log per frame against pinned X_ITE, oracle/rea-b09-inputs-baseline, 3 identical recordings, MSAA 0, PR #528)"
    ],
    "missing": "",
    "oracle": "x10_compare exact",
-   "notes": ""
+   "notes": "PR #528 (2026-11-09): the oracle/synthetic-rea-verify worlds this entry cites had no runner and no baseline; they now run in rea_batch09_inputs and equal pinned X_ITE (scene text, poses, log; no pictures). Test reference only, the status does not change."
   },
   {
    "id": "node:BooleanFilter",
@@ -1837,11 +1841,12 @@
    "behavior": "fields, events and observable behavior of the upstream class",
    "tests": [
     "oracle/synthetic-rea-verify/{switch-lod-billboard,collision-children,proximity-visibility}.wrl",
-    "crates/x3d-viewer/tests/rea_batch11_bbox.rs (bb-static, bb-others, bb-screen, bb-dynamic, MSAA 0/4)"
+    "crates/x3d-viewer/tests/rea_batch11_bbox.rs (bb-static, bb-others, bb-screen, bb-dynamic, MSAA 0/4)",
+    "crates/x3d-viewer/tests/rea_batch09_inputs.rs (cases verify-switch-lod-billboard, verify-proximity-visibility, verify-collision-children, verify-anchor-static, verify-bind-stack: scene text, poses and log per frame against pinned X_ITE, oracle/rea-b09-inputs-baseline, 3 identical recordings, MSAA 0, PR #528)"
    ],
    "missing": "",
    "oracle": "x10_compare exact",
-   "notes": "Batch 11 2026-10-21: bboxDisplay matches X_ITE (bb-static, bb-others, bb-dynamic). Billboard's own bboxDisplay is not covered."
+   "notes": "Batch 11 2026-10-21: bboxDisplay matches X_ITE (bb-static, bb-others, bb-dynamic). Billboard's own bboxDisplay is not covered. | PR #528 (2026-11-09): the oracle/synthetic-rea-verify worlds this entry cites had no runner and no baseline; they now run in rea_batch09_inputs and equal pinned X_ITE (scene text, poses, log; no pictures). Test reference only, the status does not change."
   },
   {
    "id": "node:StaticGroup",
@@ -1884,11 +1889,12 @@
    "status": "COMPLETE",
    "behavior": "fields, events and observable behavior of the upstream class",
    "tests": [
-    "oracle/synthetic-rea-verify/{switch-lod-billboard,collision-children,proximity-visibility}.wrl"
+    "oracle/synthetic-rea-verify/{switch-lod-billboard,collision-children,proximity-visibility}.wrl",
+    "crates/x3d-viewer/tests/rea_batch09_inputs.rs (cases verify-switch-lod-billboard, verify-proximity-visibility, verify-collision-children, verify-anchor-static, verify-bind-stack: scene text, poses and log per frame against pinned X_ITE, oracle/rea-b09-inputs-baseline, 3 identical recordings, MSAA 0, PR #528)"
    ],
    "missing": "",
    "oracle": "x10_compare exact",
-   "notes": ""
+   "notes": "PR #528 (2026-11-09): the oracle/synthetic-rea-verify worlds this entry cites had no runner and no baseline; they now run in rea_batch09_inputs and equal pinned X_ITE (scene text, poses, log; no pictures). Test reference only, the status does not change."
   },
   {
    "id": "node:Transform",
@@ -1910,11 +1916,12 @@
    "behavior": "fields, events and observable behavior of the upstream class",
    "tests": [
     "oracle/synthetic-rea-verify/{switch-lod-billboard,collision-children,proximity-visibility}.wrl",
-    "crates/x3d-viewer/tests/rea_batch11_bbox.rs (bb-static, bb-others, bb-screen, bb-dynamic, MSAA 0/4)"
+    "crates/x3d-viewer/tests/rea_batch11_bbox.rs (bb-static, bb-others, bb-screen, bb-dynamic, MSAA 0/4)",
+    "crates/x3d-viewer/tests/rea_batch09_inputs.rs (cases verify-switch-lod-billboard, verify-proximity-visibility, verify-collision-children, verify-anchor-static, verify-bind-stack: scene text, poses and log per frame against pinned X_ITE, oracle/rea-b09-inputs-baseline, 3 identical recordings, MSAA 0, PR #528)"
    ],
    "missing": "",
    "oracle": "x10_compare exact",
-   "notes": "Batch 11 2026-10-21: bboxDisplay matches X_ITE (bb-static, bb-dynamic)."
+   "notes": "Batch 11 2026-10-21: bboxDisplay matches X_ITE (bb-static, bb-dynamic). | PR #528 (2026-11-09): the oracle/synthetic-rea-verify worlds this entry cites had no runner and no baseline; they now run in rea_batch09_inputs and equal pinned X_ITE (scene text, poses, log; no pictures). Test reference only, the status does not change."
   },
   {
    "id": "node:HAnimDisplacer",
@@ -2986,11 +2993,12 @@
    "tests": [
     "oracle/synthetic-rea-verify/*",
     "crates/x3d-viewer/tests/rea_batch09_inputs.rs::rea_batch09_inputs_cases_match_x_ite (billboard-runtime)",
-    "crates/x3d-viewer/tests/rea_batch12.rs::rea_batch12_cases_match_x_ite (bbb-static, bbb-camera, bbb-dynamic, bbb-shadow, MSAA 0/4, 3 identical X_ITE recordings each)"
+    "crates/x3d-viewer/tests/rea_batch12.rs::rea_batch12_cases_match_x_ite (bbb-static, bbb-camera, bbb-dynamic, bbb-shadow, MSAA 0/4, 3 identical X_ITE recordings each)",
+    "crates/x3d-viewer/tests/rea_batch09_inputs.rs (cases verify-switch-lod-billboard, verify-proximity-visibility, verify-collision-children, verify-anchor-static, verify-bind-stack: scene text, poses and log per frame against pinned X_ITE, oracle/rea-b09-inputs-baseline, 3 identical recordings, MSAA 0, PR #528)"
    ],
    "missing": "",
    "oracle": "",
-   "notes": "Batch 09 d8cce9b. Batch 12 2026-10-21: bboxDisplay (all axisOfRotation kinds, transformed parents, empty, explicit bboxSize, nested, under a Group), camera moves, run-time changes and the SHADOW pass match X_ITE. Rust defect fixed: Billboard.getBBox and the SHADOW pass used no rotation; X_ITE keeps the rotation of the last DISPLAY traversal (Billboard.matrix). A negative check (identity matrix) fails bbb-static, bbb-camera and bbb-shadow."
+   "notes": "Batch 09 d8cce9b. Batch 12 2026-10-21: bboxDisplay (all axisOfRotation kinds, transformed parents, empty, explicit bboxSize, nested, under a Group), camera moves, run-time changes and the SHADOW pass match X_ITE. Rust defect fixed: Billboard.getBBox and the SHADOW pass used no rotation; X_ITE keeps the rotation of the last DISPLAY traversal (Billboard.matrix). A negative check (identity matrix) fails bbb-static, bbb-camera and bbb-shadow. | PR #528 (2026-11-09): the oracle/synthetic-rea-verify worlds this entry cites had no runner and no baseline; they now run in rea_batch09_inputs and equal pinned X_ITE (scene text, poses, log; no pictures). Test reference only, the status does not change."
   },
   {
    "id": "node:Collision",
@@ -3037,11 +3045,12 @@
    "status": "COMPLETE",
    "behavior": "fields, events and observable behavior of the upstream class",
    "tests": [
-    "oracle/synthetic-rea/lod.wrl, oracle/synthetic-rea-verify/switch-lod-billboard.wrl"
+    "oracle/synthetic-rea/lod.wrl, oracle/synthetic-rea-verify/switch-lod-billboard.wrl",
+    "crates/x3d-viewer/tests/rea_batch09_inputs.rs (cases verify-switch-lod-billboard, verify-proximity-visibility, verify-collision-children, verify-anchor-static, verify-bind-stack: scene text, poses and log per frame against pinned X_ITE, oracle/rea-b09-inputs-baseline, 3 identical recordings, MSAA 0, PR #528)"
    ],
    "missing": "",
    "oracle": "x10_compare exact (281 + 241 checks)",
-   "notes": "LOD.changeLevel in the DISPLAY walk, frame-rate mode, forceTransitions, USE, displayFinishEvents phase added"
+   "notes": "LOD.changeLevel in the DISPLAY walk, frame-rate mode, forceTransitions, USE, displayFinishEvents phase added | PR #528 (2026-11-09): the oracle/synthetic-rea-verify worlds this entry cites had no runner and no baseline; they now run in rea_batch09_inputs and equal pinned X_ITE (scene text, poses, log; no pictures). Test reference only, the status does not change."
   },
   {
    "id": "node:NavigationInfo",
@@ -3062,11 +3071,12 @@
    "status": "COMPLETE",
    "behavior": "fields, events and observable behavior of the upstream class",
    "tests": [
-    "oracle/synthetic-rea-verify/bind-stack.wrl + corpus suites"
+    "oracle/synthetic-rea-verify/bind-stack.wrl + corpus suites",
+    "crates/x3d-viewer/tests/rea_batch09_inputs.rs (cases verify-switch-lod-billboard, verify-proximity-visibility, verify-collision-children, verify-anchor-static, verify-bind-stack: scene text, poses and log per frame against pinned X_ITE, oracle/rea-b09-inputs-baseline, 3 identical recordings, MSAA 0, PR #528)"
    ],
    "missing": "",
    "oracle": "x10_compare exact (241 checks)",
-   "notes": ""
+   "notes": "PR #528 (2026-11-09): the oracle/synthetic-rea-verify worlds this entry cites had no runner and no baseline; they now run in rea_batch09_inputs and equal pinned X_ITE (scene text, poses, log; no pictures). Test reference only, the status does not change."
   },
   {
    "id": "node:OrthoViewpoint",
@@ -3120,11 +3130,12 @@
     "oracle/synthetic-rea-verify/*",
     "crates/x3d-viewer/tests/rea_batch09_inputs.rs::rea_batch09_inputs_cases_match_x_ite (viewpoint-runtime)",
     "crates/x3d-viewer/tests/rea_batch09_nav.rs::rea_batch09_nav_shard0..3_match_x_ite (transition worlds)",
-    "crates/x3d-viewer/tests/rea_batch12.rs::rea_batch12_cases_match_x_ite (vw-ortho, vw-persp, vw-geo, vw-layers, MSAA 0/4, 3 identical X_ITE recordings each)"
+    "crates/x3d-viewer/tests/rea_batch12.rs::rea_batch12_cases_match_x_ite (vw-ortho, vw-persp, vw-geo, vw-layers, MSAA 0/4, 3 identical X_ITE recordings each)",
+    "crates/x3d-viewer/tests/rea_batch09_inputs.rs (cases verify-switch-lod-billboard, verify-proximity-visibility, verify-collision-children, verify-anchor-static, verify-bind-stack: scene text, poses and log per frame against pinned X_ITE, oracle/rea-b09-inputs-baseline, 3 identical recordings, MSAA 0, PR #528)"
    ],
    "missing": "",
    "oracle": "",
-   "notes": "Batch 09 d8cce9b. Batch 12 2026-10-21: Browser.viewAll, StraightenHorizon and LookAt variants match X_ITE (vw-persp)."
+   "notes": "Batch 09 d8cce9b. Batch 12 2026-10-21: Browser.viewAll, StraightenHorizon and LookAt variants match X_ITE (vw-persp). | PR #528 (2026-11-09): the oracle/synthetic-rea-verify worlds this entry cites had no runner and no baseline; they now run in rea_batch09_inputs and equal pinned X_ITE (scene text, poses, log; no pictures). Test reference only, the status does not change."
   },
   {
    "id": "node:ViewpointGroup",
@@ -3171,11 +3182,12 @@
    "tests": [
     "oracle/synthetic-rea-verify/*",
     "crates/x3d-viewer/tests/rea_b24_anchor_collision_instanced.rs (ci-pick 2601 probes, ci-events, cl-render, cl-events, an-nested; MSAA 0/4, 3 identical X_ITE runs each; oracle/rea-b24-anchor-collision-instanced-baseline)",
-    "crates/x3d-viewer/tests/rea_collision_time.rs (Billboard under Anchor with pointing probes, pictures and poses; collideTime path; MSAA 0 and 4)"
+    "crates/x3d-viewer/tests/rea_collision_time.rs (Billboard under Anchor with pointing probes, pictures and poses; collideTime path; MSAA 0 and 4)",
+    "crates/x3d-viewer/tests/rea_batch09_inputs.rs (cases verify-switch-lod-billboard, verify-proximity-visibility, verify-collision-children, verify-anchor-static, verify-bind-stack: scene text, poses and log per frame against pinned X_ITE, oracle/rea-b09-inputs-baseline, 3 identical recordings, MSAA 0, PR #528)"
    ],
    "missing": "only binding / static load / children paths oracle-tested here; an Anchor to a non-X3D page or another window cannot be observed by the headless runner",
    "oracle": "",
-   "notes": "Issue #94 2026-10-31 (PR #209): Anchor, Collision and InstancedShape pointer paths recorded from pinned X_ITE (batch 24). Rust defects fixed: pointerEvents FALSE on a Shape or InstancedShape was ignored by the pointing pass; a fragment Anchor click bound its Viewpoint one frame later than X_ITE (owner decision 2026-10-31: match X_ITE). | Issue #51 2026-11-03 (PR #408): the collideTime path and Billboard orientation under an Anchor are compared (collideTime was already compared in rea_b15_particle_collision.rs). The gap about an Anchor to a non-X3D page or another window stays. Status stays PARTIAL."
+   "notes": "Issue #94 2026-10-31 (PR #209): Anchor, Collision and InstancedShape pointer paths recorded from pinned X_ITE (batch 24). Rust defects fixed: pointerEvents FALSE on a Shape or InstancedShape was ignored by the pointing pass; a fragment Anchor click bound its Viewpoint one frame later than X_ITE (owner decision 2026-10-31: match X_ITE). | Issue #51 2026-11-03 (PR #408): the collideTime path and Billboard orientation under an Anchor are compared (collideTime was already compared in rea_b15_particle_collision.rs). The gap about an Anchor to a non-X3D page or another window stays. Status stays PARTIAL. | PR #528 (2026-11-09): the oracle/synthetic-rea-verify worlds this entry cites had no runner and no baseline; they now run in rea_batch09_inputs and equal pinned X_ITE (scene text, poses, log; no pictures). Test reference only, the status does not change."
   },
   {
    "id": "node:Inline",
