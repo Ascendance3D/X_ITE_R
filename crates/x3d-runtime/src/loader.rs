@@ -1739,8 +1739,7 @@ impl Runtime {
                 match media {
                     Ok(media) => return self.movie_set_frames(node, media),
                     Err(DecodeError::Fail(name, error)) => (name, error),
-                    // setAPNG's unhandled rejection, or the browser's out-of-memory error: IN_PROGRESS.
-                    Err(DecodeError::NotAnimated) => return,
+                    // The browser's out-of-memory error: IN_PROGRESS (not changed).
                     Err(DecodeError::TooLarge(error)) => {
                         self.log_error(format!("RangeError: {error}"));
                         return;
