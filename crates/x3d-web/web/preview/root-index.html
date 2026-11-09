@@ -84,8 +84,9 @@
     <div class="band-head">
       <p class="label">Tested</p>
       <h2 id="browsers">Browsers</h2>
-      <p>The release check (32 checks: drawing, navigation, sensors, field changes, Inline, EXTERNPROTO, reload,
-        device loss, dispose) on 2026-11-05. Other browsers and devices are not tested.</p>
+      <p>Results of Browser Preview 0.1.0 (<span class="mono">11e148db</span>): the release check (32 checks: drawing,
+        navigation, sensors, field changes, Inline, EXTERNPROTO, reload, device loss, dispose) on 2026-11-05. Canary 0.2.0
+        has not run these checks yet. Other browsers and devices are not tested.</p>
     </div>
     <div class="table-wrap">
       <table>
@@ -120,9 +121,13 @@
       <p class="label">Missing</p>
       <h2>Not available</h2>
       <ul>
-        <li>WebXR.</li>
         <li>WebGPU compatibility mode for OpenGL ES 3.1 class GPUs.</li>
         <li>Most X3DBrowserContext functions and the WebGL rendering properties.</li>
+      </ul>
+      <h2>Experimental</h2>
+      <ul>
+        <li>WebXR: on the WebGL2 backend only (on WebGPU the XR button stays hidden). Input rays are not drawn, and the
+          drag sensors do not work in XR. Tested with an emulated device only; no headset is supported.</li>
       </ul>
       <p><a href="compatibility.html">The full list</a></p>
     </div>

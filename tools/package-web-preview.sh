@@ -24,18 +24,9 @@ if [[ "${1:-}" != --release || -z "${2:-}" ]]; then
 fi
 release_id=$2
 shift 2
-if [[ ! "$release_id" =~ ^(canary|browser-preview)-(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)$ ]]; then
-  echo "package-web-preview: release ID '$release_id' is not canary-X.Y.Z or browser-preview-X.Y.Z" >&2
-  exit 2
-fi
-version=${release_id#*-}
-version=${version#preview-}
-case "${release_id%%-*}" in
-  canary) channel=Canary ;;
-  browser) channel="Browser Preview" ;;
-esac
-title="$channel $version"
-release=x_ite_r-$release_id
+# The ID gives the package name, the version and the page title (tools/release_identity.py).
+ident=$(python3 -I -B tools/release_identity.py parse "$release_id") || exit 2
+IFS=$'\t' read -r release version title <<<"$ident"
 out=${1:-target/web-preview}
 dir=$out/$release
 
@@ -54,32 +45,10 @@ python3 -I -B tools/third_party_notices.py --check
 
 commit=$(git rev-parse HEAD)
 
-# The tracked sources at the commit must carry this version, so the package, the pages and the engine agree.
+# The tracked sources at the commit must carry this identity: the version strings, and page labels of this channel and
+# version only (tools/release_identity.py).
+python3 -I -B tools/release_identity.py check "$release_id" "$commit"
 web=crates/x3d-web/web
-version_mismatch=0
-need() { # need FILE TEXT: FILE at the commit holds TEXT.
-  if ! git show "$commit:$1" | grep -F -- "$2" > /dev/null; then
-    echo "package-web-preview: $1 does not hold '$2'" >&2
-    version_mismatch=1
-  fi
-}
-need "$web/x_ite_r.mjs" "get version () { return \"$version\"; }"
-need crates/x3d-viewer/Cargo.toml "version = \"$version\""
-need "$web/preview/DEPLOY.md" "# X_ITE_R $title"
-need "$web/preview/COMPATIBILITY.md" "# X_ITE_R $title"
-need "$web/preview/COMPATIBILITY.md" "\`browser.version\` is \`\"$version\"\`"
-need "$web/preview/root-index.html" "<title>X_ITE_R $title</title>"
-need "$web/preview/root-index.html" "id=\"f-version\">$version<"
-# No page tag or title names another version (Alpha/Canary/Browser Preview X.Y.Z).
-other=$(git grep -h -o -E "(Alpha|Canary|Browser Preview) [0-9]+\.[0-9]+\.[0-9]+" "$commit" -- "$web/preview" "$web/example" "$web/site" \
-  "$web/API.md" tools/md_page.py | sed 's/^[^:]*://' | grep -vxF -e "Canary $version" -e "Browser Preview $version" -e "Alpha $version" | sort -u || true)
-if [[ -n "$other" ]]; then
-  echo "package-web-preview: the pages name another version: $other" >&2
-  version_mismatch=1
-fi
-if (( version_mismatch )); then
-  exit 1
-fi
 epoch=$(git log -1 --format=%ct HEAD)
 cargo_home=${CARGO_HOME:-$HOME/.cargo}
 sysroot=$(rustc --print sysroot)

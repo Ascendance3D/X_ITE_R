@@ -17,6 +17,7 @@
 
 import { chromium, firefox, webkit } from "playwright";
 import { webDriverPage } from "./webdriver.mjs";
+import { versionFacts } from "./release_facts.mjs";
 import { mkdir, writeFile } from "node:fs/promises";
 import { join } from "node:path";
 
@@ -297,7 +298,11 @@ await check ("page starts: graphics backend and first world", async () =>
 
 await check ("version and build commit shown", async () =>
 {
-   return { pass: /^X_ITE_R 0\.1\.0$/ .test (facts .version) && /^[0-9a-f]{40} /.test (facts .build), detail: `${facts .version} / ${facts .build}` };
+   // The expected version and commit are the package's own (build-info.json at the base URL), not a fixed version.
+   const response = await fetch (new URL ("build-info.json", base), { cache: "no-store" });
+   const info     = response .ok ? await response .json () : null;
+
+   return versionFacts (facts, info);
 });
 
 await check ("VRML97 world renders (red, blue, green shapes)", async () =>

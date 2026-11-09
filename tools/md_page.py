@@ -16,7 +16,7 @@ ap.add_argument("out")
 ap.add_argument("--root", required=True, help="relative URL of the package root from the page, e.g. '../' or ''")
 ap.add_argument("--current", required=True, help="the navigation entry of this page")
 ap.add_argument("--eyebrow", required=True)
-ap.add_argument("--tag", required=True, help="the release tag of the header, e.g. 'Canary 0.2.0'")
+ap.add_argument("--tag", required=True, help="the release tag of the header: the channel and version, e.g. 'Canary X.Y.Z'")
 ap.add_argument("--source-link", required=True, help="relative URL of the Markdown file from the page")
 args = ap.parse_args()
 
