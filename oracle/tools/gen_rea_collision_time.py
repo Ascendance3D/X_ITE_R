@@ -19,6 +19,12 @@ y measured from the bottom, same script format as batch 24 (oracle/tools/gen_rea
   ct-bb-ctl     the same with a Group instead of the Billboard (control)
   ct-*-pick     ct-wall, ct-nested and ct-bb-ctl again, with pickProbes (the hit point 0.27 to 0.38 from the surface)
   ct-bb-head-*  Collision > Billboard (y, f) or Group (ctl) with the panel centered on the first walk's line
+  ct-live-inline   the wall Collision is inside an Inline (ct-live-inline-inner.wrl, IMPORTed as C1 so that the parent Script logs its
+                   isActive and collideTime); the avatar walks into it and keeps pushing, the parent Script sets the Inline's `load`
+                   FALSE (at 2.6 s of page time, the avatar stopped against the wall since frame 59), then TRUE (4.3 s; hist keeps time stamps only: the Script's prepareEvents count depends on when the Inline finished loading), and the avatar walks back at the wall from behind. Collision.set_live__
+                   (removeCollision / addCollision) and what happens to isActive on unload. Script key "settle" (loads at run time).
+  ct-live-inline-two  the same with a second, never reached Collision C0 in the parent (the browser's collision count stays above 0 while
+                   the Inline is unloaded)
 
 Every script has collisionProbes (getClosestObject along 44 directions) and, except where noted, pickProbes (a 16 x 16
 pointing-buffer grid, compared bit for bit).
@@ -211,5 +217,44 @@ for n, axis in (("ct-bb-head-y", "0 1 0"), ("ct-bb-head-f", "0 0 0"), ("ct-bb-he
     world(n, FLOOR + "\n" + billboard("cb", axis, 1.5) + "\n" + LANDMARKS, BB_START, ["C1"])
     script(n, 150, BB_WALK, [20, 60, 76, 84, 100, 140])
     case(n)
+
+# ---- Collision.set_live__: a Collision inside an Inline that is unloaded and loaded again ------------------------------------
+open(os.path.join(root, "ct-live-inline-inner.wrl"), "w").write(
+    HEADER + "DEF T1 Transform { translation 0 1.5 4 children [ DEF C1 Collision { children [\n"
+    + f"Shape {{ appearance {mat('0.8 0.3 0.3')} geometry Box {{ size 8 3 0.4 }} }}\n] }} ] }}\n"
+    # The parent's routes die with the Inline's scene; this Script, inside the Inline, prints what C1 sends while the scene exists
+    # (the page console is recorded: script key "console"). No shutdown (): the native build calls it on an unloaded Inline, the pinned page
+    # does not (a documented, owner-approved difference, oracle/README.md "Plain Inline reload and abort paths").
+    "DEF LOGI Script {\n  inputOnly SFBool a\n  inputOnly SFTime t\n  url \"ecmascript:\n"
+    f"    function a (v, ts) {{ print ('inner C1.isActive=' + v + '@' + (ts - {T0}) .toFixed (6)); }}\n"
+    f"    function t (v, ts) {{ print ('inner C1.collideTime=' + (v - {T0}) .toFixed (6)); }}\n"
+    "\"\n}\n"
+    "ROUTE C1.isActive TO LOGI.a\nROUTE C1.collideTime TO LOGI.t\nEXPORT C1\n")
+
+
+def live_world(name, extra_names):
+    names = ["C1"] + extra_names
+    fields = "".join(f"  inputOnly SFBool {n}_a\n  inputOnly SFTime {n}_t\n" for n in names)
+    funcs = "".join(f"    function {n}_a (v, t) {{ hist = hist + ' ' + '{n}.isActive=' + v + '@' + (t - {T0}) .toFixed (6); }}\n"
+                    f"    function {n}_t (v, t) {{ hist = hist + ' ' + '{n}.collideTime=' + (v - {T0}) .toFixed (6); }}\n" for n in names)
+    routes = "".join(f"ROUTE {n}.isActive TO LOG.{n}_a\nROUTE {n}.collideTime TO LOG.{n}_t\n" for n in names)
+    far = ("DEF C0 Collision { children [\n" + box(0, 1.5, -40, 8, 3, 0.4, "0.3 0.3 0.8") + "\n] }\n") if extra_names else ""
+    text = (HEADER + NAV + "\n" + START[0] + "\n" + FLOOR + "\nDEF INL Inline { url \"ct-live-inline-inner.wrl\" }\nIMPORT INL.C1 AS C1\n" + far + LANDMARKS
+            + "\nDEF LOG Script {\n  inputOutput SFString hist \"\"\n  field SFInt32 step 0\n  outputOnly SFBool load_out\n" + fields
+            + "  url \"ecmascript:\n" + funcs
+            + "    function prepareEvents (t) { var e = t - 946684800;\n"
+            + "      if (step == 0 && e >= 2.6) { step = 1; hist = hist + ' ' + 'load=FALSE@' + e .toFixed (6); load_out = false; }\n"
+            + "      else if (step == 1 && e >= 4.3) { step = 2; hist = hist + ' ' + 'load=TRUE@' + e .toFixed (6); load_out = true; } }\n\"\n}\n"
+            + routes + "ROUTE LOG.load_out TO INL.set_load\n")
+    open(os.path.join(root, name + ".wrl"), "w").write(text)
+    d = {"size": [SIZE, SIZE], "t0": T0, "dt": 1 / 30, "capture": [60, 78, 90, 128, 135, 160, 235], "dump": [60, 78, 79, 81, 82, 90, 128, 129, 131, 132, 135, 160, 235],
+         "frames": 240, "settle": True, "console": True, "dumpInlines": True,
+         "events": sorted(hold(FWD, 2, 130) + hold(BACK, 140, 60), key=lambda e: e["frame"]), "collisionProbes": PROBES}
+    json.dump(d, open(os.path.join(root, "scripts", name + ".json"), "w"), indent=1)
+    case(name)
+
+
+live_world("ct-live-inline", [])
+live_world("ct-live-inline-two", ["C0"])
 
 open(os.path.join(root, "cases.txt"), "w").write("\n".join(" ".join(c) for c in cases) + "\n")

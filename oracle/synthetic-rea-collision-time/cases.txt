@@ -20,3 +20,5 @@ ct-bb-ctl-pick oracle/synthetic-rea-collision-time/ct-bb-ctl-pick.wrl oracle/syn
 ct-bb-head-y oracle/synthetic-rea-collision-time/ct-bb-head-y.wrl oracle/synthetic-rea-collision-time/scripts/ct-bb-head-y.json
 ct-bb-head-f oracle/synthetic-rea-collision-time/ct-bb-head-f.wrl oracle/synthetic-rea-collision-time/scripts/ct-bb-head-f.json
 ct-bb-head-ctl oracle/synthetic-rea-collision-time/ct-bb-head-ctl.wrl oracle/synthetic-rea-collision-time/scripts/ct-bb-head-ctl.json
+ct-live-inline oracle/synthetic-rea-collision-time/ct-live-inline.wrl oracle/synthetic-rea-collision-time/scripts/ct-live-inline.json
+ct-live-inline-two oracle/synthetic-rea-collision-time/ct-live-inline-two.wrl oracle/synthetic-rea-collision-time/scripts/ct-live-inline-two.json
