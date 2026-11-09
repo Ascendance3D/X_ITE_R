@@ -1188,6 +1188,69 @@ fn a_movie_texture_waits_for_the_candidate_after_one_that_does_not_play() {
     assert!(!log.contains("tex/green.gif"), "{log}");
 }
 
+const STATIC_PNG: &[u8] =
+    include_bytes!("../../../oracle/synthetic-movie-load-errors/media/static.png");
+const NOT_PNG: &[u8] =
+    include_bytes!("../../../oracle/synthetic-movie-load-errors/media/notpng.png");
+const ANIMATED_PNG: &[u8] =
+    include_bytes!("../../../oracle/synthetic-movie-load-errors/media/good.png");
+
+/// A deliberate difference from X_ITE 16.5.0 (docs/adr/0001-browser-build-known-differences.md, row 14): apng-js returns
+/// `Error ('Not an animated PNG')` for a static PNG, MovieTexture.js does not await `setAPNG`, and the pinned node stays
+/// IN_PROGRESS for good, so the scene never finishes loading. Here it is loadData's catch: the warning, the next URL.
+#[test]
+fn a_movie_texture_url_with_a_static_png_goes_on_with_the_next_candidate() {
+    let net = TestFetcher::default();
+    let mut s = begin(
+        "#X3D V4.0 utf8\nShape { appearance Appearance { texture MovieTexture { url [ \"static.png\" \"anim.png\" ] } } geometry Box { } }\n",
+        &net,
+    );
+
+    assert!(!poll(&mut s));
+    net.respond(&w("static.png"), Ok(STATIC_PNG));
+    assert!(!poll(&mut s), "loaded before the animated PNG");
+    assert_eq!(net.requested(), [w("static.png"), w("anim.png")]);
+
+    net.respond(&w("anim.png"), Ok(ANIMATED_PNG));
+    assert!(poll(&mut s));
+
+    let log = s.take_log().join("\n");
+
+    assert!(
+        log.contains(&format!(
+            "Error loading movie '{}': Not an animated PNG",
+            w("static.png")
+        )),
+        "{log}"
+    );
+    assert!(!log.contains("anim.png"), "{log}");
+}
+
+#[test]
+fn a_movie_texture_with_only_a_static_or_non_png_fails_and_the_world_finishes_loading() {
+    for (data, message) in [(STATIC_PNG, "Not an animated PNG"), (NOT_PNG, "Not a PNG")] {
+        let net = TestFetcher::default();
+        let mut s = begin(
+            "#X3D V4.0 utf8\nShape { appearance Appearance { texture MovieTexture { url \"static.png\" } } geometry Box { } }\n",
+            &net,
+        );
+
+        assert!(!poll(&mut s));
+        net.respond(&w("static.png"), Ok(data));
+        assert!(poll(&mut s), "the world never finishes loading ({message})");
+
+        let log = s.take_log().join("\n");
+
+        assert!(
+            log.contains(&format!(
+                "Error loading movie '{}': {message}",
+                w("static.png")
+            )),
+            "{log}"
+        );
+    }
+}
+
 #[test]
 fn a_video_is_the_pages_element_and_a_video_that_fails_goes_on_with_the_next_candidate() {
     let net = TestFetcher::default();
