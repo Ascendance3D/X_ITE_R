@@ -102,8 +102,8 @@ no XR runtime (Chrome 156 on Linux reports `immersive-vr` unsupported, `XRGPUBin
   compared with the pinned context. The input rays and hit points (`ScreenLine`, `ScreenPoint`: white or, with a button pressed, blue; the
   hit point a ring and a disk in the plane of the hit) are drawn over each view of `xrFrame` on the WebGL2 backend and compared with
   the pinned pixels (`xr_views.rs`, case `stereo-pointers`); no headset has shown them.
-* **Wiring to the public API.** `getRenderingProperty("XRSession")` and the `xrSessionMode` option still behave as documented in
-  `web/API.md` (no XR); they change when the draw path exists.
+* ~~Wiring to the public API~~ (done): `getRenderingProperty("XRSession")` is TRUE while a session runs, and the XR button
+  follows the `XRSessionMode` option (`web/x_ite_r.mjs`, `web/API.md`). Corrected 2026-11-09.
 * **A native OpenXR session:** see the owner decision, item 2.
 
 ## Known difference from the pinned X_ITE

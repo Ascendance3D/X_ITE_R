@@ -6377,8 +6377,9 @@ class X3DBrowser
    // The options the shared engine reads itself (WebBrowser.setEngineOption): EnableInlineViewpoints
    // (X3DLayerNode.getUserViewpoints), LoadUrlObjects (X3DUrlObject.requestImmediateLoad), StraightenHorizon
    // (BrowserOptions.set_StraightenHorizon__, X3DBrowser.viewAll), Gravity (X3DRenderObject.gravitate) and
-   // OrderIndependentTransparency (X3DRenderObject.set_renderKey__, issue #479).
-   static #engineOptions = [ "EnableInlineViewpoints", "LoadUrlObjects", "StraightenHorizon", "Gravity", "Cache", "OrderIndependentTransparency" ];
+   // OrderIndependentTransparency (X3DRenderObject.set_renderKey__, issue #479), PrimitiveQuality and TextureQuality
+   // (the primitives, text, textures and SVG).
+   static #engineOptions = [ "EnableInlineViewpoints", "LoadUrlObjects", "StraightenHorizon", "Gravity", "Cache", "OrderIndependentTransparency", "PrimitiveQuality", "TextureQuality" ];
 
    #applyEngineOptions ()
    {
@@ -6392,6 +6393,11 @@ class X3DBrowser
          return;
 
       const value = this .#options .get (name) .getValue ();
+
+      // PrimitiveQuality and TextureQuality are strings: the engine builds its primitives, text and textures with them and
+      // the SVG parser reads them (SVGParser.js, BrowserOptions.set_PrimitiveQuality__ and set_TextureQuality__).
+      if (typeof value === "string")
+         return void this .#engine .setQualityOption (name, value);
 
       this .#engine .setEngineOption (name, typeof value === "boolean" ? value : false, typeof value === "number" ? value : 0);
    }

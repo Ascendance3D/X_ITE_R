@@ -54,11 +54,26 @@ pub enum Quality {
 
 thread_local! {
     static QUALITY: std::cell::Cell<(Quality, Quality)> = const { std::cell::Cell::new((Quality::Medium, Quality::Medium)) };
+    /// What a world parsed before its runtime exists reads: the options of the page's browser (MEDIUM until it sets them).
+    static DEFAULT_QUALITY: std::cell::Cell<(Quality, Quality)> = const { std::cell::Cell::new((Quality::Medium, Quality::Medium)) };
 }
 
 /// The browser options the SVG parser reads: (PrimitiveQuality, TextureQuality).
 pub fn set_quality(primitive: Quality, texture: Quality) {
     QUALITY.with(|q| q.set((primitive, texture)));
+}
+
+/// The options of the browser that starts a parse before it has a runtime: the page's PrimitiveQuality and TextureQuality
+/// (BrowserOptions persist across worlds), `MEDIUM` for a browser that has set none.
+pub fn set_default_quality(primitive: Quality, texture: Quality) {
+    DEFAULT_QUALITY.with(|q| q.set((primitive, texture)));
+}
+
+/// The options a parse without a runtime reads: [`set_default_quality`]'s, `MEDIUM` and `MEDIUM` when none were set.
+pub fn reset_quality() {
+    let (primitive, texture) = DEFAULT_QUALITY.with(|q| q.get());
+
+    set_quality(primitive, texture);
 }
 
 // --- the lexer ----------------------------------------------------------------------------------
