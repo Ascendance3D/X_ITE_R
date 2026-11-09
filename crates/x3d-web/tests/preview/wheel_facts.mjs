@@ -17,12 +17,14 @@ export function scrollFactor (userAgent)
    return SLOW_SCROLL .test (String (userAgent ?? "")) ? 1 / 120 : 1 / 20;
 }
 
-/** `{ pass, detail }`: the change of the distance to the center (`before` to `after`) after one wheel event. */
+/** `{ pass, detail }`: the distance to the center before and after one wheel event with deltaY < 0. X_ITE's zoom moves
+ *  the viewer toward the center for deltaY < 0 (`if (deltaY < 0) this .addMove (translation .negate (), ...)`), so the
+ *  distance must get smaller: a step away from the center fails. */
 export function wheelZoomFacts (userAgent, before, after)
 {
    const factor   = scrollFactor (userAgent);
    const expected = before * factor;
-   const zoom     = Math .abs (after - before);
+   const zoom     = before - after;
    const pass     = Number .isFinite (zoom) && expected > 0 && zoom > MIN_STEP_PART * expected;
 
    return { pass, detail: { factor: factor === 1 / 120 ? "1/120" : "1/20", expected, zoom, limit: MIN_STEP_PART * expected } };
