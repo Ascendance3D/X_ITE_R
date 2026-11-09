@@ -33,7 +33,9 @@ pub use html::parse_html_x3d;
 pub use parser::{
     ContextCall, ParseError, Parser, error_console_text, take_error_detail, take_error_warnings,
 };
-pub use svg::{Quality as SvgQuality, set_quality as set_svg_quality};
+pub use svg::{
+    Quality as SvgQuality, reset_quality as reset_svg_quality, set_quality as set_svg_quality,
+};
 pub use xml::{parse_attribute_into, parse_child_into};
 
 use std::io::Read;
