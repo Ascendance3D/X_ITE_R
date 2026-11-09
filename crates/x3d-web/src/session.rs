@@ -126,6 +126,8 @@ fn print_scene_of(scene: &x3d_scene::Scene, kind: &str) -> Result<String, String
 
 /// The browser's constant setup of every parse.
 fn parse_setup() {
+    // A world that is parsed before its runtime exists has the default browser options (no SVG quality of another browser).
+    x3d_parse::reset_svg_quality();
     x3d_fields::jsmath::set_flavor(x3d_fields::jsmath::MathFlavor::Chrome);
     x3d_render::traverse::install_particle_geometry();
 }

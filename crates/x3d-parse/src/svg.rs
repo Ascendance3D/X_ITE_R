@@ -61,6 +61,11 @@ pub fn set_quality(primitive: Quality, texture: Quality) {
     QUALITY.with(|q| q.set((primitive, texture)));
 }
 
+/// The default options of a browser that has set none: PrimitiveQuality and TextureQuality `MEDIUM`.
+pub fn reset_quality() {
+    set_quality(Quality::Medium, Quality::Medium);
+}
+
 // --- the lexer ----------------------------------------------------------------------------------
 
 /// The parser's own string cursor (`parseValue`, the sticky `Grammar` expressions, `this .value`,
