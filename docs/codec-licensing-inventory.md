@@ -6,7 +6,7 @@ Owner ruling 2026-11-02 (issue #90): before any public release of binaries that 
 
 State of this file: **first draft 2026-11-02 (`Cargo.lock` at master `7e50fa2b`); technical facts corrected 2026-11-07 from `Cargo.lock`, `vendor/` and the crate manifests at master `e0e053ec`.** The 2026-11-07 correction changes no patent position, no disposition and no owner ruling. Columns the owner listed: codec and implementation, exact crate and source, copyright license, applicable patent grants, patent-license conditions, third-party claims, distribution and notice requirements, recommended disposition. "Not assessed" means no patent research was done for that row; it is not a statement that none exists.
 
-No release exists yet (`gh release list` is empty; README: "There is no stable release"). The repository publishes source only.
+Releases (corrected 2026-11-09): when this file was first written, no release existed. Since 2026-11-05 the GitHub prerelease `browser-preview-0.1.0` ("X_ITE_R Browser Preview 0.1.0 (alpha)", commit `11e148db`) publishes a binary browser package, and https://xiter-alpha.ascendance3d.org serves the same package. That publication did not pass this gate and is not evidence of clearance; see "Evidence inventory for Canary 0.2.0" below. There is no stable release.
 
 ## Video
 
@@ -77,7 +77,7 @@ Commands: `cargo tree --offline -q -p <crate> [--target wasm32-unknown-unknown] 
 | WebP lossy (`image-webp`) | yes | yes | yes | not separable today |
 | MPEG-1 Video, Systems | yes | yes | no (since 2026-11-08; `tools/check_no_native_video.py`) | feature `native-video` off |
 | Audio: MP2/MP3, FLAC, Vorbis, PCM/ADPCM, ALAC, WAV (`symphonia`, `web-audio-api`, `hound`) | yes | yes | yes | not separable today |
-| AAC | no | no | no | excluded (`tools/check_no_aac.py`: `OK: no AAC decoder among 524 packages`) |
+| AAC | no (not in `Cargo.lock`; not detected) | no | no | excluded (`tools/check_no_aac.py`: `OK: no AAC decoder among 524 packages`) |
 
 ## Notice gaps found 2026-11-07 (technical, not legal findings)
 
@@ -88,6 +88,51 @@ Update 2026-11-08 (technical, not a legal finding): the browser package now carr
 Update 2026-11-08 (technical, not a legal finding): the MPEG-1 decoder moved behind `native-video`. Before, the browser module compiled it, but the browser loader hands every MovieTexture to the page's `<video>` element first (`crates/x3d-runtime/src/loader.rs`, `plays_video`), so the wasm never ran it. Browser behavior does not change: Chromium cannot play MPEG-1, and pinned X_ITE shows nothing for it. `tools/check_no_native_video.py --binary` now also refuses the `mpeg1/` source path in an artifact.
 
 Update 2026-11-08 (technical, not a legal finding): the browser package carries the Source Code Form of its 29 MPL-2.0 crates (`symphonia` 0.5.5 and 0.6.1, unmodified) in `third-party-source/`. These are the published crate archives, each checked against its `Cargo.lock` checksum, with a README and the MPL-2.0 text (`tools/mpl_sources.py`, run by `tools/package-web-preview.sh`; about 1.1 MB). The owner still decides the delivery method (archive or link) after legal review.
+
+## Evidence inventory for Canary 0.2.0 (2026-11-09; technical, not a legal finding)
+
+Artifact under review: `x_ite_r-canary-0.2.0.tar.gz`, SHA-256 `a49423ae119b22099ead8f545729499ac4036e5f657ea76310e41949fb63e9d7`, commit `a6947a6b` (merge of PR #521), `pkg/x3d_web_bg.wasm` SHA-256 `0cc0cf58c067c390750d2c2b2c36e1125abd00342a27d09b88b14f310e8c328d`. The canary is not published. This section lists the evidence a reviewer has and the evidence that is missing. It assesses no patent and gives no advice.
+
+### Decoders in the canary browser module
+
+The second column has two kinds of evidence. "No" rows: the decoder is not in the build graph (`Cargo.lock` or `cargo tree` check), and the binary string scan does not detect it. "Yes" rows: the crate is in the build graph, and the binary string scan detects its crate paths in the WASM. A string scan is a supplemental check, not proof of presence or absence (item 3 below). It does not show whether a decoder is called.
+
+| decoder | in the canary WASM | evidence in this repository | evidence missing for the review |
+| --- | --- | --- | --- |
+| AAC | no (not in `Cargo.lock`; not detected) | `tools/check_no_aac.py --binary`: OK; `Cargo.lock` form in CI | none for the exclusion |
+| Opus | no (not in `Cargo.lock`; not detected) | `tools/check_no_opus.py --binary`: OK | none for the exclusion |
+| VP8, VP9, WebM video, MPEG-1 Video and Systems | no (not in the wasm32 `cargo tree`; not detected) | `tools/check_no_native_video.py --cargo --binary`: OK | none for the browser package; still open for a native release |
+| AV1 intra (AVIF, `avif-rust`) | yes (default `avif` feature; detected) | AOMedia Patent License 1.0 text read; disposition "with AV1 video" | qualified review of the AOMedia grant for this decoder; the owner's written disposition, or a build with `avif` off |
+| WebP lossy (`image-webp`, VP8 intra) | yes (not separable today; detected) | VP8 documents listed in the Video table | qualified review with VP8; whether the Cross-License is needed |
+| MP3, MP2, MP1 (`symphonia-bundle-mp3` 0.5.5, 0.6.1) | yes (detected) | crate, version, features, `Cargo.lock` checksums | patent status of MPEG-1/2 Layer I to III verified by a qualified reviewer (only secondary sources here) |
+| FLAC, Vorbis/Ogg, PCM/ADPCM/A-law/mu-law, ALAC, WAV/AIFF/CAF, Matroska audio demux | yes (in the build graph; ALAC detected) | crate rows above; `hound` (WAV) | a patent position for each row ("Not assessed" today) |
+
+### Copyright notices and source (MPL-2.0) in the canary package
+
+One commit gives all of this: `a6947a6b` (its `Cargo.lock`, `tools/third_party_notices.py`, `tools/mpl_sources.py` and `tools/package-web-preview.sh`). The package's `build-info.json` records that commit. The build command was `tools/package-web-preview.sh --release canary-0.2.0 <out>`. The script runs `tools/third_party_notices.py --check` (it stops on a stale `THIRD_PARTY_CRATES.md`), then builds the WASM from the same tree, then runs `tools/mpl_sources.py --write` and `--verify` on the package (`tools/package-web-preview.sh:44,96-97`).
+
+- `THIRD_PARTY_CRATES.md`: 231 packages of the feature-resolved wasm32 `x3d-web` build, with every license text, MPL-2.0 included (`tools/third_party_notices.py`).
+- `third-party-source/`: the 29 unmodified MPL-2.0 crate archives (symphonia 0.5.5 and 0.6.1), each equal to its `Cargo.lock` checksum, with `README.md` and `MPL-2.0.txt` (`tools/mpl_sources.py`).
+- The site build of `Ascendance3D/xiter-www` keeps `third-party-source/` in the deployed site (PR 1 there), so the source is served beside the WASM.
+- Open for the review: whether this delivery meets MPL-2.0 section 3.2, and the exact notice wording.
+
+### Facts of the published Browser Preview 0.1.0 (checked 2026-11-09 on the release asset)
+
+`x_ite_r-browser-preview-0.1.0.tar.gz` SHA-256 `d48b092b93270764e0bf566f22e8aea3661d397d22757099bd4b9797ddd1ded4` (the release asset; the same package is deployed at the alpha site):
+
+- AAC and Opus: absent (`check_no_aac.py --binary`, `check_no_opus.py --binary`: OK).
+- MPEG-1: **present**. `check_no_native_video.py --binary` reports `x3d-runtime/src/mpeg1/` in `pkg/x3d_web_bg.wasm`. The MPEG-1 row is "Not assessed. Release blocker until reviewed." The decoder was compiled in but the browser loader did not call it (see the 2026-11-08 update above).
+- AV1 intra (`avif-rust`), WebP (`image-webp`) and the symphonia audio decoders: present.
+- Notices: `THIRD_PARTY_NOTICES.md` has no symphonia section and no MPL-2.0 text; the package has no `THIRD_PARTY_CRATES.md` and no `third-party-source/`.
+
+These are facts for the reviewer and the owner. This file does not decide what they mean or what to do about 0.1.0.
+
+### Open review requirements (from "What a release needs" below)
+
+1. A qualified patent position, and the owner's written disposition, for every row marked "Not assessed": MPEG-1 (native only now), MP1/MP2/MP3, FLAC, Vorbis, PCM/ADPCM, ALAC, Matroska demux, and the separate VP8 Cross-License question.
+2. A qualified review of the AOMedia grant for AV1 intra (`avif-rust`) in the default browser build.
+3. A legal reading of the MPL-2.0 notice and source delivery above.
+4. The owner's separate release authorization.
 
 ## What a release needs from this file
 
