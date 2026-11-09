@@ -2649,12 +2649,6 @@ impl WebBrowser {
             .unwrap_or(1)
     }
 
-    /// A browser option the shared engine reads itself, for the worlds and loads now and for those to come: the booleans
-    /// `EnableInlineViewpoints` (X3DLayerNode.getUserViewpoints), `LoadUrlObjects` (X3DUrlObject.requestImmediateLoad), `Cache` (X3DExternProtoDeclaration.loadData) and
-    /// `StraightenHorizon` (BrowserOptions.set_StraightenHorizon__, X3DBrowser.viewAll), and the number `Gravity`
-    /// (X3DRenderObject.gravitate), and `OrderIndependentTransparency` (X3DRenderObject.set_renderKey__: a world takes it
-    /// as its starting state, and a live world's change reaches the renderer as a rendering change, issue #479). The page
-    /// gives the option's value already coerced to the field type. Returns whether the engine has the option.
     /// The page's `PrimitiveQuality` or `TextureQuality` (`LOW`, `MEDIUM` or `HIGH`; the page gives the field's string), for
     /// the worlds and loads now and for those to come. The engine reads them itself: the primitives, the text and the
     /// textures follow them in every frame (`x3d_render::traverse::set_browser_qualities`), and the SVG parser reads them
@@ -2697,6 +2691,12 @@ impl WebBrowser {
         crate::session::set_page_quality(&get("PrimitiveQuality"), &get("TextureQuality"));
     }
 
+    /// A browser option the shared engine reads itself, for the worlds and loads now and for those to come: the booleans
+    /// `EnableInlineViewpoints` (X3DLayerNode.getUserViewpoints), `LoadUrlObjects` (X3DUrlObject.requestImmediateLoad), `Cache` (X3DExternProtoDeclaration.loadData) and
+    /// `StraightenHorizon` (BrowserOptions.set_StraightenHorizon__, X3DBrowser.viewAll), and the number `Gravity`
+    /// (X3DRenderObject.gravitate), and `OrderIndependentTransparency` (X3DRenderObject.set_renderKey__: a world takes it
+    /// as its starting state, and a live world's change reaches the renderer as a rendering change, issue #479). The page
+    /// gives the option's value already coerced to the field type. Returns whether the engine has the option.
     #[wasm_bindgen(js_name = setEngineOption)]
     pub fn set_engine_option(&mut self, name: &str, flag: bool, number: f64) -> bool {
         use x3d_runtime::browser_options::OptionValue;
