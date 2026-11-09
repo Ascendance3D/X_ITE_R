@@ -78,11 +78,18 @@ fn source(id: u32, x: f64, button0: bool) -> XrSource {
     let mut inverse = Matrix4::IDENTITY;
     inverse.translate(&Vector3::new(x, 0.0, 0.0));
     inverse.inverse();
+
+    let mut matrix = inverse;
+
+    matrix.inverse();
+
     XrSource {
         id,
         active: true,
         button0,
         inverse,
+        matrix,
+        pressed: button0,
     }
 }
 

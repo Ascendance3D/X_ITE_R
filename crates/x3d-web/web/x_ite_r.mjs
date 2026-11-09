@@ -12,7 +12,7 @@ import { createScriptRealm } from "./pkg/script.mjs";
 import { AudioMirror } from "./audio_mirror.mjs";
 import { VideoMirror } from "./video_mirror.mjs";
 import { XRSessionController } from "./xr_session.mjs";
-import { prepareLayer, drawXRFrame } from "./xr_layer.mjs";
+import { prepareLayer, drawXRFrame, xrSourceNumbers } from "./xr_layer.mjs";
 import
 {
    __bridge, X3DConstants, X3DChildObject, X3DField, X3DArrayField, X3DFieldDefinition, FieldDefinitionArray, SFNodeCache,
@@ -6325,33 +6325,32 @@ class X3DBrowser
       this .#start ();
    }
 
-   // X3DWebXRContext.xrUpdatePointers after the display, without the ray drawing: the target rays of the input sources,
-   // then the picks, button 0 and the pointer motion in the engine. A source whose ray starts to hit a sensor gets one
-   // haptic pulse (xrSensorHitPulse).
-   #xrPointers (engine, controller)
+   // X3DWebXRContext.xrUpdatePointers: the target rays of the input sources, which the engine then picks along, presses
+   // and moves the pointer with (xrFrame, on the frame it has just built) and draws, the rays and the hit points, over each
+   // view. A source whose ray starts to hit a sensor gets one haptic pulse (xrSensorHitPulse). Returns the sources of
+   // this frame for `drawXRFrame`.
+   #xrSources (controller)
    {
       const sources = [ ... controller .inputSources ?? [ ] ];
 
       if (!sources .length)
-         return;
+         return [ ];
 
       controller .updateTargetRays ();
 
-      const data = new Float64Array (sources .length * 19);
-
-      for (const [i, source] of sources .entries ())
+      return sources .map (source =>
       {
          if (!this .#xrSourceIds .has (source))
             this .#xrSourceIds .set (source, this .#xrNextSourceId ++);
 
-         data [i * 19]     = this .#xrSourceIds .get (source);
-         data [i * 19 + 1] = source .active ? 1 : 0;
-         data [i * 19 + 2] = source .gamepad ?.buttons [0] ?.pressed ? 1 : 0;
-         data .set (source .inverse, i * 19 + 3);
-      }
+         return { id: this .#xrSourceIds .get (source), source };
+      });
+   }
 
-      for (const id of engine .xrPointers (data))
-         sources .find (source => this .#xrSourceIds .get (source) === id) ?.gamepad ?.hapticActuators ?.[0] ?.pulse (0.25, 10);
+   #xrPulses (engine, sources)
+   {
+      for (const id of engine .xrTakePulses ())
+         sources .find (item => item .id === id) ?.source .gamepad ?.hapticActuators ?.[0] ?.pulse (0.25, 10);
    }
 
    // X3DWebXRContext.xrStopSession; the session's `end` event comes here too (XRSessionController.stop).
@@ -8197,8 +8196,10 @@ class X3DBrowser
 
                if (pose)
                {
-                  drawXRFrame (engine, xr .gl, xr .layer, pose, time);
-                  this .#xrPointers (engine, xr .controller);
+                  const sources = this .#xrSources (xr .controller);
+
+                  drawXRFrame (engine, xr .gl, xr .layer, pose, time, xrSourceNumbers (sources));
+                  this .#xrPulses (engine, sources);
                }
             }
             else

@@ -87,6 +87,14 @@ window .setSize = function (w, h)
 
 // views: [{ projectionMatrix, matrix, inverse, viewport: [x, y, width, height] }], column-major arrays as XRRigidTransform.
 // The viewer pose is the first view's transform when "pose" is not given.
+function invertRigid (m)
+{
+   const t = m .slice (12, 15);
+   const r = [ m [0], m [4], m [8], m [1], m [5], m [9], m [2], m [6], m [10] ]; // the transpose, column-major
+   return [ r [0], r [1], r [2], 0, r [3], r [4], r [5], 0, r [6], r [7], r [8], 0,
+            - (r [0] * t [0] + r [3] * t [1] + r [6] * t [2]), - (r [1] * t [0] + r [4] * t [1] + r [7] * t [2]), - (r [2] * t [0] + r [5] * t [1] + r [8] * t [2]), 1 ];
+}
+
 window .xrShot = async function (url, script)
 {
    const log = [ ];
@@ -112,7 +120,25 @@ window .xrShot = async function (url, script)
 
       await browser .xrStartSession ();
 
+      // script .inputSources: [{ matrix, pressed }], mock tracked-pointer input sources whose target-ray pose is `matrix` (column-major,
+      // in the reference space). They are announced to X_ITE as `inputsourceschange` does (X3DWebXRContext.xrUpdateInputSources).
+      const sources = (script .inputSources ?? [ ]) .map (({ matrix, pressed }, i) => ({
+         targetRayMode: "tracked-pointer",
+         targetRaySpace: { id: i },
+         gamepad: { axes: [ 0, 0 ], buttons: [ { pressed: !! pressed } ], hapticActuators: [ ] },
+         rayMatrix: matrix,
+      }));
+
+      if (sources .length)
+         mock .session .dispatchEvent (Object .assign (new Event ("inputsourceschange"), { added: sources, removed: [ ] }));
+
       const frame = {
+         getPose: space =>
+         {
+            const m = sources [space .id] .rayMatrix, inv = script .inputSources [space .id] .inverse ?? invertRigid (m);
+
+            return { transform: { matrix: new Float32Array (m), inverse: { matrix: new Float32Array (inv) } } };
+         },
          getViewerPose: () => ({
             transform: { matrix: new Float32Array (script .pose ?.matrix ?? identity), inverse: { matrix: new Float32Array (script .pose ?.inverse ?? identity) } },
             views: script .views .map (v => ({
@@ -146,6 +172,9 @@ window .xrShot = async function (url, script)
 
       return { ok: true, width: w, height: h, rgba: btoa (bin), log: log .sort (), requests: mock .requests,
                xrSession: browser .getRenderingProperty ("XRSession"), numViews: browser .getPose () ?.views .length,
+               // What the pinned context found for each input source (hit .id, hit .originalPoint, hit .originalNormal), recorded
+               // beside the key so that the port's drawing and its picking are compared with them.
+               inputSources: sources .map (s => ({ active: s .active, id: !! s .hit .id, point: Array .from (s .hit .originalPoint), normal: Array .from (s .hit .originalNormal) })),
                eyeMatrices: browser .getPose () ?.views .map (v => Array .from (v .matrix)) };
    }
    catch (e)

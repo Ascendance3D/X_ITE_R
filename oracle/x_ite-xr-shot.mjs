@@ -186,7 +186,7 @@ await writeFile (join (outDir, `${name}.json`), JSON .stringify ({
    pinned: (await readFile (join (ROOT, "x_ite-pin/PINNED_COMMIT"), "utf8")) .trim (),
    world: relative (ROOT, world), script: relative (ROOT, resolve (scriptArg)), runs: RUNS, ms: MS,
    renderer: first .info .renderer, size: script .size,
-   requests: first .r .requests, numViews: first .r .numViews, log: first .r .log,
+   requests: first .r .requests, numViews: first .r .numViews, log: first .r .log, ... (first .r .inputSources ?.length ? { inputSources: first .r .inputSources } : { }),
    rgbaSha256: hashes [0], pngSha256: createHash ("sha256") .update (first .png) .digest ("hex"),
 }, null, 1) + "\n");
 

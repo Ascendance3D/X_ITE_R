@@ -1133,6 +1133,8 @@ pub struct Frame {
     pub projectors: Vec<ProjectorParams>,
     /// The FLY / WALK viewer's rubber band (X3DFlyViewer.display on displayFinishEvents), drawn over the finished frame.
     pub rubber_band: Option<crate::rubber_band::RubberBand>,
+    /// The input rays and hit points of an XR view (X3DWebXRContext.xrUpdatePointers), drawn over the finished view.
+    pub xr_pointers: Vec<crate::xr::XrPointerDraw>,
 }
 
 pub const MAX_LIGHTS: usize = 8;
@@ -5085,6 +5087,7 @@ impl<'a> Builder<'a> {
 
         Frame {
             rubber_band: None,
+            xr_pointers: Vec::new(),
             projection: perspective(std::f64::consts::FRAC_PI_2, near, far, 1.0, 1.0),
             view,
             items,
@@ -5332,6 +5335,7 @@ impl<'a> Builder<'a> {
 
         let frame = Frame {
             rubber_band: None,
+            xr_pointers: Vec::new(),
             projection,
             view,
             items,
@@ -5396,6 +5400,7 @@ impl<'a> Builder<'a> {
 
             Frame {
                 rubber_band: None,
+                xr_pointers: Vec::new(),
                 projection: Matrix4::IDENTITY,
                 view: Matrix4::IDENTITY,
                 items: vec![],
@@ -5755,6 +5760,7 @@ impl<'a> Builder<'a> {
 
         Frame {
             rubber_band: None,
+            xr_pointers: Vec::new(),
             projection,
             view,
             items,

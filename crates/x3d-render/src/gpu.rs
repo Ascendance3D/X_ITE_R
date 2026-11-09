@@ -1195,6 +1195,7 @@ pub struct Renderer {
     mip_pipeline: wgpu::RenderPipeline,
     /// The rubber band of the FLY and WALK viewers (created at the first frame that has one).
     rubber_band: Option<crate::rubber_band::RubberBandGpu>,
+    xr_pointer: Option<crate::xr_pointer::XrPointerGpu>,
     /// RenderedTexture depthMap pipelines (shadow.wgsl fs_depth_color), points, lines, triangles.
     depth_color_pipelines: [wgpu::RenderPipeline; 3],
     rendered: HashMap<(u64, NodeId), RenGpu>,
@@ -2299,6 +2300,7 @@ impl Renderer {
             mip_layout,
             mip_pipeline,
             rubber_band: None,
+            xr_pointer: None,
             rendered: HashMap::new(),
             shadow_buffer,
             shadow_capacity: 64,
@@ -4304,7 +4306,8 @@ impl Renderer {
             self.sample_count()
         };
         let flip = self.flip_now;
-        self.keep_msaa_samples = samples > 1 && frame.rubber_band.is_some();
+        self.keep_msaa_samples =
+            samples > 1 && (frame.rubber_band.is_some() || !frame.xr_pointers.is_empty());
 
         if frame.layers.is_empty() {
             self.encode_frame(
@@ -4376,30 +4379,46 @@ impl Renderer {
     ) {
         self.keep_msaa_samples = false;
 
-        let Some(band) = &frame.rubber_band else {
-            return;
-        };
-
         let device = &self.device;
         let msaa = self
             .msaa_color
             .as_ref()
             .filter(|m| samples > 1 && m.5 == samples)
             .map(|m| &m.1);
-        self.rubber_band
-            .get_or_insert_with(|| crate::rubber_band::RubberBandGpu::new(device))
-            .encode(
-                device,
-                &self.queue,
-                encoder,
-                band,
-                target,
-                msaa,
-                format,
-                width,
-                height,
-                flip,
-            );
+
+        if let Some(band) = &frame.rubber_band {
+            self.rubber_band
+                .get_or_insert_with(|| crate::rubber_band::RubberBandGpu::new(device))
+                .encode(
+                    device,
+                    &self.queue,
+                    encoder,
+                    band,
+                    target,
+                    msaa,
+                    format,
+                    width,
+                    height,
+                    flip,
+                );
+        }
+
+        // X3DWebXRContext.xrUpdatePointers: the input rays and hit points of an XR view, after the finished view.
+        if !frame.xr_pointers.is_empty() {
+            self.xr_pointer
+                .get_or_insert_with(|| crate::xr_pointer::XrPointerGpu::new(device))
+                .encode(
+                    device,
+                    encoder,
+                    &frame.xr_pointers,
+                    target,
+                    msaa,
+                    format,
+                    width,
+                    height,
+                    flip,
+                );
+        }
     }
 
     /// GPU objects kept between frames: geometries, point sprites, textures, texture bind groups,

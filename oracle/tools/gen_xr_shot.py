@@ -63,8 +63,12 @@ def views(pose, eyes, size, projections):
     return result
 
 
-def script(size, pose, eyes, projections, world=None, headlight=True, frames=4):
-    return {"world": world, "headlight": headlight, "size": size, "frames": frames, "pose": {"matrix": pose, "inverse": invert_rigid(pose)}, "views": views(pose, eyes, size, projections)}
+def script(size, pose, eyes, projections, world=None, headlight=True, frames=4, sources=None):
+    out = {"world": world, "headlight": headlight, "size": size, "frames": frames, "pose": {"matrix": pose, "inverse": invert_rigid(pose)}, "views": views(pose, eyes, size, projections)}
+    if sources:
+        # XR input sources: the target-ray pose (column-major, in the reference space) and whether a gamepad button is pressed.
+        out["inputSources"] = [{"matrix": m, "pressed": pressed} for m, pressed in sources]
+    return out
 
 
 IPD = 0.064
@@ -74,6 +78,13 @@ STEREO = [trans(-IPD / 2, 0, 0), trans(IPD / 2, 0, 0)]
 POSE = mul(trans(0.3, 0.1, 0.2), roty(0.2))
 TOE_IN = [mul(trans(-IPD / 2, 0, 0), roty(-0.05)), mul(trans(IPD / 2, 0, 0), roty(0.05))]
 OFF_AXIS = [offaxis(-0.9, 0.7, -0.8, 0.8, 0.1, 100.0), offaxis(-0.7, 0.9, -0.8, 0.8, 0.1, 100.0)]
+POINTER_SOURCES = [
+    (mul(trans(-0.25, -0.25, -0.05), mul(roty(-0.17), rotx(0.3))), False),
+    (mul(trans(0.45, -0.2, -0.1), rotx(0.3)), False),
+    (mul(trans(0.0, -0.3, -0.1), rotx(0.9)), True),
+    (mul(trans(-0.55, -0.3, -0.05), mul(roty(0.175), rotx(0.226))), True),
+    (mul(trans(-0.9, -0.2, 0.0), mul(roty(-0.418), rotx(0.15))), False),
+]
 # The world of each script is oracle/synthetic-xr/WORLD.x3dv ("world"). The viewer pose, the eyes and the frusta vary by case.
 SCRIPTS = {
     # The viewer at the origin, eyes 64 mm apart, the same symmetric frustum: the simplest stereo pair.
@@ -97,6 +108,10 @@ SCRIPTS = {
     # Clip planes, and points and lines (screen-space geometry): the same pose, toe-in and frusta.
     "stereo-clipplane": script(SIZE, POSE, TOE_IN, OFF_AXIS, "stereo-clipplane"),
     "stereo-points-lines": script(SIZE, POSE, TOE_IN, OFF_AXIS, "stereo-points-lines"),
+    # Input rays and their hit points (X3DWebXRContext.xrUpdatePointers, ScreenLine, ScreenPoint): a ray that hits far away, one
+    # that hits within the ray's length (the ray ends at the hit), a pressed one that hits, a pressed one that misses, one
+    # that hits a curved surface (a tilted disk).
+    "stereo-pointers": script(SIZE, POSE, TOE_IN, OFF_AXIS, "stereo-pointers", sources=POINTER_SOURCES),
 }
 
 for name, s in SCRIPTS.items():

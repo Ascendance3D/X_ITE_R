@@ -80,7 +80,31 @@ fn xr_pose_of(pose: &[f64], views: &[f64]) -> Result<x3d_render::xr::XrPose, JsE
         view_matrix: matrix(&pose[16..32]),
         views,
         headlight: true,
+        rays: vec![],
+        content_scale: 1.0,
     })
+}
+
+/// The input sources of [`WebBrowser::xr_frame`]: 36 numbers each, the page's id, `active` (1 or 0), button 0 pressed, any button
+/// pressed, then the target-ray pose's `transform.inverse.matrix` and `transform.matrix` (column-major, as WebXR gives them).
+fn xr_sources_of(sources: &[f64]) -> Result<Vec<XrSource>, JsError> {
+    if !sources.len().is_multiple_of(36) {
+        return Err(JsError::new(
+            "xrFrame: the input sources need 36 numbers each",
+        ));
+    }
+
+    Ok(sources
+        .chunks_exact(36)
+        .map(|s| XrSource {
+            id: s[0] as u32,
+            active: s[1] != 0.0,
+            button0: s[2] != 0.0,
+            pressed: s[3] != 0.0,
+            inverse: x3d_fields::math::Matrix4(s[4..20].try_into().expect("16 numbers")),
+            matrix: x3d_fields::math::Matrix4(s[20..36].try_into().expect("16 numbers")),
+        })
+        .collect())
 }
 
 /// The pipeline of [`WebBrowser::xr_frame`] that draws a texture of the canvas size into the canvas, texel for texel.
@@ -481,6 +505,8 @@ pub struct WebBrowser {
     xr_target: Option<(wgpu::Texture, wgpu::Texture)>,
     /// The pipeline that draws the composed XR views into the canvas, made on first use.
     xr_blit: Option<(wgpu::RenderPipeline, wgpu::BindGroupLayout)>,
+    /// The haptic pulses of the last `xrFrame` (`xrTakePulses`).
+    xr_pulses: Vec<u32>,
 }
 
 /// A route as the array `routes` and its relatives give.
@@ -782,6 +808,7 @@ impl WebBrowser {
             fallback_reason: None,
             xr_target: None,
             xr_blit: None,
+            xr_pulses: Vec::new(),
         })
     }
 }
@@ -2963,6 +2990,8 @@ impl WebBrowser {
                 active: s[1] != 0.0,
                 button0: s[2] != 0.0,
                 inverse: x3d_fields::math::Matrix4(s[3..19].try_into().expect("16 numbers")),
+                matrix: x3d_fields::math::Matrix4::IDENTITY,
+                pressed: s[2] != 0.0,
             })
             .collect();
 
@@ -2982,6 +3011,11 @@ impl WebBrowser {
     ///   them).
     /// * `views`: 36 numbers per view: `projectionMatrix`, `transform.inverse.matrix`, then the layer viewport `x, y,
     ///   width, height` (y up, pixels). A view of width zero is left out, as X_ITE does.
+    /// * `sources` (optional): the input sources of the frame, 36 numbers each, see `xr_sources_of`. After the world
+    ///   is stepped and the frame is built, X3DWebXRContext.xrUpdatePointers runs for them (`xrPointers`: the picks, the
+    ///   buttons, the pointer motion), and the rays and hit points of the active ones are drawn over each view, as
+    ///   ScreenLine and ScreenPoint draw them before the view is blitted. The sources due a haptic pulse are returned by
+    ///   `xrTakePulses`.
     ///
     /// The page then copies the canvas into the session's `XRWebGLLayer` (`x_ite_r.mjs`). Only the WebGL2 backend can do
     /// this: a WebGPU canvas has no XR layer in a stable browser, so `xrFrame` refuses WebGPU.
@@ -2993,6 +3027,7 @@ impl WebBrowser {
         height: u32,
         pose: &[f64],
         views: &[f64],
+        sources: Option<Vec<f64>>,
     ) -> Result<(), JsError> {
         if !self.webgl2 {
             return Err(JsError::new(
@@ -3005,6 +3040,7 @@ impl WebBrowser {
         }
 
         let pose = xr_pose_of(pose, views)?;
+        let sources = xr_sources_of(sources.as_deref().unwrap_or(&[]))?;
         let (width, height) = (width.max(1), height.max(1));
 
         if (width, height) != (self.config.width, self.config.height) {
@@ -3018,7 +3054,7 @@ impl WebBrowser {
         }
 
         let current = self.current.and_then(|id| self.worlds.get_mut(&id));
-        let (frame, headlight) = match current.map(|w| &mut w.session) {
+        let (frame, headlight, rays, content_scale) = match current.map(|w| &mut w.session) {
             Some(s) => {
                 s.step(now);
 
@@ -3030,11 +3066,25 @@ impl WebBrowser {
                     c.apply(&mut self.renderer);
                 }
 
-                (frame, headlight)
+                // X3DWebXRContext.xrUpdatePointers: the picks run on the frame just built, then the rays are drawn.
+                let (rays, content_scale) = match s.viewer() {
+                    Some(v) if !sources.is_empty() => {
+                        self.xr_pulses = v.xr_pointers(&sources);
+                        (v.xr_rays(&sources), v.content_scale())
+                    }
+                    _ => (vec![], 1.0),
+                };
+
+                (frame, headlight, rays, content_scale)
             }
-            None => (crate::empty_frame(), true),
+            None => (crate::empty_frame(), true, vec![], 1.0),
         };
-        let pose = x3d_render::xr::XrPose { headlight, ..pose };
+        let pose = x3d_render::xr::XrPose {
+            headlight,
+            rays,
+            content_scale,
+            ..pose
+        };
 
         // Each view is drawn over the whole of one target, and only its viewport is copied into a second target (as
         // `x3d_render::render_file_xr` does for its picture). The second target is then drawn into the canvas: wgpu's
@@ -3211,6 +3261,12 @@ impl WebBrowser {
         self.renderer.queue().submit([encoder.finish()]);
         self.renderer.queue().present(texture);
         Ok(())
+    }
+
+    /// The input sources due a haptic pulse (`hapticActuators [0] .pulse (0.25, 10)`) at the last `xrFrame`: their ids.
+    #[wasm_bindgen(js_name = xrTakePulses)]
+    pub fn xr_take_pulses(&mut self) -> Vec<u32> {
+        std::mem::take(&mut self.xr_pulses)
     }
 
     /// Draw the current state (no stepping) once more into an RGBA8 texture of the canvas size and read it back: a

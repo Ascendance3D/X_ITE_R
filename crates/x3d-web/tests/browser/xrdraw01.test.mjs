@@ -182,3 +182,118 @@ test ("xrFrame refuses the WebGPU backend (#83)", { timeout: CASE_TIMEOUT, skip:
       await page .context () .close ();
    }
 });
+
+// The input rays and hit points (X3DWebXRContext.xrUpdatePointers, ScreenLine, ScreenPoint) are drawn over each view of the
+// frame the engine draws. The pixels are compared with the pinned X_ITE in crates/x3d-render/tests/xr_views.rs (case
+// stereo-pointers); this checks the page path: the input sources `xrSourceNumbers` hands over reach the engine's xrFrame,
+// which picks along the rays and draws them.
+test ("an XR frame draws the rays of its input sources over each view (#83)", { timeout: CASE_TIMEOUT }, async t =>
+{
+   const page = await openPage (DESKTOP, { init: noWebGPU, signal: t .signal });
+
+   try
+   {
+      const result = await page .evaluate (async (world) =>
+      {
+         const { prepareLayer, drawXRFrame, xrSourceNumbers } = await import ("../../web/xr_layer.mjs");
+         const element = document .querySelector ("x3d-canvas");
+         const browser = element .browser;
+         const engine  = browser [Symbol .for ("X_ITE_R.engine")];
+
+         await browser .replaceWorld (await browser .createX3DFromString (world));
+         await new Promise (r => requestAnimationFrame (() => requestAnimationFrame (r)));
+
+         const canvas = element .shadowRoot .querySelector ("canvas");
+         const W = 200, H = 100;
+
+         class Layer
+         {
+            constructor (session, gl)
+            {
+               this .framebufferWidth  = W;
+               this .framebufferHeight = H;
+               this .texture           = gl .createTexture ();
+               gl .bindTexture (gl .TEXTURE_2D, this .texture);
+               gl .texStorage2D (gl .TEXTURE_2D, 1, gl .RGBA8, W, H);
+               gl .bindTexture (gl .TEXTURE_2D, null);
+               this .framebuffer = gl .createFramebuffer ();
+               gl .bindFramebuffer (gl .FRAMEBUFFER, this .framebuffer);
+               gl .framebufferTexture2D (gl .FRAMEBUFFER, gl .COLOR_ATTACHMENT0, gl .TEXTURE_2D, this .texture, 0);
+               gl .bindFramebuffer (gl .FRAMEBUFFER, null);
+            }
+
+            getViewport (view) { return view .viewport; }
+         }
+
+         WebGL2RenderingContext .prototype .makeXRCompatible = function () { return Promise .resolve (); };
+
+         const { gl, layer } = await prepareLayer (canvas, { updateRenderState () { } }, { XRWebGLLayer: Layer });
+         const near = 0.1, far = 100;
+         const projectionMatrix = Float32Array .of (1, 0, 0, 0,  0, 1, 0, 0,  0, 0, (far + near) / (near - far), -1,
+            0, 0, 2 * far * near / (near - far), 0);
+         const identity = Float32Array .of (1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+         const rigid    = { matrix: identity, inverse: { matrix: identity } };
+         const view     = viewport => ({ projectionMatrix, transform: rigid, viewport });
+         const pose     = { transform: rigid, views: [ view ({ x: 0, y: 0, width: 100, height: 100 }),
+            view ({ x: 100, y: 0, width: 100, height: 100 }) ] };
+
+         // A controller below and in front of the viewer, pointing along -z at the box 7 m away: no hit within the ray's length.
+         const at       = (x, y, z) => Float32Array .of (1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, x, y, z, 1);
+         const inverse  = (x, y, z) => Float32Array .of (1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, -x, -y, -z, 1);
+         const source   = pressed => ({ id: 1, source: { active: true, gamepad: { buttons: [ { pressed } ] }, matrix: at (0, -0.1, -0.3), inverse: inverse (0, -0.1, -0.3) } });
+         const read     = () =>
+         {
+            const pixels = new Uint8Array (W * H * 4);
+
+            gl .bindFramebuffer (gl .READ_FRAMEBUFFER, layer .framebuffer);
+            gl .readPixels (0, 0, W, H, gl .RGBA, gl .UNSIGNED_BYTE, pixels);
+            gl .bindFramebuffer (gl .READ_FRAMEBUFFER, null);
+
+            // [ white, light blue ] ray pixels (red box and blue sky are neither) in each half.
+            const count = x0 =>
+            {
+               let white = 0, light = 0;
+
+               for (let y = 0; y < H; ++ y)
+                  for (let x = x0; x < x0 + 100; ++ x)
+                  {
+                     const [ r, g, b ] = pixels .subarray ((y * W + x) * 4, (y * W + x) * 4 + 3);
+
+                     if (r > 200 && g > 200 && b > 200) ++ white;
+                     else if (r > 90 && r < 170 && g > 150 && g < 230 && b > 230) ++ light;
+                  }
+
+               return { white, light };
+            };
+
+            return [ count (0), count (100) ];
+         };
+
+         drawXRFrame (engine, gl, layer, pose, performance .now () / 1000);
+         const none = read ();
+         drawXRFrame (engine, gl, layer, pose, performance .now () / 1000, xrSourceNumbers ([ source (false) ]));
+         const plain = read ();
+         drawXRFrame (engine, gl, layer, pose, performance .now () / 1000, xrSourceNumbers ([ source (true) ]));
+         const pressed = read ();
+
+         return { none, plain, pressed, pulses: engine .xrTakePulses () .length, glError: gl .getError () };
+      },
+      WORLD);
+
+      assert .equal (result .glError, 0);
+
+      // Without input sources nothing is drawn but the box and the sky.
+      for (const half of result .none) assert .deepEqual (half, { white: 0, light: 0 });
+
+      // A ray in each view, white; when a button is pressed, light blue (0.5, 0.75, 1).
+      for (const half of result .plain) assert .ok (half .white > 10 && half .light === 0, `white ray: ${JSON .stringify (half)}`);
+      for (const half of result .pressed) assert .ok (half .light > 10 && half .white === 0, `pressed ray: ${JSON .stringify (half)}`);
+
+      assert .equal (result .pulses, 0);
+      assert .deepEqual (page .log .filter (l => !l .startsWith ("log:") && !l .startsWith ("info:") && !FALLBACK .some (r => r .test (l))), [ ]);
+   }
+   finally
+   {
+      await page .context () .close ();
+   }
+});

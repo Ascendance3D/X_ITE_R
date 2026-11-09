@@ -292,3 +292,20 @@ test("emulated device: a lost pose before any good frame leaves the identity pos
   assert.equal(c.pose.views.length, 0);
   assert.deepEqual([...c.pose.viewMatrix], [...translation(0, 0, 0)]);
 });
+
+test("xrSourceNumbers hands the engine 36 numbers per input source: id, active, button 0, any button, inverse, matrix", async () => {
+  const { xrSourceNumbers } = await import("../../web/xr_layer.mjs");
+  const inverse = translation(-1, -2, -3);
+  const matrix = translation(1, 2, 3);
+  const pad = { buttons: [{ pressed: false }, { pressed: true }] };
+  const data = xrSourceNumbers([
+    { id: 4, source: { active: true, gamepad: pad, inverse, matrix } },
+    { id: 5, source: { active: false, inverse, matrix } },
+  ]);
+
+  assert.equal(data.length, 72);
+  assert.deepEqual([...data.subarray(0, 4)], [4, 1, 0, 1]);
+  assert.deepEqual([...data.subarray(4, 20)], [...inverse]);
+  assert.deepEqual([...data.subarray(20, 36)], [...matrix]);
+  assert.deepEqual([...data.subarray(36, 40)], [5, 0, 0, 0]);
+});

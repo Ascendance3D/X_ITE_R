@@ -1567,6 +1567,11 @@ requests of the mock, the renderer and the hashes) are compared by `cargo nextes
 key fails; no adapter fails in strict mode and records a skip otherwise. `XR_CASES=a,b` runs other cases, `XR_DUMP=dir` writes the
 Rust pictures.
 
+A script with `inputSources` (`[{ "matrix": target-ray pose, column-major, "pressed": bool }]`) gives the page mock tracked-pointer input sources
+(`inputsourceschange`, `frame.getPose`): the pinned context then draws their rays and hit points (ScreenLine, ScreenPoint), and the key's JSON
+records what it found per source (`inputSources`: `active`, `id`, `point`, `normal` = `hit .id`, `hit .originalPoint`, `hit .originalNormal`).
+`xr_views.rs` draws from those recorded hits and `x3d-viewer`'s `xr_rays.rs` compares the viewer's own picks with them (case `stereo-pointers`).
+
 ## GoldenGate binary dispatch (sub:parse.golden-gate)
 
 `oracle/synthetic-rea-golden-gate-binary/` holds authored binary inputs (binary STL, binary PLY little and big endian, GLB, each a few triangles
