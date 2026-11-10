@@ -1,0 +1,48 @@
+#VRML V2.0 utf8
+# Synthetic, newly authored for the Rust port REA batch 24 (no archive content).
+# A PROTO update disposes and rebuilds the body of an instance: how often the body Script initializes.
+PROTO Gadget [
+  field SFInt32 level 2
+]
+{
+  Script {
+    field SFInt32 level IS level
+    url "javascript:
+function initialize () { print ('Body initialize level=' + level); }
+"
+  }
+}
+DEF G Gadget { level 4 }
+DEF Clock TimeSensor { loop TRUE cycleInterval 1 }
+DEF S Script {
+  eventIn SFTime tick
+  url "javascript:
+let n = 0;
+
+function tick (t)
+{
+   ++ n;
+
+   const d = Browser .currentScene .protos .get ('Gadget');
+
+   if (n === 1)
+   {
+      print ('update 1');
+      d .updateInstances ();
+   }
+   else if (n === 3)
+   {
+      print ('update 2');
+      d .updateInstances ();
+   }
+   else if (n === 5)
+   {
+      print ('request update');
+      d .requestUpdateInstances ();
+   }
+   else if (n < 6)
+      print ('tick ' + n);
+}
+"
+}
+ROUTE Clock.time TO S.tick

@@ -457,6 +457,184 @@
      "instances": {}
     }
    ]
+  },
+  {
+   "case": "p07",
+   "ok": true,
+   "steps": [
+    {
+     "k": 0,
+     "console": [
+      "log: Body initialize level=4",
+      "log: update 1",
+      "log: Body initialize level=4",
+      "log: tick 2",
+      "log: update 2",
+      "log: Body initialize level=4",
+      "log: tick 4"
+     ],
+     "loadCount": 0,
+     "externs": [],
+     "instances": {
+      "G": {
+       "type": "Gadget",
+       "body": [
+        "Script"
+       ]
+      }
+     },
+     "vrml": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT EnvironmentalSensor : 3\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Scripting : 1\nCOMPONENT Sound : 3\nCOMPONENT Text : 2\n\nPROTO Gadget [\n  initializeOnly SFInt32 level 2\n]\n{\n  Script {\n    initializeOnly SFInt32 level IS level\n\n    url \"javascript:\nfunction initialize () { print ('Body initialize level=' + level); }\n\"\n  }\n}\n\nDEF G Gadget {\n  level 4\n}\n\nDEF Clock TimeSensor {\n  loop TRUE\n}\n\nDEF S Script {\n  inputOnly SFTime tick\n\n  url \"javascript:\nlet n = 0;\n\nfunction tick (t)\n{\n   ++ n;\n\n   const d = Browser .currentScene .protos .get ('Gadget');\n\n   if (n === 1)\n   {\n      print ('update 1');\n      d .updateInstances ();\n   }\n   else if (n === 3)\n   {\n      print ('update 2');\n      d .updateInstances ();\n   }\n   else if (n === 5)\n   {\n      print ('request update');\n      d .requestUpdateInstances ();\n   }\n   else if (n < 6)\n      print ('tick ' + n);\n}\n\"\n}\n\nROUTE Clock.time TO S.tick\n"
+    },
+    {
+     "k": 1,
+     "console": [
+      "log: request update",
+      "log: Body initialize level=4"
+     ],
+     "loadCount": 0,
+     "externs": [],
+     "instances": {
+      "G": {
+       "type": "Gadget",
+       "body": [
+        "Script"
+       ]
+      }
+     }
+    },
+    {
+     "k": 2,
+     "console": [],
+     "loadCount": 0,
+     "externs": [],
+     "instances": {
+      "G": {
+       "type": "Gadget",
+       "body": [
+        "Script"
+       ]
+      }
+     }
+    },
+    {
+     "k": 3,
+     "console": [],
+     "loadCount": 0,
+     "externs": [],
+     "instances": {
+      "G": {
+       "type": "Gadget",
+       "body": [
+        "Script"
+       ]
+      }
+     }
+    },
+    {
+     "k": 4,
+     "console": [],
+     "loadCount": 0,
+     "externs": [],
+     "instances": {
+      "G": {
+       "type": "Gadget",
+       "body": [
+        "Script"
+       ]
+      }
+     }
+    },
+    {
+     "k": 5,
+     "console": [],
+     "loadCount": 0,
+     "externs": [],
+     "instances": {
+      "G": {
+       "type": "Gadget",
+       "body": [
+        "Script"
+       ]
+      }
+     }
+    },
+    {
+     "k": 6,
+     "console": [],
+     "loadCount": 0,
+     "externs": [],
+     "instances": {
+      "G": {
+       "type": "Gadget",
+       "body": [
+        "Script"
+       ]
+      }
+     }
+    },
+    {
+     "k": 7,
+     "console": [],
+     "loadCount": 0,
+     "externs": [],
+     "instances": {
+      "G": {
+       "type": "Gadget",
+       "body": [
+        "Script"
+       ]
+      }
+     }
+    },
+    {
+     "k": 8,
+     "console": [],
+     "loadCount": 0,
+     "externs": [],
+     "instances": {
+      "G": {
+       "type": "Gadget",
+       "body": [
+        "Script"
+       ]
+      }
+     }
+    }
+   ]
+  },
+  {
+   "case": "p08",
+   "ok": true,
+   "steps": [
+    {
+     "k": 0,
+     "console": [
+      "log: created",
+      "log: updated",
+      "log: added",
+      "log: Body initialize level=2",
+      "log: Body initialize level=2"
+     ],
+     "loadCount": 0,
+     "externs": [],
+     "instances": {},
+     "vrml": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT EnvironmentalSensor : 3\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Scripting : 1\nCOMPONENT Sound : 3\nCOMPONENT Text : 2\n\nPROTO Gadget [\n  initializeOnly SFInt32 level 2\n]\n{\n  Script {\n    initializeOnly SFInt32 level IS level\n\n    url \"javascript:\nfunction initialize () { print ('Body initialize level=' + level); }\n\"\n  }\n}\n\nDEF S Script {\n  url \"javascript:\nfunction initialize ()\n{\n   const cs = Browser .currentScene;\n   const d  = cs .protos .get ('Gadget');\n   const g  = cs .createProto ('Gadget');\n\n   print ('created');\n   d .updateInstances ();\n   print ('updated');\n   cs .rootNodes .push (g);\n   print ('added');\n}\n\"\n}\n\nGadget { }\n"
+    },
+    {
+     "k": 1,
+     "console": [],
+     "loadCount": 0,
+     "externs": [],
+     "instances": {}
+    },
+    {
+     "k": 2,
+     "console": [],
+     "loadCount": 0,
+     "externs": [],
+     "instances": {}
+    }
+   ]
   }
  ]
 }
