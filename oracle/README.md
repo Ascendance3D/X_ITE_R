@@ -1849,3 +1849,19 @@ other escape too. The recordings confirm it for `createX3DFromURL` (`ff-data-utf
 ```
 node oracle/x_ite-web-runtime-02.mjs oracle/web-browser-anchor-pages-01-baseline --runs 3 --suite anchorpages01
 ```
+
+## glTF animation cases (sub:parse.gltf2)
+
+`oracle/synthetic-rea-b08-gltf/anim/*-driver.wrl` (generator `tools/gen_rea_b08_gltf.py`) load one animation file through an
+Inline; a click at frame 4 starts the exported `Timer1`; `anim/gltf-anim.json` dumps the scene text and the Inline scene text at nine
+frames inside the animation. Cases: STEP, LINEAR and CUBICSPLINE of translation, rotation, scale and weights; the STEP pointer
+animation (`pointer/roughness-step.gltf` does not load in the pinned X_ITE: `Cannot set properties of null (setting '_emissiveStrength')`,
+so `roughness-step-plain` and `base-color-step-plain` animate a plain material); each at MSAA 0 and 4.
+- Recorded with `oracle/tools/rea_e14_e18_record.py record --cases CASES --dest oracle/rea-gltf-anim-baseline --pictures` (three identical
+  pinned runs each; prepare the worktree as in "Recording from a worktree"). `crates/x3d-viewer/tests/gltf_anim_step.rs` replays them and the
+  three driver cases of `rea-b08-gltf-baseline`: scene text and Inline scene text exact (MSAA 0 only: the MSAA 4 page records neither), poses
+  1e-4, pictures 8 / 0.5%. The pinned page's `console` holds only `log:` lines (anim.html replaces warn and error), so only those are compared.
+- Pinned difference, not copied: STEP morph weights. Pinned `createArrayInterpolator` writes keys `[t0, t1, t1, t2, t2]` with values
+  `[v0, v1, v1, v2, v2]` (linear over the first segment) where glTF 2.0 and the pinned `createNamedInterpolator` hold `[v0, v0, v1, v1, v2]`. The
+  port holds. `KNOWN` in `gltf_anim_step.rs` (weights-step, MSAA 0 and 4: Inline text and pictures 14 and 26 not compared; the held points are
+  asserted) and `KNOWN_STEP_WEIGHTS` in `crates/x3d-parse/tests/gltf_rea.rs` name it.
