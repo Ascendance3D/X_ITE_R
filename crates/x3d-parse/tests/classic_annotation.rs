@@ -117,6 +117,11 @@ fn recorded_v3_3_cases_accept_the_component_and_keep_x_ite_s_version_rule() {
             vec![("Annotation".to_string(), level)],
             "{name}: components"
         );
+        assert_eq!(
+            scene.contexts[0].root_nodes.len(),
+            NODES.len(),
+            "{name}: V3.3 root count"
+        );
         assert!(
             scene.contexts[0].root_nodes.iter().all(Option::is_none),
             "{name}: V3.3 roots"
