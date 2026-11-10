@@ -47,7 +47,7 @@ const files  = (await readdir (corpus, { recursive: true, withFileTypes: true })
    .filter (d => d .isFile ())
    .map (d => relative (corpus, join (d .parentPath, d .name)))
    .filter (f => /\.(wrl|wrz)(\.gz)?$/i .test (f))
-   .filter (f => !ONLY || f .includes (ONLY))
+   .filter (f => !ONLY || ONLY .split (",") .some (s => f .includes (s)))
    .sort ();
 
 // node:http is event-driven: many parallel ESM connections are served concurrently.

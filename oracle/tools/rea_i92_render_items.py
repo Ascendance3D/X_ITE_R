@@ -12,22 +12,28 @@ oracle/rea-i92-render-items-baseline/{png,msaa4}/ (with its index.json). A basel
 
 records oracle/synthetic-rea-oit-render-items/*.wrl (oracle/tools/gen_rea_oit_render_items.py) the same way with the
 `orderIndependentTransparency` browser option on (`--oit` of both tools) into oracle/rea-oit-render-items-baseline/.
+
+  XITE_PLAYWRIGHT=<x_ite-tests>/node_modules python3 -I -B oracle/tools/rea_i92_render_items.py shots --oit-i92
+
+records the transparency worlds of oracle/synthetic-rea-i92-render-items (`--only i92-tr-,i92-fg-transparent`; `--only` takes a
+comma-separated list of substrings) with the option on into oracle/rea-oit-i92-render-items-baseline/.
 """
 import json, os, shutil, subprocess, sys
 
 root = os.path.normpath(os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", ".."))
-oit = "--oit" in sys.argv
-worlds = os.path.join(root, "oracle", "synthetic-rea-oit-render-items" if oit else "synthetic-rea-i92-render-items")
-dest = os.path.join(root, "oracle", "rea-oit-render-items-baseline" if oit else "rea-i92-render-items-baseline")
+oit_i92 = "--oit-i92" in sys.argv
+oit = "--oit" in sys.argv or oit_i92
+worlds = os.path.join(root, "oracle", "synthetic-rea-oit-render-items" if "--oit" in sys.argv else "synthetic-rea-i92-render-items")
+dest = os.path.join(root, "oracle", "rea-oit-i92-render-items-baseline" if oit_i92 else "rea-oit-render-items-baseline" if oit else "rea-i92-render-items-baseline")
 env = dict(os.environ, NODE_PATH=os.environ.get("XITE_PLAYWRIGHT", ""))
 if sys.argv[1:2] != ["shots"] or not env["NODE_PATH"]:
     sys.exit(__doc__)
-only = sys.argv[sys.argv.index("--only") + 1] if "--only" in sys.argv else None
+only = sys.argv[sys.argv.index("--only") + 1] if "--only" in sys.argv else "i92-tr-,i92-fg-transparent" if oit_i92 else None
 bad = 0
 for name, tool in (("png", "x_ite-shot.mjs"), ("msaa4", "x_ite-shot-msaa.mjs")):
     runs = []
     for i in (1, 2, 3):
-        out = f"/tmp/lane92-record{'-oit' if oit else ''}/{name}-{i}"
+        out = f"/tmp/lane92-record{'-oit-i92' if oit_i92 else '-oit' if oit else ''}/{name}-{i}"
         shutil.rmtree(out, ignore_errors=True)
         os.makedirs(out)
         cmd = ["node", os.path.join(root, "oracle", tool), worlds, out] + (["--only", only] if only else []) + (["--oit"] if oit else [])
