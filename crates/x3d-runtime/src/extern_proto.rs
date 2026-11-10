@@ -1544,17 +1544,20 @@ impl Runtime {
 
         // The Script's objects of the old fields follow them to the new layout (the Script host moves their handles from
         // `field_remaps`): the mirror flags go with the fields, the fields that are gone are not mirrored any more.
-        self.field_remaps.push(FieldRemap {
-            node: inst,
-            map: map.to_vec(),
-            old_values: self
-                .scene
-                .node(inst)
-                .fields
-                .iter()
-                .map(|f| f.value.clone())
-                .collect(),
-        });
+        // Only a Script holds such objects, and only the Script host takes the list: a world without Scripts keeps none.
+        if !self.scripts.is_empty() {
+            self.field_remaps.push(FieldRemap {
+                node: inst,
+                map: map.to_vec(),
+                old_values: self
+                    .scene
+                    .node(inst)
+                    .fields
+                    .iter()
+                    .map(|f| f.value.clone())
+                    .collect(),
+            });
+        }
 
         let mirrored: Vec<(FKey, bool)> = self
             .js_mirror
