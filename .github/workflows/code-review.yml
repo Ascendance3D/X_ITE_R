@@ -103,6 +103,11 @@ jobs:
             await core.summary.addRaw('```\n' + lines.join('\n') + '\n```', true).write();
             core.info(lines.join('\n'));
             core.exportVariable('NOT_REVIEWED', [...excluded, ...noPatchBinary].join('\n'));
+            // With no file left to send (for example a pull request of recorded baselines only) the action posts no comment,
+            // so the review and its stamp are skipped and the summary says why.
+            const reviewable = kept.filter(f => f.patch).length;
+            core.exportVariable('REVIEWABLE', String(reviewable));
+            if (reviewable === 0) await core.summary.addRaw('\nNo changed file is left for review after the exclusions: no review was needed.\n', true).write();
             const missing = [...noPatchText, ...truncated, ...over];
             if (capped) missing.push('(file list capped at 3000)');
             if (missing.length > 0) {
@@ -112,6 +117,7 @@ jobs:
           MINIMAX_MODEL_NAME: ${{ vars.MINIMAX_MODEL }}
 
       - name: Code Review
+        if: env.REVIEWABLE != '0'
         # Fork of tarmojussila/minimax-code-review adding reasoning-effort and timeout inputs.
         uses: Ascendance3D/minimax-code-review@v0.5.0
         with:
@@ -127,6 +133,7 @@ jobs:
       # The action keeps one comment per pull request and updates it in place, and the comment names no commit. This step
       # stamps the comment with the head that the run reviewed, so a reader can match a review to an exact head.
       - name: Stamp the review with its head
+        if: env.REVIEWABLE != '0'
         uses: actions/github-script@v9
         with:
           script: |
