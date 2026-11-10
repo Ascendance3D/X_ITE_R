@@ -1340,6 +1340,11 @@ three runs are identical and no world logs an error; a world whose multisampled 
 and is listed in `msaa4/unstable.json`. `crates/x3d-render/tests/render_rea_oit_items.rs` replays every world with the option on (bound: 8 per
 channel, 0.5% of pixels) and, as the negative control, with the option off (every world must then be over the bound).
 
+`oracle/tools/rea_i92_render_items.py shots --oit-i92` records the transparency worlds of `synthetic-rea-i92-render-items` (`i92-tr-*`,
+`i92-fg-transparent`) with the option on into `oracle/rea-oit-i92-render-items-baseline/{png,msaa4}` the same way (`--only` takes a comma-separated
+list); `i92-tr-many` and `i92-tr-nested` have no MSAA 4 picture (`msaa4/unstable.json`). `crates/x3d-render/tests/render_rea_oit_i92_items.rs`
+replays them with the option on (same bound).
+
 ## decodeAudioData lane (2026-10-31, issue #98): MP3, Ogg, FLAC, Opus, WAV
 
 - `x_ite-audio-decode.mjs` decodes the files of `synthetic-rea-b24-audio/` (ffmpeg sine plus seeded noise, 0.3 s;
