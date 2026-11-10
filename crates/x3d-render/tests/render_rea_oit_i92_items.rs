@@ -199,3 +199,34 @@ fn rea_oit_i92_render_items_match_x_ite() {
     assert!(!compared.is_empty(), "no baselines found");
     assert!(failures.is_empty(), "{}", failures.join("\n"));
 }
+
+/// Negative control: the option off on the Rust side against the same OIT-on references. A shot that stays within the
+/// bound cannot tell order independent transparency from sorted blending, so it proves nothing about OIT; those shots are
+/// listed here by name, and the list must be exact (a new world that cannot tell the two apart, or a listed one that now
+/// can, fails).
+/// i92-fg-transparent: six solid transparent spheres side by side, so each pixel has at most one transparent layer, and
+/// one layer blends the same with and without OIT (measured: 20 and 12 pixels over 8 with the option off). Every other
+/// shot differs by 2.1% to 34% of the pixels with the option off.
+const OPTION_OFF_WITHIN_BOUND: &[&str] =
+    &["i92-fg-transparent.wrl png", "i92-fg-transparent.wrl msaa4"];
+
+#[test]
+fn rea_oit_i92_render_items_option_off_is_told_apart() {
+    let Some((failures, over, compared)) = run(false) else {
+        return;
+    };
+
+    assert!(failures.is_empty(), "{}", failures.join("\n"));
+    assert!(!compared.is_empty(), "no baselines found");
+
+    let within: Vec<&str> = compared
+        .iter()
+        .map(String::as_str)
+        .filter(|c| !over.iter().any(|o| o.starts_with(c)))
+        .collect();
+
+    assert_eq!(
+        within, OPTION_OFF_WITHIN_BOUND,
+        "shots that match the OIT references with the option off"
+    );
+}
