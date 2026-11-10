@@ -8,6 +8,10 @@
 //! loader's diagnostic for a failed candidate (`Couldn't load URL ..., Error: <parser error>`, the warning when a later URL follows) is
 //! the sorted `log`. Compared like oracle/tools/x10_compare.py: the scene text of every dumped frame exact, the sorted log exact.
 //! No rendering.
+//!
+//! gg-stl-nonfinite: binary and ASCII STL with NaN, +Inf and -Inf coordinates and normals. The scene text is compared exactly (a binary
+//! file keeps every non-finite value; ASCII takes only a SIGNED `nan` / `inf` constant). The pinned page's log also holds crashes of its
+//! MikkTSpace WebAssembly (see PINNED_WASM_CRASH); that is the one named difference, and nothing else in the log may differ.
 
 use serde_json::Value;
 use std::path::{Path, PathBuf};
@@ -18,6 +22,21 @@ fn root() -> PathBuf {
         .join("../..")
         .canonicalize()
         .unwrap()
+}
+
+/// Upstream defect, not copied. A non-finite vertex position (NaN, +Inf, -Inf) in a TriangleSet makes the pinned page's
+/// `MikkTSpace.generateTangents` (the WebAssembly tangent generator, called from `X3DGeometryNode.generateTangents` for every
+/// geometry that is not a point or line set) crash: `RangeError: Maximum call stack size exceeded` (NaN: unbounded recursion in the
+/// wasm), `RuntimeError: unreachable` (Inf), and once the wasm instance is damaged `RuntimeError: memory access out of bounds` for the
+/// geometries after it. `generateTangents` catches the error, logs it only in the unbundled development source (`if (DEVELOPMENT)`
+/// console.error), and leaves the geometry without tangents; the scene, its text and the load are unaffected. A crash on a finite file
+/// is not required behavior, and the port has no such crash (no panic, same scene), so the port logs none of these lines.
+/// Evidence: oracle/golden-gate-binary-baseline/gg-stl-nonfinite.json `log`; one case per file in a fresh page gives
+/// nonfinite-coord-nan RangeError, nonfinite-coord-inf / -ninf / nonfinite-mixed `unreachable`, nonfinite-normal-* no error.
+fn is_pinned_wasm_crash(line: &str) -> bool {
+    line.starts_with("error: RangeError: Maximum call stack size exceeded")
+        || line.starts_with("error: RuntimeError: unreachable")
+        || line.starts_with("error: RuntimeError: memory access out of bounds")
 }
 
 /// The groups of the baseline directory (the json files in it, nothing nested).
@@ -114,7 +133,36 @@ fn compare_group(root: &Path, name: &str) -> Vec<String> {
     }
 
     // `log`: the sorted warn / error lines.
-    if js["log"] != rs["log"] {
+    let strip = |v: &Value| -> Value {
+        if name != "gg-stl-nonfinite" {
+            return v.clone();
+        }
+        Value::Array(
+            v.as_array()
+                .unwrap()
+                .iter()
+                .filter(|l| !is_pinned_wasm_crash(l.as_str().unwrap()))
+                .cloned()
+                .collect(),
+        )
+    };
+    if name == "gg-stl-nonfinite" {
+        let crashes = |v: &Value| {
+            v.as_array()
+                .unwrap()
+                .iter()
+                .filter(|l| is_pinned_wasm_crash(l.as_str().unwrap()))
+                .count()
+        };
+        if crashes(&js["log"]) == 0 {
+            fail("the pinned log has no MikkTSpace crash: the named difference is gone".into());
+        }
+        if crashes(&rs["log"]) != 0 {
+            fail("the port logs a crash line".into());
+        }
+    }
+    let (js_log, rs_log) = (strip(&js["log"]), strip(&rs["log"]));
+    if js_log != rs_log {
         let strings = |v: &Value| -> Vec<String> {
             v.as_array()
                 .map(|a| {
@@ -124,7 +172,7 @@ fn compare_group(root: &Path, name: &str) -> Vec<String> {
                 })
                 .unwrap_or_default()
         };
-        let (a, b) = (strings(&js["log"]), strings(&rs["log"]));
+        let (a, b) = (strings(&js_log), strings(&rs_log));
         let only_js: Vec<&String> = a.iter().filter(|l| !b.contains(l)).collect();
         let only_rs: Vec<&String> = b.iter().filter(|l| !a.contains(l)).collect();
         fail(format!(
@@ -155,6 +203,11 @@ fn golden_gate_stl_binary_matches_x_ite() {
 }
 
 #[test]
+fn golden_gate_stl_nonfinite_matches_x_ite() {
+    check("gg-stl-nonfinite");
+}
+
+#[test]
 fn golden_gate_ply_binary_matches_x_ite() {
     check("gg-ply");
 }
@@ -179,6 +232,13 @@ fn golden_gate_dispatch_matches_x_ite() {
 fn golden_gate_baseline_groups_are_the_tested_ones() {
     assert_eq!(
         groups(&root()),
-        ["gg-dispatch", "gg-glb", "gg-ply", "gg-ply-splat", "gg-stl"]
+        [
+            "gg-dispatch",
+            "gg-glb",
+            "gg-ply",
+            "gg-ply-splat",
+            "gg-stl",
+            "gg-stl-nonfinite"
+        ]
     );
 }

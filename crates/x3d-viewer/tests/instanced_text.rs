@@ -5,6 +5,8 @@
 //!              FontStyle, length / maxExtent, no instance field, transparency
 //! it-extra     PixelTexture, solid TRUE under turned instances, bboxDisplay and explicit bbox, `length` per line, empty string, visible FALSE
 //! it-pick      TouchSensor over instanced Text: a 2601-probe pointing grid (script key pickProbes), bit for bit
+//! it-fields    Text output fields (textBounds, lineBounds, origin, length, maxExtent) read by a Script: plain Shape control and InstancedShapes,
+//!              with and without FontStyle, before and after a run-time change of `string` / `size` (scene text exact, two pictures)
 //! it-runtime   `string`, FontStyle, instance fields and `geometry` changed at run time by key events (11 pictures)
 //!
 //! Compared like rea_b24_anchor_collision_instanced.rs: scene text exact, the sorted log exact, poses within 1e-4, captured frames with
@@ -25,7 +27,13 @@ use std::sync::atomic::{AtomicUsize, Ordering};
 /// (case name, MSAA, why Rust differs).
 const KNOWN_GAPS: &[(&str, u32, &str)] = &[];
 
-const CASES: &[&str] = &["it-static", "it-extra", "it-pick", "it-runtime"];
+const CASES: &[&str] = &[
+    "it-static",
+    "it-extra",
+    "it-pick",
+    "it-runtime",
+    "it-fields",
+];
 
 fn quat(r: &[f64]) -> [f64; 4] {
     let n = (r[0] * r[0] + r[1] * r[1] + r[2] * r[2]).sqrt();
