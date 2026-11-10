@@ -1187,14 +1187,23 @@ impl<'j, 's> P<'j, 's> {
                     .map(|i| weights.v.get(i).copied().unwrap_or(f64::NAN))
                     .collect();
 
-                kv.extend(self.apply_morph_targets(&base, targets, key, &first)?);
+                let mut previous = self.apply_morph_targets(&base, targets, key, &first)?;
 
+                kv.extend(previous.iter());
+
+                // glTF 2.0 STEP holds each keyframe value until the next keyframe, so the pair at key
+                // t[i] is (value[i - 1], value[i]), as in the other channels (`createNamedInterpolator`).
+                // The pinned X_ITE 16.5.0 `createArrayInterpolator` writes (value[i], value[i]) instead,
+                // which interpolates linearly from value[i - 1] to value[i] over the segment: an upstream
+                // defect (not copied; KNOWN_STEP_WEIGHTS in crates/x3d-parse/tests/gltf_rea.rs and
+                // KNOWN in crates/x3d-viewer/tests/gltf_anim_step.rs).
                 for t in 1..times_v.len() {
                     let ws: Vec<f64> = (0..n_targets).map(|i| w(t, i)).collect();
                     let values = self.apply_morph_targets(&base, targets, key, &ws)?;
 
+                    kv.extend(previous.iter());
                     kv.extend(values.iter());
-                    kv.extend(values.iter());
+                    previous = values;
                 }
 
                 self.set_nums(node, "key", &k);

@@ -1,0 +1,16 @@
+#VRML V2.0 utf8
+# Synthetic REA oracle world (sub:proto.externproto). Browser.loadURL is called from a cycle after the page has loaded, for a
+# file that holds an EXTERNPROTO of a file next to it. The file's own Script records the state of its EXTERNPROTO
+# and the instance in `hist`, so the scene text after the replacement carries it.
+DEF P Script {
+  field SFInt32 step 0
+  eventIn SFTime cycle
+  url "javascript:
+function cycle () {
+  step = step + 1;
+  if (step == 2) Browser .loadURL (new MFString ('ep-loadurl-file.wrl'), new MFString ());
+}
+  "
+}
+DEF STEP TimeSensor { cycleInterval 0.05 loop TRUE }
+ROUTE STEP.cycleTime TO P.cycle
