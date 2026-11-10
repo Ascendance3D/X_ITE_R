@@ -1253,7 +1253,7 @@ function makeExecutionContext (script)
       toJSONStream (generator) { generator .string += this .toJSONString (); },
       getExecutionContext ()  { const c = X ("cx", script, "parentCtx"); return c === null ? null : executionContext (- (c + 2)); },
       getLocalScene ()        { return this .isScene ? object : executionContext (- (X ("cx", script, "sceneRoot") + 2)); },
-      getOuterNode ()         { return R (X ("cx", script, "outerNode")); },
+      getOuterNode ()         { const r = X ("cx", script, "outerNode"); return r !== null && typeof r === "object" && "proto" in r ? protoObject (false, r .proto) : R (r); },
    };
 
    if (script === undefined)

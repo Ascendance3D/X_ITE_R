@@ -20,16 +20,32 @@ const DIR: &str = "synthetic-rea-b24-proto-sai";
 const MODES: [(&str, bool); 2] = [("browser", true), ("native", false)];
 
 /// `mode, case, X_ITE console line, reason`: a deliberate difference of Rust.
-const KNOWN: &[(&str, &str, &str, &str)] = &[(
-    "native",
-    "p08",
-    "log: Body initialize level=2",
-    // X_ITE: a Script requests its load when it initializes and a disposal does not cancel it, so the body that
-    // the update disposed before its Script's load finished still runs `initialize ()`. The native build calls
-    // `shutdown ()` on the disposed body first, which cancels that (the kept shutdown difference); the browser
-    // build matches X_ITE.
-    "native shutdown () of a body disposed before its Script initialized",
-)];
+const KNOWN: &[(&str, &str, &str, &str)] = &[
+    // X_ITE has no getBody on an EXTERNPROTO declaration (only the PROTO it loaded has one), as the port; V8 names the
+    // expression in the message of the TypeError, QuickJS does not.
+    (
+        "*",
+        "p10",
+        "log: extern early getBody threw TypeError: e.getBody is not a function",
+        "QuickJS TypeError text of a call of a missing method",
+    ),
+    (
+        "*",
+        "p10",
+        "log: extern late getBody threw TypeError: e.getBody is not a function",
+        "QuickJS TypeError text of a call of a missing method",
+    ),
+    (
+        "native",
+        "p08",
+        "log: Body initialize level=2",
+        // X_ITE: a Script requests its load when it initializes and a disposal does not cancel it, so the body that
+        // the update disposed before its Script's load finished still runs `initialize ()`. The native build calls
+        // `shutdown ()` on the disposed body first, which cancels that (the kept shutdown difference); the browser
+        // build matches X_ITE.
+        "native shutdown () of a body disposed before its Script initialized",
+    ),
+];
 
 fn baseline() -> HashMap<String, Value> {
     let text = std::fs::read_to_string(oracle_root().join(format!("{DIR}-baseline.json")))
@@ -96,10 +112,9 @@ fn rea_b24_proto_sai_matches_x_ite() {
                 if x != r {
                     let line = (x.to_string(), r.to_string());
 
-                    if let Some(i) = KNOWN
-                        .iter()
-                        .position(|(m, c, l, _)| *m == mode && c == name && *l == line.0)
-                    {
+                    if let Some(i) = KNOWN.iter().position(|(m, c, l, _)| {
+                        (*m == "*" || *m == mode) && c == name && *l == line.0
+                    }) {
                         used[i] = true;
                     } else {
                         unexplained.push(format!(

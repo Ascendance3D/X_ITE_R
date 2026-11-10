@@ -694,6 +694,211 @@
      "instances": {}
     }
    ]
+  },
+  {
+   "case": "p10",
+   "ok": true,
+   "steps": [
+    {
+     "k": 0,
+     "console": [
+      "log: proto typeof getBody: function",
+      "log: proto getBody: [object X3DExecutionContext]",
+      "log: proto has getBody: true",
+      "log: extern early typeof getBody: undefined",
+      "log: extern early getBody threw TypeError: e.getBody is not a function",
+      "log: extern early has getBody: false",
+      "log: proto body isScene: false",
+      "log: proto body type: X3DExecutionContext",
+      "log: proto body roots: 1",
+      "log: proto body outer: false",
+      "log: extern late loadState: 1008",
+      "log: extern late typeof getBody: undefined",
+      "log: extern late getBody threw TypeError: e.getBody is not a function",
+      "log: extern late has getBody: false",
+      "log: loaded proto: Lib",
+      "log: loaded body type: X3DExecutionContext",
+      "log: loaded body roots: 1"
+     ],
+     "loadCount": 0,
+     "externs": [
+      {
+       "name": "Ext",
+       "loadState": "COMPLETE",
+       "url": [
+        "lib.wrl#Lib"
+       ],
+       "proto": "Lib",
+       "fields": [
+        "level",
+        "poke"
+       ]
+      }
+     ],
+     "instances": {},
+     "vrml": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT EnvironmentalSensor : 3\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Scripting : 1\nCOMPONENT Sound : 3\nCOMPONENT Text : 2\n\nEXTERNPROTO Ext [\n  initializeOnly SFInt32 level\n  inputOnly      SFInt32 poke\n]\n\"lib.wrl#Lib\"\n\nPROTO Local [\n  initializeOnly SFInt32 level 1\n]\n{\n  Group { }\n}\n\nDEF S Script {\n  url \"javascript:\nvar frame = 0;\nvar early = null;\n\nfunction show (label, f)\n{\n   try { print (label + ': ' + f ()); }\n   catch (e) { print (label + ' threw ' + e .name + ': ' + e .message); }\n}\n\nfunction probe (label, e)\n{\n   show (label + ' typeof getBody', () => typeof e .getBody);\n   show (label + ' getBody', () => e .getBody ());\n   show (label + ' has getBody', () => 'getBody' in e);\n}\n\nfunction initialize ()\n{\n   const cs = Browser .currentScene;\n   const l  = cs .protos .get ('Local');\n   const e  = cs .externprotos .get ('Ext');\n\n   early = cs .createProto ('Ext');\n\n   probe ('proto', l);\n   probe ('extern early', e);\n   show ('proto body isScene', () => l .getBody () .isScene);\n   show ('proto body type', () => l .getBody () .getTypeName ());\n   show ('proto body roots', () => l .getBody () .rootNodes .length);\n   show ('proto body outer', () => l .getBody () .getOuterNode () === null);\n}\n\nfunction prepareEvents ()\n{\n   const cs = Browser .currentScene;\n   const e  = cs .externprotos .get ('Ext');\n\n   if (++ frame !== 6)\n      return;\n\n   show ('extern late loadState', () => e .loadState);\n   probe ('extern late', e);\n   show ('loaded proto', () => e .getProtoDeclaration () .getName ());\n   show ('loaded body type', () => e .getProtoDeclaration () .getBody () .getTypeName ());\n   show ('loaded body roots', () => e .getProtoDeclaration () .getBody () .rootNodes .length);\n}\n\"\n}\n"
+    },
+    {
+     "k": 1,
+     "console": [],
+     "loadCount": 0,
+     "externs": [
+      {
+       "name": "Ext",
+       "loadState": "COMPLETE",
+       "url": [
+        "lib.wrl#Lib"
+       ],
+       "proto": "Lib",
+       "fields": [
+        "level",
+        "poke"
+       ]
+      }
+     ],
+     "instances": {}
+    },
+    {
+     "k": 2,
+     "console": [],
+     "loadCount": 0,
+     "externs": [
+      {
+       "name": "Ext",
+       "loadState": "COMPLETE",
+       "url": [
+        "lib.wrl#Lib"
+       ],
+       "proto": "Lib",
+       "fields": [
+        "level",
+        "poke"
+       ]
+      }
+     ],
+     "instances": {}
+    },
+    {
+     "k": 3,
+     "console": [],
+     "loadCount": 0,
+     "externs": [
+      {
+       "name": "Ext",
+       "loadState": "COMPLETE",
+       "url": [
+        "lib.wrl#Lib"
+       ],
+       "proto": "Lib",
+       "fields": [
+        "level",
+        "poke"
+       ]
+      }
+     ],
+     "instances": {}
+    },
+    {
+     "k": 4,
+     "console": [],
+     "loadCount": 0,
+     "externs": [
+      {
+       "name": "Ext",
+       "loadState": "COMPLETE",
+       "url": [
+        "lib.wrl#Lib"
+       ],
+       "proto": "Lib",
+       "fields": [
+        "level",
+        "poke"
+       ]
+      }
+     ],
+     "instances": {}
+    },
+    {
+     "k": 5,
+     "console": [],
+     "loadCount": 0,
+     "externs": [
+      {
+       "name": "Ext",
+       "loadState": "COMPLETE",
+       "url": [
+        "lib.wrl#Lib"
+       ],
+       "proto": "Lib",
+       "fields": [
+        "level",
+        "poke"
+       ]
+      }
+     ],
+     "instances": {}
+    },
+    {
+     "k": 6,
+     "console": [],
+     "loadCount": 0,
+     "externs": [
+      {
+       "name": "Ext",
+       "loadState": "COMPLETE",
+       "url": [
+        "lib.wrl#Lib"
+       ],
+       "proto": "Lib",
+       "fields": [
+        "level",
+        "poke"
+       ]
+      }
+     ],
+     "instances": {}
+    },
+    {
+     "k": 7,
+     "console": [],
+     "loadCount": 0,
+     "externs": [
+      {
+       "name": "Ext",
+       "loadState": "COMPLETE",
+       "url": [
+        "lib.wrl#Lib"
+       ],
+       "proto": "Lib",
+       "fields": [
+        "level",
+        "poke"
+       ]
+      }
+     ],
+     "instances": {}
+    },
+    {
+     "k": 8,
+     "console": [],
+     "loadCount": 0,
+     "externs": [
+      {
+       "name": "Ext",
+       "loadState": "COMPLETE",
+       "url": [
+        "lib.wrl#Lib"
+       ],
+       "proto": "Lib",
+       "fields": [
+        "level",
+        "poke"
+       ]
+      }
+     ],
+     "instances": {}
+    }
+   ]
   }
  ]
 }

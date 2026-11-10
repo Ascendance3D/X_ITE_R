@@ -102,9 +102,16 @@ pub(super) fn op<C: Cx>(ctx: &C, a: &[C::V]) -> Result<J<C::V>, C::E> {
         "live" => Ok(J::Bool(rt().ctx_live(c))),
         // X3DExecutionContext.getLocalScene: the scene the context belongs to.
         "sceneRoot" => Ok(J::Number(rt().scene.scene_root(c) as f64)),
-        // X3DExecutionContext.getOuterNode: the PROTO instance whose body the context is; null for a scene.
+        // X3DExecutionContext.getOuterNode: the PROTO instance, or the PROTO declaration, whose body the context is; null for a scene.
+        // The body of a PROTO declaration has the declaration: `{ proto: id }` (the page makes the object).
         "outerNode" => match rt().scene.contexts[c].outer {
             x3d_scene::Outer::Instance(n) => Ok(node_js(Some(n))),
+            x3d_scene::Outer::Proto(p) => {
+                let o = Obj::new();
+
+                o.set("proto", p as f64);
+                Ok(o.into())
+            }
             _ => Ok(J::Null),
         },
         "unique" => {
