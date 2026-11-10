@@ -635,6 +635,65 @@
      "instances": {}
     }
    ]
+  },
+  {
+   "case": "p09",
+   "ok": true,
+   "steps": [
+    {
+     "k": 0,
+     "console": [
+      "warn: The use of sfnode.getField(name) is deprecated. Future versions of X_ITE may remove this feature. Instead, use the sfnode.{fieldName} property syntax or sfnode.addFieldCallback(key, fieldName, callback). Error",
+      "log: decl field names: pos,level",
+      "log: decl field types: SFVec3f,SFInt32",
+      "log: decl pos value: 1 2 3",
+      "log: decl pos access: 1",
+      "log: decl is held: true",
+      "log: decl fields getter: false",
+      "log: set decl pos: 7 8 9",
+      "log: held pos: 1 2 3",
+      "log: late pos: 7 8 9",
+      "log: set decl level: 5",
+      "log: held level: 2",
+      "log: late level: 5",
+      "log: held pos field: 1 2 3",
+      "log: set held pos: 4 4 4",
+      "log: after update held level: 5",
+      "log: after update held pos field: 4 4 4",
+      "log: after update same field: true",
+      "log: after update set field: 6 6 6",
+      "log: after update decl pos: 7 8 9",
+      "log: after update decl same: true",
+      "log: relayout names: level,pos",
+      "log: relayout decl pos: 1 1 1",
+      "log: relayout old decl pos: 7 8 9",
+      "log: relayout held pos field: 6 6 6",
+      "log: relayout held same: true",
+      "log: relayout held pos: 6 6 6",
+      "log: relayout held level: 5",
+      "log: relayout set field: 2 2 2",
+      "log: relayout set node: 3 3 3"
+     ],
+     "loadCount": 0,
+     "externs": [],
+     "instances": {},
+     "vrml": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT EnvironmentalSensor : 3\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Scripting : 1\nCOMPONENT Sound : 3\nCOMPONENT Text : 2\n\nPROTO Box9 [\n  initializeOnly SFInt32 level 5\n  initializeOnly SFVec3f pos 1 1 1\n]\n{\n  Group { }\n}\n\nDEF S Script {\n  url \"javascript:\nfunction show (label, f)\n{\n   try { print (label + ': ' + f ()); }\n   catch (e) { print (label + ' threw ' + e .name + ': ' + e .message); }\n}\n\nfunction initialize ()\n{\n   const cs   = Browser .currentScene;\n   const d    = cs .protos .get ('Box9');\n   const held = cs .createProto ('Box9');\n   const df   = Array .from (d .getUserDefinedFields ());\n   const pos  = df .find (f => f .getName () === 'pos');\n   const lev  = df .find (f => f .getName () === 'level');\n   const hpos = held .getField ('pos');\n\n   show ('decl field names', () => df .map (f => f .getName ()) .join (','));\n   show ('decl field types', () => df .map (f => f .getTypeName ? f .getTypeName () : f .constructor .name) .join (','));\n   show ('decl pos value', () => pos .toString ());\n   show ('decl pos access', () => pos .getAccessType ());\n   show ('decl is held', () => pos === Array .from (d .getUserDefinedFields ()) [0]);\n   show ('decl fields getter', () => d .fields .get ('pos') === pos);\n   show ('set decl pos', () => { pos .setValue (new SFVec3f (7, 8, 9)); return pos .toString (); });\n   show ('held pos', () => held .pos .toString ());\n   show ('late pos', () => cs .createProto ('Box9') .pos .toString ());\n   show ('set decl level', () => { lev .setValue (5); return lev .valueOf (); });\n   show ('held level', () => held .level);\n   show ('late level', () => cs .createProto ('Box9') .level);\n   show ('held pos field', () => hpos .toString ());\n   show ('set held pos', () => { held .pos = new SFVec3f (4, 4, 4); return hpos .toString (); });\n\n   d .updateInstances ();\n\n   show ('after update held level', () => held .level);\n   show ('after update held pos field', () => hpos .toString ());\n   show ('after update same field', () => hpos === held .getField ('pos'));\n   show ('after update set field', () => { hpos .setValue (new SFVec3f (6, 6, 6)); return held .pos .toString (); });\n   show ('after update decl pos', () => pos .toString ());\n   show ('after update decl same', () => Array .from (d .getUserDefinedFields ()) .find (f => f .getName () === 'pos') === pos);\n\n   d .removeUserDefinedField ('pos');\n   d .addUserDefinedField (X3DConstants .initializeOnly, 'pos', new SFVec3f (1, 1, 1));\n   d .updateInstances ();\n\n   show ('relayout names', () => Array .from (d .getUserDefinedFields (), f => f .getName ()) .join (','));\n   show ('relayout decl pos', () => Array .from (d .getUserDefinedFields ()) .find (f => f .getName () === 'pos') .toString ());\n   show ('relayout old decl pos', () => pos .toString ());\n   show ('relayout held pos field', () => hpos .toString ());\n   show ('relayout held same', () => hpos === held .getField ('pos'));\n   show ('relayout held pos', () => held .pos .toString ());\n   show ('relayout held level', () => held .level);\n   show ('relayout set field', () => { hpos .setValue (new SFVec3f (2, 2, 2)); return held .pos .toString (); });\n   show ('relayout set node', () => { held .pos = new SFVec3f (3, 3, 3); return hpos .toString (); });\n}\n\"\n}\n"
+    },
+    {
+     "k": 1,
+     "console": [],
+     "loadCount": 0,
+     "externs": [],
+     "instances": {}
+    },
+    {
+     "k": 2,
+     "console": [],
+     "loadCount": 0,
+     "externs": [],
+     "instances": {}
+    }
+   ]
   }
  ]
 }

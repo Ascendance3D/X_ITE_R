@@ -1452,6 +1452,22 @@ impl Runtime {
         self.scene.externprotos[e].fields.retain(|f| f.name != name);
     }
 
+    /// The default value of a declaration's interface field changed (the field object of `getUserDefinedFields` is the
+    /// declaration's own: instances made from now on start with it, existing ones take it at `updateInstances`).
+    pub fn decl_set_default(&mut self, extern_: bool, id: usize, name: &str, value: FieldValue) {
+        let fields = if extern_ {
+            &mut self.scene.externprotos[id].fields
+        } else {
+            &mut self.scene.protos[id].fields
+        };
+
+        if let Some(f) = fields.iter_mut().find(|f| f.name == name) {
+            if f.ty() == value.field_type() {
+                f.value = value;
+            }
+        }
+    }
+
     fn proto_field_names(&self, p: ProtoId) -> Vec<String> {
         self.scene.protos[p]
             .fields
@@ -1526,10 +1542,44 @@ impl Runtime {
             }
         };
 
-        // The page's mirrors of the old field objects name the old layout: they stop being refreshed.
-        self.js_mirror
-            .retain(|k, _| !matches!(k, (n, FieldLoc::Pre(_)) if *n == inst));
+        // The Script's objects of the old fields follow them to the new layout (the Script host moves their handles from
+        // `field_remaps`): the mirror flags go with the fields, the fields that are gone are not mirrored any more.
+        self.field_remaps.push(FieldRemap {
+            node: inst,
+            map: map.to_vec(),
+            old_values: self
+                .scene
+                .node(inst)
+                .fields
+                .iter()
+                .map(|f| f.value.clone())
+                .collect(),
+        });
+
+        let mirrored: Vec<(FKey, bool)> = self
+            .js_mirror
+            .iter()
+            .filter(|(k, _)| matches!(k, (n, FieldLoc::Pre(_)) if *n == inst))
+            .map(|(k, d)| (*k, *d))
+            .collect();
+
+        for (k, _) in &mirrored {
+            self.js_mirror.remove(k);
+        }
+
         self.drop_js_dirty_of(inst);
+
+        for (k, dirty) in mirrored {
+            if let Some(nk) = remap(k) {
+                self.js_mirror.insert(nk, false);
+
+                // A field whose refresh was pending keeps it (the new key).
+                if dirty {
+                    self.js_dirty.push(nk);
+                    self.js_mirror.insert(nk, true);
+                }
+            }
+        }
 
         let old = std::mem::take(&mut self.frt);
 
