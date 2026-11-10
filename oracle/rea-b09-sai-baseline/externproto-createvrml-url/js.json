@@ -1,0 +1,515 @@
+{
+  "ok": true,
+  "poses": {
+    "8": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "9": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "10": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "11": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "12": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "13": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "14": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "15": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "16": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "17": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "18": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "19": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "20": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "21": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "22": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "23": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "24": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "27": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "30": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "33": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "36": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    }
+  },
+  "vrml": {
+    "8": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT EnvironmentalSensor : 3\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Scripting : 1\nCOMPONENT Sound : 3\nCOMPONENT Text : 2\n\nDEF P Script {\n  initializeOnly SFString hist \"got:n=1,SFNode v=3 \"\n  initializeOnly SFInt32  step 3\n  inputOnly      SFTime   cycle\n  inputOnly      MFNode   got\n\n  url \"javascript:\nfunction rec (s) { hist = hist + s + ' '; }\nfunction describe (nodes) {\n  var out = 'n=' + nodes .length;\n  for (var i = 0; i < nodes .length; ++ i) {\n    out += ',' + nodes [i] .getTypeName ();\n    if (nodes [i] .v !== undefined) out += ' v=' + nodes [i] .v;\n  }\n  return out;\n}\nfunction got (value) { rec ('got:' + describe (value)); }\nfunction cycle () {\n  step = step + 1;\n  if (step == 2) Browser .createVrmlFromURL (new MFString ('ep-url-file.wrl'), Browser .currentScene .getNamedNode ('P'), 'got');\n  if (step == 3) Browser .createVrmlFromURL (new MFString ('ep-url-missing.wrl'), Browser .currentScene .getNamedNode ('P'), 'got');\n  if (step == 5) Browser .createVrmlFromURL (new MFString ('ep-url-again.wrl'), Browser .currentScene .getNamedNode ('P'), 'got');\n  if (step == 6) Browser .createVrmlFromURL (new MFString ('ep-url-file.wrl'), Browser .currentScene .getNamedNode ('P'), 'got');\n}\n  \"\n}\n\nDEF STEP TimeSensor {\n  cycleInterval 0.05\n  loop TRUE\n}\n\nROUTE STEP.cycleTime TO P.cycle\n",
+    "9": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT EnvironmentalSensor : 3\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Scripting : 1\nCOMPONENT Sound : 3\nCOMPONENT Text : 2\n\nDEF P Script {\n  initializeOnly SFString hist \"got:n=1,SFNode v=3 got:n=1,SFNode v=3 \"\n  initializeOnly SFInt32  step 4\n  inputOnly      SFTime   cycle\n  inputOnly      MFNode   got\n\n  url \"javascript:\nfunction rec (s) { hist = hist + s + ' '; }\nfunction describe (nodes) {\n  var out = 'n=' + nodes .length;\n  for (var i = 0; i < nodes .length; ++ i) {\n    out += ',' + nodes [i] .getTypeName ();\n    if (nodes [i] .v !== undefined) out += ' v=' + nodes [i] .v;\n  }\n  return out;\n}\nfunction got (value) { rec ('got:' + describe (value)); }\nfunction cycle () {\n  step = step + 1;\n  if (step == 2) Browser .createVrmlFromURL (new MFString ('ep-url-file.wrl'), Browser .currentScene .getNamedNode ('P'), 'got');\n  if (step == 3) Browser .createVrmlFromURL (new MFString ('ep-url-missing.wrl'), Browser .currentScene .getNamedNode ('P'), 'got');\n  if (step == 5) Browser .createVrmlFromURL (new MFString ('ep-url-again.wrl'), Browser .currentScene .getNamedNode ('P'), 'got');\n  if (step == 6) Browser .createVrmlFromURL (new MFString ('ep-url-file.wrl'), Browser .currentScene .getNamedNode ('P'), 'got');\n}\n  \"\n}\n\nDEF STEP TimeSensor {\n  cycleInterval 0.05\n  loop TRUE\n}\n\nROUTE STEP.cycleTime TO P.cycle\n",
+    "10": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT EnvironmentalSensor : 3\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Scripting : 1\nCOMPONENT Sound : 3\nCOMPONENT Text : 2\n\nDEF P Script {\n  initializeOnly SFString hist \"got:n=1,SFNode v=3 got:n=1,SFNode v=3 \"\n  initializeOnly SFInt32  step 4\n  inputOnly      SFTime   cycle\n  inputOnly      MFNode   got\n\n  url \"javascript:\nfunction rec (s) { hist = hist + s + ' '; }\nfunction describe (nodes) {\n  var out = 'n=' + nodes .length;\n  for (var i = 0; i < nodes .length; ++ i) {\n    out += ',' + nodes [i] .getTypeName ();\n    if (nodes [i] .v !== undefined) out += ' v=' + nodes [i] .v;\n  }\n  return out;\n}\nfunction got (value) { rec ('got:' + describe (value)); }\nfunction cycle () {\n  step = step + 1;\n  if (step == 2) Browser .createVrmlFromURL (new MFString ('ep-url-file.wrl'), Browser .currentScene .getNamedNode ('P'), 'got');\n  if (step == 3) Browser .createVrmlFromURL (new MFString ('ep-url-missing.wrl'), Browser .currentScene .getNamedNode ('P'), 'got');\n  if (step == 5) Browser .createVrmlFromURL (new MFString ('ep-url-again.wrl'), Browser .currentScene .getNamedNode ('P'), 'got');\n  if (step == 6) Browser .createVrmlFromURL (new MFString ('ep-url-file.wrl'), Browser .currentScene .getNamedNode ('P'), 'got');\n}\n  \"\n}\n\nDEF STEP TimeSensor {\n  cycleInterval 0.05\n  loop TRUE\n}\n\nROUTE STEP.cycleTime TO P.cycle\n",
+    "11": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT EnvironmentalSensor : 3\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Scripting : 1\nCOMPONENT Sound : 3\nCOMPONENT Text : 2\n\nDEF P Script {\n  initializeOnly SFString hist \"got:n=1,SFNode v=3 got:n=1,SFNode v=3 \"\n  initializeOnly SFInt32  step 4\n  inputOnly      SFTime   cycle\n  inputOnly      MFNode   got\n\n  url \"javascript:\nfunction rec (s) { hist = hist + s + ' '; }\nfunction describe (nodes) {\n  var out = 'n=' + nodes .length;\n  for (var i = 0; i < nodes .length; ++ i) {\n    out += ',' + nodes [i] .getTypeName ();\n    if (nodes [i] .v !== undefined) out += ' v=' + nodes [i] .v;\n  }\n  return out;\n}\nfunction got (value) { rec ('got:' + describe (value)); }\nfunction cycle () {\n  step = step + 1;\n  if (step == 2) Browser .createVrmlFromURL (new MFString ('ep-url-file.wrl'), Browser .currentScene .getNamedNode ('P'), 'got');\n  if (step == 3) Browser .createVrmlFromURL (new MFString ('ep-url-missing.wrl'), Browser .currentScene .getNamedNode ('P'), 'got');\n  if (step == 5) Browser .createVrmlFromURL (new MFString ('ep-url-again.wrl'), Browser .currentScene .getNamedNode ('P'), 'got');\n  if (step == 6) Browser .createVrmlFromURL (new MFString ('ep-url-file.wrl'), Browser .currentScene .getNamedNode ('P'), 'got');\n}\n  \"\n}\n\nDEF STEP TimeSensor {\n  cycleInterval 0.05\n  loop TRUE\n}\n\nROUTE STEP.cycleTime TO P.cycle\n",
+    "12": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT EnvironmentalSensor : 3\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Scripting : 1\nCOMPONENT Sound : 3\nCOMPONENT Text : 2\n\nDEF P Script {\n  initializeOnly SFString hist \"got:n=1,SFNode v=3 got:n=1,SFNode v=3 \"\n  initializeOnly SFInt32  step 5\n  inputOnly      SFTime   cycle\n  inputOnly      MFNode   got\n\n  url \"javascript:\nfunction rec (s) { hist = hist + s + ' '; }\nfunction describe (nodes) {\n  var out = 'n=' + nodes .length;\n  for (var i = 0; i < nodes .length; ++ i) {\n    out += ',' + nodes [i] .getTypeName ();\n    if (nodes [i] .v !== undefined) out += ' v=' + nodes [i] .v;\n  }\n  return out;\n}\nfunction got (value) { rec ('got:' + describe (value)); }\nfunction cycle () {\n  step = step + 1;\n  if (step == 2) Browser .createVrmlFromURL (new MFString ('ep-url-file.wrl'), Browser .currentScene .getNamedNode ('P'), 'got');\n  if (step == 3) Browser .createVrmlFromURL (new MFString ('ep-url-missing.wrl'), Browser .currentScene .getNamedNode ('P'), 'got');\n  if (step == 5) Browser .createVrmlFromURL (new MFString ('ep-url-again.wrl'), Browser .currentScene .getNamedNode ('P'), 'got');\n  if (step == 6) Browser .createVrmlFromURL (new MFString ('ep-url-file.wrl'), Browser .currentScene .getNamedNode ('P'), 'got');\n}\n  \"\n}\n\nDEF STEP TimeSensor {\n  cycleInterval 0.05\n  loop TRUE\n}\n\nROUTE STEP.cycleTime TO P.cycle\n",
+    "13": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT EnvironmentalSensor : 3\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Scripting : 1\nCOMPONENT Sound : 3\nCOMPONENT Text : 2\n\nDEF P Script {\n  initializeOnly SFString hist \"got:n=1,SFNode v=3 got:n=1,SFNode v=3 \"\n  initializeOnly SFInt32  step 5\n  inputOnly      SFTime   cycle\n  inputOnly      MFNode   got\n\n  url \"javascript:\nfunction rec (s) { hist = hist + s + ' '; }\nfunction describe (nodes) {\n  var out = 'n=' + nodes .length;\n  for (var i = 0; i < nodes .length; ++ i) {\n    out += ',' + nodes [i] .getTypeName ();\n    if (nodes [i] .v !== undefined) out += ' v=' + nodes [i] .v;\n  }\n  return out;\n}\nfunction got (value) { rec ('got:' + describe (value)); }\nfunction cycle () {\n  step = step + 1;\n  if (step == 2) Browser .createVrmlFromURL (new MFString ('ep-url-file.wrl'), Browser .currentScene .getNamedNode ('P'), 'got');\n  if (step == 3) Browser .createVrmlFromURL (new MFString ('ep-url-missing.wrl'), Browser .currentScene .getNamedNode ('P'), 'got');\n  if (step == 5) Browser .createVrmlFromURL (new MFString ('ep-url-again.wrl'), Browser .currentScene .getNamedNode ('P'), 'got');\n  if (step == 6) Browser .createVrmlFromURL (new MFString ('ep-url-file.wrl'), Browser .currentScene .getNamedNode ('P'), 'got');\n}\n  \"\n}\n\nDEF STEP TimeSensor {\n  cycleInterval 0.05\n  loop TRUE\n}\n\nROUTE STEP.cycleTime TO P.cycle\n",
+    "14": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT EnvironmentalSensor : 3\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Scripting : 1\nCOMPONENT Sound : 3\nCOMPONENT Text : 2\n\nDEF P Script {\n  initializeOnly SFString hist \"got:n=1,SFNode v=3 got:n=1,SFNode v=3 \"\n  initializeOnly SFInt32  step 5\n  inputOnly      SFTime   cycle\n  inputOnly      MFNode   got\n\n  url \"javascript:\nfunction rec (s) { hist = hist + s + ' '; }\nfunction describe (nodes) {\n  var out = 'n=' + nodes .length;\n  for (var i = 0; i < nodes .length; ++ i) {\n    out += ',' + nodes [i] .getTypeName ();\n    if (nodes [i] .v !== undefined) out += ' v=' + nodes [i] .v;\n  }\n  return out;\n}\nfunction got (value) { rec ('got:' + describe (value)); }\nfunction cycle () {\n  step = step + 1;\n  if (step == 2) Browser .createVrmlFromURL (new MFString ('ep-url-file.wrl'), Browser .currentScene .getNamedNode ('P'), 'got');\n  if (step == 3) Browser .createVrmlFromURL (new MFString ('ep-url-missing.wrl'), Browser .currentScene .getNamedNode ('P'), 'got');\n  if (step == 5) Browser .createVrmlFromURL (new MFString ('ep-url-again.wrl'), Browser .currentScene .getNamedNode ('P'), 'got');\n  if (step == 6) Browser .createVrmlFromURL (new MFString ('ep-url-file.wrl'), Browser .currentScene .getNamedNode ('P'), 'got');\n}\n  \"\n}\n\nDEF STEP TimeSensor {\n  cycleInterval 0.05\n  loop TRUE\n}\n\nROUTE STEP.cycleTime TO P.cycle\n",
+    "15": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT EnvironmentalSensor : 3\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Scripting : 1\nCOMPONENT Sound : 3\nCOMPONENT Text : 2\n\nDEF P Script {\n  initializeOnly SFString hist \"got:n=1,SFNode v=3 got:n=1,SFNode v=3 got:n=1,SFNode v=5 \"\n  initializeOnly SFInt32  step 6\n  inputOnly      SFTime   cycle\n  inputOnly      MFNode   got\n\n  url \"javascript:\nfunction rec (s) { hist = hist + s + ' '; }\nfunction describe (nodes) {\n  var out = 'n=' + nodes .length;\n  for (var i = 0; i < nodes .length; ++ i) {\n    out += ',' + nodes [i] .getTypeName ();\n    if (nodes [i] .v !== undefined) out += ' v=' + nodes [i] .v;\n  }\n  return out;\n}\nfunction got (value) { rec ('got:' + describe (value)); }\nfunction cycle () {\n  step = step + 1;\n  if (step == 2) Browser .createVrmlFromURL (new MFString ('ep-url-file.wrl'), Browser .currentScene .getNamedNode ('P'), 'got');\n  if (step == 3) Browser .createVrmlFromURL (new MFString ('ep-url-missing.wrl'), Browser .currentScene .getNamedNode ('P'), 'got');\n  if (step == 5) Browser .createVrmlFromURL (new MFString ('ep-url-again.wrl'), Browser .currentScene .getNamedNode ('P'), 'got');\n  if (step == 6) Browser .createVrmlFromURL (new MFString ('ep-url-file.wrl'), Browser .currentScene .getNamedNode ('P'), 'got');\n}\n  \"\n}\n\nDEF STEP TimeSensor {\n  cycleInterval 0.05\n  loop TRUE\n}\n\nROUTE STEP.cycleTime TO P.cycle\n",
+    "16": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT EnvironmentalSensor : 3\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Scripting : 1\nCOMPONENT Sound : 3\nCOMPONENT Text : 2\n\nDEF P Script {\n  initializeOnly SFString hist \"got:n=1,SFNode v=3 got:n=1,SFNode v=3 got:n=1,SFNode v=5 \"\n  initializeOnly SFInt32  step 6\n  inputOnly      SFTime   cycle\n  inputOnly      MFNode   got\n\n  url \"javascript:\nfunction rec (s) { hist = hist + s + ' '; }\nfunction describe (nodes) {\n  var out = 'n=' + nodes .length;\n  for (var i = 0; i < nodes .length; ++ i) {\n    out += ',' + nodes [i] .getTypeName ();\n    if (nodes [i] .v !== undefined) out += ' v=' + nodes [i] .v;\n  }\n  return out;\n}\nfunction got (value) { rec ('got:' + describe (value)); }\nfunction cycle () {\n  step = step + 1;\n  if (step == 2) Browser .createVrmlFromURL (new MFString ('ep-url-file.wrl'), Browser .currentScene .getNamedNode ('P'), 'got');\n  if (step == 3) Browser .createVrmlFromURL (new MFString ('ep-url-missing.wrl'), Browser .currentScene .getNamedNode ('P'), 'got');\n  if (step == 5) Browser .createVrmlFromURL (new MFString ('ep-url-again.wrl'), Browser .currentScene .getNamedNode ('P'), 'got');\n  if (step == 6) Browser .createVrmlFromURL (new MFString ('ep-url-file.wrl'), Browser .currentScene .getNamedNode ('P'), 'got');\n}\n  \"\n}\n\nDEF STEP TimeSensor {\n  cycleInterval 0.05\n  loop TRUE\n}\n\nROUTE STEP.cycleTime TO P.cycle\n",
+    "17": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT EnvironmentalSensor : 3\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Scripting : 1\nCOMPONENT Sound : 3\nCOMPONENT Text : 2\n\nDEF P Script {\n  initializeOnly SFString hist \"got:n=1,SFNode v=3 got:n=1,SFNode v=3 got:n=1,SFNode v=5 \"\n  initializeOnly SFInt32  step 6\n  inputOnly      SFTime   cycle\n  inputOnly      MFNode   got\n\n  url \"javascript:\nfunction rec (s) { hist = hist + s + ' '; }\nfunction describe (nodes) {\n  var out = 'n=' + nodes .length;\n  for (var i = 0; i < nodes .length; ++ i) {\n    out += ',' + nodes [i] .getTypeName ();\n    if (nodes [i] .v !== undefined) out += ' v=' + nodes [i] .v;\n  }\n  return out;\n}\nfunction got (value) { rec ('got:' + describe (value)); }\nfunction cycle () {\n  step = step + 1;\n  if (step == 2) Browser .createVrmlFromURL (new MFString ('ep-url-file.wrl'), Browser .currentScene .getNamedNode ('P'), 'got');\n  if (step == 3) Browser .createVrmlFromURL (new MFString ('ep-url-missing.wrl'), Browser .currentScene .getNamedNode ('P'), 'got');\n  if (step == 5) Browser .createVrmlFromURL (new MFString ('ep-url-again.wrl'), Browser .currentScene .getNamedNode ('P'), 'got');\n  if (step == 6) Browser .createVrmlFromURL (new MFString ('ep-url-file.wrl'), Browser .currentScene .getNamedNode ('P'), 'got');\n}\n  \"\n}\n\nDEF STEP TimeSensor {\n  cycleInterval 0.05\n  loop TRUE\n}\n\nROUTE STEP.cycleTime TO P.cycle\n",
+    "18": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT EnvironmentalSensor : 3\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Scripting : 1\nCOMPONENT Sound : 3\nCOMPONENT Text : 2\n\nDEF P Script {\n  initializeOnly SFString hist \"got:n=1,SFNode v=3 got:n=1,SFNode v=3 got:n=1,SFNode v=5 got:n=1,SFNode v=3 \"\n  initializeOnly SFInt32  step 7\n  inputOnly      SFTime   cycle\n  inputOnly      MFNode   got\n\n  url \"javascript:\nfunction rec (s) { hist = hist + s + ' '; }\nfunction describe (nodes) {\n  var out = 'n=' + nodes .length;\n  for (var i = 0; i < nodes .length; ++ i) {\n    out += ',' + nodes [i] .getTypeName ();\n    if (nodes [i] .v !== undefined) out += ' v=' + nodes [i] .v;\n  }\n  return out;\n}\nfunction got (value) { rec ('got:' + describe (value)); }\nfunction cycle () {\n  step = step + 1;\n  if (step == 2) Browser .createVrmlFromURL (new MFString ('ep-url-file.wrl'), Browser .currentScene .getNamedNode ('P'), 'got');\n  if (step == 3) Browser .createVrmlFromURL (new MFString ('ep-url-missing.wrl'), Browser .currentScene .getNamedNode ('P'), 'got');\n  if (step == 5) Browser .createVrmlFromURL (new MFString ('ep-url-again.wrl'), Browser .currentScene .getNamedNode ('P'), 'got');\n  if (step == 6) Browser .createVrmlFromURL (new MFString ('ep-url-file.wrl'), Browser .currentScene .getNamedNode ('P'), 'got');\n}\n  \"\n}\n\nDEF STEP TimeSensor {\n  cycleInterval 0.05\n  loop TRUE\n}\n\nROUTE STEP.cycleTime TO P.cycle\n",
+    "19": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT EnvironmentalSensor : 3\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Scripting : 1\nCOMPONENT Sound : 3\nCOMPONENT Text : 2\n\nDEF P Script {\n  initializeOnly SFString hist \"got:n=1,SFNode v=3 got:n=1,SFNode v=3 got:n=1,SFNode v=5 got:n=1,SFNode v=3 \"\n  initializeOnly SFInt32  step 7\n  inputOnly      SFTime   cycle\n  inputOnly      MFNode   got\n\n  url \"javascript:\nfunction rec (s) { hist = hist + s + ' '; }\nfunction describe (nodes) {\n  var out = 'n=' + nodes .length;\n  for (var i = 0; i < nodes .length; ++ i) {\n    out += ',' + nodes [i] .getTypeName ();\n    if (nodes [i] .v !== undefined) out += ' v=' + nodes [i] .v;\n  }\n  return out;\n}\nfunction got (value) { rec ('got:' + describe (value)); }\nfunction cycle () {\n  step = step + 1;\n  if (step == 2) Browser .createVrmlFromURL (new MFString ('ep-url-file.wrl'), Browser .currentScene .getNamedNode ('P'), 'got');\n  if (step == 3) Browser .createVrmlFromURL (new MFString ('ep-url-missing.wrl'), Browser .currentScene .getNamedNode ('P'), 'got');\n  if (step == 5) Browser .createVrmlFromURL (new MFString ('ep-url-again.wrl'), Browser .currentScene .getNamedNode ('P'), 'got');\n  if (step == 6) Browser .createVrmlFromURL (new MFString ('ep-url-file.wrl'), Browser .currentScene .getNamedNode ('P'), 'got');\n}\n  \"\n}\n\nDEF STEP TimeSensor {\n  cycleInterval 0.05\n  loop TRUE\n}\n\nROUTE STEP.cycleTime TO P.cycle\n",
+    "20": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT EnvironmentalSensor : 3\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Scripting : 1\nCOMPONENT Sound : 3\nCOMPONENT Text : 2\n\nDEF P Script {\n  initializeOnly SFString hist \"got:n=1,SFNode v=3 got:n=1,SFNode v=3 got:n=1,SFNode v=5 got:n=1,SFNode v=3 \"\n  initializeOnly SFInt32  step 7\n  inputOnly      SFTime   cycle\n  inputOnly      MFNode   got\n\n  url \"javascript:\nfunction rec (s) { hist = hist + s + ' '; }\nfunction describe (nodes) {\n  var out = 'n=' + nodes .length;\n  for (var i = 0; i < nodes .length; ++ i) {\n    out += ',' + nodes [i] .getTypeName ();\n    if (nodes [i] .v !== undefined) out += ' v=' + nodes [i] .v;\n  }\n  return out;\n}\nfunction got (value) { rec ('got:' + describe (value)); }\nfunction cycle () {\n  step = step + 1;\n  if (step == 2) Browser .createVrmlFromURL (new MFString ('ep-url-file.wrl'), Browser .currentScene .getNamedNode ('P'), 'got');\n  if (step == 3) Browser .createVrmlFromURL (new MFString ('ep-url-missing.wrl'), Browser .currentScene .getNamedNode ('P'), 'got');\n  if (step == 5) Browser .createVrmlFromURL (new MFString ('ep-url-again.wrl'), Browser .currentScene .getNamedNode ('P'), 'got');\n  if (step == 6) Browser .createVrmlFromURL (new MFString ('ep-url-file.wrl'), Browser .currentScene .getNamedNode ('P'), 'got');\n}\n  \"\n}\n\nDEF STEP TimeSensor {\n  cycleInterval 0.05\n  loop TRUE\n}\n\nROUTE STEP.cycleTime TO P.cycle\n",
+    "21": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT EnvironmentalSensor : 3\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Scripting : 1\nCOMPONENT Sound : 3\nCOMPONENT Text : 2\n\nDEF P Script {\n  initializeOnly SFString hist \"got:n=1,SFNode v=3 got:n=1,SFNode v=3 got:n=1,SFNode v=5 got:n=1,SFNode v=3 \"\n  initializeOnly SFInt32  step 8\n  inputOnly      SFTime   cycle\n  inputOnly      MFNode   got\n\n  url \"javascript:\nfunction rec (s) { hist = hist + s + ' '; }\nfunction describe (nodes) {\n  var out = 'n=' + nodes .length;\n  for (var i = 0; i < nodes .length; ++ i) {\n    out += ',' + nodes [i] .getTypeName ();\n    if (nodes [i] .v !== undefined) out += ' v=' + nodes [i] .v;\n  }\n  return out;\n}\nfunction got (value) { rec ('got:' + describe (value)); }\nfunction cycle () {\n  step = step + 1;\n  if (step == 2) Browser .createVrmlFromURL (new MFString ('ep-url-file.wrl'), Browser .currentScene .getNamedNode ('P'), 'got');\n  if (step == 3) Browser .createVrmlFromURL (new MFString ('ep-url-missing.wrl'), Browser .currentScene .getNamedNode ('P'), 'got');\n  if (step == 5) Browser .createVrmlFromURL (new MFString ('ep-url-again.wrl'), Browser .currentScene .getNamedNode ('P'), 'got');\n  if (step == 6) Browser .createVrmlFromURL (new MFString ('ep-url-file.wrl'), Browser .currentScene .getNamedNode ('P'), 'got');\n}\n  \"\n}\n\nDEF STEP TimeSensor {\n  cycleInterval 0.05\n  loop TRUE\n}\n\nROUTE STEP.cycleTime TO P.cycle\n",
+    "22": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT EnvironmentalSensor : 3\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Scripting : 1\nCOMPONENT Sound : 3\nCOMPONENT Text : 2\n\nDEF P Script {\n  initializeOnly SFString hist \"got:n=1,SFNode v=3 got:n=1,SFNode v=3 got:n=1,SFNode v=5 got:n=1,SFNode v=3 \"\n  initializeOnly SFInt32  step 8\n  inputOnly      SFTime   cycle\n  inputOnly      MFNode   got\n\n  url \"javascript:\nfunction rec (s) { hist = hist + s + ' '; }\nfunction describe (nodes) {\n  var out = 'n=' + nodes .length;\n  for (var i = 0; i < nodes .length; ++ i) {\n    out += ',' + nodes [i] .getTypeName ();\n    if (nodes [i] .v !== undefined) out += ' v=' + nodes [i] .v;\n  }\n  return out;\n}\nfunction got (value) { rec ('got:' + describe (value)); }\nfunction cycle () {\n  step = step + 1;\n  if (step == 2) Browser .createVrmlFromURL (new MFString ('ep-url-file.wrl'), Browser .currentScene .getNamedNode ('P'), 'got');\n  if (step == 3) Browser .createVrmlFromURL (new MFString ('ep-url-missing.wrl'), Browser .currentScene .getNamedNode ('P'), 'got');\n  if (step == 5) Browser .createVrmlFromURL (new MFString ('ep-url-again.wrl'), Browser .currentScene .getNamedNode ('P'), 'got');\n  if (step == 6) Browser .createVrmlFromURL (new MFString ('ep-url-file.wrl'), Browser .currentScene .getNamedNode ('P'), 'got');\n}\n  \"\n}\n\nDEF STEP TimeSensor {\n  cycleInterval 0.05\n  loop TRUE\n}\n\nROUTE STEP.cycleTime TO P.cycle\n",
+    "23": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT EnvironmentalSensor : 3\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Scripting : 1\nCOMPONENT Sound : 3\nCOMPONENT Text : 2\n\nDEF P Script {\n  initializeOnly SFString hist \"got:n=1,SFNode v=3 got:n=1,SFNode v=3 got:n=1,SFNode v=5 got:n=1,SFNode v=3 \"\n  initializeOnly SFInt32  step 8\n  inputOnly      SFTime   cycle\n  inputOnly      MFNode   got\n\n  url \"javascript:\nfunction rec (s) { hist = hist + s + ' '; }\nfunction describe (nodes) {\n  var out = 'n=' + nodes .length;\n  for (var i = 0; i < nodes .length; ++ i) {\n    out += ',' + nodes [i] .getTypeName ();\n    if (nodes [i] .v !== undefined) out += ' v=' + nodes [i] .v;\n  }\n  return out;\n}\nfunction got (value) { rec ('got:' + describe (value)); }\nfunction cycle () {\n  step = step + 1;\n  if (step == 2) Browser .createVrmlFromURL (new MFString ('ep-url-file.wrl'), Browser .currentScene .getNamedNode ('P'), 'got');\n  if (step == 3) Browser .createVrmlFromURL (new MFString ('ep-url-missing.wrl'), Browser .currentScene .getNamedNode ('P'), 'got');\n  if (step == 5) Browser .createVrmlFromURL (new MFString ('ep-url-again.wrl'), Browser .currentScene .getNamedNode ('P'), 'got');\n  if (step == 6) Browser .createVrmlFromURL (new MFString ('ep-url-file.wrl'), Browser .currentScene .getNamedNode ('P'), 'got');\n}\n  \"\n}\n\nDEF STEP TimeSensor {\n  cycleInterval 0.05\n  loop TRUE\n}\n\nROUTE STEP.cycleTime TO P.cycle\n",
+    "24": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT EnvironmentalSensor : 3\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Scripting : 1\nCOMPONENT Sound : 3\nCOMPONENT Text : 2\n\nDEF P Script {\n  initializeOnly SFString hist \"got:n=1,SFNode v=3 got:n=1,SFNode v=3 got:n=1,SFNode v=5 got:n=1,SFNode v=3 \"\n  initializeOnly SFInt32  step 9\n  inputOnly      SFTime   cycle\n  inputOnly      MFNode   got\n\n  url \"javascript:\nfunction rec (s) { hist = hist + s + ' '; }\nfunction describe (nodes) {\n  var out = 'n=' + nodes .length;\n  for (var i = 0; i < nodes .length; ++ i) {\n    out += ',' + nodes [i] .getTypeName ();\n    if (nodes [i] .v !== undefined) out += ' v=' + nodes [i] .v;\n  }\n  return out;\n}\nfunction got (value) { rec ('got:' + describe (value)); }\nfunction cycle () {\n  step = step + 1;\n  if (step == 2) Browser .createVrmlFromURL (new MFString ('ep-url-file.wrl'), Browser .currentScene .getNamedNode ('P'), 'got');\n  if (step == 3) Browser .createVrmlFromURL (new MFString ('ep-url-missing.wrl'), Browser .currentScene .getNamedNode ('P'), 'got');\n  if (step == 5) Browser .createVrmlFromURL (new MFString ('ep-url-again.wrl'), Browser .currentScene .getNamedNode ('P'), 'got');\n  if (step == 6) Browser .createVrmlFromURL (new MFString ('ep-url-file.wrl'), Browser .currentScene .getNamedNode ('P'), 'got');\n}\n  \"\n}\n\nDEF STEP TimeSensor {\n  cycleInterval 0.05\n  loop TRUE\n}\n\nROUTE STEP.cycleTime TO P.cycle\n",
+    "27": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT EnvironmentalSensor : 3\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Scripting : 1\nCOMPONENT Sound : 3\nCOMPONENT Text : 2\n\nDEF P Script {\n  initializeOnly SFString hist \"got:n=1,SFNode v=3 got:n=1,SFNode v=3 got:n=1,SFNode v=5 got:n=1,SFNode v=3 \"\n  initializeOnly SFInt32  step 10\n  inputOnly      SFTime   cycle\n  inputOnly      MFNode   got\n\n  url \"javascript:\nfunction rec (s) { hist = hist + s + ' '; }\nfunction describe (nodes) {\n  var out = 'n=' + nodes .length;\n  for (var i = 0; i < nodes .length; ++ i) {\n    out += ',' + nodes [i] .getTypeName ();\n    if (nodes [i] .v !== undefined) out += ' v=' + nodes [i] .v;\n  }\n  return out;\n}\nfunction got (value) { rec ('got:' + describe (value)); }\nfunction cycle () {\n  step = step + 1;\n  if (step == 2) Browser .createVrmlFromURL (new MFString ('ep-url-file.wrl'), Browser .currentScene .getNamedNode ('P'), 'got');\n  if (step == 3) Browser .createVrmlFromURL (new MFString ('ep-url-missing.wrl'), Browser .currentScene .getNamedNode ('P'), 'got');\n  if (step == 5) Browser .createVrmlFromURL (new MFString ('ep-url-again.wrl'), Browser .currentScene .getNamedNode ('P'), 'got');\n  if (step == 6) Browser .createVrmlFromURL (new MFString ('ep-url-file.wrl'), Browser .currentScene .getNamedNode ('P'), 'got');\n}\n  \"\n}\n\nDEF STEP TimeSensor {\n  cycleInterval 0.05\n  loop TRUE\n}\n\nROUTE STEP.cycleTime TO P.cycle\n",
+    "30": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT EnvironmentalSensor : 3\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Scripting : 1\nCOMPONENT Sound : 3\nCOMPONENT Text : 2\n\nDEF P Script {\n  initializeOnly SFString hist \"got:n=1,SFNode v=3 got:n=1,SFNode v=3 got:n=1,SFNode v=5 got:n=1,SFNode v=3 \"\n  initializeOnly SFInt32  step 11\n  inputOnly      SFTime   cycle\n  inputOnly      MFNode   got\n\n  url \"javascript:\nfunction rec (s) { hist = hist + s + ' '; }\nfunction describe (nodes) {\n  var out = 'n=' + nodes .length;\n  for (var i = 0; i < nodes .length; ++ i) {\n    out += ',' + nodes [i] .getTypeName ();\n    if (nodes [i] .v !== undefined) out += ' v=' + nodes [i] .v;\n  }\n  return out;\n}\nfunction got (value) { rec ('got:' + describe (value)); }\nfunction cycle () {\n  step = step + 1;\n  if (step == 2) Browser .createVrmlFromURL (new MFString ('ep-url-file.wrl'), Browser .currentScene .getNamedNode ('P'), 'got');\n  if (step == 3) Browser .createVrmlFromURL (new MFString ('ep-url-missing.wrl'), Browser .currentScene .getNamedNode ('P'), 'got');\n  if (step == 5) Browser .createVrmlFromURL (new MFString ('ep-url-again.wrl'), Browser .currentScene .getNamedNode ('P'), 'got');\n  if (step == 6) Browser .createVrmlFromURL (new MFString ('ep-url-file.wrl'), Browser .currentScene .getNamedNode ('P'), 'got');\n}\n  \"\n}\n\nDEF STEP TimeSensor {\n  cycleInterval 0.05\n  loop TRUE\n}\n\nROUTE STEP.cycleTime TO P.cycle\n",
+    "33": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT EnvironmentalSensor : 3\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Scripting : 1\nCOMPONENT Sound : 3\nCOMPONENT Text : 2\n\nDEF P Script {\n  initializeOnly SFString hist \"got:n=1,SFNode v=3 got:n=1,SFNode v=3 got:n=1,SFNode v=5 got:n=1,SFNode v=3 \"\n  initializeOnly SFInt32  step 12\n  inputOnly      SFTime   cycle\n  inputOnly      MFNode   got\n\n  url \"javascript:\nfunction rec (s) { hist = hist + s + ' '; }\nfunction describe (nodes) {\n  var out = 'n=' + nodes .length;\n  for (var i = 0; i < nodes .length; ++ i) {\n    out += ',' + nodes [i] .getTypeName ();\n    if (nodes [i] .v !== undefined) out += ' v=' + nodes [i] .v;\n  }\n  return out;\n}\nfunction got (value) { rec ('got:' + describe (value)); }\nfunction cycle () {\n  step = step + 1;\n  if (step == 2) Browser .createVrmlFromURL (new MFString ('ep-url-file.wrl'), Browser .currentScene .getNamedNode ('P'), 'got');\n  if (step == 3) Browser .createVrmlFromURL (new MFString ('ep-url-missing.wrl'), Browser .currentScene .getNamedNode ('P'), 'got');\n  if (step == 5) Browser .createVrmlFromURL (new MFString ('ep-url-again.wrl'), Browser .currentScene .getNamedNode ('P'), 'got');\n  if (step == 6) Browser .createVrmlFromURL (new MFString ('ep-url-file.wrl'), Browser .currentScene .getNamedNode ('P'), 'got');\n}\n  \"\n}\n\nDEF STEP TimeSensor {\n  cycleInterval 0.05\n  loop TRUE\n}\n\nROUTE STEP.cycleTime TO P.cycle\n",
+    "36": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT EnvironmentalSensor : 3\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Scripting : 1\nCOMPONENT Sound : 3\nCOMPONENT Text : 2\n\nDEF P Script {\n  initializeOnly SFString hist \"got:n=1,SFNode v=3 got:n=1,SFNode v=3 got:n=1,SFNode v=5 got:n=1,SFNode v=3 \"\n  initializeOnly SFInt32  step 13\n  inputOnly      SFTime   cycle\n  inputOnly      MFNode   got\n\n  url \"javascript:\nfunction rec (s) { hist = hist + s + ' '; }\nfunction describe (nodes) {\n  var out = 'n=' + nodes .length;\n  for (var i = 0; i < nodes .length; ++ i) {\n    out += ',' + nodes [i] .getTypeName ();\n    if (nodes [i] .v !== undefined) out += ' v=' + nodes [i] .v;\n  }\n  return out;\n}\nfunction got (value) { rec ('got:' + describe (value)); }\nfunction cycle () {\n  step = step + 1;\n  if (step == 2) Browser .createVrmlFromURL (new MFString ('ep-url-file.wrl'), Browser .currentScene .getNamedNode ('P'), 'got');\n  if (step == 3) Browser .createVrmlFromURL (new MFString ('ep-url-missing.wrl'), Browser .currentScene .getNamedNode ('P'), 'got');\n  if (step == 5) Browser .createVrmlFromURL (new MFString ('ep-url-again.wrl'), Browser .currentScene .getNamedNode ('P'), 'got');\n  if (step == 6) Browser .createVrmlFromURL (new MFString ('ep-url-file.wrl'), Browser .currentScene .getNamedNode ('P'), 'got');\n}\n  \"\n}\n\nDEF STEP TimeSensor {\n  cycleInterval 0.05\n  loop TRUE\n}\n\nROUTE STEP.cycleTime TO P.cycle\n"
+  },
+  "prints": [],
+  "log": [
+    "error: X3DExternProtoDeclaration: Couldn't load URL 'http://oracle/synthetic-rea-b09-sai/nowhere-ep-url.wrl'. Error: Not Found"
+  ],
+  "anchors": [],
+  "loadFrames": 3,
+  "warmupFrames": 8,
+  "geometry": {
+    "rect": [
+      0,
+      0,
+      512,
+      512
+    ],
+    "viewport": [
+      0,
+      0,
+      512,
+      512
+    ],
+    "scroll": [
+      0,
+      0
+    ]
+  }
+}

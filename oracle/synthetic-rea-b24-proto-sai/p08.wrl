@@ -1,0 +1,31 @@
+#VRML V2.0 utf8
+# Synthetic, newly authored for the Rust port REA batch 24 (no archive content).
+# An instance made with createProto is updated before it joins the scene: its first body has a Script whose
+# load is still in flight when the update disposes that body, so the body Script initializes twice.
+PROTO Gadget [
+  field SFInt32 level 2
+]
+{
+  Script {
+    field SFInt32 level IS level
+    url "javascript:
+function initialize () { print ('Body initialize level=' + level); }
+"
+  }
+}
+DEF S Script {
+  url "javascript:
+function initialize ()
+{
+   const cs = Browser .currentScene;
+   const d  = cs .protos .get ('Gadget');
+   const g  = cs .createProto ('Gadget');
+
+   print ('created');
+   d .updateInstances ();
+   print ('updated');
+   cs .rootNodes .push (g);
+   print ('added');
+}
+"
+}

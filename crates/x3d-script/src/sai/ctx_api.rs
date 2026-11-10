@@ -102,9 +102,16 @@ pub(super) fn op<C: Cx>(ctx: &C, a: &[C::V]) -> Result<J<C::V>, C::E> {
         "live" => Ok(J::Bool(rt().ctx_live(c))),
         // X3DExecutionContext.getLocalScene: the scene the context belongs to.
         "sceneRoot" => Ok(J::Number(rt().scene.scene_root(c) as f64)),
-        // X3DExecutionContext.getOuterNode: the PROTO instance whose body the context is; null for a scene.
+        // X3DExecutionContext.getOuterNode: the PROTO instance, or the PROTO declaration, whose body the context is; null for a scene.
+        // The body of a PROTO declaration has the declaration: `{ proto: id }` (the page makes the object).
         "outerNode" => match rt().scene.contexts[c].outer {
             x3d_scene::Outer::Instance(n) => Ok(node_js(Some(n))),
+            x3d_scene::Outer::Proto(p) => {
+                let o = Obj::new();
+
+                o.set("proto", p as f64);
+                Ok(o.into())
+            }
             _ => Ok(J::Null),
         },
         "unique" => {
@@ -544,6 +551,20 @@ pub(super) fn op<C: Cx>(ctx: &C, a: &[C::V]) -> Result<J<C::V>, C::E> {
 
             Ok(J::Undefined)
         }
+        // The field object of a declaration's interface field (getUserDefinedFields) changed: (extern, id, name, value).
+        "protoDefault" => {
+            let (extern_, id) = (
+                a.first().is_some_and(coerce_bool),
+                num_arg(ctx, a, 1) as usize,
+            );
+            let name = str_at(2);
+
+            if let Some(value) = value_arg(a, 3) {
+                rt().decl_set_default(extern_, id, &name, value);
+            }
+
+            Ok(J::Undefined)
+        }
         // X3DProtoDeclarationNode.updateInstances.
         "protoUpdate" => {
             let (extern_, id) = (
@@ -552,6 +573,7 @@ pub(super) fn op<C: Cx>(ctx: &C, a: &[C::V]) -> Result<J<C::V>, C::E> {
             );
 
             rt().proto_update_instances(extern_, id);
+            sync_layout();
             Ok(J::Undefined)
         }
         // X3DProtoDeclaration.getBody: the context of the body.

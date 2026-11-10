@@ -1340,6 +1340,11 @@ three runs are identical and no world logs an error; a world whose multisampled 
 and is listed in `msaa4/unstable.json`. `crates/x3d-render/tests/render_rea_oit_items.rs` replays every world with the option on (bound: 8 per
 channel, 0.5% of pixels) and, as the negative control, with the option off (every world must then be over the bound).
 
+`oracle/tools/rea_i92_render_items.py shots --oit-i92` records the transparency worlds of `synthetic-rea-i92-render-items` (`i92-tr-*`,
+`i92-fg-transparent`) with the option on into `oracle/rea-oit-i92-render-items-baseline/{png,msaa4}` the same way (`--only` takes a comma-separated
+list); `i92-tr-many` and `i92-tr-nested` have no MSAA 4 picture (`msaa4/unstable.json`). `crates/x3d-render/tests/render_rea_oit_i92_items.rs`
+replays them with the option on (same bound).
+
 ## decodeAudioData lane (2026-10-31, issue #98): MP3, Ogg, FLAC, Opus, WAV
 
 - `x_ite-audio-decode.mjs` decodes the files of `synthetic-rea-b24-audio/` (ffmpeg sine plus seeded noise, 0.3 s;
@@ -1865,3 +1870,19 @@ so `roughness-step-plain` and `base-color-step-plain` animate a plain material);
   `[v0, v1, v1, v2, v2]` (linear over the first segment) where glTF 2.0 and the pinned `createNamedInterpolator` hold `[v0, v0, v1, v1, v2]`. The
   port holds. `KNOWN` in `gltf_anim_step.rs` (weights-step, MSAA 0 and 4: Inline text and pictures 14 and 26 not compared; the held points are
   asserted) and `KNOWN_STEP_WEIGHTS` in `crates/x3d-parse/tests/gltf_rea.rs` name it.
+
+## CFF items: subroutine bias and depth, `seac`, variable CFF2 (`rea-t-cff-items-baseline/`)
+
+- `tools/gen_cff_items_fonts.py` writes `synthetic-rea-t-cff-items/` (12 newly authored fonts, every table byte written by the script):
+  `bias-1239`, `bias-1240`, `bias-33899`, `bias-33900` (N local and N global subrs: Type 2 bias 107, 1131, 1131, 32768), `depth` (local, global and
+  alternating chains of 9 to 13 subrs and self-calling subrs), `seac-plain`, `seac-cid`, `seac-cid-fd` (`endchar` with four arguments), and
+  `var-default`, `var-regular`, `var-avar`, `var-2axes` (CFF2 with `fvar`, `avar`, HVAR and `blend`).
+- `tools/rea_t_cff_items.py record` runs `x_ite-cff-cid-fonts.mjs` (`FONT_DIR`, `FONT_CHARS`) three times against the pinned X_ITE and keeps
+  `fonts.json` only if the three runs are identical. Prepare the worktree as in "Recording from a worktree".
+- `crates/x3d-text/tests/rea_t_cff_items.rs` compares `x3d-text` with it glyph by glyph (advances, `getPath` commands, libtess vertices, exceptions,
+  console lines).
+- Pinned facts the test pins: opentype.js applies the Type 2 bias and the nesting limit of 10 (the 11th call is skipped with a `console.warn`);
+  a CID-keyed font cannot resolve the components of `seac` (TypeError), and a plain font whose accent glyph is missing throws too; a font with `fvar`
+  and CFF2 outlines gets a variation manager, whose default instance is the first instance equal to the axis defaults, else the instance named
+  "Regular", else the axis defaults, so a charstring `blend` uses the `avar`-mapped normalized coordinates and every path coordinate is rounded
+  (`Math.round`); X_ITE calls `glyph .getPath (0, 0, 1)` without the font, so HVAR advances are never applied. X_ITE has no way to set other coordinates.
