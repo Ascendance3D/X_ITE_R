@@ -303,6 +303,17 @@ const KNOWN_GAPS: &[(&str, &str)] = &[
 /// constrainTranslation) reads those stale shapes against the moved eye. x3d-drive rebuilds the shapes from the frame it
 /// is at. Nothing else reads the shapes in a transition: collide and gravitate are skipped (compared directly by
 /// trans-gravity-skip and trans-layer-skip), and the viewer stops the transition before it moves the eye.
+///
+/// Classified 2026-11-10 as an upstream defect, kept on purpose (not copied). X3DRenderObject.getCollisionShape draws each
+/// stored shape with its stored `modelViewMatrix`, which holds the view matrix of the last collision pass, and
+/// getClosestObject multiplies it with a view matrix built from the current user position. In a transition the two view
+/// matrices differ, so the result follows the old eye, not the geometry: a static wall seems to move with the viewer. The
+/// early return of X3DLayerNode.collision only skips collide and gravitate. getClosestObject is an X_ITE extension that no
+/// standard defines; ISO/IEC 19775-1 V4.0 23.2.4 ties collision detection to "other objects in the scene", which a result
+/// that follows the old eye does not measure. REA: analysis ev_bdb28dc35b50b73af2c0a0f9bae3faab1c34b450a2bd853bcfaf96bfa886153e
+/// (summary view ev_ed4b3ac34d8319f9e34fba3a8f7f7e0c246d369387be082d7aceae25d7d17e3e), module trace of X3DLayerNode.js
+/// ev_94297619aaada34f6ef3bfb1be12f333446490a64dadb104fc51d808d4934563; the graph is partial, and the line-level reading
+/// (X3DLayerNode.js 466-467, X3DRenderObject.js 470-485 and 513-529) is from the pinned source text.
 const STALE_SHAPES: &str = "getClosestObject in a transition reads X_ITE's stale collision shapes";
 
 fn run_shard(shard: usize) {
@@ -381,4 +392,41 @@ fn rea_gravity_layers_shard1_match_x_ite() {
 #[test]
 fn rea_gravity_layers_shard2_match_x_ite() {
     run_shard(2);
+}
+
+/// The evidence for STALE_SHAPES in the pinned recordings themselves (no renderer needed): in trans-skip-probe the eye has
+/// moved from (0 1.6 12) at frame 10 to (0 3.8 6) at frame 40, yet X_ITE's probes at frame 40 equal, value for value, its
+/// probes of trans-skip-probe-start at frame 10. The answer follows the eye of the last collision pass, not the geometry,
+/// which is why the port keeps its fresh shapes (KNOWN_GAPS) instead of copying the defect.
+#[test]
+fn x_ite_mid_transition_probes_follow_the_old_eye() {
+    let root =
+        PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("../../oracle/rea-gravity-layers-baseline");
+    let load = |name: &str| -> Value {
+        serde_json::from_str(
+            &std::fs::read_to_string(root.join(format!("{name}-msaa0.json"))).unwrap(),
+        )
+        .unwrap()
+    };
+    let (mid, start) = (load("trans-skip-probe"), load("trans-skip-probe-start"));
+    let position = |v: &Value, frame: &str| v["poses"][frame]["position"].clone();
+
+    assert_eq!(
+        position(&mid, "10"),
+        position(&start, "10"),
+        "same start pose"
+    );
+    let (from, to) = (position(&mid, "10"), position(&mid, "40"));
+    let height = |p: &Value| p[1].as_f64().unwrap();
+    assert!(
+        height(&to) - height(&from) > 2.0,
+        "the eye rises by more than 2 m: {from} -> {to}"
+    );
+
+    let probes = mid["collisionProbes"].as_array().unwrap();
+    assert!(!probes.is_empty());
+    assert_eq!(
+        mid["collisionProbes"], start["collisionProbes"],
+        "X_ITE's probes did not follow the eye"
+    );
 }
