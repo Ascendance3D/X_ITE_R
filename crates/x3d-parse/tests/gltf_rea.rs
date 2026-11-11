@@ -27,6 +27,13 @@ fn first_difference(expected: &str, actual: &str) -> String {
     String::new()
 }
 
+/// glTF STEP animation of morph weights. glTF 2.0 holds a keyframe value until the next keyframe; pinned X_ITE 16.5.0
+/// `createArrayInterpolator` writes the keys `[t0, t1, t1, t2, t2]` with the values `[v0, v1, v1, v2, v2]` where
+/// `createNamedInterpolator` (translation, rotation, scale, pointer) writes `[v0, v0, v1, v1, v2]`, so the morph is
+/// interpolated linearly over the first segment of each pair. An upstream defect, not copied: the Rust interpolators
+/// carry the held values and differ from the pinned text only in the key values. See also `gltf_anim_step.rs`.
+const KNOWN_STEP_WEIGHTS: &[&str] = &["animation/weights-step.gltf"];
+
 #[test]
 fn gltf_matches_x_ite() {
     let root = Path::new(env!("CARGO_MANIFEST_DIR")).join("../../oracle/synthetic-rea-b08-gltf");
@@ -111,6 +118,38 @@ fn gltf_matches_x_ite() {
             };
 
             checks += 1;
+
+            if KNOWN_STEP_WEIGHTS.contains(&file) {
+                // Not copied (see KNOWN_STEP_WEIGHTS): the text must differ, only in numbers.
+                let (e, a): (Vec<&str>, Vec<&str>) =
+                    (expected.split('\n').collect(), actual.split('\n').collect());
+                let shape = |l: &str| -> String {
+                    let mut out = String::new();
+
+                    for c in l.chars() {
+                        let c = if "0123456789.-e".contains(c) { '#' } else { c };
+
+                        if c != '#' || !out.ends_with('#') {
+                            out.push(c);
+                        }
+                    }
+
+                    out
+                };
+
+                if expected == actual
+                    || e.len() != a.len()
+                    || e.iter()
+                        .zip(&a)
+                        .any(|(x, y)| x != y && shape(x) != shape(y))
+                {
+                    failures.push(format!(
+                        "{file} [{key}]: the STEP weights fix is not in place"
+                    ));
+                }
+
+                continue;
+            }
 
             if expected != actual {
                 failures.push(format!(

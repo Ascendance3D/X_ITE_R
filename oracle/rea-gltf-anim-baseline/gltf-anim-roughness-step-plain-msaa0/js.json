@@ -1,0 +1,293 @@
+{
+  "ok": true,
+  "poses": {
+    "3": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "NONE",
+      "fieldOfViewScale": 1
+    },
+    "8": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "NONE",
+      "fieldOfViewScale": 1
+    },
+    "14": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "NONE",
+      "fieldOfViewScale": 1
+    },
+    "20": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "NONE",
+      "fieldOfViewScale": 1
+    },
+    "26": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "NONE",
+      "fieldOfViewScale": 1
+    },
+    "32": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "NONE",
+      "fieldOfViewScale": 1
+    },
+    "38": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "NONE",
+      "fieldOfViewScale": 1
+    },
+    "44": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "NONE",
+      "fieldOfViewScale": 1
+    },
+    "63": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "NONE",
+      "fieldOfViewScale": 1
+    },
+    "64": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "NONE",
+      "fieldOfViewScale": 1
+    }
+  },
+  "vrml": {
+    "3": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT EnvironmentalSensor : 3\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Scripting : 1\nCOMPONENT Sound : 3\nCOMPONENT Text : 2\n\nNavigationInfo {\n  type \"NONE\"\n}\n\nDEF Gltf Inline {\n  global TRUE\n  url \"../pointer/roughness-step-plain.gltf\"\n}\n\nTransform {\n  translation 0 0 -3\n  children [\n    DEF Touch TouchSensor { }\n    Shape {\n      appearance Appearance {\n        material Material {\n          transparency 0.9\n        }\n      }\n      geometry Box {\n        size 100 100 0.1\n      }\n    }\n  ]\n}\n\nIMPORT Gltf.Timer1\n\nROUTE Touch.touchTime TO Timer1.set_startTime\n",
+    "8": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT EnvironmentalSensor : 3\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Scripting : 1\nCOMPONENT Sound : 3\nCOMPONENT Text : 2\n\nNavigationInfo {\n  type \"NONE\"\n}\n\nDEF Gltf Inline {\n  global TRUE\n  url \"../pointer/roughness-step-plain.gltf\"\n}\n\nTransform {\n  translation 0 0 -3\n  children [\n    DEF Touch TouchSensor { }\n    Shape {\n      appearance Appearance {\n        material Material {\n          transparency 0.9\n        }\n      }\n      geometry Box {\n        size 100 100 0.1\n      }\n    }\n  ]\n}\n\nIMPORT Gltf.Timer1\n\nROUTE Touch.touchTime TO Timer1.set_startTime\n",
+    "14": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT EnvironmentalSensor : 3\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Scripting : 1\nCOMPONENT Sound : 3\nCOMPONENT Text : 2\n\nNavigationInfo {\n  type \"NONE\"\n}\n\nDEF Gltf Inline {\n  global TRUE\n  url \"../pointer/roughness-step-plain.gltf\"\n}\n\nTransform {\n  translation 0 0 -3\n  children [\n    DEF Touch TouchSensor { }\n    Shape {\n      appearance Appearance {\n        material Material {\n          transparency 0.9\n        }\n      }\n      geometry Box {\n        size 100 100 0.1\n      }\n    }\n  ]\n}\n\nIMPORT Gltf.Timer1\n\nROUTE Touch.touchTime TO Timer1.set_startTime\n",
+    "20": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT EnvironmentalSensor : 3\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Scripting : 1\nCOMPONENT Sound : 3\nCOMPONENT Text : 2\n\nNavigationInfo {\n  type \"NONE\"\n}\n\nDEF Gltf Inline {\n  global TRUE\n  url \"../pointer/roughness-step-plain.gltf\"\n}\n\nTransform {\n  translation 0 0 -3\n  children [\n    DEF Touch TouchSensor { }\n    Shape {\n      appearance Appearance {\n        material Material {\n          transparency 0.9\n        }\n      }\n      geometry Box {\n        size 100 100 0.1\n      }\n    }\n  ]\n}\n\nIMPORT Gltf.Timer1\n\nROUTE Touch.touchTime TO Timer1.set_startTime\n",
+    "26": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT EnvironmentalSensor : 3\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Scripting : 1\nCOMPONENT Sound : 3\nCOMPONENT Text : 2\n\nNavigationInfo {\n  type \"NONE\"\n}\n\nDEF Gltf Inline {\n  global TRUE\n  url \"../pointer/roughness-step-plain.gltf\"\n}\n\nTransform {\n  translation 0 0 -3\n  children [\n    DEF Touch TouchSensor { }\n    Shape {\n      appearance Appearance {\n        material Material {\n          transparency 0.9\n        }\n      }\n      geometry Box {\n        size 100 100 0.1\n      }\n    }\n  ]\n}\n\nIMPORT Gltf.Timer1\n\nROUTE Touch.touchTime TO Timer1.set_startTime\n",
+    "32": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT EnvironmentalSensor : 3\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Scripting : 1\nCOMPONENT Sound : 3\nCOMPONENT Text : 2\n\nNavigationInfo {\n  type \"NONE\"\n}\n\nDEF Gltf Inline {\n  global TRUE\n  url \"../pointer/roughness-step-plain.gltf\"\n}\n\nTransform {\n  translation 0 0 -3\n  children [\n    DEF Touch TouchSensor { }\n    Shape {\n      appearance Appearance {\n        material Material {\n          transparency 0.9\n        }\n      }\n      geometry Box {\n        size 100 100 0.1\n      }\n    }\n  ]\n}\n\nIMPORT Gltf.Timer1\n\nROUTE Touch.touchTime TO Timer1.set_startTime\n",
+    "38": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT EnvironmentalSensor : 3\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Scripting : 1\nCOMPONENT Sound : 3\nCOMPONENT Text : 2\n\nNavigationInfo {\n  type \"NONE\"\n}\n\nDEF Gltf Inline {\n  global TRUE\n  url \"../pointer/roughness-step-plain.gltf\"\n}\n\nTransform {\n  translation 0 0 -3\n  children [\n    DEF Touch TouchSensor { }\n    Shape {\n      appearance Appearance {\n        material Material {\n          transparency 0.9\n        }\n      }\n      geometry Box {\n        size 100 100 0.1\n      }\n    }\n  ]\n}\n\nIMPORT Gltf.Timer1\n\nROUTE Touch.touchTime TO Timer1.set_startTime\n",
+    "44": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT EnvironmentalSensor : 3\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Scripting : 1\nCOMPONENT Sound : 3\nCOMPONENT Text : 2\n\nNavigationInfo {\n  type \"NONE\"\n}\n\nDEF Gltf Inline {\n  global TRUE\n  url \"../pointer/roughness-step-plain.gltf\"\n}\n\nTransform {\n  translation 0 0 -3\n  children [\n    DEF Touch TouchSensor { }\n    Shape {\n      appearance Appearance {\n        material Material {\n          transparency 0.9\n        }\n      }\n      geometry Box {\n        size 100 100 0.1\n      }\n    }\n  ]\n}\n\nIMPORT Gltf.Timer1\n\nROUTE Touch.touchTime TO Timer1.set_startTime\n",
+    "63": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT EnvironmentalSensor : 3\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Scripting : 1\nCOMPONENT Sound : 3\nCOMPONENT Text : 2\n\nNavigationInfo {\n  type \"NONE\"\n}\n\nDEF Gltf Inline {\n  global TRUE\n  url \"../pointer/roughness-step-plain.gltf\"\n}\n\nTransform {\n  translation 0 0 -3\n  children [\n    DEF Touch TouchSensor { }\n    Shape {\n      appearance Appearance {\n        material Material {\n          transparency 0.9\n        }\n      }\n      geometry Box {\n        size 100 100 0.1\n      }\n    }\n  ]\n}\n\nIMPORT Gltf.Timer1\n\nROUTE Touch.touchTime TO Timer1.set_startTime\n",
+    "64": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT EnvironmentalSensor : 3\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Scripting : 1\nCOMPONENT Sound : 3\nCOMPONENT Text : 2\n\nNavigationInfo {\n  type \"NONE\"\n}\n\nDEF Gltf Inline {\n  global TRUE\n  url \"../pointer/roughness-step-plain.gltf\"\n}\n\nTransform {\n  translation 0 0 -3\n  children [\n    DEF Touch TouchSensor { }\n    Shape {\n      appearance Appearance {\n        material Material {\n          transparency 0.9\n        }\n      }\n      geometry Box {\n        size 100 100 0.1\n      }\n    }\n  ]\n}\n\nIMPORT Gltf.Timer1\n\nROUTE Touch.touchTime TO Timer1.set_startTime\n"
+  },
+  "prints": [],
+  "log": [],
+  "anchors": [],
+  "loadFrames": 3,
+  "warmupFrames": 8,
+  "geometry": {
+    "rect": [
+      0,
+      0,
+      512,
+      512
+    ],
+    "viewport": [
+      0,
+      0,
+      512,
+      512
+    ],
+    "scroll": [
+      0,
+      0
+    ]
+  },
+  "inlines": {
+    "3": {
+      "Gltf": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT EventUtilities : 1\nCOMPONENT Scripting : 1\n\nMETA \"generator\" \"rea-b08\"\n\nShape {\n  appearance DEF M Appearance {\n    alphaMode \"OPAQUE\"\n    material DEF _1 PhysicalMaterial { }\n  }\n  geometry IndexedTriangleSet {\n    index [\n      0,\n      1,\n      2,\n      0,\n      2,\n      3\n    ]\n    normal Normal {\n      vector [\n        0 0 1,\n        0 0 1,\n        0 0 1,\n        0 0 1\n      ]\n    }\n    coord Coordinate {\n      point [\n        -1 -1 0,\n        1 -1 0,\n        1 1 0,\n        -1 1 0\n      ]\n    }\n  }\n}\n\nDEF Animations Group {\n  visible FALSE\n  children DEF roughness-step-plain Group {\n    children [\n      DEF Timer1 TimeSensor {\n        description \"roughness-step-plain\"\n        cycleInterval 2\n      }\n      DEF RoughnessInterpolator ScalarInterpolator {\n        key [\n          0,\n          0.5,\n          0.5,\n          1,\n          1\n        ]\n        keyValue [\n          1,\n          1,\n          0,\n          0,\n          0.5\n        ]\n      }\n    ]\n  }\n}\n\nROUTE Timer1.fraction_changed TO RoughnessInterpolator.set_fraction\nROUTE RoughnessInterpolator.value_changed TO _1.set_roughness\n\nEXPORT roughness-step-plain\nEXPORT Timer1\nEXPORT Animations\n"
+    },
+    "8": {
+      "Gltf": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT EventUtilities : 1\nCOMPONENT Scripting : 1\n\nMETA \"generator\" \"rea-b08\"\n\nShape {\n  appearance DEF M Appearance {\n    alphaMode \"OPAQUE\"\n    material DEF _1 PhysicalMaterial { }\n  }\n  geometry IndexedTriangleSet {\n    index [\n      0,\n      1,\n      2,\n      0,\n      2,\n      3\n    ]\n    normal Normal {\n      vector [\n        0 0 1,\n        0 0 1,\n        0 0 1,\n        0 0 1\n      ]\n    }\n    coord Coordinate {\n      point [\n        -1 -1 0,\n        1 -1 0,\n        1 1 0,\n        -1 1 0\n      ]\n    }\n  }\n}\n\nDEF Animations Group {\n  visible FALSE\n  children DEF roughness-step-plain Group {\n    children [\n      DEF Timer1 TimeSensor {\n        description \"roughness-step-plain\"\n        cycleInterval 2\n        startTime 946684800.133333\n      }\n      DEF RoughnessInterpolator ScalarInterpolator {\n        key [\n          0,\n          0.5,\n          0.5,\n          1,\n          1\n        ]\n        keyValue [\n          1,\n          1,\n          0,\n          0,\n          0.5\n        ]\n      }\n    ]\n  }\n}\n\nROUTE Timer1.fraction_changed TO RoughnessInterpolator.set_fraction\nROUTE RoughnessInterpolator.value_changed TO _1.set_roughness\n\nEXPORT roughness-step-plain\nEXPORT Timer1\nEXPORT Animations\n"
+    },
+    "14": {
+      "Gltf": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT EventUtilities : 1\nCOMPONENT Scripting : 1\n\nMETA \"generator\" \"rea-b08\"\n\nShape {\n  appearance DEF M Appearance {\n    alphaMode \"OPAQUE\"\n    material DEF _1 PhysicalMaterial { }\n  }\n  geometry IndexedTriangleSet {\n    index [\n      0,\n      1,\n      2,\n      0,\n      2,\n      3\n    ]\n    normal Normal {\n      vector [\n        0 0 1,\n        0 0 1,\n        0 0 1,\n        0 0 1\n      ]\n    }\n    coord Coordinate {\n      point [\n        -1 -1 0,\n        1 -1 0,\n        1 1 0,\n        -1 1 0\n      ]\n    }\n  }\n}\n\nDEF Animations Group {\n  visible FALSE\n  children DEF roughness-step-plain Group {\n    children [\n      DEF Timer1 TimeSensor {\n        description \"roughness-step-plain\"\n        cycleInterval 2\n        startTime 946684800.133333\n      }\n      DEF RoughnessInterpolator ScalarInterpolator {\n        key [\n          0,\n          0.5,\n          0.5,\n          1,\n          1\n        ]\n        keyValue [\n          1,\n          1,\n          0,\n          0,\n          0.5\n        ]\n      }\n    ]\n  }\n}\n\nROUTE Timer1.fraction_changed TO RoughnessInterpolator.set_fraction\nROUTE RoughnessInterpolator.value_changed TO _1.set_roughness\n\nEXPORT roughness-step-plain\nEXPORT Timer1\nEXPORT Animations\n"
+    },
+    "20": {
+      "Gltf": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT EventUtilities : 1\nCOMPONENT Scripting : 1\n\nMETA \"generator\" \"rea-b08\"\n\nShape {\n  appearance DEF M Appearance {\n    alphaMode \"OPAQUE\"\n    material DEF _1 PhysicalMaterial { }\n  }\n  geometry IndexedTriangleSet {\n    index [\n      0,\n      1,\n      2,\n      0,\n      2,\n      3\n    ]\n    normal Normal {\n      vector [\n        0 0 1,\n        0 0 1,\n        0 0 1,\n        0 0 1\n      ]\n    }\n    coord Coordinate {\n      point [\n        -1 -1 0,\n        1 -1 0,\n        1 1 0,\n        -1 1 0\n      ]\n    }\n  }\n}\n\nDEF Animations Group {\n  visible FALSE\n  children DEF roughness-step-plain Group {\n    children [\n      DEF Timer1 TimeSensor {\n        description \"roughness-step-plain\"\n        cycleInterval 2\n        startTime 946684800.133333\n      }\n      DEF RoughnessInterpolator ScalarInterpolator {\n        key [\n          0,\n          0.5,\n          0.5,\n          1,\n          1\n        ]\n        keyValue [\n          1,\n          1,\n          0,\n          0,\n          0.5\n        ]\n      }\n    ]\n  }\n}\n\nROUTE Timer1.fraction_changed TO RoughnessInterpolator.set_fraction\nROUTE RoughnessInterpolator.value_changed TO _1.set_roughness\n\nEXPORT roughness-step-plain\nEXPORT Timer1\nEXPORT Animations\n"
+    },
+    "26": {
+      "Gltf": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT EventUtilities : 1\nCOMPONENT Scripting : 1\n\nMETA \"generator\" \"rea-b08\"\n\nShape {\n  appearance DEF M Appearance {\n    alphaMode \"OPAQUE\"\n    material DEF _1 PhysicalMaterial { }\n  }\n  geometry IndexedTriangleSet {\n    index [\n      0,\n      1,\n      2,\n      0,\n      2,\n      3\n    ]\n    normal Normal {\n      vector [\n        0 0 1,\n        0 0 1,\n        0 0 1,\n        0 0 1\n      ]\n    }\n    coord Coordinate {\n      point [\n        -1 -1 0,\n        1 -1 0,\n        1 1 0,\n        -1 1 0\n      ]\n    }\n  }\n}\n\nDEF Animations Group {\n  visible FALSE\n  children DEF roughness-step-plain Group {\n    children [\n      DEF Timer1 TimeSensor {\n        description \"roughness-step-plain\"\n        cycleInterval 2\n        startTime 946684800.133333\n      }\n      DEF RoughnessInterpolator ScalarInterpolator {\n        key [\n          0,\n          0.5,\n          0.5,\n          1,\n          1\n        ]\n        keyValue [\n          1,\n          1,\n          0,\n          0,\n          0.5\n        ]\n      }\n    ]\n  }\n}\n\nROUTE Timer1.fraction_changed TO RoughnessInterpolator.set_fraction\nROUTE RoughnessInterpolator.value_changed TO _1.set_roughness\n\nEXPORT roughness-step-plain\nEXPORT Timer1\nEXPORT Animations\n"
+    },
+    "32": {
+      "Gltf": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT EventUtilities : 1\nCOMPONENT Scripting : 1\n\nMETA \"generator\" \"rea-b08\"\n\nShape {\n  appearance DEF M Appearance {\n    alphaMode \"OPAQUE\"\n    material DEF _1 PhysicalMaterial { }\n  }\n  geometry IndexedTriangleSet {\n    index [\n      0,\n      1,\n      2,\n      0,\n      2,\n      3\n    ]\n    normal Normal {\n      vector [\n        0 0 1,\n        0 0 1,\n        0 0 1,\n        0 0 1\n      ]\n    }\n    coord Coordinate {\n      point [\n        -1 -1 0,\n        1 -1 0,\n        1 1 0,\n        -1 1 0\n      ]\n    }\n  }\n}\n\nDEF Animations Group {\n  visible FALSE\n  children DEF roughness-step-plain Group {\n    children [\n      DEF Timer1 TimeSensor {\n        description \"roughness-step-plain\"\n        cycleInterval 2\n        startTime 946684800.133333\n      }\n      DEF RoughnessInterpolator ScalarInterpolator {\n        key [\n          0,\n          0.5,\n          0.5,\n          1,\n          1\n        ]\n        keyValue [\n          1,\n          1,\n          0,\n          0,\n          0.5\n        ]\n      }\n    ]\n  }\n}\n\nROUTE Timer1.fraction_changed TO RoughnessInterpolator.set_fraction\nROUTE RoughnessInterpolator.value_changed TO _1.set_roughness\n\nEXPORT roughness-step-plain\nEXPORT Timer1\nEXPORT Animations\n"
+    },
+    "38": {
+      "Gltf": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT EventUtilities : 1\nCOMPONENT Scripting : 1\n\nMETA \"generator\" \"rea-b08\"\n\nShape {\n  appearance DEF M Appearance {\n    alphaMode \"OPAQUE\"\n    material DEF _1 PhysicalMaterial {\n      roughness 0\n    }\n  }\n  geometry IndexedTriangleSet {\n    index [\n      0,\n      1,\n      2,\n      0,\n      2,\n      3\n    ]\n    normal Normal {\n      vector [\n        0 0 1,\n        0 0 1,\n        0 0 1,\n        0 0 1\n      ]\n    }\n    coord Coordinate {\n      point [\n        -1 -1 0,\n        1 -1 0,\n        1 1 0,\n        -1 1 0\n      ]\n    }\n  }\n}\n\nDEF Animations Group {\n  visible FALSE\n  children DEF roughness-step-plain Group {\n    children [\n      DEF Timer1 TimeSensor {\n        description \"roughness-step-plain\"\n        cycleInterval 2\n        startTime 946684800.133333\n      }\n      DEF RoughnessInterpolator ScalarInterpolator {\n        key [\n          0,\n          0.5,\n          0.5,\n          1,\n          1\n        ]\n        keyValue [\n          1,\n          1,\n          0,\n          0,\n          0.5\n        ]\n      }\n    ]\n  }\n}\n\nROUTE Timer1.fraction_changed TO RoughnessInterpolator.set_fraction\nROUTE RoughnessInterpolator.value_changed TO _1.set_roughness\n\nEXPORT roughness-step-plain\nEXPORT Timer1\nEXPORT Animations\n"
+    },
+    "44": {
+      "Gltf": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT EventUtilities : 1\nCOMPONENT Scripting : 1\n\nMETA \"generator\" \"rea-b08\"\n\nShape {\n  appearance DEF M Appearance {\n    alphaMode \"OPAQUE\"\n    material DEF _1 PhysicalMaterial {\n      roughness 0\n    }\n  }\n  geometry IndexedTriangleSet {\n    index [\n      0,\n      1,\n      2,\n      0,\n      2,\n      3\n    ]\n    normal Normal {\n      vector [\n        0 0 1,\n        0 0 1,\n        0 0 1,\n        0 0 1\n      ]\n    }\n    coord Coordinate {\n      point [\n        -1 -1 0,\n        1 -1 0,\n        1 1 0,\n        -1 1 0\n      ]\n    }\n  }\n}\n\nDEF Animations Group {\n  visible FALSE\n  children DEF roughness-step-plain Group {\n    children [\n      DEF Timer1 TimeSensor {\n        description \"roughness-step-plain\"\n        cycleInterval 2\n        startTime 946684800.133333\n      }\n      DEF RoughnessInterpolator ScalarInterpolator {\n        key [\n          0,\n          0.5,\n          0.5,\n          1,\n          1\n        ]\n        keyValue [\n          1,\n          1,\n          0,\n          0,\n          0.5\n        ]\n      }\n    ]\n  }\n}\n\nROUTE Timer1.fraction_changed TO RoughnessInterpolator.set_fraction\nROUTE RoughnessInterpolator.value_changed TO _1.set_roughness\n\nEXPORT roughness-step-plain\nEXPORT Timer1\nEXPORT Animations\n"
+    },
+    "63": {
+      "Gltf": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT EventUtilities : 1\nCOMPONENT Scripting : 1\n\nMETA \"generator\" \"rea-b08\"\n\nShape {\n  appearance DEF M Appearance {\n    alphaMode \"OPAQUE\"\n    material DEF _1 PhysicalMaterial {\n      roughness 0\n    }\n  }\n  geometry IndexedTriangleSet {\n    index [\n      0,\n      1,\n      2,\n      0,\n      2,\n      3\n    ]\n    normal Normal {\n      vector [\n        0 0 1,\n        0 0 1,\n        0 0 1,\n        0 0 1\n      ]\n    }\n    coord Coordinate {\n      point [\n        -1 -1 0,\n        1 -1 0,\n        1 1 0,\n        -1 1 0\n      ]\n    }\n  }\n}\n\nDEF Animations Group {\n  visible FALSE\n  children DEF roughness-step-plain Group {\n    children [\n      DEF Timer1 TimeSensor {\n        description \"roughness-step-plain\"\n        cycleInterval 2\n        startTime 946684800.133333\n      }\n      DEF RoughnessInterpolator ScalarInterpolator {\n        key [\n          0,\n          0.5,\n          0.5,\n          1,\n          1\n        ]\n        keyValue [\n          1,\n          1,\n          0,\n          0,\n          0.5\n        ]\n      }\n    ]\n  }\n}\n\nROUTE Timer1.fraction_changed TO RoughnessInterpolator.set_fraction\nROUTE RoughnessInterpolator.value_changed TO _1.set_roughness\n\nEXPORT roughness-step-plain\nEXPORT Timer1\nEXPORT Animations\n"
+    },
+    "64": {
+      "Gltf": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT EventUtilities : 1\nCOMPONENT Scripting : 1\n\nMETA \"generator\" \"rea-b08\"\n\nShape {\n  appearance DEF M Appearance {\n    alphaMode \"OPAQUE\"\n    material DEF _1 PhysicalMaterial {\n      roughness 0.5\n    }\n  }\n  geometry IndexedTriangleSet {\n    index [\n      0,\n      1,\n      2,\n      0,\n      2,\n      3\n    ]\n    normal Normal {\n      vector [\n        0 0 1,\n        0 0 1,\n        0 0 1,\n        0 0 1\n      ]\n    }\n    coord Coordinate {\n      point [\n        -1 -1 0,\n        1 -1 0,\n        1 1 0,\n        -1 1 0\n      ]\n    }\n  }\n}\n\nDEF Animations Group {\n  visible FALSE\n  children DEF roughness-step-plain Group {\n    children [\n      DEF Timer1 TimeSensor {\n        description \"roughness-step-plain\"\n        cycleInterval 2\n        startTime 946684800.133333\n      }\n      DEF RoughnessInterpolator ScalarInterpolator {\n        key [\n          0,\n          0.5,\n          0.5,\n          1,\n          1\n        ]\n        keyValue [\n          1,\n          1,\n          0,\n          0,\n          0.5\n        ]\n      }\n    ]\n  }\n}\n\nROUTE Timer1.fraction_changed TO RoughnessInterpolator.set_fraction\nROUTE RoughnessInterpolator.value_changed TO _1.set_roughness\n\nEXPORT roughness-step-plain\nEXPORT Timer1\nEXPORT Animations\n"
+    }
+  },
+  "console": []
+}

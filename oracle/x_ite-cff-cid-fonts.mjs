@@ -23,8 +23,9 @@ const OUT = resolve (process .argv [2] ?? "oracle/rea-t-cff-cid-baseline/fonts.j
 checkOutput (OUT);
 
 const TYPES = { ".html": "text/html", ".js": "text/javascript", ".mjs": "text/javascript", ".css": "text/css", ".json": "application/json" };
-const DIR   = "/synthetic-rea-t-cff-cid";
-const CHARS = "AB OHFWVZ";
+// FONT_DIR (below oracle/) and FONT_CHARS pick another font set (oracle/tools/rea_t_cff_items.py); the defaults record the CID-keyed lane.
+const DIR   = process .env .FONT_DIR ?? "/synthetic-rea-t-cff-cid";
+const CHARS = process .env .FONT_CHARS ?? "AB OHFWVZ";
 
 const server = createServer (async (req, res) =>
 {

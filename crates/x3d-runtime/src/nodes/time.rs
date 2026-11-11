@@ -537,7 +537,23 @@ impl Runtime {
             self.now = now;
 
             match t.name {
-                "start" => self.time_do_start(t.node),
+                "start" => {
+                    let was_active = self.is_active(t.node);
+
+                    self.time_do_start(t.node);
+
+                    // The page's timer runs with the browser time at the later of the previous frame and the due time
+                    // (pinned anim.html runTimers: `T = Math.max (T, due / 1000)`), so the elapsed time of a clip
+                    // started by a timeout counts from startTime, not from the frame that follows it. The events of
+                    // the start keep the frame's time stamp.
+                    if !was_active && self.is_active(t.node) && !self.is_time_sensor(t.node) {
+                        let start = self.timer_prev_time.max(t.time).min(now);
+                        let s = self.ts(t.node);
+
+                        s.start = start;
+                        s.pause = start;
+                    }
+                }
                 "pause" => self.time_do_pause(t.node),
                 "resume" => self.time_do_resume(t.node),
                 "abort" => self.load_sensor_abort(t.node),
@@ -545,6 +561,7 @@ impl Runtime {
             }
 
             self.process_events();
+            self.now = now;
         }
     }
 

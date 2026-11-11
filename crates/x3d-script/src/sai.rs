@@ -519,6 +519,7 @@ pub fn native<C: Cx>(cx: &C, args: Vec<C::V>) -> Result<C::V, C::E> {
 /// prelude/bridge.js: the node fields a Script holds as objects are refreshed before its code runs (`__enter`), and what it
 /// changed in place goes to the runtime after it and its promise jobs ran (`__leave`).
 fn js_enter<C: Cx>(cx: &C) {
+    sync_layout();
     let _ = cx.call_global("__enter", vec![]);
 }
 
@@ -701,6 +702,8 @@ pub fn event<C: Cx>(cx: &C, name: &str, args: Vec<J<C::V>>) {
 /// X3DField.processEvent calls the callbacks synchronously, inside the event cascade: the promises they make run
 /// with the jobs of the next host call, as in X_ITE they run after processEvents.
 pub fn field_event<C: Cx>(cx: &C, k: FKey) {
+    sync_layout();
+
     let _ = cx.call_global_with("__fieldEvent", || {
         vec![J::from(fkey_id(k)), field_value_js(attach(k))]
     });
@@ -854,7 +857,58 @@ impl<C: Cx> CallWith for C {
 
 // --- slots ---------------------------------------------------------------------------------
 
+/// The field objects of a PROTO instance follow their fields when the instance's field layout changed
+/// (`X3DPrototypeInstance.update` reuses the old field objects): a handle moves to the new place of its field, and the handle
+/// of a field that is gone keeps the value it had and no longer reaches a field.
+pub(crate) fn sync_layout() {
+    let remaps = rt().take_field_remaps();
+
+    if remaps.is_empty() {
+        return;
+    }
+
+    with_state(|s| {
+        for r in remaps {
+            let held: Vec<(usize, u32)> = s
+                .attached
+                .iter()
+                .filter_map(|(k, h)| match k {
+                    (n, FieldLoc::Pre(i)) if *n == r.node => Some((*i, *h)),
+                    _ => None,
+                })
+                .collect();
+
+            for (i, _) in &held {
+                s.attached.remove(&(r.node, FieldLoc::Pre(*i)));
+            }
+
+            for (i, h) in held {
+                match r.map.get(i).copied().flatten() {
+                    Some(j) => {
+                        let k = (r.node, FieldLoc::Pre(j));
+
+                        s.slots[h as usize] = Slot::Field(k);
+                        s.attached.insert(k, h);
+                    }
+                    None => {
+                        let value = r
+                            .old_values
+                            .get(i)
+                            .cloned()
+                            .unwrap_or(FieldValue::SFBool(false));
+
+                        s.slots[h as usize] = Slot::Value(value);
+                        s.try_free(h);
+                    }
+                }
+            }
+        }
+    });
+}
+
 fn attach(k: FKey) -> u32 {
+    sync_layout();
+
     with_state(|s| {
         if let Some(h) = s.attached.get(&k) {
             return *h;
@@ -1140,12 +1194,10 @@ fn data_value<V: Val>(ty: FieldType, v: &V) -> FieldValue {
 }
 
 /// The name prelude.js keeps the callbacks of a node field under (a handle can be released while the field lives on).
+/// The id of a node field's object: the node, then the field's handle, which stays the field's when a PROTO instance's field
+/// layout changes (the key of the field does not).
 fn fkey_id(k: FKey) -> String {
-    match k.1 {
-        FieldLoc::Pre(i) => format!("{}:p{i}", k.0),
-        FieldLoc::User(i) => format!("{}:u{i}", k.0),
-        FieldLoc::Priv(i) => format!("{}:x{i}", k.0),
-    }
+    format!("{}:h{}", k.0, encode(attach(k)) as u64)
 }
 
 fn slot_key(h: u32) -> Option<FKey> {
