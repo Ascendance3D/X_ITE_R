@@ -173,3 +173,5 @@ update-props oracle/synthetic-rea-b97-update/props.wrl oracle/synthetic-rea-b97-
 update-speed oracle/synthetic-rea-b97-update/speed.wrl oracle/synthetic-rea-b97-update/speed.json
 externproto-after-load oracle/synthetic-rea-b09-sai/externproto-after-load.wrl oracle/synthetic-rea-b09-sai/sai-extern-short.json
 externproto-from-url oracle/synthetic-rea-b09-sai/externproto-from-url.wrl oracle/synthetic-rea-b09-sai/sai-extern-short.json
+externproto-createvrml-url oracle/synthetic-rea-b09-sai/externproto-createvrml-url.wrl oracle/synthetic-rea-b09-sai/sai-extern-short.json
+externproto-loadurl oracle/synthetic-rea-b09-sai/externproto-loadurl.wrl oracle/synthetic-rea-b09-sai/sai-extern-short.json

@@ -1,0 +1,513 @@
+{
+  "ok": true,
+  "poses": {
+    "8": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "9": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "10": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "11": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "12": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "13": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "14": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "15": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "16": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "17": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "18": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "19": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "20": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "21": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "22": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "23": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "24": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "27": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "30": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "33": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "36": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    }
+  },
+  "vrml": {
+    "8": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT EnvironmentalSensor : 3\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Scripting : 1\nCOMPONENT Sound : 3\nCOMPONENT Text : 2\n\nEXTERNPROTO EP [\n  inputOutput SFFloat v\n]\n\"ep-url-lib.wrl\"\n\nDEF I EP {\n  v 3\n}\n\nDEF R Script {\n  initializeOnly SFString hist \"1:EP,ls=1007,v=3 \"\n  initializeOnly SFInt32  step 1\n  inputOnly      SFTime   cycle\n\n  url \"javascript:\nfunction cycle () {\n  step = step + 1;\n  var e = Browser .currentScene .externprotos [0];\n  hist = hist + step + ':' + e .name + ',ls=' + e .loadState + ',v=' + Browser .currentScene .getNamedNode ('I') .v + ' ';\n}\n  \"\n}\n\nDEF STEP TimeSensor {\n  cycleInterval 0.05\n  loop TRUE\n}\n\nROUTE STEP.cycleTime TO R.cycle\n",
+    "9": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT EnvironmentalSensor : 3\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Scripting : 1\nCOMPONENT Sound : 3\nCOMPONENT Text : 2\n\nEXTERNPROTO EP [\n  inputOutput SFFloat v\n]\n\"ep-url-lib.wrl\"\n\nDEF I EP {\n  v 3\n}\n\nDEF R Script {\n  initializeOnly SFString hist \"1:EP,ls=1007,v=3 2:EP,ls=1008,v=3 \"\n  initializeOnly SFInt32  step 2\n  inputOnly      SFTime   cycle\n\n  url \"javascript:\nfunction cycle () {\n  step = step + 1;\n  var e = Browser .currentScene .externprotos [0];\n  hist = hist + step + ':' + e .name + ',ls=' + e .loadState + ',v=' + Browser .currentScene .getNamedNode ('I') .v + ' ';\n}\n  \"\n}\n\nDEF STEP TimeSensor {\n  cycleInterval 0.05\n  loop TRUE\n}\n\nROUTE STEP.cycleTime TO R.cycle\n",
+    "10": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT EnvironmentalSensor : 3\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Scripting : 1\nCOMPONENT Sound : 3\nCOMPONENT Text : 2\n\nEXTERNPROTO EP [\n  inputOutput SFFloat v\n]\n\"ep-url-lib.wrl\"\n\nDEF I EP {\n  v 3\n}\n\nDEF R Script {\n  initializeOnly SFString hist \"1:EP,ls=1007,v=3 2:EP,ls=1008,v=3 \"\n  initializeOnly SFInt32  step 2\n  inputOnly      SFTime   cycle\n\n  url \"javascript:\nfunction cycle () {\n  step = step + 1;\n  var e = Browser .currentScene .externprotos [0];\n  hist = hist + step + ':' + e .name + ',ls=' + e .loadState + ',v=' + Browser .currentScene .getNamedNode ('I') .v + ' ';\n}\n  \"\n}\n\nDEF STEP TimeSensor {\n  cycleInterval 0.05\n  loop TRUE\n}\n\nROUTE STEP.cycleTime TO R.cycle\n",
+    "11": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT EnvironmentalSensor : 3\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Scripting : 1\nCOMPONENT Sound : 3\nCOMPONENT Text : 2\n\nEXTERNPROTO EP [\n  inputOutput SFFloat v\n]\n\"ep-url-lib.wrl\"\n\nDEF I EP {\n  v 3\n}\n\nDEF R Script {\n  initializeOnly SFString hist \"1:EP,ls=1007,v=3 2:EP,ls=1008,v=3 \"\n  initializeOnly SFInt32  step 2\n  inputOnly      SFTime   cycle\n\n  url \"javascript:\nfunction cycle () {\n  step = step + 1;\n  var e = Browser .currentScene .externprotos [0];\n  hist = hist + step + ':' + e .name + ',ls=' + e .loadState + ',v=' + Browser .currentScene .getNamedNode ('I') .v + ' ';\n}\n  \"\n}\n\nDEF STEP TimeSensor {\n  cycleInterval 0.05\n  loop TRUE\n}\n\nROUTE STEP.cycleTime TO R.cycle\n",
+    "12": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT EnvironmentalSensor : 3\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Scripting : 1\nCOMPONENT Sound : 3\nCOMPONENT Text : 2\n\nEXTERNPROTO EP [\n  inputOutput SFFloat v\n]\n\"ep-url-lib.wrl\"\n\nDEF I EP {\n  v 3\n}\n\nDEF R Script {\n  initializeOnly SFString hist \"1:EP,ls=1007,v=3 2:EP,ls=1008,v=3 3:EP,ls=1008,v=3 \"\n  initializeOnly SFInt32  step 3\n  inputOnly      SFTime   cycle\n\n  url \"javascript:\nfunction cycle () {\n  step = step + 1;\n  var e = Browser .currentScene .externprotos [0];\n  hist = hist + step + ':' + e .name + ',ls=' + e .loadState + ',v=' + Browser .currentScene .getNamedNode ('I') .v + ' ';\n}\n  \"\n}\n\nDEF STEP TimeSensor {\n  cycleInterval 0.05\n  loop TRUE\n}\n\nROUTE STEP.cycleTime TO R.cycle\n",
+    "13": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT EnvironmentalSensor : 3\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Scripting : 1\nCOMPONENT Sound : 3\nCOMPONENT Text : 2\n\nEXTERNPROTO EP [\n  inputOutput SFFloat v\n]\n\"ep-url-lib.wrl\"\n\nDEF I EP {\n  v 3\n}\n\nDEF R Script {\n  initializeOnly SFString hist \"1:EP,ls=1007,v=3 2:EP,ls=1008,v=3 3:EP,ls=1008,v=3 \"\n  initializeOnly SFInt32  step 3\n  inputOnly      SFTime   cycle\n\n  url \"javascript:\nfunction cycle () {\n  step = step + 1;\n  var e = Browser .currentScene .externprotos [0];\n  hist = hist + step + ':' + e .name + ',ls=' + e .loadState + ',v=' + Browser .currentScene .getNamedNode ('I') .v + ' ';\n}\n  \"\n}\n\nDEF STEP TimeSensor {\n  cycleInterval 0.05\n  loop TRUE\n}\n\nROUTE STEP.cycleTime TO R.cycle\n",
+    "14": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT EnvironmentalSensor : 3\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Scripting : 1\nCOMPONENT Sound : 3\nCOMPONENT Text : 2\n\nEXTERNPROTO EP [\n  inputOutput SFFloat v\n]\n\"ep-url-lib.wrl\"\n\nDEF I EP {\n  v 3\n}\n\nDEF R Script {\n  initializeOnly SFString hist \"1:EP,ls=1007,v=3 2:EP,ls=1008,v=3 3:EP,ls=1008,v=3 \"\n  initializeOnly SFInt32  step 3\n  inputOnly      SFTime   cycle\n\n  url \"javascript:\nfunction cycle () {\n  step = step + 1;\n  var e = Browser .currentScene .externprotos [0];\n  hist = hist + step + ':' + e .name + ',ls=' + e .loadState + ',v=' + Browser .currentScene .getNamedNode ('I') .v + ' ';\n}\n  \"\n}\n\nDEF STEP TimeSensor {\n  cycleInterval 0.05\n  loop TRUE\n}\n\nROUTE STEP.cycleTime TO R.cycle\n",
+    "15": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT EnvironmentalSensor : 3\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Scripting : 1\nCOMPONENT Sound : 3\nCOMPONENT Text : 2\n\nEXTERNPROTO EP [\n  inputOutput SFFloat v\n]\n\"ep-url-lib.wrl\"\n\nDEF I EP {\n  v 3\n}\n\nDEF R Script {\n  initializeOnly SFString hist \"1:EP,ls=1007,v=3 2:EP,ls=1008,v=3 3:EP,ls=1008,v=3 4:EP,ls=1008,v=3 \"\n  initializeOnly SFInt32  step 4\n  inputOnly      SFTime   cycle\n\n  url \"javascript:\nfunction cycle () {\n  step = step + 1;\n  var e = Browser .currentScene .externprotos [0];\n  hist = hist + step + ':' + e .name + ',ls=' + e .loadState + ',v=' + Browser .currentScene .getNamedNode ('I') .v + ' ';\n}\n  \"\n}\n\nDEF STEP TimeSensor {\n  cycleInterval 0.05\n  loop TRUE\n}\n\nROUTE STEP.cycleTime TO R.cycle\n",
+    "16": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT EnvironmentalSensor : 3\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Scripting : 1\nCOMPONENT Sound : 3\nCOMPONENT Text : 2\n\nEXTERNPROTO EP [\n  inputOutput SFFloat v\n]\n\"ep-url-lib.wrl\"\n\nDEF I EP {\n  v 3\n}\n\nDEF R Script {\n  initializeOnly SFString hist \"1:EP,ls=1007,v=3 2:EP,ls=1008,v=3 3:EP,ls=1008,v=3 4:EP,ls=1008,v=3 \"\n  initializeOnly SFInt32  step 4\n  inputOnly      SFTime   cycle\n\n  url \"javascript:\nfunction cycle () {\n  step = step + 1;\n  var e = Browser .currentScene .externprotos [0];\n  hist = hist + step + ':' + e .name + ',ls=' + e .loadState + ',v=' + Browser .currentScene .getNamedNode ('I') .v + ' ';\n}\n  \"\n}\n\nDEF STEP TimeSensor {\n  cycleInterval 0.05\n  loop TRUE\n}\n\nROUTE STEP.cycleTime TO R.cycle\n",
+    "17": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT EnvironmentalSensor : 3\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Scripting : 1\nCOMPONENT Sound : 3\nCOMPONENT Text : 2\n\nEXTERNPROTO EP [\n  inputOutput SFFloat v\n]\n\"ep-url-lib.wrl\"\n\nDEF I EP {\n  v 3\n}\n\nDEF R Script {\n  initializeOnly SFString hist \"1:EP,ls=1007,v=3 2:EP,ls=1008,v=3 3:EP,ls=1008,v=3 4:EP,ls=1008,v=3 \"\n  initializeOnly SFInt32  step 4\n  inputOnly      SFTime   cycle\n\n  url \"javascript:\nfunction cycle () {\n  step = step + 1;\n  var e = Browser .currentScene .externprotos [0];\n  hist = hist + step + ':' + e .name + ',ls=' + e .loadState + ',v=' + Browser .currentScene .getNamedNode ('I') .v + ' ';\n}\n  \"\n}\n\nDEF STEP TimeSensor {\n  cycleInterval 0.05\n  loop TRUE\n}\n\nROUTE STEP.cycleTime TO R.cycle\n",
+    "18": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT EnvironmentalSensor : 3\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Scripting : 1\nCOMPONENT Sound : 3\nCOMPONENT Text : 2\n\nEXTERNPROTO EP [\n  inputOutput SFFloat v\n]\n\"ep-url-lib.wrl\"\n\nDEF I EP {\n  v 3\n}\n\nDEF R Script {\n  initializeOnly SFString hist \"1:EP,ls=1007,v=3 2:EP,ls=1008,v=3 3:EP,ls=1008,v=3 4:EP,ls=1008,v=3 5:EP,ls=1008,v=3 \"\n  initializeOnly SFInt32  step 5\n  inputOnly      SFTime   cycle\n\n  url \"javascript:\nfunction cycle () {\n  step = step + 1;\n  var e = Browser .currentScene .externprotos [0];\n  hist = hist + step + ':' + e .name + ',ls=' + e .loadState + ',v=' + Browser .currentScene .getNamedNode ('I') .v + ' ';\n}\n  \"\n}\n\nDEF STEP TimeSensor {\n  cycleInterval 0.05\n  loop TRUE\n}\n\nROUTE STEP.cycleTime TO R.cycle\n",
+    "19": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT EnvironmentalSensor : 3\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Scripting : 1\nCOMPONENT Sound : 3\nCOMPONENT Text : 2\n\nEXTERNPROTO EP [\n  inputOutput SFFloat v\n]\n\"ep-url-lib.wrl\"\n\nDEF I EP {\n  v 3\n}\n\nDEF R Script {\n  initializeOnly SFString hist \"1:EP,ls=1007,v=3 2:EP,ls=1008,v=3 3:EP,ls=1008,v=3 4:EP,ls=1008,v=3 5:EP,ls=1008,v=3 \"\n  initializeOnly SFInt32  step 5\n  inputOnly      SFTime   cycle\n\n  url \"javascript:\nfunction cycle () {\n  step = step + 1;\n  var e = Browser .currentScene .externprotos [0];\n  hist = hist + step + ':' + e .name + ',ls=' + e .loadState + ',v=' + Browser .currentScene .getNamedNode ('I') .v + ' ';\n}\n  \"\n}\n\nDEF STEP TimeSensor {\n  cycleInterval 0.05\n  loop TRUE\n}\n\nROUTE STEP.cycleTime TO R.cycle\n",
+    "20": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT EnvironmentalSensor : 3\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Scripting : 1\nCOMPONENT Sound : 3\nCOMPONENT Text : 2\n\nEXTERNPROTO EP [\n  inputOutput SFFloat v\n]\n\"ep-url-lib.wrl\"\n\nDEF I EP {\n  v 3\n}\n\nDEF R Script {\n  initializeOnly SFString hist \"1:EP,ls=1007,v=3 2:EP,ls=1008,v=3 3:EP,ls=1008,v=3 4:EP,ls=1008,v=3 5:EP,ls=1008,v=3 \"\n  initializeOnly SFInt32  step 5\n  inputOnly      SFTime   cycle\n\n  url \"javascript:\nfunction cycle () {\n  step = step + 1;\n  var e = Browser .currentScene .externprotos [0];\n  hist = hist + step + ':' + e .name + ',ls=' + e .loadState + ',v=' + Browser .currentScene .getNamedNode ('I') .v + ' ';\n}\n  \"\n}\n\nDEF STEP TimeSensor {\n  cycleInterval 0.05\n  loop TRUE\n}\n\nROUTE STEP.cycleTime TO R.cycle\n",
+    "21": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT EnvironmentalSensor : 3\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Scripting : 1\nCOMPONENT Sound : 3\nCOMPONENT Text : 2\n\nEXTERNPROTO EP [\n  inputOutput SFFloat v\n]\n\"ep-url-lib.wrl\"\n\nDEF I EP {\n  v 3\n}\n\nDEF R Script {\n  initializeOnly SFString hist \"1:EP,ls=1007,v=3 2:EP,ls=1008,v=3 3:EP,ls=1008,v=3 4:EP,ls=1008,v=3 5:EP,ls=1008,v=3 6:EP,ls=1008,v=3 \"\n  initializeOnly SFInt32  step 6\n  inputOnly      SFTime   cycle\n\n  url \"javascript:\nfunction cycle () {\n  step = step + 1;\n  var e = Browser .currentScene .externprotos [0];\n  hist = hist + step + ':' + e .name + ',ls=' + e .loadState + ',v=' + Browser .currentScene .getNamedNode ('I') .v + ' ';\n}\n  \"\n}\n\nDEF STEP TimeSensor {\n  cycleInterval 0.05\n  loop TRUE\n}\n\nROUTE STEP.cycleTime TO R.cycle\n",
+    "22": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT EnvironmentalSensor : 3\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Scripting : 1\nCOMPONENT Sound : 3\nCOMPONENT Text : 2\n\nEXTERNPROTO EP [\n  inputOutput SFFloat v\n]\n\"ep-url-lib.wrl\"\n\nDEF I EP {\n  v 3\n}\n\nDEF R Script {\n  initializeOnly SFString hist \"1:EP,ls=1007,v=3 2:EP,ls=1008,v=3 3:EP,ls=1008,v=3 4:EP,ls=1008,v=3 5:EP,ls=1008,v=3 6:EP,ls=1008,v=3 \"\n  initializeOnly SFInt32  step 6\n  inputOnly      SFTime   cycle\n\n  url \"javascript:\nfunction cycle () {\n  step = step + 1;\n  var e = Browser .currentScene .externprotos [0];\n  hist = hist + step + ':' + e .name + ',ls=' + e .loadState + ',v=' + Browser .currentScene .getNamedNode ('I') .v + ' ';\n}\n  \"\n}\n\nDEF STEP TimeSensor {\n  cycleInterval 0.05\n  loop TRUE\n}\n\nROUTE STEP.cycleTime TO R.cycle\n",
+    "23": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT EnvironmentalSensor : 3\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Scripting : 1\nCOMPONENT Sound : 3\nCOMPONENT Text : 2\n\nEXTERNPROTO EP [\n  inputOutput SFFloat v\n]\n\"ep-url-lib.wrl\"\n\nDEF I EP {\n  v 3\n}\n\nDEF R Script {\n  initializeOnly SFString hist \"1:EP,ls=1007,v=3 2:EP,ls=1008,v=3 3:EP,ls=1008,v=3 4:EP,ls=1008,v=3 5:EP,ls=1008,v=3 6:EP,ls=1008,v=3 \"\n  initializeOnly SFInt32  step 6\n  inputOnly      SFTime   cycle\n\n  url \"javascript:\nfunction cycle () {\n  step = step + 1;\n  var e = Browser .currentScene .externprotos [0];\n  hist = hist + step + ':' + e .name + ',ls=' + e .loadState + ',v=' + Browser .currentScene .getNamedNode ('I') .v + ' ';\n}\n  \"\n}\n\nDEF STEP TimeSensor {\n  cycleInterval 0.05\n  loop TRUE\n}\n\nROUTE STEP.cycleTime TO R.cycle\n",
+    "24": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT EnvironmentalSensor : 3\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Scripting : 1\nCOMPONENT Sound : 3\nCOMPONENT Text : 2\n\nEXTERNPROTO EP [\n  inputOutput SFFloat v\n]\n\"ep-url-lib.wrl\"\n\nDEF I EP {\n  v 3\n}\n\nDEF R Script {\n  initializeOnly SFString hist \"1:EP,ls=1007,v=3 2:EP,ls=1008,v=3 3:EP,ls=1008,v=3 4:EP,ls=1008,v=3 5:EP,ls=1008,v=3 6:EP,ls=1008,v=3 7:EP,ls=1008,v=3 \"\n  initializeOnly SFInt32  step 7\n  inputOnly      SFTime   cycle\n\n  url \"javascript:\nfunction cycle () {\n  step = step + 1;\n  var e = Browser .currentScene .externprotos [0];\n  hist = hist + step + ':' + e .name + ',ls=' + e .loadState + ',v=' + Browser .currentScene .getNamedNode ('I') .v + ' ';\n}\n  \"\n}\n\nDEF STEP TimeSensor {\n  cycleInterval 0.05\n  loop TRUE\n}\n\nROUTE STEP.cycleTime TO R.cycle\n",
+    "27": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT EnvironmentalSensor : 3\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Scripting : 1\nCOMPONENT Sound : 3\nCOMPONENT Text : 2\n\nEXTERNPROTO EP [\n  inputOutput SFFloat v\n]\n\"ep-url-lib.wrl\"\n\nDEF I EP {\n  v 3\n}\n\nDEF R Script {\n  initializeOnly SFString hist \"1:EP,ls=1007,v=3 2:EP,ls=1008,v=3 3:EP,ls=1008,v=3 4:EP,ls=1008,v=3 5:EP,ls=1008,v=3 6:EP,ls=1008,v=3 7:EP,ls=1008,v=3 8:EP,ls=1008,v=3 \"\n  initializeOnly SFInt32  step 8\n  inputOnly      SFTime   cycle\n\n  url \"javascript:\nfunction cycle () {\n  step = step + 1;\n  var e = Browser .currentScene .externprotos [0];\n  hist = hist + step + ':' + e .name + ',ls=' + e .loadState + ',v=' + Browser .currentScene .getNamedNode ('I') .v + ' ';\n}\n  \"\n}\n\nDEF STEP TimeSensor {\n  cycleInterval 0.05\n  loop TRUE\n}\n\nROUTE STEP.cycleTime TO R.cycle\n",
+    "30": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT EnvironmentalSensor : 3\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Scripting : 1\nCOMPONENT Sound : 3\nCOMPONENT Text : 2\n\nEXTERNPROTO EP [\n  inputOutput SFFloat v\n]\n\"ep-url-lib.wrl\"\n\nDEF I EP {\n  v 3\n}\n\nDEF R Script {\n  initializeOnly SFString hist \"1:EP,ls=1007,v=3 2:EP,ls=1008,v=3 3:EP,ls=1008,v=3 4:EP,ls=1008,v=3 5:EP,ls=1008,v=3 6:EP,ls=1008,v=3 7:EP,ls=1008,v=3 8:EP,ls=1008,v=3 9:EP,ls=1008,v=3 \"\n  initializeOnly SFInt32  step 9\n  inputOnly      SFTime   cycle\n\n  url \"javascript:\nfunction cycle () {\n  step = step + 1;\n  var e = Browser .currentScene .externprotos [0];\n  hist = hist + step + ':' + e .name + ',ls=' + e .loadState + ',v=' + Browser .currentScene .getNamedNode ('I') .v + ' ';\n}\n  \"\n}\n\nDEF STEP TimeSensor {\n  cycleInterval 0.05\n  loop TRUE\n}\n\nROUTE STEP.cycleTime TO R.cycle\n",
+    "33": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT EnvironmentalSensor : 3\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Scripting : 1\nCOMPONENT Sound : 3\nCOMPONENT Text : 2\n\nEXTERNPROTO EP [\n  inputOutput SFFloat v\n]\n\"ep-url-lib.wrl\"\n\nDEF I EP {\n  v 3\n}\n\nDEF R Script {\n  initializeOnly SFString hist \"1:EP,ls=1007,v=3 2:EP,ls=1008,v=3 3:EP,ls=1008,v=3 4:EP,ls=1008,v=3 5:EP,ls=1008,v=3 6:EP,ls=1008,v=3 7:EP,ls=1008,v=3 8:EP,ls=1008,v=3 9:EP,ls=1008,v=3 10:EP,ls=1008,v=3 \"\n  initializeOnly SFInt32  step 10\n  inputOnly      SFTime   cycle\n\n  url \"javascript:\nfunction cycle () {\n  step = step + 1;\n  var e = Browser .currentScene .externprotos [0];\n  hist = hist + step + ':' + e .name + ',ls=' + e .loadState + ',v=' + Browser .currentScene .getNamedNode ('I') .v + ' ';\n}\n  \"\n}\n\nDEF STEP TimeSensor {\n  cycleInterval 0.05\n  loop TRUE\n}\n\nROUTE STEP.cycleTime TO R.cycle\n",
+    "36": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT EnvironmentalSensor : 3\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Scripting : 1\nCOMPONENT Sound : 3\nCOMPONENT Text : 2\n\nEXTERNPROTO EP [\n  inputOutput SFFloat v\n]\n\"ep-url-lib.wrl\"\n\nDEF I EP {\n  v 3\n}\n\nDEF R Script {\n  initializeOnly SFString hist \"1:EP,ls=1007,v=3 2:EP,ls=1008,v=3 3:EP,ls=1008,v=3 4:EP,ls=1008,v=3 5:EP,ls=1008,v=3 6:EP,ls=1008,v=3 7:EP,ls=1008,v=3 8:EP,ls=1008,v=3 9:EP,ls=1008,v=3 10:EP,ls=1008,v=3 11:EP,ls=1008,v=3 \"\n  initializeOnly SFInt32  step 11\n  inputOnly      SFTime   cycle\n\n  url \"javascript:\nfunction cycle () {\n  step = step + 1;\n  var e = Browser .currentScene .externprotos [0];\n  hist = hist + step + ':' + e .name + ',ls=' + e .loadState + ',v=' + Browser .currentScene .getNamedNode ('I') .v + ' ';\n}\n  \"\n}\n\nDEF STEP TimeSensor {\n  cycleInterval 0.05\n  loop TRUE\n}\n\nROUTE STEP.cycleTime TO R.cycle\n"
+  },
+  "prints": [],
+  "log": [],
+  "anchors": [],
+  "loadFrames": 3,
+  "warmupFrames": 8,
+  "geometry": {
+    "rect": [
+      0,
+      0,
+      512,
+      512
+    ],
+    "viewport": [
+      0,
+      0,
+      512,
+      512
+    ],
+    "scroll": [
+      0,
+      0
+    ]
+  }
+}

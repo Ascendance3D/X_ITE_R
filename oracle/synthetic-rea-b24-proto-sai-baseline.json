@@ -457,6 +457,448 @@
      "instances": {}
     }
    ]
+  },
+  {
+   "case": "p07",
+   "ok": true,
+   "steps": [
+    {
+     "k": 0,
+     "console": [
+      "log: Body initialize level=4",
+      "log: update 1",
+      "log: Body initialize level=4",
+      "log: tick 2",
+      "log: update 2",
+      "log: Body initialize level=4",
+      "log: tick 4"
+     ],
+     "loadCount": 0,
+     "externs": [],
+     "instances": {
+      "G": {
+       "type": "Gadget",
+       "body": [
+        "Script"
+       ]
+      }
+     },
+     "vrml": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT EnvironmentalSensor : 3\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Scripting : 1\nCOMPONENT Sound : 3\nCOMPONENT Text : 2\n\nPROTO Gadget [\n  initializeOnly SFInt32 level 2\n]\n{\n  Script {\n    initializeOnly SFInt32 level IS level\n\n    url \"javascript:\nfunction initialize () { print ('Body initialize level=' + level); }\n\"\n  }\n}\n\nDEF G Gadget {\n  level 4\n}\n\nDEF Clock TimeSensor {\n  loop TRUE\n}\n\nDEF S Script {\n  inputOnly SFTime tick\n\n  url \"javascript:\nlet n = 0;\n\nfunction tick (t)\n{\n   ++ n;\n\n   const d = Browser .currentScene .protos .get ('Gadget');\n\n   if (n === 1)\n   {\n      print ('update 1');\n      d .updateInstances ();\n   }\n   else if (n === 3)\n   {\n      print ('update 2');\n      d .updateInstances ();\n   }\n   else if (n === 5)\n   {\n      print ('request update');\n      d .requestUpdateInstances ();\n   }\n   else if (n < 6)\n      print ('tick ' + n);\n}\n\"\n}\n\nROUTE Clock.time TO S.tick\n"
+    },
+    {
+     "k": 1,
+     "console": [
+      "log: request update",
+      "log: Body initialize level=4"
+     ],
+     "loadCount": 0,
+     "externs": [],
+     "instances": {
+      "G": {
+       "type": "Gadget",
+       "body": [
+        "Script"
+       ]
+      }
+     }
+    },
+    {
+     "k": 2,
+     "console": [],
+     "loadCount": 0,
+     "externs": [],
+     "instances": {
+      "G": {
+       "type": "Gadget",
+       "body": [
+        "Script"
+       ]
+      }
+     }
+    },
+    {
+     "k": 3,
+     "console": [],
+     "loadCount": 0,
+     "externs": [],
+     "instances": {
+      "G": {
+       "type": "Gadget",
+       "body": [
+        "Script"
+       ]
+      }
+     }
+    },
+    {
+     "k": 4,
+     "console": [],
+     "loadCount": 0,
+     "externs": [],
+     "instances": {
+      "G": {
+       "type": "Gadget",
+       "body": [
+        "Script"
+       ]
+      }
+     }
+    },
+    {
+     "k": 5,
+     "console": [],
+     "loadCount": 0,
+     "externs": [],
+     "instances": {
+      "G": {
+       "type": "Gadget",
+       "body": [
+        "Script"
+       ]
+      }
+     }
+    },
+    {
+     "k": 6,
+     "console": [],
+     "loadCount": 0,
+     "externs": [],
+     "instances": {
+      "G": {
+       "type": "Gadget",
+       "body": [
+        "Script"
+       ]
+      }
+     }
+    },
+    {
+     "k": 7,
+     "console": [],
+     "loadCount": 0,
+     "externs": [],
+     "instances": {
+      "G": {
+       "type": "Gadget",
+       "body": [
+        "Script"
+       ]
+      }
+     }
+    },
+    {
+     "k": 8,
+     "console": [],
+     "loadCount": 0,
+     "externs": [],
+     "instances": {
+      "G": {
+       "type": "Gadget",
+       "body": [
+        "Script"
+       ]
+      }
+     }
+    }
+   ]
+  },
+  {
+   "case": "p08",
+   "ok": true,
+   "steps": [
+    {
+     "k": 0,
+     "console": [
+      "log: created",
+      "log: updated",
+      "log: added",
+      "log: Body initialize level=2",
+      "log: Body initialize level=2"
+     ],
+     "loadCount": 0,
+     "externs": [],
+     "instances": {},
+     "vrml": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT EnvironmentalSensor : 3\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Scripting : 1\nCOMPONENT Sound : 3\nCOMPONENT Text : 2\n\nPROTO Gadget [\n  initializeOnly SFInt32 level 2\n]\n{\n  Script {\n    initializeOnly SFInt32 level IS level\n\n    url \"javascript:\nfunction initialize () { print ('Body initialize level=' + level); }\n\"\n  }\n}\n\nDEF S Script {\n  url \"javascript:\nfunction initialize ()\n{\n   const cs = Browser .currentScene;\n   const d  = cs .protos .get ('Gadget');\n   const g  = cs .createProto ('Gadget');\n\n   print ('created');\n   d .updateInstances ();\n   print ('updated');\n   cs .rootNodes .push (g);\n   print ('added');\n}\n\"\n}\n\nGadget { }\n"
+    },
+    {
+     "k": 1,
+     "console": [],
+     "loadCount": 0,
+     "externs": [],
+     "instances": {}
+    },
+    {
+     "k": 2,
+     "console": [],
+     "loadCount": 0,
+     "externs": [],
+     "instances": {}
+    }
+   ]
+  },
+  {
+   "case": "p09",
+   "ok": true,
+   "steps": [
+    {
+     "k": 0,
+     "console": [
+      "warn: The use of sfnode.getField(name) is deprecated. Future versions of X_ITE may remove this feature. Instead, use the sfnode.{fieldName} property syntax or sfnode.addFieldCallback(key, fieldName, callback). Error",
+      "log: decl field names: pos,level",
+      "log: decl field types: SFVec3f,SFInt32",
+      "log: decl pos value: 1 2 3",
+      "log: decl pos access: 1",
+      "log: decl is held: true",
+      "log: decl fields getter: false",
+      "log: set decl pos: 7 8 9",
+      "log: held pos: 1 2 3",
+      "log: late pos: 7 8 9",
+      "log: set decl level: 5",
+      "log: held level: 2",
+      "log: late level: 5",
+      "log: held pos field: 1 2 3",
+      "log: set held pos: 4 4 4",
+      "log: after update held level: 5",
+      "log: after update held pos field: 4 4 4",
+      "log: after update same field: true",
+      "log: after update set field: 6 6 6",
+      "log: after update decl pos: 7 8 9",
+      "log: after update decl same: true",
+      "log: relayout names: level,pos",
+      "log: relayout decl pos: 1 1 1",
+      "log: relayout old decl pos: 7 8 9",
+      "log: relayout held pos field: 6 6 6",
+      "log: relayout held same: true",
+      "log: relayout held pos: 6 6 6",
+      "log: relayout held level: 5",
+      "log: relayout set field: 2 2 2",
+      "log: relayout set node: 3 3 3"
+     ],
+     "loadCount": 0,
+     "externs": [],
+     "instances": {},
+     "vrml": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT EnvironmentalSensor : 3\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Scripting : 1\nCOMPONENT Sound : 3\nCOMPONENT Text : 2\n\nPROTO Box9 [\n  initializeOnly SFInt32 level 5\n  initializeOnly SFVec3f pos 1 1 1\n]\n{\n  Group { }\n}\n\nDEF S Script {\n  url \"javascript:\nfunction show (label, f)\n{\n   try { print (label + ': ' + f ()); }\n   catch (e) { print (label + ' threw ' + e .name + ': ' + e .message); }\n}\n\nfunction initialize ()\n{\n   const cs   = Browser .currentScene;\n   const d    = cs .protos .get ('Box9');\n   const held = cs .createProto ('Box9');\n   const df   = Array .from (d .getUserDefinedFields ());\n   const pos  = df .find (f => f .getName () === 'pos');\n   const lev  = df .find (f => f .getName () === 'level');\n   const hpos = held .getField ('pos');\n\n   show ('decl field names', () => df .map (f => f .getName ()) .join (','));\n   show ('decl field types', () => df .map (f => f .getTypeName ? f .getTypeName () : f .constructor .name) .join (','));\n   show ('decl pos value', () => pos .toString ());\n   show ('decl pos access', () => pos .getAccessType ());\n   show ('decl is held', () => pos === Array .from (d .getUserDefinedFields ()) [0]);\n   show ('decl fields getter', () => d .fields .get ('pos') === pos);\n   show ('set decl pos', () => { pos .setValue (new SFVec3f (7, 8, 9)); return pos .toString (); });\n   show ('held pos', () => held .pos .toString ());\n   show ('late pos', () => cs .createProto ('Box9') .pos .toString ());\n   show ('set decl level', () => { lev .setValue (5); return lev .valueOf (); });\n   show ('held level', () => held .level);\n   show ('late level', () => cs .createProto ('Box9') .level);\n   show ('held pos field', () => hpos .toString ());\n   show ('set held pos', () => { held .pos = new SFVec3f (4, 4, 4); return hpos .toString (); });\n\n   d .updateInstances ();\n\n   show ('after update held level', () => held .level);\n   show ('after update held pos field', () => hpos .toString ());\n   show ('after update same field', () => hpos === held .getField ('pos'));\n   show ('after update set field', () => { hpos .setValue (new SFVec3f (6, 6, 6)); return held .pos .toString (); });\n   show ('after update decl pos', () => pos .toString ());\n   show ('after update decl same', () => Array .from (d .getUserDefinedFields ()) .find (f => f .getName () === 'pos') === pos);\n\n   d .removeUserDefinedField ('pos');\n   d .addUserDefinedField (X3DConstants .initializeOnly, 'pos', new SFVec3f (1, 1, 1));\n   d .updateInstances ();\n\n   show ('relayout names', () => Array .from (d .getUserDefinedFields (), f => f .getName ()) .join (','));\n   show ('relayout decl pos', () => Array .from (d .getUserDefinedFields ()) .find (f => f .getName () === 'pos') .toString ());\n   show ('relayout old decl pos', () => pos .toString ());\n   show ('relayout held pos field', () => hpos .toString ());\n   show ('relayout held same', () => hpos === held .getField ('pos'));\n   show ('relayout held pos', () => held .pos .toString ());\n   show ('relayout held level', () => held .level);\n   show ('relayout set field', () => { hpos .setValue (new SFVec3f (2, 2, 2)); return held .pos .toString (); });\n   show ('relayout set node', () => { held .pos = new SFVec3f (3, 3, 3); return hpos .toString (); });\n}\n\"\n}\n"
+    },
+    {
+     "k": 1,
+     "console": [],
+     "loadCount": 0,
+     "externs": [],
+     "instances": {}
+    },
+    {
+     "k": 2,
+     "console": [],
+     "loadCount": 0,
+     "externs": [],
+     "instances": {}
+    }
+   ]
+  },
+  {
+   "case": "p10",
+   "ok": true,
+   "steps": [
+    {
+     "k": 0,
+     "console": [
+      "log: proto typeof getBody: function",
+      "log: proto getBody: [object X3DExecutionContext]",
+      "log: proto has getBody: true",
+      "log: extern early typeof getBody: undefined",
+      "log: extern early getBody threw TypeError: e.getBody is not a function",
+      "log: extern early has getBody: false",
+      "log: proto body isScene: false",
+      "log: proto body type: X3DExecutionContext",
+      "log: proto body roots: 1",
+      "log: proto body outer: false",
+      "log: extern late loadState: 1008",
+      "log: extern late typeof getBody: undefined",
+      "log: extern late getBody threw TypeError: e.getBody is not a function",
+      "log: extern late has getBody: false",
+      "log: loaded proto: Lib",
+      "log: loaded body type: X3DExecutionContext",
+      "log: loaded body roots: 1"
+     ],
+     "loadCount": 0,
+     "externs": [
+      {
+       "name": "Ext",
+       "loadState": "COMPLETE",
+       "url": [
+        "lib.wrl#Lib"
+       ],
+       "proto": "Lib",
+       "fields": [
+        "level",
+        "poke"
+       ]
+      }
+     ],
+     "instances": {},
+     "vrml": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT EnvironmentalSensor : 3\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Scripting : 1\nCOMPONENT Sound : 3\nCOMPONENT Text : 2\n\nEXTERNPROTO Ext [\n  initializeOnly SFInt32 level\n  inputOnly      SFInt32 poke\n]\n\"lib.wrl#Lib\"\n\nPROTO Local [\n  initializeOnly SFInt32 level 1\n]\n{\n  Group { }\n}\n\nDEF S Script {\n  url \"javascript:\nvar frame = 0;\nvar early = null;\n\nfunction show (label, f)\n{\n   try { print (label + ': ' + f ()); }\n   catch (e) { print (label + ' threw ' + e .name + ': ' + e .message); }\n}\n\nfunction probe (label, e)\n{\n   show (label + ' typeof getBody', () => typeof e .getBody);\n   show (label + ' getBody', () => e .getBody ());\n   show (label + ' has getBody', () => 'getBody' in e);\n}\n\nfunction initialize ()\n{\n   const cs = Browser .currentScene;\n   const l  = cs .protos .get ('Local');\n   const e  = cs .externprotos .get ('Ext');\n\n   early = cs .createProto ('Ext');\n\n   probe ('proto', l);\n   probe ('extern early', e);\n   show ('proto body isScene', () => l .getBody () .isScene);\n   show ('proto body type', () => l .getBody () .getTypeName ());\n   show ('proto body roots', () => l .getBody () .rootNodes .length);\n   show ('proto body outer', () => l .getBody () .getOuterNode () === null);\n}\n\nfunction prepareEvents ()\n{\n   const cs = Browser .currentScene;\n   const e  = cs .externprotos .get ('Ext');\n\n   if (++ frame !== 6)\n      return;\n\n   show ('extern late loadState', () => e .loadState);\n   probe ('extern late', e);\n   show ('loaded proto', () => e .getProtoDeclaration () .getName ());\n   show ('loaded body type', () => e .getProtoDeclaration () .getBody () .getTypeName ());\n   show ('loaded body roots', () => e .getProtoDeclaration () .getBody () .rootNodes .length);\n}\n\"\n}\n"
+    },
+    {
+     "k": 1,
+     "console": [],
+     "loadCount": 0,
+     "externs": [
+      {
+       "name": "Ext",
+       "loadState": "COMPLETE",
+       "url": [
+        "lib.wrl#Lib"
+       ],
+       "proto": "Lib",
+       "fields": [
+        "level",
+        "poke"
+       ]
+      }
+     ],
+     "instances": {}
+    },
+    {
+     "k": 2,
+     "console": [],
+     "loadCount": 0,
+     "externs": [
+      {
+       "name": "Ext",
+       "loadState": "COMPLETE",
+       "url": [
+        "lib.wrl#Lib"
+       ],
+       "proto": "Lib",
+       "fields": [
+        "level",
+        "poke"
+       ]
+      }
+     ],
+     "instances": {}
+    },
+    {
+     "k": 3,
+     "console": [],
+     "loadCount": 0,
+     "externs": [
+      {
+       "name": "Ext",
+       "loadState": "COMPLETE",
+       "url": [
+        "lib.wrl#Lib"
+       ],
+       "proto": "Lib",
+       "fields": [
+        "level",
+        "poke"
+       ]
+      }
+     ],
+     "instances": {}
+    },
+    {
+     "k": 4,
+     "console": [],
+     "loadCount": 0,
+     "externs": [
+      {
+       "name": "Ext",
+       "loadState": "COMPLETE",
+       "url": [
+        "lib.wrl#Lib"
+       ],
+       "proto": "Lib",
+       "fields": [
+        "level",
+        "poke"
+       ]
+      }
+     ],
+     "instances": {}
+    },
+    {
+     "k": 5,
+     "console": [],
+     "loadCount": 0,
+     "externs": [
+      {
+       "name": "Ext",
+       "loadState": "COMPLETE",
+       "url": [
+        "lib.wrl#Lib"
+       ],
+       "proto": "Lib",
+       "fields": [
+        "level",
+        "poke"
+       ]
+      }
+     ],
+     "instances": {}
+    },
+    {
+     "k": 6,
+     "console": [],
+     "loadCount": 0,
+     "externs": [
+      {
+       "name": "Ext",
+       "loadState": "COMPLETE",
+       "url": [
+        "lib.wrl#Lib"
+       ],
+       "proto": "Lib",
+       "fields": [
+        "level",
+        "poke"
+       ]
+      }
+     ],
+     "instances": {}
+    },
+    {
+     "k": 7,
+     "console": [],
+     "loadCount": 0,
+     "externs": [
+      {
+       "name": "Ext",
+       "loadState": "COMPLETE",
+       "url": [
+        "lib.wrl#Lib"
+       ],
+       "proto": "Lib",
+       "fields": [
+        "level",
+        "poke"
+       ]
+      }
+     ],
+     "instances": {}
+    },
+    {
+     "k": 8,
+     "console": [],
+     "loadCount": 0,
+     "externs": [
+      {
+       "name": "Ext",
+       "loadState": "COMPLETE",
+       "url": [
+        "lib.wrl#Lib"
+       ],
+       "proto": "Lib",
+       "fields": [
+        "level",
+        "poke"
+       ]
+      }
+     ],
+     "instances": {}
+    }
+   ]
   }
  ]
 }
