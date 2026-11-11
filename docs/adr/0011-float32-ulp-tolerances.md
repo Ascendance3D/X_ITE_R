@@ -32,6 +32,10 @@ ISO/IEC 19775-1 V4.0 5.3.5 (SFFloat): "Implementation of these fields is targete
 
 `node:PointSet` is `COMPLETE` in the ledger; the issue named it as PARTIAL, but its only gap (`pk-points-style`) is carried by `sub:pointer.picking`. The ledger (`ledger/ledger.json`) is not changed by this record; the missing texts of `node:ParticleSystem` and `sub:pointer.picking` can name these bounds instead of KNOWN_GAP.
 
+## Addendum: 1 px LINE particles at MSAA 0 (ExplosionEmitter finding)
+
+A multi-viewer draft with an ExplosionEmitter and LINE particles differed from X_ITE by 0.738% of a 96 x 72 image at frame 40. It is not the emitter. The cases `ex-line`, `ex-line-plain`, `ex-point`, `ex-quad` and `cone-line` of `oracle/synthetic-rea-b18-particle-lines` (baselines recorded three times, identical) match X_ITE in every particle record (1e-5 bound), ExplosionEmitter POINT and QUAD images are pixel-identical, and at MSAA 4 the LINE images are too, except one line-end pixel of `ex-line-plain` at frame 40. At MSAA 0 only 1 px LINE images differ, by isolated line-end/edge pixels (512 x 512: `ex-line` 49, 103 and 187 pixels at frames 5, 20 and 40, the ConeEmitter control `cone-line` 3, 9 and 20, and `inst-line-dashed`, an InstancedShape with no particles at all, 119): the rasterization of a Vulkan line list against ANGLE's GL lines, the same class as the line rows above. The share of the image grows with the number of line pixels, so a small image and a burst of lines pass 0.5%. The cases are in `rea_b18_particle_lines`, whose per-case bound stays 0.5% of 512 x 512.
+
 ## Evidence
 
 * Tests: `crates/x3d-viewer/tests/rea_batch12.rs` (`PICK_ULPS`), `rea_b14_particle_pick.rs` (`PICK_ULPS`), `rea_b15_particle_collision.rs` (`PROBE_TOLERANCES`), `tests/common/ulps.rs`.
