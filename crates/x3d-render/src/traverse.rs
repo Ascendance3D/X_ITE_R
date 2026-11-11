@@ -4597,7 +4597,9 @@ impl<'a> Builder<'a> {
 
         // Unlit2.glsl getEmissiveColor: X3D_EMISSIVE_TEXTURE wins over X3D_TEXTURE.
         let (textures, multi_texture) = match emissive_texture {
-            Some(t) if can_load(sg, t) => (
+            // A MovieTexture too (the texture of a glTF EXT_texture_video source): its picture, and X_ITE's white default
+            // texture until the media has one.
+            Some(t) if can_load(sg, t) || sg.type_name(t) == Some("MovieTexture") => (
                 vec![self.texture(sg, t).unwrap_or_else(|| self.white_texture())],
                 None,
             ),

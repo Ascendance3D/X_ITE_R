@@ -105,6 +105,8 @@ pub fn apply(v: &mut Viewer3d, e: &Value) {
 
             match v.rt.scene.get_named_node(x3d_scene::ROOT, name) {
                 Some(node) => {
+                    // The oracle pauses the element first, so a node that plays at a speed other than 0 holds the picture.
+                    v.rt.movie_element_pause(node);
                     v.rt.movie_seek(node, f("time"));
                 }
                 None => eprintln!("movieSeek: no node {name}"),

@@ -28,6 +28,7 @@ impl MovieMedia {
             audio: mpeg1::audio::track(data, MAX_DECODED_BYTES),
             seekable: false,
             offset: 0.0,
+            held: None,
             iso: Default::default(),
         })
     }

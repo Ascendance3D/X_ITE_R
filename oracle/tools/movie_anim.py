@@ -13,6 +13,8 @@ Sets: anim (oracle/movie-anim-baseline, playback; worlds from oracle/tools/gen_m
 load-errors (oracle/movie-load-errors-baseline, PNG load states; oracle/tools/gen_movie_load_errors.py, MSAA 0) and
 video (oracle/movie-video-baseline, WebM VP8 and VP9 pictures at fixed movie times; oracle/tools/gen_movie_video.py, MSAA 0 and 4) and
 video-av1 (oracle/movie-video-av1-baseline, the same seeks on AV1 streams; the same generator, its movie-video-av1 world, MSAA 0 and 4).
+gltf-video (oracle/gltf-video-baseline, the same seeks on the EXT_texture_video textures of three glTF files: external, data URL and
+GLB buffer view; oracle/tools/gen_gltf_video.py, MSAA 0 and 4).
 A baseline is written only from an X_ITE run; the Rust result is compared (crates/x3d-viewer/tests/movie_anim.rs),
 never copied.
 """
@@ -24,6 +26,9 @@ SETS = {
     "load-errors": ("movie-load-errors-baseline", "synthetic-movie-load-errors", ["movie-load-errors"], ["0"]),
     "video": ("movie-video-baseline", "synthetic-movie-video", ["movie-video"], ["0", "4"]),
     "video-av1": ("movie-video-av1-baseline", "synthetic-movie-video", ["movie-video-av1"], ["0", "4"]),
+    # A world given as (name, world file, script file): the three glTF files share one event script.
+    "gltf-video": ("gltf-video-baseline", "synthetic-gltf-video",
+                   [("gv-uri", "gv-uri.gltf", "gv.json"), ("gv-data", "gv-data.gltf", "gv.json"), ("gv-glb", "gv-glb.glb", "gv.json")], ["0", "4"]),
 }
 
 
@@ -67,7 +72,8 @@ def write_baseline(tmp, out_dir, cases, msaa, report):
 def record(runs, name):
     baseline, synthetic, worlds, MSAA = SETS[name]
     out_dir = os.path.join(root, "oracle", baseline)
-    CASES = [(n, f"oracle/{synthetic}/{n}.wrl", f"oracle/{synthetic}/{n}.json") for n in worlds]
+    CASES = [(n, f"oracle/{synthetic}/{n}.wrl", f"oracle/{synthetic}/{n}.json") if isinstance(n, str)
+             else (n[0], f"oracle/{synthetic}/{n[1]}", f"oracle/{synthetic}/{n[2]}") for n in worlds]
     targets(out_dir, CASES, MSAA)
     tmp = "/tmp/movie-anim-xite"
     shutil.rmtree(tmp, ignore_errors=True)

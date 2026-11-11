@@ -55,6 +55,9 @@ pub struct MovieMedia {
     seekable: bool,
     /// Seconds added to the clock of a decoded WebM by a seek.
     offset: f64,
+    /// The movie time of a decoded WebM whose element the page paused itself ([`Self::hold`]): `currentTime` stays
+    /// there, whatever the node's clock does, until the node plays the element again.
+    held: Option<f64>,
     /// The state of [`MovieTiming::Iso`]; unused in the pinned mode.
     iso: IsoState,
 }
@@ -369,6 +372,7 @@ impl MovieMedia {
             audio: crate::video_types::AudioTrack::None,
             seekable: false,
             offset: 0.0,
+            held: None,
             iso: IsoState::default(),
         })
     }
@@ -410,6 +414,7 @@ impl MovieMedia {
             audio: crate::webm::audio(data),
             seekable: true,
             offset: 0.0,
+            held: None,
             iso: IsoState::default(),
         })
     }
@@ -471,6 +476,7 @@ impl MovieMedia {
             audio: crate::video_types::AudioTrack::None,
             seekable: false,
             offset: 0.0,
+            held: None,
             iso: IsoState::default(),
         };
 
@@ -506,6 +512,10 @@ impl MovieMedia {
 
     /// `currentTime`.
     pub fn current_time(&self, elapsed: f64) -> f64 {
+        if let Some(t) = self.held {
+            return t;
+        }
+
         match &self.kind {
             Kind::Gif { cycle, looping } => {
                 if self.offset != 0.0 {
@@ -568,6 +578,19 @@ impl MovieMedia {
     pub fn seek_to(&mut self, target: f64, elapsed: f64) {
         if self.seekable {
             self.offset = target - elapsed * self.playback_rate;
+
+            if self.held.is_some() {
+                self.held = Some(target);
+            }
+        }
+    }
+
+    /// `pause ()` called on the element by the page, not by the node (the recorder of the answer keys does it before a
+    /// seek, oracle/x_ite-anim.mjs `movieSeek`): a decoded WebM keeps its `currentTime` while the node's clock goes on.
+    /// The node's next `play ()` goes on from that time. Other media are not changed.
+    pub fn hold(&mut self, elapsed: f64) {
+        if self.seekable && self.held.is_none() {
+            self.held = Some(self.current_time(elapsed));
         }
     }
 
@@ -622,6 +645,10 @@ impl MovieMedia {
 
     /// `play ()` at `now` (milliseconds): GifMedia keeps the cycle, PNGMedia plays the player.
     pub fn play(&mut self, elapsed: f64, now: f64) {
+        if let Some(t) = self.held.take() {
+            self.offset = t - elapsed * self.playback_rate;
+        }
+
         let cycle_now = self.cycle(elapsed);
 
         match &mut self.kind {
@@ -1093,6 +1120,23 @@ impl Runtime {
         });
     }
 
+    /// `mediaElement .pause ()` called by the page itself on a MovieTexture's element, as the recorder of the answer keys
+    /// does before it sets `currentTime` (oracle/x_ite-anim.mjs `movieSeek`). The node is not told: its clock and its
+    /// outputs go on, and the picture stays. Pinned timing only (with ISO timing the engine chooses every picture).
+    pub fn movie_element_pause(&mut self, node: NodeId) {
+        if self.movie_timing == MovieTiming::Iso {
+            return;
+        }
+
+        let elapsed = self.elapsed_value(node);
+
+        if let Some(m) = self.movie(node) {
+            m.hold(elapsed);
+        }
+
+        self.media_set(node, |e, m| m.pause(e));
+    }
+
     /// `mediaElement .currentTime = t` of a MovieTexture: a decoded WebM takes it, clamped to [0, duration] as Chrome
     /// does (measured: -5 gives 0, 100 gives the duration), and its sound follows. GifMedia ignores `currentTime`
     /// and PNGMedia only stops, so those, and a NaN, are not seeks: nothing moves and a diagnostic is logged.
@@ -1477,6 +1521,7 @@ impl Runtime {
             audio: crate::video_types::AudioTrack::None,
             seekable: false,
             offset: 0.0,
+            held: None,
             iso: IsoState::default(),
         };
 

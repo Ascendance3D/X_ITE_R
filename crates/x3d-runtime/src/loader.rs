@@ -1762,16 +1762,32 @@ impl Runtime {
                     }
                 }
 
-                let playable = [".webm", ".ogv", ".ogg", ".mp4", ".m4v"]
-                    .iter()
-                    .any(|e| path.to_ascii_lowercase().ends_with(e));
+                // A data URL has no file name: its media type says what it is (a glTF EXT_texture_video source in a data
+                // URL or in a buffer view of a GLB, which the pinned parser gives to the node as a data URL).
+                let lower = path.to_ascii_lowercase();
+                let data_type = href.strip_prefix("data:").map(|rest| {
+                    rest.split([';', ','])
+                        .next()
+                        .unwrap_or("")
+                        .to_ascii_lowercase()
+                });
+                let playable = match &data_type {
+                    Some(t) => ["video/webm", "video/ogg", "video/mp4"].contains(&t.as_str()),
+                    None => [".webm", ".ogv", ".ogg", ".mp4", ".m4v"]
+                        .iter()
+                        .any(|e| lower.ends_with(e)),
+                };
+                let webm = match &data_type {
+                    Some(t) => t == "video/webm",
+                    None => lower.ends_with(".webm"),
+                };
 
                 if playable {
                     if let Ok(data) = self.fetcher.fetch(&file_url) {
                         use crate::video_types::WebmError;
 
                         // A WebM with a VP9 or VP8 track is decoded; any other playable file is taken as playing.
-                        if !path.to_ascii_lowercase().ends_with(".webm") {
+                        if !webm {
                             return;
                         }
 

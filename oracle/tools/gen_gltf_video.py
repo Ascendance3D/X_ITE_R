@@ -61,6 +61,8 @@ def doc(videos, buffers, views):
         "meshes": [{"primitives": [{"attributes": {"POSITION": 0, "TEXCOORD_0": 1}, "indices": 2, "material": i}]} for i in range(n)],
         "materials": [{"name": f"M{i}", "pbrMetallicRoughness": {"baseColorTexture": {"index": i}},
                        "extensions": {"KHR_materials_unlit": {}}} for i in range(n)],
+        # The pinned parser reads `this .images [texture .source]` for every texture, so a file without an images array does not load.
+        "images": [],
         "textures": [{"name": f"V{i}", "extensions": {EXT: {"source": i}}} for i in range(n)],
         "accessors": [
             {"bufferView": 0, "componentType": 5126, "count": 4, "type": "VEC3", "min": [-0.9, -0.9, 0], "max": [0.9, 0.9, 0]},

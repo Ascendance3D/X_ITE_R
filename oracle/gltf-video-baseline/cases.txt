@@ -1,0 +1,6 @@
+gv-uri oracle/synthetic-gltf-video/gv-uri.gltf oracle/synthetic-gltf-video/gv.json 0
+gv-uri oracle/synthetic-gltf-video/gv-uri.gltf oracle/synthetic-gltf-video/gv.json 4
+gv-data oracle/synthetic-gltf-video/gv-data.gltf oracle/synthetic-gltf-video/gv.json 0
+gv-data oracle/synthetic-gltf-video/gv-data.gltf oracle/synthetic-gltf-video/gv.json 4
+gv-glb oracle/synthetic-gltf-video/gv-glb.glb oracle/synthetic-gltf-video/gv.json 0
+gv-glb oracle/synthetic-gltf-video/gv-glb.glb oracle/synthetic-gltf-video/gv.json 4
