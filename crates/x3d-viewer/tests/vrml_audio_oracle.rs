@@ -67,6 +67,21 @@ const CASES: &[&str] = &[
     "sound-priority",
     "sound-mono-left",
     "sound-viewpoint-turned",
+    // A startTime, pauseTime or resumeTime in the future: the pinned page's virtual timers fire them at a known frame.
+    "clip-future-05",
+    "clip-future-1",
+    "clip-future-2",
+    "clip-future-change-earlier",
+    "clip-future-change-later",
+    "clip-future-change-now",
+    "clip-future-loop-05",
+    "clip-future-loop-1",
+    "clip-future-loop-2",
+    "clip-future-pause-only",
+    "clip-future-pause-resume",
+    "clip-future-stop-after",
+    "clip-future-stop-before",
+    "clip-future-stop-event",
 ];
 
 /// The cases added for issue #90, with the shape of the pinned recording: the number of 768-sample frames
@@ -88,6 +103,20 @@ const SHAPE: &[(&str, usize, usize)] = &[
     ("sound-priority", 0, 40),
     ("sound-mono-left", 0, 40),
     ("sound-viewpoint-turned", 0, 80),
+    ("clip-future-05", 104, 120),
+    ("clip-future-1", 124, 140),
+    ("clip-future-2", 184, 200),
+    ("clip-future-change-earlier", 27, 140),
+    ("clip-future-change-later", 74, 140),
+    ("clip-future-change-now", 11, 140),
+    ("clip-future-loop-05", 35, 120),
+    ("clip-future-loop-1", 66, 140),
+    ("clip-future-loop-2", 128, 200),
+    ("clip-future-pause-only", 108, 140),
+    ("clip-future-pause-resume", 34, 140),
+    ("clip-future-stop-after", 109, 140),
+    ("clip-future-stop-before", 66, 140),
+    ("clip-future-stop-event", 35, 140),
 ];
 
 // Not compared: `race-url-next-frame` (BLOCKED in rea_b05.py: under CPU load X_ITE resolved both decodes in one

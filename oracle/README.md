@@ -1547,6 +1547,20 @@ XITE_TESTS=~/Projects/cybertown/X_ITE/x_ite-tests python3 -I oracle/tools/rea_b0
 python3 -I oracle/tools/rea_b05.py check --target target/release
 ```
 
+### A startTime, pauseTime or resumeTime in the future
+
+The 14 `clip-future-*` worlds (`gen_rea_audio_repair.py`) set the times by an event at tick 12 (`value + 0.25 .. 2` s): a
+start 0.5 / 1 / 2 s ahead (one-shot and looping), a `stopTime` before and after the start, a `stopTime` event while the clip
+waits, a `startTime` changed while it waits (later, earlier, to now), and X3D `pauseTime` / `resumeTime` ahead of a playing
+clip. X_ITE arms a `setTimeout`; the oracle page (`anim.html`) replaces it with virtual timers that `step` runs before
+the frame, with `getCurrentTime` at `max (previous frame, due time)`. The frame is therefore the same in every run: three
+recordings were byte-identical (scene text, log, prints, audio). The measured detail: a clip started by a timeout resets its
+elapsed time at the due time (`startTime`), so the first `elapsedTime` after the start is the part of the frame that is past
+`startTime` (0.012 s), while the events of the start carry the frame's time stamp. Rust counted the elapsed time from the frame
+(first value 0); `nodes/time.rs` now sets the start of a timer-started sound source to the due time. The cases are in
+`vrml_audio_oracle.rs`. Not covered: the TimeSensor (it has its own cases) and real-time browsers, where the timer fires after
+the due time by the timer's lateness.
+
 ## XR views against the pinned WebXR context (issue #83)
 
 `oracle/xr-shot.html` + `oracle/x_ite-xr-shot.mjs` draw a world with the pinned X_ITE 16.5.0 through its own `X3DWebXRContext`,

@@ -344,6 +344,37 @@ CASES["sound-viewpoint-turned"] = VRML + "DEF V Viewpoint { position 0 0 0 orien
     24: "o.orientation = new SFRotation (0, 1, 0, -1.5708);", 36: "o.orientation = new SFRotation (1, 0, 0, 1.0);"}) + start("O")
 SCRIPTS["sound-viewpoint-turned"] = LONG
 
+# --- A startTime (and pauseTime, resumeTime) in the future ------------------------------------------------
+# The Script sets the time at tick 12 as an event: `value` (the tick's time) plus an offset. X_ITE arms a timeout for it,
+# and the oracle page's virtual timers (x_ite-anim.mjs) fire it in the first step at or after the time, so the frame is
+# the same in every run. The clip is 0.25 s long; one frame is 0.016 s (0.5 s is about 31 frames, 2 s about 125).
+
+
+def future(name, clip_text, steps, x3d=False, frames=200):
+    watched = watch("O", elapsed=True, paused="pause" in name)
+    text = (X3D if x3d else VRML) + VIEW + sound("0 0 -5", clip_text) + ticks("O", "", steps, x3d=x3d) + (watched.replace("eventIn", "inputOnly") if x3d else watched) + (start() if not x3d else x3d_start())
+    CASES[name] = text
+    SCRIPTS[name] = {"frames": frames, "dump": [frames]}
+
+
+for label, delay, frames in (("05", 0.5, 120), ("1", 1, 140), ("2", 2, 200)):
+    future(f"clip-future-{label}", f"DEF O AudioClip {{ url {WAV} stopTime 1 }}", {12: f"o.startTime = value + {delay};"}, frames=frames)
+    future(f"clip-future-loop-{label}", f"DEF O AudioClip {{ url {WAV} loop TRUE stopTime 1 }}", {12: f"o.startTime = value + {delay};"}, frames=frames)
+
+# stopTime set before the wait ends: not after startTime (ignored), and after it.
+future("clip-future-stop-before", f"DEF O AudioClip {{ url {WAV} loop TRUE stopTime 1 }}", {12: "o.startTime = value + 1; o.stopTime = value + 0.5;"}, frames=140)
+future("clip-future-stop-after", f"DEF O AudioClip {{ url {WAV} loop TRUE stopTime 1 }}", {12: "o.startTime = value + 0.5; o.stopTime = value + 1;"}, frames=140)
+future("clip-future-stop-event", f"DEF O AudioClip {{ url {WAV} loop TRUE stopTime 1 }}", {12: "o.startTime = value + 0.5;", 20: "o.stopTime = value + 0.25;"}, frames=140)
+
+# A startTime change while the clip waits: later, earlier, and to now.
+future("clip-future-change-later", f"DEF O AudioClip {{ url {WAV} loop TRUE stopTime 1 }}", {12: "o.startTime = value + 0.5;", 20: "o.startTime = value + 1;"}, frames=140)
+future("clip-future-change-earlier", f"DEF O AudioClip {{ url {WAV} loop TRUE stopTime 1 }}", {12: "o.startTime = value + 1;", 20: "o.startTime = value + 0.25;"}, frames=140)
+future("clip-future-change-now", f"DEF O AudioClip {{ url {WAV} loop TRUE stopTime 1 }}", {12: "o.startTime = value + 1;", 20: "o.startTime = value;"}, frames=140)
+
+# pauseTime and resumeTime in the future of a playing clip (X3D: the VRML97 AudioClip has neither).
+future("clip-future-pause-resume", f"DEF O AudioClip {{ url {WAV} loop TRUE stopTime 1 }}", {12: "o.startTime = value; o.pauseTime = value + 0.5; o.resumeTime = value + 1;"}, x3d=True, frames=140)
+future("clip-future-pause-only", f"DEF O AudioClip {{ url {WAV} loop TRUE stopTime 1 }}", {12: "o.startTime = value; o.pauseTime = value + 0.5;"}, x3d=True, frames=140)
+
 SCRIPT = {"dt": 0.016, "frames": 40, "warmup": 8, "dump": [40], "audio": {"sampleRate": 48000, "channels": 2}, "console": True}
 
 def order(text):
