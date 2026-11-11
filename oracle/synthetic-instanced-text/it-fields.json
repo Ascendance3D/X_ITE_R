@@ -1,0 +1,37 @@
+{
+ "settle": true,
+ "console": true,
+ "size": [
+  512,
+  512
+ ],
+ "t0": 946684800,
+ "dt": 0.03333333333333333,
+ "frames": 30,
+ "capture": [
+  10,
+  26
+ ],
+ "dump": [
+  10,
+  26,
+  29
+ ],
+ "events": [
+  {
+   "frame": 8,
+   "type": "key",
+   "key": "a"
+  },
+  {
+   "frame": 14,
+   "type": "key",
+   "key": "b"
+  },
+  {
+   "frame": 20,
+   "type": "key",
+   "key": "c"
+  }
+ ]
+}

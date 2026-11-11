@@ -77,6 +77,16 @@ pub use script::{ScriptCall, ScriptError, ScriptHost};
 /// A field identity: node + location (X_ITE field object identity).
 pub type FKey = (NodeId, FieldLoc);
 
+/// The predefined fields of a PROTO instance were laid out again (`X3DPrototypeInstance.update`).
+#[derive(Clone, Debug)]
+pub struct FieldRemap {
+    pub node: NodeId,
+    /// Per old predefined field: its index in the new layout, `None` when the field is gone.
+    pub map: Vec<Option<usize>>,
+    /// Per old predefined field: its value before the change.
+    pub old_values: Vec<FieldValue>,
+}
+
 /// A world that is still loading after this many frames is given up on (a load that can never
 /// finish would keep [`Runtime::load_scene`] busy forever).
 pub const MAX_LOAD_FRAMES: usize = 100_000;
@@ -409,6 +419,9 @@ pub struct Runtime {
     /// value changed since the objects were last refreshed ([`Runtime::take_js_dirty`]).
     pub js_mirror: HashMap<FKey, bool>,
     js_dirty: Vec<FKey>,
+    /// The field layout changes of PROTO instances since the Script host last looked ([`Runtime::take_field_remaps`]): the
+    /// field objects a Script holds follow their fields (X3DPrototypeInstance.update reuses the old field objects).
+    field_remaps: Vec<FieldRemap>,
     /// Node fields the page holds as objects (the browser build), kept apart from the Scripts' ([`Runtime::js_mirror`]):
     /// each side refreshes its own objects ([`Runtime::take_page_dirty`]).
     pub page_mirror: HashMap<FKey, bool>,
@@ -763,6 +776,7 @@ impl Runtime {
             page_released: None,
             js_mirror: HashMap::new(),
             js_dirty: vec![],
+            field_remaps: vec![],
             page_mirror: HashMap::new(),
             page_dirty: vec![],
             shaders: Default::default(),
@@ -1376,6 +1390,11 @@ impl Runtime {
     pub(crate) fn drop_js_dirty_of(&mut self, inst: NodeId) {
         self.js_dirty
             .retain(|k| !matches!(k, (n, FieldLoc::Pre(_)) if *n == inst));
+    }
+
+    /// The field layout changes of PROTO instances since the last call, oldest first.
+    pub fn take_field_remaps(&mut self) -> Vec<FieldRemap> {
+        std::mem::take(&mut self.field_remaps)
     }
 
     pub fn take_js_dirty(&mut self) -> Vec<FKey> {

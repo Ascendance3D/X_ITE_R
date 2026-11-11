@@ -572,6 +572,7 @@ function leave ()
       X ("fpush", entry .h, data, false, token);
    }
 
+   syncDeclFields ();
    rawForget ();
 }
 
