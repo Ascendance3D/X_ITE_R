@@ -1885,7 +1885,13 @@ node oracle/x_ite-web-runtime-02.mjs oracle/web-browser-anchor-pages-01-baseline
   fingers, a touch that ends while moving, a finger on a TouchSensor, and a two-finger pitch followed by a drive. All are equal.
 - Kept difference, pinned by name (cases `*-cancel-during-move`, ADR 0001 row 1): X_ITE's viewers have no `touchcancel` handler, so a
   drive goes on after a cancel (until a touchend, or a two-finger touchstart, reaches the viewer); X_ITE_R ends it with the cancel.
-- The poses of the `walk` and `walk-nograv` cases are equal in the pinned X_ITE (the low box is stepped onto in both); X_ITE_R matches both.
+- `walk-nograv.wrl` sets `Browser .setBrowserOption ('Gravity', 0)` in a Script (the option is a `BrowserOptions` field, as in `rea-b24-nav`); the
+  viewpoint starts 1.4 above the ground, so `walk` falls to the avatar height and `walk-nograv` and `fly` stay put (different in the pinned X_ITE).
+- Not compared in the gravity world (`walk-*`): the count `PX_n` of ProximitySensor events. A standing avatar is settled by the f32 depth read
+  from the GPU, whose noise (about 2e-7) moves the resting pose from frame to frame in X_ITE_R and not in the recording, one extra event per
+  wobble; the poses (1e-4) and the rest of the scene text are compared. `walk-nograv` and `fly` compare it exactly.
+- The `cancel-during-move` cases also compare the log (equal), the scene text before the cancel, and assert the deliberate difference in the
+  event count (X_ITE goes on driving, so it has more `position_changed` events).
 
 ## glTF animation cases (sub:parse.gltf2)
 
