@@ -10,6 +10,12 @@
 //! (until a later touchend or mouseup reaches it); X_ITE_R ends it when the touch is cancelled (ISO/IEC 19775-1 TouchSensor: `isActive`
 //! ends when the pointing device is released or lost).
 //!
+//! The hit point, normal and texture coordinate are the float32 pixels of the pointing buffer (PointingBuffer.getHit reads them with
+//! `gl.readPixels` and copies them), so they are the GPU's interpolated varyings: on ANGLE Metal the pinned page itself gives numbers
+//! 1 to 2 ulps away from the NVIDIA recording. With `X3D_REFERENCE_PLATFORM=apple-m1` the cases are read from
+//! oracle/rea-pointer-touch-apple-m1-baseline (the same pinned page on the physical M1, three identical runs; common/reference.rs).
+//! The comparison is exact on both platforms.
+//!
 //! `REA_ONLY=<substring>` restricts the cases.
 
 mod common;
