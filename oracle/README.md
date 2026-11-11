@@ -1854,3 +1854,35 @@ other escape too. The recordings confirm it for `createX3DFromURL` (`ff-data-utf
 ```
 node oracle/x_ite-web-runtime-02.mjs oracle/web-browser-anchor-pages-01-baseline --runs 3 --suite anchorpages01
 ```
+
+## glTF animation cases (sub:parse.gltf2)
+
+`oracle/synthetic-rea-b08-gltf/anim/*-driver.wrl` (generator `tools/gen_rea_b08_gltf.py`) load one animation file through an
+Inline; a click at frame 4 starts the exported `Timer1`; `anim/gltf-anim.json` dumps the scene text and the Inline scene text at nine
+frames inside the animation. Cases: STEP, LINEAR and CUBICSPLINE of translation, rotation, scale and weights; the STEP pointer
+animation (`pointer/roughness-step.gltf` does not load in the pinned X_ITE: `Cannot set properties of null (setting '_emissiveStrength')`,
+so `roughness-step-plain` and `base-color-step-plain` animate a plain material); each at MSAA 0 and 4.
+- Recorded with `oracle/tools/rea_e14_e18_record.py record --cases CASES --dest oracle/rea-gltf-anim-baseline --pictures` (three identical
+  pinned runs each; prepare the worktree as in "Recording from a worktree"). `crates/x3d-viewer/tests/gltf_anim_step.rs` replays them and the
+  three driver cases of `rea-b08-gltf-baseline`: scene text and Inline scene text exact (MSAA 0 only: the MSAA 4 page records neither), poses
+  1e-4, pictures 8 / 0.5%. The pinned page's `console` holds only `log:` lines (anim.html replaces warn and error), so only those are compared.
+- Pinned difference, not copied: STEP morph weights. Pinned `createArrayInterpolator` writes keys `[t0, t1, t1, t2, t2]` with values
+  `[v0, v1, v1, v2, v2]` (linear over the first segment) where glTF 2.0 and the pinned `createNamedInterpolator` hold `[v0, v0, v1, v1, v2]`. The
+  port holds. `KNOWN` in `gltf_anim_step.rs` (weights-step, MSAA 0 and 4: Inline text and pictures 14 and 26 not compared; the held points are
+  asserted) and `KNOWN_STEP_WEIGHTS` in `crates/x3d-parse/tests/gltf_rea.rs` name it.
+
+## CFF items: subroutine bias and depth, `seac`, variable CFF2 (`rea-t-cff-items-baseline/`)
+
+- `tools/gen_cff_items_fonts.py` writes `synthetic-rea-t-cff-items/` (12 newly authored fonts, every table byte written by the script):
+  `bias-1239`, `bias-1240`, `bias-33899`, `bias-33900` (N local and N global subrs: Type 2 bias 107, 1131, 1131, 32768), `depth` (local, global and
+  alternating chains of 9 to 13 subrs and self-calling subrs), `seac-plain`, `seac-cid`, `seac-cid-fd` (`endchar` with four arguments), and
+  `var-default`, `var-regular`, `var-avar`, `var-2axes` (CFF2 with `fvar`, `avar`, HVAR and `blend`).
+- `tools/rea_t_cff_items.py record` runs `x_ite-cff-cid-fonts.mjs` (`FONT_DIR`, `FONT_CHARS`) three times against the pinned X_ITE and keeps
+  `fonts.json` only if the three runs are identical. Prepare the worktree as in "Recording from a worktree".
+- `crates/x3d-text/tests/rea_t_cff_items.rs` compares `x3d-text` with it glyph by glyph (advances, `getPath` commands, libtess vertices, exceptions,
+  console lines).
+- Pinned facts the test pins: opentype.js applies the Type 2 bias and the nesting limit of 10 (the 11th call is skipped with a `console.warn`);
+  a CID-keyed font cannot resolve the components of `seac` (TypeError), and a plain font whose accent glyph is missing throws too; a font with `fvar`
+  and CFF2 outlines gets a variation manager, whose default instance is the first instance equal to the axis defaults, else the instance named
+  "Regular", else the axis defaults, so a charstring `blend` uses the `avar`-mapped normalized coordinates and every path coordinate is rounded
+  (`Math.round`); X_ITE calls `glyph .getPath (0, 0, 1)` without the font, so HVAR advances are never applied. X_ITE has no way to set other coordinates.

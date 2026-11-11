@@ -232,7 +232,13 @@ struct Fd {
 }
 
 struct VarSubtable {
-    region_indexes: usize,
+    region_indexes: Vec<usize>,
+}
+
+/// `topDict ._vstore .itemVariationStore`: `variationRegions` (per region, per axis: start, peak, end) and `itemVariationSubtables`.
+struct VarStore {
+    regions: Vec<Vec<[f64; 3]>>,
+    subtables: Vec<VarSubtable>,
 }
 
 pub struct Cff {
@@ -248,7 +254,7 @@ pub struct Cff {
     fd_array: Vec<Fd>,
     fd_select: Option<Vec<usize>>,
     /// `topDict ._vstore .itemVariationStore .itemVariationSubtables` (`None`: no VariationStore, `_vstore` is undefined).
-    vstore: Option<Vec<VarSubtable>>,
+    vstore: Option<VarStore>,
     charstrings: Vec<(usize, usize)>,
 }
 
@@ -538,7 +544,7 @@ impl Cff {
     }
 
     /// `glyph .path ()` of glyph `gid`: `parseCFFCharstring (font, glyph, code, version)`.
-    pub fn glyph(&self, d: &[u8], gid: usize) -> R<Outline> {
+    pub fn glyph(&self, d: &[u8], gid: usize, norm: Option<&[f64]>) -> R<Outline> {
         let Some(&(cs, ce)) = self.charstrings.get(gid) else {
             return Err("TypeError: Cannot read properties of undefined".to_string());
         };
@@ -558,6 +564,8 @@ impl Cff {
             width: self.default_width,
             vsindex: 0.0,
             vstore: None,
+            norm,
+            blend_vector: None,
             depth: 0,
             log: vec![],
             seac: false,
@@ -606,6 +614,27 @@ impl Cff {
         }
 
         it.parse(d.get(cs..ce).unwrap_or(&[]))?;
+
+        // `if (font .variation && coords)`: once the font has a variation manager every coordinate of the path is rounded (`Math .round`).
+        if norm.is_some() {
+            for c in it.p.iter_mut() {
+                *c = match *c {
+                    Cmd::M(x, y) => Cmd::M(js_round(x), js_round(y)),
+                    Cmd::L(x, y) => Cmd::L(js_round(x), js_round(y)),
+                    Cmd::Q(a, b, x, y) => {
+                        Cmd::Q(js_round(a), js_round(b), js_round(x), js_round(y))
+                    }
+                    Cmd::C(a, b, c, d, x, y) => Cmd::C(
+                        js_round(a),
+                        js_round(b),
+                        js_round(c),
+                        js_round(d),
+                        js_round(x),
+                        js_round(y),
+                    ),
+                };
+            }
+        }
 
         Ok(Outline {
             cmds: it.p,
@@ -794,8 +823,15 @@ fn parse_encoding(d: &[u8], start: usize) -> R<()> {
     Ok(())
 }
 
-/// `Parser.parseVariationStore`: the number of region indexes of each ItemVariationData (what `blend` reads) after the reads the parser does.
-fn parse_variation_store(d: &[u8], start: usize) -> R<Vec<VarSubtable>> {
+/// JavaScript `Math .round`: halves go toward +Infinity.
+fn js_round(v: f64) -> f64 {
+    let f = v.floor();
+
+    if v - f >= 0.5 { f + 1.0 } else { f }
+}
+
+/// `Parser.parseVariationStore`: the regions and the region indexes of each ItemVariationData (what `blend` reads) after the reads the parser does.
+fn parse_variation_store(d: &[u8], start: usize) -> R<VarStore> {
     let length = card16(d, start)? as usize;
     let _ = length;
     let store = start + 2;
@@ -813,8 +849,19 @@ fn parse_variation_store(d: &[u8], start: usize) -> R<Vec<VarSubtable>> {
     let axis_count = card16(d, rl)? as usize;
     let region_count = card16(d, rl + 2)? as usize;
 
-    for i in 0..region_count * axis_count * 3 {
-        card16(d, rl + 4 + i * 2)?;
+    let mut regions = vec![];
+
+    for r in 0..region_count {
+        let mut axes = vec![];
+
+        for a in 0..axis_count {
+            let o = rl + 4 + (r * axis_count + a) * 6;
+            let f = |k: usize| card16(d, o + k * 2).map(|v| v as u16 as i16 as f64 / 16384.0);
+
+            axes.push([f(0)?, f(1)?, f(2)?]);
+        }
+
+        regions.push(axes);
     }
 
     let mut out = vec![];
@@ -824,9 +871,10 @@ fn parse_variation_store(d: &[u8], start: usize) -> R<Vec<VarSubtable>> {
         let item_count = card16(d, s)? as usize;
         let word_delta_count = card16(d, s + 2)? as usize;
         let n = card16(d, s + 4)? as usize;
+        let mut indexes = vec![];
 
         for i in 0..n {
-            card16(d, s + 6 + i * 2)?;
+            indexes.push(card16(d, s + 6 + i * 2)? as usize);
         }
 
         if item_count != 0 && n != 0 {
@@ -845,10 +893,15 @@ fn parse_variation_store(d: &[u8], start: usize) -> R<Vec<VarSubtable>> {
             }
         }
 
-        out.push(VarSubtable { region_indexes: n });
+        out.push(VarSubtable {
+            region_indexes: indexes,
+        });
     }
 
-    Ok(out)
+    Ok(VarStore {
+        regions,
+        subtables: out,
+    })
 }
 
 /// The JavaScript spelling of a number used as a property key in a `TypeError` message.
@@ -877,7 +930,11 @@ struct Interp<'a> {
     nominal: f64,
     width: f64,
     vsindex: f64,
-    vstore: Option<&'a Vec<VarSubtable>>,
+    vstore: Option<&'a VarStore>,
+    /// The normalized default coordinates of the font's `fvar` (`font .variation` exists): `blend` mixes the deltas in.
+    norm: Option<&'a [f64]>,
+    /// `blendVector`: computed by the first `blend` of the charstring.
+    blend_vector: Option<Vec<f64>>,
     depth: usize,
     log: Vec<String>,
     seac: bool,
@@ -1157,20 +1214,103 @@ impl Interp<'_> {
                                 .into(),
                         );
                     } else {
-                        // No variation (`font .variation` is undefined): the default values stay and the deltas go.
                         let n = self.pop();
                         let sub = (self.vsindex >= 0.0 && self.vsindex == self.vsindex.trunc())
-                            .then(|| self.vstore.and_then(|s| s.get(self.vsindex as usize)))
+                            .then(|| {
+                                self.vstore
+                                    .and_then(|s| s.subtables.get(self.vsindex as usize))
+                            })
                             .flatten();
-                        let Some(sub) = sub else {
-                            return Err("TypeError: Cannot read properties of undefined (reading 'regionIndexes')".to_string());
-                        };
-                        let delta_set_count = n * sub.region_indexes as f64;
 
-                        if delta_set_count > 0.0 {
-                            let k = (delta_set_count as usize).min(self.stack.len());
+                        if let Some(norm) = self.norm {
+                            // `font .variation .process .getBlendVector (vstore, vsindex, coords)`, once per charstring
+                            if self.blend_vector.is_none() {
+                                let Some(sub) = sub else {
+                                    return Err("TypeError: Cannot read properties of undefined (reading 'regionIndexes')".to_string());
+                                };
+                                let store = self.vstore.expect("a subtable needs a store");
+                                let mut vector = vec![];
 
-                            self.stack.truncate(self.stack.len() - k);
+                                for &ri in &sub.region_indexes {
+                                    let Some(region) = store.regions.get(ri) else {
+                                        return Err("TypeError: Cannot read properties of undefined (reading 'regionAxes')".to_string());
+                                    };
+                                    let mut scalar = 1.0;
+
+                                    for (j, ax) in region.iter().enumerate() {
+                                        let [start, peak, end] = *ax;
+                                        let c = norm.get(j).copied().unwrap_or(f64::NAN);
+                                        let axis_scalar = if start > peak
+                                            || peak > end
+                                            || (start < 0.0 && end > 0.0 && peak != 0.0)
+                                            || peak == 0.0
+                                        {
+                                            1.0
+                                        } else if c < start || c > end {
+                                            0.0
+                                        } else if c == peak {
+                                            1.0
+                                        } else if c < peak {
+                                            (c - start + f64::EPSILON)
+                                                / (peak - start + f64::EPSILON)
+                                        } else {
+                                            (end - c + f64::EPSILON) / (end - peak + f64::EPSILON)
+                                        };
+
+                                        scalar *= axis_scalar;
+                                    }
+
+                                    vector.push(scalar);
+                                }
+
+                                self.blend_vector = Some(vector);
+                            }
+
+                            let vector = self.blend_vector.clone().unwrap_or_default();
+                            let axis_count = vector.len();
+                            let delta_set_count = n * axis_count as f64;
+                            let len = self.stack.len() as isize;
+                            let mut delta = len - delta_set_count as isize;
+                            let delta_set_index = delta - n as isize;
+                            let at = |st: &Vec<f64>, i: isize| {
+                                usize::try_from(i)
+                                    .ok()
+                                    .and_then(|i| st.get(i).copied())
+                                    .unwrap_or(f64::NAN)
+                            };
+
+                            for i2 in 0..(n.max(0.0) as isize) {
+                                let mut sum = at(&self.stack, delta_set_index + i2);
+
+                                for bv in vector.iter() {
+                                    sum += bv * at(&self.stack, delta);
+                                    delta += 1;
+                                }
+
+                                if let Ok(i) = usize::try_from(delta_set_index + i2)
+                                    && let Some(slot) = self.stack.get_mut(i)
+                                {
+                                    *slot = sum;
+                                }
+                            }
+
+                            if delta_set_count > 0.0 {
+                                let k = (delta_set_count as usize).min(self.stack.len());
+
+                                self.stack.truncate(self.stack.len() - k);
+                            }
+                        } else {
+                            // No variation (`font .variation` is undefined): the default values stay and the deltas go.
+                            let Some(sub) = sub else {
+                                return Err("TypeError: Cannot read properties of undefined (reading 'regionIndexes')".to_string());
+                            };
+                            let delta_set_count = n * sub.region_indexes.len() as f64;
+
+                            if delta_set_count > 0.0 {
+                                let k = (delta_set_count as usize).min(self.stack.len());
+
+                                self.stack.truncate(self.stack.len() - k);
+                            }
                         }
                     }
                 }

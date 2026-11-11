@@ -64,6 +64,9 @@ pub struct Font {
     cff: bool,
     /// The parsed `CFF ` / `CFF2` table (`None` for a TrueType font).
     cff_tables: Option<crate::cff::Cff>,
+    /// `font .variation` of opentype.js (an `fvar` table with `gvar` or `CFF2`): the normalized coordinates of the default instance. A CFF
+    /// glyph's path blends with them and rounds every coordinate. HVAR is not applied: X_ITE calls `glyph .getPath (0, 0, 1)` without the font.
+    cff_norm: Option<Vec<f64>>,
     /// The path of each CFF glyph built so far (opentype.js builds it once): the commands in font units, or the exception text.
     cff_paths: RefCell<HashMap<u16, Result<std::rc::Rc<Vec<Cmd>>, String>>>,
     /// `console .error` / `.warn` lines of the parse and of the path builds, as `error: text` / `warn: text`, until [`Font::take_log`].
@@ -161,6 +164,13 @@ impl Font {
         } else {
             None
         };
+        let cff_norm = if cff && (table(b"gvar").is_some() || table(b"CFF2").is_some()) {
+            table(b"fvar").and_then(|f| {
+                crate::variation::default_normalized(f, table(b"avar"), table(b"name"))
+            })
+        } else {
+            None
+        };
         let glyf_start = if cff {
             0
         } else {
@@ -209,6 +219,7 @@ impl Font {
             glyf: (glyf_start, glyf_tag.len()),
             cff,
             cff_tables,
+            cff_norm,
             cff_paths: RefCell::new(HashMap::new()),
             log: RefCell::new(log),
             cff_widths: RefCell::new(HashMap::new()),
@@ -728,8 +739,8 @@ impl Font {
             return vec![];
         };
         let result = tables
-            .glyph(&self.data, glyph as usize)
-            .map(|mut o| {
+            .glyph(&self.data, glyph as usize, self.cff_norm.as_deref())
+            .and_then(|mut o| {
                 self.log.borrow_mut().append(&mut o.log);
 
                 if let Some(w) = o.width {
@@ -737,9 +748,13 @@ impl Font {
                 }
 
                 if o.seac {
-                    self.cff_seac_commands(glyph)
+                    // A component glyph the font does not have: opentype.js reads `.path` of `undefined`.
+                    self.cff_seac_commands(glyph).ok_or_else(|| {
+                        "TypeError: Cannot read properties of undefined (reading 'path')"
+                            .to_string()
+                    })
                 } else {
-                    o.cmds
+                    Ok(o.cmds)
                 }
             })
             .map(std::rc::Rc::new);
@@ -751,7 +766,7 @@ impl Font {
 
     /// An accented composite (`endchar` with four arguments) of a plain CFF font: the base glyph's and the shifted accent's outlines.
     /// opentype.js builds it from the two glyphs' paths; ttf-parser's interpreter does the same lookup by standard-encoding name.
-    fn cff_seac_commands(&self, glyph: u16) -> Vec<Cmd> {
+    fn cff_seac_commands(&self, glyph: u16) -> Option<Vec<Cmd>> {
         struct Out {
             cmds: Vec<Cmd>,
         }
@@ -780,13 +795,12 @@ impl Font {
             fn close(&mut self) {}
         }
 
-        let Ok(face) = Face::parse(&self.data, 0) else {
-            return vec![];
-        };
+        let face = Face::parse(&self.data, 0).ok()?;
         let mut out = Out { cmds: vec![] };
 
-        let _ = face.outline_glyph(ttf_parser::GlyphId(glyph), &mut out);
-        out.cmds
+        // `None`: a component is missing from the charset (or the outline cannot be built).
+        face.outline_glyph(ttf_parser::GlyphId(glyph), &mut out)?;
+        Some(out.cmds)
     }
 
     /// `font .isCIDFont`: a CID-keyed CFF font (a `ROS` entry in the top DICT).

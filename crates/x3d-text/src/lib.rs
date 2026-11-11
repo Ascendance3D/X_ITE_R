@@ -10,6 +10,7 @@ pub mod layout;
 pub mod libtess;
 pub mod raster;
 pub mod timsort;
+pub mod variation;
 
 pub use font::{Font, FontError, PrimitiveQuality};
 pub use layout::{Alignment, FontStyleParams, TextCompression, TextLayout, TextParams, layout};

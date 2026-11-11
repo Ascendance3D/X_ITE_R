@@ -1232,7 +1232,7 @@ function makeExecutionContext (script)
       getWorldURL ()          { return X ("worldURL", script); },
       getSpecificationVersion () { return X ("specVersion", script); },
       createNode (type)       { return R (X ("createNode", script, String (type))); },
-      createProto (type)      { return R (X ("createProto", script, String (type))); },
+      createProto (type)      { syncDeclFields (); return R (X ("createProto", script, String (type))); },
       getNamedNode (name)     { return R (X ("namedNode", script, String (name))); },
       addRoute (a, b, c, d)   { return routeObject (script, X ("cx", script, "routeAdd", A (a), String (b), A (c), String (d))); },
       deleteRoute (a)
@@ -1253,7 +1253,7 @@ function makeExecutionContext (script)
       toJSONStream (generator) { generator .string += this .toJSONString (); },
       getExecutionContext ()  { const c = X ("cx", script, "parentCtx"); return c === null ? null : executionContext (- (c + 2)); },
       getLocalScene ()        { return this .isScene ? object : executionContext (- (X ("cx", script, "sceneRoot") + 2)); },
-      getOuterNode ()         { return R (X ("cx", script, "outerNode")); },
+      getOuterNode ()         { const r = X ("cx", script, "outerNode"); return r !== null && typeof r === "object" && "proto" in r ? protoObject (false, r .proto) : R (r); },
    };
 
    if (script === undefined)
@@ -1364,10 +1364,135 @@ function engineMembers (C, members)
    }
 }
 
+// The field objects of a declaration's interface (X3DProtoDeclarationNode.getUserDefinedFields): X_ITE hands out the declaration's
+// own fields, so a Script that sets one changes the default of the declaration, and the object stays the same while the field
+// does (removing a field and adding one of the same name makes a new object). The runtime owns the defaults: an event of the
+// object (or a change in place, `syncDeclFields`) is sent to it, and a default that changed there (an EXTERNPROTO's load) is
+// taken over unless the Script changed the object since.
+const declEntries = new WeakMap (); // field object → its entry { state, name, type, data, field, uid }
+const declStates  = new Set ();     // the declarations whose field objects a Script holds
+let   declUid     = 0;
+
+function X3DDeclRef ()
+{
+   X3DChildObject .call (this);
+}
+
+Object .assign (Object .setPrototypeOf (X3DDeclRef .prototype, X3DChildObject .prototype),
+{
+   addEvent (field) { pushDeclField (field); },
+   addEventObject (field) { pushDeclField (field); },
+   addParent () { },
+   removeParent () { },
+   isInitialized () { return true; },
+   setup () { },
+   dispose () { },
+});
+
+const declRef = new X3DDeclRef ();
+
+function declDefault (state, entry)
+{
+   const s = state;
+
+   X ("cx", - (s .info () .ctx + 2), "protoDefault", s .extern, s .id, entry .name, A (entry .field));
+}
+
+function pushDeclField (field)
+{
+   const entry = declEntries .get (field);
+
+   if (!entry || entry .state .live ?.get (entry .name) !== entry)
+      return;
+
+   const data = fieldData (field);
+
+   if (sameData (data, entry .data))
+      return;
+
+   entry .data = data;
+   declDefault (entry .state, entry);
+}
+
+function newDeclEntry (state, name, field)
+{
+   const entry = { state, name, type: field .getTypeName (), field, data: fieldData (field), uid: ++ declUid };
+
+   field .setName (name);
+   field .addParent (declRef);
+   declEntries .set (field, entry);
+   (state .live ??= new Map ()) .set (name, entry);
+   declStates .add (state);
+
+   return entry;
+}
+
+function dropDeclEntry (state, name)
+{
+   const entry = state .live ?.get (name);
+
+   if (!entry)
+      return;
+
+   declEntries .delete (entry .field);
+   entry .field .removeParent (declRef);
+   state .live .delete (name);
+
+   // syncDeclFields scans only the declarations with live field objects (protoObjects keeps the state itself).
+   if (state .live .size === 0)
+      declStates .delete (state);
+}
+
+// What a Script changed in a declaration's field object in place, without an event, goes to the runtime.
+function syncDeclFields ()
+{
+   for (const state of declStates)
+   {
+      for (const entry of state .live .values ())
+         pushDeclField (entry .field);
+   }
+}
+
+function declField (state, f)
+{
+   const make = (dataType, v) => v instanceof X3DField ? v
+      : dataType === "SFNode" ? new Fields .SFNode (v instanceof SFNode ? v .getValue () : null)
+      : fieldFromData (dataType, v);
+   const runtime = make (f .dataType, R (f .value));
+   const data    = fieldData (runtime);
+   const entry   = state .live ?.get (f .name);
+
+   if (entry && entry .type === f .dataType)
+   {
+      // The runtime's default changed (the loaded PROTO's interface): the object follows unless the Script changed it.
+      if (!sameData (data, entry .data) && sameData (fieldData (entry .field), entry .data))
+      {
+         setFieldData (entry .field, data);
+         entry .data = data;
+      }
+
+      return entry .field;
+   }
+
+   dropDeclEntry (state, f .name);
+   runtime .setAccessType (f .accessType);
+
+   return newDeclEntry (state, f .name, runtime) .field;
+}
+
 function protoFields (state)
 {
    const fields = state .info () .fields;
-   const key    = JSON .stringify (fields .map (f => [f .name, f .accessType, f .dataType]));
+   const first  = state .info () .hasMetadata ? 1 : 0;
+   const values = fields .map ((f, i) => i < first ? undefined : declField (state, f));
+
+   for (const name of Array .from (state .live ?.keys () ?? [ ]))
+   {
+      if (!fields .some (f => f .name === name))
+         dropDeclEntry (state, name);
+   }
+
+   const key = JSON .stringify (fields .map ((f, i) => [f .name, f .accessType, f .dataType, values [i] ? state .live .get (f .name) .uid : 0]));
 
    if (state .fieldsKey === key)
       return state .fields;
@@ -1377,7 +1502,7 @@ function protoFields (state)
       : fieldFromData (dataType, v);
 
    state .fieldsKey = key;
-   state .fields    = new FieldDefinitionArray (fields .map (f => new X3DFieldDefinition (f .accessType, f .name, value (f .dataType, R (f .value)))));
+   state .fields    = new FieldDefinitionArray (fields .map ((f, i) => new X3DFieldDefinition (f .accessType, f .name, values [i] ?? value (f .dataType, R (f .value)))));
    return state .fields;
 }
 
@@ -1519,14 +1644,11 @@ engineMembers (X3DProtoDeclarationNode,
    // X3DProtoDeclarationNode.getUserDefinedFields: the interface fields, named, with their declared default values.
    getUserDefinedFields ()
    {
-      return Array .from (protoFields (this [ENGINE_STATE]))
-         .slice (this [ENGINE_STATE] .info () .hasMetadata ? 1 : 0)
-         .map (d => Object .freeze ({
-            getName () { return d .name; },
-            getAccessType () { return d .accessType; },
-            getType () { return d .dataType; },
-            getValue () { return d .value; },
-         }));
+      const state = this [ENGINE_STATE];
+
+      protoFields (state);
+
+      return Array .from (state .info () .fields .slice (state .info () .hasMetadata ? 1 : 0), f => state .live .get (f .name) .field);
    },
    getFieldDefinitions () { return protoFields (this [ENGINE_STATE]); },
    // X3DProtoDeclarationNode.createInstance (executionContext): an instance in that context, set up.
@@ -1538,6 +1660,8 @@ engineMembers (X3DProtoDeclarationNode,
          throw new TypeError ("Cannot read properties of undefined (reading 'getBrowser')");
 
       const s = this [ENGINE_STATE];
+
+      syncDeclFields ();
 
       return R (X ("cx", - (key + 2), "protoNew", s .extern, s .id));
    },
@@ -1551,17 +1675,33 @@ engineMembers (X3DProtoDeclarationNode,
       if (! (field instanceof X3DField))
          throw new TypeError ("field.setTainted is not a function");
 
+      syncDeclFields ();
       X ("cx", - (s .info () .ctx + 2), "protoField", s .id, "add", String (name), accessType, A (field), s .extern);
+
+      // X3DBaseNode.addUserDefinedField keeps the object it is given as the declaration's field.
+      field .setAccessType (accessType);
+      dropDeclEntry (s, String (name));
+      newDeclEntry (s, String (name), field);
    },
    removeUserDefinedField (name)
    {
       const s = this [ENGINE_STATE];
 
       X ("cx", - (s .info () .ctx + 2), "protoField", s .id, "remove", String (name), 0, null, s .extern);
+      dropDeclEntry (s, String (name));
    },
    requestUpdateInstances () { const s = this [ENGINE_STATE]; X ("cx", - (s .info () .ctx + 2), "protoRequest", s .extern, s .id); },
    // X3DProtoDeclarationNode.updateInstances: every instance takes the interface as it is now.
-   updateInstances () { const s = this [ENGINE_STATE]; X ("cx", - (s .info () .ctx + 2), "protoUpdate", s .extern, s .id); },
+   updateInstances ()
+   {
+      const s = this [ENGINE_STATE];
+
+      syncDeclFields ();
+      X ("cx", - (s .info () .ctx + 2), "protoUpdate", s .extern, s .id);
+
+      // The instances took the declaration's defaults: the Script's objects of their fields hold them from now on.
+      enter ();
+   },
    getAppInfo () { return this [ENGINE_STATE] .appInfo; },
    setAppInfo (value) { this [ENGINE_STATE] .appInfo = String (value); },
    getDocumentation () { return this [ENGINE_STATE] .documentation; },
@@ -1583,9 +1723,9 @@ for (const [C, extern] of [[X3DProtoDeclaration, false], [X3DExternProtoDeclarat
 {
    engineMembers (C,
    {
-      toVRMLStream (generator) { generator .string += X ("cx", -1, "protoString", extern, this [ENGINE_STATE] .id, "vrml"); },
-      toXMLStream (generator) { generator .string += X ("cx", -1, "protoString", extern, this [ENGINE_STATE] .id, "xml"); },
-      toJSONStream (generator) { generator .string += X ("cx", -1, "protoString", extern, this [ENGINE_STATE] .id, "json"); },
+      toVRMLStream (generator) { syncDeclFields (); generator .string += X ("cx", -1, "protoString", extern, this [ENGINE_STATE] .id, "vrml"); },
+      toXMLStream (generator) { syncDeclFields (); generator .string += X ("cx", -1, "protoString", extern, this [ENGINE_STATE] .id, "xml"); },
+      toJSONStream (generator) { syncDeclFields (); generator .string += X ("cx", -1, "protoString", extern, this [ENGINE_STATE] .id, "json"); },
    });
 }
 

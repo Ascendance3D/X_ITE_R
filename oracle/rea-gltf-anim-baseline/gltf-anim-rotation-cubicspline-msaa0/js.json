@@ -1,0 +1,293 @@
+{
+  "ok": true,
+  "poses": {
+    "3": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "NONE",
+      "fieldOfViewScale": 1
+    },
+    "8": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "NONE",
+      "fieldOfViewScale": 1
+    },
+    "14": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "NONE",
+      "fieldOfViewScale": 1
+    },
+    "20": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "NONE",
+      "fieldOfViewScale": 1
+    },
+    "26": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "NONE",
+      "fieldOfViewScale": 1
+    },
+    "32": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "NONE",
+      "fieldOfViewScale": 1
+    },
+    "38": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "NONE",
+      "fieldOfViewScale": 1
+    },
+    "44": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "NONE",
+      "fieldOfViewScale": 1
+    },
+    "63": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "NONE",
+      "fieldOfViewScale": 1
+    },
+    "64": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "NONE",
+      "fieldOfViewScale": 1
+    }
+  },
+  "vrml": {
+    "3": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT EnvironmentalSensor : 3\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Scripting : 1\nCOMPONENT Sound : 3\nCOMPONENT Text : 2\n\nNavigationInfo {\n  type \"NONE\"\n}\n\nDEF Gltf Inline {\n  global TRUE\n  url \"../animation/rotation-cubicspline.gltf\"\n}\n\nTransform {\n  translation 0 0 -3\n  children [\n    DEF Touch TouchSensor { }\n    Shape {\n      appearance Appearance {\n        material Material {\n          transparency 0.9\n        }\n      }\n      geometry Box {\n        size 100 100 0.1\n      }\n    }\n  ]\n}\n\nIMPORT Gltf.Timer1\n\nROUTE Touch.touchTime TO Timer1.set_startTime\n",
+    "8": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT EnvironmentalSensor : 3\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Scripting : 1\nCOMPONENT Sound : 3\nCOMPONENT Text : 2\n\nNavigationInfo {\n  type \"NONE\"\n}\n\nDEF Gltf Inline {\n  global TRUE\n  url \"../animation/rotation-cubicspline.gltf\"\n}\n\nTransform {\n  translation 0 0 -3\n  children [\n    DEF Touch TouchSensor { }\n    Shape {\n      appearance Appearance {\n        material Material {\n          transparency 0.9\n        }\n      }\n      geometry Box {\n        size 100 100 0.1\n      }\n    }\n  ]\n}\n\nIMPORT Gltf.Timer1\n\nROUTE Touch.touchTime TO Timer1.set_startTime\n",
+    "14": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT EnvironmentalSensor : 3\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Scripting : 1\nCOMPONENT Sound : 3\nCOMPONENT Text : 2\n\nNavigationInfo {\n  type \"NONE\"\n}\n\nDEF Gltf Inline {\n  global TRUE\n  url \"../animation/rotation-cubicspline.gltf\"\n}\n\nTransform {\n  translation 0 0 -3\n  children [\n    DEF Touch TouchSensor { }\n    Shape {\n      appearance Appearance {\n        material Material {\n          transparency 0.9\n        }\n      }\n      geometry Box {\n        size 100 100 0.1\n      }\n    }\n  ]\n}\n\nIMPORT Gltf.Timer1\n\nROUTE Touch.touchTime TO Timer1.set_startTime\n",
+    "20": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT EnvironmentalSensor : 3\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Scripting : 1\nCOMPONENT Sound : 3\nCOMPONENT Text : 2\n\nNavigationInfo {\n  type \"NONE\"\n}\n\nDEF Gltf Inline {\n  global TRUE\n  url \"../animation/rotation-cubicspline.gltf\"\n}\n\nTransform {\n  translation 0 0 -3\n  children [\n    DEF Touch TouchSensor { }\n    Shape {\n      appearance Appearance {\n        material Material {\n          transparency 0.9\n        }\n      }\n      geometry Box {\n        size 100 100 0.1\n      }\n    }\n  ]\n}\n\nIMPORT Gltf.Timer1\n\nROUTE Touch.touchTime TO Timer1.set_startTime\n",
+    "26": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT EnvironmentalSensor : 3\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Scripting : 1\nCOMPONENT Sound : 3\nCOMPONENT Text : 2\n\nNavigationInfo {\n  type \"NONE\"\n}\n\nDEF Gltf Inline {\n  global TRUE\n  url \"../animation/rotation-cubicspline.gltf\"\n}\n\nTransform {\n  translation 0 0 -3\n  children [\n    DEF Touch TouchSensor { }\n    Shape {\n      appearance Appearance {\n        material Material {\n          transparency 0.9\n        }\n      }\n      geometry Box {\n        size 100 100 0.1\n      }\n    }\n  ]\n}\n\nIMPORT Gltf.Timer1\n\nROUTE Touch.touchTime TO Timer1.set_startTime\n",
+    "32": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT EnvironmentalSensor : 3\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Scripting : 1\nCOMPONENT Sound : 3\nCOMPONENT Text : 2\n\nNavigationInfo {\n  type \"NONE\"\n}\n\nDEF Gltf Inline {\n  global TRUE\n  url \"../animation/rotation-cubicspline.gltf\"\n}\n\nTransform {\n  translation 0 0 -3\n  children [\n    DEF Touch TouchSensor { }\n    Shape {\n      appearance Appearance {\n        material Material {\n          transparency 0.9\n        }\n      }\n      geometry Box {\n        size 100 100 0.1\n      }\n    }\n  ]\n}\n\nIMPORT Gltf.Timer1\n\nROUTE Touch.touchTime TO Timer1.set_startTime\n",
+    "38": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT EnvironmentalSensor : 3\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Scripting : 1\nCOMPONENT Sound : 3\nCOMPONENT Text : 2\n\nNavigationInfo {\n  type \"NONE\"\n}\n\nDEF Gltf Inline {\n  global TRUE\n  url \"../animation/rotation-cubicspline.gltf\"\n}\n\nTransform {\n  translation 0 0 -3\n  children [\n    DEF Touch TouchSensor { }\n    Shape {\n      appearance Appearance {\n        material Material {\n          transparency 0.9\n        }\n      }\n      geometry Box {\n        size 100 100 0.1\n      }\n    }\n  ]\n}\n\nIMPORT Gltf.Timer1\n\nROUTE Touch.touchTime TO Timer1.set_startTime\n",
+    "44": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT EnvironmentalSensor : 3\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Scripting : 1\nCOMPONENT Sound : 3\nCOMPONENT Text : 2\n\nNavigationInfo {\n  type \"NONE\"\n}\n\nDEF Gltf Inline {\n  global TRUE\n  url \"../animation/rotation-cubicspline.gltf\"\n}\n\nTransform {\n  translation 0 0 -3\n  children [\n    DEF Touch TouchSensor { }\n    Shape {\n      appearance Appearance {\n        material Material {\n          transparency 0.9\n        }\n      }\n      geometry Box {\n        size 100 100 0.1\n      }\n    }\n  ]\n}\n\nIMPORT Gltf.Timer1\n\nROUTE Touch.touchTime TO Timer1.set_startTime\n",
+    "63": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT EnvironmentalSensor : 3\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Scripting : 1\nCOMPONENT Sound : 3\nCOMPONENT Text : 2\n\nNavigationInfo {\n  type \"NONE\"\n}\n\nDEF Gltf Inline {\n  global TRUE\n  url \"../animation/rotation-cubicspline.gltf\"\n}\n\nTransform {\n  translation 0 0 -3\n  children [\n    DEF Touch TouchSensor { }\n    Shape {\n      appearance Appearance {\n        material Material {\n          transparency 0.9\n        }\n      }\n      geometry Box {\n        size 100 100 0.1\n      }\n    }\n  ]\n}\n\nIMPORT Gltf.Timer1\n\nROUTE Touch.touchTime TO Timer1.set_startTime\n",
+    "64": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT EnvironmentalSensor : 3\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Scripting : 1\nCOMPONENT Sound : 3\nCOMPONENT Text : 2\n\nNavigationInfo {\n  type \"NONE\"\n}\n\nDEF Gltf Inline {\n  global TRUE\n  url \"../animation/rotation-cubicspline.gltf\"\n}\n\nTransform {\n  translation 0 0 -3\n  children [\n    DEF Touch TouchSensor { }\n    Shape {\n      appearance Appearance {\n        material Material {\n          transparency 0.9\n        }\n      }\n      geometry Box {\n        size 100 100 0.1\n      }\n    }\n  ]\n}\n\nIMPORT Gltf.Timer1\n\nROUTE Touch.touchTime TO Timer1.set_startTime\n"
+  },
+  "prints": [],
+  "log": [],
+  "anchors": [],
+  "loadFrames": 3,
+  "warmupFrames": 8,
+  "geometry": {
+    "rect": [
+      0,
+      0,
+      512,
+      512
+    ],
+    "viewport": [
+      0,
+      0,
+      512,
+      512
+    ],
+    "scroll": [
+      0,
+      0
+    ]
+  },
+  "inlines": {
+    "3": {
+      "Gltf": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nMETA \"generator\" \"rea-b08\"\n\nDEF Morph Transform {\n  children Shape {\n    appearance Appearance {\n      alphaMode \"OPAQUE\"\n      material PhysicalMaterial {\n        metallic 0\n      }\n    }\n    geometry IndexedTriangleSet {\n      index [\n        0,\n        1,\n        2,\n        0,\n        2,\n        3\n      ]\n      normal Normal {\n        vector [\n          0 0 1,\n          0 0 1,\n          0 0 1,\n          0 0 1\n        ]\n      }\n      coord Coordinate {\n        point [\n          -1 -1 0,\n          1 -1 0,\n          1 1 0,\n          -1 1 0\n        ]\n      }\n    }\n  }\n}\n\nDEF Animations Group {\n  visible FALSE\n  children DEF Spin Group {\n    children [\n      DEF Timer1 TimeSensor {\n        description \"Spin\"\n      }\n      DEF RotationInterpolator OrientationInterpolator {\n        key [\n          0,\n          0.03448276,\n          0.06896552,\n          0.1034483,\n          0.137931,\n          0.1724138,\n          0.2068966,\n          0.2413793,\n          0.2758621,\n          0.3103448,\n          0.3448276,\n          0.3793103,\n          0.4137931,\n          0.4482759,\n          0.4827586,\n          0.5172414,\n          0.5517241,\n          0.5862069,\n          0.6206896,\n          0.6551724,\n          0.6896552,\n          0.7241379,\n          0.7586207,\n          0.7931035,\n          0.8275862,\n          0.862069,\n          0.8965517,\n          0.9310345,\n          0.9655172,\n          1\n        ]\n        keyValue [\n          0 0 1 0,\n          0 1.00000000000044 0 0.0104294175227453,\n          0 1.00000000000005 0 0.0398182394365823,\n          0 0.999999999999972 0 0.0853985823769227,\n          0 1.00000000000001 0 0.144398213379085,\n          0 1 0 0.213928041601237,\n          0 1 0 0.290920800418025,\n          0 0.999999999999999 0 0.372130820371892,\n          0 1 0 0.454190915561436,\n          0 0.999999999999998 0 0.533707517422869,\n          0 1 0 0.607364092119991,\n          0 0.999999999999999 0 0.672000357808349,\n          0 1 0 0.724642064559539,\n          0 1 0 0.762469789421445,\n          0 1 0 0.782730027633251,\n          0 1 0 0.788066319607516,\n          0 1 0 0.808326558638355,\n          0 1 0 0.846154284838861,\n          0 1 0 0.898795993036753,\n          0 1 0 0.963432259833957,\n          0 1 0 1.03708883489248,\n          0 1 0 1.11660543606341,\n          0 1 0 1.19866552936868,\n          0 1 0 1.27987554629843,\n          0 1 0 1.35686830120115,\n          0 1 0 1.42639812503238,\n          0 1 0 1.48539775168749,\n          0 1 0 1.53097809088911,\n          0 1 0 1.56036691022048,\n          0 1 0 1.5707963267949\n        ]\n      }\n    ]\n  }\n}\n\nROUTE Timer1.fraction_changed TO RotationInterpolator.set_fraction\nROUTE RotationInterpolator.value_changed TO Morph.set_rotation\n\nEXPORT Spin\nEXPORT Timer1\nEXPORT Animations\n"
+    },
+    "8": {
+      "Gltf": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nMETA \"generator\" \"rea-b08\"\n\nDEF Morph Transform {\n  rotation 0 1.00000000000001 0 0.136531582314407\n  children Shape {\n    appearance Appearance {\n      alphaMode \"OPAQUE\"\n      material PhysicalMaterial {\n        metallic 0\n      }\n    }\n    geometry IndexedTriangleSet {\n      index [\n        0,\n        1,\n        2,\n        0,\n        2,\n        3\n      ]\n      normal Normal {\n        vector [\n          0 0 1,\n          0 0 1,\n          0 0 1,\n          0 0 1\n        ]\n      }\n      coord Coordinate {\n        point [\n          -1 -1 0,\n          1 -1 0,\n          1 1 0,\n          -1 1 0\n        ]\n      }\n    }\n  }\n}\n\nDEF Animations Group {\n  visible FALSE\n  children DEF Spin Group {\n    children [\n      DEF Timer1 TimeSensor {\n        description \"Spin\"\n        startTime 946684800.133333\n      }\n      DEF RotationInterpolator OrientationInterpolator {\n        key [\n          0,\n          0.03448276,\n          0.06896552,\n          0.1034483,\n          0.137931,\n          0.1724138,\n          0.2068966,\n          0.2413793,\n          0.2758621,\n          0.3103448,\n          0.3448276,\n          0.3793103,\n          0.4137931,\n          0.4482759,\n          0.4827586,\n          0.5172414,\n          0.5517241,\n          0.5862069,\n          0.6206896,\n          0.6551724,\n          0.6896552,\n          0.7241379,\n          0.7586207,\n          0.7931035,\n          0.8275862,\n          0.862069,\n          0.8965517,\n          0.9310345,\n          0.9655172,\n          1\n        ]\n        keyValue [\n          0 0 1 0,\n          0 1.00000000000044 0 0.0104294175227453,\n          0 1.00000000000005 0 0.0398182394365823,\n          0 0.999999999999972 0 0.0853985823769227,\n          0 1.00000000000001 0 0.144398213379085,\n          0 1 0 0.213928041601237,\n          0 1 0 0.290920800418025,\n          0 0.999999999999999 0 0.372130820371892,\n          0 1 0 0.454190915561436,\n          0 0.999999999999998 0 0.533707517422869,\n          0 1 0 0.607364092119991,\n          0 0.999999999999999 0 0.672000357808349,\n          0 1 0 0.724642064559539,\n          0 1 0 0.762469789421445,\n          0 1 0 0.782730027633251,\n          0 1 0 0.788066319607516,\n          0 1 0 0.808326558638355,\n          0 1 0 0.846154284838861,\n          0 1 0 0.898795993036753,\n          0 1 0 0.963432259833957,\n          0 1 0 1.03708883489248,\n          0 1 0 1.11660543606341,\n          0 1 0 1.19866552936868,\n          0 1 0 1.27987554629843,\n          0 1 0 1.35686830120115,\n          0 1 0 1.42639812503238,\n          0 1 0 1.48539775168749,\n          0 1 0 1.53097809088911,\n          0 1 0 1.56036691022048,\n          0 1 0 1.5707963267949\n        ]\n      }\n    ]\n  }\n}\n\nROUTE Timer1.fraction_changed TO RotationInterpolator.set_fraction\nROUTE RotationInterpolator.value_changed TO Morph.set_rotation\n\nEXPORT Spin\nEXPORT Timer1\nEXPORT Animations\n"
+    },
+    "14": {
+      "Gltf": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nMETA \"generator\" \"rea-b08\"\n\nDEF Morph Transform {\n  rotation 0 0.999999999999999 0 0.582811985432869\n  children Shape {\n    appearance Appearance {\n      alphaMode \"OPAQUE\"\n      material PhysicalMaterial {\n        metallic 0\n      }\n    }\n    geometry IndexedTriangleSet {\n      index [\n        0,\n        1,\n        2,\n        0,\n        2,\n        3\n      ]\n      normal Normal {\n        vector [\n          0 0 1,\n          0 0 1,\n          0 0 1,\n          0 0 1\n        ]\n      }\n      coord Coordinate {\n        point [\n          -1 -1 0,\n          1 -1 0,\n          1 1 0,\n          -1 1 0\n        ]\n      }\n    }\n  }\n}\n\nDEF Animations Group {\n  visible FALSE\n  children DEF Spin Group {\n    children [\n      DEF Timer1 TimeSensor {\n        description \"Spin\"\n        startTime 946684800.133333\n      }\n      DEF RotationInterpolator OrientationInterpolator {\n        key [\n          0,\n          0.03448276,\n          0.06896552,\n          0.1034483,\n          0.137931,\n          0.1724138,\n          0.2068966,\n          0.2413793,\n          0.2758621,\n          0.3103448,\n          0.3448276,\n          0.3793103,\n          0.4137931,\n          0.4482759,\n          0.4827586,\n          0.5172414,\n          0.5517241,\n          0.5862069,\n          0.6206896,\n          0.6551724,\n          0.6896552,\n          0.7241379,\n          0.7586207,\n          0.7931035,\n          0.8275862,\n          0.862069,\n          0.8965517,\n          0.9310345,\n          0.9655172,\n          1\n        ]\n        keyValue [\n          0 0 1 0,\n          0 1.00000000000044 0 0.0104294175227453,\n          0 1.00000000000005 0 0.0398182394365823,\n          0 0.999999999999972 0 0.0853985823769227,\n          0 1.00000000000001 0 0.144398213379085,\n          0 1 0 0.213928041601237,\n          0 1 0 0.290920800418025,\n          0 0.999999999999999 0 0.372130820371892,\n          0 1 0 0.454190915561436,\n          0 0.999999999999998 0 0.533707517422869,\n          0 1 0 0.607364092119991,\n          0 0.999999999999999 0 0.672000357808349,\n          0 1 0 0.724642064559539,\n          0 1 0 0.762469789421445,\n          0 1 0 0.782730027633251,\n          0 1 0 0.788066319607516,\n          0 1 0 0.808326558638355,\n          0 1 0 0.846154284838861,\n          0 1 0 0.898795993036753,\n          0 1 0 0.963432259833957,\n          0 1 0 1.03708883489248,\n          0 1 0 1.11660543606341,\n          0 1 0 1.19866552936868,\n          0 1 0 1.27987554629843,\n          0 1 0 1.35686830120115,\n          0 1 0 1.42639812503238,\n          0 1 0 1.48539775168749,\n          0 1 0 1.53097809088911,\n          0 1 0 1.56036691022048,\n          0 1 0 1.5707963267949\n        ]\n      }\n    ]\n  }\n}\n\nROUTE Timer1.fraction_changed TO RotationInterpolator.set_fraction\nROUTE RotationInterpolator.value_changed TO Morph.set_rotation\n\nEXPORT Spin\nEXPORT Timer1\nEXPORT Animations\n"
+    },
+    "20": {
+      "Gltf": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nMETA \"generator\" \"rea-b08\"\n\nDEF Morph Transform {\n  rotation 0 1 0 0.797521086148405\n  children Shape {\n    appearance Appearance {\n      alphaMode \"OPAQUE\"\n      material PhysicalMaterial {\n        metallic 0\n      }\n    }\n    geometry IndexedTriangleSet {\n      index [\n        0,\n        1,\n        2,\n        0,\n        2,\n        3\n      ]\n      normal Normal {\n        vector [\n          0 0 1,\n          0 0 1,\n          0 0 1,\n          0 0 1\n        ]\n      }\n      coord Coordinate {\n        point [\n          -1 -1 0,\n          1 -1 0,\n          1 1 0,\n          -1 1 0\n        ]\n      }\n    }\n  }\n}\n\nDEF Animations Group {\n  visible FALSE\n  children DEF Spin Group {\n    children [\n      DEF Timer1 TimeSensor {\n        description \"Spin\"\n        startTime 946684800.133333\n      }\n      DEF RotationInterpolator OrientationInterpolator {\n        key [\n          0,\n          0.03448276,\n          0.06896552,\n          0.1034483,\n          0.137931,\n          0.1724138,\n          0.2068966,\n          0.2413793,\n          0.2758621,\n          0.3103448,\n          0.3448276,\n          0.3793103,\n          0.4137931,\n          0.4482759,\n          0.4827586,\n          0.5172414,\n          0.5517241,\n          0.5862069,\n          0.6206896,\n          0.6551724,\n          0.6896552,\n          0.7241379,\n          0.7586207,\n          0.7931035,\n          0.8275862,\n          0.862069,\n          0.8965517,\n          0.9310345,\n          0.9655172,\n          1\n        ]\n        keyValue [\n          0 0 1 0,\n          0 1.00000000000044 0 0.0104294175227453,\n          0 1.00000000000005 0 0.0398182394365823,\n          0 0.999999999999972 0 0.0853985823769227,\n          0 1.00000000000001 0 0.144398213379085,\n          0 1 0 0.213928041601237,\n          0 1 0 0.290920800418025,\n          0 0.999999999999999 0 0.372130820371892,\n          0 1 0 0.454190915561436,\n          0 0.999999999999998 0 0.533707517422869,\n          0 1 0 0.607364092119991,\n          0 0.999999999999999 0 0.672000357808349,\n          0 1 0 0.724642064559539,\n          0 1 0 0.762469789421445,\n          0 1 0 0.782730027633251,\n          0 1 0 0.788066319607516,\n          0 1 0 0.808326558638355,\n          0 1 0 0.846154284838861,\n          0 1 0 0.898795993036753,\n          0 1 0 0.963432259833957,\n          0 1 0 1.03708883489248,\n          0 1 0 1.11660543606341,\n          0 1 0 1.19866552936868,\n          0 1 0 1.27987554629843,\n          0 1 0 1.35686830120115,\n          0 1 0 1.42639812503238,\n          0 1 0 1.48539775168749,\n          0 1 0 1.53097809088911,\n          0 1 0 1.56036691022048,\n          0 1 0 1.5707963267949\n        ]\n      }\n    ]\n  }\n}\n\nROUTE Timer1.fraction_changed TO RotationInterpolator.set_fraction\nROUTE RotationInterpolator.value_changed TO Morph.set_rotation\n\nEXPORT Spin\nEXPORT Timer1\nEXPORT Animations\n"
+    },
+    "26": {
+      "Gltf": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nMETA \"generator\" \"rea-b08\"\n\nDEF Morph Transform {\n  rotation 0 1 0 1.13848822217391\n  children Shape {\n    appearance Appearance {\n      alphaMode \"OPAQUE\"\n      material PhysicalMaterial {\n        metallic 0\n      }\n    }\n    geometry IndexedTriangleSet {\n      index [\n        0,\n        1,\n        2,\n        0,\n        2,\n        3\n      ]\n      normal Normal {\n        vector [\n          0 0 1,\n          0 0 1,\n          0 0 1,\n          0 0 1\n        ]\n      }\n      coord Coordinate {\n        point [\n          -1 -1 0,\n          1 -1 0,\n          1 1 0,\n          -1 1 0\n        ]\n      }\n    }\n  }\n}\n\nDEF Animations Group {\n  visible FALSE\n  children DEF Spin Group {\n    children [\n      DEF Timer1 TimeSensor {\n        description \"Spin\"\n        startTime 946684800.133333\n      }\n      DEF RotationInterpolator OrientationInterpolator {\n        key [\n          0,\n          0.03448276,\n          0.06896552,\n          0.1034483,\n          0.137931,\n          0.1724138,\n          0.2068966,\n          0.2413793,\n          0.2758621,\n          0.3103448,\n          0.3448276,\n          0.3793103,\n          0.4137931,\n          0.4482759,\n          0.4827586,\n          0.5172414,\n          0.5517241,\n          0.5862069,\n          0.6206896,\n          0.6551724,\n          0.6896552,\n          0.7241379,\n          0.7586207,\n          0.7931035,\n          0.8275862,\n          0.862069,\n          0.8965517,\n          0.9310345,\n          0.9655172,\n          1\n        ]\n        keyValue [\n          0 0 1 0,\n          0 1.00000000000044 0 0.0104294175227453,\n          0 1.00000000000005 0 0.0398182394365823,\n          0 0.999999999999972 0 0.0853985823769227,\n          0 1.00000000000001 0 0.144398213379085,\n          0 1 0 0.213928041601237,\n          0 1 0 0.290920800418025,\n          0 0.999999999999999 0 0.372130820371892,\n          0 1 0 0.454190915561436,\n          0 0.999999999999998 0 0.533707517422869,\n          0 1 0 0.607364092119991,\n          0 0.999999999999999 0 0.672000357808349,\n          0 1 0 0.724642064559539,\n          0 1 0 0.762469789421445,\n          0 1 0 0.782730027633251,\n          0 1 0 0.788066319607516,\n          0 1 0 0.808326558638355,\n          0 1 0 0.846154284838861,\n          0 1 0 0.898795993036753,\n          0 1 0 0.963432259833957,\n          0 1 0 1.03708883489248,\n          0 1 0 1.11660543606341,\n          0 1 0 1.19866552936868,\n          0 1 0 1.27987554629843,\n          0 1 0 1.35686830120115,\n          0 1 0 1.42639812503238,\n          0 1 0 1.48539775168749,\n          0 1 0 1.53097809088911,\n          0 1 0 1.56036691022048,\n          0 1 0 1.5707963267949\n        ]\n      }\n    ]\n  }\n}\n\nROUTE Timer1.fraction_changed TO RotationInterpolator.set_fraction\nROUTE RotationInterpolator.value_changed TO Morph.set_rotation\n\nEXPORT Spin\nEXPORT Timer1\nEXPORT Animations\n"
+    },
+    "32": {
+      "Gltf": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nMETA \"generator\" \"rea-b08\"\n\nDEF Morph Transform {\n  rotation 0 1 0 1.53293738276428\n  children Shape {\n    appearance Appearance {\n      alphaMode \"OPAQUE\"\n      material PhysicalMaterial {\n        metallic 0\n      }\n    }\n    geometry IndexedTriangleSet {\n      index [\n        0,\n        1,\n        2,\n        0,\n        2,\n        3\n      ]\n      normal Normal {\n        vector [\n          0 0 1,\n          0 0 1,\n          0 0 1,\n          0 0 1\n        ]\n      }\n      coord Coordinate {\n        point [\n          -1 -1 0,\n          1 -1 0,\n          1 1 0,\n          -1 1 0\n        ]\n      }\n    }\n  }\n}\n\nDEF Animations Group {\n  visible FALSE\n  children DEF Spin Group {\n    children [\n      DEF Timer1 TimeSensor {\n        description \"Spin\"\n        startTime 946684800.133333\n      }\n      DEF RotationInterpolator OrientationInterpolator {\n        key [\n          0,\n          0.03448276,\n          0.06896552,\n          0.1034483,\n          0.137931,\n          0.1724138,\n          0.2068966,\n          0.2413793,\n          0.2758621,\n          0.3103448,\n          0.3448276,\n          0.3793103,\n          0.4137931,\n          0.4482759,\n          0.4827586,\n          0.5172414,\n          0.5517241,\n          0.5862069,\n          0.6206896,\n          0.6551724,\n          0.6896552,\n          0.7241379,\n          0.7586207,\n          0.7931035,\n          0.8275862,\n          0.862069,\n          0.8965517,\n          0.9310345,\n          0.9655172,\n          1\n        ]\n        keyValue [\n          0 0 1 0,\n          0 1.00000000000044 0 0.0104294175227453,\n          0 1.00000000000005 0 0.0398182394365823,\n          0 0.999999999999972 0 0.0853985823769227,\n          0 1.00000000000001 0 0.144398213379085,\n          0 1 0 0.213928041601237,\n          0 1 0 0.290920800418025,\n          0 0.999999999999999 0 0.372130820371892,\n          0 1 0 0.454190915561436,\n          0 0.999999999999998 0 0.533707517422869,\n          0 1 0 0.607364092119991,\n          0 0.999999999999999 0 0.672000357808349,\n          0 1 0 0.724642064559539,\n          0 1 0 0.762469789421445,\n          0 1 0 0.782730027633251,\n          0 1 0 0.788066319607516,\n          0 1 0 0.808326558638355,\n          0 1 0 0.846154284838861,\n          0 1 0 0.898795993036753,\n          0 1 0 0.963432259833957,\n          0 1 0 1.03708883489248,\n          0 1 0 1.11660543606341,\n          0 1 0 1.19866552936868,\n          0 1 0 1.27987554629843,\n          0 1 0 1.35686830120115,\n          0 1 0 1.42639812503238,\n          0 1 0 1.48539775168749,\n          0 1 0 1.53097809088911,\n          0 1 0 1.56036691022048,\n          0 1 0 1.5707963267949\n        ]\n      }\n    ]\n  }\n}\n\nROUTE Timer1.fraction_changed TO RotationInterpolator.set_fraction\nROUTE RotationInterpolator.value_changed TO Morph.set_rotation\n\nEXPORT Spin\nEXPORT Timer1\nEXPORT Animations\n"
+    },
+    "38": {
+      "Gltf": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nMETA \"generator\" \"rea-b08\"\n\nDEF Morph Transform {\n  rotation 0 1 0 1.5707963267949\n  children Shape {\n    appearance Appearance {\n      alphaMode \"OPAQUE\"\n      material PhysicalMaterial {\n        metallic 0\n      }\n    }\n    geometry IndexedTriangleSet {\n      index [\n        0,\n        1,\n        2,\n        0,\n        2,\n        3\n      ]\n      normal Normal {\n        vector [\n          0 0 1,\n          0 0 1,\n          0 0 1,\n          0 0 1\n        ]\n      }\n      coord Coordinate {\n        point [\n          -1 -1 0,\n          1 -1 0,\n          1 1 0,\n          -1 1 0\n        ]\n      }\n    }\n  }\n}\n\nDEF Animations Group {\n  visible FALSE\n  children DEF Spin Group {\n    children [\n      DEF Timer1 TimeSensor {\n        description \"Spin\"\n        startTime 946684800.133333\n      }\n      DEF RotationInterpolator OrientationInterpolator {\n        key [\n          0,\n          0.03448276,\n          0.06896552,\n          0.1034483,\n          0.137931,\n          0.1724138,\n          0.2068966,\n          0.2413793,\n          0.2758621,\n          0.3103448,\n          0.3448276,\n          0.3793103,\n          0.4137931,\n          0.4482759,\n          0.4827586,\n          0.5172414,\n          0.5517241,\n          0.5862069,\n          0.6206896,\n          0.6551724,\n          0.6896552,\n          0.7241379,\n          0.7586207,\n          0.7931035,\n          0.8275862,\n          0.862069,\n          0.8965517,\n          0.9310345,\n          0.9655172,\n          1\n        ]\n        keyValue [\n          0 0 1 0,\n          0 1.00000000000044 0 0.0104294175227453,\n          0 1.00000000000005 0 0.0398182394365823,\n          0 0.999999999999972 0 0.0853985823769227,\n          0 1.00000000000001 0 0.144398213379085,\n          0 1 0 0.213928041601237,\n          0 1 0 0.290920800418025,\n          0 0.999999999999999 0 0.372130820371892,\n          0 1 0 0.454190915561436,\n          0 0.999999999999998 0 0.533707517422869,\n          0 1 0 0.607364092119991,\n          0 0.999999999999999 0 0.672000357808349,\n          0 1 0 0.724642064559539,\n          0 1 0 0.762469789421445,\n          0 1 0 0.782730027633251,\n          0 1 0 0.788066319607516,\n          0 1 0 0.808326558638355,\n          0 1 0 0.846154284838861,\n          0 1 0 0.898795993036753,\n          0 1 0 0.963432259833957,\n          0 1 0 1.03708883489248,\n          0 1 0 1.11660543606341,\n          0 1 0 1.19866552936868,\n          0 1 0 1.27987554629843,\n          0 1 0 1.35686830120115,\n          0 1 0 1.42639812503238,\n          0 1 0 1.48539775168749,\n          0 1 0 1.53097809088911,\n          0 1 0 1.56036691022048,\n          0 1 0 1.5707963267949\n        ]\n      }\n    ]\n  }\n}\n\nROUTE Timer1.fraction_changed TO RotationInterpolator.set_fraction\nROUTE RotationInterpolator.value_changed TO Morph.set_rotation\n\nEXPORT Spin\nEXPORT Timer1\nEXPORT Animations\n"
+    },
+    "44": {
+      "Gltf": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nMETA \"generator\" \"rea-b08\"\n\nDEF Morph Transform {\n  rotation 0 1 0 1.5707963267949\n  children Shape {\n    appearance Appearance {\n      alphaMode \"OPAQUE\"\n      material PhysicalMaterial {\n        metallic 0\n      }\n    }\n    geometry IndexedTriangleSet {\n      index [\n        0,\n        1,\n        2,\n        0,\n        2,\n        3\n      ]\n      normal Normal {\n        vector [\n          0 0 1,\n          0 0 1,\n          0 0 1,\n          0 0 1\n        ]\n      }\n      coord Coordinate {\n        point [\n          -1 -1 0,\n          1 -1 0,\n          1 1 0,\n          -1 1 0\n        ]\n      }\n    }\n  }\n}\n\nDEF Animations Group {\n  visible FALSE\n  children DEF Spin Group {\n    children [\n      DEF Timer1 TimeSensor {\n        description \"Spin\"\n        startTime 946684800.133333\n      }\n      DEF RotationInterpolator OrientationInterpolator {\n        key [\n          0,\n          0.03448276,\n          0.06896552,\n          0.1034483,\n          0.137931,\n          0.1724138,\n          0.2068966,\n          0.2413793,\n          0.2758621,\n          0.3103448,\n          0.3448276,\n          0.3793103,\n          0.4137931,\n          0.4482759,\n          0.4827586,\n          0.5172414,\n          0.5517241,\n          0.5862069,\n          0.6206896,\n          0.6551724,\n          0.6896552,\n          0.7241379,\n          0.7586207,\n          0.7931035,\n          0.8275862,\n          0.862069,\n          0.8965517,\n          0.9310345,\n          0.9655172,\n          1\n        ]\n        keyValue [\n          0 0 1 0,\n          0 1.00000000000044 0 0.0104294175227453,\n          0 1.00000000000005 0 0.0398182394365823,\n          0 0.999999999999972 0 0.0853985823769227,\n          0 1.00000000000001 0 0.144398213379085,\n          0 1 0 0.213928041601237,\n          0 1 0 0.290920800418025,\n          0 0.999999999999999 0 0.372130820371892,\n          0 1 0 0.454190915561436,\n          0 0.999999999999998 0 0.533707517422869,\n          0 1 0 0.607364092119991,\n          0 0.999999999999999 0 0.672000357808349,\n          0 1 0 0.724642064559539,\n          0 1 0 0.762469789421445,\n          0 1 0 0.782730027633251,\n          0 1 0 0.788066319607516,\n          0 1 0 0.808326558638355,\n          0 1 0 0.846154284838861,\n          0 1 0 0.898795993036753,\n          0 1 0 0.963432259833957,\n          0 1 0 1.03708883489248,\n          0 1 0 1.11660543606341,\n          0 1 0 1.19866552936868,\n          0 1 0 1.27987554629843,\n          0 1 0 1.35686830120115,\n          0 1 0 1.42639812503238,\n          0 1 0 1.48539775168749,\n          0 1 0 1.53097809088911,\n          0 1 0 1.56036691022048,\n          0 1 0 1.5707963267949\n        ]\n      }\n    ]\n  }\n}\n\nROUTE Timer1.fraction_changed TO RotationInterpolator.set_fraction\nROUTE RotationInterpolator.value_changed TO Morph.set_rotation\n\nEXPORT Spin\nEXPORT Timer1\nEXPORT Animations\n"
+    },
+    "63": {
+      "Gltf": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nMETA \"generator\" \"rea-b08\"\n\nDEF Morph Transform {\n  rotation 0 1 0 1.5707963267949\n  children Shape {\n    appearance Appearance {\n      alphaMode \"OPAQUE\"\n      material PhysicalMaterial {\n        metallic 0\n      }\n    }\n    geometry IndexedTriangleSet {\n      index [\n        0,\n        1,\n        2,\n        0,\n        2,\n        3\n      ]\n      normal Normal {\n        vector [\n          0 0 1,\n          0 0 1,\n          0 0 1,\n          0 0 1\n        ]\n      }\n      coord Coordinate {\n        point [\n          -1 -1 0,\n          1 -1 0,\n          1 1 0,\n          -1 1 0\n        ]\n      }\n    }\n  }\n}\n\nDEF Animations Group {\n  visible FALSE\n  children DEF Spin Group {\n    children [\n      DEF Timer1 TimeSensor {\n        description \"Spin\"\n        startTime 946684800.133333\n      }\n      DEF RotationInterpolator OrientationInterpolator {\n        key [\n          0,\n          0.03448276,\n          0.06896552,\n          0.1034483,\n          0.137931,\n          0.1724138,\n          0.2068966,\n          0.2413793,\n          0.2758621,\n          0.3103448,\n          0.3448276,\n          0.3793103,\n          0.4137931,\n          0.4482759,\n          0.4827586,\n          0.5172414,\n          0.5517241,\n          0.5862069,\n          0.6206896,\n          0.6551724,\n          0.6896552,\n          0.7241379,\n          0.7586207,\n          0.7931035,\n          0.8275862,\n          0.862069,\n          0.8965517,\n          0.9310345,\n          0.9655172,\n          1\n        ]\n        keyValue [\n          0 0 1 0,\n          0 1.00000000000044 0 0.0104294175227453,\n          0 1.00000000000005 0 0.0398182394365823,\n          0 0.999999999999972 0 0.0853985823769227,\n          0 1.00000000000001 0 0.144398213379085,\n          0 1 0 0.213928041601237,\n          0 1 0 0.290920800418025,\n          0 0.999999999999999 0 0.372130820371892,\n          0 1 0 0.454190915561436,\n          0 0.999999999999998 0 0.533707517422869,\n          0 1 0 0.607364092119991,\n          0 0.999999999999999 0 0.672000357808349,\n          0 1 0 0.724642064559539,\n          0 1 0 0.762469789421445,\n          0 1 0 0.782730027633251,\n          0 1 0 0.788066319607516,\n          0 1 0 0.808326558638355,\n          0 1 0 0.846154284838861,\n          0 1 0 0.898795993036753,\n          0 1 0 0.963432259833957,\n          0 1 0 1.03708883489248,\n          0 1 0 1.11660543606341,\n          0 1 0 1.19866552936868,\n          0 1 0 1.27987554629843,\n          0 1 0 1.35686830120115,\n          0 1 0 1.42639812503238,\n          0 1 0 1.48539775168749,\n          0 1 0 1.53097809088911,\n          0 1 0 1.56036691022048,\n          0 1 0 1.5707963267949\n        ]\n      }\n    ]\n  }\n}\n\nROUTE Timer1.fraction_changed TO RotationInterpolator.set_fraction\nROUTE RotationInterpolator.value_changed TO Morph.set_rotation\n\nEXPORT Spin\nEXPORT Timer1\nEXPORT Animations\n"
+    },
+    "64": {
+      "Gltf": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nMETA \"generator\" \"rea-b08\"\n\nDEF Morph Transform {\n  rotation 0 1 0 1.5707963267949\n  children Shape {\n    appearance Appearance {\n      alphaMode \"OPAQUE\"\n      material PhysicalMaterial {\n        metallic 0\n      }\n    }\n    geometry IndexedTriangleSet {\n      index [\n        0,\n        1,\n        2,\n        0,\n        2,\n        3\n      ]\n      normal Normal {\n        vector [\n          0 0 1,\n          0 0 1,\n          0 0 1,\n          0 0 1\n        ]\n      }\n      coord Coordinate {\n        point [\n          -1 -1 0,\n          1 -1 0,\n          1 1 0,\n          -1 1 0\n        ]\n      }\n    }\n  }\n}\n\nDEF Animations Group {\n  visible FALSE\n  children DEF Spin Group {\n    children [\n      DEF Timer1 TimeSensor {\n        description \"Spin\"\n        startTime 946684800.133333\n      }\n      DEF RotationInterpolator OrientationInterpolator {\n        key [\n          0,\n          0.03448276,\n          0.06896552,\n          0.1034483,\n          0.137931,\n          0.1724138,\n          0.2068966,\n          0.2413793,\n          0.2758621,\n          0.3103448,\n          0.3448276,\n          0.3793103,\n          0.4137931,\n          0.4482759,\n          0.4827586,\n          0.5172414,\n          0.5517241,\n          0.5862069,\n          0.6206896,\n          0.6551724,\n          0.6896552,\n          0.7241379,\n          0.7586207,\n          0.7931035,\n          0.8275862,\n          0.862069,\n          0.8965517,\n          0.9310345,\n          0.9655172,\n          1\n        ]\n        keyValue [\n          0 0 1 0,\n          0 1.00000000000044 0 0.0104294175227453,\n          0 1.00000000000005 0 0.0398182394365823,\n          0 0.999999999999972 0 0.0853985823769227,\n          0 1.00000000000001 0 0.144398213379085,\n          0 1 0 0.213928041601237,\n          0 1 0 0.290920800418025,\n          0 0.999999999999999 0 0.372130820371892,\n          0 1 0 0.454190915561436,\n          0 0.999999999999998 0 0.533707517422869,\n          0 1 0 0.607364092119991,\n          0 0.999999999999999 0 0.672000357808349,\n          0 1 0 0.724642064559539,\n          0 1 0 0.762469789421445,\n          0 1 0 0.782730027633251,\n          0 1 0 0.788066319607516,\n          0 1 0 0.808326558638355,\n          0 1 0 0.846154284838861,\n          0 1 0 0.898795993036753,\n          0 1 0 0.963432259833957,\n          0 1 0 1.03708883489248,\n          0 1 0 1.11660543606341,\n          0 1 0 1.19866552936868,\n          0 1 0 1.27987554629843,\n          0 1 0 1.35686830120115,\n          0 1 0 1.42639812503238,\n          0 1 0 1.48539775168749,\n          0 1 0 1.53097809088911,\n          0 1 0 1.56036691022048,\n          0 1 0 1.5707963267949\n        ]\n      }\n    ]\n  }\n}\n\nROUTE Timer1.fraction_changed TO RotationInterpolator.set_fraction\nROUTE RotationInterpolator.value_changed TO Morph.set_rotation\n\nEXPORT Spin\nEXPORT Timer1\nEXPORT Animations\n"
+    }
+  },
+  "console": []
+}

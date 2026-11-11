@@ -1,0 +1,31 @@
+#VRML V2.0 utf8
+# Synthetic REA oracle world (sub:proto.externproto). Browser.createVrmlFromURL is called from a cycle after the page has loaded,
+# for files that hold an EXTERNPROTO: of a file next to them, of a url that does not exist, and the first file's again.
+# The Script records what reaches its eventIn (node type names, the instance's field value) in the SFString `hist`.
+DEF P Script {
+  field SFString hist ""
+  field SFInt32 step 0
+  eventIn SFTime cycle
+  eventIn MFNode got
+  url "javascript:
+function rec (s) { hist = hist + s + ' '; }
+function describe (nodes) {
+  var out = 'n=' + nodes .length;
+  for (var i = 0; i < nodes .length; ++ i) {
+    out += ',' + nodes [i] .getTypeName ();
+    if (nodes [i] .v !== undefined) out += ' v=' + nodes [i] .v;
+  }
+  return out;
+}
+function got (value) { rec ('got:' + describe (value)); }
+function cycle () {
+  step = step + 1;
+  if (step == 2) Browser .createVrmlFromURL (new MFString ('ep-url-file.wrl'), Browser .currentScene .getNamedNode ('P'), 'got');
+  if (step == 3) Browser .createVrmlFromURL (new MFString ('ep-url-missing.wrl'), Browser .currentScene .getNamedNode ('P'), 'got');
+  if (step == 5) Browser .createVrmlFromURL (new MFString ('ep-url-again.wrl'), Browser .currentScene .getNamedNode ('P'), 'got');
+  if (step == 6) Browser .createVrmlFromURL (new MFString ('ep-url-file.wrl'), Browser .currentScene .getNamedNode ('P'), 'got');
+}
+  "
+}
+DEF STEP TimeSensor { cycleInterval 0.05 loop TRUE }
+ROUTE STEP.cycleTime TO P.cycle
