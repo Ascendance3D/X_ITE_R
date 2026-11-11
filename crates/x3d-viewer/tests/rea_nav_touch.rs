@@ -59,6 +59,29 @@ fn hist(v: &Value, frame: &str) -> String {
 struct Run {
     js: Value,
     rs: Value,
+    /// WALK with gravity: a standing avatar is settled by the depth read back from the GPU (an f32, about 2e-7 of noise; see
+    /// `World::gravitate_on`), so a pose that rests on the floor moves by that noise from frame to frame, and the pose agrees only
+    /// within 1e-4. A ProximitySensor `position_changed` is sent for every such wobble, so the count `PX_n` is not compared in
+    /// these worlds (it is, exactly, in `walk-nograv` and `fly`); the poses and the rest of the scene text are.
+    gravity: bool,
+}
+
+/// The scene text of a frame, without the count `PX_n` of ProximitySensor events when `strip`.
+fn scene_text(v: &Value, frame: &str, strip: bool) -> Option<String> {
+    let text = v["vrml"].get(frame)?.as_str()?.to_string();
+
+    if !strip {
+        return Some(text);
+    }
+
+    let Some(at) = text.find(" PX_n=") else {
+        return Some(text);
+    };
+    let digits = text[at + 6..]
+        .find(|c: char| !c.is_ascii_digit())
+        .unwrap_or(text.len() - at - 6);
+
+    Some(format!("{}{}", &text[..at], &text[at + 6 + digits..]))
 }
 
 fn run(name: &str) -> Result<Run, String> {
@@ -98,19 +121,41 @@ fn run(name: &str) -> Result<Run, String> {
         return Err(format!("ok js {} rs {}", js["ok"], rs["ok"]));
     }
 
-    Ok(Run { js, rs })
+    Ok(Run {
+        js,
+        rs,
+        gravity: name.starts_with("walk-") && !name.starts_with("walk-nograv-"),
+    })
+}
+
+/// The captured pose frames and the dumped scene text frames, sorted.
+fn frame_set(v: &Value) -> (Vec<u32>, Vec<u32>) {
+    let keys = |key: &str| {
+        let mut f: Vec<u32> = v[key]
+            .as_object()
+            .unwrap()
+            .keys()
+            .map(|k| k.parse().unwrap())
+            .collect();
+
+        f.sort_unstable();
+        f
+    };
+
+    (keys("poses"), keys("vrml"))
 }
 
 /// The first frame whose pose or whose scene text differs.
 fn first_difference(r: &Run) -> Option<String> {
-    let mut frames: Vec<u32> = r.js["poses"]
-        .as_object()
-        .unwrap()
-        .keys()
-        .map(|k| k.parse().unwrap())
-        .collect();
+    if frame_set(&r.js) != frame_set(&r.rs) {
+        return Some(format!(
+            "the frames differ: X_ITE {:?} / Rust {:?}",
+            frame_set(&r.js),
+            frame_set(&r.rs)
+        ));
+    }
 
-    frames.sort_unstable();
+    let frames = frame_set(&r.js).0;
 
     for f in frames {
         let k = f.to_string();
@@ -126,7 +171,7 @@ fn first_difference(r: &Run) -> Option<String> {
             ));
         }
 
-        if r.js["vrml"].get(&k) != r.rs["vrml"].get(&k) {
+        if scene_text(&r.js, &k, r.gravity) != scene_text(&r.rs, &k, r.gravity) {
             return Some(format!(
                 "scene text differs at frame {k}: X_ITE {:?} / Rust {:?}",
                 hist(&r.js, &k),
@@ -148,16 +193,51 @@ fn check_cancel(name: &str, r: &Run, failures: &mut Vec<String>) {
     let z = |v: &Value, k: u32| pose(v, &k.to_string())[2];
     let mut fail = |what: String| failures.push(format!("{name}: {what}"));
 
+    if frame_set(&r.js) != frame_set(&r.rs) {
+        fail("the captured frames differ".to_string());
+    }
+
+    if r.js.get("log") != r.rs.get("log") {
+        fail(format!("log differs: {} / {}", r.js["log"], r.rs["log"]));
+    }
+
+    // Before the cancel the poses and the scene texts (the Script `hist`) are equal.
     for k in 1..20 {
         let ks = k.to_string();
 
         if pose_distance(&pose(&r.js, &ks), &pose(&r.rs, &ks)) > 1e-4 {
             fail(format!("frames before the cancel must be equal, frame {k}"));
         }
+
+        if scene_text(&r.js, &ks, r.gravity) != scene_text(&r.rs, &ks, r.gravity) {
+            fail(format!("scene text before the cancel differs, frame {k}"));
+        }
+    }
+
+    // The deliberate difference in the history: the ProximitySensor `position_changed` events that X_ITE keeps producing while it
+    // goes on driving (`PX_n`, one per frame) are missing from X_ITE_R. Everything else in `hist` is equal in the last frame.
+    let px = |v: &Value| -> u32 {
+        let h = hist(v, "70");
+        let (_, n) = h.rsplit_once("PX_n=").unwrap_or(("", "0"));
+
+        n.trim().parse().unwrap_or(0)
+    };
+    let words = |v: &Value| -> String {
+        let h = hist(v, "70");
+        h.rsplit_once(" PX_n=")
+            .map_or(h.clone(), |(a, _)| a.to_string())
+    };
+
+    if words(&r.js) != words(&r.rs) || px(&r.js) <= px(&r.rs) {
+        fail(format!(
+            "hist: X_ITE {:?} must have more position events than X_ITE_R {:?}",
+            hist(&r.js, "90"),
+            hist(&r.rs, "90")
+        ));
     }
 
     // X_ITE has no touchcancel handler: the drive goes on every frame until the two-finger touchstart ends it.
-    for k in 20..29 {
+    for k in 19..29 {
         if z(&r.js, k + 1) >= z(&r.js, k) - 0.01 {
             fail(format!(
                 "X_ITE must go on driving after the cancel, frame {k}"

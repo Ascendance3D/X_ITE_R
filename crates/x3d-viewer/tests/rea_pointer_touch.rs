@@ -19,10 +19,25 @@ use serde_json::Value;
 use std::path::PathBuf;
 use std::process::Command;
 
+/// The numbers of a pose vector; a missing or non-numeric component gives NaN, so the comparison fails.
 fn nums(v: &Value) -> Vec<f64> {
     v.as_array()
-        .map(|a| a.iter().filter_map(Value::as_f64).collect())
-        .unwrap_or_default()
+        .map(|a| a.iter().map(|x| x.as_f64().unwrap_or(f64::NAN)).collect())
+        .unwrap_or_else(|| vec![f64::NAN])
+}
+
+/// The largest component difference; vectors of another length differ by infinity.
+fn max_diff(a: &[f64], b: &[f64]) -> f64 {
+    if a.len() != b.len() {
+        return f64::INFINITY;
+    }
+    a.iter()
+        .zip(b)
+        .map(|(p, q)| (p - q).abs())
+        .fold(
+            0.0,
+            |m, d| if d.is_nan() { f64::INFINITY } else { m.max(d) },
+        )
 }
 
 /// The words of the Script string `hist` of the scene text of a frame.
@@ -79,7 +94,43 @@ fn run_case(name: &str, failures: &mut Vec<String>) {
 
     let frames = js["vrml"].as_object().unwrap().len() as u32;
 
+    // Both sides dump the same frames, and the log is equal in every case (the cancel difference is in the events only).
+    for key in ["vrml", "poses"] {
+        let keys = |v: &Value| -> Vec<String> {
+            let mut k: Vec<String> = v[key]
+                .as_object()
+                .map(|o| o.keys().cloned().collect())
+                .unwrap_or_default();
+            k.sort();
+            k
+        };
+        if keys(&js) != keys(&rs) {
+            fail(format!(
+                "{key} frame sets differ: X_ITE {:?} / Rust {:?}",
+                keys(&js),
+                keys(&rs)
+            ));
+        }
+    }
+
+    if js.get("log") != rs.get("log") {
+        fail(format!("log differs: {} / {}", js["log"], rs["log"]));
+    }
+
     if name == "cancel" {
+        // Before the first touchcancel (frame 6) the histories are equal.
+        for frame in 0..6 {
+            if js["vrml"].get(frame.to_string()).is_some()
+                && hist(&js["vrml"], frame) != hist(&rs["vrml"], frame)
+            {
+                fail(format!(
+                    "cancel: the history before the first touchcancel differs at frame {frame}: {:?} / {:?}",
+                    hist(&js["vrml"], frame),
+                    hist(&rs["vrml"], frame)
+                ));
+            }
+        }
+
         // Kept difference, ADR 0001 row 1. Events: touchstart on the TouchSensor (frame 2), touchcancel (6), touchstart on the
         // PlaneSensor (10), touchcancel (14), touchstart on empty space, move, touchend (18 to 20).
         let (xa, ra) = (hist(&js["vrml"], 8), hist(&rs["vrml"], 8));
@@ -133,22 +184,12 @@ fn run_case(name: &str, failures: &mut Vec<String>) {
         }
     }
 
-    if js.get("log") != rs.get("log") {
-        fail(format!("log differs: {} / {}", js["log"], rs["log"]));
-    }
-
     for (k, a) in js["poses"].as_object().unwrap() {
         let Some(b) = rs["poses"].get(k) else {
             fail(format!("pose at frame {k} missing"));
             continue;
         };
-        let d = |key: &str| {
-            nums(&a[key])
-                .iter()
-                .zip(nums(&b[key]))
-                .map(|(p, q)| (p - q).abs())
-                .fold(0.0, f64::max)
-        };
+        let d = |key: &str| max_diff(&nums(&a[key]), &nums(&b[key]));
         let viewpoint = a["viewpoint"] == b["viewpoint"] || b["viewpoint"] == "<default>";
 
         if d("position") > 1e-4
