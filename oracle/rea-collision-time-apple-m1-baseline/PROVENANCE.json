@@ -611,6 +611,92 @@
     "0c1c2fa32a5965928ea4f65835a955327735c94752620f0b6fe18764d12228d7"
    ]
   },
+  "ct-live-inline-msaa0": {
+   "chrome": "Google Chrome 156.0.8078.80",
+   "differs_from_nvidia_in": [
+    "collisionProbes"
+   ],
+   "pictures_differ_from_nvidia": {
+    "128.png": "fcc7ab0ffdda25680118d1a48b4910bd809dff57326f3f5f1673658e0459fbc2",
+    "160.png": "e57d4b80b71cb2bfab224e2af77e2dc281c2edfe3d9951265175efa8e9fd0a3b",
+    "60.png": "50be509ac3fa339dd44ac7b1421ffbd0dc2369911221345f768467478298f811",
+    "78.png": "6b15d6c4c2a999a3578f134e7ab62e49cb429062f5ee626dc8cb1e455599e6ba",
+    "90.png": "c4a29c6b9e3e30c269d60f421be233e073a6c50e50b118dcabab82ff65a8fd4a"
+   },
+   "recorded": "2026-11-10",
+   "recorder": "oracle/x_ite-anim.mjs",
+   "run_sha256": [
+    "040bf0cb0cf405edf4d930370a2e7453a3684098198acb86b129aed3bb61c1af",
+    "040bf0cb0cf405edf4d930370a2e7453a3684098198acb86b129aed3bb61c1af",
+    "040bf0cb0cf405edf4d930370a2e7453a3684098198acb86b129aed3bb61c1af"
+   ]
+  },
+  "ct-live-inline-msaa4": {
+   "chrome": "Google Chrome 156.0.8078.80",
+   "differs_from_nvidia_in": [
+    "collisionProbes",
+    "info"
+   ],
+   "pictures_differ_from_nvidia": {
+    "128.png": "72d66973cc31d58e2f6af2f4f8a362d6ff9bc4d3f9836c55aa8d500bef18d53c",
+    "160.png": "8b2bf65547e3369dd8fb4d69c56bdabf4f41856a6a8288ced40994272ef6ec1d",
+    "60.png": "11ef9ad9b6e21a8f10483bfa0ad202bebfe94d6f1fc4b50dc8d480e0362f680a",
+    "78.png": "5bf12f06aafce15d025972af62685b97a5751b720db248c8c40b5ce40f0e2083",
+    "90.png": "f16e209f462b21c7542814f2489ca57fca04b036cbfb40f86ee8b016e8c6f8ad"
+   },
+   "recorded": "2026-11-10",
+   "recorder": "oracle/x_ite-anim-msaa.mjs",
+   "run_sha256": [
+    "b21d90234617aecb5eba8d6ccd7e9b20caea64b479ec59885897d72dd7813438",
+    "b21d90234617aecb5eba8d6ccd7e9b20caea64b479ec59885897d72dd7813438",
+    "b21d90234617aecb5eba8d6ccd7e9b20caea64b479ec59885897d72dd7813438"
+   ]
+  },
+  "ct-live-inline-two-msaa0": {
+   "chrome": "Google Chrome 156.0.8078.80",
+   "differs_from_nvidia_in": [
+    "collisionProbes"
+   ],
+   "pictures_differ_from_nvidia": {
+    "128.png": "85765a9222d496f77abb56c792a472ac9bcc9faf17b572f8fbb0e0ab212cb1da",
+    "135.png": "5e325fd7991531fb7a48053f82072c54fec566cae92fda6f0b1e001790a6f863",
+    "160.png": "b6aa616e7045d8d3cfed7b50165947aed1096073d65508f8fd448f31fee24852",
+    "235.png": "42d6ca3da948609dff140ceaf8d778ce87926947739860734ffa14e0febe3e3d",
+    "60.png": "50be509ac3fa339dd44ac7b1421ffbd0dc2369911221345f768467478298f811",
+    "78.png": "d888e3d70bcb9228633f285a0924eb889c142cfb2053140e5f5604fe2a24cae4",
+    "90.png": "e3695058eb0ea40e014813cd617305dbc88962a41fafbe7dde1eb05065431d28"
+   },
+   "recorded": "2026-11-10",
+   "recorder": "oracle/x_ite-anim.mjs",
+   "run_sha256": [
+    "2e80aad233446c7155662db1bb000391451d8c30aea6cc8e71f958a195462501",
+    "2e80aad233446c7155662db1bb000391451d8c30aea6cc8e71f958a195462501",
+    "2e80aad233446c7155662db1bb000391451d8c30aea6cc8e71f958a195462501"
+   ]
+  },
+  "ct-live-inline-two-msaa4": {
+   "chrome": "Google Chrome 156.0.8078.80",
+   "differs_from_nvidia_in": [
+    "collisionProbes",
+    "info"
+   ],
+   "pictures_differ_from_nvidia": {
+    "128.png": "427fc7b10eaffdc3d20eb323edc0816537081156172d7e5bcaaedae6bf62588a",
+    "135.png": "dd5ccb5378eb8ba96d67923fa5c3c63921e5d12c51181e8a108d8a6926209225",
+    "160.png": "37663de9181ca5a0292e99d9c64773ee396e21977f78d4d27240f3acdf618828",
+    "235.png": "88450d0c27db8c0b36019d33344a93781904630c97d14664f1c91bfab5c39cdb",
+    "60.png": "11ef9ad9b6e21a8f10483bfa0ad202bebfe94d6f1fc4b50dc8d480e0362f680a",
+    "78.png": "746be9d99e8e8ee9b631145f449163379ea988c54b9bfb30c10b6dddcf15fbac",
+    "90.png": "9038b8e80c58711c5b75084b7332e9fd3f028f75786449756d5af4c42c341f71"
+   },
+   "recorded": "2026-11-10",
+   "recorder": "oracle/x_ite-anim-msaa.mjs",
+   "run_sha256": [
+    "946a52a9fbc383783fc167d6257810d5b1c6eee6a5128d32fc45d53f2b650393",
+    "946a52a9fbc383783fc167d6257810d5b1c6eee6a5128d32fc45d53f2b650393",
+    "946a52a9fbc383783fc167d6257810d5b1c6eee6a5128d32fc45d53f2b650393"
+   ]
+  },
   "ct-nested-msaa0": {
    "differs_from_nvidia_in": [
     "collisionProbes"
