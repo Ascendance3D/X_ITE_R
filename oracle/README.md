@@ -1872,6 +1872,27 @@ node oracle/x_ite-web-runtime-02.mjs oracle/web-browser-anchor-pages-01-baseline
 - Kept difference, pinned by name (case `cancel`, ADR 0001 row 1): X_ITE has no `touchcancel` handler, a pressed sensor stays active;
   X_ITE_R ends it.
 
+## Touch navigation of WALK and FLY (sub:nav.walk-fly, F16)
+
+- `tools/gen_rea_nav_touch.py` writes `synthetic-rea-nav-touch/` (three worlds: WALK with gravity and collision, WALK with `Gravity` 0,
+  FLY; each with a floor, a low box (stepped onto with gravity), a wall, a TouchSensor box and a Script whose string `hist` lists the
+  TouchSensor events and the ProximitySensor activity and event count; 8 event scripts each, 24 cases).
+  `tools/rea_e14_e18_record.py record --cases oracle/synthetic-rea-nav-touch/cases.txt --dest oracle/rea-nav-touch-baseline` records the
+  pinned X_ITE three times (identical, touch split 0; a touch event that lifts or presses two fingers at once reaches the page as two
+  events, so the scripts lift and press one finger per event). Prepare the worktree as in "Recording from a worktree".
+- `crates/x3d-viewer/tests/rea_nav_touch.rs` compares `x3d-drive` with it on every frame (pose 1e-4, scene text exact): one finger
+  driving forward, back, turning and diagonally (into the box and the wall), two fingers looking around, one to two to one to three
+  fingers, a touch that ends while moving, a finger on a TouchSensor, and a two-finger pitch followed by a drive. All are equal.
+- Kept difference, pinned by name (cases `*-cancel-during-move`, ADR 0001 row 1): X_ITE's viewers have no `touchcancel` handler, so a
+  drive goes on after a cancel (until a touchend, or a two-finger touchstart, reaches the viewer); X_ITE_R ends it with the cancel.
+- `walk-nograv.wrl` sets `Browser .setBrowserOption ('Gravity', 0)` in a Script (the option is a `BrowserOptions` field, as in `rea-b24-nav`); the
+  viewpoint starts 1.4 above the ground, so `walk` falls to the avatar height and `walk-nograv` and `fly` stay put (different in the pinned X_ITE).
+- Not compared in the gravity world (`walk-*`): the count `PX_n` of ProximitySensor events. A standing avatar is settled by the f32 depth read
+  from the GPU, whose noise (about 2e-7) moves the resting pose from frame to frame in X_ITE_R and not in the recording, one extra event per
+  wobble; the poses (1e-4) and the rest of the scene text are compared. `walk-nograv` and `fly` compare it exactly.
+- The `cancel-during-move` cases also compare the log (equal), the scene text before the cancel, and assert the deliberate difference in the
+  event count (X_ITE goes on driving, so it has more `position_changed` events).
+
 ## glTF animation cases (sub:parse.gltf2)
 
 `oracle/synthetic-rea-b08-gltf/anim/*-driver.wrl` (generator `tools/gen_rea_b08_gltf.py`) load one animation file through an
