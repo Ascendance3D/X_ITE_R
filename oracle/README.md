@@ -1854,3 +1854,19 @@ other escape too. The recordings confirm it for `createX3DFromURL` (`ff-data-utf
 ```
 node oracle/x_ite-web-runtime-02.mjs oracle/web-browser-anchor-pages-01-baseline --runs 3 --suite anchorpages01
 ```
+
+## CFF items: subroutine bias and depth, `seac`, variable CFF2 (`rea-t-cff-items-baseline/`)
+
+- `tools/gen_cff_items_fonts.py` writes `synthetic-rea-t-cff-items/` (12 newly authored fonts, every table byte written by the script):
+  `bias-1239`, `bias-1240`, `bias-33899`, `bias-33900` (N local and N global subrs: Type 2 bias 107, 1131, 1131, 32768), `depth` (local, global and
+  alternating chains of 9 to 13 subrs and self-calling subrs), `seac-plain`, `seac-cid`, `seac-cid-fd` (`endchar` with four arguments), and
+  `var-default`, `var-regular`, `var-avar`, `var-2axes` (CFF2 with `fvar`, `avar`, HVAR and `blend`).
+- `tools/rea_t_cff_items.py record` runs `x_ite-cff-cid-fonts.mjs` (`FONT_DIR`, `FONT_CHARS`) three times against the pinned X_ITE and keeps
+  `fonts.json` only if the three runs are identical. Prepare the worktree as in "Recording from a worktree".
+- `crates/x3d-text/tests/rea_t_cff_items.rs` compares `x3d-text` with it glyph by glyph (advances, `getPath` commands, libtess vertices, exceptions,
+  console lines).
+- Pinned facts the test pins: opentype.js applies the Type 2 bias and the nesting limit of 10 (the 11th call is skipped with a `console.warn`);
+  a CID-keyed font cannot resolve the components of `seac` (TypeError), and a plain font whose accent glyph is missing throws too; a font with `fvar`
+  and CFF2 outlines gets a variation manager, whose default instance is the first instance equal to the axis defaults, else the instance named
+  "Regular", else the axis defaults, so a charstring `blend` uses the `avar`-mapped normalized coordinates and every path coordinate is rounded
+  (`Math.round`); X_ITE calls `glyph .getPath (0, 0, 1)` without the font, so HVAR advances are never applied. X_ITE has no way to set other coordinates.
