@@ -225,8 +225,15 @@ fn rea_oit_i92_render_items_option_off_is_told_apart() {
         .filter(|c| !over.iter().any(|o| o.starts_with(c)))
         .collect();
 
+    // Under REA_ONLY only the selected worlds run, so only their listed shots are expected.
+    let expected: Vec<&str> = OPTION_OFF_WITHIN_BOUND
+        .iter()
+        .copied()
+        .filter(|e| compared.iter().any(|c| c == e))
+        .collect();
+
     assert_eq!(
-        within, OPTION_OFF_WITHIN_BOUND,
+        within, expected,
         "shots that match the OIT references with the option off"
     );
 }
