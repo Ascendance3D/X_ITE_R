@@ -2962,10 +2962,10 @@ impl Viewer3d {
                 }
             }
             2 => {
-                let (x, y) = self.touch_pointer;
-
                 self.touch_menu = None;
-                self.pointing_up(x, y);
+                // touchend (event) with the touchstart event: a TouchEvent has no pageX or pageY, so the pointer of the
+                // release (`getPointerFromEvent`) is NaN and the verifying motion hits nothing (isOver ends).
+                self.pointing_up(f64::NAN, f64::NAN);
             }
             _ => {}
         }
@@ -3009,7 +3009,9 @@ impl Viewer3d {
             return;
         }
 
-        self.pointing_up(x, y);
+        // The touchend event is a TouchEvent: no pageX or pageY, so `getPointerFromEvent` gives NaN. The release does not pick
+        // again, and the motion that verifies isOver after the next frame hits nothing (a TouchSensor ends isOver).
+        self.pointing_up(f64::NAN, f64::NAN);
         self.viewer_input(Input::TouchEnd);
     }
 
@@ -3675,9 +3677,11 @@ impl Viewer3d {
             self.pointer.button_release(&mut self.rt, &cam, now);
             self.collect_pointer_output();
             self.browser_requests();
-            // PointingDevice.onverifymotion: motion after the next frame.
-            self.verify_motion = Some((x, y));
         }
+
+        // PointingDevice.mouseup: onverifymotion runs after every release, also when no sensor was active (motion after the
+        // next frame; a touchend at a viewer that was active during the release ends isOver then).
+        self.verify_motion = Some((x, y));
     }
 
     fn mouse_move(&mut self, x: f64, y: f64) {
