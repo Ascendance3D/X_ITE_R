@@ -215,6 +215,29 @@ fn compare_case(
             if !equal && known.is_none() {
                 fail(format!("inline {p} scene text differs at frame {k}"));
             }
+
+            // A known STEP-weights case differs from the pinned text only in the interpolator numbers: the path must exist on
+            // both sides and the text without its numbers must be equal, so another change in the Inline still fails.
+            if !equal && known.is_some() {
+                let skeleton = |t: &str| -> Vec<String> {
+                    t.split_whitespace()
+                        .map(|w| {
+                            let n = w.trim_matches(|c| c == ',' || c == '[' || c == ']');
+                            if !n.is_empty() && n.parse::<f64>().is_ok() {
+                                w.replace(n, "#")
+                            } else {
+                                w.to_string()
+                            }
+                        })
+                        .collect()
+                };
+                match (x.and_then(Value::as_str), y.and_then(Value::as_str)) {
+                    (Some(x), Some(y)) if skeleton(x) == skeleton(y) => {}
+                    _ => fail(format!(
+                        "inline {p} at frame {k}: the known STEP-weights case differs in more than its numbers"
+                    )),
+                }
+            }
         }
     }
 
