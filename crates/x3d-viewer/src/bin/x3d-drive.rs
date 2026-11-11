@@ -121,7 +121,7 @@ fn main() {
 /// `touchstart` and `touchmove` with `"points": [[x, y], ...]` (every touch that is down after the event; the index is the touch's id)
 /// and `touchend` with `"ids": [id, ...]` (those touches are released; without `ids` all are). Coordinates are pixels with the origin
 /// at the bottom left, as for the mouse events. `event .touches` is every touch still down in id order, `window .innerWidth` (the pinch
-/// zoom factor's divisor) is the canvas width, as in the oracle page. Returns false for any other event type.
+/// zoom factor's divisor) is the canvas width, as in the oracle page. `touchcancel` cancels every touch that is down. Returns false for any other event type.
 fn apply_touch(
     v: &mut Viewer3d,
     e: &Value,
@@ -129,13 +129,19 @@ fn apply_touch(
 ) -> bool {
     let kind = e["type"].as_str().unwrap_or("");
 
-    if !matches!(kind, "touchstart" | "touchmove" | "touchend") {
+    if !matches!(
+        kind,
+        "touchstart" | "touchmove" | "touchend" | "touchcancel"
+    ) {
         return false;
     }
 
     let height = v.height as f64;
 
-    if kind == "touchend" {
+    if kind == "touchcancel" {
+        // A cancelled touch is a lost pointer: the viewer sees a touchend (ADR 0001 row 1; X_ITE has no touchcancel handler).
+        down.clear();
+    } else if kind == "touchend" {
         let ids: Vec<u64> = match e["ids"].as_array() {
             Some(a) => a.iter().filter_map(Value::as_u64).collect(),
             None => down.keys().copied().collect(),
@@ -165,7 +171,7 @@ fn apply_touch(
     v.input(match kind {
         "touchstart" => UiEvent::TouchStart(t),
         "touchmove" => UiEvent::TouchMove(t),
-        _ => UiEvent::TouchEnd(t),
+        _ => UiEvent::TouchEnd(t), // touchend and touchcancel
     });
     true
 }

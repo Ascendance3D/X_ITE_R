@@ -1849,3 +1849,20 @@ other escape too. The recordings confirm it for `createX3DFromURL` (`ff-data-utf
 ```
 node oracle/x_ite-web-runtime-02.mjs oracle/web-browser-anchor-pages-01-baseline --runs 3 --suite anchorpages01
 ```
+
+## Touch input into pointing device sensors (sub:pointer.picking)
+
+- `tools/gen_rea_pointer_touch.py` writes `synthetic-rea-pointer-touch/` (a world with a TouchSensor, PlaneSensor, CylinderSensor,
+  SphereSensor and an Anchor to a Viewpoint, a Script that logs every sensor output event into the string `hist`, and 6 event scripts).
+  `tools/rea_e14_e18_record.py record --cases oracle/synthetic-rea-pointer-touch/cases.txt --dest oracle/rea-pointer-touch-baseline`
+  records the pinned X_ITE three times (identical, touch split 0) with Chrome DevTools touch events (`x_ite-anim.mjs` now also sends
+  `touchcancel`, DevTools `touchCancel`). Prepare the worktree as in "Recording from a worktree".
+- `crates/x3d-viewer/tests/rea_pointer_touch.rs` compares `x3d-drive` (which feeds `touchstart`, `touchmove`, `touchend`, `touchcancel`
+  to the viewer, as the window and the browser build do) with it: taps, drags, leave and enter, a second finger and the EXAMINE viewer
+  against a press are equal in scene text (the `hist` of every frame) and pose.
+- Rust defect fixed: a touchend (and the two-finger touchstart that ends the press) is a TouchEvent without `pageX` and `pageY`, so the
+  pinned `PointingDevice.touchend` releases with a NaN pointer: the release does not pick again and the verifying motion hits nothing
+  (TouchSensor `isOver` ends at once). Rust released at the touch position (the hit values were sent again, `isOver` stayed until the
+  next press). `mouseup` also verifies the motion when no sensor was active.
+- Kept difference, pinned by name (case `cancel`, ADR 0001 row 1): X_ITE has no `touchcancel` handler, a pressed sensor stays active;
+  X_ITE_R ends it.
