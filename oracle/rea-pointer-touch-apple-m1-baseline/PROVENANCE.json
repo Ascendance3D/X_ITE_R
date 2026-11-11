@@ -1,0 +1,72 @@
+{
+ "angle_backend": "metal",
+ "cases": {
+  "cancel-msaa0": {
+   "differs_from_nvidia_in": [
+    "vrml"
+   ],
+   "run_sha256": [
+    "3c2f33d7061b056db83bb4c81eda28b1fe94b2ba3ffd864ed116aec85d4aef9a",
+    "3c2f33d7061b056db83bb4c81eda28b1fe94b2ba3ffd864ed116aec85d4aef9a",
+    "3c2f33d7061b056db83bb4c81eda28b1fe94b2ba3ffd864ed116aec85d4aef9a"
+   ]
+  },
+  "drag-each-msaa0": {
+   "differs_from_nvidia_in": [
+    "vrml"
+   ],
+   "run_sha256": [
+    "9b36eb3b79918f95040501e417938424ba5b2884b4a33e1b8fba26540424173a",
+    "9b36eb3b79918f95040501e417938424ba5b2884b4a33e1b8fba26540424173a",
+    "9b36eb3b79918f95040501e417938424ba5b2884b4a33e1b8fba26540424173a"
+   ]
+  },
+  "empty-vs-sensor-msaa0": {
+   "differs_from_nvidia_in": [
+    "vrml"
+   ],
+   "run_sha256": [
+    "5cccc7f3481bf3b7fcfc90b53497003731f0fd32bb50f95e0c0403f041396656",
+    "5cccc7f3481bf3b7fcfc90b53497003731f0fd32bb50f95e0c0403f041396656",
+    "5cccc7f3481bf3b7fcfc90b53497003731f0fd32bb50f95e0c0403f041396656"
+   ]
+  },
+  "leave-and-enter-msaa0": {
+   "differs_from_nvidia_in": [
+    "vrml"
+   ],
+   "run_sha256": [
+    "08e8bc5106558cb2fb2d1bff0f43011b1882021054699a304764b276bee296d8",
+    "08e8bc5106558cb2fb2d1bff0f43011b1882021054699a304764b276bee296d8",
+    "08e8bc5106558cb2fb2d1bff0f43011b1882021054699a304764b276bee296d8"
+   ]
+  },
+  "second-finger-msaa0": {
+   "differs_from_nvidia_in": [
+    "vrml"
+   ],
+   "run_sha256": [
+    "735b93b8c6b7e865a8a09fb1ed762c2adced7d57147c1650d79b34fcfdf3ed5d",
+    "735b93b8c6b7e865a8a09fb1ed762c2adced7d57147c1650d79b34fcfdf3ed5d",
+    "735b93b8c6b7e865a8a09fb1ed762c2adced7d57147c1650d79b34fcfdf3ed5d"
+   ]
+  },
+  "tap-each-msaa0": {
+   "differs_from_nvidia_in": [
+    "vrml"
+   ],
+   "run_sha256": [
+    "d378e48e683e144d88c51dc54c9d7bed07f70a0d519acb82ccea8edb1607d137",
+    "d378e48e683e144d88c51dc54c9d7bed07f70a0d519acb82ccea8edb1607d137",
+    "d378e48e683e144d88c51dc54c9d7bed07f70a0d519acb82ccea8edb1607d137"
+   ]
+  }
+ },
+ "chrome": "Google Chrome 156.0.8078.80",
+ "hardware": "Apple M1, macOS 27.0.1",
+ "pinned_x_ite": "16.5.0 34cdf9f97",
+ "platform": "apple-m1",
+ "recorded": "2026-11-10",
+ "recorder": "oracle/x_ite-anim.mjs, oracle/x_ite-anim-sized.mjs, oracle/x_ite-anim-msaa.mjs",
+ "rule": "3 identical runs; kept only where the NVIDIA recording differs"
+}

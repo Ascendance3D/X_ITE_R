@@ -139,3 +139,26 @@ then differ from the NVIDIA page by 1.68e-4 (experiment, not kept).
 Owner decision 2026-11-04: Rust keeps the CPU inverse. Under `X3D_REFERENCE_PLATFORM=apple-m1` the five other cases are compared
 with the M1 recordings at 1e-4 on every component (Rust on Metal: at most 2.2e-5 plain, 1.9e-6 log). gs-pick-ortho has no M1 file:
 it is compared with the NVIDIA recording and `DISTANCE_TOL_MACOS` (3e-4) on macOS (measured worst 2.43e-4).
+
+## Touch input into pointing device sensors (`rea_pointer_touch`)
+
+The hosted macOS run of PR #541 (`b1757328`) failed `rea_pointer_touch_match_x_ite` in all 6 cases against the NVIDIA recording: the
+hit numbers of the TouchSensor were 1 to 2 float32 ulps off (`hitTexCoord` y 0.4083078 / 0.4083079, `hitPoint` y -0.1467075 / -0.1467073),
+and the drag sensors' track points with them.
+
+Cause: `PointingBuffer.getHit` (`oracle/x_ite-pin/src/x_ite/Rendering/PointingBuffer.js`) reads the point, the normal and the texture
+coordinate with `gl.readPixels (0, 0, 1, 1, gl.RGBA, gl.FLOAT, array)` from three RGBA32F attachments and sets them into the hit with
+no arithmetic. The numbers are the varyings that the GPU interpolates. Rust reads its pointing sample the same way
+(`crates/x3d-viewer/src/pointer.rs`, `gpu_hit`). No CPU operation is between the GPU and the event value on either side.
+
+Measured on the physical M1 (Apple M1, macOS 27.0.1, Chrome 156.0.8078.80 ANGLE Metal, wgpu Metal), master `6eaf3c72`:
+
+* The pinned page, three runs per case: identical, and all 6 cases differ from the NVIDIA recording in `vrml` only. It gives
+  0.4083079 and -0.1467073 itself.
+* Rust against the NVIDIA recording: fails (20 differing lines).
+* Rust against the M1 recording (`X3D_REFERENCE_PLATFORM=apple-m1`): the test passes. The scene text is exact in five cases. In
+  `cancel` (the kept difference of ADR 0001 row 1) the test compares the history before the first touchcancel and the last tap,
+  and both are exact.
+
+So the M1 recording `oracle/rea-pointer-touch-apple-m1-baseline` is the reference on that hardware. The test's rules are the same
+on both platforms (no tolerance was added), and no Rust code changed.
