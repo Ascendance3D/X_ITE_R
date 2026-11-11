@@ -539,9 +539,21 @@ fn run(
         let probes: Vec<Value> = directions
             .iter()
             .map(|d| {
-                let c = v.probe_closest(x3d_fields::math::Vector3::new(d[0].as_f64().unwrap_or(0.0), d[1].as_f64().unwrap_or(0.0), d[2].as_f64().unwrap_or(0.0)));
+                let c = v.probe_closest(x3d_fields::math::Vector3::new(
+                    d[0].as_f64().unwrap_or(0.0),
+                    d[1].as_f64().unwrap_or(0.0),
+                    d[2].as_f64().unwrap_or(0.0),
+                ));
 
-                json!({ "distance": c.distance, "id": if c.hit { 0 } else { -1 }, "normal": vec3(&c.normal) })
+                // `id`: the collision shape at the closest pixel (TextureBuffer.readDepth `array [index + 1]`, the index into
+                // renderObject .collisionShapes), -1 without a hit.
+                let id = if c.hit {
+                    c.shape.map_or(0, |s| s as i64)
+                } else {
+                    -1
+                };
+
+                json!({ "distance": c.distance, "id": id, "normal": vec3(&c.normal) })
             })
             .collect();
 
