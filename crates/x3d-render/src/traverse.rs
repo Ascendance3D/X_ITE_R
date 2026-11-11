@@ -5970,10 +5970,11 @@ pub fn straighten(r: &Rotation4, up: &Vector3) -> Rotation4 {
     r
 }
 
-static LOGARITHMIC_DEPTH_BUFFER: std::sync::atomic::AtomicBool =
-    std::sync::atomic::AtomicBool::new(false);
-
 thread_local! {
+    /// X3D `LogarithmicDepthBuffer` of the browser running on this thread (a value of the thread, like
+    /// `BROWSER_QUALITIES`: viewers on different threads draw at the same time and must not see each other's).
+    static LOGARITHMIC_DEPTH_BUFFER: std::cell::Cell<bool> = const { std::cell::Cell::new(false) };
+
     /// BrowserOptions PrimitiveQuality, TextureQuality and TextCompression (browser-wide in
     /// X_ITE): the values of the browser running on this thread (a viewer builds its frames on
     /// its own thread). The epoch counts changes so cached geometries and textures are rebuilt
@@ -6029,13 +6030,13 @@ fn quality_epoch() -> u64 {
 }
 
 /// X3D `LogarithmicDepthBuffer` rendering property (a browser-wide property in X_ITE, so a
-/// process-wide switch here). Set through `gpu::Renderer::set_depth_mode`.
+/// per-thread switch here: one browser per thread). Set through `gpu::Renderer::set_depth_mode`.
 pub fn set_logarithmic_depth_buffer(on: bool) {
-    LOGARITHMIC_DEPTH_BUFFER.store(on, std::sync::atomic::Ordering::Relaxed);
+    LOGARITHMIC_DEPTH_BUFFER.with(|c| c.set(on));
 }
 
 pub fn logarithmic_depth_buffer() -> bool {
-    LOGARITHMIC_DEPTH_BUFFER.load(std::sync::atomic::Ordering::Relaxed)
+    LOGARITHMIC_DEPTH_BUFFER.with(|c| c.get())
 }
 
 /// The browser-wide options above as one value: X_ITE keeps them per browser, this port keeps them per
