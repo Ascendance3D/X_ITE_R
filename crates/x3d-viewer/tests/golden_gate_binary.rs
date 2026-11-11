@@ -33,10 +33,15 @@ fn root() -> PathBuf {
 /// is not required behavior, and the port has no such crash (no panic, same scene), so the port logs none of these lines.
 /// Evidence: oracle/golden-gate-binary-baseline/gg-stl-nonfinite.json `log`; one case per file in a fresh page gives
 /// nonfinite-coord-nan RangeError, nonfinite-coord-inf / -ninf / nonfinite-mixed `unreachable`, nonfinite-normal-* no error.
+/// The exact lines and their counts in the recorded group log; the test requires exactly these, so another crash is not hidden.
+const PINNED_WASM_CRASHES: [(&str, usize); 3] = [
+    ("error: RangeError: Maximum call stack size exceeded", 1),
+    ("error: RuntimeError: unreachable", 2),
+    ("error: RuntimeError: memory access out of bounds", 16),
+];
+
 fn is_pinned_wasm_crash(line: &str) -> bool {
-    line.starts_with("error: RangeError: Maximum call stack size exceeded")
-        || line.starts_with("error: RuntimeError: unreachable")
-        || line.starts_with("error: RuntimeError: memory access out of bounds")
+    PINNED_WASM_CRASHES.iter().any(|(l, _)| line == *l)
 }
 
 /// The groups of the baseline directory (the json files in it, nothing nested).
@@ -154,6 +159,19 @@ fn compare_group(root: &Path, name: &str) -> Vec<String> {
                 .filter(|l| is_pinned_wasm_crash(l.as_str().unwrap()))
                 .count()
         };
+        for (line, count) in PINNED_WASM_CRASHES {
+            let n = js["log"]
+                .as_array()
+                .unwrap()
+                .iter()
+                .filter(|l| l.as_str() == Some(line))
+                .count();
+            if n != count {
+                fail(format!(
+                    "the pinned log has {n} x {line:?}, the named difference expects {count}"
+                ));
+            }
+        }
         if crashes(&js["log"]) == 0 {
             fail("the pinned log has no MikkTSpace crash: the named difference is gone".into());
         }
