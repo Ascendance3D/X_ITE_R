@@ -173,10 +173,9 @@ fn rea_pointer_touch_match_x_ite() {
     let gpu = renderer_available();
 
     if !gpu {
-        x3d_evidence::no_gpu("the pointing pass needs a Vulkan adapter");
+        // Hosted CI has no adapter: the evidence log records the skip (X3D_EVIDENCE decides whether it is allowed).
+        return x3d_evidence::no_gpu("the pointing pass needs a Vulkan adapter");
     }
-
-    assert!(gpu, "the pointing pass needs a Vulkan adapter");
 
     let mut failures = vec![];
     let mut checked = 0;
