@@ -1,0 +1,129 @@
+{
+ "pinned": "34cdf9f97",
+ "chrome": "156.0.8078.47",
+ "oit": true,
+ "ms": "4",
+ "size": [
+  512,
+  512
+ ],
+ "frames": 10,
+ "settleMs": 400,
+ "gl": {
+  "vendor": "Google Inc. (NVIDIA Corporation)",
+  "renderer": "ANGLE (NVIDIA Corporation, NVIDIA GeForce RTX 3060 Ti/PCIe/SSE2, OpenGL ES 3.2)",
+  "version": "WebGL 2.0 (OpenGL ES 3.0 Chromium)",
+  "contextAttributes": {
+   "alpha": true,
+   "antialias": false,
+   "depth": true,
+   "desynchronized": false,
+   "failIfMajorPerformanceCaveat": false,
+   "powerPreference": "default",
+   "premultipliedAlpha": true,
+   "preserveDrawingBuffer": true,
+   "stencil": false,
+   "xrCompatible": false
+  },
+  "multisampling": 4,
+  "antialiased": true,
+  "splashVisible": false,
+  "canvasDisplay": "inline",
+  "drawingBuffer": [
+   512,
+   512
+  ],
+  "maxSamples": 8,
+  "x_ite": "16.5.0"
+ },
+ "results": [
+  {
+   "file": "i92-fg-transparent.wrl",
+   "ok": true,
+   "log": [],
+   "width": 512,
+   "height": 512,
+   "rgbaSha256": "4aa8a5628e34ec06ba75b2129c368bb5e5068d48c5c4e5f1d673f818c4fe76c9",
+   "pngSha256": "d22949793ea565f7fb5cfa3e76890119b1bf3bc32372cf5c5276f0ba8f4660f0",
+   "splashVisible": false,
+   "canvasDisplay": "block"
+  },
+  {
+   "file": "i92-tr-many.wrl",
+   "ok": true,
+   "log": [],
+   "width": 512,
+   "height": 512,
+   "rgbaSha256": "e367332017248f3b0d7c64948eb08d664969f672d2e717da7f85f3828a1c478e",
+   "pngSha256": "ed806f10417b5aef3639a3048c19b2169beacad00b479d44daf8d29a35286d98",
+   "splashVisible": false,
+   "canvasDisplay": "block"
+  },
+  {
+   "file": "i92-tr-nested.wrl",
+   "ok": true,
+   "log": [],
+   "width": 512,
+   "height": 512,
+   "rgbaSha256": "8170aaf40bcd23aec7da77be4c5bf2dd00f2ce0a91c80ea838b4e1804793a850",
+   "pngSha256": "ae27dfa436d71c39c1521467c542d89b1282bce094fd2584cbd9f402194f04fb",
+   "splashVisible": false,
+   "canvasDisplay": "block"
+  },
+  {
+   "file": "i92-tr-opaque.wrl",
+   "ok": true,
+   "log": [],
+   "width": 512,
+   "height": 512,
+   "rgbaSha256": "cf8d785997736abe2771caaab32702a400471194643a037a45bd92e585256e82",
+   "pngSha256": "98cc8ea7344a7fa6d7068e2c4d73c1e0d5b4e5ac090a97f6dabf9756d85b2150",
+   "splashVisible": false,
+   "canvasDisplay": "block"
+  },
+  {
+   "file": "i92-tr-order.wrl",
+   "ok": true,
+   "log": [],
+   "width": 512,
+   "height": 512,
+   "rgbaSha256": "453c1f3d190741a39cffcfe9dc8cb5aa6f26a1b9ee22d2ed6b984ea2ae457648",
+   "pngSha256": "b47d17a4716ba8eea340621302b26e64ebd22491b28367f3a2d506d2a5e55285",
+   "splashVisible": false,
+   "canvasDisplay": "block"
+  },
+  {
+   "file": "i92-tr-ortho.wrl",
+   "ok": true,
+   "log": [],
+   "width": 512,
+   "height": 512,
+   "rgbaSha256": "a47a8f929a595eb58e73d556365037130342f4f4885512391ea1c14c2fd470c4",
+   "pngSha256": "970c0fe3c0c2e0e15ae9efc48821a16d1834b9203da6988f8f23a80f5d39d240",
+   "splashVisible": false,
+   "canvasDisplay": "block"
+  },
+  {
+   "file": "i92-tr-points-lines.wrl",
+   "ok": true,
+   "log": [],
+   "width": 512,
+   "height": 512,
+   "rgbaSha256": "3ce8a96c61e4116f6156730ada03b6037d1120591d0cf28bd611486dabc8253c",
+   "pngSha256": "66eaa45ea26db7b0275fd868d19f1d826492c637690a7bd4186a79072243ebb2",
+   "splashVisible": false,
+   "canvasDisplay": "block"
+  },
+  {
+   "file": "i92-tr-textured.wrl",
+   "ok": true,
+   "log": [],
+   "width": 512,
+   "height": 512,
+   "rgbaSha256": "41406ad26296b11792ab0095ef43774ea35d7e7681df86a1693eb2efc1b05bb1",
+   "pngSha256": "19118a1019375f30904666a81c1e0e6745671cbb1ef790def991f8177efc13b2",
+   "splashVisible": false,
+   "canvasDisplay": "block"
+  }
+ ]
+}

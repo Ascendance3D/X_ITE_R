@@ -1,0 +1,58 @@
+#VRML V2.0 utf8
+# Synthetic, newly authored for the Rust port REA batch 24 (no archive content).
+# getBody: a PROTO declaration has it, an EXTERNPROTO declaration does not (only the PROTO it loaded has).
+EXTERNPROTO Ext [ field SFInt32 level eventIn SFInt32 poke ] "lib.wrl#Lib"
+PROTO Local [ field SFInt32 level 1 ]
+{
+  Group { }
+}
+DEF S Script {
+  url "javascript:
+var frame = 0;
+var early = null;
+
+function show (label, f)
+{
+   try { print (label + ': ' + f ()); }
+   catch (e) { print (label + ' threw ' + e .name + ': ' + e .message); }
+}
+
+function probe (label, e)
+{
+   show (label + ' typeof getBody', () => typeof e .getBody);
+   show (label + ' getBody', () => e .getBody ());
+   show (label + ' has getBody', () => 'getBody' in e);
+}
+
+function initialize ()
+{
+   const cs = Browser .currentScene;
+   const l  = cs .protos .get ('Local');
+   const e  = cs .externprotos .get ('Ext');
+
+   early = cs .createProto ('Ext');
+
+   probe ('proto', l);
+   probe ('extern early', e);
+   show ('proto body isScene', () => l .getBody () .isScene);
+   show ('proto body type', () => l .getBody () .getTypeName ());
+   show ('proto body roots', () => l .getBody () .rootNodes .length);
+   show ('proto body outer', () => l .getBody () .getOuterNode () === null);
+}
+
+function prepareEvents ()
+{
+   const cs = Browser .currentScene;
+   const e  = cs .externprotos .get ('Ext');
+
+   if (++ frame !== 6)
+      return;
+
+   show ('extern late loadState', () => e .loadState);
+   probe ('extern late', e);
+   show ('loaded proto', () => e .getProtoDeclaration () .getName ());
+   show ('loaded body type', () => e .getProtoDeclaration () .getBody () .getTypeName ());
+   show ('loaded body roots', () => e .getProtoDeclaration () .getBody () .rootNodes .length);
+}
+"
+}

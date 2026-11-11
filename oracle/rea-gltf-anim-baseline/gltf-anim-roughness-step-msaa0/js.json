@@ -1,0 +1,295 @@
+{
+  "ok": true,
+  "poses": {
+    "3": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "NONE",
+      "fieldOfViewScale": 1
+    },
+    "8": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "NONE",
+      "fieldOfViewScale": 1
+    },
+    "14": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "NONE",
+      "fieldOfViewScale": 1
+    },
+    "20": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "NONE",
+      "fieldOfViewScale": 1
+    },
+    "26": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "NONE",
+      "fieldOfViewScale": 1
+    },
+    "32": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "NONE",
+      "fieldOfViewScale": 1
+    },
+    "38": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "NONE",
+      "fieldOfViewScale": 1
+    },
+    "44": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "NONE",
+      "fieldOfViewScale": 1
+    },
+    "63": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "NONE",
+      "fieldOfViewScale": 1
+    },
+    "64": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "NONE",
+      "fieldOfViewScale": 1
+    }
+  },
+  "vrml": {
+    "3": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT EnvironmentalSensor : 3\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Scripting : 1\nCOMPONENT Sound : 3\nCOMPONENT Text : 2\n\nNavigationInfo {\n  type \"NONE\"\n}\n\nDEF Gltf Inline {\n  global TRUE\n  url \"../pointer/roughness-step.gltf\"\n}\n\nTransform {\n  translation 0 0 -3\n  children [\n    DEF Touch TouchSensor { }\n    Shape {\n      appearance Appearance {\n        material Material {\n          transparency 0.9\n        }\n      }\n      geometry Box {\n        size 100 100 0.1\n      }\n    }\n  ]\n}\n\nIMPORT Gltf.Timer1\n\nROUTE Touch.touchTime TO Timer1.set_startTime\n",
+    "8": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT EnvironmentalSensor : 3\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Scripting : 1\nCOMPONENT Sound : 3\nCOMPONENT Text : 2\n\nNavigationInfo {\n  type \"NONE\"\n}\n\nDEF Gltf Inline {\n  global TRUE\n  url \"../pointer/roughness-step.gltf\"\n}\n\nTransform {\n  translation 0 0 -3\n  children [\n    DEF Touch TouchSensor { }\n    Shape {\n      appearance Appearance {\n        material Material {\n          transparency 0.9\n        }\n      }\n      geometry Box {\n        size 100 100 0.1\n      }\n    }\n  ]\n}\n\nIMPORT Gltf.Timer1\n\nROUTE Touch.touchTime TO Timer1.set_startTime\n",
+    "14": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT EnvironmentalSensor : 3\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Scripting : 1\nCOMPONENT Sound : 3\nCOMPONENT Text : 2\n\nNavigationInfo {\n  type \"NONE\"\n}\n\nDEF Gltf Inline {\n  global TRUE\n  url \"../pointer/roughness-step.gltf\"\n}\n\nTransform {\n  translation 0 0 -3\n  children [\n    DEF Touch TouchSensor { }\n    Shape {\n      appearance Appearance {\n        material Material {\n          transparency 0.9\n        }\n      }\n      geometry Box {\n        size 100 100 0.1\n      }\n    }\n  ]\n}\n\nIMPORT Gltf.Timer1\n\nROUTE Touch.touchTime TO Timer1.set_startTime\n",
+    "20": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT EnvironmentalSensor : 3\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Scripting : 1\nCOMPONENT Sound : 3\nCOMPONENT Text : 2\n\nNavigationInfo {\n  type \"NONE\"\n}\n\nDEF Gltf Inline {\n  global TRUE\n  url \"../pointer/roughness-step.gltf\"\n}\n\nTransform {\n  translation 0 0 -3\n  children [\n    DEF Touch TouchSensor { }\n    Shape {\n      appearance Appearance {\n        material Material {\n          transparency 0.9\n        }\n      }\n      geometry Box {\n        size 100 100 0.1\n      }\n    }\n  ]\n}\n\nIMPORT Gltf.Timer1\n\nROUTE Touch.touchTime TO Timer1.set_startTime\n",
+    "26": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT EnvironmentalSensor : 3\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Scripting : 1\nCOMPONENT Sound : 3\nCOMPONENT Text : 2\n\nNavigationInfo {\n  type \"NONE\"\n}\n\nDEF Gltf Inline {\n  global TRUE\n  url \"../pointer/roughness-step.gltf\"\n}\n\nTransform {\n  translation 0 0 -3\n  children [\n    DEF Touch TouchSensor { }\n    Shape {\n      appearance Appearance {\n        material Material {\n          transparency 0.9\n        }\n      }\n      geometry Box {\n        size 100 100 0.1\n      }\n    }\n  ]\n}\n\nIMPORT Gltf.Timer1\n\nROUTE Touch.touchTime TO Timer1.set_startTime\n",
+    "32": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT EnvironmentalSensor : 3\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Scripting : 1\nCOMPONENT Sound : 3\nCOMPONENT Text : 2\n\nNavigationInfo {\n  type \"NONE\"\n}\n\nDEF Gltf Inline {\n  global TRUE\n  url \"../pointer/roughness-step.gltf\"\n}\n\nTransform {\n  translation 0 0 -3\n  children [\n    DEF Touch TouchSensor { }\n    Shape {\n      appearance Appearance {\n        material Material {\n          transparency 0.9\n        }\n      }\n      geometry Box {\n        size 100 100 0.1\n      }\n    }\n  ]\n}\n\nIMPORT Gltf.Timer1\n\nROUTE Touch.touchTime TO Timer1.set_startTime\n",
+    "38": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT EnvironmentalSensor : 3\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Scripting : 1\nCOMPONENT Sound : 3\nCOMPONENT Text : 2\n\nNavigationInfo {\n  type \"NONE\"\n}\n\nDEF Gltf Inline {\n  global TRUE\n  url \"../pointer/roughness-step.gltf\"\n}\n\nTransform {\n  translation 0 0 -3\n  children [\n    DEF Touch TouchSensor { }\n    Shape {\n      appearance Appearance {\n        material Material {\n          transparency 0.9\n        }\n      }\n      geometry Box {\n        size 100 100 0.1\n      }\n    }\n  ]\n}\n\nIMPORT Gltf.Timer1\n\nROUTE Touch.touchTime TO Timer1.set_startTime\n",
+    "44": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT EnvironmentalSensor : 3\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Scripting : 1\nCOMPONENT Sound : 3\nCOMPONENT Text : 2\n\nNavigationInfo {\n  type \"NONE\"\n}\n\nDEF Gltf Inline {\n  global TRUE\n  url \"../pointer/roughness-step.gltf\"\n}\n\nTransform {\n  translation 0 0 -3\n  children [\n    DEF Touch TouchSensor { }\n    Shape {\n      appearance Appearance {\n        material Material {\n          transparency 0.9\n        }\n      }\n      geometry Box {\n        size 100 100 0.1\n      }\n    }\n  ]\n}\n\nIMPORT Gltf.Timer1\n\nROUTE Touch.touchTime TO Timer1.set_startTime\n",
+    "63": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT EnvironmentalSensor : 3\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Scripting : 1\nCOMPONENT Sound : 3\nCOMPONENT Text : 2\n\nNavigationInfo {\n  type \"NONE\"\n}\n\nDEF Gltf Inline {\n  global TRUE\n  url \"../pointer/roughness-step.gltf\"\n}\n\nTransform {\n  translation 0 0 -3\n  children [\n    DEF Touch TouchSensor { }\n    Shape {\n      appearance Appearance {\n        material Material {\n          transparency 0.9\n        }\n      }\n      geometry Box {\n        size 100 100 0.1\n      }\n    }\n  ]\n}\n\nIMPORT Gltf.Timer1\n\nROUTE Touch.touchTime TO Timer1.set_startTime\n",
+    "64": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT EnvironmentalSensor : 3\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Scripting : 1\nCOMPONENT Sound : 3\nCOMPONENT Text : 2\n\nNavigationInfo {\n  type \"NONE\"\n}\n\nDEF Gltf Inline {\n  global TRUE\n  url \"../pointer/roughness-step.gltf\"\n}\n\nTransform {\n  translation 0 0 -3\n  children [\n    DEF Touch TouchSensor { }\n    Shape {\n      appearance Appearance {\n        material Material {\n          transparency 0.9\n        }\n      }\n      geometry Box {\n        size 100 100 0.1\n      }\n    }\n  ]\n}\n\nIMPORT Gltf.Timer1\n\nROUTE Touch.touchTime TO Timer1.set_startTime\n"
+  },
+  "prints": [],
+  "log": [
+    "error: Inline: Couldn't load URL 'http://oracle/synthetic-rea-b08-gltf/pointer/roughness-step.gltf'. TypeError: Cannot set properties of null (setting '_emissiveStrength')"
+  ],
+  "anchors": [],
+  "loadFrames": 3,
+  "warmupFrames": 8,
+  "geometry": {
+    "rect": [
+      0,
+      0,
+      512,
+      512
+    ],
+    "viewport": [
+      0,
+      0,
+      512,
+      512
+    ],
+    "scroll": [
+      0,
+      0
+    ]
+  },
+  "inlines": {
+    "3": {
+      "Gltf": null
+    },
+    "8": {
+      "Gltf": null
+    },
+    "14": {
+      "Gltf": null
+    },
+    "20": {
+      "Gltf": null
+    },
+    "26": {
+      "Gltf": null
+    },
+    "32": {
+      "Gltf": null
+    },
+    "38": {
+      "Gltf": null
+    },
+    "44": {
+      "Gltf": null
+    },
+    "63": {
+      "Gltf": null
+    },
+    "64": {
+      "Gltf": null
+    }
+  },
+  "console": []
+}

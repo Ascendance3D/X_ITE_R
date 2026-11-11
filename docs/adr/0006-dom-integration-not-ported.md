@@ -22,6 +22,9 @@ The ledger (`ledger/ledger.json`) is not changed by this record; it keeps its st
 
 ## Evidence
 
-- Tests and recordings: Entry `sub:browser.dom-integration` (`DIFFERENT`, note "DOM-only feature; native host has no DOM"); no test.
+- Tests and recordings: Entry `sub:browser.dom-integration` (`DIFFERENT`, note "DOM-only feature; native host has no DOM"). The entry text is frozen with the other 20 DIFFERENT entries (`ledger/tools/verify_ledger.py`), so the platform evidence is recorded here.
+- Native host (2026-11-10): no DOM, nothing to port; the native parser is judged by its contract (`sub:parse.html-support`, COMPLETE, ADR 0012 item 5).
+- Browser build (2026-11-10, local run at master 1203bf40 plus this branch, headless Chromium, WebGPU adapter nvidia ampere): `tests/browser/dom01.test.mjs`, `dom02.test.mjs` and `dom03.test.mjs` pass 21 of 21 (0 fail, 0 skipped) against pinned X_ITE. They cover the canvas following its `<X3D>` child, `importDocument (htmlElement)`, attribute, child and removal changes, the Inline child elements, the load, error and field CustomEvents, a user field object refresh and the disposal of a removed `Scene` element. The code is `crates/x3d-web/src/{session,chain,wasm}.rs`, `crates/x3d-runtime/src/dom.rs` and `crates/x3d-web/web/x_ite_r.mjs`, and `crates/x3d-web/tests/dom_mutation.rs` tests the engine side of the element changes. One known difference stays: the order of the first load events of the Inline elements (`web/API.md`).
+- Ledger status: unchanged (`DIFFERENT`). This record leaves the status to the owner, and the browser-side evidence does not change that.
 - REA (pinned source, summary view `ev_537f8ca3dfe9bde6e6887f475f4420020d32b62af8858080807c0223243ea80d`, parent `ev_1c09119a37d7bfc3f3f8fb85d5aed52b88ad7d4fa2c9f9698d9920a46bbc7b08`): `Browser/DOMIntegration.js`. The graph is partial; relationships through unselected sources are unknown.
 - Format: as ADR 0001 (Status, Context, Decision, Consequences, Evidence).
