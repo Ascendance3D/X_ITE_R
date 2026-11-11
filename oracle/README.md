@@ -1975,3 +1975,25 @@ so `roughness-step-plain` and `base-color-step-plain` animate a plain material);
 ```
 XITE_TESTS=<x_ite-tests> python3 -I -B oracle/tools/rea_cff_screen_raster.py record
 ```
+
+## glTF video pictures: `EXT_texture_video` textures at fixed movie times (`gltf-video-baseline/`)
+
+- `tools/gen_gltf_video.py` writes `synthetic-gltf-video/`: `gv-uri.gltf` (four external WebM files of `synthetic-movie-codecs/media`:
+  VP8 ramp, test pattern and parts, VP9 with Vorbis), `gv-data.gltf` (the same files as data URLs), `gv-glb.glb` (the same files as
+  buffer views) and one event script, `gv.json`. Each file has four quads with an unlit material, and each texture has only a video
+  source. The pinned parser reads `this .images [texture .source]` for every texture, so the files carry an empty `images` array.
+- The pinned parser makes a MovieTexture with `loop TRUE` of each texture and names it after the texture (`V0` to `V3`), so
+  `movieSeek` finds the nodes with `getNamedNode`. A glTF file cannot set `speed`, so the nodes play at speed 1. The recorder pauses
+  each video element and sets `currentTime`; `x3d-drive` does the same (`Runtime::movie_element_pause`, then `Runtime::movie_seek`).
+- `tools/movie_anim.py record 5 gltf-video` wrote the baseline (MSAA 0 and 4). The five runs of 2026-11-11 were identical. The three
+  files give the same pictures. The baseline holds only synthetic worlds and media, so it is committed.
+- `crates/x3d-viewer/tests/movie_anim.rs::gltf_video_frames_match_x_ite` compares scene text, log and pictures: at most 0.5% of the
+  pixels more than 8 off. Measured 2026-11-11 (RTX 3060 Ti): 0 pixels over 8, largest difference 1, on all 24 pictures.
+- Before the fixes of that day the test failed on every picture (19.1% over 8): the port drew a MovieTexture of an unlit material
+  white, and did not load a video from a data URL. With only the first fix, the external-file case failed by 5.7% to 6.8%, because
+  the port's seek did not pause the element (the picture was one frame later).
+- Not compared: free-running playback between seeks (the page's video element runs on the wall clock), and MP4 sources.
+
+```
+XITE_TESTS=<x_ite-tests> python3 -I -B oracle/tools/movie_anim.py record 5 gltf-video
+```
