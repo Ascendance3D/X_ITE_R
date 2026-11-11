@@ -15,7 +15,7 @@ inst-line-*: the same LineProperties on an InstancedShape IndexedLineSet (X3DLin
 worlds also hold a disabled ParticleSystem named PS so that the particle oracle and x3d-particles-drive can step them; it
 draws nothing and records no particles. Newly authored; no historical content.
 """
-import json, os
+import json, os, zlib
 
 ROOT = os.path.normpath(os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "synthetic-rea-b18-particle-lines"))
 
@@ -80,6 +80,27 @@ CASES = {
     "inst-line-dashed": instanced(linetype=2),
 }
 
+# ExplosionEmitter worlds (a ParticleSystem with an ExplosionEmitter and LINE particles differed from X_ITE in an
+# earlier multi-viewer draft): the draft's parameters with each geometry type, and a ConeEmitter control. They run
+# at 60 fps and dump frames 5, 20 and 40; their seeds come from the name so the cases above keep theirs.
+RAMP_RGBA = "colorKey [ 0 1 ] colorRamp ColorRGBA { color [ 1 0.2 0 1, 0 0.2 1 0.3 ] }"
+
+
+def burst(geometry, emitter, ramp=True):
+    return (f'DEF PS ParticleSystem {{ maxParticles 60 particleLifetime 1.5 geometryType "{geometry}" particleSize 0.5 0.5 '
+            f'{RAMP_RGBA if ramp else ""}\n  emitter {emitter}\n'
+            "  appearance Appearance { material Material { emissiveColor 1 1 1 } } }\n")
+
+
+EXPLOSION = "ExplosionEmitter { speed 1.2 variation 0.25 }"
+BURST_CASES = {
+    "ex-line": burst("LINE", EXPLOSION),
+    "ex-line-plain": burst("LINE", EXPLOSION, False),
+    "ex-point": burst("POINT", EXPLOSION),
+    "ex-quad": burst("QUAD", EXPLOSION),
+    "cone-line": burst("LINE", "ConeEmitter { direction 0 1 0 angle 0.6 speed 1.2 }"),
+}
+
 
 def main():
     os.makedirs(os.path.join(ROOT, "scripts"), exist_ok=True)
@@ -93,7 +114,16 @@ def main():
         with open(os.path.join(ROOT, "scripts", name + ".json"), "w") as f:
             json.dump(dict(script, seed=1800017 * (i + 1) % 2147483647), f)
 
-    print(f"{len(CASES)} cases in {ROOT}")
+    burst_script = dict(script, dt=1 / 60, frames=40, dump=[5, 20, 40])
+
+    for name, body in sorted(BURST_CASES.items()):
+        with open(os.path.join(ROOT, name + ".x3dv"), "w") as f:
+            f.write(HEAD + 'Viewpoint { position 0 0 9 }\nBackground { skyColor 0.1 0.1 0.2 }\n' + body)
+
+        with open(os.path.join(ROOT, "scripts", name + ".json"), "w") as f:
+            json.dump(dict(burst_script, seed=zlib.crc32(name.encode()) % 2147483647), f)
+
+    print(f"{len(CASES) + len(BURST_CASES)} cases in {ROOT}")
 
 
 if __name__ == "__main__":
