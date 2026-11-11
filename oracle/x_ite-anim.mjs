@@ -613,7 +613,7 @@ try
 
    // Script keys "touchstart", "touchmove" with "points": [[x, y], ...] (origin bottom left, like the mouse events): every touch that
    // is down after the event, the index in the list is the touch's id. "touchend" with "ids": [id, ...] releases those touches (all
-   // touches without "ids"), like the `touchPoints` of the DevTools touchEnd. The page's log of the touch events it received
+   // touches without "ids"), "touchcancel" cancels all touches that are down (DevTools touchCancel), like the `touchPoints` of the DevTools touchEnd. The page's log of the touch events it received
    // is the result key `touchLog` ([ frame, type, [[pageX, pageY], ...] ]), so that a recording shows what X_ITE saw, and
    // `touchSplit` counts the events the page saw as two (see crates/x3d-web/tests/browser/touchdelivery.mjs); a recording with
    // a split is not kept by the recording tool.
@@ -639,18 +639,19 @@ try
    {
       cdp ??= await context .newCDPSession (page);
 
-      if (type !== "touchEnd")
+      if (type !== "touchEnd" && type !== "touchCancel")
          (e .points ?? [ ]) .forEach ((p, id) => down .set (id, p));
 
       const ids    = type === "touchEnd" ? (e .ids ?? [ ... down .keys () ]) : [ ... down .keys () ];
+      const ended  = type === "touchEnd" || type === "touchCancel";
       const points = ids .map (id => ({ x: down .get (id) [0], y: H - down .get (id) [1], id, radiusX: 1, radiusY: 1, force: 1 }));
 
-      if (type === "touchEnd")
+      if (ended)
          ids .forEach (id => down .delete (id));
 
       const since  = await page .evaluate (() => window .touchLog .length);
 
-      await cdp .send ("Input.dispatchTouchEvent", { type, touchPoints: points });
+      await cdp .send ("Input.dispatchTouchEvent", { type, touchPoints: type === "touchCancel" ? [ ] : points });
       await settle ();
 
       const seen = await page .evaluate (since => window .touchLog .slice (since), since);
@@ -696,6 +697,7 @@ try
             case "touchstart": await touch (e, "touchStart"); break;
             case "touchmove":  await touch (e, "touchMove"); break;
             case "touchend":   await touch (e, "touchEnd"); break;
+            case "touchcancel": await touch (e, "touchCancel"); break; // every touch that is down is cancelled (sub:pointer.picking)
             case "viewer":    await page .evaluate (n => window .setViewer (n), e .name); break;
             // REA batch 10: the canvas is resized (CSS size); X_ITE's ResizeObserver runs reshape () on the next rendering opportunity.
             case "resize":

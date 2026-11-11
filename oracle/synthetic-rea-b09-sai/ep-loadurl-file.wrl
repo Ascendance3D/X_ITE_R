@@ -1,0 +1,18 @@
+#VRML V2.0 utf8
+# Synthetic REA oracle file (sub:proto.externproto): the world Browser.loadURL loads, with an EXTERNPROTO of a file next to it.
+EXTERNPROTO EP [ exposedField SFFloat v ] "ep-url-lib.wrl"
+DEF I EP { v 3 }
+DEF R Script {
+  field SFString hist ""
+  field SFInt32 step 0
+  eventIn SFTime cycle
+  url "javascript:
+function cycle () {
+  step = step + 1;
+  var e = Browser .currentScene .externprotos [0];
+  hist = hist + step + ':' + e .name + ',ls=' + e .loadState + ',v=' + Browser .currentScene .getNamedNode ('I') .v + ' ';
+}
+  "
+}
+DEF STEP TimeSensor { cycleInterval 0.05 loop TRUE }
+ROUTE STEP.cycleTime TO R.cycle

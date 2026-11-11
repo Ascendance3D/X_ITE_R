@@ -1,0 +1,6 @@
+cancel oracle/synthetic-rea-pointer-touch/pointer-touch.wrl oracle/synthetic-rea-pointer-touch/scripts/cancel.json 0
+drag-each oracle/synthetic-rea-pointer-touch/pointer-touch.wrl oracle/synthetic-rea-pointer-touch/scripts/drag-each.json 0
+empty-vs-sensor oracle/synthetic-rea-pointer-touch/pointer-touch.wrl oracle/synthetic-rea-pointer-touch/scripts/empty-vs-sensor.json 0
+leave-and-enter oracle/synthetic-rea-pointer-touch/pointer-touch.wrl oracle/synthetic-rea-pointer-touch/scripts/leave-and-enter.json 0
+second-finger oracle/synthetic-rea-pointer-touch/pointer-touch.wrl oracle/synthetic-rea-pointer-touch/scripts/second-finger.json 0
+tap-each oracle/synthetic-rea-pointer-touch/pointer-touch.wrl oracle/synthetic-rea-pointer-touch/scripts/tap-each.json 0

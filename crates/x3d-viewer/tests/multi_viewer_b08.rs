@@ -211,6 +211,40 @@ Transform { translation -2 -1 0 children ParticleSystem { maxParticles 40 partic
     p
 }
 
+/// World P-C (lane agentH): the geometry types and emitters P-A and P-B do not use: LINE particles of an
+/// ConeEmitter with a ColorRamp , QUAD particles of a PolylineEmitter.
+fn world_particles_c(d: &std::path::Path) -> PathBuf {
+    let p = d.join("main.x3dv");
+    std::fs::write(
+        &p,
+        "#X3D V3.3 utf8\nPROFILE Full\nCOMPONENT ParticleSystems:2\nViewpoint { position 0 0 9 }\n\
+ParticleSystem { maxParticles 60 particleLifetime 1.5 geometryType \"LINE\" particleSize 0.5 0.5 colorKey [ 0 1 ] colorRamp ColorRGBA { color [ 1 0.2 0 1, 0 0.2 1 0.3 ] }\n\
+  emitter ConeEmitter { direction 0 1 0 angle 0.6 speed 1.2 } appearance Appearance { material Material { emissiveColor 1 1 1 } } }\n\
+Transform { translation -1 -2 0 children ParticleSystem { maxParticles 40 particleLifetime 1.2 geometryType \"QUAD\" particleSize 0.3 0.3\n\
+  emitter PolylineEmitter { coord Coordinate { point [ -1 0 0, 1 0 0, 1 0 1 ] } coordIndex [ 0 1 2 -1 ] direction 0 1 0 speed 1.5 variation 0.2 }\n\
+  appearance Appearance { material Material { emissiveColor 0.5 1 0.5 } } } }\n",
+    )
+    .unwrap();
+    p
+}
+
+/// World P-D: TRIANGLE particles of a VolumeEmitter, POINT particles of a ConeEmitter with a WindPhysicsModel and a ColorRamp.
+fn world_particles_d(d: &std::path::Path) -> PathBuf {
+    let p = d.join("main.x3dv");
+    std::fs::write(
+        &p,
+        "#X3D V3.3 utf8\nPROFILE Full\nCOMPONENT ParticleSystems:2\nViewpoint { position 0 0 9 }\n\
+ParticleSystem { maxParticles 50 particleLifetime 1.4 geometryType \"TRIANGLE\" particleSize 0.4 0.4\n\
+  emitter VolumeEmitter { coord Coordinate { point [ -1 -1 -1, 1 -1 -1, 0 1 -1, 0 0 1 ] } coordIndex [ 0 1 2 -1 0 1 3 -1 1 2 3 -1 0 2 3 -1 ] direction 0 1 0 speed 0.4 }\n\
+  appearance Appearance { material Material { emissiveColor 1 0.6 0.1 } } }\n\
+Transform { translation 2 1 0 children ParticleSystem { maxParticles 70 particleLifetime 1.6 geometryType \"POINT\" colorKey [ 0 0.5 1 ] colorRamp Color { color [ 1 0 0, 0 1 0, 0 0 1 ] }\n\
+  emitter ConeEmitter { direction -1 1 0 angle 0.4 speed 1.2 } physics WindPhysicsModel { speed 0.8 gustiness 0.3 direction 0 0 1 }\n\
+  appearance Appearance { material Material { emissiveColor 1 1 1 } } } }\n",
+    )
+    .unwrap();
+    p
+}
+
 /// A 16-bit mono PCM WAV of `secs` seconds of a sine at `hz`, written byte by byte (clean-room, no encoder).
 fn wav(rate: u32, hz: f64, secs: f64) -> Vec<u8> {
     let n = (rate as f64 * secs) as usize;
@@ -1035,6 +1069,8 @@ fn oracle_worlds() -> Vec<(&'static str, Maker)> {
         ),
         ("p-a", Box::new(|d| drop(world_particles_a(d)))),
         ("p-b", Box::new(|d| drop(world_particles_b(d)))),
+        ("p-c", Box::new(|d| drop(world_particles_c(d)))),
+        ("p-d", Box::new(|d| drop(world_particles_d(d)))),
         (
             "rb-a",
             Box::new(|d| drop(world_physics_opts(d, 3.0, false, false))),
@@ -1057,38 +1093,41 @@ fn read_rgba(p: &std::path::Path) -> Vec<u8> {
     })
 }
 
+fn oracle_world(w: &str) -> PathBuf {
+    oracle_dir()
+        .join("multiview-b08/worlds")
+        .join(w)
+        .join("main.x3dv")
+}
+
+/// Load `path` into `v` and run the warm-up the oracle page has (see [`rust_frames`]).
+fn load_and_warm(v: &mut EmbeddedViewer, p: &std::path::Path) {
+    load(v, p);
+    // The oracle page traverses 8 warm-up frames at t0 while the worlds load (x3d-drive does the same).
+    let c = v.core().unwrap();
+    c.frame_rate = 60.0;
+    // The oracle page returns 1 / dt from getCurrentFrameRate (): a RigidBodyCollection's moving-average time step
+    // (and so the number of substeps) depends on it. Left to measure the rate from the clock deltas, which are
+    // differences of two doubles near 9.5e8, the time step is off by up to 1e-6 relative and the box falls
+    // a fraction of a frame ahead (frame 9 on: rb-a 0.58% at MSAA 4). x3d-drive pins it the same way.
+    c.pinned_frame_rate = Some(1.0 / DT);
+
+    for _ in 0..std::env::var("MV_WARM")
+        .ok()
+        .and_then(|v| v.parse().ok())
+        .unwrap_or(8)
+    {
+        c.step(T0);
+    }
+}
+
 /// Rust frames `ORACLE_FRAMES` of the given worlds, all on one thread, interleaved (or one viewer for one world).
 fn rust_frames(rig: &Rig, samples: u32, worlds: &[&str]) -> Vec<Vec<Vec<u8>>> {
     constant_draws();
-    let paths: Vec<PathBuf> = worlds
-        .iter()
-        .map(|w| {
-            oracle_dir()
-                .join("multiview-b08/worlds")
-                .join(w)
-                .join("main.x3dv")
-        })
-        .collect();
     let mut viewers: Vec<EmbeddedViewer> = worlds.iter().map(|_| rig.viewer(samples)).collect();
 
-    for (v, p) in viewers.iter_mut().zip(&paths) {
-        load(v, p);
-        // The oracle page traverses 8 warm-up frames at t0 while the worlds load (x3d-drive does the same).
-        let c = v.core().unwrap();
-        c.frame_rate = 60.0;
-        // The oracle page returns 1 / dt from getCurrentFrameRate (): a RigidBodyCollection's moving-average time step
-        // (and so the number of substeps) depends on it. Left to measure the rate from the clock deltas, which are
-        // differences of two doubles near 9.5e8, the time step is off by up to 1e-6 relative and the box falls
-        // a fraction of a frame ahead (frame 9 on: rb-a 0.58% at MSAA 4). x3d-drive pins it the same way.
-        c.pinned_frame_rate = Some(1.0 / DT);
-
-        for _ in 0..std::env::var("MV_WARM")
-            .ok()
-            .and_then(|v| v.parse().ok())
-            .unwrap_or(8)
-        {
-            c.step(T0);
-        }
+    for (v, w) in viewers.iter_mut().zip(worlds) {
+        load_and_warm(v, &oracle_world(w));
     }
 
     let mut out = vec![vec![]; worlds.len()];
@@ -1118,6 +1157,50 @@ fn rust_frames(rig: &Rig, samples: u32, worlds: &[&str]) -> Vec<Vec<Vec<u8>>> {
     }
 
     out
+}
+
+/// [`rust_frames`] with every viewer on an OWN OS thread of this process (own `Rig` target, the one wgpu device and
+/// queue, the one set of process globals). All threads start a frame together (a `Barrier`) so the draws overlap in time
+/// and a shared mutable global would be seen by the other viewer. `constant_draws` runs on each thread (the seed
+/// lists are thread-local).
+fn rust_frames_threads(
+    d: &wgpu::Device,
+    q: &wgpu::Queue,
+    samples: u32,
+    worlds: &[&str],
+) -> Vec<Vec<Vec<u8>>> {
+    let barrier = std::sync::Arc::new(std::sync::Barrier::new(worlds.len()));
+    let handles: Vec<_> = worlds
+        .iter()
+        .map(|w| {
+            let (d, q, w, barrier) = (d.clone(), q.clone(), w.to_string(), barrier.clone());
+            std::thread::Builder::new()
+                .stack_size(256 << 20)
+                .spawn(move || {
+                    let rig = Rig::new(d, q);
+                    constant_draws();
+                    let mut v = rig.viewer(samples);
+                    load_and_warm(&mut v, &oracle_world(&w));
+                    let mut out = vec![];
+
+                    for k in 1..=*ORACLE_FRAMES.last().unwrap() {
+                        barrier.wait();
+                        let img = rig.shot(&mut v, k);
+
+                        if ORACLE_FRAMES.contains(&k) {
+                            out.push(img);
+                        }
+                    }
+
+                    out
+                })
+                .expect("spawn viewer thread")
+        })
+        .collect();
+    handles
+        .into_iter()
+        .map(|h| h.join().expect("viewer thread panicked"))
+        .collect()
 }
 
 /// Share of the pixels more than 8 levels off in red, green or blue. The alpha of the two canvases differs where
@@ -1269,6 +1352,19 @@ fn x_ite_two_canvases_particles_msaa4() {
     oracle_pair_gated(4, ["p-a", "p-b"], true);
 }
 
+/// A second particle pair (lane agentH, `sub:browser.multi-viewer-thread`): LINE, QUAD and TRIANGLE particles, the
+/// Explosion, Polyline and Volume emitters, ColorRamps. Same bounds as the first pair; baselines recorded three times
+/// identically (`oracle/multiview-b08-baseline/p-c+p-d-msaa*`).
+#[test]
+fn x_ite_two_canvases_particles_more_msaa0() {
+    oracle_pair_gated(0, ["p-c", "p-d"], true);
+}
+
+#[test]
+fn x_ite_two_canvases_particles_more_msaa4() {
+    oracle_pair_gated(4, ["p-c", "p-d"], true);
+}
+
 /// Sound: there is no audio-output oracle, so what is compared is the picture of a world whose Script turns the
 /// SAI-visible state of an AudioClip into geometry: `isActive` (a sphere shown or hidden), `isPaused` (box height),
 /// `duration_changed` (box scale) and `elapsedTime` (box position and rotation). The audible signal itself, the
@@ -1323,6 +1419,216 @@ fn x_ite_two_canvases_particles_192x144_msaa0() {
         true,
         (192, 144),
         "multiview-b08-baseline-192x144",
+    );
+}
+
+/// Viewers on different OS threads (issue #60, `sub:browser.multi-viewer-thread`, lane agentH): every world in its own
+/// thread of one process, one wgpu device, drawing at the same moment (a barrier per frame). Each viewer's pictures
+/// equal the same world alone on one thread exactly, the pair (when the world has a pinned two-canvas recording) is
+/// within 0.5% of the pinned X_ITE's pair, and every world is within 0.5% of the pinned X_ITE alone.
+fn oracle_threads(samples: u32, worlds: &'static [&'static str]) {
+    let Some((d, q)) = device() else {
+        return x3d_evidence::no_gpu("no adapter, skipped");
+    };
+    spawn_big_stack(move || {
+        let rig = Rig::new(d.clone(), q.clone());
+        let base = oracle_dir().join("multiview-b08-baseline");
+        let threaded = rust_frames_threads(&d, &q, samples, worlds);
+        let mut fails: Vec<String> = vec![];
+
+        for (i, w) in worlds.iter().enumerate() {
+            let alone = rust_frames(&rig, samples, &[w]).remove(0);
+
+            for (fi, k) in ORACLE_FRAMES.iter().enumerate() {
+                let x_alone = read_rgba(&base.join(format!("{w}-msaa{samples}/c0-f{k}.rgba")));
+                let e = off(&threaded[i][fi], &alone[fi]);
+                let c = off(&threaded[i][fi], &x_alone);
+                let mut line = format!(
+                    "THREADS msaa={samples} world={w} frame={k}: threaded vs Rust alone {e:.5}; threaded vs X_ITE alone {c:.5}"
+                );
+
+                if threaded[i][fi] != alone[fi] {
+                    fails.push(format!(
+                        "{w} frame {k}: pictures differ from the single-thread run ({e})"
+                    ));
+                }
+
+                if c > 0.005 {
+                    fails.push(format!("{w} frame {k}: {c} off the pinned X_ITE alone"));
+                }
+
+                if worlds.len() == 2 {
+                    let x_pair = read_rgba(&base.join(format!(
+                        "{}+{}-msaa{samples}/c{i}-f{k}.rgba",
+                        worlds[0], worlds[1]
+                    )));
+                    let b = off(&threaded[i][fi], &x_pair);
+                    line += &format!("; threaded vs X_ITE pair {b:.5}");
+
+                    if b > 0.005 {
+                        fails.push(format!("{w} frame {k}: {b} off the pinned X_ITE pair"));
+                    }
+                }
+
+                eprintln!("{line}");
+            }
+        }
+
+        assert!(fails.is_empty(), "{fails:#?}");
+    });
+}
+
+#[test]
+fn threads_scripts_msaa0() {
+    oracle_threads(0, &["s-a", "s-b"]);
+}
+
+#[test]
+fn threads_scripts_msaa4() {
+    oracle_threads(4, &["s-a", "s-b"]);
+}
+
+#[test]
+fn threads_rigid_bodies_msaa0() {
+    oracle_threads(0, &["rb-a", "rb-b"]);
+}
+
+#[test]
+fn threads_rigid_bodies_msaa4() {
+    oracle_threads(4, &["rb-a", "rb-b"]);
+}
+
+#[test]
+fn threads_particles_msaa0() {
+    oracle_threads(0, &["p-a", "p-b"]);
+}
+
+#[test]
+fn threads_particles_msaa4() {
+    oracle_threads(4, &["p-a", "p-b"]);
+}
+
+#[test]
+fn threads_particles_more_msaa0() {
+    oracle_threads(0, &["p-c", "p-d"]);
+}
+
+#[test]
+fn threads_particles_more_msaa4() {
+    oracle_threads(4, &["p-c", "p-d"]);
+}
+
+#[test]
+fn threads_sound_msaa0() {
+    oracle_threads(0, &["snd-a", "snd-b"]);
+}
+
+#[test]
+fn threads_sound_msaa4() {
+    oracle_threads(4, &["snd-a", "snd-b"]);
+}
+
+/// Six viewers on six threads: every kind of world at once.
+#[test]
+fn threads_all_worlds_msaa0() {
+    oracle_threads(0, &["s-a", "s-b", "p-a", "p-b", "rb-a", "snd-a"]);
+}
+
+#[test]
+fn threads_all_worlds_msaa4() {
+    oracle_threads(4, &["s-a", "s-b", "p-a", "p-b", "rb-b", "snd-b"]);
+}
+
+/// Browser-wide options of one viewer (LogarithmicDepthBuffer, quality) do not reach a viewer on another thread, even
+/// when both draw at the same time. Each thread's pictures equal the same world alone.
+#[test]
+fn threads_rendering_options_stay_per_viewer() {
+    let Some((d, q)) = device() else {
+        return x3d_evidence::no_gpu("no adapter, skipped");
+    };
+    spawn_big_stack(move || {
+        let rig = Rig::new(d.clone(), q.clone());
+        let scene = |opt: &str| {
+            format!(
+                "#X3D V3.3 utf8\nPROFILE Full\nViewpoint {{ position 0 0 8 }}\nScript {{ url \"ecmascript: function initialize() {{ {opt} }}\" }}\nShape {{ appearance Appearance {{ material Material {{ diffuseColor 1 0 0 }} }} geometry Sphere {{ radius 1.5 }} }}\nTransform {{ translation 0 0 -2 children Shape {{ appearance Appearance {{ material Material {{ diffuseColor 0 0 1 }} }} geometry Cylinder {{ radius 1 height 4 }} }} }}\n"
+            )
+        };
+        let (da, db) = (dir("to-a"), dir("to-b"));
+        let write = |d: &std::path::Path, text: String| {
+            let p = d.join("main.x3dv");
+            std::fs::write(&p, text).unwrap();
+            p
+        };
+        let a = write(
+            &da,
+            scene(
+                "Browser.setBrowserOption('PrimitiveQuality', 'LOW'); Browser.setBrowserOption('LogarithmicDepthBuffer', true);",
+            ),
+        );
+        let b = write(&db, scene(""));
+        let (sa, _) = solo_frames(&rig, 0, &a);
+        let (sb, _) = solo_frames(&rig, 0, &b);
+        assert!(
+            bad_pixels(&sa[10], &sb[10]) > 20,
+            "the options change the picture"
+        );
+
+        let barrier = std::sync::Arc::new(std::sync::Barrier::new(2));
+        let run = |path: PathBuf| {
+            let (d, q, barrier) = (d.clone(), q.clone(), barrier.clone());
+            std::thread::Builder::new()
+                .stack_size(256 << 20)
+                .spawn(move || {
+                    let rig = Rig::new(d, q);
+                    constant_draws();
+                    let mut v = rig.viewer(0);
+                    load(&mut v, &path);
+                    (0..FRAMES)
+                        .map(|k| {
+                            barrier.wait();
+                            rig.shot(&mut v, k)
+                        })
+                        .collect::<Vec<_>>()
+                })
+                .unwrap()
+        };
+        let (ha, hb) = (run(a), run(b));
+        let (ta, tb) = (ha.join().unwrap(), hb.join().unwrap());
+
+        for k in 0..FRAMES as usize {
+            assert!(
+                exact(&ta[k], &sa[k]),
+                "A frame {k}: {} pixels off",
+                bad_pixels(&ta[k], &sa[k])
+            );
+            assert!(
+                exact(&tb[k], &sb[k]),
+                "B frame {k}: {} pixels off",
+                bad_pixels(&tb[k], &sb[k])
+            );
+        }
+    });
+}
+
+/// The browser-wide LogarithmicDepthBuffer switch is a value of the thread, like the qualities: another thread that
+/// sets it does not change this thread's.
+#[test]
+fn logarithmic_depth_switch_is_per_thread() {
+    use x3d_render::traverse::{logarithmic_depth_buffer, set_logarithmic_depth_buffer};
+    set_logarithmic_depth_buffer(false);
+    std::thread::spawn(|| {
+        assert!(
+            !logarithmic_depth_buffer(),
+            "a new thread starts with the default"
+        );
+        set_logarithmic_depth_buffer(true);
+        assert!(logarithmic_depth_buffer());
+    })
+    .join()
+    .unwrap();
+    assert!(
+        !logarithmic_depth_buffer(),
+        "the other thread's switch is not seen here"
     );
 }
 

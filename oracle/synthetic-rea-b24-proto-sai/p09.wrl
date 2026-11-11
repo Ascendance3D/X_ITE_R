@@ -1,0 +1,68 @@
+#VRML V2.0 utf8
+# Synthetic, newly authored for the Rust port REA batch 24 (no archive content).
+# The field objects of a PROTO declaration (getUserDefinedFields) and of its instances, across a layout change.
+PROTO Box9 [
+  field SFVec3f pos 1 2 3
+  field SFInt32 level 2
+]
+{
+  Group { }
+}
+DEF S Script {
+  url "javascript:
+function show (label, f)
+{
+   try { print (label + ': ' + f ()); }
+   catch (e) { print (label + ' threw ' + e .name + ': ' + e .message); }
+}
+
+function initialize ()
+{
+   const cs   = Browser .currentScene;
+   const d    = cs .protos .get ('Box9');
+   const held = cs .createProto ('Box9');
+   const df   = Array .from (d .getUserDefinedFields ());
+   const pos  = df .find (f => f .getName () === 'pos');
+   const lev  = df .find (f => f .getName () === 'level');
+   const hpos = held .getField ('pos');
+
+   show ('decl field names', () => df .map (f => f .getName ()) .join (','));
+   show ('decl field types', () => df .map (f => f .getTypeName ? f .getTypeName () : f .constructor .name) .join (','));
+   show ('decl pos value', () => pos .toString ());
+   show ('decl pos access', () => pos .getAccessType ());
+   show ('decl is held', () => pos === Array .from (d .getUserDefinedFields ()) [0]);
+   show ('decl fields getter', () => d .fields .get ('pos') === pos);
+   show ('set decl pos', () => { pos .setValue (new SFVec3f (7, 8, 9)); return pos .toString (); });
+   show ('held pos', () => held .pos .toString ());
+   show ('late pos', () => cs .createProto ('Box9') .pos .toString ());
+   show ('set decl level', () => { lev .setValue (5); return lev .valueOf (); });
+   show ('held level', () => held .level);
+   show ('late level', () => cs .createProto ('Box9') .level);
+   show ('held pos field', () => hpos .toString ());
+   show ('set held pos', () => { held .pos = new SFVec3f (4, 4, 4); return hpos .toString (); });
+
+   d .updateInstances ();
+
+   show ('after update held level', () => held .level);
+   show ('after update held pos field', () => hpos .toString ());
+   show ('after update same field', () => hpos === held .getField ('pos'));
+   show ('after update set field', () => { hpos .setValue (new SFVec3f (6, 6, 6)); return held .pos .toString (); });
+   show ('after update decl pos', () => pos .toString ());
+   show ('after update decl same', () => Array .from (d .getUserDefinedFields ()) .find (f => f .getName () === 'pos') === pos);
+
+   d .removeUserDefinedField ('pos');
+   d .addUserDefinedField (X3DConstants .initializeOnly, 'pos', new SFVec3f (1, 1, 1));
+   d .updateInstances ();
+
+   show ('relayout names', () => Array .from (d .getUserDefinedFields (), f => f .getName ()) .join (','));
+   show ('relayout decl pos', () => Array .from (d .getUserDefinedFields ()) .find (f => f .getName () === 'pos') .toString ());
+   show ('relayout old decl pos', () => pos .toString ());
+   show ('relayout held pos field', () => hpos .toString ());
+   show ('relayout held same', () => hpos === held .getField ('pos'));
+   show ('relayout held pos', () => held .pos .toString ());
+   show ('relayout held level', () => held .level);
+   show ('relayout set field', () => { hpos .setValue (new SFVec3f (2, 2, 2)); return held .pos .toString (); });
+   show ('relayout set node', () => { held .pos = new SFVec3f (3, 3, 3); return hpos .toString (); });
+}
+"
+}

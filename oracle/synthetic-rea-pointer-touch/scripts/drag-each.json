@@ -1,0 +1,460 @@
+{
+ "size": [
+  512,
+  512
+ ],
+ "t0": 946684800,
+ "dt": 0.03333333333333333,
+ "capture": [],
+ "dump": [
+  1,
+  2,
+  3,
+  4,
+  5,
+  6,
+  7,
+  8,
+  9,
+  10,
+  11,
+  12,
+  13,
+  14,
+  15,
+  16,
+  17,
+  18,
+  19,
+  20,
+  21,
+  22,
+  23,
+  24,
+  25,
+  26,
+  27,
+  28,
+  29,
+  30,
+  31,
+  32,
+  33,
+  34,
+  35,
+  36,
+  37,
+  38,
+  39,
+  40,
+  41,
+  42,
+  43,
+  44,
+  45,
+  46,
+  47,
+  48,
+  49,
+  50,
+  51,
+  52,
+  53,
+  54,
+  55,
+  56,
+  57,
+  58,
+  59,
+  60,
+  61,
+  62,
+  63,
+  64,
+  65,
+  66,
+  67,
+  68,
+  69,
+  70,
+  71,
+  72,
+  73,
+  74,
+  75,
+  76,
+  77,
+  78,
+  79,
+  80,
+  81,
+  82,
+  83,
+  84,
+  85,
+  86,
+  87,
+  88,
+  89,
+  90
+ ],
+ "frames": 90,
+ "events": [
+  {
+   "frame": 2,
+   "type": "touchstart",
+   "points": [
+    [
+     102,
+     380
+    ]
+   ]
+  },
+  {
+   "frame": 3,
+   "type": "touchmove",
+   "points": [
+    [
+     108,
+     376
+    ]
+   ]
+  },
+  {
+   "frame": 4,
+   "type": "touchmove",
+   "points": [
+    [
+     114,
+     372
+    ]
+   ]
+  },
+  {
+   "frame": 5,
+   "type": "touchmove",
+   "points": [
+    [
+     120,
+     368
+    ]
+   ]
+  },
+  {
+   "frame": 6,
+   "type": "touchmove",
+   "points": [
+    [
+     126,
+     364
+    ]
+   ]
+  },
+  {
+   "frame": 7,
+   "type": "touchmove",
+   "points": [
+    [
+     132,
+     360
+    ]
+   ]
+  },
+  {
+   "frame": 8,
+   "type": "touchmove",
+   "points": [
+    [
+     138,
+     356
+    ]
+   ]
+  },
+  {
+   "frame": 9,
+   "type": "touchend"
+  },
+  {
+   "frame": 12,
+   "type": "touchstart",
+   "points": [
+    [
+     410,
+     380
+    ]
+   ]
+  },
+  {
+   "frame": 13,
+   "type": "touchmove",
+   "points": [
+    [
+     418,
+     374
+    ]
+   ]
+  },
+  {
+   "frame": 14,
+   "type": "touchmove",
+   "points": [
+    [
+     426,
+     368
+    ]
+   ]
+  },
+  {
+   "frame": 15,
+   "type": "touchmove",
+   "points": [
+    [
+     434,
+     362
+    ]
+   ]
+  },
+  {
+   "frame": 16,
+   "type": "touchmove",
+   "points": [
+    [
+     442,
+     356
+    ]
+   ]
+  },
+  {
+   "frame": 17,
+   "type": "touchmove",
+   "points": [
+    [
+     450,
+     350
+    ]
+   ]
+  },
+  {
+   "frame": 18,
+   "type": "touchmove",
+   "points": [
+    [
+     458,
+     344
+    ]
+   ]
+  },
+  {
+   "frame": 19,
+   "type": "touchmove",
+   "points": [
+    [
+     466,
+     338
+    ]
+   ]
+  },
+  {
+   "frame": 20,
+   "type": "touchmove",
+   "points": [
+    [
+     474,
+     332
+    ]
+   ]
+  },
+  {
+   "frame": 21,
+   "type": "touchend"
+  },
+  {
+   "frame": 24,
+   "type": "touchstart",
+   "points": [
+    [
+     102,
+     132
+    ]
+   ]
+  },
+  {
+   "frame": 25,
+   "type": "touchmove",
+   "points": [
+    [
+     111,
+     135
+    ]
+   ]
+  },
+  {
+   "frame": 26,
+   "type": "touchmove",
+   "points": [
+    [
+     120,
+     138
+    ]
+   ]
+  },
+  {
+   "frame": 27,
+   "type": "touchmove",
+   "points": [
+    [
+     129,
+     141
+    ]
+   ]
+  },
+  {
+   "frame": 28,
+   "type": "touchmove",
+   "points": [
+    [
+     138,
+     144
+    ]
+   ]
+  },
+  {
+   "frame": 29,
+   "type": "touchmove",
+   "points": [
+    [
+     147,
+     147
+    ]
+   ]
+  },
+  {
+   "frame": 30,
+   "type": "touchmove",
+   "points": [
+    [
+     156,
+     150
+    ]
+   ]
+  },
+  {
+   "frame": 31,
+   "type": "touchmove",
+   "points": [
+    [
+     165,
+     153
+    ]
+   ]
+  },
+  {
+   "frame": 32,
+   "type": "touchmove",
+   "points": [
+    [
+     174,
+     156
+    ]
+   ]
+  },
+  {
+   "frame": 33,
+   "type": "touchend"
+  },
+  {
+   "frame": 36,
+   "type": "touchstart",
+   "points": [
+    [
+     410,
+     132
+    ]
+   ]
+  },
+  {
+   "frame": 37,
+   "type": "touchmove",
+   "points": [
+    [
+     403,
+     138
+    ]
+   ]
+  },
+  {
+   "frame": 38,
+   "type": "touchmove",
+   "points": [
+    [
+     396,
+     144
+    ]
+   ]
+  },
+  {
+   "frame": 39,
+   "type": "touchmove",
+   "points": [
+    [
+     389,
+     150
+    ]
+   ]
+  },
+  {
+   "frame": 40,
+   "type": "touchmove",
+   "points": [
+    [
+     382,
+     156
+    ]
+   ]
+  },
+  {
+   "frame": 41,
+   "type": "touchmove",
+   "points": [
+    [
+     375,
+     162
+    ]
+   ]
+  },
+  {
+   "frame": 42,
+   "type": "touchmove",
+   "points": [
+    [
+     368,
+     168
+    ]
+   ]
+  },
+  {
+   "frame": 43,
+   "type": "touchmove",
+   "points": [
+    [
+     361,
+     174
+    ]
+   ]
+  },
+  {
+   "frame": 44,
+   "type": "touchmove",
+   "points": [
+    [
+     354,
+     180
+    ]
+   ]
+  },
+  {
+   "frame": 45,
+   "type": "touchend"
+  }
+ ]
+}

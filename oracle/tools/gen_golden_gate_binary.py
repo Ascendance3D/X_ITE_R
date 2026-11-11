@@ -47,8 +47,29 @@ put("stl/empty.stl", stl(b"zero facets", []))
 put("stl/bad-count.stl", stl(b"count is one too many", TRI, count=3))
 put("stl/bad-count-few.stl", stl(b"count is one too few", TRI, count=1))
 put("stl/short.stl", stl(b"eighty-three bytes", [])[:83])
-# Not a case: a NaN coordinate makes the pinned page log "RangeError: Maximum call stack size exceeded" (measured, see the PR); a finite extreme is.
+# A finite extreme. Non-finite values (NaN, +Inf, -Inf) are in the nonfinite-* files below.
 put("stl/extreme.stl", stl(b"extreme finite values", [((0, 0, 1), (3.0e38, 0, 0), (1.0e-45, 1, 0), (0, 1, -0.0))]))
+NAN, INF = float("nan"), float("inf")
+NF = {"nan": NAN, "inf": INF, "ninf": -INF}
+for tag, v in NF.items():
+    put(f"stl/nonfinite-coord-{tag}.stl", stl(b"non-finite vertex coordinate", [((0, 0, 1), (v, 0, 0), (1, 0, 0), (0, 1, 0))]))
+    put(f"stl/nonfinite-normal-{tag}.stl", stl(b"non-finite normal", [((0, v, 1), (0, 0, 0), (1, 0, 0), (0, 1, 0))]))
+    put(f"stl/nonfinite-all-{tag}.stl", stl(b"all values non-finite", [((v, v, v), (v, v, v), (v, v, v), (v, v, v))]))
+put("stl/nonfinite-mixed.stl", stl(b"mixed non-finite", TRI + [((NAN, 0, 1), (INF, -INF, 0), (1, NAN, 0), (0, 1, INF))]))
+
+
+def stla(name, normal="0 0 1", vs=("0 0 0", "1 0 0", "0 1 0")):
+    return (f"solid {name}\n  facet normal {normal}\n    outer loop\n" + "".join(f"      vertex {v}\n" for v in vs) + "    endloop\n  endfacet\nendsolid " + name + "\n").encode()
+
+
+put("stl/ascii-tri.stl", stla("synthetic"))
+# STLAParser.double takes a number, or a SIGNED constant (`/([+-])(NAN|INF|INFINITY)/i`): an unsigned one is rejected, and `-Infinity`
+# matches `INF` first and leaves `inity`, so it is rejected too.
+ASCII_WORDS = (("nan", "NaN"), ("inf", "Infinity"), ("ninf", "-Infinity"), ("infshort", "inf"), ("nanlow", "nan"), ("pnan", "+nan"),
+               ("mnan", "-NaN"), ("pinf", "+inf"), ("minf", "-inf"), ("minfu", "-INF"), ("pinfinity", "+Infinity"))
+for tag, word in ASCII_WORDS:
+    put(f"stl/ascii-coord-{tag}.stl", stla("synthetic", vs=(f"{word} 0 0", "1 0 0", "0 1 0")))
+    put(f"stl/ascii-normal-{tag}.stl", stla("synthetic", normal=f"0 {word} 1"))
 put("stl/header-utf8.stl", stl("synthetic é€ binary header".encode("utf-8"), TRI))
 put("stl/header-nul.stl", stl(b"before\0after the NUL", TRI))
 
@@ -304,6 +325,15 @@ groups = {
         ["stl/header-utf8.stl"],
         ["stl/header-nul.stl"],
         ["stl/missing.stl"],
+    ],
+    # Own group: the pinned page's MikkTSpace WebAssembly crashes on a non-finite vertex position (logged), and a crashed instance
+    # makes later tangent generation in the same page fail too, so these cases must not share a page with the others.
+    "gg-stl-nonfinite": [
+        *[[f"stl/nonfinite-{k}-{t}.stl"] for k in ("coord", "normal", "all") for t in ("nan", "inf", "ninf")],
+        ["stl/nonfinite-mixed.stl"],
+        ["stl/ascii-tri.stl"],
+        *[[f"stl/ascii-{k}-{t}.stl"] for k in ("coord", "normal") for t in ("nan", "inf", "ninf", "infshort", "nanlow", "pnan", "mnan", "pinf", "minf", "minfu", "pinfinity")],
+        ["stl/tri.stl"],
     ],
     "gg-ply": [
         ["ply/tri-le.ply"],

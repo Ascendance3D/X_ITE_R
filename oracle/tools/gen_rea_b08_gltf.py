@@ -1454,6 +1454,41 @@ ROUTE Loop.loop_ TO Timer1.set_loop
 ROUTE Touch.touchTime TO Timer1.set_startTime
 """ % (gltf, loop.lower()))
 
+# STEP pointer animations on a plain material (no extension): `pointer/roughness-step.gltf` itself does not load in the
+# pinned X_ITE (its material carries KHR_materials_emissive_strength: "Cannot set properties of null (setting
+# '_emissiveStrength')"), so these two give the pointer interpolation something to animate.
+def plain_scene(g):
+    m = g.add("materials", {"name": "M", "pbrMetallicRoughness": {"baseColorFactor": [1, 1, 1, 1], "metallicFactor": 1, "roughnessFactor": 1}})
+    render_scene(g, material=m, shape="quad", cam=False)
+
+ptr_case("roughness-step-plain", plain_scene, "/materials/0/pbrMetallicRoughness/roughnessFactor", "SCALAR", [1, 0, 0.5], times=(0, 1, 2), interp="STEP")
+ptr_case("base-color-step-plain", plain_scene, "/materials/0/pbrMetallicRoughness/baseColorFactor", "VEC4", [(1, 1, 1, 1), (1, 0, 0, 1), (0, 1, 0, 1)], times=(0, 1, 2), interp="STEP")
+
+# Animation drivers for the cargo test crates/x3d-viewer/tests/gltf_anim_step.rs: every animation file of every
+# interpolation (and the STEP pointer animation) gets a driver of the same shape and one event script (a click at frame 4
+# starts Timer1; the dumped frames lie inside the 1 to 2 second animations).
+anim_script = {
+    "settle": True, "console": True, "dumpInlines": True, "size": [512, 512], "t0": 946684800, "dt": 1 / 30, "frames": 64,
+    "capture": [3, 14, 26, 44, 63], "dump": [3, 8, 14, 20, 26, 32, 38, 44, 63],
+    "events": [{"frame": 4, "type": "mousemove", "x": 5, "y": 507}, {"frame": 4, "type": "mousedown", "button": 0, "x": 5, "y": 507}, {"frame": 5, "type": "mouseup", "button": 0, "x": 5, "y": 507}],
+}
+open(os.path.join(OUT, "anim/gltf-anim.json"), "w").write(json.dumps(anim_script, indent=1) + "\n")
+for gltf in [f"../animation/{p}-{i}.gltf" for p in ("translation", "rotation", "scale", "weights") for i in ("step", "linear", "cubicspline")] + ["../pointer/roughness-step.gltf", "../pointer/roughness-step-plain.gltf", "../pointer/base-color-step-plain.gltf"]:
+    label = os.path.basename(gltf)[:-5]
+    open(os.path.join(OUT, f"anim/{label}-driver.wrl"), "w").write("""#VRML V2.0 utf8
+NavigationInfo { type "NONE" }
+DEF Gltf Inline { url "%s" }
+IMPORT Gltf.Timer1 AS Timer1
+Transform {
+  translation 0 0 -3
+  children [
+    DEF Touch TouchSensor { }
+    Shape { appearance Appearance { material Material { transparency 0.9 } } geometry Box { size 100 100 0.1 } }
+  ]
+}
+ROUTE Touch.touchTime TO Timer1.set_startTime
+""" % gltf)
+
 # Inline load / switch / unload driven by keys: 'u' unloads (load FALSE), 'l' loads again, 'g' switches the
 # url to a GLB, 'h' back to the glTF, 'm' sets an MFString with a missing first candidate (fallback).
 os.makedirs(os.path.join(OUT, "inline"), exist_ok=True)

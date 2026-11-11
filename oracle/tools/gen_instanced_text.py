@@ -11,6 +11,10 @@
   it-runtime  a KeySensor drives a Script that changes `string`, FontStyle fields, the instance fields and `geometry` of an
               InstancedShape at run time (a picture after each key)
 
+  it-fields   the output-only fields of Text (textBounds, lineBounds, origin) and length / maxExtent as a Script reads them, for a plain
+              Shape control and for InstancedShapes (with and without FontStyle; scales, rotations and translations on the instances),
+              before and after a run-time change of `string` and `size`; the values are printed into the scene text of the dumped frames
+
   python3 -I -B oracle/tools/gen_instanced_text.py
 """
 import json, os
@@ -98,6 +102,42 @@ start, step = 6, 8
 ev = [{"frame": start + step * n, "type": "key", "key": c} for n, c in enumerate(letters)]
 script("it-runtime", start + step * len(letters) + 6, ev, [start - 2] + [start + step * n + 3 for n in range(len(letters))])
 
+# ---- it-fields ------------------------------------------------------------------------------------------------------------
+w = HEAD + BG
+defs = [("A", "Shape", "-4 3.4 0", ["Ab"], "size 0.8", ""),
+        ("B", "InstancedShape", "-4 1.6 0", ["Ab"], "size 0.8", ""),
+        ("C", "InstancedShape", "0 1.6 0", ["One", "Two"], "size 0.5 spacing 1.3 justify [ \"MIDDLE\" \"END\" ]", ""),
+        ("D", "InstancedShape", "-4 -0.6 0", ["Wide text", "x"], "size 0.5", "length [ 3 1 ] maxExtent 2.2"),
+        ("E", "InstancedShape", "1 -0.6 0", ["abc"], "size 0.5 horizontal FALSE topToBottom TRUE", ""),
+        ("F", "InstancedShape", "-4 -3 0", ["Nofont"], "", ""),
+        ("G", "InstancedShape", "0 -3 0", [""], "size 0.5", ""),
+        ("H", "InstancedShape", "3 -3 0", ["Lang", "g"], "size 0.6 justify [ \"BEGIN\" \"MIDDLE\" ] leftToRight FALSE", "")]
+for n, kind, tr, strs, fs, extra in defs:
+    fstyle = f"fontStyle DEF FS{n} FontStyle {{ {fs} }} " if fs else ""
+    geo = f"DEF TX{n} Text {{ string [ {' '.join(chr(34) + x + chr(34) for x in strs)} ] {fstyle}{extra} solid FALSE }}"
+    if kind == "Shape":
+        node = f"Shape {{ appearance {MAT('0.95 0.95 0.95')} geometry {geo} }}"
+    else:
+        node = (f"InstancedShape {{ appearance {MAT('0.6 0.8 0.9')} translations [ 0 0 0, 2.2 0.3 0 ] scales [ 1 1 1, 1.5 0.7 1 ] "
+                f"rotations [ 0 0 1 0.2 ] geometry {geo} }}")
+    w += T(tr, node)
+names = [d[0] for d in defs]
+w += "DEF K KeySensor { }\nDEF R Script {\n  directOutput TRUE\n  inputOnly SFString on_key\n  inputOutput MFString out [ ]\n"
+for n in names:
+    w += f"  initializeOnly SFNode t{n} USE TX{n}\n"
+w += "  initializeOnly SFNode fsB USE FSB\n  initializeOnly SFNode fsC USE FSC\n  url \"javascript:\n"
+w += "var step = 0;\nfunction dump (t) { return 'tb ' + String (t .textBounds) + ' | lb ' + String (t .lineBounds) + ' | o ' + String (t .origin) + ' | len ' + String (t .length) + ' | max ' + t .maxExtent; }\n"
+w += "function on_key (k)\n{\n   if (k == 'a') { var o = []; "
+w += " ".join(f"o .push ('{n}0 ' + dump (t{n}));" for n in names)
+w += " out = new MFString (... o); }\n"
+w += "   if (k == 'b') { tB .string = new MFString ('Longer', 'Two'); fsC .size = 0.9; fsB .size = 1.4; }\n"
+w += "   if (k == 'c') { var o = []; "
+w += " ".join(f"o .push ('{n}1 ' + dump (t{n}));" for n in names)
+w += " out = new MFString (... o); }\n}\n\"\n}\nROUTE K.keyPress TO R.on_key\n"
+w += "".join("")
+write("it-fields", w)
+script("it-fields", 30, [{"frame": 8, "type": "key", "key": "a"}, {"frame": 14, "type": "key", "key": "b"}, {"frame": 20, "type": "key", "key": "c"}], [10, 26])
+
 # ---- it-extra -------------------------------------------------------------------------------------------------------------
 PIX = 'texture PixelTexture { image 2 2 3 0xff0000 0x00ff00 0x0000ff 0xffff00 }'
 w = HEAD + BG
@@ -138,4 +178,4 @@ d = {"size": [SIZE, SIZE], "t0": 946684800, "dt": 1 / 30, "settle": True, "conso
 rows = ",\n  ".join(json.dumps(grid[r * 51:(r + 1) * 51], separators=(",", ":"))[1:-1] for r in range(51))
 head = json.dumps({k: v for k, v in d.items() if k != "pickProbes"}, separators=(",", ":"))
 open(os.path.join(root, "it-pick.json"), "w").write(head[:-1] + ',"pickProbes":[\n  ' + rows + "\n]}\n")
-print("it-static, it-runtime, it-extra, it-pick")
+print("it-static, it-runtime, it-extra, it-pick, it-fields")

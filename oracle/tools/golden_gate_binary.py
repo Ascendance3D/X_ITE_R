@@ -2,7 +2,7 @@
 """GoldenGate binary dispatch oracle baselines (REA ledger entry sub:parse.golden-gate; pinned X_ITE in headless Chrome, no rendering).
 
   python3 -I oracle/tools/golden_gate_binary.py record [GROUP ...]
-      records each group (gg-stl, gg-ply, gg-ply-splat, gg-glb, gg-dispatch; default all) THREE times with oracle/x_ite-anim.mjs, requires the
+      records each group (gg-stl, gg-stl-nonfinite, gg-ply, gg-ply-splat, gg-glb, gg-dispatch; default all) THREE times with oracle/x_ite-anim.mjs, requires the
       three results to be identical, and writes the first as oracle/golden-gate-binary-baseline/GROUP.json. Identical means every
       key of the result except `warmupFrames` and `loadFrames`: the number of real frames the pinned page needs before the scripted
       frames start depends on the wall clock (10 or 11 in repeated runs of one world), is printed here, and x3d-drive takes it
@@ -17,7 +17,7 @@ from X_ITE runs; the Rust result is compared (crates/x3d-viewer/tests/golden_gat
 import hashlib, json, os, shutil, subprocess, sys
 
 root = os.path.normpath(os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", ".."))
-GROUPS = ["gg-stl", "gg-ply", "gg-ply-splat", "gg-glb", "gg-dispatch"]
+GROUPS = ["gg-stl", "gg-stl-nonfinite", "gg-ply", "gg-ply-splat", "gg-glb", "gg-dispatch"]
 world = lambda g: f"oracle/synthetic-rea-golden-gate-binary/{g}.wrl"
 script = "oracle/synthetic-rea-golden-gate-binary/gg.json"
 tmp = "/tmp/golden-gate-binary"
