@@ -1437,6 +1437,10 @@ function dropDeclEntry (state, name)
    declEntries .delete (entry .field);
    entry .field .removeParent (declRef);
    state .live .delete (name);
+
+   // syncDeclFields scans only the declarations with live field objects (protoObjects keeps the state itself).
+   if (state .live .size === 0)
+      declStates .delete (state);
 }
 
 // What a Script changed in a declaration's field object in place, without an event, goes to the runtime.
