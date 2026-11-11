@@ -14,7 +14,8 @@
 //! `gl.readPixels` and copies them), so they are the GPU's interpolated varyings: on ANGLE Metal the pinned page itself gives numbers
 //! 1 to 2 ulps away from the NVIDIA recording. With `X3D_REFERENCE_PLATFORM=apple-m1` the cases are read from
 //! oracle/rea-pointer-touch-apple-m1-baseline (the same pinned page on the physical M1, three identical runs; common/reference.rs).
-//! The comparison is exact on both platforms.
+//! On both platforms the scene text is exact in five cases and the poses are within 1e-4; the `cancel` case compares the history
+//! before the first touchcancel and the last tap exactly (the kept difference is between them).
 //!
 //! `REA_ONLY=<substring>` restricts the cases.
 

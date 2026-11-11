@@ -1882,7 +1882,8 @@ node oracle/x_ite-web-runtime-02.mjs oracle/web-browser-anchor-pages-01-baseline
 - `rea-pointer-touch-apple-m1-baseline/` is the same pinned page on the physical Apple M1 (Chrome 156.0.8078.80, ANGLE Metal, macOS 27.0.1;
   `tools/record_platform_baseline.py --platform apple-m1 --base rea-pointer-touch-baseline`): three identical runs per case, and all 6
   cases differ from the NVIDIA recording in the scene text only (hit numbers 1 to 2 float32 ulps off). The test reads it with
-  `X3D_REFERENCE_PLATFORM=apple-m1` and compares exactly. See `docs/metal-reference-variation.md`.
+  `X3D_REFERENCE_PLATFORM=apple-m1` and compares as with the NVIDIA recording: scene text exact in five cases, poses within
+  1e-4, and in `cancel` the history before the first touchcancel and the last tap. See `docs/metal-reference-variation.md`.
 - Rust defect fixed: a touchend (and the two-finger touchstart that ends the press) is a TouchEvent without `pageX` and `pageY`, so the
   pinned `PointingDevice.touchend` releases with a NaN pointer: the release does not pick again and the verifying motion hits nothing
   (TouchSensor `isOver` ends at once). Rust released at the touch position (the hit values were sent again, `isOver` stayed until the

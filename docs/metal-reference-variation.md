@@ -156,7 +156,9 @@ Measured on the physical M1 (Apple M1, macOS 27.0.1, Chrome 156.0.8078.80 ANGLE 
 * The pinned page, three runs per case: identical, and all 6 cases differ from the NVIDIA recording in `vrml` only. It gives
   0.4083079 and -0.1467073 itself.
 * Rust against the NVIDIA recording: fails (20 differing lines).
-* Rust against the M1 recording (`X3D_REFERENCE_PLATFORM=apple-m1`): equal in all 6 cases, scene text exact.
+* Rust against the M1 recording (`X3D_REFERENCE_PLATFORM=apple-m1`): the test passes. The scene text is exact in five cases. In
+  `cancel` (the kept difference of ADR 0001 row 1) the test compares the history before the first touchcancel and the last tap,
+  and both are exact.
 
-So the M1 recording `oracle/rea-pointer-touch-apple-m1-baseline` is the reference on that hardware. The comparison stays exact, and no
-Rust code changed.
+So the M1 recording `oracle/rea-pointer-touch-apple-m1-baseline` is the reference on that hardware. The test's rules are the same
+on both platforms (no tolerance was added), and no Rust code changed.
