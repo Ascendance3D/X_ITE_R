@@ -1,0 +1,117 @@
+{
+ "settle": true,
+ "size": [
+  512,
+  512
+ ],
+ "t0": 946684800,
+ "dt": 0.03125,
+ "frames": 37,
+ "capture": [
+  11,
+  19,
+  27,
+  35
+ ],
+ "dump": [
+  37
+ ],
+ "events": [
+  {
+   "frame": 8,
+   "type": "movieSeek",
+   "node": "V0",
+   "time": 0.25
+  },
+  {
+   "frame": 8,
+   "type": "movieSeek",
+   "node": "V1",
+   "time": 0.25
+  },
+  {
+   "frame": 8,
+   "type": "movieSeek",
+   "node": "V2",
+   "time": 0.25
+  },
+  {
+   "frame": 8,
+   "type": "movieSeek",
+   "node": "V3",
+   "time": 0.25
+  },
+  {
+   "frame": 16,
+   "type": "movieSeek",
+   "node": "V0",
+   "time": 0.55
+  },
+  {
+   "frame": 16,
+   "type": "movieSeek",
+   "node": "V1",
+   "time": 0.55
+  },
+  {
+   "frame": 16,
+   "type": "movieSeek",
+   "node": "V2",
+   "time": 0.55
+  },
+  {
+   "frame": 16,
+   "type": "movieSeek",
+   "node": "V3",
+   "time": 0.55
+  },
+  {
+   "frame": 24,
+   "type": "movieSeek",
+   "node": "V0",
+   "time": 0.05
+  },
+  {
+   "frame": 24,
+   "type": "movieSeek",
+   "node": "V1",
+   "time": 0.05
+  },
+  {
+   "frame": 24,
+   "type": "movieSeek",
+   "node": "V2",
+   "time": 0.05
+  },
+  {
+   "frame": 24,
+   "type": "movieSeek",
+   "node": "V3",
+   "time": 0.05
+  },
+  {
+   "frame": 32,
+   "type": "movieSeek",
+   "node": "V0",
+   "time": 0.35
+  },
+  {
+   "frame": 32,
+   "type": "movieSeek",
+   "node": "V1",
+   "time": 0.35
+  },
+  {
+   "frame": 32,
+   "type": "movieSeek",
+   "node": "V2",
+   "time": 0.35
+  },
+  {
+   "frame": 32,
+   "type": "movieSeek",
+   "node": "V3",
+   "time": 0.35
+  }
+ ]
+}
