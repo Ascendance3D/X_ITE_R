@@ -91,6 +91,18 @@ async function anchorCase (page, env, anchor, { wait = 1500 } = { })
 
    await page .waitForTimeout (600);
 
+   // A world replaced in the same page (target _self, a fragment-less X3D url) is done when the new world has loaded or
+   // failed: on a slow host the shutdown of the old world can come well before the new world's initialized and load.
+   for (let i = 0; i < 200; ++ i)
+   {
+      const events = await page .evaluate (() => window .events) .catch (() => null);
+
+      if (!events || !events .includes ("shutdown") || events .includes ("load") || events .includes ("error"))
+         break;
+
+      await page .waitForTimeout (50);
+   }
+
    const same = await page .evaluate (() =>
    {
       const browser = document .querySelector ("x3d-canvas") .browser;
