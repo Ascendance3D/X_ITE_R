@@ -3,10 +3,15 @@
  * Chrome) and save the WebGL drawing buffer as PNG. The Rust renderer must draw the same picture.
  *
  *   node oracle/x_ite-shot.mjs <corpus_dir> <out_dir> [--size 512x512] [--jobs 6]
- *                              [--frames 10] [--settle 400] [--only <substring>] [--oit]
+ *                              [--frames 10] [--settle 400] [--only <substring>] [--oit] [--canvas]
  *
  * Writes <out_dir>/<file>.png (same relative path, ".png" appended) and <out_dir>/index.json
  * (renderer string, size, sha256 of the raw RGBA and of the PNG, console log, errors).
+ *
+ * --canvas also writes <out_dir>/<file>.canvas.json: every 2D canvas the page filled and read back (ScreenText draws its glyphs
+ * with `fill ()` and takes the pixels with `getImageData`), as { width, height, calls, alpha }: the path and transform calls since the
+ * canvas was cleared, and the alpha of every pixel in the canvas' row order. The page's own canvas methods run unchanged; they are
+ * only wrapped to keep their arguments. Without the option nothing is wrapped.
  *
  * Headless only: --headless=new, never a window. All non-local requests are aborted.
  * Never touches dump.html / x_ite-dump.mjs; the page is x_ite-pin/src/shot.html.
@@ -35,6 +40,7 @@ const FRAMES   = Number (opt ("--frames", "10"));
 const SETTLE   = Number (opt ("--settle", "400"));
 const ONLY     = opt ("--only", "");
 const OIT      = argv .includes ("--oit");   // OrderIndependentTransparency browser option on (sub:render.transparency-sorting)
+const CANVAS   = argv .includes ("--canvas"); // record the 2D canvas calls and pixels (ScreenText raster)
 
 const corpus = resolve (corpusArg);
 const outDir = resolve (outArg);
@@ -114,6 +120,37 @@ async function renderOne (file)
 
    const page = await context .newPage ();
 
+   if (CANVAS)
+   {
+      await page .addInitScript (() =>
+      {
+         window .canvasLog = [ ];
+
+         const prototype = CanvasRenderingContext2D .prototype;
+
+         for (const name of [ "save", "restore", "translate", "scale", "beginPath", "moveTo", "lineTo", "quadraticCurveTo", "bezierCurveTo", "closePath", "fill", "fillRect" ])
+         {
+            const method = prototype [name];
+
+            prototype [name] = function (... args) { window .canvasLog .push ([ name, ... args ]); return method .apply (this, args); };
+         }
+
+         const getImageData = prototype .getImageData;
+
+         prototype .getImageData = function (... args)
+         {
+            const data  = getImageData .apply (this, args);
+            const alpha = [ ];
+
+            for (let i = 3; i < data .data .length; i += 4)
+               alpha .push (data .data [i]);
+
+            window .canvasLog .push ([ "getImageData", data .width, data .height, alpha ]);
+            return data;
+         };
+      });
+   }
+
    try
    {
       await page .goto (`${base}/x_ite-pin/src/shot.html`);
@@ -134,6 +171,40 @@ async function renderOne (file)
       ]);
 
       const entry = { file, ok: r .ok, error: r .error, log: JSON .parse (JSON .stringify (r .log ?? [ ]) .replaceAll (base, "http://oracle")) };
+
+      if (CANVAS)
+      {
+         // One record for each canvas that was cleared (fillRect), drawn and read back; equal records are kept once, in sorted order.
+         const canvases = [ ];
+         let calls = [ ];
+
+         for (const [ name, ... args ] of await page .evaluate (() => window .canvasLog))
+         {
+            if (name === "fillRect")
+               calls = [ ];
+            else if (name === "getImageData")
+            {
+               const record = JSON .stringify ({ width: args [0], height: args [1], calls, alpha: args [2] });
+
+               if (!canvases .includes (record))
+                  canvases .push (record);
+            }
+            else
+               calls .push ([ name, ... args ]);
+         }
+
+         // Fonts arrive in any order, so the order in which the texts are drawn is not part of the record.
+         canvases .sort ();
+
+         const text = `{"canvases":[\n${canvases .join (",\n")}\n]}\n`;
+         const out  = join (outDir, file + ".canvas.json");
+
+         await mkdir (dirname (out), { recursive: true });
+         await writeFile (out, text);
+
+         entry .canvases     = canvases .length;
+         entry .canvasSha256 = createHash ("sha256") .update (text) .digest ("hex");
+      }
 
       if (r .ok)
       {

@@ -9,6 +9,7 @@ pub mod fonts;
 pub mod layout;
 pub mod libtess;
 pub mod raster;
+pub mod skia_edge;
 pub mod timsort;
 pub mod variation;
 

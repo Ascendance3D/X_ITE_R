@@ -6,6 +6,7 @@
 
 use crate::font::Cmd;
 use crate::font::{Font, PrimitiveQuality};
+use crate::skia_edge::PathCmd;
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub enum Alignment {
@@ -1056,60 +1057,29 @@ fn screen_text(st: State, text: &TextParams, fs: &FontStyleParams) -> TextLayout
     let size = fs.size;
     let size_units_per_em = size / st.font.units_per_em;
     let mut add = |glyph: u16, x: f64, y: f64, sx: f64, sy: f64| {
-        let mut contours: Vec<Vec<[f64; 2]>> = vec![];
-        let mut contour: Vec<[f64; 2]> = vec![];
+        // The canvas' device space. ScreenText draws under `cx .translate (0, height); cx .scale (1, -1)` and opentype.js gives
+        // a path with Y down, so a device row is a row of the text counted from its bottom: the canvas holds the text upside
+        // down, and row 0 of the alpha is the bottom of the text. The scan converter's rounding depends on this direction.
         let at = |gx: f64, gy: f64| [x + sx * gx * size - min[0], y + sy * gy * size - min[1]];
-
-        for c in st.font.glyph_commands(glyph) {
-            match c {
-                Cmd::M(gx, gy) => {
-                    if !contour.is_empty() {
-                        contours.push(std::mem::take(&mut contour));
-                    }
-
-                    contour.push(at(gx, gy));
-                }
-                Cmd::L(gx, gy) => contour.push(at(gx, gy)),
-                Cmd::Q(cx, cy, gx, gy) => {
-                    let from = *contour.last().unwrap_or(&[0.0, 0.0]);
-
-                    skia_quad(from, at(cx, cy), at(gx, gy), &mut contour);
-                }
-                // CFF outlines: not Skia's cubic edge builder, a fixed 16 lines per curve (ScreenText with a CFF font is
-                // not verified against the canvas).
+        // Every glyph is its own path (`cx .beginPath ()` ... `cx .fill ()`).
+        let path: Vec<PathCmd> = st
+            .font
+            .glyph_commands(glyph)
+            .into_iter()
+            .map(|c| match c {
+                Cmd::M(gx, gy) => PathCmd::MoveTo(at(gx, gy)),
+                Cmd::L(gx, gy) => PathCmd::LineTo(at(gx, gy)),
+                Cmd::Q(cx, cy, gx, gy) => PathCmd::QuadTo(at(cx, cy), at(gx, gy)),
                 Cmd::C(x1, y1, x2, y2, gx, gy) => {
-                    let p0 = *contour.last().unwrap_or(&[0.0, 0.0]);
-                    let (p1, p2, p3) = (at(x1, y1), at(x2, y2), at(gx, gy));
-
-                    for k in 1..=16 {
-                        let t = k as f64 / 16.0;
-                        let u = 1.0 - t;
-                        let w = [u * u * u, 3.0 * u * u * t, 3.0 * u * t * t, t * t * t];
-
-                        contour.push([
-                            w[0] * p0[0] + w[1] * p1[0] + w[2] * p2[0] + w[3] * p3[0],
-                            w[0] * p0[1] + w[1] * p1[1] + w[2] * p2[1] + w[3] * p3[1],
-                        ]);
-                    }
+                    PathCmd::CubicTo(at(x1, y1), at(x2, y2), at(gx, gy))
                 }
-            }
-        }
+            })
+            .collect();
 
-        if !contour.is_empty() {
-            contours.push(contour);
-        }
-
-        let coverage = crate::raster::fill(width, height, &contours);
-
-        for (dst, src) in canvas_alpha.iter_mut().zip(coverage) {
-            let src = (src * 255.0).round() as u32;
-
-            if src != 0 {
-                let (d, s) = (*dst as u32, src);
-
-                *dst = (s + (d * (255 - s) + 127) / 255) as u8;
-            }
-        }
+        crate::skia_edge::composite(
+            &mut canvas_alpha,
+            &crate::skia_edge::fill_path(width, height, &path),
+        );
     };
 
     if fs.horizontal {
@@ -1190,69 +1160,4 @@ fn screen_text(st: State, text: &TextParams, fs: &FontStyleParams) -> TextLayout
 
     out.texture = Some((width as u32, height as u32, rgba));
     out
-}
-
-/// How Skia cuts a quadratic curve into lines (SkEdgeBuilder: SkChopQuadAtYExtrema, then SkQuadraticEdge: 1 << shift lines
-/// by `diff_to_shift`, with the AA scale of 2): the canvas fills the polylines, not the curves. Appends the points after `p0`.
-fn skia_quad(p0: [f64; 2], p1: [f64; 2], p2: [f64; 2], out: &mut Vec<[f64; 2]>) {
-    // SkChopQuadAtYExtrema
-    let (a, b, c) = (p0[1], p1[1], p2[1]);
-
-    if (b - a) * (c - b) < 0.0 {
-        let t = (a - b) / (a - 2.0 * b + c);
-
-        if t > 0.0 && t < 1.0 {
-            let lerp =
-                |p: [f64; 2], q: [f64; 2]| [p[0] + (q[0] - p[0]) * t, p[1] + (q[1] - p[1]) * t];
-            let (ab, bc) = (lerp(p0, p1), lerp(p1, p2));
-            let mut mid = lerp(ab, bc);
-            let y = mid[1];
-            let (mut ab, mut bc) = (ab, bc);
-
-            ab[1] = y;
-            bc[1] = y;
-            mid[1] = y;
-            quad_edge(p0, ab, mid, out);
-            quad_edge(mid, bc, p2, out);
-            return;
-        }
-    }
-
-    quad_edge(p0, p1, p2, out);
-}
-
-/// SkQuadraticEdge.setQuadraticWithoutUpdate: the number of lines of one Y-monotonic quad.
-fn quad_edge(p0: [f64; 2], p1: [f64; 2], p2: [f64; 2], out: &mut Vec<[f64; 2]>) {
-    // The points as SkFDot6 scaled up by the AA shift (2): 26.6 fixed point times 4.
-    let f = |v: f64| (v * 256.0) as i32;
-    let (x0, y0, x1, y1, x2, y2) = (f(p0[0]), f(p0[1]), f(p1[0]), f(p1[1]), f(p2[0]), f(p2[1]));
-    let dx = (((x1 << 1) - x0 - x2) >> 2).abs();
-    let dy = (((y1 << 1) - y0 - y2) >> 2).abs();
-    // cheap_distance, then diff_to_shift
-    let dist = if dx > dy {
-        dx + (dy >> 1)
-    } else {
-        dy + (dx >> 1)
-    };
-    let dist = (dist + (1 << 4)) >> (3 + 2);
-    let mut shift = (32 - (dist as u32).leading_zeros()) >> 1;
-
-    // At least 1 subdivision, at most MAX_COEFF_SHIFT (6).
-    if shift == 0 {
-        shift = 1;
-    } else if shift > 6 {
-        shift = 6;
-    }
-
-    let n = 1usize << shift;
-
-    for i in 1..=n {
-        let t = i as f64 / n as f64;
-        let u = 1.0 - t;
-
-        out.push([
-            u * u * p0[0] + 2.0 * u * t * p1[0] + t * t * p2[0],
-            u * u * p0[1] + 2.0 * u * t * p1[1] + t * t * p2[1],
-        ]);
-    }
 }

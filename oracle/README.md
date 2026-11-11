@@ -1943,3 +1943,35 @@ so `roughness-step-plain` and `base-color-step-plain` animate a plain material);
   and CFF2 outlines gets a variation manager, whose default instance is the first instance equal to the axis defaults, else the instance named
   "Regular", else the axis defaults, so a charstring `blend` uses the `avar`-mapped normalized coordinates and every path coordinate is rounded
   (`Math.round`); X_ITE calls `glyph .getPath (0, 0, 1)` without the font, so HVAR advances are never applied. X_ITE has no way to set other coordinates.
+
+## ScreenText raster: the canvas of CFF and TrueType text (`rea-cff-screen-raster-baseline/`)
+
+- `synthetic-rea-cff-screen-raster/` holds 6 hand-written worlds: ScreenFontStyle text with the authored CFF font of
+  `synthetic-rea-b24-cff` through a FontLibrary (`cff-sr-justify`, `cff-sr-sizes` at 14, 20, 28 and 40 pixels, `cff-sr-large` at 90,
+  `cff-sr-vertical`, and `cff-sr-lines` with glyphs of straight lines only) and with the default TrueType font (`ttf-sr-default`).
+- `x_ite-shot.mjs --canvas` also writes `<world>.canvas.json`: for every 2D canvas that the page cleared, filled and read back, the
+  page's own canvas calls (transforms and glyph paths) and the alpha of every pixel that `getImageData` returned. The canvas methods
+  are only wrapped to keep their arguments; without the option nothing is wrapped. Equal records are kept once, in sorted order
+  (fonts arrive in any order).
+- `tools/rea_cff_screen_raster.py record` shoots the worlds three times and keeps the first run only if the pictures and the canvas
+  records of the three runs are identical. Prepare the worktree as in "Recording from a worktree".
+- `crates/x3d-text/tests/rea_screen_canvas.rs` gives the recorded calls to `x3d_text::skia_edge` (the code that ScreenText uses) and
+  compares the alpha of the canvas: at most 0.5% of the canvas' pixels more than 8 off. The canvas is only the text box, so this
+  is far stricter than the same bound on a 512 × 512 picture. `crates/x3d-render/tests/render_rea_cff_screen_raster.rs` compares
+  the pictures (the place and size of the text box).
+- What the canvas does (Chrome's software canvas, Skia's analytic anti-aliasing): it fills polylines, not curves. A line's ends are
+  truncated to 1/256 pixel in X and snapped to a quarter pixel in Y. A curve is cut at its Y extrema, and each part is walked in
+  `1 << shift` forward-difference steps in 16.16 fixed point, with the Y of every step snapped to a quarter pixel. The canvas holds
+  the text upside down (`cx .translate (0, height); cx .scale (1, -1)` on a path with Y down), so a device row counts from the
+  bottom of the text. `crates/x3d-text/src/skia_edge.rs` does the same.
+- Measured on this baseline (pixels of a canvas more than 8 off): before, with exact curve points, every one of the 15 canvases that
+  hold text was over the bound (0.54% to 7.4%). Now the 4 TrueType canvases are at 0.00% to 0.11% and 5 of the 11 CFF canvases are
+  within the bound (the lines-only glyphs at 0.02% and 0.03%).
+- Known gap, pinned by name in the test (`KNOWN_GAPS`, 6 canvases at 0.71% to 1.24%): glyphs of cubic curves. Where a cubic bulges
+  into the filled span (a counter, the inside of a bowl), Chrome's canvas has the edge about 0.1 pixel further left than these
+  polylines. A quadratic curve, and a cubic that bulges away from its span, do not show it (measured with single arcs on Chrome
+  156). The rule is not known, so it is not copied.
+
+```
+XITE_TESTS=<x_ite-tests> python3 -I -B oracle/tools/rea_cff_screen_raster.py record
+```

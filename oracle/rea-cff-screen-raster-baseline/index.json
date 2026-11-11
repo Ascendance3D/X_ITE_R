@@ -1,0 +1,117 @@
+{
+ "pinned": "34cdf9f97",
+ "chrome": "156.0.8078.47",
+ "oit": false,
+ "size": [
+  512,
+  512
+ ],
+ "frames": 10,
+ "settleMs": 400,
+ "gl": {
+  "vendor": "Google Inc. (NVIDIA Corporation)",
+  "renderer": "ANGLE (NVIDIA Corporation, NVIDIA GeForce RTX 3060 Ti/PCIe/SSE2, OpenGL ES 3.2)",
+  "version": "WebGL 2.0 (OpenGL ES 3.0 Chromium)",
+  "contextAttributes": {
+   "alpha": true,
+   "antialias": false,
+   "depth": true,
+   "desynchronized": false,
+   "failIfMajorPerformanceCaveat": false,
+   "powerPreference": "default",
+   "premultipliedAlpha": true,
+   "preserveDrawingBuffer": true,
+   "stencil": false,
+   "xrCompatible": false
+  },
+  "multisampling": 0,
+  "antialiased": true,
+  "splashVisible": false,
+  "canvasDisplay": "inline",
+  "drawingBuffer": [
+   512,
+   512
+  ],
+  "x_ite": "16.5.0"
+ },
+ "results": [
+  {
+   "file": "cff-sr-justify.wrl",
+   "ok": true,
+   "log": [],
+   "canvases": 4,
+   "canvasSha256": "13374d4bb3691d0ad29d2807cceeebefe2ffbe0f0d9d197f7943bde596dde5d8",
+   "width": 512,
+   "height": 512,
+   "rgbaSha256": "016b53777530317e1129198ae69124402405ca496baa41ec5bc2212e54d98020",
+   "pngSha256": "25812a5b743888bae8b28afe0918594462e801fafbc2c138ffa54a28ba7815b3",
+   "splashVisible": false,
+   "canvasDisplay": "block"
+  },
+  {
+   "file": "cff-sr-large.wrl",
+   "ok": true,
+   "log": [],
+   "canvases": 1,
+   "canvasSha256": "31063bca8447ae131bab7b6ab7ba3b5e468e0c593f925b90ded5526592062979",
+   "width": 512,
+   "height": 512,
+   "rgbaSha256": "6ba46d90645d4ea90e4785a6fd0551c7f61ee4a12bd90188861e0e31da532f1d",
+   "pngSha256": "e4c2fce931523220779bab71fc68c57458020a162e6c159aeb95be56a9acdd6f",
+   "splashVisible": false,
+   "canvasDisplay": "block"
+  },
+  {
+   "file": "cff-sr-lines.wrl",
+   "ok": true,
+   "log": [],
+   "canvases": 2,
+   "canvasSha256": "a4452487e5c0945550279785d110339eacda7599c44ebf106ddd5c2091b8bc8c",
+   "width": 512,
+   "height": 512,
+   "rgbaSha256": "dc5bd73e3a211b7c7723997e613de5968bf63640fe10dfa83ce7247231a4bc1f",
+   "pngSha256": "85e8bf4bed83675e89462e72ef3c42d27f97eea8932363b6099455b7da0fddc6",
+   "splashVisible": false,
+   "canvasDisplay": "block"
+  },
+  {
+   "file": "cff-sr-sizes.wrl",
+   "ok": true,
+   "log": [],
+   "canvases": 4,
+   "canvasSha256": "a4b8018adfd9c87078ed7f11be41ab0ac665e97bd745a3a6f8e9edde68b4bea1",
+   "width": 512,
+   "height": 512,
+   "rgbaSha256": "dcf6e2e2c10b68de26a0724699ff4a98dc4152fa017df640d91054c71e50e523",
+   "pngSha256": "9aee1ddfae995a21db75fa35099a9d727ed210e7b53f8c73841ff207a1de1bf2",
+   "splashVisible": false,
+   "canvasDisplay": "block"
+  },
+  {
+   "file": "cff-sr-vertical.wrl",
+   "ok": true,
+   "log": [],
+   "canvases": 2,
+   "canvasSha256": "4260ce3fff033910e4c2328545161d41f3cbc5cc03be01ebb22feb860f576527",
+   "width": 512,
+   "height": 512,
+   "rgbaSha256": "d37ebd05dd732afef29b93f8e8d070bf442b3509ae5bf1f162b3572d52ae1d5c",
+   "pngSha256": "34b3851776034539fa64b50b32a3f9cbd90dbd1c3d7784a67fe7b561d5cdc300",
+   "splashVisible": false,
+   "canvasDisplay": "block"
+  },
+  {
+   "file": "ttf-sr-default.wrl",
+   "ok": true,
+   "log": [],
+   "canvases": 4,
+   "canvasSha256": "bec77d5db31ad65d4d8e60b64123261456a114b2d783d2ecd3c3c9ef8f67c2df",
+   "width": 512,
+   "height": 512,
+   "rgbaSha256": "47be4a0464a326803fa09ad9acd5e147cf32b5dd56275a1f97a908030a905283",
+   "pngSha256": "bff78c19daee60accdf38a7b44ae85ad8b7d8d038169bd958ecadd231103f708",
+   "splashVisible": false,
+   "canvasDisplay": "block"
+  }
+ ]
+}

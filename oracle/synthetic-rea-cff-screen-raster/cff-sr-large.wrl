@@ -2,4 +2,4 @@
 PROFILE Full
 META "title" "cff-sr-large"
 DEF L1 FontLibrary { family "CffLib" url "../synthetic-rea-b24-cff/cff-basic.otf" }
-Shape { geometry Text { string [ "BS" ] fontStyle ScreenFontStyle { family "CffLib" pointSize 160 justify [ "MIDDLE" "MIDDLE" ] } } }
+Shape { geometry Text { string [ "i" "OQSB" ] fontStyle ScreenFontStyle { family "CffLib" pointSize 90 justify [ "MIDDLE" "MIDDLE" ] } } }
