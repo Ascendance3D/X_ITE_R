@@ -724,3 +724,42 @@ fn pinned_timing_keeps_its_seek_rules() {
     at(&mut rt, 102.2);
     assert_eq!(seek(&mut rt, 0.65), None);
 }
+
+#[test]
+fn an_mp4_video_asks_the_page_for_its_sound_and_plays_it_on_the_timeline() {
+    // ADR 0015: the load of an MP4 is followed by a Sound call; the page answers with what decodeAudioData gave.
+    let mut rt = load("clip.mp4", "startTime 102 loop TRUE", MovieTiming::Iso);
+    let ops = rt.take_video_ops();
+    let token = match ops.as_slice() {
+        [VideoOp::Load { token, .. }, VideoOp::Sound(t)] if t == token => *token,
+        _ => panic!("{ops:?}"),
+    };
+
+    assert!(rt.video_loaded(token, 2, 2, 2.0, true, vec![0; 16]));
+
+    // The late-audio file: an empty edit of 0.228 s; decodeAudioData gives the 1.772 s of samples from 0.
+    let late = std::fs::read(
+        std::path::PathBuf::from(env!("CARGO_MANIFEST_DIR"))
+            .join("tests/data/mp4/h264-aac-audio-late.mp4"),
+    )
+    .unwrap();
+    let samples = vec![vec![0.5f32; 85024]; 2];
+
+    assert!(rt.video_sound(token, &late, samples, 48000.0));
+    assert!(!rt.video_sound(token + 1000, &late, vec![vec![0.0; 4]], 48000.0));
+
+    let m = movie(&rt);
+    let element = rt
+        .sound
+        .get(&m)
+        .and_then(|s| s.media.as_ref())
+        .expect("the sound");
+
+    // Padded to the element's duration (2 s), so a loop of the sound and of the pictures is the same length.
+    assert!(
+        (element.duration - 2.0).abs() < 1e-6,
+        "{}",
+        element.duration
+    );
+    assert_eq!(rt.movie_audio_resyncs(m), Some(0));
+}

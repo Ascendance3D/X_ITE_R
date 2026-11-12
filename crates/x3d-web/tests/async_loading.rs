@@ -1284,11 +1284,13 @@ fn a_video_is_the_pages_element_and_a_video_that_fails_goes_on_with_the_next_can
     poll(&mut s);
 
     let ops = s.take_video_ops();
-    let [VideoOp::Load { token: second, url }] = ops.as_slice() else {
+    // An MP4: the page also decodes its sound (ADR 0015).
+    let [VideoOp::Load { token: second, url }, VideoOp::Sound(sound)] = ops.as_slice() else {
         panic!("{ops:?}");
     };
 
     assert_eq!(url, &w("m2.mp4"));
+    assert_eq!(sound, second);
     assert_eq!(net.requested(), Vec::<String>::new());
 
     // The second plays: its first frame is the texture, and the node has the video's outputs.

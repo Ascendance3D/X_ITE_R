@@ -2490,6 +2490,7 @@ impl WebBrowser {
                 VideoOp::Load { token, url } => {
                     call(&["load".into(), num(token), url.as_str().into()])
                 }
+                VideoOp::Sound(t) => call(&["sound".into(), num(t)]),
                 VideoOp::Play(t) => call(&["play".into(), num(t)]),
                 VideoOp::Pause(t) => call(&["pause".into(), num(t)]),
                 VideoOp::Rewind(t) => call(&["rewind".into(), num(t)]),
@@ -2538,6 +2539,30 @@ impl WebBrowser {
             if l.rt
                 .video_loaded(token, width, height, duration, has_sound, rgba.to_vec())
             {
+                return;
+            }
+        }
+    }
+
+    /// The sound of the page's MP4 video element `token` (ADR 0015): the file's bytes, the sample rate and one
+    /// `Float32Array` per channel, as the page's `decodeAudioData` gave them. The engine plays it through the node's audio
+    /// source on the movie time ([`Runtime::video_sound`]).
+    #[wasm_bindgen(js_name = videoSound)]
+    pub fn video_sound(&mut self, token: f64, data: &[u8], rate: f32, channels: js_sys::Array) {
+        let token = token as u64;
+        let channels: Vec<Vec<f32>> = channels
+            .iter()
+            .map(|c| js_sys::Float32Array::from(c).to_vec())
+            .collect();
+
+        for w in self.worlds.values_mut() {
+            if w.session.video_sound(token, data, channels.clone(), rate) {
+                return;
+            }
+        }
+
+        for l in self.loads.values_mut() {
+            if l.rt.video_sound(token, data, channels.clone(), rate) {
                 return;
             }
         }

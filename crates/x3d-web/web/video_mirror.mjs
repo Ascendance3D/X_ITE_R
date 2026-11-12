@@ -41,13 +41,16 @@ export class VideoMirror
    // What WebBrowser.takeVideoOps gave: { live, ops }.
    apply ({ live, ops })
    {
+      // A `sound` call follows the `load` of an MP4 (ADR 0015).
+      const sound = new Set (ops .filter (op => op [0] === "sound") .map (op => op [1]));
+
       for (const op of ops)
       {
          const [ name, token, ... args ] = op;
 
          if (name === "load")
-            this .#load (token, args [0]);
-         else
+            this .#load (token, args [0], sound .has (token));
+         else if (name !== "sound")
             this .#call (name, token, args);
       }
 
@@ -106,11 +109,14 @@ export class VideoMirror
       this .#videos .clear ();
    }
 
-   // MovieTexture.loadVideo.
-   #load (token, url)
+   // MovieTexture.loadVideo. `mp4`: the engine plays the sound (ADR 0015): the file is read once with `fetch`, the element
+   // plays a `blob:` URL of it, muted, and `decodeAudioData` (the platform's AAC decoder) decodes the sound, which goes to
+   // the engine with the bytes (WebBrowser.videoSound). The element then never sounds, as X_ITE's element, whose sound goes
+   // only into the node's audio source (MovieTexture.js:118-119).
+   #load (token, url, mp4 = false)
    {
       const video = document .createElement ("video");
-      const entry = { video, loaded: false, dirty: false, lastTime: -1, wantPlay: false, retried: 0 };
+      const entry = { video, loaded: false, dirty: false, lastTime: -1, wantPlay: false, retried: 0, blob: null, sound: null };
 
       this .#videos .set (token, entry);
 
@@ -136,7 +142,24 @@ export class VideoMirror
          video .requestVideoFrameCallback ?.(watch);
 
          entry .lastTime = video .currentTime;
-         this .#engine () ?.videoLoaded (token, video .videoWidth, video .videoHeight, video .duration, hasAudioTracks (video), this .#pixels (video));
+
+         const loaded = sound =>
+         {
+            if (this .#videos .get (token) !== entry)
+               return;
+
+            const engine = this .#engine ();
+
+            engine ?.videoLoaded (token, video .videoWidth, video .videoHeight, video .duration, !! sound || hasAudioTracks (video), this .#pixels (video));
+
+            if (sound)
+               engine ?.videoSound (token, sound .bytes, sound .buffer .sampleRate, Array .from ({ length: sound .buffer .numberOfChannels }, (_, i) => sound .buffer .getChannelData (i)));
+         };
+
+         if (entry .sound)
+            entry .sound .then (loaded);
+         else
+            loaded (null);
       };
 
       video .onerror =
@@ -153,7 +176,37 @@ export class VideoMirror
       video .crossOrigin = "anonymous";
       video .preload     = "auto";
       video .playsInline = true;
-      video .src         = url;
+
+      if (!mp4)
+      {
+         video .src = url;
+         return;
+      }
+
+      video .muted = true;
+
+      fetch (url, { mode: "cors", credentials: "same-origin" }) .then (async response =>
+      {
+         if (!response .ok)
+            throw new Error (response .statusText);
+
+         const bytes = new Uint8Array (await response .arrayBuffer ());
+
+         if (this .#videos .get (token) !== entry)
+            return;
+
+         // A file without sound, or a codec that the platform does not decode: the video plays without sound.
+         entry .sound = new OfflineAudioContext (1, 1, 48000) .decodeAudioData (bytes .slice () .buffer)
+            .then (buffer => ({ buffer, bytes }), () => null);
+         entry .blob  = URL .createObjectURL (new Blob ([ bytes ], { type: "video/mp4" }));
+         video .src   = entry .blob;
+      })
+      .catch (() =>
+      {
+         // The element's own request fails the same way: its `error` event (MovieTexture.loadVideo).
+         if (this .#videos .get (token) === entry && video .onerror)
+            video .onerror (new Event ("error"));
+      });
    }
 
    // set_start, set_pause, set_loop and set_speed__ of the engine's MovieTexture.
@@ -256,6 +309,9 @@ export class VideoMirror
       video .pause ();
       video .removeAttribute ("src");
       video .load ();
+
+      if (entry .blob)
+         URL .revokeObjectURL (entry .blob);
    }
 
    // The picture of the element as RGBA rows from the top.
