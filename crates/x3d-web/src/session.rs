@@ -485,6 +485,11 @@ impl Session {
         Some((audio.uid(), audio.take_ops()))
     }
 
+    /// The audio engine of the world, when its number is `uid` ([`x3d_runtime::sound::AudioEngine::uid`]).
+    pub fn audio_engine(&mut self, uid: u64) -> Option<&mut x3d_runtime::sound::AudioEngine> {
+        self.rt_mut().audio.as_mut().filter(|a| a.uid() == uid)
+    }
+
     /// The calls of the world's MovieTextures for the page's `<video>` elements since the last call.
     pub fn take_video_ops(&mut self) -> Vec<x3d_runtime::nodes::movie_texture::VideoOp> {
         self.rt_mut().take_video_ops()

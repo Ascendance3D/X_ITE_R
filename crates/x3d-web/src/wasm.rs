@@ -2871,6 +2871,42 @@ impl WebBrowser {
         ))
     }
 
+    /// What the page read from its AnalyserNode `slot` of the audio engine `uid` in this frame (web/audio_mirror.mjs,
+    /// `readAnalysers`): getByteFrequencyData, getByteTimeDomainData, getFloatFrequencyData and getFloatTimeDomainData. The
+    /// engine's graph only records the calls in a page, so the Analyser node's data fields come from this, as X_ITE reads
+    /// them from the page's node (Analyser.set_time). An unknown engine or a slot that is no AnalyserNode is ignored.
+    #[wasm_bindgen(js_name = setAnalyserData)]
+    pub fn set_analyser_data(
+        &mut self,
+        uid: f64,
+        slot: u32,
+        byte_frequency: &[u8],
+        byte_time_domain: &[u8],
+        float_frequency: &[f32],
+        float_time_domain: &[f32],
+    ) {
+        let uid = uid as u64;
+        let reading = x3d_runtime::sound::AnalyserReading {
+            byte_frequency: byte_frequency.to_vec(),
+            byte_time_domain: byte_time_domain.to_vec(),
+            float_frequency: float_frequency.to_vec(),
+            float_time_domain: float_time_domain.to_vec(),
+        };
+        let engine = self
+            .worlds
+            .values_mut()
+            .find_map(|w| w.session.audio_engine(uid))
+            .or_else(|| {
+                self.loads
+                    .values_mut()
+                    .find_map(|l| l.rt.audio.as_mut().filter(|a| a.uid() == uid))
+            });
+
+        if let Some(engine) = engine {
+            engine.set_page_analyser(slot as usize, reading);
+        }
+    }
+
     /// Buffer `index` of the last [`WebBrowser::take_audio_ops`]: `[sampleRate, channel 0, channel 1, ...]`, each channel
     /// a Float32Array.
     #[wasm_bindgen(js_name = audioBuffer)]

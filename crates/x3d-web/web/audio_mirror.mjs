@@ -23,6 +23,7 @@ export class AudioMirror
    #queue = Promise .resolve ();
    #disposed = false;
    #elements = new Map ();    // MediaStreamAudioDestinationNode -> the <audio> element that plays its stream
+   #analyserData = new WeakMap (); // AnalyserNode -> the arrays readAnalysers fills
 
    // `context`: the page's AudioContext. `read .buffer (index)`: [ sampleRate, ... Float32Array ] of an op's `{ buffer }`
    // argument; `read .bytes (index)`: the Uint8Array of its `{ encoded }` argument (the file an AudioBuffer was decoded from).
@@ -115,6 +116,38 @@ export class AudioMirror
       this .#elements .delete (node);
       quiet (() => element .pause ());
       element .srcObject = null;
+   }
+
+   // Analyser.set_time (Analyser.js:60-87) reads the four data arrays of the page's AnalyserNode every frame. No signal goes
+   // through the engine's graph, so the page reads its own node of each engine Analyser and gives the data to the engine
+   // (`setAnalyserData`), in X_ITE's order: byte frequency, byte time domain, float frequency, float time domain. Called
+   // before each frame; a node the mirror makes in a frame is read from the next one.
+   readAnalysers (engine)
+   {
+      for (const [ uid, nodes ] of this .#engines)
+      {
+         for (const [ slot, node ] of nodes)
+         {
+            if (!(node instanceof AnalyserNode))
+               continue;
+
+            const bins = node .frequencyBinCount;
+            let data   = this .#analyserData .get (node);
+
+            if (data ?.[0] .length !== bins)
+            {
+               data = [ new Uint8Array (bins), new Uint8Array (bins), new Float32Array (bins), new Float32Array (bins) ];
+               this .#analyserData .set (node, data);
+            }
+
+            node .getByteFrequencyData  (data [0]);
+            node .getByteTimeDomainData (data [1]);
+            node .getFloatFrequencyData  (data [2]);
+            node .getFloatTimeDomainData (data [3]);
+
+            engine .setAnalyserData (uid, slot, ... data);
+         }
+      }
    }
 
    // X3DSoundContext.startAudioElements: the `<audio>` elements that are not playing yet are played again (the autoplay
