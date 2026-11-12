@@ -92,6 +92,28 @@ describe ("mp4 sound 01", { skip: Boolean (ONLY), timeout: CASE_TIMEOUT }, () =>
       }
    });
 
+   test ("after a scene replacement the new world's MP4 is heard, and the old element is released", async () =>
+   {
+      const page = await open ();
+
+      try
+      {
+         const first  = await play (page, WORLD (server .base, true));
+         const second = await play (page, WORLD (server .base, true));
+
+         assert .ok (first .level > 0.05, `first world (level ${first .level})`);
+         assert .ok (second .level > 0.05, `the replacing world is heard (level ${second .level})`);
+         // Two elements were made, both muted; the first one has no source any more.
+         assert .equal (second .videos .length, 2);
+         assert .ok (second .videos .every (v => v .muted));
+         assert .deepEqual (second .videos .map (v => v .blob), [ false, true ]);
+      }
+      finally
+      {
+         await page .context () .close ();
+      }
+   });
+
    test ("without a Sound node the MP4 is not heard", async () =>
    {
       const page = await open ();
