@@ -316,16 +316,6 @@ impl From<&str> for ExprError {
     }
 }
 
-impl ExprError {
-    /// The text of an array-size error (`'[' : <message>`); an undefined identifier is not one there.
-    fn message(self) -> String {
-        match self {
-            ExprError::Message(m) => m,
-            ExprError::Undefined(name) => format!("undefined identifier '{name}'"),
-        }
-    }
-}
-
 /// A preprocessor expression (`#if`): integers, defined, macros, the C operators.
 struct Expr<'a> {
     toks: Vec<Tok>,
@@ -333,8 +323,9 @@ struct Expr<'a> {
     pos: usize,
     defines: &'a Defines,
     depth: u32,
-    /// An undefined identifier is an error (`#if`, `#elif`); otherwise it is 0 (a constant array size).
-    strict: bool,
+    /// Which identifiers that are not macros are an error: none (`|_| true`), every one (`#if`, `#elif`), or in an
+    /// array size those the shader does not declare. An accepted one is 0.
+    declared: &'a dyn Fn(&str) -> bool,
     /// Inside an operand that is not evaluated (the right side of a short-circuited `&&` / `||`): ESSL 3.00
     /// section 3.4 and ANGLE's ExpressionParser report no undefined identifier and no division by zero there.
     ignore: u32,
@@ -511,7 +502,7 @@ impl Expr<'_> {
                             pos: 0,
                             defines: self.defines,
                             depth: self.depth + 1,
-                            strict: self.strict,
+                            declared: self.declared,
                             ignore: self.ignore,
                         };
                         if e.toks.is_empty() {
@@ -520,7 +511,7 @@ impl Expr<'_> {
                             e.binary(0)
                         }
                     }
-                    None if self.strict && self.ignore == 0 && tok.kind == Kind::Ident => {
+                    None if self.ignore == 0 && tok.kind == Kind::Ident && !(self.declared)(&t) => {
                         Err(ExprError::Undefined(t))
                     }
                     _ => Ok(0),
@@ -531,14 +522,18 @@ impl Expr<'_> {
     }
 }
 
-fn eval_expr(s: &str, defines: &Defines, strict: bool) -> Result<i64, ExprError> {
+fn eval_expr(
+    s: &str,
+    defines: &Defines,
+    declared: &dyn Fn(&str) -> bool,
+) -> Result<i64, ExprError> {
     let mut e = Expr {
         toks: lex(s),
         src: s,
         pos: 0,
         defines,
         depth: 0,
-        strict,
+        declared,
         ignore: 0,
     };
     let v = e.binary(0)?;
@@ -552,8 +547,30 @@ fn eval_expr(s: &str, defines: &Defines, strict: bool) -> Result<i64, ExprError>
 
 /// The conditional directives resolved: inactive lines and the directive lines themselves become
 /// empty lines. `#define` / `#undef` are tracked for the conditions and kept. `#version` and
-/// `#extension` lines are removed (the version is returned). Returns the text and `#version`.
-fn resolve_conditionals(s: &str, defines: &mut Defines) -> Result<(String, Option<u32>), String> {
+/// `#extension` lines are removed (the version is returned). Returns the text, `#version` and the first undefined
+/// identifier error of a condition (line, text).
+///
+/// ANGLE preprocesses while it parses, so its errors come in source order. An undefined identifier in a condition is
+/// therefore not returned at once: the condition is false (ANGLE skips the group), and the caller reports it unless an
+/// error of the parsed text comes first. Any other error here returns the undefined identifier error if there was one
+/// before it.
+fn resolve_conditionals(s: &str, defines: &mut Defines) -> Result<Conditionals, String> {
+    let mut undefined = None;
+
+    match resolve_conditionals_inner(s, defines, &mut undefined) {
+        Ok((text, version)) => Ok((text, version, undefined)),
+        Err(e) => Err(undefined.map_or(e, |(_, u)| u)),
+    }
+}
+
+/// (text, `#version`, the first undefined identifier error of a condition: (line, text)).
+type Conditionals = (String, Option<u32>, Option<(usize, String)>);
+
+fn resolve_conditionals_inner(
+    s: &str,
+    defines: &mut Defines,
+    undefined: &mut Option<(usize, String)>,
+) -> Result<(String, Option<u32>), String> {
     // (this branch is active, a branch was taken, parent active)
     let mut stack: Vec<(bool, bool, bool)> = vec![];
     let mut out = String::with_capacity(s.len());
@@ -581,12 +598,23 @@ fn resolve_conditionals(s: &str, defines: &mut Defines) -> Result<(String, Optio
             .unwrap_or(rest.len());
         let (word, arg) = (&rest[..word_end], rest[word_end..].trim());
         let err = |m: String| format!("ERROR: 0:{}: '#{}' : {}", n + 1, word, m);
-        let expr_err = |e: ExprError| match e {
-            ExprError::Message(m) => err(m),
-            ExprError::Undefined(name) => format!(
-                "ERROR: 0:{}: '{name}' : unexpected token after conditional expression",
-                n + 1
-            ),
+        let mut eval = |arg: &str, defines: &Defines| -> Result<bool, String> {
+            match eval_expr(arg, defines, &|_| false) {
+                Ok(v) => Ok(v != 0),
+                Err(ExprError::Message(m)) => Err(err(m)),
+                Err(ExprError::Undefined(name)) => {
+                    undefined.get_or_insert_with(|| {
+                        (
+                            n + 1,
+                            format!(
+                                "ERROR: 0:{}: '{name}' : unexpected token after conditional expression",
+                                n + 1
+                            ),
+                        )
+                    });
+                    Ok(false)
+                }
+            }
         };
 
         match word {
@@ -596,11 +624,7 @@ fn resolve_conditionals(s: &str, defines: &mut Defines) -> Result<(String, Optio
                 stack.push((active && v, v, active));
             }
             "if" => {
-                let v = if active {
-                    eval_expr(arg, defines, true).map_err(expr_err)? != 0
-                } else {
-                    false
-                };
+                let v = if active { eval(arg, defines)? } else { false };
                 stack.push((active && v, v, active));
             }
             "elif" => {
@@ -608,7 +632,7 @@ fn resolve_conditionals(s: &str, defines: &mut Defines) -> Result<(String, Optio
                     return Err(err("unexpected #elif".into()));
                 };
                 let v = if top.2 && !top.1 {
-                    eval_expr(arg, defines, true).map_err(expr_err)? != 0
+                    eval(arg, defines)?
                 } else {
                     false
                 };
@@ -759,15 +783,36 @@ fn is_precision(w: &str) -> bool {
     matches!(w, "lowp" | "mediump" | "highp")
 }
 
-/// A constant array size: an integer, or a macro / expression the preprocessor can evaluate.
-fn eval_size(expr: &str, defines: &Defines) -> Result<u32, String> {
-    let v = eval_expr(expr, defines, false).map_err(ExprError::message)?;
+/// A constant array size: an integer, or a macro / expression the preprocessor can evaluate. `line` is the line of the
+/// declaration. An identifier that is not a macro and that `declared` does not know is ANGLE's `'<name>' : undeclared
+/// identifier`; a declared one (a global constant, a built-in `gl_` constant) is 0, as before.
+fn eval_size(
+    expr: &str,
+    defines: &Defines,
+    declared: &dyn Fn(&str) -> bool,
+    line: usize,
+) -> Result<u32, String> {
+    let v = eval_expr(expr, defines, declared).map_err(|e| match e {
+        ExprError::Message(m) => format!("ERROR: 0:{line}: '[' : {m}"),
+        ExprError::Undefined(name) => format!("ERROR: 0:{line}: '{name}' : undeclared identifier"),
+    })?;
 
     if !(1..=65536).contains(&v) {
-        return Err(format!("array size {v} out of range"));
+        return Err(format!(
+            "ERROR: 0:{line}: '[' : array size {v} out of range"
+        ));
     }
 
     Ok(v as u32)
+}
+
+/// A name an array size may use without a macro: a global the shader declares, a struct, or a built-in `gl_` name.
+fn declared_name(
+    name: &str,
+    globals: &HashSet<String>,
+    structs: &HashMap<String, StructDef>,
+) -> bool {
+    name.starts_with("gl_") || globals.contains(name) || structs.contains_key(name)
 }
 
 /// Split the global scope of `text` into items and parse declarations and structs.
@@ -916,9 +961,12 @@ fn scan(text: &str, defines: &Defines, es3: bool) -> Result<Scan, String> {
                         }
 
                         k += 1;
-                        array = Some(eval_size(&e, defines).map_err(|m| {
-                            format!("ERROR: 0:{}: '[' : {m}", line_of(item[0].start))
-                        })?);
+                        array = Some(eval_size(
+                            &e,
+                            defines,
+                            &|n| declared_name(n, &globals, &structs),
+                            line_of(item[0].start),
+                        )?);
                     }
 
                     members.push(Member {
@@ -1002,6 +1050,27 @@ fn scan(text: &str, defines: &Defines, es3: bool) -> Result<Scan, String> {
                         line_of(item[k + 1].start)
                     ));
                 }
+
+                // The array size of a plain global: only an undeclared identifier is reported here (in source
+                // order, before a later declaration's error); naga checks the rest.
+                if known && words.get(k + 2) == Some(&"[") {
+                    let size: Vec<&str> = words[k + 3..]
+                        .iter()
+                        .take_while(|w| **w != "]")
+                        .copied()
+                        .collect();
+
+                    if let Err(ExprError::Undefined(n)) =
+                        eval_expr(&size.join(" "), defines, &|n| {
+                            declared_name(n, &globals, &structs)
+                        })
+                    {
+                        return Err(format!(
+                            "ERROR: 0:{}: '{n}' : undeclared identifier",
+                            line_of(item[0].start)
+                        ));
+                    }
+                }
             }
 
             continue;
@@ -1039,10 +1108,12 @@ fn scan(text: &str, defines: &Defines, es3: bool) -> Result<Scan, String> {
                 }
 
                 k += 1;
-                array = Some(
-                    eval_size(&e, defines)
-                        .map_err(|m| format!("ERROR: 0:{}: '[' : {m}", line_of(item[0].start)))?,
-                );
+                array = Some(eval_size(
+                    &e,
+                    defines,
+                    &|n| declared_name(n, &globals, &structs),
+                    line_of(item[0].start),
+                )?);
             }
 
             names.push(Declarator { name, array });
@@ -1441,7 +1512,34 @@ fn head_defines(source: &str) -> Defines {
     out
 }
 
+/// The first error in source order: `e`, or the undefined identifier error of a condition (resolve_conditionals) when
+/// `e` does not come before its line.
+fn first_error(e: String, undefined: &Option<(usize, String)>) -> String {
+    match undefined {
+        Some((line, u)) if !error_line(&e).is_some_and(|l| l < *line) => u.clone(),
+        _ => e,
+    }
+}
+
 fn analyze(stage: Stage, source: &str, options: &[String]) -> Result<Analysis, String> {
+    let mut undefined = None;
+    let a = analyze_deferred(stage, source, options, &mut undefined)
+        .map_err(|e| first_error(e, &undefined))?;
+
+    match undefined {
+        Some((_, u)) => Err(u),
+        None => Ok(a),
+    }
+}
+
+/// analyze, with the first undefined identifier error of a condition in `undefined` instead of returned: the caller
+/// reports it unless an error of the parsed text comes first (first_error).
+fn analyze_deferred(
+    stage: Stage,
+    source: &str,
+    options: &[String],
+    undefined_out: &mut Option<(usize, String)>,
+) -> Result<Analysis, String> {
     let es3 = {
         // `#version 300 es` after comments.
         let stripped = strip_comments(source);
@@ -1453,8 +1551,9 @@ fn analyze(stage: Stage, source: &str, options: &[String]) -> Result<Analysis, S
     let mut defines = head_defines(source);
     defines.extend(base_defines(stage, es3, options));
     // The injected types come first: their constants are macros the user's conditions can see.
-    let (types, _) = resolve_conditionals(&strip_comments(TYPES), &mut defines)?;
-    let (user, _version) = resolve_conditionals(&strip_comments(source), &mut defines)?;
+    let (types, _, _) = resolve_conditionals(&strip_comments(TYPES), &mut defines)?;
+    let (user, _version, undefined) = resolve_conditionals(&strip_comments(source), &mut defines)?;
+    *undefined_out = undefined;
     let user = mask_sampler_precision(&user);
     let prefix_lines = newlines(&types) + 1;
     let combined = format!("{types}\n{user}");
@@ -1584,6 +1683,11 @@ fn analyze(stage: Stage, source: &str, options: &[String]) -> Result<Analysis, S
     }
 
     Ok(a)
+}
+
+/// The line of an `ERROR: 0:N: …` text.
+fn error_line(e: &str) -> Option<usize> {
+    e.strip_prefix("ERROR: 0:")?.split(':').next()?.parse().ok()
 }
 
 fn shift_error(e: &str, prefix_lines: usize) -> String {
@@ -2491,9 +2595,18 @@ fn parse_options(options: &[String]) -> Vec<String> {
 /// log (`ERROR: 0:line: message`), the line counted in the user's text.
 pub fn compile_part(stage: Stage, source: &str, options: &[String]) -> Result<(), String> {
     let options = parse_options(options);
-    let a = analyze(stage, source, &options)?;
-    let p = link_analyses(&[&a], false)?;
+    // ANGLE preprocesses while it parses: an undefined identifier of a condition is reported in source order among
+    // the compile errors, and before the output check, which runs after the parse.
+    let mut undefined = None;
+    let a = analyze_deferred(stage, source, &options, &mut undefined)
+        .map_err(|e| first_error(e, &undefined))?;
+    let p = link_analyses(&[&a], false).map_err(|e| first_error(e, &undefined))?;
     drop(p);
+
+    if let Some((_, u)) = undefined {
+        return Err(u);
+    }
+
     check_output_locations(&a)
 }
 
