@@ -1,0 +1,6 @@
+#X3D V4.1 utf8
+PROFILE Full
+META "title" "cff-sr-lines"
+# Glyphs of straight lines only (A, W, H): the control for the curved glyphs of the other worlds.
+DEF L1 FontLibrary { family "CffLib" url "../synthetic-rea-b24-cff/cff-basic.otf" }
+Shape { geometry Text { string [ "i" "AWH" ] fontStyle ScreenFontStyle { family "CffLib" pointSize 60 justify [ "MIDDLE" "MIDDLE" ] } } }

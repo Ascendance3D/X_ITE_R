@@ -1,0 +1,8 @@
+#X3D V4.1 utf8
+PROFILE Full
+META "title" "cff-sr-justify"
+DEF L1 FontLibrary { family "CffLib" url "../synthetic-rea-b24-cff/cff-basic.otf" }
+Transform { translation -3 2 0 children Shape { geometry Text { string [ "BO" "iSB" ] fontStyle ScreenFontStyle { family "CffLib" pointSize 28 justify [ "BEGIN" "BEGIN" ] } } } }
+Transform { translation 2 2 0 children Shape { geometry Text { string [ "BO" "iSB" ] fontStyle ScreenFontStyle { family "CffLib" pointSize 28 justify [ "END" "END" ] } } } }
+Transform { translation -3 -2 0 children Shape { geometry Text { string [ "BO" "iSB" ] fontStyle ScreenFontStyle { family "CffLib" pointSize 28 justify [ "MIDDLE" "MIDDLE" ] spacing 1.4 } } } }
+Transform { translation 2 -2 0 children Shape { geometry Text { string [ "OSB" "i" ] fontStyle ScreenFontStyle { family "CffLib" pointSize 28 leftToRight FALSE } } } }

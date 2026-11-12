@@ -1,0 +1,9 @@
+#X3D V4.1 utf8
+PROFILE Full
+META "title" "cff-sr-sizes"
+# The second line carries the curved glyphs (O: four cubic arcs and a counter, Q: flex operators, S and B: cubic bowls).
+DEF L1 FontLibrary { family "CffLib" url "../synthetic-rea-b24-cff/cff-basic.otf" }
+Transform { translation -3 3 0 children Shape { geometry Text { string [ "i" "OQSB" ] fontStyle ScreenFontStyle { family "CffLib" pointSize 14 } } } }
+Transform { translation 1 3 0 children Shape { geometry Text { string [ "i" "OQSB" ] fontStyle ScreenFontStyle { family "CffLib" pointSize 20 } } } }
+Transform { translation -3 0.5 0 children Shape { geometry Text { string [ "i" "OQSB" ] fontStyle ScreenFontStyle { family "CffLib" pointSize 28 } } } }
+Transform { translation -3 -2.5 0 children Shape { geometry Text { string [ "i" "OQSB" ] fontStyle ScreenFontStyle { family "CffLib" pointSize 40 } } } }

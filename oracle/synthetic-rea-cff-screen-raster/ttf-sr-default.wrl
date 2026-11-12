@@ -1,0 +1,8 @@
+#X3D V4.1 utf8
+PROFILE Full
+META "title" "ttf-sr-default"
+# The default font (TrueType, quadratic curves) at four sizes.
+Transform { translation -3 3 0 children Shape { geometry Text { string [ "Round S" "o@8g" ] fontStyle ScreenFontStyle { pointSize 12 } } } }
+Transform { translation 0 3 0 children Shape { geometry Text { string [ "Round S" "o@8g" ] fontStyle ScreenFontStyle { pointSize 20 style "BOLD" } } } }
+Transform { translation -3 0.5 0 children Shape { geometry Text { string [ "Round S" "o@8g" ] fontStyle ScreenFontStyle { pointSize 34 family "SERIF" } } } }
+Transform { translation -3 -3 0 children Shape { geometry Text { string [ "RS" "o@8" ] fontStyle ScreenFontStyle { pointSize 60 style "ITALIC" } } } }
