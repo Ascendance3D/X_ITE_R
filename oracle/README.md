@@ -1345,12 +1345,21 @@ channel, 0.5% of pixels) and, as the negative control, with the option off (ever
 list); `i92-tr-many` and `i92-tr-nested` have no MSAA 4 picture (`msaa4/unstable.json`). `crates/x3d-render/tests/render_rea_oit_i92_items.rs`
 replays them with the option on (same bound).
 
-`oracle/tools/rea_oit_msaa4_envelope.py record 8` (and `record 8 --i92` for the recordings with the option off) gives the worlds of
-`msaa4/unstable.json` a reference: it shoots each world eight times and writes the lowest and the highest value of every channel of
-every pixel into the new directory `msaa4-envelope` (`<world>.min.png`, `<world>.max.png`, `index.json` with the hash of every run).
-It refuses a channel spread over 2 levels or more than 0.1% differing pixels, and it does not change `msaa4/` or `unstable.json`.
-Measured: the runs are at most 1 level apart, in 0 to 63 pixels. The two tests measure a pixel of such a world from the nearest
-value between the two pictures (`crates/x3d-render/tests/support/envelope.rs`).
+The worlds of `msaa4/unstable.json` have an envelope reference (owner decision 2026-11-11), in the new directory
+`msaa4-envelope-v1` of each of the two baselines. `XITE_TESTS=<x_ite-tests> python3 -I -B oracle/tools/rea_oit_msaa4_envelope.py
+record 8` (and `record 8 --i92` for the recordings with the option off) shoots each world eight times and stores every picture as
+recorded (`raw/run-<n>/<world>.png`) with `manifest.json`: the recorder's description (pin, Chrome, GL renderer, size,
+Multisampling), the scene file with its SHA-256 and its viewpoint statement, and the SHA-256 of every stored file and of its pixels.
+`build` makes `<world>.min.png`, `<world>.max.png` (the lowest and the highest value of every channel of every pixel, no margin) and
+`envelope.json` from the stored pictures only. `check` verifies the stored pictures, builds the envelope twice and compares both
+with the stored files, byte for byte. Nothing in a version directory is changed later (a new recording is a new version), and
+`msaa4/` and `unstable.json` do not change. No run is left out; `record` refuses a channel spread over 2 levels or more than 0.1%
+differing pixels. Measured: the eight runs are at most 1 level apart, in 0, 63 and 2 pixels (option off: `i92-fg-transparent`,
+`i92-tr-many`, `i92-tr-ortho`) and in 17 and 14 pixels (option on: `i92-tr-many`, `i92-tr-nested`).
+
+The tests count a channel of Rust's picture only when it is outside the interval, by its distance to the interval, and allow no
+pixel more than 8 outside (`crates/x3d-render/tests/support/envelope.rs`, tests `rea_msaa4_envelope.rs`). The envelope is for these
+five shots only. Every other shot, and every shot with Multisampling 0, keeps its one exact reference.
 
 ## decodeAudioData lane (2026-10-31, issue #98): MP3, Ogg, FLAC, Opus, WAV
 

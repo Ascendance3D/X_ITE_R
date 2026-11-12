@@ -4,9 +4,10 @@
 //! oracle/rea-oit-i92-render-items-baseline/png (antialiased="false") and /msaa4 (Multisampling 4), recorded by
 //! `oracle/tools/rea_i92_render_items.py shots --oit-i92` with three identical runs per pass. A world whose multisampled
 //! X_ITE output differs between its own runs has no msaa4 reference and is listed in msaa4/unstable.json. Those worlds are
-//! compared with /msaa4-envelope instead (`oracle/tools/rea_oit_msaa4_envelope.py`, eight runs): the lowest and the highest
-//! value of every channel of every pixel over the runs, which are at most 2 levels apart. A pixel is measured from the
-//! nearest value between the two, so the envelope does not widen the bound by more than the spread of X_ITE itself.
+//! compared with /msaa4-envelope-v1 instead (owner decision 2026-11-11; `oracle/tools/rea_oit_msaa4_envelope.py`): the interval
+//! between the lowest and the highest value of every channel of every pixel over eight stored runs, which are 1 level apart
+//! in 17 and 14 pixels. A channel differs only outside the interval, by its distance to it; no pixel of such a shot may be
+//! more than 8 outside, and the pixels outside by any amount are printed (`support/envelope.rs`, tests rea_msaa4_envelope).
 //!
 //! Bound: at most 0.5% of the pixels more than 8 off (1.0% for multisampled passes on macOS, as in render_rea_i92_items).
 //! A world without a reference, or one whose X_ITE run logged an error, fails the test. `REA_ONLY=<substring>` restricts
@@ -128,7 +129,13 @@ fn run(oit: bool) -> Option<(Vec<String>, Vec<String>, Vec<String>)> {
 
         for world in &worlds {
             let envelope = if unstable.contains(world) {
-                match load_envelope(&base.join(format!("{pass}-envelope")), world, true) {
+                match load_envelope(
+                    &base.join(envelope::VERSION_DIR),
+                    "rea-oit-i92-render-items-baseline",
+                    world,
+                    true,
+                    samples,
+                ) {
                     Ok(e) => Some(e),
                     Err(e) => {
                         failures.push(format!("{world} {pass}: {e}"));
@@ -168,11 +175,33 @@ fn run(oit: bool) -> Option<(Vec<String>, Vec<String>, Vec<String>)> {
                 .chunks_exact(4)
                 .flat_map(|p| [p[0], p[1], p[2], 255])
                 .collect();
-            // With an envelope the reference of a channel is the value nearest to Rust's between X_ITE's lowest and highest.
-            let want = match &envelope {
-                Some(e) => e.nearest(&rgba),
-                None => want,
-            };
+            // An envelope shot: a channel differs only outside the interval of X_ITE's stored runs, by its distance to the
+            // interval, and no pixel may be more than 8 outside.
+            if let Some(e) = &envelope {
+                let out = match e.outside(w, h, &rgba) {
+                    Ok(out) => out,
+                    Err(e) => {
+                        failures.push(format!("{world} {pass}: {e}"));
+                        continue;
+                    }
+                };
+
+                eprintln!(
+                    "{world} {pass} oit={oit}: envelope of {} runs: {} pixels outside, {} more than 8 outside, max {}",
+                    e.captures, out.pixels_outside, out.pixels_over, out.max_distance
+                );
+                compared.push(format!("{world} {pass}"));
+
+                if out.pixels_over > 0 {
+                    over.push(format!(
+                        "{world} {pass}: {} pixels more than 8 outside the envelope, max {}",
+                        out.pixels_over, out.max_distance
+                    ));
+                }
+
+                continue;
+            }
+
             let s = x3d_render::compare::compare(w, h, &want, &rgba, 8);
 
             eprintln!(

@@ -1,0 +1,179 @@
+{
+ "version": "v1",
+ "baseline": "rea-oit-i92-render-items-baseline",
+ "recorder": "oracle/x_ite-shot-msaa.mjs --oit",
+ "pinned": "34cdf9f97",
+ "chrome": "156.0.8078.47",
+ "oit": true,
+ "ms": "4",
+ "size": [
+  512,
+  512
+ ],
+ "frames": 10,
+ "settleMs": 400,
+ "gl": {
+  "vendor": "Google Inc. (NVIDIA Corporation)",
+  "renderer": "ANGLE (NVIDIA Corporation, NVIDIA GeForce RTX 3060 Ti/PCIe/SSE2, OpenGL ES 3.2)",
+  "version": "WebGL 2.0 (OpenGL ES 3.0 Chromium)",
+  "contextAttributes": {
+   "alpha": true,
+   "antialias": false,
+   "depth": true,
+   "desynchronized": false,
+   "failIfMajorPerformanceCaveat": false,
+   "powerPreference": "default",
+   "premultipliedAlpha": true,
+   "preserveDrawingBuffer": true,
+   "stencil": false,
+   "xrCompatible": false
+  },
+  "multisampling": 4,
+  "antialiased": true,
+  "splashVisible": false,
+  "canvasDisplay": "inline",
+  "drawingBuffer": [
+   512,
+   512
+  ],
+  "maxSamples": 8,
+  "x_ite": "16.5.0"
+ },
+ "runs": 8,
+ "worlds": {
+  "i92-tr-many.wrl": {
+   "scene": "oracle/synthetic-rea-i92-render-items/i92-tr-many.wrl",
+   "sceneSha256": "75982e18c31bce64c2ff2e2ff995d94988ba5f6d6077cf5ca616d8ffc6e29e78",
+   "viewpoint": [
+    "Viewpoint { position 0 0 12 }"
+   ],
+   "width": 512,
+   "height": 512,
+   "captures": [
+    {
+     "run": 1,
+     "file": "raw/run-1/i92-tr-many.wrl.png",
+     "fileSha256": "6fb5f1a71f66366eeff2fbda3d66380c3b38f138ef009346c80b930cde8494ea",
+     "rgbaSha256": "94075f2535a41251879cb4f81808c3d33c356134fa922ef0a407030262913234",
+     "log": []
+    },
+    {
+     "run": 2,
+     "file": "raw/run-2/i92-tr-many.wrl.png",
+     "fileSha256": "347c8054621c5a0455d286560b3763529c24e0bdb9dffbd52f6bcfe7fa8e3fa6",
+     "rgbaSha256": "484e2019db70579876f1c78665cf14424e6b89d6bb2e072f24e1fd30b3325295",
+     "log": []
+    },
+    {
+     "run": 3,
+     "file": "raw/run-3/i92-tr-many.wrl.png",
+     "fileSha256": "b64b15be4e8e985a4341d1deebac4b63e668e289fd4830f8360ede83cd06006c",
+     "rgbaSha256": "61726497332853ef86558d8c3adf534ea4637a54f49506e1e5d84411db50c852",
+     "log": []
+    },
+    {
+     "run": 4,
+     "file": "raw/run-4/i92-tr-many.wrl.png",
+     "fileSha256": "96413496307d3c22c38a0a39d02807c8008a896b35b3a0e26acf7dcede327c2e",
+     "rgbaSha256": "89ee606f1fd5475972c16dcad19936dfbdb1f64a2b99ab91d3a81ffc82cfb665",
+     "log": []
+    },
+    {
+     "run": 5,
+     "file": "raw/run-5/i92-tr-many.wrl.png",
+     "fileSha256": "b02583429a26c2addb1acdb2e7f57c6a6292831a6209ca47b57fffb802eb27b3",
+     "rgbaSha256": "0eda5ae211c02280999fd4e11fd911ab96c41eb6cd010fc285df5ed7c7221f01",
+     "log": []
+    },
+    {
+     "run": 6,
+     "file": "raw/run-6/i92-tr-many.wrl.png",
+     "fileSha256": "2b25f589ce8815bf922c7af0db741232e53ae7d70352d3aee4b0573b7f3223c5",
+     "rgbaSha256": "7f7cbe98d12e1db4757aa61628746fd9ce88c31ec09daa9e0149062847dac55b",
+     "log": []
+    },
+    {
+     "run": 7,
+     "file": "raw/run-7/i92-tr-many.wrl.png",
+     "fileSha256": "6ca7c7323bd1c5bd42b27e9b3a8f2f35efd018ecbfd261428b17649c2bf78cd8",
+     "rgbaSha256": "48d640c2f6d4a1d0e0d4d3856fb7a2cfee822f7a5507423a0fc60d6f2290da11",
+     "log": []
+    },
+    {
+     "run": 8,
+     "file": "raw/run-8/i92-tr-many.wrl.png",
+     "fileSha256": "cebac8271abed6b4d8cb513b71a3f8ff4f9b9204c3c8db2d68d73073a797c0e7",
+     "rgbaSha256": "fef06640c3f3beb6637192d0b03fd8e45ea17ce1ed5bceeeaf4d27b0ebac8cc1",
+     "log": []
+    }
+   ]
+  },
+  "i92-tr-nested.wrl": {
+   "scene": "oracle/synthetic-rea-i92-render-items/i92-tr-nested.wrl",
+   "sceneSha256": "b57e7ef1c15898155cb4e47f82dd52d4163e039ff5b909a45b1a01fae25eb741",
+   "viewpoint": [
+    "Viewpoint { position 0 0 12 }"
+   ],
+   "width": 512,
+   "height": 512,
+   "captures": [
+    {
+     "run": 1,
+     "file": "raw/run-1/i92-tr-nested.wrl.png",
+     "fileSha256": "d99b73413c0ca9dd4c0e23f7dee91500ea87ec1db701138507cbf61590304d5f",
+     "rgbaSha256": "3684645c2c45f03af1bcd3e06542418acc510b60ef74ba9fbcf0627f9ec228d9",
+     "log": []
+    },
+    {
+     "run": 2,
+     "file": "raw/run-2/i92-tr-nested.wrl.png",
+     "fileSha256": "d1006cf58ad0a658dfc2d0ab93949c30632c70cdcb953822bad276d477edc057",
+     "rgbaSha256": "7816810a1cb20e9dd8cffc9610551a18460a557c8f0d84a17e09871f695907fc",
+     "log": []
+    },
+    {
+     "run": 3,
+     "file": "raw/run-3/i92-tr-nested.wrl.png",
+     "fileSha256": "d99b73413c0ca9dd4c0e23f7dee91500ea87ec1db701138507cbf61590304d5f",
+     "rgbaSha256": "3684645c2c45f03af1bcd3e06542418acc510b60ef74ba9fbcf0627f9ec228d9",
+     "log": []
+    },
+    {
+     "run": 4,
+     "file": "raw/run-4/i92-tr-nested.wrl.png",
+     "fileSha256": "1db5776018caeecf3a5f4fc3f0577581e9dbf79f0640cf866cce39410bae418c",
+     "rgbaSha256": "134b219bd97282dc77662f0aa1195b57763d5b0f71dba76a4a18b0e5586b76a3",
+     "log": []
+    },
+    {
+     "run": 5,
+     "file": "raw/run-5/i92-tr-nested.wrl.png",
+     "fileSha256": "c365378e785d280b8b93f4aafbc4efd24e298719aa0783b2d76cf6fb8a482b50",
+     "rgbaSha256": "c881ca3c55753da346bff655fef684d26b841b588c8f1d8493d5633405fce8cc",
+     "log": []
+    },
+    {
+     "run": 6,
+     "file": "raw/run-6/i92-tr-nested.wrl.png",
+     "fileSha256": "57039a8bb3fdae79b074392e9881342db26a6c56685666ac66fd3439265605c3",
+     "rgbaSha256": "8fde6cbd1b6f06f24ab243d61da20d4fc8e86c604ce71d17bb935540702776ca",
+     "log": []
+    },
+    {
+     "run": 7,
+     "file": "raw/run-7/i92-tr-nested.wrl.png",
+     "fileSha256": "ed621d9665dd94f2d0c27a9c4830d9ddfd25350302b56ff8b59862d534a94cd8",
+     "rgbaSha256": "2e6cd197524c3d915aa57b72153d83dd5bd7b1211b4fd749f883e0d9de309d19",
+     "log": []
+    },
+    {
+     "run": 8,
+     "file": "raw/run-8/i92-tr-nested.wrl.png",
+     "fileSha256": "157d72906b2216f7a6ef440919fe2692f33eab67e35a5ed15596e46457d678c8",
+     "rgbaSha256": "cd2ae0513800aafac42e97c2f89e6e26588169cc260a5672c40b30d1cacc47a5",
+     "log": []
+    }
+   ]
+  }
+ }
+}

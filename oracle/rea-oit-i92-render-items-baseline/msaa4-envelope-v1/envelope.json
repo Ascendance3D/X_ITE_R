@@ -1,0 +1,32 @@
+{
+ "baseline": "rea-oit-i92-render-items-baseline",
+ "generator": "oracle/tools/rea_oit_msaa4_envelope.py build",
+ "margin": 0,
+ "pillow": "10.2.0",
+ "version": "v1",
+ "worlds": {
+  "i92-tr-many.wrl": {
+   "captures": 8,
+   "differingChannels": 17,
+   "differingPixels": 17,
+   "distinctCaptures": 8,
+   "largestSpread": 1,
+   "maxRgbSha256": "09c6412f68d982ad78c1b10119ea708213ee5306d235971ddd33f67f8e1e7ad2",
+   "maxSha256": "b60f082fd73d628e95fd9151f0f8c18d513581b091c1b8567a842d4e1c968d15",
+   "minRgbSha256": "ae8e3155ac8490c291e30fdf8474693eb2107af06387325ffed0c801795d0ce3",
+   "minSha256": "5a4f18a3217119224a3215d9f2a3332f354f87a17602c6ae311c4e979f4de60f"
+  },
+  "i92-tr-nested.wrl": {
+   "captures": 8,
+   "differingChannels": 14,
+   "differingPixels": 14,
+   "distinctCaptures": 7,
+   "largestSpread": 1,
+   "maxRgbSha256": "42689337ce1d2ae81b541547091b0c04fb47ba62d8ed8b05579f9c9b624af3c8",
+   "maxSha256": "67f8b4b40b704e3316164be45ec3c10406d7eae9933c95159b13bbf958934370",
+   "minRgbSha256": "3aa674e031893e7b7184b7ec5c4b31860d76515a07ccce8d295dc62732576c23",
+   "minSha256": "0ee9604fb7b0fed75ee8189973d06cc1de6512a4aee721b11ffb3ef8d96c2418"
+  }
+ },
+ "zlib": "1.3"
+}
