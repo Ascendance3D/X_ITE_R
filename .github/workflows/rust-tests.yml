@@ -191,6 +191,24 @@ jobs:
           tools/verify-candidate.sh
           tools/selftest-identity.sh
 
+      # The function-level inventory of the pinned source (ledger/functions, owner decision 2026-11-11). GitHub gives no
+      # patch for its four large files, so they are not tracked: FUNCTION_LEDGER.manifest.json is their identity. This step
+      # makes them again from oracle/x_ite-pin/src and fails when the extractor or the builder fails, when a tracked
+      # generated file or the manifest would change, when a large file is missing, or when its bytes, records or sha256
+      # differ from the manifest. acorn is pinned by version: the extractor's output is its parse.
+      # The manifest proves that the data is the generator's output. It does not prove that a mapping is correct.
+      - name: Function ledger manifest (X_ITE 16.5.0)
+        run: |
+          set -euo pipefail
+          work="$RUNNER_TEMP/function-ledger"
+          rm -rf "$work"
+          mkdir -p "$work"
+          npm install --prefix "$work/npm" --no-save --no-audit --no-fund --ignore-scripts acorn@8.18.0
+          node ledger/functions/tools/extract_functions.mjs "$work/npm/node_modules/acorn" oracle/x_ite-pin/src > "$work/functions.jsonl"
+          python3 -I -B ledger/functions/tools/build_function_ledger.py "$work/functions.jsonl" --large-dir "$work/large" --check
+          python3 -I -B ledger/functions/tools/build_function_ledger.py --verify-dir "$work/large"
+          rm -rf "$work"
+
       - uses: dtolnay/rust-toolchain@1.95.0
         with:
           components: rustfmt
