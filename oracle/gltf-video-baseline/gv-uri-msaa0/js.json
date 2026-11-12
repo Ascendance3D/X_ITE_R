@@ -1,0 +1,271 @@
+{
+  "ok": true,
+  "poses": {
+    "11": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "19": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "27": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "35": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "37": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    }
+  },
+  "vrml": {
+    "37": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nDEF Scene0 Group {\n  children [\n    DEF Q0 Transform {\n      translation -1.1 1.1 0\n      children Shape {\n        appearance DEF M0 Appearance {\n          alphaMode \"OPAQUE\"\n          material UnlitMaterial {\n            emissiveTextureMapping \"TEXCOORD_0\"\n            emissiveTexture DEF V0 MovieTexture {\n              url \"../synthetic-movie-codecs/media/vp8-ramp.webm\"\n              loop TRUE\n            }\n          }\n          textureTransform DEF _1 TextureTransform {\n            translation 0 -1\n            scale 1 -1\n          }\n        }\n        geometry IndexedTriangleSet {\n          normalPerVertex FALSE\n          index [\n            0,\n            1,\n            2,\n            0,\n            2,\n            3\n          ]\n          texCoord DEF _2 TextureCoordinate {\n            mapping \"TEXCOORD_0\"\n            point [\n              0 1,\n              1 1,\n              1 0,\n              0 0\n            ]\n          }\n          coord DEF _3 Coordinate {\n            point [\n              -0.9 -0.9 0,\n              0.9 -0.9 0,\n              0.9 0.9 0,\n              -0.9 0.9 0\n            ]\n          }\n        }\n      }\n    }\n    DEF Q1 Transform {\n      translation 1.1 1.1 0\n      children Shape {\n        appearance DEF M1 Appearance {\n          alphaMode \"OPAQUE\"\n          material UnlitMaterial {\n            emissiveTextureMapping \"TEXCOORD_0\"\n            emissiveTexture DEF V1 MovieTexture {\n              url \"../synthetic-movie-codecs/media/vp8-testsrc.webm\"\n              loop TRUE\n            }\n          }\n          textureTransform USE _1\n        }\n        geometry IndexedTriangleSet {\n          normalPerVertex FALSE\n          index [\n            0,\n            1,\n            2,\n            0,\n            2,\n            3\n          ]\n          texCoord USE _2\n          coord USE _3\n        }\n      }\n    }\n    DEF Q2 Transform {\n      translation -1.1 -1.1 0\n      children Shape {\n        appearance DEF M2 Appearance {\n          alphaMode \"OPAQUE\"\n          material UnlitMaterial {\n            emissiveTextureMapping \"TEXCOORD_0\"\n            emissiveTexture DEF V2 MovieTexture {\n              url \"../synthetic-movie-codecs/media/vp8-parts.webm\"\n              loop TRUE\n            }\n          }\n          textureTransform USE _1\n        }\n        geometry IndexedTriangleSet {\n          normalPerVertex FALSE\n          index [\n            0,\n            1,\n            2,\n            0,\n            2,\n            3\n          ]\n          texCoord USE _2\n          coord USE _3\n        }\n      }\n    }\n    DEF Q3 Transform {\n      translation 1.1 -1.1 0\n      children Shape {\n        appearance DEF M3 Appearance {\n          alphaMode \"OPAQUE\"\n          material UnlitMaterial {\n            emissiveTextureMapping \"TEXCOORD_0\"\n            emissiveTexture DEF V3 MovieTexture {\n              url \"../synthetic-movie-codecs/media/vp9-vorbis.webm\"\n              loop TRUE\n            }\n          }\n          textureTransform USE _1\n        }\n        geometry IndexedTriangleSet {\n          normalPerVertex FALSE\n          index [\n            0,\n            1,\n            2,\n            0,\n            2,\n            3\n          ]\n          texCoord USE _2\n          coord USE _3\n        }\n      }\n    }\n  ]\n}\n\nEXPORT V0\nEXPORT V1\nEXPORT V2\nEXPORT V3\n"
+  },
+  "prints": [],
+  "log": [],
+  "anchors": [],
+  "loadFrames": 3,
+  "warmupFrames": 8,
+  "geometry": {
+    "rect": [
+      0,
+      0,
+      512,
+      512
+    ],
+    "viewport": [
+      0,
+      0,
+      512,
+      512
+    ],
+    "scroll": [
+      0,
+      0
+    ]
+  },
+  "movieSeeks": [
+    {
+      "node": "V0",
+      "time": 0.25,
+      "currentTime": 0.25,
+      "paused": true,
+      "playbackRate": 1,
+      "readyState": 4
+    },
+    {
+      "node": "V1",
+      "time": 0.25,
+      "currentTime": 0.25,
+      "paused": true,
+      "playbackRate": 1,
+      "readyState": 4
+    },
+    {
+      "node": "V2",
+      "time": 0.25,
+      "currentTime": 0.25,
+      "paused": true,
+      "playbackRate": 1,
+      "readyState": 4
+    },
+    {
+      "node": "V3",
+      "time": 0.25,
+      "currentTime": 0.25,
+      "paused": true,
+      "playbackRate": 1,
+      "readyState": 4
+    },
+    {
+      "node": "V0",
+      "time": 0.55,
+      "currentTime": 0.55,
+      "paused": true,
+      "playbackRate": 1,
+      "readyState": 4
+    },
+    {
+      "node": "V1",
+      "time": 0.55,
+      "currentTime": 0.55,
+      "paused": true,
+      "playbackRate": 1,
+      "readyState": 4
+    },
+    {
+      "node": "V2",
+      "time": 0.55,
+      "currentTime": 0.55,
+      "paused": true,
+      "playbackRate": 1,
+      "readyState": 4
+    },
+    {
+      "node": "V3",
+      "time": 0.55,
+      "currentTime": 0.55,
+      "paused": true,
+      "playbackRate": 1,
+      "readyState": 4
+    },
+    {
+      "node": "V0",
+      "time": 0.05,
+      "currentTime": 0.05,
+      "paused": true,
+      "playbackRate": 1,
+      "readyState": 4
+    },
+    {
+      "node": "V1",
+      "time": 0.05,
+      "currentTime": 0.05,
+      "paused": true,
+      "playbackRate": 1,
+      "readyState": 4
+    },
+    {
+      "node": "V2",
+      "time": 0.05,
+      "currentTime": 0.05,
+      "paused": true,
+      "playbackRate": 1,
+      "readyState": 4
+    },
+    {
+      "node": "V3",
+      "time": 0.05,
+      "currentTime": 0.05,
+      "paused": true,
+      "playbackRate": 1,
+      "readyState": 4
+    },
+    {
+      "node": "V0",
+      "time": 0.35,
+      "currentTime": 0.35,
+      "paused": true,
+      "playbackRate": 1,
+      "readyState": 4
+    },
+    {
+      "node": "V1",
+      "time": 0.35,
+      "currentTime": 0.35,
+      "paused": true,
+      "playbackRate": 1,
+      "readyState": 4
+    },
+    {
+      "node": "V2",
+      "time": 0.35,
+      "currentTime": 0.35,
+      "paused": true,
+      "playbackRate": 1,
+      "readyState": 4
+    },
+    {
+      "node": "V3",
+      "time": 0.35,
+      "currentTime": 0.35,
+      "paused": true,
+      "playbackRate": 1,
+      "readyState": 4
+    }
+  ]
+}

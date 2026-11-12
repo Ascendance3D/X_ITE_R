@@ -407,6 +407,16 @@ fn movie_video_frames_match_x_ite() {
     compare_baseline("movie-video-baseline");
 }
 
+/// The same pictures through glTF: three files whose textures have only an EXT_texture_video source (external WebM files, data
+/// URLs, buffer views of a GLB), MSAA 0 and 4, against the pinned page (oracle/gltf-video-baseline, five identical recordings;
+/// oracle/tools/gen_gltf_video.py). The pinned parser makes a MovieTexture with `loop TRUE` of each texture, and a glTF file
+/// cannot set `speed`, so the nodes play at speed 1 from the load; the recorder pauses each video element and sets its
+/// currentTime (`movieSeek`), and `x3d-drive` does the same at the same frame.
+#[test]
+fn gltf_video_frames_match_x_ite() {
+    compare_baseline("gltf-video-baseline");
+}
+
 /// The same seeks on AV1 streams (av1-testsrc, av1-parts, av1-svt, av1-grain, av1-10bit, av1-444), MSAA 0 and 4, against
 /// the pinned page, which plays AV1 itself (oracle/movie-video-av1-baseline, five identical recordings; the `movie-video-av1`
 /// world of oracle/tools/gen_movie_video.py). X_ITE_R decodes AV1 only with the `av1` feature (rav1d, off by default), so

@@ -55,6 +55,9 @@ pub struct MovieMedia {
     seekable: bool,
     /// Seconds added to the clock of a decoded WebM by a seek.
     offset: f64,
+    /// The movie time of a decoded WebM whose element the page paused itself ([`Self::hold`]): `currentTime` stays
+    /// there, whatever the node's clock does, until the node plays the element again.
+    held: Option<f64>,
     /// The state of [`MovieTiming::Iso`]; unused in the pinned mode.
     iso: IsoState,
 }
@@ -369,6 +372,7 @@ impl MovieMedia {
             audio: crate::video_types::AudioTrack::None,
             seekable: false,
             offset: 0.0,
+            held: None,
             iso: IsoState::default(),
         })
     }
@@ -410,6 +414,7 @@ impl MovieMedia {
             audio: crate::webm::audio(data),
             seekable: true,
             offset: 0.0,
+            held: None,
             iso: IsoState::default(),
         })
     }
@@ -471,6 +476,7 @@ impl MovieMedia {
             audio: crate::video_types::AudioTrack::None,
             seekable: false,
             offset: 0.0,
+            held: None,
             iso: IsoState::default(),
         };
 
@@ -506,6 +512,10 @@ impl MovieMedia {
 
     /// `currentTime`.
     pub fn current_time(&self, elapsed: f64) -> f64 {
+        if let Some(t) = self.held {
+            return t;
+        }
+
         match &self.kind {
             Kind::Gif { cycle, looping } => {
                 if self.offset != 0.0 {
@@ -534,9 +544,15 @@ impl MovieMedia {
         }
     }
 
-    /// `currentTime = 0`: GifMedia ignores it, PNGMedia stops the player.
+    /// `currentTime = 0`: GifMedia ignores it, PNGMedia stops the player. A held (paused) element stays held, at time 0, as a
+    /// paused `video` element does; `play` then goes on from 0 and not from the earlier held time.
     pub fn set_current_time_zero(&mut self) {
         self.offset = 0.0;
+
+        if self.held.is_some() {
+            self.held = Some(0.0);
+        }
+
         if matches!(self.kind, Kind::Apng { .. }) {
             self.player_stop();
         }
@@ -568,6 +584,19 @@ impl MovieMedia {
     pub fn seek_to(&mut self, target: f64, elapsed: f64) {
         if self.seekable {
             self.offset = target - elapsed * self.playback_rate;
+
+            if self.held.is_some() {
+                self.held = Some(target);
+            }
+        }
+    }
+
+    /// `pause ()` called on the element by the page, not by the node (the recorder of the answer keys does it before a
+    /// seek, oracle/x_ite-anim.mjs `movieSeek`): a decoded WebM keeps its `currentTime` while the node's clock goes on.
+    /// The node's next `play ()` goes on from that time. Other media are not changed.
+    pub fn hold(&mut self, elapsed: f64) {
+        if self.seekable && self.held.is_none() {
+            self.held = Some(self.current_time(elapsed));
         }
     }
 
@@ -622,6 +651,10 @@ impl MovieMedia {
 
     /// `play ()` at `now` (milliseconds): GifMedia keeps the cycle, PNGMedia plays the player.
     pub fn play(&mut self, elapsed: f64, now: f64) {
+        if let Some(t) = self.held.take() {
+            self.offset = t - elapsed * self.playback_rate;
+        }
+
         let cycle_now = self.cycle(elapsed);
 
         match &mut self.kind {
@@ -1093,6 +1126,23 @@ impl Runtime {
         });
     }
 
+    /// `mediaElement .pause ()` called by the page itself on a MovieTexture's element, as the recorder of the answer keys
+    /// does before it sets `currentTime` (oracle/x_ite-anim.mjs `movieSeek`). The node is not told: its clock and its
+    /// outputs go on, and the picture stays. Pinned timing only (with ISO timing the engine chooses every picture).
+    pub fn movie_element_pause(&mut self, node: NodeId) {
+        if self.movie_timing == MovieTiming::Iso {
+            return;
+        }
+
+        let elapsed = self.elapsed_value(node);
+
+        if let Some(m) = self.movie(node) {
+            m.hold(elapsed);
+        }
+
+        self.media_set(node, |e, m| m.pause(e));
+    }
+
     /// `mediaElement .currentTime = t` of a MovieTexture: a decoded WebM takes it, clamped to [0, duration] as Chrome
     /// does (measured: -5 gives 0, 100 gives the duration), and its sound follows. GifMedia ignores `currentTime`
     /// and PNGMedia only stops, so those, and a NaN, are not seeks: nothing moves and a diagnostic is logged.
@@ -1477,6 +1527,7 @@ impl Runtime {
             audio: crate::video_types::AudioTrack::None,
             seekable: false,
             offset: 0.0,
+            held: None,
             iso: IsoState::default(),
         };
 
@@ -1623,6 +1674,101 @@ mod tests {
         // A negative rate gives a negative time: frame 0.
         m.set_playback_rate(-1.0);
         assert_eq!(m.current_frame(0.6), Some(0));
+    }
+
+    /// A medium that takes `currentTime`, as a decoded WebM does: four frames in one second.
+    fn seekable() -> MovieMedia {
+        let mut m = MovieMedia::decode_gif(&media("anim4.gif")).unwrap();
+
+        m.seekable = true;
+        m
+    }
+
+    fn near(a: f64, b: f64) -> bool {
+        (a - b).abs() < 1e-9
+    }
+
+    #[test]
+    fn a_held_element_keeps_its_time_takes_a_seek_and_plays_on_from_it() {
+        let mut m = seekable();
+
+        m.hold(0.25);
+        // The node's clock goes on, the element's time stays.
+        assert_eq!(m.current_time(0.25), 0.25);
+        assert_eq!(m.current_time(0.875), 0.25);
+        // GifMedia's frame of that time (ceil - 1), not the frame of the clock (3).
+        assert_eq!(m.current_frame(0.875), Some(0));
+
+        // A second pause does not take a new time.
+        m.hold(0.875);
+        assert_eq!(m.current_time(0.875), 0.25);
+
+        // A seek moves the held time, not a time that follows the clock.
+        m.seek_to(0.5, 1.0);
+        assert_eq!(m.current_time(1.0), 0.5);
+        assert_eq!(m.current_time(2.0), 0.5);
+        assert_eq!(m.current_frame(2.0), Some(1));
+
+        // The node's play () goes on from the held time.
+        m.play(3.0, 0.0);
+        assert!(near(m.current_time(3.0), 0.5), "{}", m.current_time(3.0));
+        assert!(near(m.current_time(3.25), 0.75), "{}", m.current_time(3.25));
+    }
+
+    /// The node's restart after a held pause (`movie_set_start`: `currentTime = 0`, then `play ()`).
+    #[test]
+    fn a_held_element_that_is_rewound_plays_on_from_zero() {
+        let mut m = seekable();
+
+        m.hold(0.5);
+        assert_eq!(m.current_time(0.75), 0.5);
+        m.set_current_time_zero();
+        // Still held, at 0.
+        assert_eq!(m.current_time(0.75), 0.0);
+        assert_eq!(m.current_time(2.0), 0.0);
+        m.play(2.0, 0.0);
+        assert!(near(m.current_time(2.0), 0.0), "{}", m.current_time(2.0));
+        assert!(near(m.current_time(2.25), 0.25), "{}", m.current_time(2.25));
+
+        // An element that is not held: the rewind is as before.
+        let mut free = seekable();
+
+        free.set_current_time_zero();
+        assert!(free.held.is_none());
+    }
+
+    #[test]
+    fn a_held_element_at_another_rate_plays_on_at_that_rate() {
+        let mut m = seekable();
+
+        m.set_playback_rate(2.0);
+        m.hold(0.125);
+        assert!(near(m.current_time(0.125), 0.25));
+        assert!(near(m.current_time(0.75), 0.25));
+
+        m.play(1.0, 0.0);
+        assert!(near(m.current_time(1.0), 0.25), "{}", m.current_time(1.0));
+        assert!(
+            near(m.current_time(1.125), 0.5),
+            "{}",
+            m.current_time(1.125)
+        );
+    }
+
+    #[test]
+    fn a_medium_that_takes_no_seek_is_not_held() {
+        let mut gif = MovieMedia::decode_gif(&media("anim4.gif")).unwrap();
+
+        gif.hold(0.25);
+        assert_eq!(gif.current_time(0.25), 0.25);
+        assert_eq!(gif.current_time(0.75), 0.75);
+
+        let mut png = MovieMedia::decode_apng(&media("once.png")).unwrap();
+        let before = png.current_time(0.0);
+
+        png.hold(0.25);
+        assert!(png.held.is_none());
+        assert_eq!(png.current_time(0.25), before);
     }
 
     #[test]

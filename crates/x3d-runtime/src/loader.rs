@@ -1762,16 +1762,14 @@ impl Runtime {
                     }
                 }
 
-                let playable = [".webm", ".ogv", ".ogg", ".mp4", ".m4v"]
-                    .iter()
-                    .any(|e| path.to_ascii_lowercase().ends_with(e));
+                let (playable, webm) = video_source_kind(&path, href);
 
                 if playable {
                     if let Ok(data) = self.fetcher.fetch(&file_url) {
                         use crate::video_types::WebmError;
 
                         // A WebM with a VP9 or VP8 track is decoded; any other playable file is taken as playing.
-                        if !path.to_ascii_lowercase().ends_with(".webm") {
+                        if !webm {
                             return;
                         }
 
@@ -2209,9 +2207,77 @@ pub(crate) fn parse_bytes_waiting(
     }
 }
 
+/// What a MovieTexture source that is not a GIF or a PNG is, from its URL: (a video the page's element may play, a WebM
+/// that the engine decodes). `path` and `href` are the path and the text of the parsed URL, so the scheme is lower case.
+/// A data URL has no file name: its media type says what it is (a glTF EXT_texture_video source in a data URL or in a
+/// buffer view of a GLB, which the pinned parser gives to the node as a data URL). Any other URL is known by its
+/// extension.
+fn video_source_kind(path: &str, href: &str) -> (bool, bool) {
+    match href.strip_prefix("data:") {
+        Some(rest) => {
+            let media_type = rest
+                .split([';', ','])
+                .next()
+                .unwrap_or("")
+                .trim()
+                .to_ascii_lowercase();
+
+            (
+                ["video/webm", "video/ogg", "video/mp4"].contains(&media_type.as_str()),
+                media_type == "video/webm",
+            )
+        }
+        None => {
+            let lower = path.to_ascii_lowercase();
+
+            (
+                [".webm", ".ogv", ".ogg", ".mp4", ".m4v"]
+                    .iter()
+                    .any(|e| lower.ends_with(e)),
+                lower.ends_with(".webm"),
+            )
+        }
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    /// The kind of a video source: the media type of a data URL (any case, with or without parameters), the extension of
+    /// any other URL. The URL is parsed first, as the loader does, so an upper-case scheme is a data URL too.
+    #[test]
+    fn video_source_kind_reads_a_data_url_media_type_and_a_file_extension() {
+        let kind = |text: &str| {
+            let u = url::Url::parse(text).unwrap();
+
+            video_source_kind(u.path(), u.as_str())
+        };
+
+        assert_eq!(kind("data:video/webm;base64,GkXfow=="), (true, true));
+        assert_eq!(kind("DATA:Video/WebM;base64,GkXfow=="), (true, true));
+        assert_eq!(kind("data:video/webm,x"), (true, true));
+        assert_eq!(
+            kind("data:video/webm;codecs=vp9;base64,GkXfow=="),
+            (true, true)
+        );
+        assert_eq!(kind("data:video/mp4;base64,AAAA"), (true, false));
+        assert_eq!(kind("data:video/ogg;base64,AAAA"), (true, false));
+        assert_eq!(
+            kind("data:application/octet-stream;base64,GkXfow=="),
+            (false, false)
+        );
+        assert_eq!(kind("data:,x"), (false, false));
+        // The data of a data URL is not a file name.
+        assert_eq!(kind("data:text/plain,a.webm"), (false, false));
+        assert_eq!(kind("http://oracle/media/a.webm"), (true, true));
+        assert_eq!(kind("http://oracle/media/A.WEBM?x=1"), (true, true));
+        assert_eq!(kind("http://oracle/media/a.mp4"), (true, false));
+        assert_eq!(kind("http://oracle/media/a.m4v"), (true, false));
+        assert_eq!(kind("http://oracle/media/a.ogv"), (true, false));
+        assert_eq!(kind("http://oracle/media/a.mov"), (false, false));
+        assert_eq!(kind("http://oracle/media/webm"), (false, false));
+    }
 
     /// LocalFetcher answers as the case-sensitive oracle server on every file system: a name that differs only in case is
     /// "Not Found", in a file name and in a directory name (macOS run of PR #435: `text/PLAIN.wrl` was read as `plain.wrl`).
