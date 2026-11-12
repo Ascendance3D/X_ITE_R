@@ -21,6 +21,8 @@ av1-asm = ["av1", "rav1d/asm"]
 # installed plugins; this project ships no codec. Off by default. Build: libgstreamer1.0-dev and
 # libgstreamer-plugins-base1.0-dev. Run: gstreamer1.0-plugins-good (qtdemux) and a decoder plugin.
 system-video-gst = ["native-video", "dep:gstreamer", "dep:gstreamer-app", "dep:gstreamer-video", "dep:gstreamer-audio"]
+# MP4 video and audio through AVFoundation on macOS (ADR 0015): AVAssetReader decodes, the engine plays.
+system-video-avf = ["native-video", "dep:objc2", "dep:objc2-foundation", "dep:objc2-core-foundation", "dep:objc2-av-foundation", "dep:objc2-avf-audio", "dep:objc2-core-media", "dep:objc2-core-video", "dep:objc2-core-audio-types"]
 
 [dependencies]
 x3d-fields = { path = "../x3d-fields" }
@@ -64,3 +66,14 @@ url = "2"
 serde_json = "1"
 sha2 = "0.10"
 x3d-evidence = { path = "../x3d-evidence" }
+
+# MP4 through AVFoundation (feature `system-video-avf`, ADR 0015). OS frameworks; nothing is bundled.
+[target.'cfg(target_os = "macos")'.dependencies]
+objc2 = { version = "0.6", optional = true }
+objc2-foundation = { version = "0.3", optional = true, features = ["NSString", "NSURL", "NSArray", "NSDictionary", "NSValue", "NSError", "NSObject"] }
+objc2-av-foundation = { version = "0.3", optional = true, features = ["AVAsset", "AVAssetReader", "AVAssetReaderOutput", "AVAssetTrack", "AVMediaFormat", "AVAudioSettings", "AVVideoSettings", "AVMetadataFormat", "objc2-core-media", "block2"] }
+objc2-core-media = { version = "0.3", optional = true, features = ["CMSampleBuffer", "CMTime", "CMBlockBuffer", "CMFormatDescription", "objc2-core-video", "objc2-core-audio-types"] }
+objc2-core-video = { version = "0.3", optional = true, features = ["CVPixelBuffer", "CVImageBuffer", "CVBuffer", "CVReturn", "CVPixelFormatDescription"] }
+objc2-core-audio-types = { version = "0.3", optional = true, features = ["CoreAudioBaseTypes"] }
+objc2-core-foundation = { version = "0.3", optional = true, features = ["CFString", "CFBase"] }
+objc2-avf-audio = { version = "0.3", optional = true, features = ["AVAudioSettings"] }

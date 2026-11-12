@@ -331,7 +331,7 @@ jobs:
             # shellcheck disable=SC2086
             flock /tmp/xite-ci-apt.lock sudo apt-get -o DPkg::Lock::Timeout=600 install -y --no-install-recommends $missing
           fi
-          cargo nextest run --release -p x3d-runtime --features av1,system-video-gst --no-fail-fast -E "binary(mp4_gst) or binary(mp4_probe) or test(sysvideo::)" 2>&1 | tee mp4-gst.log
+          cargo nextest run --release -p x3d-runtime --features av1,system-video-gst --no-fail-fast -E "binary(mp4_platform) or binary(mp4_probe) or test(sysvideo::)" 2>&1 | tee mp4-gst.log
           test "${PIPESTATUS[0]}" -eq 0
 
       - name: Test counts
