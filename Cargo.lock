@@ -5005,7 +5005,9 @@ dependencies = [
 name = "x3d-text"
 version = "0.1.0"
 dependencies = [
+ "flate2",
  "serde_json",
+ "sha2",
  "ttf-parser",
  "woff2-patched",
  "x3d-evidence",
