@@ -190,7 +190,16 @@ fn audio_starting_late_is_silent_first_and_on_the_same_timeline() {
     let start = r.audio.as_ref().unwrap().2;
 
     eprintln!("h264-aac-audio-late.mp4: first sample at {start} s (ffprobe: 0.228)");
-    assert!((start - 0.228).abs() < 0.002, "{start}");
+    // GStreamer gives the first sample at its presentation time (0.228 s); AVFoundation applies the edit list itself and
+    // gives the track from 0 with silence first. The timeline is the same.
+    let (channels, rate, _) = r.audio.as_ref().unwrap();
+    let lead = (0.2 * f64::from(*rate)) as usize;
+
+    assert!(
+        (start - 0.228).abs() < 0.002
+            || (start.abs() < 0.002 && channels[0][..lead].iter().all(|s| s.abs() < 1e-4)),
+        "{start}"
+    );
 
     let t = sysvideo::timeline(r).unwrap();
     let AudioTrack::Decoded { channels, .. } = t.audio else {
@@ -207,7 +216,7 @@ fn audio_starting_late_is_silent_first_and_on_the_same_timeline() {
     assert!(
         channels[0][..(0.2 * RATE) as usize]
             .iter()
-            .all(|s| *s == 0.0)
+            .all(|s| s.abs() < 1e-4)
     );
     // From 0.3 s on, the tones are those of the full file: the same movie time sounds the same segment.
     assert_eq!(
