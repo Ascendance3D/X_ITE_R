@@ -15,10 +15,6 @@
 /// poses, pictures) is still compared. The log must still differ: a case that now matches fails until it is removed.
 const KNOWN: &[(&str, &str)] = &[
     (
-        "include-Texture",
-        "ANGLE: 'X3D_NUM_TEXTURE_COORDINATES' undeclared identifier in an array size; this port: 'array size 0 out of range' (naga checks GLSL 4.50)",
-    ),
-    (
         "include-Vertex",
         "ANGLE: 'out' invalid qualifier combination at line 114; the port's compiler reports gl_PointSize undeclared at line 166 (it checks later code first)",
     ),
