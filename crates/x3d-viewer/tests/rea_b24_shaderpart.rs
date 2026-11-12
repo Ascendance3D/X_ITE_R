@@ -15,26 +15,6 @@
 /// poses, pictures) is still compared. The log must still differ: a case that now matches fails until it is removed.
 const KNOWN: &[(&str, &str)] = &[
     (
-        "include-Fragment",
-        "ANGLE's preprocessor rejects `#if X3D_NUM_TEXTURE_COORDINATES > 0` when the macro is undefined (\"unexpected token after conditional expression\"); this port's preprocessor takes an unknown identifier as 0 and fails later in another include",
-    ),
-    (
-        "include-Material",
-        "same as include-Fragment (Material includes Fragment)",
-    ),
-    (
-        "include-PBR",
-        "same as include-Fragment (PBR includes Material)",
-    ),
-    (
-        "include-Unlit",
-        "same as include-Fragment (Unlit includes Fragment)",
-    ),
-    (
-        "include-Stipple",
-        "same as include-Fragment: the undefined macro in an `#if`",
-    ),
-    (
         "include-Texture",
         "ANGLE: 'X3D_NUM_TEXTURE_COORDINATES' undeclared identifier in an array size; this port: 'array size 0 out of range' (naga checks GLSL 4.50)",
     ),

@@ -100,23 +100,32 @@ async function play (page, text)
    text);
 }
 
-// The level over `ms` after a time field of M is set to the browser's time now, `wait` ms after the set.
+// The level over `ms` after a time field of M is set to the browser's time now. The node takes the field in the next
+// frame, and the page makes the engine's calls after that frame; on a slow runner (SwiftShader) a frame can take longer
+// than the settle time. So the level is measured `wait` ms after M shows the state the field gives (isPaused for
+// pauseTime and resumeTime, isActive for stopTime and startTime), within 10 s.
+const STATE = { pauseTime: [ "isPaused", true ], resumeTime: [ "isPaused", false ], stopTime: [ "isActive", false ], startTime: [ "isActive", true ] };
+
 async function levelAfter (page, field, wait = 400, ms = 1000)
 {
-   return page .evaluate (async ({ field, wait, ms }) =>
+   return page .evaluate (async ({ field, wait, ms, state }) =>
    {
       const browser = document .querySelector ("x3d-canvas") .browser;
       const later   = ms => new Promise (resolve => setTimeout (resolve, ms));
       const m       = browser .currentScene .getNamedNode ("M");
 
       m [field] = browser .currentTime;
+
+      for (let i = 0; i < 200 && m [state [0]] !== state [1]; ++ i)
+         await later (50);
+
       await later (wait);
       window .tapMax = 0;
       await later (ms);
 
       return { level: window .tapMax, isActive: m .isActive, isPaused: m .isPaused };
    },
-   { field, wait, ms });
+   { field, wait, ms, state: STATE [field] });
 }
 
 const TIMINGS = [ "iso", "pinned" ];
