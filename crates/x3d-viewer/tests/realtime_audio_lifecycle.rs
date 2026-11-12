@@ -1,5 +1,5 @@
 //! Realtime audio lifecycle on the host's output device (Phase 7A, issue #88): an OscillatorSource plays, pauses
-//! (pauseTime), resumes (resumeTime), and the viewer is dropped (the engine closes the device). The viewer core is stepped
+//! (pauseTime), resumes (resumeTime), and the viewer is dropped (AudioEngine's Drop closes the context; see below). The viewer core is stepped
 //! on the wall clock, as the window does. Ignored by default: it needs an output device and plays a tone for 8 s.
 //! It checks the order and the wall-clock spacing of the X3D events and that the context clock runs until the drop. It cannot
 //! hear the device: record the default sink's monitor during the run (for example `parec -d <sink>.monitor`) to see that
@@ -48,22 +48,33 @@ fn oscillator_plays_pauses_resumes_and_closes_on_the_device() {
         v.step(t);
         for line in &v.rt.console[seen..] {
             eprintln!("{t:.3} console: {line}");
-            // "log: play 1794475025.0145" -> "play"; "log: O isPaused true 1794..." -> "O isPaused true".
-            let text = line.trim_start_matches("log: ");
-            let words: Vec<&str> = text.split(' ').collect();
-            log.push((t, words[..words.len() - 1].join(" ")));
+            // "log: play 1794475025.0145" -> (1794475025.0145, "play"): the X3D event time (cycleTime or the event's
+            // timestamp) and the label.
+            let words: Vec<&str> = line
+                .trim_start_matches("log: ")
+                .split_whitespace()
+                .collect();
+            let (label, time) = words.split_at(words.len() - 1);
+            let time: f64 = time[0]
+                .parse()
+                .unwrap_or_else(|_| panic!("no event time in {line:?}"));
+
+            log.push((time, label.join(" ")));
         }
         seen = v.rt.console.len();
         std::thread::sleep(Duration::from_millis(20));
     }
 
-    // The engine keeps the device until the drop: the context clock still runs.
+    // Until the drop the engine is the realtime one and its clock runs. The drop closes the context (AudioEngine's Drop:
+    // close_sync); the test cannot see the device after that, so the release is shown outside it: the sink monitor goes
+    // silent and the PipeWire stream node goes away.
+    assert!(v.rt.audio.as_ref().is_some_and(|e| e.is_realtime()));
     let clock = v.rt.audio.as_ref().map(|e| e.current_time()).unwrap_or(0.0);
     eprintln!("{:.3} context clock {clock:.3} s; drop (shutdown)", now());
     drop(v);
     eprintln!("{:.3} dropped", now());
 
-    // The order of the events and the wall-clock time of each step (one TimeSensor cycle is 0.5 s; the steps are 4 cycles apart).
+    // The order of the events and the X3D time of each step (one TimeSensor cycle is 0.5 s; the steps are 4 cycles apart).
     let at = |want: &str| -> f64 {
         log.iter()
             .find(|(_, l)| l == want)
