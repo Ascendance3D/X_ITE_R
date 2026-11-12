@@ -83,6 +83,8 @@ Rules that follow:
 * **One clock.** In native backends the engine's audio clock is the master and the video backend is asked for the picture at media time `t`. That is what makes the ISO formula, `speed`, `loop` and sync testable with the existing timing tolerance (one frame period). The element backend keeps the pinned behavior (the browser clock).
 * **Color conversion lives in one place** (the engine's YUV-to-RGBA or a GPU shader), with the matrix chosen from the stream's colour tags as the pinned Chrome does (VP8 measured BT.601, VP9 BT.709), so backends that hand us YUV agree.
 
+MP4 (2026-11-12): the SystemBackend design for MP4 video and audio is decided in `docs/adr/0015-mp4-platform-decoders.md`.
+
 ## 6. Work that is independent of this review, and what changes
 
 Continues as planned: Agent A's VP8 PRs (#353, #355), seek/audio/AudioClip steps, AV1 (rav1d); the AAC exclusion (#357); the licensing inventory. Nothing completed is discarded.
