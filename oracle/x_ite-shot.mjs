@@ -11,7 +11,9 @@
  * --canvas also writes <out_dir>/<file>.canvas.json: every 2D canvas the page filled and read back (ScreenText draws its glyphs
  * with `fill ()` and takes the pixels with `getImageData`), as { width, height, calls, alpha }: the path and transform calls since the
  * canvas was cleared, and the alpha of every pixel in the canvas' row order. The page's own canvas methods run unchanged; they are
- * only wrapped to keep their arguments. Without the option nothing is wrapped.
+ * only wrapped to keep their arguments. Without the option nothing is wrapped. A world fails when the page uses another call
+ * that changes the canvas (clearRect, a transform other than translate and scale, rect, arc, stroke, text, drawImage, ...) or
+ * a `fill` with arguments between the clear and the read: the record would not hold what made the pixels.
  *
  * Headless only: --headless=new, never a window. All non-local requests are aborted.
  * Never touches dump.html / x_ite-dump.mjs; the page is x_ite-pin/src/shot.html.
@@ -41,6 +43,11 @@ const SETTLE   = Number (opt ("--settle", "400"));
 const ONLY     = opt ("--only", "");
 const OIT      = argv .includes ("--oit");   // OrderIndependentTransparency browser option on (sub:render.transparency-sorting)
 const CANVAS   = argv .includes ("--canvas"); // record the 2D canvas calls and pixels (ScreenText raster)
+
+// --canvas: the calls a record holds (fillRect starts a record), and the calls that change a canvas' pixels, path or transform
+// in a way the record cannot hold. A rejected call between fillRect and getImageData fails the world.
+const CANVAS_CALLS    = [ "save", "restore", "translate", "scale", "beginPath", "moveTo", "lineTo", "quadraticCurveTo", "bezierCurveTo", "closePath", "fill", "fillRect" ];
+const CANVAS_REJECTED = [ "clearRect", "reset", "setTransform", "resetTransform", "transform", "rotate", "rect", "roundRect", "arc", "arcTo", "ellipse", "clip", "stroke", "strokeRect", "fillText", "strokeText", "drawImage", "putImageData" ];
 
 const corpus = resolve (corpusArg);
 const outDir = resolve (outArg);
@@ -122,15 +129,18 @@ async function renderOne (file)
 
    if (CANVAS)
    {
-      await page .addInitScript (() =>
+      await page .addInitScript (names =>
       {
          window .canvasLog = [ ];
 
          const prototype = CanvasRenderingContext2D .prototype;
 
-         for (const name of [ "save", "restore", "translate", "scale", "beginPath", "moveTo", "lineTo", "quadraticCurveTo", "bezierCurveTo", "closePath", "fill", "fillRect" ])
+         for (const name of names)
          {
             const method = prototype [name];
+
+            if (!method)
+               continue;
 
             prototype [name] = function (... args) { window .canvasLog .push ([ name, ... args ]); return method .apply (this, args); };
          }
@@ -148,7 +158,7 @@ async function renderOne (file)
             window .canvasLog .push ([ "getImageData", data .width, data .height, alpha ]);
             return data;
          };
-      });
+      }, [ ... CANVAS_CALLS, ... CANVAS_REJECTED ]);
    }
 
    try
@@ -176,21 +186,43 @@ async function renderOne (file)
       {
          // One record for each canvas that was cleared (fillRect), drawn and read back; equal records are kept once, in sorted order.
          const canvases = [ ];
-         let calls = [ ];
+         let calls = [ ], open = false;
 
+         // ScreenText sets the size of its canvas (which resets the state), clears it (fillRect), draws and reads it back. A
+         // record is the calls from the clear to the read; a path or transform call outside a record would be lost, so it
+         // stops the recording. A read or a rejected call outside a record belongs to another use of a 2D canvas.
          for (const [ name, ... args ] of await page .evaluate (() => window .canvasLog))
          {
             if (name === "fillRect")
+            {
+               if (open)
+                  throw new Error (`--canvas: a fillRect after ${calls .length} canvas calls that were not read back`);
+
                calls = [ ];
+               open  = true;
+            }
             else if (name === "getImageData")
             {
+               if (!open)
+                  continue;
+
+               open = false;
+
+               // The record must hold everything that made the pixels: a call that the replay does not know stops the recording.
+               const unknown = calls .find (([ name, ... args ]) => CANVAS_REJECTED .includes (name) || (name === "fill" && args .length));
+
+               if (unknown)
+                  throw new Error (`--canvas: the page called ${unknown [0]} (${unknown .slice (1) .length} arguments) on a 2D canvas before getImageData; the record cannot hold it`);
+
                const record = JSON .stringify ({ width: args [0], height: args [1], calls, alpha: args [2] });
 
                if (!canvases .includes (record))
                   canvases .push (record);
             }
-            else
+            else if (open)
                calls .push ([ name, ... args ]);
+            else if (CANVAS_CALLS .includes (name))
+               throw new Error (`--canvas: the page called ${name} on a 2D canvas outside a record (no fillRect before it)`);
          }
 
          // Fonts arrive in any order, so the order in which the texts are drawn is not part of the record.

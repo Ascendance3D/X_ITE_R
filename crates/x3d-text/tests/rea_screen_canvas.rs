@@ -14,7 +14,8 @@
 //! (a counter, the inside of a bowl) Chrome's canvas has the edge about 0.1 pixel further left than these polylines; a
 //! quadratic curve and a cubic that bulges away from its span do not show it (measured on Chrome 156 with single arcs). The
 //! rule is not known, so it is not copied. A listed canvas must stay over the bound: when it comes within it, the entry
-//! fails the test and must be removed.
+//! fails the test and must be removed. Each entry also has the most pixels over 8 that the canvas may have (the measured
+//! number and a tenth more), so a listed canvas cannot get worse unseen.
 
 use serde_json::Value;
 use x3d_text::skia_edge::{PathCmd, composite, fill_path};
@@ -24,14 +25,14 @@ const DIR: &str = concat!(
     "/../../oracle/rea-cff-screen-raster-baseline"
 );
 
-/// (world, canvas width, canvas height): the canvases over the bound.
-const KNOWN_GAPS: &[(&str, usize, usize)] = &[
-    ("cff-sr-large.wrl", 217, 121),
-    ("cff-sr-sizes.wrl", 35, 20),
-    ("cff-sr-sizes.wrl", 49, 28),
-    ("cff-sr-sizes.wrl", 69, 39),
-    ("cff-sr-sizes.wrl", 97, 55),
-    ("cff-sr-vertical.wrl", 49, 49),
+/// (world, canvas width, canvas height, most pixels over 8): the canvases over the bound. Measured: 206, 5, 17, 26, 43, 22.
+const KNOWN_GAPS: &[(&str, usize, usize, usize)] = &[
+    ("cff-sr-large.wrl", 217, 121, 227),
+    ("cff-sr-sizes.wrl", 35, 20, 6),
+    ("cff-sr-sizes.wrl", 49, 28, 19),
+    ("cff-sr-sizes.wrl", 69, 39, 29),
+    ("cff-sr-sizes.wrl", 97, 55, 48),
+    ("cff-sr-vertical.wrl", 49, 49, 25),
 ];
 
 /// 2D affine transform of the canvas: x' = a x + c y + e, y' = b x + d y + f.
@@ -148,18 +149,25 @@ fn screen_text_canvases_match_x_ite() {
             );
             compared += 1;
 
-            let gap = KNOWN_GAPS.contains(&(world, width, height));
+            let gap = KNOWN_GAPS
+                .iter()
+                .find(|g| (g.0, g.1, g.2) == (world, width, height));
 
             if over * 1000 > want.len() * 5 {
                 over_bound.push((world.to_string(), width, height));
 
-                if !gap {
-                    failures.push(format!(
+                match gap {
+                    None => failures.push(format!(
                         "{world} {width}x{height}: {over} of {} pixels over 8, max {max}",
                         want.len()
-                    ));
+                    )),
+                    Some(g) if over > g.3 => failures.push(format!(
+                        "{world} {width}x{height}: {over} pixels over 8, more than the {} of the known gap",
+                        g.3
+                    )),
+                    Some(_) => {}
                 }
-            } else if gap {
+            } else if gap.is_some() {
                 failures.push(format!(
                     "{world} {width}x{height}: within the bound now; remove it from KNOWN_GAPS"
                 ));
@@ -167,7 +175,7 @@ fn screen_text_canvases_match_x_ite() {
         }
     }
 
-    for (world, width, height) in KNOWN_GAPS {
+    for (world, width, height, _) in KNOWN_GAPS {
         if !over_bound.contains(&(world.to_string(), *width, *height)) {
             failures.push(format!(
                 "{world} {width}x{height}: listed in KNOWN_GAPS, but no such canvas is over the bound"
