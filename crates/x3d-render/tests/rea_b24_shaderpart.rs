@@ -3,7 +3,7 @@
 //! worlds oracle/synthetic-rea-b24-shaderpart/include-*.wrl). ANGLE reports `<file number>:<line in the file>` from
 //! the `#line` directives of ShaderCompiler.process, and X_ITE names the include file; the log of this port counts
 //! physical lines, so `remap_log` rewrites it. The stepped comparison of the same worlds (pictures, scene text and
-//! the whole log) is crates/x3d-viewer/tests/rea_b24_shaderpart.rs; the includes whose text differs are KNOWN there.
+//! the whole log) is crates/x3d-viewer/tests/rea_b24_shaderpart.rs. Every include case matches (issue #95, 2026-11-12).
 
 use x3d_render::glsl_compat::{Stage, compile_part};
 use x3d_runtime::nodes::shader_include::{process, remap_log, source_file_name};
@@ -50,7 +50,19 @@ fn rust(name: &str) -> (String, String) {
 
 #[test]
 fn include_compile_errors_name_the_include_file_and_line_like_x_ite() {
-    for name in ["Fog", "Normal", "MaterialInfo"] {
+    for name in [
+        "Fog",
+        "Fragment",
+        "Material",
+        "MaterialInfo",
+        "Normal",
+        "PBR",
+        "PointSize",
+        "Stipple",
+        "Texture",
+        "Unlit",
+        "Vertex",
+    ] {
         assert_eq!(rust(name), x_ite(name), "{name}");
     }
 }
