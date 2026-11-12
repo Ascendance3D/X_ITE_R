@@ -1560,7 +1560,7 @@ impl Runtime {
     fn analyser_set_time(&mut self, node: NodeId) {
         let n = self.snd(node).node.unwrap();
         let now = self.audio().current_time();
-        // A reading of the old size (the page gets an fftSize change after the frame) is not used.
+        // A reading of another size (the page gets an fftSize change after the frame) is not used.
         let bins = match self.audio().get(n) {
             ANode::Analyser(_, a) => a.frequency_bin_count(),
             _ => return,
@@ -1568,7 +1568,7 @@ impl Runtime {
         let page = self
             .audio()
             .page_analyser(n)
-            .filter(|r| r.byte_frequency.len() == bins)
+            .filter(|r| r.bins() == Some(bins))
             .cloned();
         let (bytes_f, bytes_t, floats_f, floats_t) = if let Some(r) = page {
             (

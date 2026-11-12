@@ -1927,6 +1927,16 @@ fn the_analyser_data_fields_of_a_page_come_from_the_page_reading() {
     assert_eq!(bytes.len(), 16, "{bytes:?}");
     assert_ne!(bytes, expected);
 
+    // A reading whose four arrays do not have one length is not used either.
+    let mut uneven = reading(16);
+
+    uneven.float_time_domain.pop();
+    s.audio_engine(uid).unwrap().set_page_analyser(slot, uneven);
+    s.step(NOW + 0.08);
+
+    assert_eq!(value(&s, "floatTimeDomainData").len(), 16);
+    assert_ne!(value(&s, "byteFrequencyData"), expected);
+
     // A slot that is no AnalyserNode takes no reading.
     s.audio_engine(uid)
         .unwrap()

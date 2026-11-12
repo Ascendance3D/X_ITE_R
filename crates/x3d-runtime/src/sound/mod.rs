@@ -233,6 +233,18 @@ pub struct AnalyserReading {
     pub float_time_domain: Vec<f32>,
 }
 
+impl AnalyserReading {
+    /// The number of bins, when the four arrays have the same length (else the reading is not used).
+    pub fn bins(&self) -> Option<usize> {
+        let n = self.byte_frequency.len();
+
+        (self.byte_time_domain.len() == n
+            && self.float_frequency.len() == n
+            && self.float_time_domain.len() == n)
+            .then_some(n)
+    }
+}
+
 /// The state of an AudioBufferSourceNode as a page reads it back: its buffer, its loop attributes and
 /// the calls of `start` and `stop` it got.
 #[derive(Clone, Debug, Default, PartialEq)]
@@ -407,7 +419,9 @@ impl AudioEngine {
     /// In a page, the engine's graph only records the calls (the page makes them on its own nodes, [`ops`]), so no
     /// signal goes through the engine's AnalyserNodes. The page reads its AnalyserNode of slot `slot` each frame and gives
     /// the data here; the Analyser node's data fields then come from it, as X_ITE reads them from the page's node
-    /// (Analyser.set_time). A slot that is not an AnalyserNode is ignored. The reading is dropped with the node.
+    /// (Analyser.set_time). A slot that is not an AnalyserNode is ignored. The page gives a new reading every frame while
+    /// its node exists; the last one stays until then (a page AnalyserNode without input also keeps its last data), and
+    /// it is dropped with the node.
     pub fn set_page_analyser(&mut self, slot: usize, reading: AnalyserReading) {
         if matches!(self.nodes.get(slot), Some(Some(ANode::Analyser(..)))) {
             self.page_analysers.insert(slot, reading);
