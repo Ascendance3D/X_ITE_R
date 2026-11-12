@@ -692,7 +692,12 @@ pub fn catmull_rom_generate(
 /// - A calculated T is (v(i+1) - v(i-1)) / 2. At the first and the last key it is 0 unless the spline is closed.
 /// - closed is ignored when the first and last velocities are given, or when the first and last keyValue differ (19.2.3).
 ///   Closed wraps the neighbours: t(-1) = t(N-2), v(-1) = v(N-2), t(N) = t(1), v(N) = v(1).
-/// - T0(i) = F+(i) T(i), T1(i) = F-(i) T(i). F± is 1 at the first and the last key of an open spline.
+/// - T0(i) = F+(i) T(i), T1(i) = F-(i) T(i). F± is 1 at the first and the last key of an open spline. With the wrap, both
+///   seam keys get F- = 2a / (a + b) and F+ = 2b / (a + b), where a is the first and b the last key interval.
+///
+/// Precondition: `key_value` has one element per key. The runtime makes it so (X3DInterpolatorNode set_keyValue__ resizes
+/// a short keyValue), so the size of keyValue in the 19.2.4 rule is `key.len()` here. A missing element is NaN, as in
+/// [`catmull_rom_generate`]. A non-finite given velocity is kept as given, as when normalizeVelocity is FALSE.
 pub fn hermite_generate_iso(
     n: usize,
     closed: bool,

@@ -188,6 +188,32 @@ fn iso_closed_is_ignored_for_unequal_ends_or_given_ends() {
 }
 
 #[test]
+fn iso_closed_seam_factors_on_unequal_intervals() {
+    // 19.2.4 with the wrap t(-1) = t(N-2), t(N) = t(1): at both seam keys F- = 2a / (a + b) and F+ = 2b / (a + b), with
+    // a = t1 - t0 = 0.2 and b = t(N-1) - t(N-2) = 0.5.
+    let key = [0.0, 0.2, 0.5, 1.0];
+    let ring = v3(&[
+        [0.0, 0.0, 0.0],
+        [1.0, 2.0, 0.0],
+        [-2.0, 1.0, 1.0],
+        [0.0, 0.0, 0.0],
+    ]);
+    let (t0, t1) = hermite_generate_iso(3, true, &key, &ring, &[], false);
+    let (fm, fp) = (2.0 * 0.2 / 0.7, 2.0 * 0.5 / 0.7);
+    // T at both seam keys = (v1 - v(N-2)) / 2 = (3, 1, -1) / 2.
+    let t = [1.5, 0.5, -0.5];
+
+    for i in [0, 3] {
+        close(&t0[i], &t.map(|x| x * fp));
+        close(&t1[i], &t.map(|x| x * fm));
+    }
+
+    let xite = catmull_rom_generate(3, true, &key, &ring, &[], false);
+    close_all(&t0, &xite.0);
+    close_all(&t1, &xite.1);
+}
+
+#[test]
 fn iso_equals_xite_where_the_rules_agree() {
     // interp-ext.wrl SP1, S2 and S2C: no keyVelocity, or one of the size of keyValue without normalization.
     let key = [0.0, 0.25, 0.6, 1.0];
