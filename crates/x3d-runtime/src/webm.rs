@@ -38,25 +38,13 @@ const ID_SIMPLE_BLOCK: u64 = 0xA3;
 const ID_BLOCK_GROUP: u64 = 0xA0;
 const ID_BLOCK: u64 = 0xA1;
 
-pub use crate::video_types::{AudioTrack, WebmError};
+pub use crate::video_types::{AudioTrack, Video, VideoFrame, WebmError};
 
 /// The largest picture, in luma samples, that [`decode`] hands to the decoder: 35 651 584, the largest picture of
 /// VP9's highest levels (8192 x 4352 fits; the level tables are not in the local standards library, so this is a
 /// limit of this implementation, not a quotation). `vp9dec` allows 2^27 samples, about 400 MB per picture and up
 /// to eight pictures held as references; a size from a file is checked here first.
 pub const MAX_LUMA_SAMPLES: u64 = 35_651_584;
-
-/// One decoded picture: RGBA rows from the top, and its presentation time in milliseconds.
-pub struct VideoFrame {
-    pub rgba: Vec<u8>,
-    pub time_ms: f64,
-}
-
-pub struct Video {
-    pub width: u32,
-    pub height: u32,
-    pub frames: Vec<VideoFrame>,
-}
 
 /// An element id (marker bits kept) and its size (`None`: unknown size), and the header length.
 fn element(d: &[u8], at: usize) -> Option<(u64, Option<usize>, usize)> {

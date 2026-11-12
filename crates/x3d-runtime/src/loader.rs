@@ -1762,18 +1762,24 @@ impl Runtime {
                     }
                 }
 
-                let (playable, webm) = video_source_kind(&path, href);
+                let (playable, container) = video_source_kind(&path, href);
 
-                if playable {
-                    if let Ok(data) = self.fetcher.fetch(&file_url) {
-                        use crate::video_types::WebmError;
+                if playable && let Ok(data) = self.fetcher.fetch(&file_url) {
+                    use crate::video_types::WebmError;
+                    use nodes::movie_texture::MovieMedia;
 
-                        // A WebM with a VP9 or VP8 track is decoded; any other playable file is taken as playing.
-                        if !webm {
-                            return;
-                        }
-
-                        match nodes::movie_texture::MovieMedia::decode_webm(&data) {
+                    match container {
+                        // Another playable file (Ogg) is taken as playing.
+                        VideoContainer::Other => return,
+                        // ADR 0015: an MP4 is decoded by the platform decoder of this build. Every failure is the video
+                        // element's `error`: the reason, X_ITE's two messages, the next candidate, FAILED_STATE.
+                        VideoContainer::Mp4 => match MovieMedia::decode_platform(&data) {
+                            Ok(media) => return self.movie_set_frames(node, media),
+                            Err(e) => self.log_warn(format!(
+                                "MovieTexture: the video '{decoded}' is not decoded by this build ({e:?})."
+                            )),
+                        },
+                        VideoContainer::Webm => match MovieMedia::decode_webm(&data) {
                             Ok(media) => return self.movie_set_frames(node, media),
                             // A video this build does not decode (another codec, a picture beyond the limits): it
                             // may play in the browser. No frame is shown, the scene goes on, the node stays
@@ -1781,7 +1787,8 @@ impl Runtime {
                             Err(
                                 e @ (WebmError::NoVideoTrack
                                 | WebmError::TooLarge
-                                | WebmError::NoDecoder),
+                                | WebmError::NoDecoder
+                                | WebmError::Unsupported { .. }),
                             ) => {
                                 self.log_warn(format!(
                                     "MovieTexture: the video '{decoded}' is not decoded by this build ({e:?}); no frame is shown."
@@ -1791,7 +1798,7 @@ impl Runtime {
                             // Not a WebM, or a stream that does not decode: the browser's video element fires
                             // `error`, and the next candidate is tried.
                             Err(WebmError::NotWebm | WebmError::Decode(_)) => {}
-                        }
+                        },
                     }
                 }
 
@@ -2207,13 +2214,22 @@ pub(crate) fn parse_bytes_waiting(
     }
 }
 
-/// What a MovieTexture source that is not a GIF or a PNG is, from its URL: (a video the page's element may play, a WebM
-/// that the engine decodes). `path` and `href` are the path and the text of the parsed URL, so the scheme is lower case.
-/// A data URL has no file name: its media type says what it is (a glTF EXT_texture_video source in a data URL or in a
-/// buffer view of a GLB, which the pinned parser gives to the node as a data URL). Any other URL is known by its
-/// extension.
-fn video_source_kind(path: &str, href: &str) -> (bool, bool) {
-    match href.strip_prefix("data:") {
+/// The container of a MovieTexture video source, as far as the native build decodes it.
+#[derive(Clone, Copy, Debug, PartialEq)]
+enum VideoContainer {
+    Webm,
+    /// MP4, M4V or M4A (ISO/IEC 14496-12, ADR 0015).
+    Mp4,
+    /// Another file the page's element may play (Ogg), or a file that it does not play.
+    Other,
+}
+
+/// What a MovieTexture source that is not a GIF or a PNG is, from its URL: (a video the page's element may play, its
+/// container). `path` and `href` are the path and the text of the parsed URL, so the scheme is lower case. A data URL
+/// has no file name: its media type says what it is (a glTF EXT_texture_video source in a data URL or in a buffer view
+/// of a GLB, which the pinned parser gives to the node as a data URL). Any other URL is known by its extension.
+fn video_source_kind(path: &str, href: &str) -> (bool, VideoContainer) {
+    let (playable, container) = match href.strip_prefix("data:") {
         Some(rest) => {
             let media_type = rest
                 .split([';', ','])
@@ -2221,23 +2237,45 @@ fn video_source_kind(path: &str, href: &str) -> (bool, bool) {
                 .unwrap_or("")
                 .trim()
                 .to_ascii_lowercase();
+            let container = match media_type.as_str() {
+                "video/webm" => VideoContainer::Webm,
+                "video/mp4" | "audio/mp4" => VideoContainer::Mp4,
+                _ => VideoContainer::Other,
+            };
 
             (
-                ["video/webm", "video/ogg", "video/mp4"].contains(&media_type.as_str()),
-                media_type == "video/webm",
+                ["video/webm", "video/ogg", "video/mp4", "audio/mp4"]
+                    .contains(&media_type.as_str()),
+                container,
             )
         }
         None => {
             let lower = path.to_ascii_lowercase();
+            let container = if lower.ends_with(".webm") {
+                VideoContainer::Webm
+            } else if [".mp4", ".m4v", ".m4a"].iter().any(|e| lower.ends_with(e)) {
+                VideoContainer::Mp4
+            } else {
+                VideoContainer::Other
+            };
 
             (
-                [".webm", ".ogv", ".ogg", ".mp4", ".m4v"]
+                [".webm", ".ogv", ".ogg", ".mp4", ".m4v", ".m4a"]
                     .iter()
                     .any(|e| lower.ends_with(e)),
-                lower.ends_with(".webm"),
+                container,
             )
         }
-    }
+    };
+
+    (
+        playable,
+        if playable {
+            container
+        } else {
+            VideoContainer::Other
+        },
+    )
 }
 
 #[cfg(test)]
@@ -2254,29 +2292,73 @@ mod tests {
             video_source_kind(u.path(), u.as_str())
         };
 
-        assert_eq!(kind("data:video/webm;base64,GkXfow=="), (true, true));
-        assert_eq!(kind("DATA:Video/WebM;base64,GkXfow=="), (true, true));
-        assert_eq!(kind("data:video/webm,x"), (true, true));
+        assert_eq!(
+            kind("data:video/webm;base64,GkXfow=="),
+            (true, VideoContainer::Webm)
+        );
+        assert_eq!(
+            kind("DATA:Video/WebM;base64,GkXfow=="),
+            (true, VideoContainer::Webm)
+        );
+        assert_eq!(kind("data:video/webm,x"), (true, VideoContainer::Webm));
         assert_eq!(
             kind("data:video/webm;codecs=vp9;base64,GkXfow=="),
-            (true, true)
+            (true, VideoContainer::Webm)
         );
-        assert_eq!(kind("data:video/mp4;base64,AAAA"), (true, false));
-        assert_eq!(kind("data:video/ogg;base64,AAAA"), (true, false));
+        assert_eq!(
+            kind("data:video/mp4;base64,AAAA"),
+            (true, VideoContainer::Mp4)
+        );
+        assert_eq!(
+            kind("data:audio/mp4;base64,AAAA"),
+            (true, VideoContainer::Mp4)
+        );
+        assert_eq!(
+            kind("data:video/ogg;base64,AAAA"),
+            (true, VideoContainer::Other)
+        );
         assert_eq!(
             kind("data:application/octet-stream;base64,GkXfow=="),
-            (false, false)
+            (false, VideoContainer::Other)
         );
-        assert_eq!(kind("data:,x"), (false, false));
+        assert_eq!(kind("data:,x"), (false, VideoContainer::Other));
         // The data of a data URL is not a file name.
-        assert_eq!(kind("data:text/plain,a.webm"), (false, false));
-        assert_eq!(kind("http://oracle/media/a.webm"), (true, true));
-        assert_eq!(kind("http://oracle/media/A.WEBM?x=1"), (true, true));
-        assert_eq!(kind("http://oracle/media/a.mp4"), (true, false));
-        assert_eq!(kind("http://oracle/media/a.m4v"), (true, false));
-        assert_eq!(kind("http://oracle/media/a.ogv"), (true, false));
-        assert_eq!(kind("http://oracle/media/a.mov"), (false, false));
-        assert_eq!(kind("http://oracle/media/webm"), (false, false));
+        assert_eq!(
+            kind("data:text/plain,a.webm"),
+            (false, VideoContainer::Other)
+        );
+        assert_eq!(
+            kind("http://oracle/media/a.webm"),
+            (true, VideoContainer::Webm)
+        );
+        assert_eq!(
+            kind("http://oracle/media/A.WEBM?x=1"),
+            (true, VideoContainer::Webm)
+        );
+        assert_eq!(
+            kind("http://oracle/media/a.mp4"),
+            (true, VideoContainer::Mp4)
+        );
+        assert_eq!(
+            kind("http://oracle/media/a.m4v"),
+            (true, VideoContainer::Mp4)
+        );
+        assert_eq!(
+            kind("http://oracle/media/a.M4A"),
+            (true, VideoContainer::Mp4)
+        );
+        assert_eq!(
+            kind("http://oracle/media/a.ogv"),
+            (true, VideoContainer::Other)
+        );
+        assert_eq!(
+            kind("http://oracle/media/a.mov"),
+            (false, VideoContainer::Other)
+        );
+        assert_eq!(
+            kind("http://oracle/media/webm"),
+            (false, VideoContainer::Other)
+        );
     }
 
     /// LocalFetcher answers as the case-sensitive oracle server on every file system: a name that differs only in case is
