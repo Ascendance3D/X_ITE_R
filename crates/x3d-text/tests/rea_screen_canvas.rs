@@ -9,13 +9,15 @@
 //! Bound, as for the pictures: at most 0.5% of the canvas' pixels more than 8 off. Here the canvas is only the text box, so
 //! the bound is far stricter than on a 512 × 512 picture.
 //!
-//! KNOWN_GAPS lists the canvases that stay over the bound: the glyphs of cubic curves (CFF). The polylines of the scan
-//! converter are reproduced (a disc of four cubic arcs is within the bound), but where a cubic bulges into the filled span
-//! (a counter, the inside of a bowl) Chrome's canvas has the edge about 0.1 pixel further left than these polylines; a
-//! quadratic curve and a cubic that bulges away from its span do not show it (measured on Chrome 156 with single arcs). The
-//! rule is not known, so it is not copied. A listed canvas must stay over the bound: when it comes within it, the entry
-//! fails the test and must be removed. Each entry also has the most pixels over 8 that the canvas may have (the measured
-//! number and a tenth more), so a listed canvas cannot get worse unseen.
+//! KNOWN_GAPS lists the canvases that stay over the bound (none now). A listed canvas must stay over the bound: when it comes
+//! within it, the entry fails the test and must be removed. Each entry also has the most pixels over 8 that the canvas may
+//! have (the measured number and a tenth more), so a listed canvas cannot get worse unseen.
+//!
+//! The six CFF canvases that were listed (206, 5, 17, 26, 43 and 22 pixels over 8, 0.71% to 1.24%) had glyphs whose cubic
+//! curves bulge into the filled span: there Chrome's edge was about 0.1 pixel further left. The cause is Skia's walk of a
+//! cubic edge in the non-convex scan (SkScan_AAAPath aaa_walk_edges): SkAnalyticCubicEdge::keepContinuous starts each next
+//! line where the walk of the previous one ended, and the truncated steps add up (`skia_edge::walk`). With the walk they
+//! are at 30, 0, 0, 1, 5 and 0.
 
 use serde_json::Value;
 use x3d_text::skia_edge::{PathCmd, composite, fill_path};
@@ -25,15 +27,8 @@ const DIR: &str = concat!(
     "/../../oracle/rea-cff-screen-raster-baseline"
 );
 
-/// (world, canvas width, canvas height, most pixels over 8): the canvases over the bound. Measured: 206, 5, 17, 26, 43, 22.
-const KNOWN_GAPS: &[(&str, usize, usize, usize)] = &[
-    ("cff-sr-large.wrl", 217, 121, 227),
-    ("cff-sr-sizes.wrl", 35, 20, 6),
-    ("cff-sr-sizes.wrl", 49, 28, 19),
-    ("cff-sr-sizes.wrl", 69, 39, 29),
-    ("cff-sr-sizes.wrl", 97, 55, 48),
-    ("cff-sr-vertical.wrl", 49, 49, 25),
-];
+/// (world, canvas width, canvas height, most pixels over 8): the canvases over the bound.
+const KNOWN_GAPS: &[(&str, usize, usize, usize)] = &[];
 
 /// 2D affine transform of the canvas: x' = a x + c y + e, y' = b x + d y + f.
 #[derive(Clone, Copy)]

@@ -1997,12 +1997,16 @@ so `roughness-step-plain` and `base-color-step-plain` animate a plain material);
   the text upside down (`cx .translate (0, height); cx .scale (1, -1)` on a path with Y down), so a device row counts from the
   bottom of the text. `crates/x3d-text/src/skia_edge.rs` does the same.
 - Measured on this baseline (pixels of a canvas more than 8 off): before, with exact curve points, every one of the 15 canvases that
-  hold text was over the bound (0.54% to 7.4%). Now the 4 TrueType canvases are at 0.00% to 0.11% and 5 of the 11 CFF canvases are
-  within the bound (the lines-only glyphs at 0.02% and 0.03%).
-- Known gap, pinned by name in the test (`KNOWN_GAPS`, 6 canvases at 0.71% to 1.24%): glyphs of cubic curves. Where a cubic bulges
-  into the filled span (a counter, the inside of a bowl), Chrome's canvas has the edge about 0.1 pixel further left than these
-  polylines. A quadratic curve, and a cubic that bulges away from its span, do not show it (measured with single arcs on Chrome
-  156). The rule is not known, so it is not copied.
+  hold text was over the bound (0.54% to 7.4%). With the forward-difference walk the 4 TrueType canvases were at 0.00% to 0.11%
+  and 5 of the 11 CFF canvases within the bound (the lines-only glyphs at 0.02% and 0.03%).
+- The walk of a cubic edge (closed 2026-11-12): in the non-convex scan (`SkScan_AAAPath.cpp` `aaa_walk_edges`),
+  `SkAnalyticCubicEdge::keepContinuous` starts each next line of a cubic where the walk of the previous line ended. The walk
+  stops at every line end of the path and at every integer row, and adds the truncated slope `fDX >> yShift` per quarter, half
+  or full row, so the error adds up along the curve. Quadratic edges take each new X from the exact point, and the convex walk
+  does not call `keepContinuous`. `skia_edge.rs` (`walk`) does the same. The 6 CFF canvases that were over the bound
+  (0.71% to 1.24%; Chrome's edge about 0.1 pixel further left where a cubic bulges into the filled span) are now at 0.00% to
+  0.11%; all 17 canvases are within the bound, the TrueType ones unchanged. Reference: Skia main (not the exact Chrome 156
+  revision).
 
 ```
 XITE_TESTS=<x_ite-tests> python3 -I -B oracle/tools/rea_cff_screen_raster.py record
