@@ -1259,6 +1259,7 @@ mod tests {
             ("bt2020", (5, false)),
             ("rgb", (7, true)),
             ("444-bt601", (1, false)),
+            ("444-bt601-no-primaries", (1, false)),
         ] {
             let d = vp9_color(name);
             let blocks = demux(&d).unwrap().1;
@@ -1370,6 +1371,17 @@ mod tests {
                     [255, 0, 255],
                 ],
             ),
+            // 4:4:4 BT.601 without a container primaries tag: the page converts it with plain BT.601 too.
+            (
+                "444-bt601-no-primaries",
+                [
+                    [255, 0, 0],
+                    [0, 255, 0],
+                    [255, 255, 0],
+                    [0, 0, 255],
+                    [255, 0, 255],
+                ],
+            ),
         ] {
             let v = decode(&vp9_color(name), BUDGET).unwrap();
             let f = &v.frames[0];
@@ -1390,9 +1402,13 @@ mod tests {
         }
     }
 
-    /// KNOWN difference: for a 4:4:4 BT.601 stream the page draws blue about 28 levels higher where U is far below 128
-    /// (the green and yellow bars: (0, 255, 28) and (255, 255, 28)); no matrix or range choice reproduces it, so the
-    /// standard BT.601 conversion is kept and the difference is pinned here.
+    /// KNOWN difference, browser color management: the WebM container of `444-bt601` tags its color primaries as
+    /// BT.470BG. For a 4:4:4 stream Chrome converts those primaries to sRGB (X_ITE uploads with
+    /// UNPACK_COLORSPACE_CONVERSION_WEBGL BROWSER_DEFAULT_WEBGL, which allows it): the green and yellow bars come out as
+    /// (0, 255, 28) and (255, 255, 28), 7.4% of the picture more than 8 off. The same stream without a primaries tag, or
+    /// with BT.709 primaries, matches the page (max 1), and so does 4:2:0 with BT.470BG primaries, so the YUV matrix
+    /// and the decoder are correct. The port does not reproduce browser color management (as for tagged images,
+    /// crates/x3d-render/src/texture.rs), so the standard BT.601 conversion is kept and the difference is pinned here.
     #[test]
     fn a_444_bt601_stream_keeps_the_standard_conversion() {
         let v = decode(&vp9_color("444-bt601"), BUDGET).unwrap();
