@@ -294,7 +294,9 @@ fn run(
         Err(e) => return json!({ "ok": false, "error": e }),
     };
 
+    // The page's `getCurrentFrameRate` is `() => 1 / dt` in every frame (anim.html `setDt`, `step`).
     v.frame_rate = 1.0 / dt;
+    v.scripted_frame_rate = Some(1.0 / dt);
 
     // `"userAgent": "…"`: the user agent of the oracle page (oracle/x_ite-anim.mjs), which decides X_ITE's SLOW_SCROLL. Without
     // it the page is headless Chrome on Linux, so SLOW_SCROLL is off on every host, the macOS one too.
