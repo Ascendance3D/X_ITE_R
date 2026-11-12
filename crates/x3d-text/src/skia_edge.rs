@@ -30,6 +30,23 @@ pub enum PathCmd {
 /// `fill ()` of one path (nonzero winding) on a `width` × `height` canvas: the coverage (0 to 1) of every pixel, in the canvas'
 /// row order. A canvas keeps its path in single precision, so every point is rounded to f32 first.
 pub fn fill_path(width: usize, height: usize, path: &[PathCmd]) -> Vec<f64> {
+    // The Y of every line end: the rows where the scan converter stops. They do not depend on X, so a first pass finds them
+    // and the second walks each cubic line over them (see `walk`).
+    let first = contours_of(path, None);
+    let mut events: Vec<Fixed> = first
+        .iter()
+        .flatten()
+        .map(|v| (v[1] * 65536.0).round() as Fixed)
+        .collect();
+
+    events.sort_unstable();
+    events.dedup();
+
+    crate::raster::fill(width, height, &contours_of(path, Some(&events)))
+}
+
+/// The contours of a path as lines of the scan converter. With `events`, the lines of cubic curves follow the walk.
+fn contours_of(path: &[PathCmd], events: Option<&[Fixed]>) -> Vec<Vec<[f64; 2]>> {
     let single = |p: [f64; 2]| [p[0] as f32 as f64, p[1] as f32 as f64];
     let mut contours: Vec<Vec<[f64; 2]>> = vec![];
     let mut contour: Vec<[f64; 2]> = vec![];
@@ -67,7 +84,7 @@ pub fn fill_path(width: usize, height: usize, path: &[PathCmd]) -> Vec<f64> {
             PathCmd::CubicTo(c1, c2, p) => {
                 let to = single(p);
 
-                cubic(current, single(c1), single(c2), to, &mut contour);
+                cubic(current, single(c1), single(c2), to, &mut contour, events);
                 current = to;
             }
             // The fill closes every subpath by itself. closePath also starts a new subpath at the start point, so a later
@@ -83,7 +100,7 @@ pub fn fill_path(width: usize, height: usize, path: &[PathCmd]) -> Vec<f64> {
 
     end_subpath(&mut contour, &mut contours);
 
-    crate::raster::fill(width, height, &contours)
+    contours
 }
 
 /// Source-over of a white fill with `coverage` onto the canvas' alpha (8 bits, as the canvas keeps it).
@@ -268,6 +285,7 @@ pub(crate) fn cubic(
     p2: [f64; 2],
     p3: [f64; 2],
     out: &mut Vec<[f64; 2]>,
+    events: Option<&[Fixed]>,
 ) {
     // SkChopCubicAtYExtrema: SkFindCubicExtrema on Y, then SkChopCubicAt with each next t mapped into the part that is left.
     let (a, b, c, d) = (p0[1], p1[1], p2[1], p3[1]);
@@ -298,12 +316,12 @@ pub(crate) fn cubic(
         // flatten_double_cubic_extrema: the tangent at the extremum is horizontal.
         abc[1] = mid[1];
         bcd[1] = mid[1];
-        cubic_edge([pts[0], ab, abc, mid], out);
+        cubic_edge([pts[0], ab, abc, mid], out, events);
         pts = [mid, bcd, cd, pts[3]];
         done = root;
     }
 
-    cubic_edge(pts, out);
+    cubic_edge(pts, out, events);
 }
 
 /// SkFindUnitQuadRoots: the roots of A t² + B t + C in the open interval (0, 1), ascending, a double root once.
@@ -355,7 +373,11 @@ fn unit_quad_roots(a: f64, b: f64, c: f64) -> Vec<f64> {
 }
 
 /// SkCubicEdge.setCubicWithoutUpdate and SkAnalyticCubicEdge.updateCubic for one Y-monotonic cubic.
-fn cubic_edge(p: [[f64; 2]; 4], out: &mut Vec<[f64; 2]>) {
+///
+/// With `events`, each line is walked as SkScan_AAAPath's aaa_walk_edges does (see `walk`), and the next line starts where the
+/// walk ended: SkAnalyticCubicEdge::keepContinuous sets fCx to the edge's fX before every updateCubic. The X of the
+/// truncated slope steps adds up along the curve. Quadratic edges take each new X from fQx and do not drift.
+fn cubic_edge(p: [[f64; 2]; 4], out: &mut Vec<[f64; 2]>, events: Option<&[Fixed]>) {
     let mut x = p.map(|q| dot8(q[0]));
     let mut y = p.map(|q| dot8(q[1]));
     let reverse = y[0] > y[3];
@@ -440,12 +462,59 @@ fn cubic_edge(p: [[f64; 2]; 4], out: &mut Vec<[f64; 2]>) {
         }
 
         // A step of no height is no line, but the next line starts at its X.
-        vertices.push((new_x, new_snapped_y));
-        old_x = new_x;
+        let snapped_y = vertices.last().unwrap().1;
+        let end_x = match events {
+            Some(events) if new_snapped_y > snapped_y => {
+                // SkAnalyticCubicEdge.updateCubic: the slope of the line from the walked start, then the walk to its end.
+                let slope = fdot6_div((new_x - old_x) >> 10, (new_snapped_y - snapped_y) >> 10);
+
+                walk(old_x, snapped_y, new_snapped_y, slope, events)
+            }
+            _ => new_x,
+        };
+
+        vertices.push((end_x, new_snapped_y));
+        old_x = end_x;
         old_y = new_y;
     }
 
+    // The walk ends near, not on, the curve's end: the next edge starts on the end itself (a step of no height).
+    if events.is_some() {
+        vertices.push((cx[4], cy[4]));
+    }
+
     append(vertices, reverse, out);
+}
+
+/// The X where an edge from (`x`, `y0`) with `slope` (16.16) is at `y1`, walked as aaa_walk_edges walks it: from each
+/// row stop to the next (the line ends in `events`, and the integer rows), with `goY (y, yShift)`, which adds
+/// `fDX >> yShift` per step (a quarter row when the gap has the quarter bit, half a row for a gap of a half, else a row).
+fn walk(mut x: Fixed, y0: Fixed, y1: Fixed, slope: Fixed, events: &[Fixed]) -> Fixed {
+    let mut y = y0;
+    let mut i = events.partition_point(|&e| e <= y);
+
+    while y < y1 {
+        let row = ((y >> 16) + 1) << 16;
+        let mut next = events.get(i).copied().unwrap_or(Fixed::MAX).min(row);
+        let gap = next - y;
+        let shift = if gap & 0x4000 != 0 {
+            next = y + 0x4000;
+            2
+        } else if gap & 0x8000 != 0 {
+            1
+        } else {
+            0
+        };
+
+        x += slope >> shift;
+        y = next;
+
+        while i < events.len() && events[i] <= y {
+            i += 1;
+        }
+    }
+
+    x
 }
 
 /// The vertices after the first, in the direction of the path.
@@ -479,7 +548,7 @@ mod tests {
 
             let mut c = vec![];
 
-            cubic(a, [a[0], b[1]], [a[0], b[1]], b, &mut c);
+            cubic(a, [a[0], b[1]], [a[0], b[1]], b, &mut c, None);
             assert_eq!(*c.last().unwrap(), point(b));
         }
     }
@@ -489,13 +558,66 @@ mod tests {
         let (r, k) = (70.3, 0.5523 * 70.3);
         let mut v = vec![];
 
-        cubic([r, 0.0], [r, k], [k, r], [0.0, r], &mut v);
+        cubic([r, 0.0], [r, k], [k, r], [0.0, r], &mut v, None);
         assert_eq!(v.len(), 16);
         assert!(v.iter().all(|p| (p[1] * 4.0).fract() == 0.0));
         // The vertices are near the curve: within a quarter of a pixel of the circle.
         assert!(
             v.iter()
                 .all(|p| ((p[0] * p[0] + p[1] * p[1]).sqrt() - r).abs() < 0.25)
+        );
+    }
+
+    #[test]
+    fn the_walk_adds_the_truncated_steps_of_each_row_stop() {
+        // A slope just past -1 pixel per row (16.16). A row with no stop is one step of the whole slope. A stop at a quarter
+        // cuts the row: a quarter step, then the three quarters left as a quarter and a half. Each step adds `slope >> shift`,
+        // which rounds down, so the cut row ends 2/65536 pixel further left.
+        let slope = -0x10001;
+
+        assert_eq!(walk(0, 0, 0x10000, slope, &[0, 0x10000]), -0x10001);
+        assert_eq!(
+            walk(0, 0, 0x10000, slope, &[0, 0x4000, 0x10000]),
+            2 * (slope >> 2) + (slope >> 1)
+        );
+        assert_eq!(2 * (slope >> 2) + (slope >> 1), -0x10003);
+        // A line that starts on a quarter: the same three-quarter gap.
+        assert_eq!(
+            walk(0, 0x4000, 0x10000, slope, &[0x4000, 0x10000]),
+            (slope >> 2) + (slope >> 1)
+        );
+    }
+
+    #[test]
+    fn a_cubic_line_starts_where_the_walk_of_the_previous_line_ended() {
+        // Without events the lines end on the forward-difference points; with them each next line starts at the walked X,
+        // so the lines drift, and the last vertex is the curve's end itself.
+        let (p0, p1, p2, p3) = ([10.0, 0.0], [2.0, 6.0], [2.0, 14.0], [10.0, 20.0]);
+        let (mut exact, mut walked) = (vec![], vec![]);
+
+        cubic(p0, p1, p2, p3, &mut exact, None);
+
+        let mut events: Vec<Fixed> = std::iter::once(point(p0))
+            .chain(exact.iter().copied())
+            .map(|v| (v[1] * 65536.0).round() as Fixed)
+            .collect();
+
+        events.sort_unstable();
+        events.dedup();
+        cubic(p0, p1, p2, p3, &mut walked, Some(&events));
+
+        assert_eq!(walked.last(), exact.last());
+        assert_eq!(walked.len(), exact.len() + 1);
+
+        let ys = |v: &[[f64; 2]]| v.iter().map(|p| p[1]).collect::<Vec<_>>();
+
+        assert_eq!(ys(&walked[..exact.len()]), ys(&exact));
+        assert!(
+            walked[..exact.len() - 1]
+                .iter()
+                .zip(&exact)
+                .any(|(w, e)| w[0] != e[0]),
+            "the walk changed no X"
         );
     }
 
@@ -509,7 +631,14 @@ mod tests {
 
         let mut v = vec![];
 
-        cubic([0.0, 30.0], [10.0, 0.0], [30.0, 0.0], [40.0, 30.0], &mut v);
+        cubic(
+            [0.0, 30.0],
+            [10.0, 0.0],
+            [30.0, 0.0],
+            [40.0, 30.0],
+            &mut v,
+            None,
+        );
         assert!(v.contains(&[20.0, 7.5]), "{v:?}");
     }
 
