@@ -85,6 +85,12 @@ fn mismatches(manifest: &Value, coords: &[f64]) -> (Vec<String>, usize) {
                 continue;
             }
 
+            assert_eq!(
+                count as u64,
+                g["triangles"].as_u64().unwrap() * 6,
+                "{name} {ch:?}: manifest triangles and coordinate count"
+            );
+
             if tri.len() * 2 != count {
                 bad.push(format!(
                     "{name} {ch:?}: {} points, want {}",

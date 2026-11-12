@@ -90,7 +90,11 @@ def check():
     for f in m["fonts"]:
         if sha256(open(os.path.join(FONT_DIR, f["file"]), "rb").read()) != f["file_sha256"]:
             bad.append(f"{f['name']}: font file sha256")
+        if "".join(g["char"] for g in f["glyphs"]) != m["characters"]:
+            bad.append(f"{f['name']}: characters")
         for g in f["glyphs"]:
+            if g["count"] != g["triangles"] * 6:
+                bad.append(f"{f['name']} {g['char']!r}: {g['count']} coordinates for {g['triangles']} triangles")
             if g["offset"] != n or sha256(raw[n * 8:(n + g["count"]) * 8]) != g["sha256"]:
                 bad.append(f"{f['name']} {g['char']!r}: offset or sha256")
             n += g["count"]
