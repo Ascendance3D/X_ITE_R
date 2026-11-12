@@ -37,13 +37,19 @@ pub fn fill_path(width: usize, height: usize, path: &[PathCmd]) -> Vec<f64> {
     // the subpath, where closePath returns.
     let (mut current, mut start) = ([0.0, 0.0], [0.0, 0.0]);
 
+    // A subpath of one point (a moveTo, or the point where closePath left the path) has no edge.
+    let end_subpath = |contour: &mut Vec<[f64; 2]>, contours: &mut Vec<Vec<[f64; 2]>>| {
+        let done = std::mem::take(contour);
+
+        if done.len() > 1 {
+            contours.push(done);
+        }
+    };
+
     for cmd in path {
         match *cmd {
             PathCmd::MoveTo(p) => {
-                if !contour.is_empty() {
-                    contours.push(std::mem::take(&mut contour));
-                }
-
+                end_subpath(&mut contour, &mut contours);
                 current = single(p);
                 start = current;
                 contour.push(point(current));
@@ -64,14 +70,18 @@ pub fn fill_path(width: usize, height: usize, path: &[PathCmd]) -> Vec<f64> {
                 cubic(current, single(c1), single(c2), to, &mut contour);
                 current = to;
             }
-            // The fill closes every subpath by itself; closePath only moves the current point.
-            PathCmd::ClosePath => current = start,
+            // The fill closes every subpath by itself. closePath also starts a new subpath at the start point, so a later
+            // line or curve does not join the closed one.
+            PathCmd::ClosePath if contour.is_empty() => {}
+            PathCmd::ClosePath => {
+                end_subpath(&mut contour, &mut contours);
+                current = start;
+                contour.push(point(current));
+            }
         }
     }
 
-    if !contour.is_empty() {
-        contours.push(contour);
-    }
+    end_subpath(&mut contour, &mut contours);
 
     crate::raster::fill(width, height, &contours)
 }
@@ -501,5 +511,61 @@ mod tests {
 
         cubic([0.0, 30.0], [10.0, 0.0], [30.0, 0.0], [40.0, 30.0], &mut v);
         assert!(v.contains(&[20.0, 7.5]), "{v:?}");
+    }
+
+    const A: [f64; 2] = [2.0, 2.0];
+    const TRIANGLE: [PathCmd; 3] = [
+        PathCmd::MoveTo(A),
+        PathCmd::LineTo([12.0, 2.0]),
+        PathCmd::LineTo([12.0, 12.0]),
+    ];
+
+    /// TRIANGLE, then `between`, then `rest`.
+    fn after_triangle(between: &[PathCmd], rest: &[PathCmd]) -> Vec<f64> {
+        fill_path(24, 24, &[&TRIANGLE[..], between, rest].concat())
+    }
+
+    #[test]
+    fn close_path_starts_a_new_subpath_at_the_start_point() {
+        // `M a, L b, L c, Z, L d, L e` is two triangles, a b c and a d e, not the polygon a b c d e.
+        let lines = [PathCmd::LineTo([2.0, 14.0]), PathCmd::LineTo([8.0, 14.0])];
+        let got = after_triangle(&[PathCmd::ClosePath], &lines);
+
+        assert_eq!(got, after_triangle(&[PathCmd::MoveTo(A)], &lines));
+        // Pixels inside each triangle, and one between them that only the polygon a b c d e covers.
+        assert!(got[5 * 24 + 10] > 0.999);
+        assert!(got[10 * 24 + 3] > 0.999);
+        assert!(got[12 * 24 + 8] < 0.001);
+    }
+
+    #[test]
+    fn a_curve_after_close_path_starts_at_the_start_point() {
+        for curve in [
+            PathCmd::QuadTo([2.0, 20.0], [10.0, 20.0]),
+            PathCmd::CubicTo([2.0, 14.0], [4.0, 20.0], [10.0, 20.0]),
+        ] {
+            assert_eq!(
+                after_triangle(&[PathCmd::ClosePath], &[curve]),
+                after_triangle(&[PathCmd::MoveTo(A)], &[curve])
+            );
+        }
+    }
+
+    #[test]
+    fn close_path_before_move_to_or_the_end_changes_nothing() {
+        let next = [
+            PathCmd::MoveTo([14.0, 14.0]),
+            PathCmd::LineTo([20.0, 14.0]),
+            PathCmd::LineTo([20.0, 20.0]),
+        ];
+
+        assert_eq!(
+            after_triangle(&[PathCmd::ClosePath], &next),
+            after_triangle(&[], &next)
+        );
+        assert_eq!(
+            after_triangle(&[PathCmd::ClosePath], &[]),
+            after_triangle(&[], &[])
+        );
     }
 }
