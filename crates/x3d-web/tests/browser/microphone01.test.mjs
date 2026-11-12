@@ -32,12 +32,15 @@ const KEEP_STREAMS = () =>
    };
 };
 
-const WORLD = sound => `#X3D V4.0 utf8
+const WORLD = (sound, device = "") => `#X3D V4.0 utf8
 PROFILE Full
 COMPONENT Sound:2
 Viewpoint { position 0 0 4 }
-${sound ? "Sound { spatialize FALSE minFront 100 minBack 100 maxFront 100 maxBack 100 source DEF M MicrophoneSource { } }" : "DEF M MicrophoneSource { }"}
+${sound ? `Sound { spatialize FALSE minFront 100 minBack 100 maxFront 100 maxBack 100 source DEF M MicrophoneSource { ${device} } }` : "DEF M MicrophoneSource { }"}
 `;
+
+// A mediaDeviceID with a quote, a backslash and a tab: the page asks for it unchanged (op "microphone", JSON).
+const DEVICE = 'a "quoted" \\ id\t1';
 
 // getUserMedia refuses, as for a denied permission; console .error lines go to window .errors as well.
 const REFUSE = () =>
@@ -46,7 +49,11 @@ const REFUSE = () =>
 
    window .errors = [ ];
    console .error = (... args) => { window .errors .push (args .join (" ")); error .apply (console, args); };
-   MediaDevices .prototype .getUserMedia = () => Promise .reject (new DOMException ("Permission denied", "NotAllowedError"));
+   MediaDevices .prototype .getUserMedia = constraints =>
+   {
+      window .requests .push (JSON .stringify (constraints));
+      return Promise .reject (new DOMException ("Permission denied", "NotAllowedError"));
+   };
 };
 
 const open = (refuse = false) => openPage (DESKTOP, { init: `(${KEEP_STREAMS}) (); ${refuse ? `(${REFUSE}) ();` : ""} (${installTap}) ();` });
@@ -149,9 +156,10 @@ describe ("microphone 01", { skip: Boolean (ONLY) }, () =>
 
       try
       {
-         const refused = await after (page, { text: WORLD (true) });
+         const refused = await after (page, { text: WORLD (true, `mediaDeviceID "${DEVICE .replace (/["\\]/g, "\\$&")}"`) });
 
          assert .equal (refused .isActive, true);
+         assert .deepEqual (refused .requests, [ JSON .stringify ({ audio: { deviceId: DEVICE } }) ]);
          assert .deepEqual (refused .tracks, [ ]);
          assert .ok (refused .errors .includes ("Permission denied"), `the message is logged: ${JSON .stringify (refused .errors)}`);
          assert .ok (refused .level < 1e-4, `silent (level ${refused .level})`);

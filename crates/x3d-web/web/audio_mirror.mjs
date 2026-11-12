@@ -119,7 +119,9 @@ export class AudioMirror
       if (!navigator .mediaDevices)
          return standIn;
 
-      navigator .mediaDevices .getUserMedia ({ audio: { deviceId } })
+      // A getUserMedia that throws at once is handled as a rejection.
+      Promise .resolve ()
+      .then (() => navigator .mediaDevices .getUserMedia ({ audio: { deviceId } }))
       .then (mediaStream =>
       {
          if (this .#disposed || !this .#live (standIn))
@@ -128,7 +130,7 @@ export class AudioMirror
          new MediaStreamAudioSourceNode (this .#context, { mediaStream }) .connect (standIn);
          this .#streams .set (standIn, mediaStream);
       })
-      .catch (error => console .error (error .message));
+      .catch (error => console .error (error ?.message ?? String (error)));
 
       return standIn;
    }

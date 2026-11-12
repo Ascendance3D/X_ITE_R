@@ -115,7 +115,8 @@ pub enum ANode {
     StreamDestination(MediaStreamAudioDestinationNode),
     StreamSource(MediaStreamAudioSourceNode),
     /// A page's MediaStreamAudioSourceNode ([`AudioEngine::microphone`] in a recording engine): the page asks for the
-    /// microphone itself (web/audio_mirror.mjs); the engine keeps a node without input in its place.
+    /// microphone itself (web/audio_mirror.mjs); the engine keeps a node without input in its place. The page's own
+    /// stand-in is a GainNode that the stream is connected into; both report MediaStreamAudioSourceNode in the graph.
     PageStreamSource(web_audio_api::worklet::AudioWorkletNode),
     Destination(AudioDestinationNode),
 }
