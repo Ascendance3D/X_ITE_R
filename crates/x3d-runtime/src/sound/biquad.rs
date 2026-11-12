@@ -237,7 +237,7 @@ fn flush_denormal(x: f64) -> f64 {
 /// form rounds only the output to float. `y1` and `y2` are the unrounded doubles, and they are not flushed. Every other
 /// build computes `float y` and feeds the rounded value back, and it flushes denormals after the quantum. The
 /// sample-accurate form is the float form on every platform. On an Apple M1 (pinned X_ITE in Chrome), the macOS form
-/// makes biquad-lowpass and nine rt-* worlds of rea_b05 exact. They were up to 4.4e-6 off with the float form.
+/// makes biquad-lowpass and eight rt-* worlds of rea_b05 exact (9 worlds). They were up to 4.4e-6 off with the float form.
 const DOUBLE_FEEDBACK: bool = cfg!(target_os = "macos");
 
 /// One channel of one quantum: `coefficients[k]` per frame when `sample_accurate`, else `coefficients[0]`.
