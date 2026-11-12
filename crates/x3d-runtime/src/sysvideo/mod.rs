@@ -5,11 +5,52 @@
 //! track start, the first picture shows from 0, the sound gets silence before its first sample, and both tracks end at
 //! the latest track end. The engine then plays them as one media ([`crate::nodes::movie_texture::MovieMedia`]).
 
+#[cfg(all(feature = "system-video-avf", target_os = "macos"))]
+pub mod avf;
 #[cfg(feature = "system-video-gst")]
 pub mod gst;
 
 use crate::video_types::{AudioTrack, Video, VideoFrame, WebmError};
 use crate::webm::{BT601, BT709, Matrix, full_to_limited, matrix_of, yuv_to_rgba};
+
+/// A file in the temporary directory that is removed when it is dropped (the backends read a file, not memory).
+#[cfg(any(
+    feature = "system-video-gst",
+    all(feature = "system-video-avf", target_os = "macos")
+))]
+pub(crate) struct TempFile(pub(crate) std::path::PathBuf);
+
+#[cfg(any(
+    feature = "system-video-gst",
+    all(feature = "system-video-avf", target_os = "macos")
+))]
+impl TempFile {
+    pub(crate) fn write(data: &[u8]) -> std::io::Result<TempFile> {
+        use std::io::Write;
+        static NEXT: std::sync::atomic::AtomicU64 = std::sync::atomic::AtomicU64::new(0);
+
+        let n = NEXT.fetch_add(1, std::sync::atomic::Ordering::Relaxed);
+        let path = std::env::temp_dir().join(format!("x3d-mp4-{}-{n}.mp4", std::process::id()));
+        let mut f = std::fs::OpenOptions::new()
+            .write(true)
+            .create_new(true)
+            .open(&path)?;
+        let file = TempFile(path);
+
+        f.write_all(data)?;
+        Ok(file)
+    }
+}
+
+#[cfg(any(
+    feature = "system-video-gst",
+    all(feature = "system-video-avf", target_os = "macos")
+))]
+impl Drop for TempFile {
+    fn drop(&mut self) {
+        let _ = std::fs::remove_file(&self.0);
+    }
+}
 
 /// The YUV to RGB matrix of a picture, as its stream tags give it.
 #[derive(Clone, Copy, Debug, PartialEq)]
@@ -151,16 +192,32 @@ pub fn timeline(d: Decoded) -> Result<Timeline, WebmError> {
 }
 
 /// The MP4 file decoded by this build's platform backend, on one timeline. `Unsupported` when the build has no backend.
-#[allow(unused_variables)]
 pub fn decode(
     data: &[u8],
     info: &crate::mp4probe::Mp4Info,
     max_bytes: u64,
 ) -> Result<Timeline, WebmError> {
-    #[cfg(feature = "system-video-gst")]
-    return timeline(gst::decode(data, info, max_bytes)?);
+    timeline(decode_tracks(data, info, max_bytes)?)
+}
 
-    #[cfg(not(feature = "system-video-gst"))]
+/// The tracks of the MP4 file as this build's platform backend decodes them (macOS: AVFoundation, else GStreamer), before
+/// [`timeline`]. `Unsupported` when the build has no backend.
+#[allow(unused_variables)]
+pub fn decode_tracks(
+    data: &[u8],
+    info: &crate::mp4probe::Mp4Info,
+    max_bytes: u64,
+) -> Result<Decoded, WebmError> {
+    #[cfg(all(feature = "system-video-avf", target_os = "macos"))]
+    return avf::decode(data, info, max_bytes);
+
+    #[cfg(all(
+        feature = "system-video-gst",
+        not(all(feature = "system-video-avf", target_os = "macos"))
+    ))]
+    return gst::decode(data, info, max_bytes);
+
+    #[allow(unreachable_code)]
     Err(WebmError::Unsupported {
         container: "mp4",
         codec: info.codecs(),

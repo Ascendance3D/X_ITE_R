@@ -2,7 +2,7 @@
 # MP4 sound on the real output path (ADR 0015): tools/mp4-audible.sh
 #
 # Linux with PipeWire or PulseAudio. The script makes a null sink, makes it the default for the run, records its monitor
-# with parec while the ignored test realtime_output_plays_the_movie_sound (crates/x3d-runtime/tests/mp4_gst.rs) plays
+# with parec while the ignored test realtime_output_plays_the_movie_sound (crates/x3d-runtime/tests/mp4_platform.rs) plays
 # h264-aac.mp4 through a Sound node, then restores the default sink and removes the null sink. The tones can still be
 # heard on the speakers: on the first host (PipeWire 1.0.5) the owner heard them during the run, so the null sink does
 # not isolate the stream there. The tones are 2 s long at half scale. tools/mp4_audible_check.py then finds the 8 tones
@@ -22,7 +22,7 @@ trap cleanup EXIT
 
 jobs="${CARGO_BUILD_JOBS:-$(($(nproc) / 2))}"
 # Build first, so that the recording holds the run only.
-cargo nextest run -j "$jobs" -p x3d-runtime --features system-video-gst --test mp4_gst --no-run
+cargo nextest run -j "$jobs" -p x3d-runtime --features system-video-gst --test mp4_platform --no-run
 
 pactl set-default-sink xiter_mp4_audible
 parec --latency-msec=20 --device=xiter_mp4_audible.monitor --format=float32le --rate=48000 --channels=2 --raw >"$out/capture.f32" &
@@ -30,7 +30,7 @@ rec=$!
 sleep 0.5
 
 status=0
-cargo nextest run -j "$jobs" -p x3d-runtime --features system-video-gst --test mp4_gst --run-ignored only \
+cargo nextest run -j "$jobs" -p x3d-runtime --features system-video-gst --test mp4_platform --run-ignored only \
   -E 'test(realtime_output_plays_the_movie_sound)' --no-capture || status=$?
 
 # parec writes its buffer late: wait before it stops.

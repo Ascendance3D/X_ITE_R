@@ -6,7 +6,7 @@
 //! user's installed plugins. The file goes to a private temporary file for `qtdemux` (which needs random access for a
 //! file whose `moov` box is at the end); the file, the pipeline and its threads are gone when [`decode`] returns.
 
-use super::{Decoded, Picture, YuvMatrix};
+use super::{Decoded, Picture, TempFile, YuvMatrix};
 use crate::mp4probe::Mp4Info;
 use crate::video_types::WebmError;
 use crate::webm::MAX_LUMA_SAMPLES;
@@ -21,33 +21,6 @@ use std::time::{Duration, Instant};
 
 /// The longest time a decode may take.
 const TIMEOUT: Duration = Duration::from_secs(60);
-
-/// A file in the temporary directory that is removed when it is dropped.
-struct TempFile(std::path::PathBuf);
-
-impl TempFile {
-    fn write(data: &[u8]) -> std::io::Result<TempFile> {
-        use std::io::Write;
-        static NEXT: std::sync::atomic::AtomicU64 = std::sync::atomic::AtomicU64::new(0);
-
-        let n = NEXT.fetch_add(1, std::sync::atomic::Ordering::Relaxed);
-        let path = std::env::temp_dir().join(format!("x3d-mp4-{}-{n}.mp4", std::process::id()));
-        let mut f = std::fs::OpenOptions::new()
-            .write(true)
-            .create_new(true)
-            .open(&path)?;
-        let file = TempFile(path);
-
-        f.write_all(data)?;
-        Ok(file)
-    }
-}
-
-impl Drop for TempFile {
-    fn drop(&mut self) {
-        let _ = std::fs::remove_file(&self.0);
-    }
-}
 
 /// What the sinks collect.
 #[derive(Default)]
