@@ -232,7 +232,63 @@ fn flush_denormal(x: f64) -> f64 {
     }
 }
 
-#[derive(Clone, Copy, Default)]
+/// Whether a quantum with fixed coefficients keeps its feedback in double precision. Chromium's `Biquad::Process` has
+/// two forms for that case. Under `BUILDFLAG(IS_MAC)` it calls `ProcessFast` (`vDSP_deq22D` on double buffers). That
+/// form rounds only the output to float. `y1` and `y2` are the unrounded doubles, and they are not flushed. Every other
+/// build computes `float y` and feeds the rounded value back, and it flushes denormals after the quantum. The
+/// sample-accurate form is the float form on every platform. On an Apple M1 (pinned X_ITE in Chrome), the macOS form
+/// makes biquad-lowpass and eight rt-* worlds of rea_b05 exact (9 worlds). They were up to 4.4e-6 off with the float form.
+const DOUBLE_FEEDBACK: bool = cfg!(target_os = "macos");
+
+/// One channel of one quantum: `coefficients[k]` per frame when `sample_accurate`, else `coefficients[0]`.
+fn filter(
+    coefficients: &[Coefficients],
+    sample_accurate: bool,
+    double_feedback: bool,
+    source: Option<&[f32]>,
+    dest: &mut [f32],
+    state: &mut State,
+) -> bool {
+    let double = double_feedback && !sample_accurate;
+    let State {
+        mut x1,
+        mut x2,
+        mut y1,
+        mut y2,
+    } = *state;
+    let mut silent = true;
+
+    for (k, d) in dest.iter_mut().enumerate() {
+        let x = source.map_or(0.0, |s| s[k]);
+        let co = coefficients[if sample_accurate { k } else { 0 }];
+        let yd = co.b0 * x as f64 + co.b1 * x1 + co.b2 * x2 - co.a1 * y1 - co.a2 * y2;
+        let y = yd as f32;
+        *d = y;
+        x2 = x1;
+        x1 = x as f64;
+        y2 = y1;
+        y1 = if double { yd } else { y as f64 };
+
+        if x != 0.0 || y != 0.0 {
+            silent = false;
+        }
+    }
+
+    *state = if double {
+        State { x1, x2, y1, y2 }
+    } else {
+        State {
+            x1: flush_denormal(x1),
+            x2: flush_denormal(x2),
+            y1: flush_denormal(y1),
+            y2: flush_denormal(y2),
+        }
+    };
+
+    silent
+}
+
+#[derive(Clone, Copy, Debug, Default, PartialEq)]
 struct State {
     x1: f64,
     x2: f64,
@@ -400,35 +456,15 @@ impl AudioWorkletProcessor for Processor {
 
         for (c, d) in dest.iter_mut().enumerate() {
             let s = source.get(c).copied().filter(|s| s.len() == frames);
-            let State {
-                mut x1,
-                mut x2,
-                mut y1,
-                mut y2,
-            } = self.states[c];
 
-            for k in 0..frames {
-                let x = s.map_or(0.0, |s| s[k]);
-                let co = self.coefficients[if self.sample_accurate { k } else { 0 }];
-                let y =
-                    (co.b0 * x as f64 + co.b1 * x1 + co.b2 * x2 - co.a1 * y1 - co.a2 * y2) as f32;
-                d[k] = y;
-                x2 = x1;
-                x1 = x as f64;
-                y2 = y1;
-                y1 = y as f64;
-
-                if x != 0.0 || y != 0.0 {
-                    silent = false;
-                }
-            }
-
-            self.states[c] = State {
-                x1: flush_denormal(x1),
-                x2: flush_denormal(x2),
-                y1: flush_denormal(y1),
-                y2: flush_denormal(y2),
-            };
+            silent &= filter(
+                &self.coefficients,
+                self.sample_accurate,
+                DOUBLE_FEEDBACK,
+                s,
+                &mut d[..frames],
+                &mut self.states[c],
+            );
         }
 
         // TailTime: at most kMaxTailTime (30 s); the filter is kept while it has signal.
@@ -438,5 +474,72 @@ impl AudioWorkletProcessor for Processor {
             0.0
         };
         self.silent_frames < 128.0 || scope.current_frame == 0
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    /// A 350 Hz lowpass (the BiquadFilter default) on a 220 Hz sawtooth at 48 kHz, one quantum after another.
+    fn run(sample_accurate: bool, double_feedback: bool) -> (Vec<f32>, State) {
+        let co = coefficients(Type::Lowpass, 350.0 / 24000.0, 1.0, 0.0);
+        let coefficients = vec![co; 128];
+        let mut state = State::default();
+        let mut out = vec![];
+
+        for q in 0..20 {
+            let x: Vec<f32> = (0..128)
+                .map(|k| ((((q * 128 + k) as f32) * 220.0 / 48000.0).fract() * 2.0 - 1.0) * 0.5)
+                .collect();
+            let mut y = vec![0.0; 128];
+
+            filter(
+                &coefficients,
+                sample_accurate,
+                double_feedback,
+                Some(&x),
+                &mut y,
+                &mut state,
+            );
+            out.extend(y);
+        }
+
+        (out, state)
+    }
+
+    #[test]
+    fn the_macos_form_keeps_the_unrounded_feedback_of_fixed_coefficients() {
+        let (float_out, float_state) = run(false, false);
+        let (double_out, double_state) = run(false, true);
+
+        // The float form feeds back the rounded output; the macOS form the double it was rounded from.
+        assert_eq!(float_state.y1, float_state.y1 as f32 as f64);
+        assert_ne!(double_state.y1, double_state.y1 as f32 as f64);
+        assert_eq!(double_out.last().copied(), Some(double_state.y1 as f32));
+        // The two forms give different samples (in ulps, not in level).
+        let differ = float_out
+            .iter()
+            .zip(&double_out)
+            .filter(|(a, b)| a != b)
+            .count();
+        let largest = float_out
+            .iter()
+            .zip(&double_out)
+            .map(|(a, b)| (a - b).abs())
+            .fold(0.0f32, f32::max);
+
+        assert!(differ > 0);
+        assert!(largest < 1e-5, "{largest}");
+    }
+
+    #[test]
+    fn sample_accurate_coefficients_use_the_float_form_on_every_platform() {
+        assert_eq!(run(true, true), run(true, false));
+    }
+
+    #[test]
+    fn only_macos_builds_keep_double_feedback() {
+        assert_eq!(DOUBLE_FEEDBACK, cfg!(target_os = "macos"));
     }
 }
