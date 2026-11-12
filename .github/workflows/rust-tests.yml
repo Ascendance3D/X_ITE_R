@@ -310,6 +310,7 @@ jobs:
         if: success() || failure()
         run: |
           cargo test --workspace --release --doc --no-fail-fast 2>&1 | tee doctests.log
+          test "${PIPESTATUS[0]}" -eq 0
 
       # MP4 video and audio through the system GStreamer (ADR 0015, feature system-video-gst). The feature links
       # libgstreamer, so it is not in the main suite; this step installs the GStreamer development files and the H.264 and
@@ -331,7 +332,6 @@ jobs:
             flock /tmp/xite-ci-apt.lock sudo apt-get -o DPkg::Lock::Timeout=600 install -y --no-install-recommends $missing
           fi
           cargo nextest run --release -p x3d-runtime --features av1,system-video-gst --no-fail-fast -E "binary(mp4_platform) or binary(mp4_probe) or test(sysvideo::)" 2>&1 | tee mp4-gst.log
-          test "${PIPESTATUS[0]}" -eq 0
           test "${PIPESTATUS[0]}" -eq 0
 
       - name: Test counts

@@ -128,6 +128,10 @@ fn audio_sample(c: &mut Collected, sample: &gst::Sample, max_bytes: u64) -> Resu
     let buffer = sample.buffer().ok_or("a sound buffer without data")?;
     let channels = info.channels() as usize;
 
+    if channels == 0 {
+        return Err("a sound buffer without channels".into());
+    }
+
     if c.audio.is_empty() {
         c.audio = vec![vec![]; channels];
         c.audio_rate = info.rate();
