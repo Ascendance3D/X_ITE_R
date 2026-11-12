@@ -24,6 +24,7 @@ export class AudioMirror
    #disposed = false;
    #elements = new Map ();    // MediaStreamAudioDestinationNode -> the <audio> element that plays its stream
    #analyserData = new WeakMap (); // AnalyserNode -> the arrays readAnalysers fills
+   #streams = new Map ();     // the stand-in GainNode of a MicrophoneSource -> its getUserMedia MediaStream
 
    // `context`: the page's AudioContext. `read .buffer (index)`: [ sampleRate, ... Float32Array ] of an op's `{ buffer }`
    // argument; `read .bytes (index)`: the Uint8Array of its `{ encoded }` argument (the file an AudioBuffer was decoded from).
@@ -106,8 +107,48 @@ export class AudioMirror
       }
    }
 
+   // MicrophoneSource.set_start (MicrophoneSource.js:32-69): getUserMedia ({ audio: { deviceId } }), then a
+   // MediaStreamAudioSourceNode. The engine's calls on the node do not wait for the page's permission: they are made on a
+   // stand-in GainNode at once, and the stream is connected into it when getUserMedia gives it. A refused or failed
+   // request logs its message, as X_ITE does, and the node stays silent. The stream's tracks stop with the node
+   // (MicrophoneSource.set_stop).
+   #microphone (deviceId)
+   {
+      const standIn = new GainNode (this .#context);
+
+      if (!navigator .mediaDevices)
+         return standIn;
+
+      navigator .mediaDevices .getUserMedia ({ audio: { deviceId } })
+      .then (mediaStream =>
+      {
+         if (this .#disposed || !this .#live (standIn))
+            return mediaStream .getTracks () .forEach (track => track .stop ());
+
+         new MediaStreamAudioSourceNode (this .#context, { mediaStream }) .connect (standIn);
+         this .#streams .set (standIn, mediaStream);
+      })
+      .catch (error => console .error (error .message));
+
+      return standIn;
+   }
+
+   // Whether a node is still one of an engine's nodes.
+   #live (node)
+   {
+      return [ ... this .#engines .values () ] .some (nodes => [ ... nodes .values () ] .includes (node));
+   }
+
    #stopElement (node)
    {
+      const stream = this .#streams .get (node);
+
+      if (stream)
+      {
+         this .#streams .delete (node);
+         stream .getTracks () .forEach (track => track .stop ());
+      }
+
       const element = this .#elements .get (node);
 
       if (!element)
@@ -218,6 +259,7 @@ export class AudioMirror
          case "convolver":   return make (context .createConvolver ());
          case "compressor":  return make (context .createDynamicsCompressor ());
          case "analyser":    return make (context .createAnalyser ());
+         case "microphone":   return make (this .#microphone (a [0]));
          case "splitter":    return make (context .createChannelSplitter (a [0]));
          case "merger":      return make (context .createChannelMerger (a [0]));
          case "panner":      return make (context .createPanner ());

@@ -18,6 +18,8 @@ pub enum Arg {
     Num(f64),
     Bool(bool),
     Str(&'static str),
+    /// A string from the scene (a mediaDeviceID).
+    Text(String),
     /// A list of numbers (a wave table, a curve).
     List(Vec<f32>),
     /// Planar sample data and its sample rate (an AudioBuffer made by `createBuffer`).
@@ -76,6 +78,7 @@ pub fn to_json(ops: &[Op], payloads: &mut Payloads) -> String {
                 Arg::Num(v) => out.push_str(&number(*v)),
                 Arg::Bool(v) => out.push_str(if *v { "true" } else { "false" }),
                 Arg::Str(v) => out.push_str(&format!("\"{v}\"")),
+                Arg::Text(v) => out.push_str(&json_string(v)),
                 Arg::List(v) => {
                     out.push('[');
                     out.push_str(
@@ -149,6 +152,23 @@ fn int(a: &Arg) -> usize {
     }
 }
 
+/// `v` as a JSON string.
+fn json_string(v: &str) -> String {
+    let mut out = String::from("\"");
+
+    for c in v.chars() {
+        match c {
+            '"' => out.push_str("\\\""),
+            '\\' => out.push_str("\\\\"),
+            c if (c as u32) < 0x20 => out.push_str(&format!("\\u{:04x}", c as u32)),
+            c => out.push(c),
+        }
+    }
+
+    out.push('"');
+    out
+}
+
 fn num(a: &Arg) -> f64 {
     match a {
         Arg::Num(v) => *v,
@@ -184,6 +204,7 @@ impl Model {
             "convolver" => Some("ConvolverNode"),
             "compressor" => Some("DynamicsCompressorNode"),
             "analyser" => Some("AnalyserNode"),
+            "microphone" => Some("MediaStreamAudioSourceNode"),
             "splitter" => Some("ChannelSplitterNode"),
             "merger" => Some("ChannelMergerNode"),
             "panner" => Some("PannerNode"),
