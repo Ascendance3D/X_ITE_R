@@ -544,9 +544,15 @@ impl MovieMedia {
         }
     }
 
-    /// `currentTime = 0`: GifMedia ignores it, PNGMedia stops the player.
+    /// `currentTime = 0`: GifMedia ignores it, PNGMedia stops the player. A held (paused) element stays held, at time 0, as a
+    /// paused `video` element does; `play` then goes on from 0 and not from the earlier held time.
     pub fn set_current_time_zero(&mut self) {
         self.offset = 0.0;
+
+        if self.held.is_some() {
+            self.held = Some(0.0);
+        }
+
         if matches!(self.kind, Kind::Apng { .. }) {
             self.player_stop();
         }
@@ -1707,6 +1713,28 @@ mod tests {
         m.play(3.0, 0.0);
         assert!(near(m.current_time(3.0), 0.5), "{}", m.current_time(3.0));
         assert!(near(m.current_time(3.25), 0.75), "{}", m.current_time(3.25));
+    }
+
+    /// The node's restart after a held pause (`movie_set_start`: `currentTime = 0`, then `play ()`).
+    #[test]
+    fn a_held_element_that_is_rewound_plays_on_from_zero() {
+        let mut m = seekable();
+
+        m.hold(0.5);
+        assert_eq!(m.current_time(0.75), 0.5);
+        m.set_current_time_zero();
+        // Still held, at 0.
+        assert_eq!(m.current_time(0.75), 0.0);
+        assert_eq!(m.current_time(2.0), 0.0);
+        m.play(2.0, 0.0);
+        assert!(near(m.current_time(2.0), 0.0), "{}", m.current_time(2.0));
+        assert!(near(m.current_time(2.25), 0.25), "{}", m.current_time(2.25));
+
+        // An element that is not held: the rewind is as before.
+        let mut free = seekable();
+
+        free.set_current_time_zero();
+        assert!(free.held.is_none());
     }
 
     #[test]
