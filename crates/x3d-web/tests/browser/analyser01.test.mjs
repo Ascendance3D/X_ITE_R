@@ -88,14 +88,15 @@ function assertTone (r, fftSize, frequency)
    for (const name of [ "bf", "bt", "ff", "ft" ])
       assert .equal (r [name] .length, bins, `${name}: one value per bin`);
 
-   // The peak is the bin of the tone (one bin of tolerance: a sine between two bins).
-   const expected = frequency * fftSize / r .rate;
+   // The float peak is the bin of the tone (one bin of tolerance: a sine between two bins). The bytes saturate at 255 over
+   // several bins near a loud tone (maxDecibels -30), so they are checked at the tone's bin and far from it.
+   const expected  = frequency * fftSize / r .rate;
+   const floatPeak = argmax (r .ff);
+   const toneBin   = Math .round (expected);
 
-   const [ bytePeak, floatPeak ] = [ argmax (r .bf), argmax (r .ff) ];
-
-   assert .ok (Math .abs (bytePeak - expected) <= 1, `byteFrequencyData peak ${bytePeak}, expected ${expected}`);
    assert .ok (Math .abs (floatPeak - expected) <= 1, `floatFrequencyData peak ${floatPeak}, expected ${expected}`);
-   assert .ok (r .bf [argmax (r .bf)] > 200, `byte peak ${r .bf [argmax (r .bf)]}`);
+   assert .ok (r .bf [toneBin] > 200, `byteFrequencyData at the tone ${r .bf [toneBin]}`);
+   assert .ok (r .bf [Math .round (bins * 0.9)] < 50, `byteFrequencyData far from the tone ${r .bf [Math .round (bins * 0.9)]}`);
 
    // The time domain is the sine (amplitude 1): bytes around 128, floats within [-1, 1] with a large swing.
    const ft = r .ft;
@@ -103,7 +104,8 @@ function assertTone (r, fftSize, frequency)
    const [ low, high ] = [ Math .min (... ft), Math .max (... ft) ];
 
    assert .ok (high > 0.9 && low < -0.9, `float swing ${low} ${high}`);
-   assert .ok (ft .every (v => Math .abs (v) <= 1.0001), "floats within [-1, 1]");
+   // Chromium's oscillator can go a little above 1 (1.0076 measured at 44.1 kHz and 3000 Hz).
+   assert .ok (ft .every (v => Math .abs (v) <= 1.05), "floats about within [-1, 1]");
    const [ byteLow, byteHigh ] = [ Math .min (... r .bt), Math .max (... r .bt) ];
 
    assert .ok (byteHigh > 240 && byteLow < 16, `byte swing ${byteLow} ${byteHigh}`);
