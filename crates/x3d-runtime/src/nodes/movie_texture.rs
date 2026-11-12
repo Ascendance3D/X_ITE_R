@@ -1670,6 +1670,79 @@ mod tests {
         assert_eq!(m.current_frame(0.6), Some(0));
     }
 
+    /// A medium that takes `currentTime`, as a decoded WebM does: four frames in one second.
+    fn seekable() -> MovieMedia {
+        let mut m = MovieMedia::decode_gif(&media("anim4.gif")).unwrap();
+
+        m.seekable = true;
+        m
+    }
+
+    fn near(a: f64, b: f64) -> bool {
+        (a - b).abs() < 1e-9
+    }
+
+    #[test]
+    fn a_held_element_keeps_its_time_takes_a_seek_and_plays_on_from_it() {
+        let mut m = seekable();
+
+        m.hold(0.25);
+        // The node's clock goes on, the element's time stays.
+        assert_eq!(m.current_time(0.25), 0.25);
+        assert_eq!(m.current_time(0.875), 0.25);
+        // GifMedia's frame of that time (ceil - 1), not the frame of the clock (3).
+        assert_eq!(m.current_frame(0.875), Some(0));
+
+        // A second pause does not take a new time.
+        m.hold(0.875);
+        assert_eq!(m.current_time(0.875), 0.25);
+
+        // A seek moves the held time, not a time that follows the clock.
+        m.seek_to(0.5, 1.0);
+        assert_eq!(m.current_time(1.0), 0.5);
+        assert_eq!(m.current_time(2.0), 0.5);
+        assert_eq!(m.current_frame(2.0), Some(1));
+
+        // The node's play () goes on from the held time.
+        m.play(3.0, 0.0);
+        assert!(near(m.current_time(3.0), 0.5), "{}", m.current_time(3.0));
+        assert!(near(m.current_time(3.25), 0.75), "{}", m.current_time(3.25));
+    }
+
+    #[test]
+    fn a_held_element_at_another_rate_plays_on_at_that_rate() {
+        let mut m = seekable();
+
+        m.set_playback_rate(2.0);
+        m.hold(0.125);
+        assert!(near(m.current_time(0.125), 0.25));
+        assert!(near(m.current_time(0.75), 0.25));
+
+        m.play(1.0, 0.0);
+        assert!(near(m.current_time(1.0), 0.25), "{}", m.current_time(1.0));
+        assert!(
+            near(m.current_time(1.125), 0.5),
+            "{}",
+            m.current_time(1.125)
+        );
+    }
+
+    #[test]
+    fn a_medium_that_takes_no_seek_is_not_held() {
+        let mut gif = MovieMedia::decode_gif(&media("anim4.gif")).unwrap();
+
+        gif.hold(0.25);
+        assert_eq!(gif.current_time(0.25), 0.25);
+        assert_eq!(gif.current_time(0.75), 0.75);
+
+        let mut png = MovieMedia::decode_apng(&media("once.png")).unwrap();
+        let before = png.current_time(0.0);
+
+        png.hold(0.25);
+        assert!(png.held.is_none());
+        assert_eq!(png.current_time(0.25), before);
+    }
+
     #[test]
     fn gif_disposal_restores_the_previous_picture_and_keeps_transparent_texels() {
         let m = MovieMedia::decode_gif(&media("dispose.gif")).unwrap();
