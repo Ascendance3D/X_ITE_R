@@ -3,7 +3,10 @@
 //! render_rea_i92_items replays with the option off). The references are pinned X_ITE 16.5.0 with the option on, in
 //! oracle/rea-oit-i92-render-items-baseline/png (antialiased="false") and /msaa4 (Multisampling 4), recorded by
 //! `oracle/tools/rea_i92_render_items.py shots --oit-i92` with three identical runs per pass. A world whose multisampled
-//! X_ITE output differs between its own runs has no msaa4 reference and is listed in msaa4/unstable.json.
+//! X_ITE output differs between its own runs has no msaa4 reference and is listed in msaa4/unstable.json. Those worlds are
+//! compared with /msaa4-envelope instead (`oracle/tools/rea_oit_msaa4_envelope.py`, eight runs): the lowest and the highest
+//! value of every channel of every pixel over the runs, which are at most 2 levels apart. A pixel is measured from the
+//! nearest value between the two, so the envelope does not widen the bound by more than the spread of X_ITE itself.
 //!
 //! Bound: at most 0.5% of the pixels more than 8 off (1.0% for multisampled passes on macOS, as in render_rea_i92_items).
 //! A world without a reference, or one whose X_ITE run logged an error, fails the test. `REA_ONLY=<substring>` restricts
@@ -12,7 +15,7 @@
 use std::path::PathBuf;
 use x3d_render::gpu::Gpu;
 
-/// The worlds without an msaa4 reference (msaa4/unstable.json). The list must be exactly this one.
+/// The worlds without a single msaa4 reference (msaa4/unstable.json). The list must be exactly this one. Each has an envelope.
 const EXPECTED_UNSTABLE: &[&str] = &["i92-tr-many.wrl", "i92-tr-nested.wrl"];
 
 /// (world, why Rust differs).
@@ -24,6 +27,89 @@ fn over_limit_permille(samples: u32) -> usize {
     } else {
         5
     }
+}
+
+/// The pictures of a world whose multisampled X_ITE output differs between runs: the lowest and the highest value of every
+/// channel over the recorded runs (RGBA, alpha 255).
+struct Envelope {
+    width: u32,
+    height: u32,
+    min: Vec<u8>,
+    max: Vec<u8>,
+}
+
+/// The largest spread of a channel an envelope may have (the recorder's MAX_SPREAD), and the fewest runs.
+const ENVELOPE_MAX_SPREAD: u8 = 2;
+const ENVELOPE_MIN_RUNS: u64 = 5;
+
+impl Envelope {
+    /// For every channel the value of the envelope nearest to `rgba`'s.
+    fn nearest(&self, rgba: &[u8]) -> Vec<u8> {
+        rgba.iter()
+            .zip(self.min.iter().zip(&self.max))
+            .map(|(v, (lo, hi))| (*v).clamp(*lo, *hi))
+            .collect()
+    }
+}
+
+/// `<world>.min.png` and `<world>.max.png` of `dir`, checked: an OIT recording of enough runs without a logged error, and
+/// pictures that agree with index.json and with each other (min <= max, no channel further apart than the limit).
+fn load_envelope(dir: &std::path::Path, world: &str) -> Result<Envelope, String> {
+    let index: serde_json::Value = serde_json::from_str(
+        &std::fs::read_to_string(dir.join("index.json"))
+            .map_err(|e| format!("no envelope index.json: {e}"))?,
+    )
+    .map_err(|e| format!("envelope index.json: {e}"))?;
+    let entry = &index["worlds"][world];
+
+    if index["oit"] != true || index["runs"].as_u64().unwrap_or(0) < ENVELOPE_MIN_RUNS {
+        return Err("the envelope is not an OIT recording of at least 5 runs".into());
+    }
+
+    if entry["runs"].as_array().map(|r| r.len() as u64) != index["runs"].as_u64() {
+        return Err("the envelope does not list every run of the world".into());
+    }
+
+    let (w, h, min) = x3d_render::compare::load_png(&dir.join(format!("{world}.min.png")))
+        .map_err(|e| format!("envelope min: {e}"))?;
+    let (w2, h2, max) = x3d_render::compare::load_png(&dir.join(format!("{world}.max.png")))
+        .map_err(|e| format!("envelope max: {e}"))?;
+
+    if (w, h) != (w2, h2) || min.len() != max.len() {
+        return Err("the envelope pictures differ in size".into());
+    }
+
+    if min.iter().zip(&max).any(|(lo, hi)| lo > hi) {
+        return Err("the envelope has a lowest value above the highest".into());
+    }
+
+    let spread = min
+        .iter()
+        .zip(&max)
+        .map(|(lo, hi)| hi - lo)
+        .max()
+        .unwrap_or(0);
+    let differing = min
+        .chunks_exact(4)
+        .zip(max.chunks_exact(4))
+        .filter(|(a, b)| a != b)
+        .count() as u64;
+
+    if spread > ENVELOPE_MAX_SPREAD
+        || Some(spread as u64) != entry["largestSpread"].as_u64()
+        || Some(differing) != entry["differingPixels"].as_u64()
+    {
+        return Err(format!(
+            "the envelope pictures ({differing} pixels differ, spread {spread}) do not agree with index.json or the limit"
+        ));
+    }
+
+    Ok(Envelope {
+        width: w,
+        height: h,
+        min,
+        max,
+    })
 }
 
 fn run(oit: bool) -> Option<(Vec<String>, Vec<String>, Vec<String>)> {
@@ -120,24 +206,34 @@ fn run(oit: bool) -> Option<(Vec<String>, Vec<String>, Vec<String>)> {
         }
 
         for world in &worlds {
-            if unstable.contains(world) {
-                eprintln!("{world} {pass}: no reference (X_ITE is not reproducible here)");
-                continue;
-            }
+            let envelope = if unstable.contains(world) {
+                match load_envelope(&base.join(format!("{pass}-envelope")), world) {
+                    Ok(e) => Some(e),
+                    Err(e) => {
+                        failures.push(format!("{world} {pass}: {e}"));
+                        continue;
+                    }
+                }
+            } else {
+                None
+            };
 
-            if !results.contains(world) {
+            if envelope.is_none() && !results.contains(world) {
                 failures.push(format!("{world} {pass}: no result in {pass}/index.json"));
                 continue;
             }
 
             let png = base.join(pass).join(format!("{world}.png"));
 
-            if !png.exists() {
+            if envelope.is_none() && !png.exists() {
                 failures.push(format!("{world} {pass}: no reference"));
                 continue;
             }
 
-            let (w, h, want) = x3d_render::compare::load_png(&png).unwrap();
+            let (w, h, want) = match &envelope {
+                Some(e) => (e.width, e.height, vec![]),
+                None => x3d_render::compare::load_png(&png).unwrap(),
+            };
             let shot = x3d_render::render_file(
                 &mut g,
                 &root,
@@ -151,6 +247,11 @@ fn run(oit: bool) -> Option<(Vec<String>, Vec<String>, Vec<String>)> {
                 .chunks_exact(4)
                 .flat_map(|p| [p[0], p[1], p[2], 255])
                 .collect();
+            // With an envelope the reference of a channel is the value nearest to Rust's between X_ITE's lowest and highest.
+            let want = match &envelope {
+                Some(e) => e.nearest(&rgba),
+                None => want,
+            };
             let s = x3d_render::compare::compare(w, h, &want, &rgba, 8);
 
             eprintln!(

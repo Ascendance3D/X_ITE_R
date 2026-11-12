@@ -5,7 +5,7 @@ oracle/rea-oit-i92-render-items-baseline/msaa4/unstable.json lists the worlds fo
 `orderIndependentTransparency` and Multisampling 4 gave three different pictures, so they have no single reference there. This tool
 measures how far the runs are apart and, when they are close, keeps the envelope of the runs:
 
-  XITE_PLAYWRIGHT=<x_ite-tests>/node_modules python3 -I -B oracle/tools/rea_oit_msaa4_envelope.py record [runs]
+  XITE_TESTS=<x_ite-tests> python3 -I -B oracle/tools/rea_oit_msaa4_envelope.py record [runs]
 
 shoots each listed world `runs` times (default 8, x_ite-shot-msaa.mjs --oit) and writes, for each world, the lowest and the highest
 value of every channel of every pixel over the runs (<world>.min.png, <world>.max.png) and index.json (the hash of every run, the
@@ -13,7 +13,8 @@ number of pixels that differ between runs, the largest spread) into oracle/rea-o
 
 It refuses when a run fails or logs an error, when the spread of a channel is over MAX_SPREAD levels, or when more than
 MAX_DIFFERING of the pixels differ between runs: such a world has no usable reference. It never overwrites a baseline, and it does
-not change msaa4/unstable.json. A baseline is never taken from Rust."""
+not change msaa4/unstable.json. A baseline is never taken from Rust. Prepare the worktree as in oracle/README.md, "Recording
+from a worktree": without oracle/x_ite-pin/node_modules no page loads, and every run fails here by name."""
 import json, os, shutil, subprocess, sys
 from PIL import Image
 
@@ -26,8 +27,10 @@ dest = os.path.join(base, "msaa4-envelope")
 tmp = "/tmp/rea-oit-msaa4-envelope"
 
 def main():
-    if sys.argv[1:2] != ["record"]:
+    if sys.argv[1:2] != ["record"] or not os.environ.get("XITE_TESTS"):
         sys.exit(__doc__)
+    if not os.path.isdir(os.path.join(root, "oracle", "x_ite-pin", "node_modules", "libtess")):
+        sys.exit("oracle/x_ite-pin/node_modules is not the pinned X_ITE's node_modules (oracle/README.md, \"Recording from a worktree\")")
     runs = int(sys.argv[2]) if len(sys.argv) > 2 else 8
     if runs < 5:
         sys.exit("at least 5 runs")
@@ -45,11 +48,16 @@ def main():
     report, bad = {}, []
     os.makedirs(os.path.join(tmp, "out"))
     for world in worlds:
-        results = [next(r for r in ix["results"] if r["file"] == world) for ix in indexes]
+        results = [next((r for r in ix["results"] if r["file"] == world), {}) for ix in indexes]
+        failed = []
         for i, r in enumerate(results):
             errors = [l for l in r.get("log", []) if "error" in l.lower()]
             if not r.get("ok") or errors:
-                bad.append(f"{world} run {i + 1}: ok {r.get('ok')}, errors {errors}")
+                failed.append(f"{world} run {i + 1}: ok {r.get('ok')}, error {r.get('error')}, log errors {errors}")
+        # A failed run has no picture: no envelope of this world.
+        if failed:
+            bad += failed
+            continue
         images = [Image.open(os.path.join(tmp, f"run-{i}", world + ".png")).convert("RGB") for i in range(1, runs + 1)]
         size = images[0].size
         data = [im.tobytes() for im in images]

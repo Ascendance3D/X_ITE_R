@@ -1,0 +1,78 @@
+{
+ "pinned": "34cdf9f97",
+ "chrome": "156.0.8078.47",
+ "oit": true,
+ "ms": "4",
+ "size": [
+  512,
+  512
+ ],
+ "frames": 10,
+ "settleMs": 400,
+ "gl": {
+  "vendor": "Google Inc. (NVIDIA Corporation)",
+  "renderer": "ANGLE (NVIDIA Corporation, NVIDIA GeForce RTX 3060 Ti/PCIe/SSE2, OpenGL ES 3.2)",
+  "version": "WebGL 2.0 (OpenGL ES 3.0 Chromium)",
+  "contextAttributes": {
+   "alpha": true,
+   "antialias": false,
+   "depth": true,
+   "desynchronized": false,
+   "failIfMajorPerformanceCaveat": false,
+   "powerPreference": "default",
+   "premultipliedAlpha": true,
+   "preserveDrawingBuffer": true,
+   "stencil": false,
+   "xrCompatible": false
+  },
+  "multisampling": 4,
+  "antialiased": true,
+  "splashVisible": false,
+  "canvasDisplay": "inline",
+  "drawingBuffer": [
+   512,
+   512
+  ],
+  "maxSamples": 8,
+  "x_ite": "16.5.0"
+ },
+ "runs": 8,
+ "maxSpread": 2,
+ "maxDiffering": 0.001,
+ "worlds": {
+  "i92-tr-many.wrl": {
+   "runs": [
+    "94f085a7a78ae5d34d7f30b8da95869eff752d17160d827c64fbdf12419f4c05",
+    "2d874be949e36702d4d1e374329692dbc53cfa4599521d00d172c491a297834d",
+    "3fdd5848199e460147973b5d0e12ef7662843f55cbc7ae4c584a2d4fdc671086",
+    "41233de40c8e683dbd37b473654911191543e958c6320259aa8cb40fc44c977c",
+    "01e7bc399de2dbf8ea57a227d640c828bb0d536935f877b2304bd60c7bccaffe",
+    "bcd340e7c31685b9d10264f9cec9a8b3140887a366945dfea174da32fe1a9529",
+    "33f29d5947bfc02dc9af728e92df8ef0365d98d101abc28b313991bc531a43dd",
+    "c28ac841e142a2fc6283da9c5b5561291994d838aab6381bd09e1cb43df7cd0c"
+   ],
+   "distinctRuns": 8,
+   "differingPixels": 11,
+   "largestSpread": 1,
+   "width": 512,
+   "height": 512
+  },
+  "i92-tr-nested.wrl": {
+   "runs": [
+    "c54600c898212e03520fb888ee0ac90cc53cb3b0555b5fc2005bfb1ba439a581",
+    "1e96f1a9bf40307e9f3f556b1fc4ae87f6826f0d1f3237b493b0453570e935f9",
+    "3684645c2c45f03af1bcd3e06542418acc510b60ef74ba9fbcf0627f9ec228d9",
+    "7ebb712312efb4a0ed3a862cd4adba3b009bf5aeae3fb763f624053ed2ec9a97",
+    "1e96f1a9bf40307e9f3f556b1fc4ae87f6826f0d1f3237b493b0453570e935f9",
+    "7b7d67151b851ff58486c26a7a7a0be8ed5cae5b9adf86172cfc7729a64a2071",
+    "4c554b2026205d98dc8ba428a29cf1b3c42f08dc044a9f457a98f9f859dc28f9",
+    "3684645c2c45f03af1bcd3e06542418acc510b60ef74ba9fbcf0627f9ec228d9"
+   ],
+   "distinctRuns": 6,
+   "differingPixels": 11,
+   "largestSpread": 1,
+   "width": 512,
+   "height": 512
+  }
+ }
+}
