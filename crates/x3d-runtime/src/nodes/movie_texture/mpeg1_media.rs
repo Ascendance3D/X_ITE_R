@@ -30,6 +30,8 @@ impl MovieMedia {
             offset: 0.0,
             held: None,
             iso: Default::default(),
+            sync_audio: false,
+            audio_resyncs: 0,
         })
     }
 }

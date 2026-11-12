@@ -58,6 +58,9 @@ pub mod protos;
 pub mod release;
 pub mod script;
 pub mod sound;
+// Platform decoders of MovieTexture media (ADR 0015): the timeline, and the GStreamer backend with `system-video-gst`.
+#[cfg(feature = "native-video")]
+pub mod sysvideo;
 pub mod url_object;
 pub mod video_types;
 #[cfg(feature = "native-video")]

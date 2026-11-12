@@ -956,10 +956,10 @@ fn element_number(d: &[u8], at: usize) -> Option<(u64, (), usize)> {
 /// matrix (measured against the pinned page: BT.601 is off by 10 levels on saturated colors) and interpolates the
 /// subsampled chroma linearly between the sample centers, which is done here too.
 /// The YUV to RGB coefficients: Y scale, then the red V, green U, green V and blue U terms.
-type Matrix = [f32; 5];
+pub(crate) type Matrix = [f32; 5];
 
 /// BT.709, which the page applies to an untagged VP9 stream.
-const BT709: Matrix = [1.164_383, 1.792_741, 0.213_249, 0.532_909, 2.112_402];
+pub(crate) const BT709: Matrix = [1.164_383, 1.792_741, 0.213_249, 0.532_909, 2.112_402];
 /// The YUV to RGB matrix of a VP9 picture by its `color_space` ([`color_config`]). An unknown (0) or reserved (6) space
 /// is converted as an untagged AV1 picture (`av1_matrix`): BT.709 for 8 bit 4:2:0, BT.601 for every other layout and
 /// for samples of more than 8 bits. BT.601 and SMPTE-170 share one matrix; SMPTE-240 and BT.2020 (non-constant
@@ -977,7 +977,7 @@ fn vp9_matrix(color_space: u32, subsampled_420: bool, bit_depth: u8) -> Matrix {
 }
 
 /// The limited-range matrix of luma coefficients `kr` and `kb` (ITU-R BT.601 2.5): Y scale 255/219, chroma 255/224.
-fn matrix_of(kr: f32, kb: f32) -> Matrix {
+pub(crate) fn matrix_of(kr: f32, kb: f32) -> Matrix {
     let kg = 1.0 - kr - kb;
     let c = 255.0 / 224.0;
 
@@ -992,7 +992,7 @@ fn matrix_of(kr: f32, kb: f32) -> Matrix {
 
 /// Full-range samples taken to the limited range the matrices expect, as the pinned page's upload does (measured with
 /// the AV1 and VP9 full-range streams).
-fn full_to_limited(y: &mut [u8], u: &mut [u8], v: &mut [u8]) {
+pub(crate) fn full_to_limited(y: &mut [u8], u: &mut [u8], v: &mut [u8]) {
     for s in y.iter_mut() {
         *s = (16.0 + f32::from(*s) * 219.0 / 255.0).round() as u8;
     }
@@ -1006,11 +1006,11 @@ fn full_to_limited(y: &mut [u8], u: &mut [u8], v: &mut [u8]) {
 
 /// BT.601, which the page applies to a VP8 stream (the only color space VP8 defines). Measured against the pinned page
 /// (`crates/x3d-render/tests/render_movie_codecs.rs`): with BT.709 up to 40 levels off, with this matrix 2.
-const BT601: Matrix = [1.164_383, 1.596_027, 0.391_762, 0.812_968, 2.017_232];
+pub(crate) const BT601: Matrix = [1.164_383, 1.596_027, 0.391_762, 0.812_968, 2.017_232];
 const VP8_MATRIX: Matrix = BT601;
 
 #[allow(clippy::too_many_arguments)]
-fn yuv_to_rgba(
+pub(crate) fn yuv_to_rgba(
     w: usize,
     h: usize,
     sx: bool,

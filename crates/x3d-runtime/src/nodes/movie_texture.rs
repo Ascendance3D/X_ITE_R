@@ -61,6 +61,10 @@ pub struct MovieMedia {
     held: Option<f64>,
     /// The state of [`MovieTiming::Iso`]; unused in the pinned mode.
     iso: IsoState,
+    /// The sound follows the movie time (ADR 0015, 4): a platform-decoded MP4. Other media keep their behavior.
+    sync_audio: bool,
+    /// How often the sound was moved back to the movie time ([`Runtime::movie_audio_resyncs`]).
+    audio_resyncs: u32,
 }
 
 /// What ISO timing remembers of a media: whether it has been active since it loaded (an inactive media that never
@@ -375,6 +379,8 @@ impl MovieMedia {
             offset: 0.0,
             held: None,
             iso: IsoState::default(),
+            sync_audio: false,
+            audio_resyncs: 0,
         })
     }
 
@@ -417,6 +423,8 @@ impl MovieMedia {
             offset: 0.0,
             held: None,
             iso: IsoState::default(),
+            sync_audio: false,
+            audio_resyncs: 0,
         })
     }
 
@@ -479,6 +487,8 @@ impl MovieMedia {
             offset: 0.0,
             held: None,
             iso: IsoState::default(),
+            sync_audio: false,
+            audio_resyncs: 0,
         };
 
         media.player_stop();
@@ -826,7 +836,7 @@ impl Runtime {
     /// The decoded frame the MovieTexture's texture holds: size, RGBA rows from the top and the frame index.
     pub fn movie_texture_frame(&self, node: NodeId) -> Option<(u32, u32, &[u8], usize)> {
         let m = self.sound.get(&node)?.movie.as_ref()?;
-        Some((m.width, m.height, &m.frames[m.shown], m.shown))
+        Some((m.width, m.height, m.frames.get(m.shown)?, m.shown))
     }
 
     /// Has the MovieTexture a decoded media element (GIF or APNG)?
@@ -1347,6 +1357,14 @@ impl Runtime {
         let Some(m) = self.movie(node) else {
             return;
         };
+        let time = m.current_time(elapsed);
+
+        // A media without pictures (an audio-only MP4): the time events, no texture.
+        if m.frames.is_empty() {
+            self.movie_sync_audio(node, time);
+            self.add_node_event(node);
+            return;
+        }
 
         if let Some(frame) = m.current_frame(elapsed) {
             let fresh = match &mut m.kind {
@@ -1359,8 +1377,60 @@ impl Runtime {
                 self.touch(node);
             }
 
+            self.movie_sync_audio(node, time);
             self.add_node_event(node);
         }
+    }
+
+    /// ADR 0015, 4: the movie time is the clock; the sound of a platform-decoded MP4 follows it. When the position that the
+    /// sound plays differs from the movie time by more than two picture periods (at least 40 ms), the sound is moved to
+    /// the movie time. The pinned timing plays a negative speed's sound at rate 1 (as Chrome's element), so it is not
+    /// compared then; at the end of a play the sound stops by itself.
+    fn movie_sync_audio(&mut self, node: NodeId, time: f64) {
+        let iso = self.movie_timing == MovieTiming::Iso;
+        let Some(m) = self.movie(node) else {
+            return;
+        };
+
+        if !m.sync_audio || m.playback_rate == 0.0 || (!iso && m.playback_rate < 0.0) {
+            return;
+        }
+
+        let duration = m.duration();
+        let looping = m.looping();
+        let period = if m.frames.is_empty() {
+            0.0
+        } else {
+            duration / m.frames.len() as f64
+        };
+        let limit = (2.0 * period).max(0.04);
+
+        if !(time >= 0.0 && time < duration) {
+            return;
+        }
+
+        let Some(Some(position)) = self.media_get(node, |e, a| a.playing().then(|| a.position(e)))
+        else {
+            return;
+        };
+        let mut off = (position - time).abs();
+
+        if looping {
+            off = off.min(duration - off);
+        }
+
+        if off > limit {
+            self.media_set(node, |e, a| a.set_current_time(e, time));
+
+            if let Some(m) = self.movie(node) {
+                m.audio_resyncs += 1;
+            }
+        }
+    }
+
+    /// How often the sound of the MovieTexture was moved back to its movie time (ADR 0015, 4); `None` without media.
+    pub fn movie_audio_resyncs(&self, node: NodeId) -> Option<u32> {
+        Some(self.sound.get(&node)?.movie.as_ref()?.audio_resyncs)
     }
 
     /// The ISO 18.4.2 set_time: the movie time of the active node from its elapsed time, the frame of that time, and
@@ -1386,6 +1456,7 @@ impl Runtime {
         let (time, finished) = m.iso_at(t, looping);
 
         self.movie_iso_show(node, time, false);
+        self.movie_sync_audio(node, time);
 
         // set_end: the last picture of the play stays as the texture.
         if finished && !looping {
@@ -1530,6 +1601,8 @@ impl Runtime {
             offset: 0.0,
             held: None,
             iso: IsoState::default(),
+            sync_audio: false,
+            audio_resyncs: 0,
         };
 
         self.movie_set_media_element(p.node, Some(media));

@@ -92,6 +92,8 @@ pub struct AudioElement {
     current_time: f64,
     active: bool,
     pub duration: f64,
+    /// The context time and the buffer position of the last start or rate change ([`AudioElement::position`]).
+    anchor: (f64, f64),
 }
 
 /// The private state of a Sound node (the members X_ITE keeps on the node object).
@@ -862,7 +864,7 @@ impl Runtime {
         self.snd(node).media = Some(m);
     }
 
-    fn media_get<T>(
+    pub(crate) fn media_get<T>(
         &mut self,
         node: NodeId,
         f: impl FnOnce(&AudioEngine, &AudioElement) -> T,
@@ -2645,6 +2647,7 @@ impl AudioElement {
             current_time: 0.0,
             active: false,
             duration,
+            anchor: (0.0, 0.0),
         }
     }
 
@@ -2654,6 +2657,10 @@ impl AudioElement {
     }
 
     pub fn set_playback_rate(&mut self, e: &mut AudioEngine, v: f64) {
+        if self.active {
+            self.anchor = (e.current_time(), self.position(e));
+        }
+
         self.playback_rate = v;
         e.set_param(self.source, "playbackRate", v);
     }
@@ -2724,7 +2731,31 @@ impl AudioElement {
         e.buffer_source_start(self.source, 0.0, current);
 
         self.start_time = start_at - current;
+        self.anchor = (start_at, current);
         self.active = true;
+    }
+
+    /// Is the buffer playing?
+    pub fn playing(&self) -> bool {
+        self.active
+    }
+
+    /// The position in the buffer, in seconds, that the AudioBufferSourceNode reads now: the position at the last start
+    /// or rate change plus the context time since then times `playbackRate`, wrapped by the loop. [`Self::current_time`]
+    /// is X_ITE's AudioElement time (the context time since the start, without the rate); a MovieTexture whose sound
+    /// follows its movie time (ADR 0015, 4) compares the movie time with this position.
+    pub fn position(&self, e: &AudioEngine) -> f64 {
+        if !self.active {
+            return self.current_time;
+        }
+
+        let p = self.anchor.1 + (e.current_time() - self.anchor.0) * self.playback_rate;
+
+        if self.loop_ && self.duration > 0.0 {
+            p.rem_euclid(self.duration)
+        } else {
+            p.clamp(0.0, self.duration)
+        }
     }
 
     pub fn pause(&mut self, e: &mut AudioEngine) {

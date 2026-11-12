@@ -16,6 +16,11 @@ native-video = ["dep:vp9dec"]
 av1 = ["native-video", "dep:rav1d"]
 # rav1d's hand-written assembly (needs nasm; not for wasm32).
 av1-asm = ["av1", "rav1d/asm"]
+# MP4 video and audio in MovieTexture through the system GStreamer (ADR 0015): `sysvideo/gst.rs`, the gstreamer-rs
+# bindings (MIT OR Apache-2.0) over the system libgstreamer (LGPL-2.1, linked dynamically). The decoders are the user's
+# installed plugins; this project ships no codec. Off by default. Build: libgstreamer1.0-dev and
+# libgstreamer-plugins-base1.0-dev. Run: gstreamer1.0-plugins-good (qtdemux) and a decoder plugin.
+system-video-gst = ["native-video", "dep:gstreamer", "dep:gstreamer-app", "dep:gstreamer-video", "dep:gstreamer-audio"]
 
 [dependencies]
 x3d-fields = { path = "../x3d-fields" }
@@ -29,6 +34,11 @@ vp9dec = { version = "0.1.1", optional = true }
 # 2026-11-02). Its `asm` default feature is off: it needs nasm at build time and does not exist on wasm32. Patent exposure is an unresolved release risk recorded in
 # docs/decoder-admission.md; this dependency is not a patent clearance.
 rav1d = { version = "1.1.0", default-features = false, features = ["bitdepth_8", "bitdepth_16"], optional = true }
+# MP4 through the system GStreamer (feature `system-video-gst`, ADR 0015).
+gstreamer = { version = "0.25", optional = true }
+gstreamer-app = { version = "0.25", optional = true }
+gstreamer-video = { version = "0.25", optional = true }
+gstreamer-audio = { version = "0.25", optional = true }
 url = "2"
 percent-encoding = "2"
 # Image headers only (X3DTexture2DNode width and height); the same crate x3d-render decodes with.
