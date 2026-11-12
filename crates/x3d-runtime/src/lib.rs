@@ -653,6 +653,9 @@ pub struct Runtime {
     pub stamp_counter: u64,
     /// `getBrowser () .currentFrameRate` (X3DDamperNode.prepareEvents). 60 until a frame loop sets it.
     pub frame_rate: f64,
+    /// `getBrowser () .currentSpeed` (X3DTimeContext.advanceTime: the distance the active viewpoint's camera moved since
+    /// the last frame times the frame rate). 0 until a frame loop with a live clock sets it.
+    pub current_speed: f64,
     /// Seconds spent in [`particles::run_pass`] since a benchmark last zeroed it.
     pub particle_sim_seconds: f64,
     /// The scene has gone live after loading (X3DBrowser.replaceWorld: `scene .setLive (true)`
@@ -879,6 +882,7 @@ impl Runtime {
             stamps: vec![],
             stamp_counter: 0,
             frame_rate: 60.0,
+            current_speed: 0.0,
             particle_sim_seconds: 0.0,
             scene_live: false,
             followers: vec![],

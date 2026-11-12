@@ -2414,6 +2414,7 @@ fn op<C: Cx>(ctx: &C, args: Vec<C::V>) -> Result<J<C::V>, C::E> {
         }
         "datenow" => Ok(J::Number(rt().date_override.unwrap_or(rt().now) * 1000.0)),
         "framerate" => Ok(J::Number(rt().frame_rate)),
+        "speed" => Ok(J::Number(rt().current_speed)),
         "browserTime" => Ok(J::Number(rt().world_state.initialized_time)),
         // Browser.nextViewpoint () and friends: queued for the viewer (X3DBrowser viewpoint API).
         "brequest" => {

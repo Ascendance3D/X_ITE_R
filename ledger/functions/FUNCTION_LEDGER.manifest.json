@@ -7,24 +7,24 @@
  "records": "csv, json: all functions. md: the named functions listed. UNMAPPED_FUNCTIONS.md: the applicable functions with UNRESOLVED_MAPPING.",
  "files": {
   "FUNCTION_LEDGER.csv": {
-   "bytes": 2132956,
+   "bytes": 2133290,
    "records": 12314,
-   "sha256": "2350c591b95a70af54a5fb0a3777c1e68a97ed4e77797b31e3b71de519c82018"
+   "sha256": "491ea0d3a7a5b6052dbfce51ac53419d263a345c1331a2c5c8f0fc6ae9e95e58"
   },
   "FUNCTION_LEDGER.json": {
-   "bytes": 5587855,
+   "bytes": 5589318,
    "records": 12314,
-   "sha256": "2f015cb503b070e55c833f2e1acf232806b7ed086f12226b35310d3b8fb19b30"
+   "sha256": "c899946eabaa5a5b3448fe0304f65d1c475c5cca97a9566ebd72d0fb682df1c2"
   },
   "FUNCTION_LEDGER.md": {
-   "bytes": 606542,
+   "bytes": 606788,
    "records": 5999,
-   "sha256": "177d4ccf0e2f63249a86123a6487856491e02a1f34b50978405908672e1b3086"
+   "sha256": "9f5ea880276f2e45fcafe15e5f51a98c148c9ab4a3daa2e678c5952786dc1fb4"
   },
   "UNMAPPED_FUNCTIONS.md": {
-   "bytes": 183974,
-   "records": 5939,
-   "sha256": "70389702a4960fb6ddbc7c45c3d5a40128f57e5379d530190242dec53b77f297"
+   "bytes": 183949,
+   "records": 5938,
+   "sha256": "2c8b015ddce5a87be1c3794ef11f434b212e228e2c72295dd1ce8170dd78cc0b"
   }
  }
 }

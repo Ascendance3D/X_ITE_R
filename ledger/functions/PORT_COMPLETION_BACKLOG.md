@@ -401,7 +401,7 @@ A row closes when each of its functions has an inspected disposition that is not
 
 ## Priority 4 browser and WASM host
 
-33 files, 346 open functions.
+33 files, 345 open functions.
 
 | X_ITE file | functions | unresolved | missing | partial | ledger entries |
 | --- | --- | --- | --- | --- | --- |
@@ -418,11 +418,11 @@ A row closes when each of its functions has an inspected disposition that is not
 | `src/x_ite/X3DCanvasElement.js` | 9 | 9 | 0 | 0 | none |
 | `src/x_ite/Browser/Legacy.js` | 5 | 5 | 0 | 0 | none |
 | `src/x_ite/Browser/Networking/URLs.js` | 5 | 5 | 0 | 0 | none |
-| `src/x_ite/Browser/Time/X3DTimeContext.js` | 5 | 5 | 0 | 0 | none |
 | `src/x_ite/Configuration/ComponentInfo.js` | 5 | 5 | 0 | 0 | none |
 | `src/x_ite/Configuration/ProfileInfo.js` | 5 | 5 | 0 | 0 | none |
 | `src/x_ite/Configuration/UnitInfo.js` | 5 | 5 | 0 | 0 | none |
 | `src/x_ite/X3D.js` | 5 | 5 | 0 | 0 | none |
+| `src/x_ite/Browser/Time/X3DTimeContext.js` | 5 | 4 | 0 | 0 | none |
 | `src/x_ite/Browser/Core/Notification.js` | 3 | 3 | 0 | 0 | none |
 | `src/x_ite/Browser/Core/RenderingProperties.js` | 3 | 3 | 0 | 0 | none |
 | `src/x_ite/Configuration/ConcreteNodesArray.js` | 3 | 3 | 0 | 0 | none |
@@ -654,6 +654,6 @@ A row closes when each of its functions has an inspected disposition that is not
 | `src/x_ite/Browser/X_ITE/ExtensionKeys.js` | 1 | 1 | 0 | 0 | none |
 | `src/x_ite/Components.js` | 1 | 1 | 0 | 0 | none |
 
-Total: 5939 open functions in 602 files.
+Total: 5938 open functions in 602 files.
 
 Priority 5 of the directive (WebGL2 and WebGPU) is a property of the Rust renderer backends and has no X_ITE source area of its own.
