@@ -16,7 +16,10 @@ use objc2_av_foundation::{
     AVAssetReader, AVAssetReaderStatus, AVAssetReaderTrackOutput, AVAssetTrack, AVMediaTypeAudio,
     AVMediaTypeVideo, AVURLAsset,
 };
-use objc2_core_audio_types::kAudioFormatLinearPCM;
+use objc2_core_audio_types::{
+    kAudioFormatFlagIsBigEndian, kAudioFormatFlagIsFloat, kAudioFormatFlagIsNonInterleaved,
+    kAudioFormatLinearPCM,
+};
 use objc2_core_foundation::{CFString, CFType};
 use objc2_core_media::{
     CMAudioFormatDescriptionGetStreamBasicDescription, CMSampleBuffer, CMTime, CMTimeFlags,
@@ -204,7 +207,19 @@ fn audio_sample(c: &mut Collected, s: &CMSampleBuffer, max_bytes: u64) -> Result
     let asbd = unsafe { &*asbd };
     let channels = asbd.mChannelsPerFrame as usize;
 
-    if asbd.mFormatID != kAudioFormatLinearPCM || asbd.mBitsPerChannel != 32 || channels == 0 {
+    // The reader settings ask for this format (`settings`); the samples are read as interleaved native-endian f32,
+    // so any other layout is refused instead of misread.
+    let flags = asbd.mFormatFlags;
+    let float = flags & kAudioFormatFlagIsFloat != 0;
+    let layout = flags & (kAudioFormatFlagIsNonInterleaved | kAudioFormatFlagIsBigEndian) == 0;
+
+    if asbd.mFormatID != kAudioFormatLinearPCM
+        || asbd.mBitsPerChannel != 32
+        || channels == 0
+        || !float
+        || !layout
+        || asbd.mBytesPerFrame as usize != 4 * channels
+    {
         return Err(WebmError::Decode(
             "AVFoundation gave another sound format".into(),
         ));
