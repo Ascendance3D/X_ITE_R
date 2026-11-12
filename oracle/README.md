@@ -1345,6 +1345,13 @@ channel, 0.5% of pixels) and, as the negative control, with the option off (ever
 list); `i92-tr-many` and `i92-tr-nested` have no MSAA 4 picture (`msaa4/unstable.json`). `crates/x3d-render/tests/render_rea_oit_i92_items.rs`
 replays them with the option on (same bound).
 
+`oracle/tools/rea_oit_msaa4_envelope.py record 8` (and `record 8 --i92` for the recordings with the option off) gives the worlds of
+`msaa4/unstable.json` a reference: it shoots each world eight times and writes the lowest and the highest value of every channel of
+every pixel into the new directory `msaa4-envelope` (`<world>.min.png`, `<world>.max.png`, `index.json` with the hash of every run).
+It refuses a channel spread over 2 levels or more than 0.1% differing pixels, and it does not change `msaa4/` or `unstable.json`.
+Measured: the runs are at most 1 level apart, in 0 to 63 pixels. The two tests measure a pixel of such a world from the nearest
+value between the two pictures (`crates/x3d-render/tests/support/envelope.rs`).
+
 ## decodeAudioData lane (2026-10-31, issue #98): MP3, Ogg, FLAC, Opus, WAV
 
 - `x_ite-audio-decode.mjs` decodes the files of `synthetic-rea-b24-audio/` (ffmpeg sine plus seeded noise, 0.3 s;
