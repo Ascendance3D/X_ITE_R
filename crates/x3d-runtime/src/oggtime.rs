@@ -11,7 +11,10 @@
 //!   in any build, `tools/check_no_opus.py`).
 //! - The video start (Theora) is read here from the granule position of the first Theora page that ends a picture
 //!   (the Theora I specification, 6.2 and A.2.3): the key frame number shifted by KFGSHIFT plus the frames after it,
-//!   counted from 1 since bitstream version 3.2.1, less the pictures that end on the pages up to that one.
+//!   counted from 1 since bitstream version 3.2.1, less the pictures that end on the pages up to that one. This is
+//!   FFmpeg's rule (libavformat/oggparsetheora.c, `theora_packet`: one frame per packet before the first granule
+//!   position), and Chromium plays Ogg through FFmpeg. An encoder that drops repeated pictures (FFmpeg's Ogg muxer does)
+//!   leaves gaps that the rule does not see, so the result is FFmpeg's start time, not always the encoder's.
 
 /// The start times in seconds of the first audio track (Vorbis or Opus) and of the first Theora track of `data` (None
 /// for a track that is not there or whose time cannot be read), or None when `data` is not an Ogg file. Damaged data
@@ -178,6 +181,16 @@ mod tests {
                 "{name}: audio start {a:?}, want {audio}"
             );
         }
+    }
+
+    /// Both tracks start at 0.5 s (ffprobe: Theora 0.500000, Vorbis 0.497333): the first Theora granule position is not
+    /// 0, and the muxer dropped the repeated pictures (8 packets for 40 frames).
+    #[test]
+    fn an_offset_file_starts_where_ffprobe_says() {
+        let (v, a) = first_times(&file("theora-vorbis-offset.ogv")).unwrap();
+
+        assert!((v.unwrap() - 0.5).abs() < 1e-9, "{v:?}");
+        assert!((a.unwrap() - (0.5 - 128.0 / 48000.0)).abs() < 1e-6, "{a:?}");
     }
 
     #[test]

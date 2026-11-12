@@ -791,6 +791,8 @@ fn the_sound_lead_comes_from_the_container() {
         ("theora-vorbis.ogv", 0.0),
         ("theora-opus-late.ogv", 0.5),
         ("theora-vorbis-late.ogv", 0.497333),
+        // Both tracks from 0.5 s (the audio 128 frames earlier): no lead.
+        ("theora-vorbis-offset.ogv", 0.0),
     ] {
         let got = sound_lead(&websound(name));
 

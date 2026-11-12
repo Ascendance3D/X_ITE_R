@@ -86,6 +86,9 @@ def main():
             "theora-opus.ogv": both + THEORA + OPUS,
             "theora-vorbis-late.ogv": delayed + THEORA + VORBIS,
             "theora-opus-late.ogv": delayed + THEORA + OPUS,
+            # Both tracks start at 0.5 s: the first Theora page is not at granule 0 (the Ogg muxer drops an offset of the
+            # video alone, and it drops repeated pictures, so the packets are not one per frame).
+            "theora-vorbis-offset.ogv": both + THEORA + VORBIS + ["-output_ts_offset", str(LATE * SEGMENT)],
         }
         for name, args in files.items():
             run(args + COMMON + [os.path.join(out_dir, name)])

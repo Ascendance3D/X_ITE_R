@@ -167,8 +167,10 @@ pub(crate) fn each_block(
             }
 
             let rel = i16::from_be_bytes([data[bs + nlen], data[bs + nlen + 1]]) as i64;
-            // A damaged cluster time cannot overflow.
-            let ticks = (cluster_time as i64).saturating_add(rel);
+            // A damaged cluster time (above i64::MAX) is clamped, not wrapped, and cannot overflow.
+            let ticks = i64::try_from(cluster_time)
+                .unwrap_or(i64::MAX)
+                .saturating_add(rel);
             let block = Block {
                 time_ms: ticks as f64 * scale as f64 / 1_000_000.0,
                 start: bs + header,
@@ -211,6 +213,11 @@ pub fn first_block_times(data: &[u8]) -> Option<(Option<f64>, Option<f64>)> {
                 }
             }
 
+            // Track numbers start at 1: an entry without one is damaged and is left out.
+            if number == 0 {
+                continue;
+            }
+
             match kind {
                 1 if video.is_none() => video = Some(number),
                 2 if audio.is_none() => audio = Some(number),
@@ -222,6 +229,11 @@ pub fn first_block_times(data: &[u8]) -> Option<(Option<f64>, Option<f64>)> {
     let (mut video_time, mut audio_time) = (None::<f64>, None::<f64>);
 
     each_block(data, &segment, scale, |number, _, block| {
+        // A block with no frame data presents nothing.
+        if block.start >= block.end {
+            return true;
+        }
+
         let t = block.time_ms / 1000.0;
 
         // The first block of a track in file order; a later block with an earlier time (B-frames) is taken too.
@@ -287,6 +299,87 @@ mod tests {
             assert_eq!(v, Some(video), "{name}: video");
             assert_eq!(a, audio, "{name}: audio");
         }
+    }
+
+    /// An EBML element: the id bytes, an 8-byte size, the body.
+    fn el(id: &[u8], body: &[u8]) -> Vec<u8> {
+        let mut out = id.to_vec();
+
+        out.push(0x01);
+        out.extend_from_slice(&(body.len() as u64).to_be_bytes()[1..]);
+        out.extend_from_slice(body);
+        out
+    }
+
+    /// A WebM of one track entry per (number, type) (number 0: no TrackNumber element) and one cluster of the given
+    /// time, whose blocks are (track number, relative time, frame data).
+    fn crafted(tracks: &[(u8, u8)], cluster_time: &[u8], blocks: &[(u8, i16, &[u8])]) -> Vec<u8> {
+        let mut entries = vec![];
+
+        for &(number, kind) in tracks {
+            let mut body = vec![];
+
+            if number != 0 {
+                body.extend(el(&[0xD7], &[number]));
+            }
+            body.extend(el(&[0x83], &[kind]));
+            entries.extend(el(&[0xAE], &body));
+        }
+
+        let mut cluster = el(&[0xE7], cluster_time);
+
+        for &(number, rel, frame) in blocks {
+            let mut body = vec![0x80 | number];
+
+            body.extend_from_slice(&rel.to_be_bytes());
+            body.push(0x80);
+            body.extend_from_slice(frame);
+            cluster.extend(el(&[0xA3], &body));
+        }
+
+        let mut segment = el(&[0x16, 0x54, 0xAE, 0x6B], &entries);
+
+        segment.extend(el(&[0x1F, 0x43, 0xB6, 0x75], &cluster));
+
+        let mut out = el(&[0x1A, 0x45, 0xDF, 0xA3], &[]);
+
+        out.extend(el(&[0x18, 0x53, 0x80, 0x67], &segment));
+        out
+    }
+
+    /// Damaged values in a well-formed file: a cluster time above i64::MAX is clamped (not wrapped to a negative time);
+    /// a track entry without a TrackNumber is left out; a block with no frame data sets no time.
+    #[test]
+    fn damaged_values_give_no_wrong_time() {
+        let ok = crafted(
+            &[(1, 1), (2, 2)],
+            &[0x01, 0xF4],
+            &[(1, 0, &[1]), (2, 3, &[1])],
+        );
+
+        assert_eq!(first_block_times(&ok), Some((Some(0.5), Some(0.503))));
+
+        let huge = crafted(
+            &[(1, 1), (2, 2)],
+            &[0xFF; 8],
+            &[(1, -5, &[1]), (2, 0, &[1])],
+        );
+        let (v, a) = first_block_times(&huge).unwrap();
+
+        assert!(v.unwrap() > 9.2e15 && a.unwrap() > 9.2e15, "{v:?} {a:?}");
+
+        // TrackNumber 0 (missing) is not a track, so a block of track 0 is not its block.
+        let unnumbered = crafted(&[(0, 2), (1, 1)], &[0], &[(0, 0, &[1]), (1, 7, &[1])]);
+
+        assert_eq!(first_block_times(&unnumbered), Some((Some(0.007), None)));
+
+        let empty = crafted(
+            &[(1, 1), (2, 2)],
+            &[0],
+            &[(2, 0, &[]), (2, 20, &[1]), (1, 0, &[1])],
+        );
+
+        assert_eq!(first_block_times(&empty), Some((Some(0.0), Some(0.02))));
     }
 
     /// Not a WebM: None. Every cut of a file, and damaged bytes, give times or None, never a panic.
