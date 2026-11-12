@@ -3,16 +3,24 @@
 //! render_rea_i92_items replays with the option off). The references are pinned X_ITE 16.5.0 with the option on, in
 //! oracle/rea-oit-i92-render-items-baseline/png (antialiased="false") and /msaa4 (Multisampling 4), recorded by
 //! `oracle/tools/rea_i92_render_items.py shots --oit-i92` with three identical runs per pass. A world whose multisampled
-//! X_ITE output differs between its own runs has no msaa4 reference and is listed in msaa4/unstable.json.
+//! X_ITE output differs between its own runs has no msaa4 reference and is listed in msaa4/unstable.json. Those worlds are
+//! compared with /msaa4-envelope-v1 instead (owner decision 2026-11-11; `oracle/tools/rea_oit_msaa4_envelope.py`): the interval
+//! between the lowest and the highest value of every channel of every pixel over eight stored runs, which are 1 level apart
+//! in 17 and 14 pixels. A channel differs only outside the interval, by its distance to it; no pixel of such a shot may be
+//! more than 8 outside, and the pixels outside by any amount are printed (`support/envelope.rs`, tests rea_msaa4_envelope).
 //!
 //! Bound: at most 0.5% of the pixels more than 8 off (1.0% for multisampled passes on macOS, as in render_rea_i92_items).
 //! A world without a reference, or one whose X_ITE run logged an error, fails the test. `REA_ONLY=<substring>` restricts
 //! the worlds.
 
+#[path = "support/envelope.rs"]
+mod envelope;
+
+use envelope::load_envelope;
 use std::path::PathBuf;
 use x3d_render::gpu::Gpu;
 
-/// The worlds without an msaa4 reference (msaa4/unstable.json). The list must be exactly this one.
+/// The worlds without a single msaa4 reference (msaa4/unstable.json). The list must be exactly this one. Each has an envelope.
 const EXPECTED_UNSTABLE: &[&str] = &["i92-tr-many.wrl", "i92-tr-nested.wrl"];
 
 /// (world, why Rust differs).
@@ -120,24 +128,40 @@ fn run(oit: bool) -> Option<(Vec<String>, Vec<String>, Vec<String>)> {
         }
 
         for world in &worlds {
-            if unstable.contains(world) {
-                eprintln!("{world} {pass}: no reference (X_ITE is not reproducible here)");
-                continue;
-            }
+            let envelope = if unstable.contains(world) {
+                match load_envelope(
+                    &base.join(envelope::VERSION_DIR),
+                    "rea-oit-i92-render-items-baseline",
+                    world,
+                    true,
+                    samples,
+                ) {
+                    Ok(e) => Some(e),
+                    Err(e) => {
+                        failures.push(format!("{world} {pass}: {e}"));
+                        continue;
+                    }
+                }
+            } else {
+                None
+            };
 
-            if !results.contains(world) {
+            if envelope.is_none() && !results.contains(world) {
                 failures.push(format!("{world} {pass}: no result in {pass}/index.json"));
                 continue;
             }
 
             let png = base.join(pass).join(format!("{world}.png"));
 
-            if !png.exists() {
+            if envelope.is_none() && !png.exists() {
                 failures.push(format!("{world} {pass}: no reference"));
                 continue;
             }
 
-            let (w, h, want) = x3d_render::compare::load_png(&png).unwrap();
+            let (w, h, want) = match &envelope {
+                Some(e) => (e.width, e.height, vec![]),
+                None => x3d_render::compare::load_png(&png).unwrap(),
+            };
             let shot = x3d_render::render_file(
                 &mut g,
                 &root,
@@ -151,6 +175,33 @@ fn run(oit: bool) -> Option<(Vec<String>, Vec<String>, Vec<String>)> {
                 .chunks_exact(4)
                 .flat_map(|p| [p[0], p[1], p[2], 255])
                 .collect();
+            // An envelope shot: a channel differs only outside the interval of X_ITE's stored runs, by its distance to the
+            // interval, and no pixel may be more than 8 outside.
+            if let Some(e) = &envelope {
+                let out = match e.outside(w, h, &rgba) {
+                    Ok(out) => out,
+                    Err(e) => {
+                        failures.push(format!("{world} {pass}: {e}"));
+                        continue;
+                    }
+                };
+
+                eprintln!(
+                    "{world} {pass} oit={oit}: envelope of {} runs: {} pixels outside, {} more than 8 outside, max {}",
+                    e.captures, out.pixels_outside, out.pixels_over, out.max_distance
+                );
+                compared.push(format!("{world} {pass}"));
+
+                if out.pixels_over > 0 {
+                    over.push(format!(
+                        "{world} {pass}: {} pixels more than 8 outside the envelope, max {}",
+                        out.pixels_over, out.max_distance
+                    ));
+                }
+
+                continue;
+            }
+
             let s = x3d_render::compare::compare(w, h, &want, &rgba, 8);
 
             eprintln!(

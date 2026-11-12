@@ -4,13 +4,19 @@
 //! `oracle/tools/rea_i92_render_items.py shots` with three identical runs per pass.
 //!
 //! A world whose multisampled X_ITE output differs between three runs has no msaa4 reference and is listed in
-//! msaa4/unstable.json (the png pass still has one).
+//! msaa4/unstable.json (the png pass still has one). It is compared with /msaa4-envelope-v1 instead (owner decision
+//! 2026-11-11): the interval between the lowest and the highest value of every channel over eight stored runs
+//! (`oracle/tools/rea_oit_msaa4_envelope.py record 8 --i92`; 1 level apart in 0, 63 and 2 pixels). A channel differs only
+//! outside the interval, by its distance to it; no pixel of such a shot may be more than 8 outside (`support/envelope.rs`).
 //!
 //! The bound is the one of `x3d-shot compare`: at most 0.5% of the pixels more than 8 off. A world without a reference,
 //! or a reference whose X_ITE run logged an error, fails the test (an absent answer never passes).
 //! `REA_ONLY=<substring>` restricts the worlds.
 //!
 //! KNOWN_GAPS lists worlds the renderer cannot match yet; each must stay over the bound and fails once it matches.
+
+#[path = "support/envelope.rs"]
+mod envelope;
 
 use std::path::PathBuf;
 use x3d_render::gpu::Gpu;
@@ -98,14 +104,27 @@ fn rea_i92_render_items_match_x_ite() {
             .unwrap_or_default();
 
         for world in &worlds {
-            if unstable.contains(world) {
-                eprintln!("{world} {pass}: no reference (X_ITE is not reproducible here)");
-                continue;
-            }
-
+            // Such a world is compared with the envelope of eight runs (msaa4-envelope-v1) instead.
+            let envelope = if unstable.contains(world) {
+                match envelope::load_envelope(
+                    &base.join(envelope::VERSION_DIR),
+                    "rea-i92-render-items-baseline",
+                    world,
+                    false,
+                    samples,
+                ) {
+                    Ok(e) => Some(e),
+                    Err(e) => {
+                        failures.push(format!("{world} {pass}: {e}"));
+                        continue;
+                    }
+                }
+            } else {
+                None
+            };
             let png = base.join(pass).join(format!("{world}.png"));
 
-            if !png.exists() {
+            if envelope.is_none() && !png.exists() {
                 failures.push(format!(
                     "{world} {pass}: no reference in {}",
                     base.display()
@@ -113,7 +132,10 @@ fn rea_i92_render_items_match_x_ite() {
                 continue;
             }
 
-            let (w, h, want) = x3d_render::compare::load_png(&png).unwrap();
+            let (w, h, want) = match &envelope {
+                Some(e) => (e.width, e.height, vec![]),
+                None => x3d_render::compare::load_png(&png).unwrap(),
+            };
             let shot = x3d_render::render_file(
                 &mut g,
                 &root,
@@ -127,6 +149,30 @@ fn rea_i92_render_items_match_x_ite() {
                 .chunks_exact(4)
                 .flat_map(|p| [p[0], p[1], p[2], 255])
                 .collect();
+            // An envelope shot: a channel differs only outside the interval of X_ITE's stored runs, by its distance to the
+            // interval, and no pixel may be more than 8 outside.
+            if let Some(e) = &envelope {
+                match e.outside(w, h, &rgba) {
+                    Ok(out) => {
+                        eprintln!(
+                            "{world} {pass}: envelope of {} runs: {} pixels outside, {} more than 8 outside, max {}",
+                            e.captures, out.pixels_outside, out.pixels_over, out.max_distance
+                        );
+
+                        if out.pixels_over > 0 {
+                            failures.push(format!(
+                                "{world} {pass}: {} pixels more than 8 outside the envelope, max {}",
+                                out.pixels_over, out.max_distance
+                            ));
+                        }
+                    }
+                    Err(e) => failures.push(format!("{world} {pass}: {e}")),
+                }
+
+                checked += 1;
+                continue;
+            }
+
             let s = x3d_render::compare::compare(w, h, &want, &rgba, 8);
             let over = s.pixels_over * 1000 > (w * h) as usize * over_limit_permille(samples);
 
