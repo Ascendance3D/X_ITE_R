@@ -2544,7 +2544,7 @@ impl WebBrowser {
         }
     }
 
-    /// The sound of the page's MP4 video element `token` (ADR 0015): the file's bytes, the sample rate and one
+    /// The sound of the page's MP4 (ADR 0015), WebM or Ogg (Phase 9A) video element `token`: the file's bytes, the sample rate and one
     /// `Float32Array` per channel, as the page's `decodeAudioData` gave them. The engine plays it through the node's audio
     /// source on the movie time ([`Runtime::video_sound`]).
     #[wasm_bindgen(js_name = videoSound)]

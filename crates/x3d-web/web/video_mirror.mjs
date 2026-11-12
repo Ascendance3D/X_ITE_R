@@ -12,10 +12,23 @@
 // (videoSeeked). One seek runs at a time and only the newest waiting request starts after it; the engine drops an answer
 // whose id is older than its newest request, so an obsolete picture never overwrites a newer one.
 //
-// The picture is read with a 2D canvas (drawImage of the element, getImageData) when it changed. The sound of the element
-// plays through the element itself, not through the engine's Web Audio graph (web/API.md).
+// The picture is read with a 2D canvas (drawImage of the element, getImageData) when it changed. The sound of an MP4, a WebM
+// or an Ogg file is decoded by the page and plays through the engine's Web Audio graph, and the element is muted; the
+// sound of any other file plays through the element itself (web/API.md).
 
 const EMPTY = new Uint8Array (0);
+
+// The media type of a file the engine plays the sound of, from its first bytes: a `blob:` URL has no file name.
+const mediaType = bytes =>
+{
+   if (bytes [0] === 0x1A && bytes [1] === 0x45 && bytes [2] === 0xDF && bytes [3] === 0xA3)
+      return "video/webm";
+
+   if (bytes [0] === 0x4F && bytes [1] === 0x67 && bytes [2] === 0x67 && bytes [3] === 0x53)
+      return "video/ogg";
+
+   return "video/mp4";
+};
 
 // MovieTexture.hasAudioTracks.
 const hasAudioTracks = video => !! (video .mozHasAudio || video .webkitAudioDecodedByteCount || video .audioTracks ?.length);
@@ -41,7 +54,7 @@ export class VideoMirror
    // What WebBrowser.takeVideoOps gave: { live, ops }.
    apply ({ live, ops })
    {
-      // A `sound` call follows the `load` of an MP4 (ADR 0015).
+      // A `sound` call follows the `load` of an MP4 (ADR 0015), a WebM or an Ogg file (Phase 9A).
       const sound = new Set (ops .filter (op => op [0] === "sound") .map (op => op [1]));
 
       for (const op of ops)
@@ -109,11 +122,12 @@ export class VideoMirror
       this .#videos .clear ();
    }
 
-   // MovieTexture.loadVideo. `mp4`: the engine plays the sound (ADR 0015): the file is read once with `fetch`, the element
-   // plays a `blob:` URL of it, muted, and `decodeAudioData` (the platform's AAC decoder) decodes the sound, which goes to
-   // the engine with the bytes (WebBrowser.videoSound). The element then never sounds, as X_ITE's element, whose sound goes
-   // only into the node's audio source (MovieTexture.js:118-119).
-   #load (token, url, mp4 = false)
+   // MovieTexture.loadVideo. `sound`: the engine plays the sound (an MP4, ADR 0015; a WebM or an Ogg file, Phase 9A): the
+   // file is read once with `fetch`, the element plays a `blob:` URL of it, muted, and `decodeAudioData` (the browser's
+   // AAC, Opus and Vorbis decoders) decodes the sound, which goes to the engine with the bytes (WebBrowser.videoSound). The
+   // element then never sounds, as X_ITE's element, whose sound goes only into the node's audio source
+   // (MovieTexture.js:118-119).
+   #load (token, url, sound = false)
    {
       const video = document .createElement ("video");
       const entry = { video, loaded: false, dirty: false, lastTime: -1, wantPlay: false, retried: 0, blob: null, sound: null };
@@ -177,7 +191,7 @@ export class VideoMirror
       video .preload     = "auto";
       video .playsInline = true;
 
-      if (!mp4)
+      if (!sound)
       {
          video .src = url;
          return;
@@ -198,7 +212,7 @@ export class VideoMirror
          // A file without sound, or a codec that the platform does not decode: the video plays without sound.
          entry .sound = new OfflineAudioContext (1, 1, 48000) .decodeAudioData (bytes .slice () .buffer)
             .then (buffer => ({ buffer, bytes }), () => null);
-         entry .blob  = URL .createObjectURL (new Blob ([ bytes ], { type: "video/mp4" }));
+         entry .blob  = URL .createObjectURL (new Blob ([ bytes ], { type: mediaType (bytes) }));
          video .src   = entry .blob;
       })
       .catch (() =>
@@ -318,6 +332,10 @@ export class VideoMirror
    #pixels (video)
    {
       const { videoWidth: width, videoHeight: height } = video;
+
+      // No picture: a file with sound only, or a video codec that the browser does not decode (Theora in Chromium 151).
+      if (!width || !height)
+         return EMPTY;
 
       if (!this .#canvas)
       {

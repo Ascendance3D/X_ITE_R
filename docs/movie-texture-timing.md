@@ -117,8 +117,12 @@ chooses every picture, so every media with pictures can seek (a GIF too; the pin
 
 - Sound of a decoded WebM (native): it follows the ISO movie time. A negative rate is the AudioBufferSourceNode's negative
   `playbackRate` started at the end of the buffer (tests/movie_iso_audio.rs, engine tests render it and read a falling ramp),
-  and a resume restarts the sound at the movie time of the pause. A `<video>` element that is only seeked is still silent
-  (its sound is not driven in ISO mode, browser only, not verifiable here). Seeking while looping is not sample-accurate.
+  and a resume restarts the sound at the movie time of the pause. Seeking while looping is not sample-accurate.
+- Sound in the browser: the `<video>` element of an MP4, a WebM or an Ogg file is muted, and the page decodes the sound
+  (`decodeAudioData`), which the engine plays on the movie time in both timings, so the element that ISO timing only seeks
+  is heard through a Sound node (Phase 9A, `crates/x3d-web/tests/browser/webmsound01.test.mjs`). The browser chooses this
+  path from the url. The leading silence comes from the container, within one audio block (about 20 ms); the sound is not
+  compared with a pinned recording. Chromium 151 decodes no Theora picture: an Ogg video has its sound and no picture.
 - Seek latency in the browser: the shown picture follows the clause's `t` by the time a seek takes (one request in flight at
   a time); a frame of lag at most per seek.
 - The clause's `t` is a cycle time (see the formulas); a reading with `t` taken literally as movie time differs only for
