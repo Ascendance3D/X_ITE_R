@@ -207,11 +207,13 @@ fn audio_starting_late_is_silent_first_and_on_the_same_timeline() {
     };
 
     assert!((t.duration - 2.0).abs() < 0.001);
-    // 2 s of video; the sound is 96001 samples (2.00002 s), so the timeline is that long.
+    // The sound is padded or cut to the timeline (GStreamer: 96001 samples; AVFoundation: 95968, its edit ends 0.7 ms
+    // early).
     assert!(
-        (channels[0].len() as i64 - 96000).abs() <= 1,
-        "{}",
-        channels[0].len()
+        (channels[0].len() as f64 - (t.duration * RATE).round()).abs() <= 1.0,
+        "{} {}",
+        channels[0].len(),
+        t.duration
     );
     assert!(
         channels[0][..(0.2 * RATE) as usize]
