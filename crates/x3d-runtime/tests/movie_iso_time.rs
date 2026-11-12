@@ -763,3 +763,115 @@ fn an_mp4_video_asks_the_page_for_its_sound_and_plays_it_on_the_timeline() {
     );
     assert_eq!(rt.movie_audio_resyncs(m), Some(0));
 }
+
+fn websound(name: &str) -> Vec<u8> {
+    std::fs::read(
+        PathBuf::from(env!("CARGO_MANIFEST_DIR"))
+            .join("tests/data/websound")
+            .join(name),
+    )
+    .unwrap()
+}
+
+/// Phase 9A: the leading silence of the browser sound comes from the container. decodeAudioData gives the samples from
+/// the first one (measured in Chromium 151: each late file decodes to 1.5 s, and its element plays the sound from about
+/// 0.5 s). The late files of oracle/tools/gen_movie_websound.py start their audio 0.5 s after the video; the others at
+/// once. An MP4 keeps its edit list (0.228 s). A file without audio, or damaged data, has no lead.
+#[test]
+fn the_sound_lead_comes_from_the_container() {
+    use x3d_runtime::nodes::movie_texture::sound_lead;
+
+    for (name, lead) in [
+        ("vp8-opus.webm", 0.0),
+        ("vp8-vorbis.webm", 0.0),
+        ("vp8-opus-late.webm", 0.501),
+        ("vp8-vorbis-late.webm", 0.497),
+        ("vp8-only.webm", 0.0),
+        ("theora-opus.ogv", 0.0),
+        ("theora-vorbis.ogv", 0.0),
+        ("theora-opus-late.ogv", 0.5),
+        ("theora-vorbis-late.ogv", 0.497333),
+    ] {
+        let got = sound_lead(&websound(name));
+
+        assert!((got - lead).abs() < 1e-3, "{name}: {got}, want {lead}");
+    }
+
+    let mp4 = std::fs::read(
+        PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("tests/data/mp4/h264-aac-audio-late.mp4"),
+    )
+    .unwrap();
+    let got = sound_lead(&mp4);
+
+    assert!((got - 0.228).abs() < 2e-3, "mp4: {got}");
+
+    for data in [&b""[..], b"OggS", &[0x1A, 0x45, 0xDF, 0xA3], b"not a movie"] {
+        assert_eq!(sound_lead(data), 0.0);
+    }
+}
+
+/// Phase 9A: a WebM or Ogg `<video>` is muted and its sound, decoded by the page, plays through the node's audio
+/// source, as for an MP4 (ADR 0015). It follows startTime, pauseTime, resumeTime and stopTime in both timings, and the
+/// leading silence of the late file is put before it (1.5 s of samples become the 2 s of the element).
+#[test]
+fn a_webm_or_ogg_video_sound_follows_start_pause_resume_and_stop() {
+    for timing in [MovieTiming::Iso, MovieTiming::Pinned] {
+        for (url, file) in [
+            ("clip.webm", "vp8-opus-late.webm"),
+            ("clip.ogv", "theora-vorbis-late.ogv"),
+        ] {
+            let mut rt = load(
+                url,
+                "startTime 102 pauseTime 103 resumeTime 103.5 stopTime 104.5 loop TRUE",
+                timing,
+            );
+            let ops = rt.take_video_ops();
+            let token = match ops.as_slice() {
+                [VideoOp::Load { token, .. }, VideoOp::Sound(t)] if t == token => *token,
+                _ => panic!("{url}: {ops:?}"),
+            };
+
+            assert!(rt.video_loaded(token, 2, 2, 2.0, true, vec![0; 16]));
+            assert!(rt.video_sound(
+                token,
+                &websound(file),
+                vec![vec![0.5f32; 72000]; 2],
+                48000.0
+            ));
+
+            let m = movie(&rt);
+            let playing = |rt: &Runtime| {
+                rt.sound
+                    .get(&m)
+                    .and_then(|s| s.media.as_ref())
+                    .map(|e| e.playing())
+            };
+            let duration = rt
+                .sound
+                .get(&m)
+                .and_then(|s| s.media.as_ref())
+                .unwrap()
+                .duration;
+
+            assert!(
+                (duration - 2.0).abs() < 1e-6,
+                "{url} {timing:?}: {duration}"
+            );
+            assert_eq!(
+                playing(&rt),
+                Some(false),
+                "{url} {timing:?}: before startTime"
+            );
+
+            for (t, want, what) in [
+                (102.2, true, "started"),
+                (103.2, false, "paused"),
+                (103.7, true, "resumed"),
+                (104.7, false, "stopped"),
+            ] {
+                at(&mut rt, t);
+                assert_eq!(playing(&rt), Some(want), "{url} {timing:?}: {what} at {t}");
+            }
+        }
+    }
+}

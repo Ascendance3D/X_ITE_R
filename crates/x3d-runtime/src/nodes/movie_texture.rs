@@ -1519,14 +1519,15 @@ impl Runtime {
 
     /// A MovieTexture candidate that is no GIF or PNG, in a browser build: the page's `<video>` element loads it
     /// (MovieTexture.loadVideo). The node stays IN_PROGRESS until the page answers [`Runtime::video_loaded`] or
-    /// [`Runtime::video_failed`]; the candidates after it wait for that.
+    /// [`Runtime::video_failed`]; the candidates after it wait for that. `sound`: the page decodes the sound of the file
+    /// (an MP4, a WebM or an Ogg file) and gives it to [`Runtime::video_sound`].
     pub(crate) fn movie_load_video(
         &mut self,
         node: NodeId,
         urls: Vec<String>,
         index: usize,
         file_url: url::Url,
-        mp4: bool,
+        sound: bool,
     ) {
         let token = NEXT_VIDEO_TOKEN.fetch_add(1, std::sync::atomic::Ordering::Relaxed);
 
@@ -1544,7 +1545,7 @@ impl Runtime {
             url: file_url.to_string(),
         });
 
-        if mp4 {
+        if sound {
             self.video_ops.push(VideoOp::Sound(token));
         }
     }
@@ -1623,12 +1624,13 @@ impl Runtime {
         true
     }
 
-    /// The sound of the page's MP4 video element `token`, decoded by the page (`decodeAudioData`: the platform's AAC
-    /// decoder), with the file's bytes (ADR 0015). The element is muted; the sound plays through the node's audio source,
-    /// so only a Sound node whose source is the MovieTexture makes it heard, and it follows the movie time as on the
-    /// native platforms. `decodeAudioData` gives the samples from the first presented one: the leading silence comes from
-    /// the container's edit list ([`crate::mp4probe::Track::start`]), and the sound is padded or cut to the element's
-    /// duration. Returns whether the token is a live video of this runtime.
+    /// The sound of the page's video element `token` (an MP4, ADR 0015; a WebM or an Ogg file, Phase 9A), decoded by
+    /// the page (`decodeAudioData`: the browser's AAC, Opus and Vorbis decoders), with the file's bytes. The element is
+    /// muted; the sound plays through the node's audio source, so only a Sound node whose source is the MovieTexture
+    /// makes it heard, and it follows the movie time as on the native platforms. `decodeAudioData` gives the samples
+    /// from the first one: the leading silence is the start of the audio track from the start of the video track, read
+    /// from the container ([`sound_lead`]), and the sound is padded or cut to the element's duration. Returns whether the
+    /// token is a live video of this runtime.
     pub fn video_sound(
         &mut self,
         token: u64,
@@ -1657,15 +1659,7 @@ impl Runtime {
             return true;
         }
 
-        let lead = match crate::mp4probe::probe(data) {
-            Ok(info) => {
-                let audio = info.audio().map_or(0.0, |a| a.start);
-                let origin = info.video().map_or(audio, |v| v.start.min(audio));
-
-                ((audio - origin) * f64::from(rate)).round().max(0.0) as usize
-            }
-            Err(_) => 0,
-        };
+        let lead = (sound_lead(data) * f64::from(rate)).round().max(0.0) as usize;
         let total = if duration.is_finite() && duration > 0.0 {
             (duration * f64::from(rate)).round() as usize
         } else {
@@ -2205,4 +2199,27 @@ mod tests {
         let m = MovieMedia::decode_apng(&load_error_media("good.png")).unwrap();
         assert_eq!(texel(&m, 1, 3, 3), GREEN);
     }
+}
+
+/// The start of the audio track of a video file from the start of its video track, in seconds (0 when it is not known):
+/// for a WebM the first block times ([`crate::ebml::first_block_times`]), for an Ogg file the granule positions
+/// ([`crate::oggtime::first_times`]), for an MP4 the edit lists ([`crate::mp4probe::Track::start`]). A file without a
+/// video track has no lead.
+pub fn sound_lead(data: &[u8]) -> f64 {
+    let (video, audio) = if data.starts_with(&[0x1A, 0x45, 0xDF, 0xA3]) {
+        crate::ebml::first_block_times(data).unwrap_or((None, None))
+    } else if data.starts_with(b"OggS") {
+        crate::oggtime::first_times(data).unwrap_or((None, None))
+    } else {
+        match crate::mp4probe::probe(data) {
+            Ok(info) => (info.video().map(|v| v.start), info.audio().map(|a| a.start)),
+            Err(_) => (None, None),
+        }
+    };
+    let Some(audio) = audio else {
+        return 0.0;
+    };
+    let lead = audio - video.map_or(audio, |v| v.min(audio));
+
+    if lead.is_finite() { lead.max(0.0) } else { 0.0 }
 }

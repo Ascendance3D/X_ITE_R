@@ -36,7 +36,9 @@ pub mod browser_options;
 pub mod bullet;
 pub mod ctx_events;
 pub mod data;
+// The WebM container structure (Phase 9A): no codec, in every build.
 pub mod dom;
+pub mod ebml;
 pub mod events;
 pub mod extern_proto;
 pub mod font_library;
@@ -46,6 +48,8 @@ pub mod inline_geometry;
 pub mod loader;
 // The MP4 container structure (ADR 0015): no codec, in every build.
 pub mod mp4probe;
+// The track start times of an Ogg file, for the leading silence of a browser movie sound (Phase 9A): no codec.
+pub mod oggtime;
 // MPEG-1 Video and Systems (issue #90): a native-video decoder. The browser build plays a MovieTexture in a <video>
 // element (`Fetcher::plays_video`) and never calls it, so the browser module leaves it out.
 #[cfg(feature = "native-video")]

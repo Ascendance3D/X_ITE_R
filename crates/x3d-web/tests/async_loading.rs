@@ -1268,11 +1268,13 @@ fn a_video_is_the_pages_element_and_a_video_that_fails_goes_on_with_the_next_can
     assert_eq!(net.requested(), Vec::<String>::new());
 
     let ops = s.take_video_ops();
-    let [VideoOp::Load { token, url }] = ops.as_slice() else {
+    // A WebM: the page also decodes its sound (Phase 9A).
+    let [VideoOp::Load { token, url }, VideoOp::Sound(first_sound)] = ops.as_slice() else {
         panic!("{ops:?}");
     };
 
     assert_eq!(url, &w("m1.webm"));
+    assert_eq!(first_sound, token);
     assert_eq!(s.video_tokens(), [*token]);
     assert!(
         !s.video_failed(token + 1000, "error"),

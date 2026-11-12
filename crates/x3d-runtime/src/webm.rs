@@ -15,14 +15,6 @@ use crate::av1;
 use crate::vp8;
 use vp9dec::{Decoder, PlaneData};
 
-const ID_EBML: u64 = 0x1A45_DFA3;
-const ID_SEGMENT: u64 = 0x1853_8067;
-const ID_INFO: u64 = 0x1549_A966;
-const ID_TIMECODE_SCALE: u64 = 0x2A_D7B1;
-const ID_TRACKS: u64 = 0x1654_AE6B;
-const ID_TRACK_ENTRY: u64 = 0xAE;
-const ID_TRACK_NUMBER: u64 = 0xD7;
-const ID_TRACK_TYPE: u64 = 0x83;
 const ID_CODEC_ID: u64 = 0x86;
 const ID_VIDEO: u64 = 0xE0;
 const ID_COLOUR: u64 = 0x55B0;
@@ -32,12 +24,9 @@ const ID_TRANSFER_CHARACTERISTICS: u64 = 0x55BA;
 const ID_PRIMARIES: u64 = 0x55BB;
 #[cfg(feature = "av1")]
 const ID_CODEC_PRIVATE: u64 = 0x63A2;
-const ID_CLUSTER: u64 = 0x1F43_B675;
-const ID_TIMECODE: u64 = 0xE7;
-const ID_SIMPLE_BLOCK: u64 = 0xA3;
-const ID_BLOCK_GROUP: u64 = 0xA0;
-const ID_BLOCK: u64 = 0xA1;
 
+pub use crate::ebml::first_block_times;
+use crate::ebml::*;
 pub use crate::video_types::{AudioTrack, Video, VideoFrame, WebmError};
 
 /// The largest picture, in luma samples, that [`decode`] hands to the decoder: 35 651 584, the largest picture of
@@ -46,83 +35,12 @@ pub use crate::video_types::{AudioTrack, Video, VideoFrame, WebmError};
 /// to eight pictures held as references; a size from a file is checked here first.
 pub const MAX_LUMA_SAMPLES: u64 = 35_651_584;
 
-/// An element id (marker bits kept) and its size (`None`: unknown size), and the header length.
-fn element(d: &[u8], at: usize) -> Option<(u64, Option<usize>, usize)> {
-    let first = *d.get(at)?;
-    let idlen = first.leading_zeros() as usize + 1;
-
-    if idlen > 4 {
-        return None;
-    }
-
-    let mut id = 0u64;
-
-    for i in 0..idlen {
-        id = (id << 8) | *d.get(at + i)? as u64;
-    }
-
-    let s0 = *d.get(at + idlen)?;
-    let slen = s0.leading_zeros() as usize + 1;
-
-    if slen > 8 {
-        return None;
-    }
-
-    let mut size = (s0 as u64) & (0xFF >> slen);
-    let mut all_ones = size == (0xFF >> slen) as u64;
-
-    for i in 1..slen {
-        let b = *d.get(at + idlen + i)?;
-        all_ones &= b == 0xFF;
-        size = (size << 8) | b as u64;
-    }
-
-    let size = (!all_ones).then_some(size as usize);
-
-    Some((id, size, idlen + slen))
-}
-
-fn uint(b: &[u8]) -> u64 {
-    b.iter().fold(0, |a, x| (a << 8) | *x as u64)
-}
-
-/// The children of the master element in `d[start..end]`: (id, body range).
-fn children(d: &[u8], start: usize, end: usize) -> Vec<(u64, usize, usize)> {
-    let mut out = vec![];
-    let mut at = start;
-
-    while at < end {
-        let Some((id, size, head)) = element(d, at) else {
-            break;
-        };
-        let body = at + head;
-
-        // A header that ends beyond the parent is cut off: no body to read (and `body..stop` would be reversed).
-        if body > end {
-            break;
-        }
-
-        let stop = size.map_or(end, |s| body.saturating_add(s)).min(end);
-
-        out.push((id, body, stop));
-        at = stop;
-    }
-
-    out
-}
-
 #[derive(Clone, Copy, PartialEq, Eq, Debug)]
 enum Codec {
     Vp9,
     Vp8,
     #[cfg(feature = "av1")]
     Av1,
-}
-
-struct Block {
-    time_ms: f64,
-    start: usize,
-    end: usize,
 }
 
 struct Bits<'a> {
@@ -404,27 +322,11 @@ impl Colour {
 
 /// [`demux`] and the Colour element of the chosen video track.
 fn demux_with_colour(data: &[u8]) -> Result<(Codec, Vec<Block>, Colour), WebmError> {
-    let top = children(data, 0, data.len());
-
-    if top.first().map(|t| t.0) != Some(ID_EBML) {
-        return Err(WebmError::NotWebm);
-    }
-
-    let Some(&(_, seg_start, seg_end)) = top.iter().find(|t| t.0 == ID_SEGMENT) else {
-        return Err(WebmError::NotWebm);
-    };
-    let segment = children(data, seg_start, seg_end);
-    let mut scale = 1_000_000u64;
+    let (segment, scale) = segment_of(data)?;
     let mut track = None;
 
     for &(id, s, e) in &segment {
-        if id == ID_INFO {
-            for (cid, cs, ce) in children(data, s, e) {
-                if cid == ID_TIMECODE_SCALE {
-                    scale = uint(&data[cs..ce]).max(1);
-                }
-            }
-        } else if id == ID_TRACKS {
+        if id == ID_TRACKS {
             for (tid, ts, te) in children(data, s, e) {
                 if tid != ID_TRACK_ENTRY || track.is_some() {
                     continue;
@@ -468,51 +370,14 @@ fn demux_with_colour(data: &[u8]) -> Result<(Codec, Vec<Block>, Colour), WebmErr
     let (track, codec, colour) = track.ok_or(WebmError::NoVideoTrack)?;
     let mut blocks = vec![];
 
-    for &(id, s, e) in &segment {
-        if id != ID_CLUSTER {
-            continue;
+    each_block(data, &segment, scale, |number, flags, block| {
+        // Lacing bits must be 0.
+        if number == track && flags & 0x06 == 0 {
+            blocks.push(block);
         }
 
-        let mut cluster_time = 0u64;
-
-        for (cid, cs, ce) in children(data, s, e) {
-            let block = match cid {
-                ID_TIMECODE => {
-                    cluster_time = uint(&data[cs..ce]);
-                    continue;
-                }
-                ID_SIMPLE_BLOCK => Some((cs, ce)),
-                ID_BLOCK_GROUP => children(data, cs, ce)
-                    .into_iter()
-                    .find(|c| c.0 == ID_BLOCK)
-                    .map(|c| (c.1, c.2)),
-                _ => None,
-            };
-
-            let Some((bs, be)) = block else {
-                continue;
-            };
-            let Some((number, _, nlen)) = element_number(data, bs) else {
-                continue;
-            };
-
-            // track number, 16-bit relative timecode, flags (lacing bits must be 0).
-            let header = nlen + 3;
-
-            if number != track || be < bs + header || data[bs + nlen + 2] & 0x06 != 0 {
-                continue;
-            }
-
-            let rel = i16::from_be_bytes([data[bs + nlen], data[bs + nlen + 1]]) as i64;
-            let ticks = cluster_time as i64 + rel;
-
-            blocks.push(Block {
-                time_ms: ticks as f64 * scale as f64 / 1_000_000.0,
-                start: bs + header,
-                end: be,
-            });
-        }
-    }
+        true
+    });
 
     Ok((codec, blocks, colour))
 }
@@ -932,24 +797,6 @@ pub fn audio(data: &[u8]) -> AudioTrack {
         Ok(Some((channels, rate))) => AudioTrack::Decoded { channels, rate },
         _ => AudioTrack::Corrupt,
     }
-}
-
-/// A track number: an EBML variable-length integer with the marker removed.
-fn element_number(d: &[u8], at: usize) -> Option<(u64, (), usize)> {
-    let first = *d.get(at)?;
-    let len = first.leading_zeros() as usize + 1;
-
-    if len > 8 {
-        return None;
-    }
-
-    let mut v = (first as u64) & (0xFF >> len);
-
-    for i in 1..len {
-        v = (v << 8) | *d.get(at + i)? as u64;
-    }
-
-    Some((v, (), len))
 }
 
 /// BT.709 limited range to full-range RGB. A browser's video upload converts an untagged stream with the BT.709
@@ -2667,6 +2514,21 @@ mod tests {
 
         assert_eq!((media.width, media.height), (50, 34));
         assert_eq!(media.frames.len(), expected.len());
+    }
+
+    /// The picture blocks of a file with an audio track: only the video track's, at their times.
+    #[test]
+    fn the_demux_keeps_the_video_blocks_of_a_file_with_sound() {
+        let data = std::fs::read(format!(
+            "{}/tests/data/websound/vp8-opus-late.webm",
+            env!("CARGO_MANIFEST_DIR")
+        ))
+        .unwrap();
+        let (_, blocks) = demux(&data).unwrap();
+
+        assert_eq!(blocks.len(), 40);
+        assert_eq!(blocks[0].time_ms, 0.0);
+        assert_eq!(blocks[39].time_ms, 1950.0);
     }
 
     #[test]

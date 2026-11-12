@@ -508,7 +508,8 @@ impl Session {
             .video_loaded(token, size.0, size.1, duration, has_sound, rgba)
     }
 
-    /// The page-decoded sound of the MP4 video element `token` ([`Runtime::video_sound`]); false when it is not this world's.
+    /// The page-decoded sound of the MP4, WebM or Ogg video element `token` ([`Runtime::video_sound`]); false when it is not
+    /// this world's.
     pub fn video_sound(
         &mut self,
         token: u64,

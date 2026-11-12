@@ -1747,9 +1747,17 @@ impl Runtime {
                 }
             } else {
                 if self.fetcher.plays_video() {
-                    let mp4 = video_source_kind(&path, href).1 == VideoContainer::Mp4;
+                    // The page decodes the sound of an MP4 (ADR 0015), a WebM or an Ogg file, and the engine plays it
+                    // through the node's audio source (X_ITE: MovieTexture.js:118-119, Sound.js:180-209).
+                    let sound = video_source_kind(&path, href).1 != VideoContainer::Other;
 
-                    return self.movie_load_video(node, urls.clone(), index, file_url.clone(), mp4);
+                    return self.movie_load_video(
+                        node,
+                        urls.clone(),
+                        index,
+                        file_url.clone(),
+                        sound,
+                    );
                 }
 
                 // MPEG-1 (ISO/IEC 19775-1 18.4.2): decoded here; a failure is the usual unplayable-video error below.
@@ -1772,7 +1780,7 @@ impl Runtime {
 
                     match container {
                         // Another playable file (Ogg) is taken as playing.
-                        VideoContainer::Other => return,
+                        VideoContainer::Ogg | VideoContainer::Other => return,
                         // ADR 0015: an MP4 is decoded by the platform decoder of this build. Every failure is the video
                         // element's `error`: the reason, X_ITE's two messages, the next candidate, FAILED_STATE.
                         VideoContainer::Mp4 => match MovieMedia::decode_platform(&data) {
@@ -2222,7 +2230,9 @@ enum VideoContainer {
     Webm,
     /// MP4, M4V or M4A (ISO/IEC 14496-12, ADR 0015).
     Mp4,
-    /// Another file the page's element may play (Ogg), or a file that it does not play.
+    /// Ogg (.ogv, .ogg, video/ogg): the page's element may play it; the native build does not decode it.
+    Ogg,
+    /// A file that the page's element does not play.
     Other,
 }
 
@@ -2242,6 +2252,7 @@ fn video_source_kind(path: &str, href: &str) -> (bool, VideoContainer) {
             let container = match media_type.as_str() {
                 "video/webm" => VideoContainer::Webm,
                 "video/mp4" | "audio/mp4" => VideoContainer::Mp4,
+                "video/ogg" => VideoContainer::Ogg,
                 _ => VideoContainer::Other,
             };
 
@@ -2257,6 +2268,8 @@ fn video_source_kind(path: &str, href: &str) -> (bool, VideoContainer) {
                 VideoContainer::Webm
             } else if [".mp4", ".m4v", ".m4a"].iter().any(|e| lower.ends_with(e)) {
                 VideoContainer::Mp4
+            } else if [".ogv", ".ogg"].iter().any(|e| lower.ends_with(e)) {
+                VideoContainer::Ogg
             } else {
                 VideoContainer::Other
             };
@@ -2317,7 +2330,7 @@ mod tests {
         );
         assert_eq!(
             kind("data:video/ogg;base64,AAAA"),
-            (true, VideoContainer::Other)
+            (true, VideoContainer::Ogg)
         );
         assert_eq!(
             kind("data:application/octet-stream;base64,GkXfow=="),
@@ -2351,7 +2364,11 @@ mod tests {
         );
         assert_eq!(
             kind("http://oracle/media/a.ogv"),
-            (true, VideoContainer::Other)
+            (true, VideoContainer::Ogg)
+        );
+        assert_eq!(
+            kind("http://oracle/media/a.OGG"),
+            (true, VideoContainer::Ogg)
         );
         assert_eq!(
             kind("http://oracle/media/a.mov"),
