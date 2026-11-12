@@ -1743,6 +1743,14 @@ XITE_CHROME="/Applications/Google Chrome.app/Contents/MacOS/Google Chrome" XITE_
 X3D_BACKEND=metal X3D_REFERENCE_PLATFORM=apple-m1 cargo nextest run -p x3d-viewer --release -E 'test(rea_batch09_nav) | test(rea_b24_nav) | test(rea_batch12) | test(rea_batch09_inputs)'
 ```
 
+`oracle/rea-nav-touch-apple-m1-baseline/` (2026-11-12) is the same for `rea_nav_touch`: the pinned page's poses and its count of ProximitySensor
+events differ on the M1 in 6 WALK cases with gravity (the avatar rests on a depth read). Against the NVIDIA recording Rust on Metal differs by one
+`position_changed` event in 4 cases; against the M1 recording all 24 cases pass, the counts included:
+
+```
+X3D_BACKEND=metal X3D_REFERENCE_PLATFORM=apple-m1 cargo nextest run -p x3d-viewer --release -E 'test(rea_nav_touch_match_x_ite)'
+```
+
 A difference between Rust and the M1 recording is investigated as a possible Rust defect; no platform tolerance hides it.
 
 ## Classic encoding edge cases (sub:parse.vrml-classic)

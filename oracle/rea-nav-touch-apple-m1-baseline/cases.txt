@@ -1,0 +1,6 @@
+walk-cancel-during-move oracle/synthetic-rea-nav-touch/walk.wrl oracle/synthetic-rea-nav-touch/scripts/walk-cancel-during-move.json 0
+walk-end-during-move oracle/synthetic-rea-nav-touch/walk.wrl oracle/synthetic-rea-nav-touch/scripts/walk-end-during-move.json 0
+walk-look-around oracle/synthetic-rea-nav-touch/walk.wrl oracle/synthetic-rea-nav-touch/scripts/walk-look-around.json 0
+walk-on-sensor oracle/synthetic-rea-nav-touch/walk.wrl oracle/synthetic-rea-nav-touch/scripts/walk-on-sensor.json 0
+walk-one-two-one oracle/synthetic-rea-nav-touch/walk.wrl oracle/synthetic-rea-nav-touch/scripts/walk-one-two-one.json 0
+walk-pitch-then-drive oracle/synthetic-rea-nav-touch/walk.wrl oracle/synthetic-rea-nav-touch/scripts/walk-pitch-then-drive.json 0

@@ -11,6 +11,13 @@
 //! handler, so a drive or look around that a touch began goes on after a cancel (until a later touchend reaches the viewer);
 //! X_ITE_R ends it when the touch is cancelled.
 //!
+//! The WALK cases with gravity depend on the GPU: the avatar rests on a depth read, and the pinned page itself gives other poses
+//! and other ProximitySensor event counts on the Apple M1 (ANGLE Metal) than on the NVIDIA host, in three identical runs each. So
+//! oracle/rea-nav-touch-apple-m1-baseline holds the M1 recording of the 6 cases that differ there
+//! (oracle/tools/record_platform_baseline.py), and `X3D_REFERENCE_PLATFORM=apple-m1` selects it (`common::reference`). Measured
+//! 2026-11-12 on the physical M1: against the NVIDIA recording 4 cases differ by one `position_changed` event; against the M1
+//! recording all 24 cases pass, the event counts included.
+//!
 //! `REA_ONLY=<substring>` restricts the cases.
 
 mod common;
@@ -21,7 +28,8 @@ use std::path::PathBuf;
 use std::process::Command;
 
 /// The largest distance of a pose from X_ITE's. Measured on the RTX 3060 Ti with the page's frame rate
-/// (`Viewer3d::scripted_frame_rate`): 0 in every frame of every case. The bound stays for other GPUs, whose depth read is not measured.
+/// (`Viewer3d::scripted_frame_rate`): 0 in every frame of every case. On the Apple M1 the comparison is with the M1 recording of
+/// the pinned page (see the module documentation), within this bound. Other GPUs are not measured.
 const POSE_TOLERANCE: f64 = 1e-4;
 
 fn nums(v: &Value) -> Vec<f64> {
@@ -308,4 +316,64 @@ fn rea_nav_touch_match_x_ite() {
         failures.len(),
         failures.join("\n")
     );
+}
+
+/// The platform recordings of this base (no GPU needed): each is a case of the base, is chosen only when the platform is named,
+/// and holds the same frames as the NVIDIA recording of its case. The M1 run of 2026-11-12 kept exactly these 6 cases.
+#[test]
+fn the_apple_m1_recordings_are_cases_of_the_base_with_the_same_frames() {
+    let root = PathBuf::from(env!("CARGO_MANIFEST_DIR"))
+        .join("../..")
+        .canonicalize()
+        .unwrap();
+    let base = "rea-nav-touch-baseline";
+    let names = |file: &str| -> Vec<String> {
+        std::fs::read_to_string(root.join(file))
+            .unwrap()
+            .lines()
+            .filter_map(|l| l.split_whitespace().next().map(str::to_string))
+            .collect()
+    };
+    let all = names("oracle/rea-nav-touch-baseline/cases.txt");
+    let m1 = names("oracle/rea-nav-touch-apple-m1-baseline/cases.txt");
+
+    assert_eq!(
+        m1,
+        [
+            "walk-cancel-during-move",
+            "walk-end-during-move",
+            "walk-look-around",
+            "walk-on-sensor",
+            "walk-one-two-one",
+            "walk-pitch-then-drive"
+        ]
+    );
+
+    for name in &all {
+        let nvidia = common::reference::js_json_for(&root, base, name, 0, None);
+        let chosen = common::reference::js_json_for(&root, base, name, 0, Some("apple-m1"));
+
+        assert!(nvidia.ends_with(format!("{base}/{name}-msaa0/js.json")));
+        assert_eq!(chosen != nvidia, m1.contains(name), "{name}");
+
+        if chosen != nvidia {
+            let read = |p: &std::path::Path| -> Value {
+                serde_json::from_str(&std::fs::read_to_string(p).unwrap()).unwrap()
+            };
+            let (a, b) = (read(&nvidia), read(&chosen));
+            let keys = |v: &Value, k: &str| -> Vec<String> {
+                let mut keys: Vec<String> = v[k].as_object().unwrap().keys().cloned().collect();
+                keys.sort();
+                keys
+            };
+
+            assert_eq!(b["ok"], Value::Bool(true), "{name}");
+            assert_eq!(keys(&a, "poses"), keys(&b, "poses"), "{name}: pose frames");
+            assert_eq!(
+                keys(&a, "vrml"),
+                keys(&b, "vrml"),
+                "{name}: scene text frames"
+            );
+        }
+    }
 }
