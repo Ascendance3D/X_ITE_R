@@ -275,6 +275,64 @@ fn coded_size(frame: &[u8]) -> Option<(u32, u32)> {
     size(&mut r)
 }
 
+/// The color description of one VP9 frame (VP9 bitstream specification 6.2 and 7.2, `color_config`): the
+/// `color_space` code (0 unknown, 1 BT.601, 2 BT.709, 3 SMPTE-170, 4 SMPTE-240, 5 BT.2020, 6 reserved, 7 sRGB) and
+/// whether the samples are full range. Only a key frame and an intra-only frame code it; an intra-only frame of
+/// profile 0 implies BT.601 limited range. `None` for every other frame, which keeps the description of the last one.
+fn color_config(frame: &[u8]) -> Option<(u32, bool)> {
+    let mut r = Bits { d: frame, at: 0 };
+
+    if r.bits(2)? != 2 {
+        return None;
+    }
+
+    let profile = r.bits(1)? | (r.bits(1)? << 1);
+
+    if profile == 3 {
+        r.bits(1)?;
+    }
+
+    if r.bits(1)? == 1 {
+        return None; // show_existing_frame
+    }
+
+    let key = r.bits(1)? == 0;
+    let show_frame = r.bits(1)?;
+    let error_resilient = r.bits(1)?;
+
+    if !key {
+        let intra_only = show_frame == 0 && r.bits(1)? == 1;
+
+        if !intra_only {
+            return None;
+        }
+
+        if error_resilient == 0 {
+            r.bits(2)?; // reset_frame_context
+        }
+    }
+
+    if r.bits(24)? != 0x49_83_42 {
+        return None; // frame_sync_code
+    }
+
+    if !key && profile == 0 {
+        return Some((1, false));
+    }
+
+    if profile >= 2 {
+        r.bits(1)?; // ten_or_twelve_bit
+    }
+
+    let color_space = r.bits(3)?;
+
+    if color_space == 7 {
+        return Some((7, true));
+    }
+
+    Some((color_space, r.bits(1)? == 1))
+}
+
 /// The codec and the blocks of the first VP9 or VP8 video track of `data`, in file order.
 fn demux(data: &[u8]) -> Result<(Codec, Vec<Block>), WebmError> {
     let top = children(data, 0, data.len());
@@ -562,15 +620,7 @@ fn decode_av1(data: &[u8], blocks: &[Block], max_bytes: u64) -> Result<Video, We
             let [mut y, mut u, mut v] = p.planes;
 
             if p.full_range {
-                for s in y.iter_mut() {
-                    *s = (16.0 + f32::from(*s) * 219.0 / 255.0).round() as u8;
-                }
-
-                for s in u.iter_mut().chain(v.iter_mut()) {
-                    *s = (128.0 + (f32::from(*s) - 128.0) * 224.0 / 254.0)
-                        .round()
-                        .clamp(16.0, 240.0) as u8;
-                }
+                full_to_limited(&mut y, &mut u, &mut v);
             }
 
             let (sx, sy) = match p.layout {
@@ -644,6 +694,8 @@ fn decode_vp9(data: &[u8], blocks: &[Block], max_bytes: u64) -> Result<Video, We
     let mut frames = vec![];
     let (mut width, mut height) = (0, 0);
     let mut bytes = 0u64;
+    // The color description of the last key or intra-only frame; an untagged stream until one is seen.
+    let mut color = (0, false);
 
     for b in blocks {
         let chunk = &data[b.start..b.end];
@@ -653,6 +705,10 @@ fn decode_vp9(data: &[u8], blocks: &[Block], max_bytes: u64) -> Result<Video, We
                 && u64::from(w) * u64::from(h) > MAX_LUMA_SAMPLES
             {
                 return Err(WebmError::TooLarge);
+            }
+
+            if let Some(c) = color_config(f) {
+                color = c;
             }
         }
 
@@ -669,9 +725,16 @@ fn decode_vp9(data: &[u8], blocks: &[Block], max_bytes: u64) -> Result<Video, We
                 .map_err(|e| WebmError::Decode(format!("{e:?}")))?;
 
         for f in shown.into_iter().filter_map(|d| d.frame) {
-            let (PlaneData::U8(y), PlaneData::U8(u), PlaneData::U8(v)) = (&f.y, &f.u, &f.v) else {
-                return Err(WebmError::Decode("not an 8-bit stream".into()));
+            // 10 and 12 bit samples are taken to 8 bits as the AV1 path does (`av1::Picture`).
+            let shift = f.bit_depth.saturating_sub(8);
+            let to_u8 = |p: &PlaneData| -> Vec<u8> {
+                match p {
+                    PlaneData::U8(d) => d.clone(),
+                    PlaneData::U16(d) => d.iter().map(|&v| (v >> shift).min(255) as u8).collect(),
+                }
             };
+            let (mut y, mut u, mut v) = (to_u8(&f.y), to_u8(&f.u), to_u8(&f.v));
+            let (sx, sy) = (f.subsampling_x != 0, f.subsampling_y != 0);
 
             width = f.width as u32;
             height = f.height as u32;
@@ -685,17 +748,31 @@ fn decode_vp9(data: &[u8], blocks: &[Block], max_bytes: u64) -> Result<Video, We
                 return Err(WebmError::TooLarge);
             }
 
-            frames.push(VideoFrame {
-                rgba: yuv_to_rgba(
+            let rgba = if color.0 == 7 {
+                // sRGB: the planes are G, B and R, full range, never subsampled.
+                (0..y.len().min(u.len()).min(v.len()))
+                    .flat_map(|i| [v[i], y[i], u[i], 255])
+                    .collect()
+            } else {
+                if color.1 {
+                    full_to_limited(&mut y, &mut u, &mut v);
+                }
+
+                yuv_to_rgba_with(
                     f.width as usize,
                     f.height as usize,
-                    f.subsampling_x != 0,
-                    f.subsampling_y != 0,
-                    y,
-                    u,
-                    v,
-                    BT709,
-                ),
+                    sx,
+                    sy,
+                    &y,
+                    &u,
+                    &v,
+                    vp9_matrix(color.0, sx && sy, f.bit_depth),
+                    f.bit_depth == 8,
+                )
+            };
+
+            frames.push(VideoFrame {
+                rgba,
                 time_ms: b.time_ms,
             });
         }
@@ -790,6 +867,50 @@ type Matrix = [f32; 5];
 
 /// BT.709, which the page applies to an untagged VP9 stream.
 const BT709: Matrix = [1.164_383, 1.792_741, 0.213_249, 0.532_909, 2.112_402];
+/// The YUV to RGB matrix of a VP9 picture by its `color_space` ([`color_config`]). An unknown (0) or reserved (6) space
+/// is converted as an untagged AV1 picture (`av1_matrix`): BT.709 for 8 bit 4:2:0, BT.601 for every other layout and
+/// for samples of more than 8 bits. BT.601 and SMPTE-170 share one matrix; SMPTE-240 and BT.2020 (non-constant
+/// luminance) have their own (ITU-R BT.2020, SMPTE ST 240 Kr and Kb). Measured against the pinned page with the
+/// synthetic streams of oracle/synthetic-vp9-color.
+fn vp9_matrix(color_space: u32, subsampled_420: bool, bit_depth: u8) -> Matrix {
+    match color_space {
+        1 | 3 => BT601,
+        2 => BT709,
+        4 => matrix_of(0.212, 0.087),
+        5 => matrix_of(0.2627, 0.0593),
+        _ if subsampled_420 && bit_depth == 8 => BT709,
+        _ => BT601,
+    }
+}
+
+/// The limited-range matrix of luma coefficients `kr` and `kb` (ITU-R BT.601 2.5): Y scale 255/219, chroma 255/224.
+fn matrix_of(kr: f32, kb: f32) -> Matrix {
+    let kg = 1.0 - kr - kb;
+    let c = 255.0 / 224.0;
+
+    [
+        255.0 / 219.0,
+        2.0 * (1.0 - kr) * c,
+        2.0 * kb * (1.0 - kb) / kg * c,
+        2.0 * kr * (1.0 - kr) / kg * c,
+        2.0 * (1.0 - kb) * c,
+    ]
+}
+
+/// Full-range samples taken to the limited range the matrices expect, as the pinned page's upload does (measured with
+/// the AV1 and VP9 full-range streams).
+fn full_to_limited(y: &mut [u8], u: &mut [u8], v: &mut [u8]) {
+    for s in y.iter_mut() {
+        *s = (16.0 + f32::from(*s) * 219.0 / 255.0).round() as u8;
+    }
+
+    for s in u.iter_mut().chain(v.iter_mut()) {
+        *s = (128.0 + (f32::from(*s) - 128.0) * 224.0 / 254.0)
+            .round()
+            .clamp(16.0, 240.0) as u8;
+    }
+}
+
 /// BT.601, which the page applies to a VP8 stream (the only color space VP8 defines). Measured against the pinned page
 /// (`crates/x3d-render/tests/render_movie_codecs.rs`): with BT.709 up to 40 levels off, with this matrix 2.
 const BT601: Matrix = [1.164_383, 1.596_027, 0.391_762, 0.812_968, 2.017_232];
@@ -1114,6 +1235,189 @@ mod tests {
                 );
             }
         }
+    }
+
+    /// Newly authored VP9 streams with a color description (ffmpeg testsrc2 at 96x64, libvpx-vp9, `-colorspace`,
+    /// `-color_range` and `-pix_fmt` as named; no third-party media).
+    fn vp9_color(name: &str) -> Vec<u8> {
+        std::fs::read(format!(
+            "{}/tests/data/vp9-color/{name}.webm",
+            env!("CARGO_MANIFEST_DIR")
+        ))
+        .unwrap()
+    }
+
+    #[test]
+    fn the_color_description_is_read_from_real_key_frames() {
+        for (name, want) in [
+            ("untagged", (0, false)),
+            ("bt601", (1, false)),
+            ("smpte170", (3, false)),
+            ("bt709-full", (2, true)),
+            ("bt601-full", (1, true)),
+            ("10bit", (0, false)),
+            ("bt2020", (5, false)),
+            ("rgb", (7, true)),
+            ("444-bt601", (1, false)),
+            ("444-bt601-no-primaries", (1, false)),
+        ] {
+            let d = vp9_color(name);
+            let blocks = demux(&d).unwrap().1;
+
+            assert_eq!(
+                color_config(&d[blocks[0].start..blocks[0].end]),
+                Some(want),
+                "{name}"
+            );
+        }
+    }
+
+    /// The first picture at the centers of the red, green, yellow, blue and magenta bars, against the colors the pinned
+    /// page (headless Chrome 156 on ANGLE/NVIDIA, X_ITE 16.5.0 uploading the `video` element) drew for the same streams
+    /// in oracle/x_ite-shot.mjs runs (2026-11-12). Before the color description was read, the BT.601 streams were up to
+    /// 40 levels off, the full-range streams up to 32 and the 10-bit streams gave no picture.
+    #[test]
+    fn tagged_vp9_streams_decode_with_their_color_description() {
+        let at = [(7, 51), (18, 51), (36, 51), (55, 51), (78, 51)];
+
+        for (name, page) in [
+            (
+                "untagged",
+                [
+                    [255, 24, 0],
+                    [0, 216, 0],
+                    [255, 240, 0],
+                    [0, 15, 255],
+                    [255, 39, 255],
+                ],
+            ),
+            (
+                "bt601",
+                [
+                    [255, 0, 0],
+                    [0, 255, 1],
+                    [255, 255, 0],
+                    [0, 0, 255],
+                    [255, 0, 254],
+                ],
+            ),
+            (
+                "smpte170",
+                [
+                    [255, 0, 0],
+                    [0, 255, 1],
+                    [255, 255, 0],
+                    [0, 0, 255],
+                    [255, 0, 254],
+                ],
+            ),
+            (
+                "bt709-full",
+                [
+                    [255, 36, 10],
+                    [0, 203, 8],
+                    [238, 223, 2],
+                    [13, 28, 249],
+                    [254, 48, 243],
+                ],
+            ),
+            (
+                "bt601-full",
+                [
+                    [238, 14, 14],
+                    [13, 238, 14],
+                    [235, 236, 12],
+                    [16, 15, 240],
+                    [238, 13, 237],
+                ],
+            ),
+            (
+                "10bit",
+                [
+                    [252, 0, 0],
+                    [0, 255, 0],
+                    [254, 254, 1],
+                    [1, 0, 253],
+                    [252, 0, 252],
+                ],
+            ),
+            (
+                "10bit-bt709",
+                [
+                    [255, 25, 0],
+                    [0, 216, 0],
+                    [255, 240, 1],
+                    [0, 14, 253],
+                    [255, 39, 252],
+                ],
+            ),
+            (
+                "bt2020",
+                [
+                    [255, 10, 0],
+                    [0, 225, 0],
+                    [255, 234, 1],
+                    [0, 20, 253],
+                    [255, 30, 252],
+                ],
+            ),
+            (
+                "rgb",
+                [
+                    [254, 0, 0],
+                    [0, 255, 0],
+                    [255, 255, 0],
+                    [1, 0, 255],
+                    [255, 0, 255],
+                ],
+            ),
+            // 4:4:4 BT.601 without a container primaries tag: the page converts it with plain BT.601 too.
+            (
+                "444-bt601-no-primaries",
+                [
+                    [255, 0, 0],
+                    [0, 255, 0],
+                    [255, 255, 0],
+                    [0, 0, 255],
+                    [255, 0, 255],
+                ],
+            ),
+        ] {
+            let v = decode(&vp9_color(name), BUDGET).unwrap();
+            let f = &v.frames[0];
+
+            assert_eq!((v.width, v.height), (96, 64), "{name}");
+
+            for (&(x, y), want) in at.iter().zip(page) {
+                let i = (y * 96 + x) * 4;
+                let got = &f.rgba[i..i + 3];
+
+                assert!(
+                    got.iter()
+                        .zip(want)
+                        .all(|(&g, w)| (i32::from(g) - w).abs() <= 8),
+                    "{name} at ({x}, {y}): {got:?}, the page drew {want:?}"
+                );
+            }
+        }
+    }
+
+    /// KNOWN difference, browser color management: the WebM container of `444-bt601` tags its color primaries as
+    /// BT.470BG. For a 4:4:4 stream Chrome converts those primaries to sRGB (X_ITE uploads with
+    /// UNPACK_COLORSPACE_CONVERSION_WEBGL BROWSER_DEFAULT_WEBGL, which allows it): the green and yellow bars come out as
+    /// (0, 255, 28) and (255, 255, 28), 7.4% of the picture more than 8 off. The same stream without a primaries tag, or
+    /// with BT.709 primaries, matches the page (max 1), and so does 4:2:0 with BT.470BG primaries, so the YUV matrix
+    /// and the decoder are correct. The port does not reproduce browser color management (as for tagged images,
+    /// crates/x3d-render/src/texture.rs), so the standard BT.601 conversion is kept and the difference is pinned here.
+    #[test]
+    fn a_444_bt601_stream_keeps_the_standard_conversion() {
+        let v = decode(&vp9_color("444-bt601"), BUDGET).unwrap();
+        let f = &v.frames[0];
+        let px = |x: usize, y: usize| f.rgba[(y * 96 + x) * 4..(y * 96 + x) * 4 + 3].to_vec();
+
+        assert_eq!(px(18, 51)[..2], [0, 255]);
+        assert!(px(18, 51)[2] <= 2, "{:?}", px(18, 51));
+        assert!(px(36, 51)[2] <= 2, "{:?}", px(36, 51));
     }
 
     #[test]
