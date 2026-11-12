@@ -198,6 +198,59 @@ impl WaveTables {
 
         (i2, i1, pitch_range - i1 as f32)
     }
+
+    /// The four-frequency WaveDataForFundamentalFrequency that ProcessARateVector calls, with the arithmetic of
+    /// Chromium's build for the target (periodic_wave_handler.cc): the x86 (SSE) version divides by the lowest
+    /// fundamental frequency and by the cents per range, like the scalar version; the ARM (NEON) version multiplies
+    /// by the reciprocals (`1 / lowest_fundamental_frequency_`, `1 / kCentsPerRange`, both in float). A table factor
+    /// can then differ in its last bit, so on arm64 an a-rate quantum of some frequencies (330 Hz) differs by about
+    /// 1e-7 from the x86 output. The k-rate path calls the scalar version on every target.
+    fn wave_data_vector(&self, fundamental_frequency: f32) -> (usize, usize, f32) {
+        #[cfg(any(
+            target_arch = "aarch64",
+            all(target_arch = "arm", target_feature = "neon")
+        ))]
+        {
+            self.wave_data_neon(fundamental_frequency)
+        }
+        #[cfg(not(any(
+            target_arch = "aarch64",
+            all(target_arch = "arm", target_feature = "neon")
+        )))]
+        {
+            self.wave_data(fundamental_frequency)
+        }
+    }
+
+    /// The NEON arithmetic of the four-frequency WaveDataForFundamentalFrequency (`CPU_ARM_NEON`: arm64, and 32-bit
+    /// ARM with NEON). Zero, negative and NaN frequencies take the same path as `vabsq_f32` and `vcgtq_f32` there: a
+    /// NaN or 0 is not greater than 0, so the ratio is 0.5.
+    #[cfg_attr(
+        not(any(
+            any(
+                target_arch = "aarch64",
+                all(target_arch = "arm", target_feature = "neon")
+            ),
+            test
+        )),
+        allow(dead_code)
+    )]
+    fn wave_data_neon(&self, fundamental_frequency: f32) -> (usize, usize, f32) {
+        let f = fundamental_frequency.abs();
+        let ratio = if f > 0.0 {
+            f * (1.0 / self.lowest_fundamental_frequency)
+        } else {
+            0.5
+        };
+        let cents = ratio.log2() * CENTS_PER_OCTAVE;
+        let pitch_range = (1.0 + cents * (1.0 / CENTS_PER_RANGE))
+            .max(0.0)
+            .min((self.ranges - 1) as f32);
+        let i1 = pitch_range as usize;
+        let i2 = if i1 < self.ranges - 1 { i1 + 1 } else { i1 };
+
+        (i2, i1, pitch_range - i1 as f32)
+    }
 }
 
 /// DoInterpolation (oscillator_handler.cc).
@@ -671,7 +724,7 @@ fn process_a_rate(
         for m in 0..4 {
             let p = increments[k + m];
             big = big && p.abs() >= INTERPOLATE_2_POINT;
-            data[m] = wave.wave_data(inv_rate_scale * p);
+            data[m] = wave.wave_data_vector(inv_rate_scale * p);
         }
 
         if big {
@@ -740,4 +793,44 @@ fn process_a_rate(
     }
 
     virtual_read_index
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    /// The a-rate table lookup (ProcessARateVector) at 48 kHz uses the arithmetic of the target's Chromium build:
+    /// division by kCentsPerRange (and by the lowest fundamental) on x86 and in the scalar fallback, multiplication by
+    /// the float reciprocals on NEON. The two pitch-range forms differ in plain IEEE single precision (no libm): at
+    /// 330 Hz the NEON form is what made the selector, enabled-toggle, remove-children and splitter-outputs worlds equal
+    /// pinned X_ITE in Chrome on an Apple M1 sample for sample (they were 35 to 70 samples off).
+    #[test]
+    fn the_a_rate_table_lookup_follows_the_target_arithmetic() {
+        let differ: Vec<f32> = (1..2000)
+            .map(|i| i as f32 * 3.7)
+            .filter(|&c| (c / CENTS_PER_RANGE).to_bits() != (c * (1.0 / CENTS_PER_RANGE)).to_bits())
+            .collect();
+
+        assert!(!differ.is_empty(), "the two pitch-range forms never differ");
+
+        let w = WaveTables::empty(48000.0);
+        let neon = cfg!(any(
+            target_arch = "aarch64",
+            all(target_arch = "arm", target_feature = "neon")
+        ));
+
+        for f in [0.0f32, -330.0, f32::NAN, 1.0, 220.0, 330.0, 440.0, 23999.0] {
+            let want = if neon {
+                w.wave_data_neon(f)
+            } else {
+                w.wave_data(f)
+            };
+
+            assert_eq!(w.wave_data_vector(f), want, "{f}");
+        }
+
+        // NaN and 0 are not greater than 0 in either form: ratio 0.5, the lowest pitch range.
+        assert_eq!(w.wave_data_neon(f32::NAN), w.wave_data_neon(0.0));
+        assert_eq!(w.wave_data(f32::NAN), w.wave_data(0.0));
+    }
 }
