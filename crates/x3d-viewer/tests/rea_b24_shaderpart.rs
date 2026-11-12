@@ -19,10 +19,6 @@ const KNOWN: &[(&str, &str)] = &[
         "ANGLE: 'X3D_NUM_TEXTURE_COORDINATES' undeclared identifier in an array size; this port: 'array size 0 out of range' (naga checks GLSL 4.50)",
     ),
     (
-        "include-PointSize",
-        "ANGLE: multiple fragment outputs need explicit locations; the port's compiler does not check output locations",
-    ),
-    (
         "include-Vertex",
         "ANGLE: 'out' invalid qualifier combination at line 114; the port's compiler reports gl_PointSize undeclared at line 166 (it checks later code first)",
     ),
