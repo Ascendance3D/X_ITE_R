@@ -508,6 +508,17 @@ impl Session {
             .video_loaded(token, size.0, size.1, duration, has_sound, rgba)
     }
 
+    /// The page-decoded sound of the MP4 video element `token` ([`Runtime::video_sound`]); false when it is not this world's.
+    pub fn video_sound(
+        &mut self,
+        token: u64,
+        data: &[u8],
+        channels: Vec<Vec<f32>>,
+        rate: f32,
+    ) -> bool {
+        self.rt_mut().video_sound(token, data, channels, rate)
+    }
+
     /// The page's video element `token` failed ([`Runtime::video_failed`]); false when it is not this world's.
     pub fn video_failed(&mut self, token: u64, event: &str) -> bool {
         self.rt_mut().video_failed(token, event)

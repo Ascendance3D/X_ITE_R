@@ -113,6 +113,10 @@ pub enum VideoOp {
     /// MovieTexture.loadVideo: `crossOrigin = "anonymous"`, `preload = "auto"`, `playsInline`, `src = url`. The page
     /// answers [`Runtime::video_loaded`] on `loadeddata`, or [`Runtime::video_failed`] on `error` or `abort`.
     Load { token: u64, url: String },
+    /// The element of the [`VideoOp::Load`] before is an MP4 (ADR 0015): the page reads the file once (`fetch`), gives the
+    /// element a `blob:` URL of it, mutes the element, decodes the sound (`decodeAudioData`) and sends it with the bytes
+    /// ([`Runtime::video_sound`]), so the sound plays through the engine's graph on the movie time.
+    Sound(u64),
     /// X3DSoundSourceNode.startAudioElement: `play ()`.
     Play(u64),
     /// X3DSoundSourceNode.stopAudioElement: `pause ()`.
@@ -1522,6 +1526,7 @@ impl Runtime {
         urls: Vec<String>,
         index: usize,
         file_url: url::Url,
+        mp4: bool,
     ) {
         let token = NEXT_VIDEO_TOKEN.fetch_add(1, std::sync::atomic::Ordering::Relaxed);
 
@@ -1538,6 +1543,10 @@ impl Runtime {
             token,
             url: file_url.to_string(),
         });
+
+        if mp4 {
+            self.video_ops.push(VideoOp::Sound(token));
+        }
     }
 
     /// The calls for the page's `<video>` elements since the last call.
@@ -1611,6 +1620,99 @@ impl Runtime {
         self.set_load_state(p.node, nodes::LoadState::Complete);
         self.movie_set_speed(p.node);
         self.touch(p.node);
+        true
+    }
+
+    /// The sound of the page's MP4 video element `token`, decoded by the page (`decodeAudioData`: the platform's AAC
+    /// decoder), with the file's bytes (ADR 0015). The element is muted; the sound plays through the node's audio source,
+    /// so only a Sound node whose source is the MovieTexture makes it heard, and it follows the movie time as on the
+    /// native platforms. `decodeAudioData` gives the samples from the first presented one: the leading silence comes from
+    /// the container's edit list ([`crate::mp4probe::Track::start`]), and the sound is padded or cut to the element's
+    /// duration. Returns whether the token is a live video of this runtime.
+    pub fn video_sound(
+        &mut self,
+        token: u64,
+        data: &[u8],
+        channels: Vec<Vec<f32>>,
+        rate: f32,
+    ) -> bool {
+        let node = self
+            .sound
+            .iter()
+            .find_map(|(n, s)| match s.movie.as_ref()?.kind {
+                Kind::Video { token: t, .. } if t == token => Some(*n),
+                _ => None,
+            });
+        let Some(node) = node else {
+            return false;
+        };
+        let Some(duration) = self.movie(node).and_then(|m| match m.kind {
+            Kind::Video { duration, .. } => Some(duration),
+            _ => None,
+        }) else {
+            return false;
+        };
+
+        if channels.is_empty() || !(rate > 0.0) {
+            return true;
+        }
+
+        let lead = match crate::mp4probe::probe(data) {
+            Ok(info) => {
+                let audio = info.audio().map_or(0.0, |a| a.start);
+                let origin = info.video().map_or(audio, |v| v.start.min(audio));
+
+                ((audio - origin) * f64::from(rate)).round().max(0.0) as usize
+            }
+            Err(_) => 0,
+        };
+        let total = if duration.is_finite() && duration > 0.0 {
+            (duration * f64::from(rate)).round() as usize
+        } else {
+            lead + channels[0].len()
+        };
+        let channels: Vec<Vec<f32>> = channels
+            .into_iter()
+            .map(|c| {
+                let mut out = vec![0.0; lead];
+
+                out.extend(c);
+                out.resize(total.max(1), 0.0);
+                out
+            })
+            .collect();
+
+        self.movie_release_audio(node);
+
+        let Ok(buffer) = self.audio().buffer_from_planar(channels, rate) else {
+            return true;
+        };
+        let source = self.snd(node).audio_source.unwrap();
+        let element = super::sound::AudioElement::create(self.audio(), source, Some(buffer));
+
+        self.snd(node).media = Some(element);
+
+        if let Some(m) = self.movie(node) {
+            m.sync_audio = true;
+        }
+
+        self.movie_set_loop(node);
+        self.movie_set_speed(node);
+
+        // A movie that plays already: its sound starts at the movie time.
+        if self.get_bool(node, "isActive") && !self.get_bool(node, "isPaused") {
+            let elapsed = self.elapsed_value(node);
+            let time = match self.movie_timing {
+                MovieTiming::Iso => self.movie(node).map_or(0.0, |m| m.iso.time),
+                MovieTiming::Pinned => self.movie(node).map_or(0.0, |m| m.current_time(elapsed)),
+            };
+
+            self.media_set(node, |e, a| {
+                a.set_current_time(e, time);
+                a.play(e)
+            });
+        }
+
         true
     }
 

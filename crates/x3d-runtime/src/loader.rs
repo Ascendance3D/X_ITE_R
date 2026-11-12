@@ -1747,7 +1747,9 @@ impl Runtime {
                 }
             } else {
                 if self.fetcher.plays_video() {
-                    return self.movie_load_video(node, urls.clone(), index, file_url.clone());
+                    let mp4 = video_source_kind(&path, href).1 == VideoContainer::Mp4;
+
+                    return self.movie_load_video(node, urls.clone(), index, file_url.clone(), mp4);
                 }
 
                 // MPEG-1 (ISO/IEC 19775-1 18.4.2): decoded here; a failure is the usual unplayable-video error below.

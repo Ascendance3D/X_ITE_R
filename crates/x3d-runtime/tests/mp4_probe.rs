@@ -129,6 +129,13 @@ fn the_probe_names_the_codec_size_and_rate_of_each_track() {
     let late = probe(&data("h264-aac-audio-late.mp4")).unwrap();
 
     assert!(late.audio().unwrap().edit_list);
+    // Its empty edit: the first sample shows at 0.228 s (ffprobe start_time 0.228). The others start at 0.
+    assert!((late.audio().unwrap().start - 0.228).abs() < 1e-9);
+    assert_eq!(late.video().unwrap().start, 0.0);
+    assert_eq!(
+        probe(&data("h264-aac.mp4")).unwrap().audio().unwrap().start,
+        0.0
+    );
     assert_eq!(probe(&data("h264-aac.mp4")).unwrap().codecs(), "avc1+mp4a");
     assert_eq!(probe(&data("aac-only.m4a")).unwrap().codecs(), "mp4a");
 }

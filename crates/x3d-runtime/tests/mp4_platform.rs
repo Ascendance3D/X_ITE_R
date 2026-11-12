@@ -365,6 +365,18 @@ fn run(
     frames: usize,
     events: Vec<(usize, Do)>,
 ) -> Run {
+    run_world(file, timing, fields, frames, events, true)
+}
+
+/// [`run`], with or without the Sound node.
+fn run_world(
+    file: &str,
+    timing: MovieTiming,
+    fields: &str,
+    frames: usize,
+    events: Vec<(usize, Do)>,
+    sound_node: bool,
+) -> Run {
     set_default_mode(AudioMode::Offline {
         channels: 2,
         sample_rate: RATE as f32,
@@ -374,7 +386,8 @@ fn run(
     let text = format!(
         "#X3D V4.0 utf8\nPROFILE Full\n\
          Shape {{ appearance Appearance {{ texture DEF M MovieTexture {{ url \"{file}\" {fields} }} }} geometry Box {{ }} }}\n\
-         DEF S Sound {{ spatialize FALSE minFront 1000 minBack 1000 maxFront 1000 maxBack 1000 source USE M }}\n"
+         {sound}DEF S Sound {{ spatialize FALSE minFront 1000 minBack 1000 maxFront 1000 maxBack 1000 source USE M }}\n",
+        sound = if sound_node { "" } else { "# " }
     );
     let scene = x3d_parse::parse_bytes(text.as_bytes(), "http://oracle/t.x3dv").unwrap();
     let mut rt = Runtime::new(scene, Box::new(Files(vec![])));
@@ -419,9 +432,9 @@ fn run(
 
         rt.frame();
         // The viewer's DISPLAY traversal of the Sound node (SpatialSound.traverse): the listener at the sound.
-        let sound = rt.scene.get_named_node(x3d_scene::ROOT, "S").unwrap();
-
-        rt.sound_traverse(sound, &x3d_fields::math::Matrix4::IDENTITY);
+        if let Some(sound) = rt.scene.get_named_node(x3d_scene::ROOT, "S") {
+            rt.sound_traverse(sound, &x3d_fields::math::Matrix4::IDENTITY);
+        }
 
         let segment = rt
             .movie_texture_frame(movie(&rt))
@@ -844,4 +857,27 @@ fn realtime_output_plays_the_movie_sound() {
     eprintln!("MP4-AUDIBLE end: context clock ran {ran:.3} s, segments shown {seen:?}");
     assert!(ran > 2.5, "{ran}");
     assert_eq!(seen.len(), SEGMENTS);
+}
+
+#[test]
+fn without_a_sound_node_the_movie_sound_is_not_heard() {
+    if !have_decoder() {
+        return;
+    }
+
+    // ISO 19775-1 16.4 and pinned Sound.js:180-209: only a Sound node whose source is the MovieTexture emits its audio.
+    let r = run_world(
+        "h264-aac.mp4",
+        MovieTiming::Iso,
+        "loop TRUE",
+        120,
+        vec![],
+        false,
+    );
+    let m = movie(&r.rt);
+    let shown: std::collections::BTreeSet<_> = r.pictures.iter().filter_map(|p| p.1).collect();
+
+    assert!(r.rt.get_bool(m, "hasSound"));
+    assert!(shown.len() >= 5, "{shown:?}");
+    assert!(r.sound.iter().all(|s| *s == 0.0));
 }

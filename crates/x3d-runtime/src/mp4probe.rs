@@ -54,6 +54,9 @@ pub struct Track {
     pub duration: Option<f64>,
     /// The track has an edit list (`edts/elst`): its presentation does not start at its first sample's time.
     pub edit_list: bool,
+    /// The empty edits at the start of the edit list, in seconds: the presentation time of the track's first sample
+    /// (0 without an edit list). A decoder that gives only the samples (`decodeAudioData`) loses it.
+    pub start: f64,
 }
 
 impl Track {
@@ -204,13 +207,59 @@ fn find<'a>(list: &'a [BoxRef], kind: &[u8; 4]) -> Option<&'a BoxRef> {
     list.iter().find(|b| &b.kind == kind)
 }
 
-/// One `trak` box.
-fn track(d: &[u8], trak: &BoxRef, count: &mut usize) -> Result<Option<Track>, Mp4Error> {
-    let children = boxes(d, trak.body.clone(), count)?;
-    let edit_list = match find(&children, b"edts") {
-        Some(edts) => find(&boxes(d, edts.body.clone(), count)?, b"elst").is_some(),
-        None => false,
+/// The seconds of the empty edits (media time -1) at the start of an `elst` body, in the movie time scale.
+fn empty_edits(d: &[u8], body: &std::ops::Range<usize>, movie_timescale: u32) -> f64 {
+    let Some(b) = d.get(body.clone()) else {
+        return 0.0;
     };
+    let (Some(&version), Some(n)) = (b.first(), u32_at(b, 4)) else {
+        return 0.0;
+    };
+    let size = if version == 1 { 20 } else { 12 };
+    let mut total = 0u64;
+
+    for i in 0..(n as usize).min(b.len() / size) {
+        let at = 8 + i * size;
+        let (duration, media_time) = if version == 1 {
+            match (u64_at(b, at), u64_at(b, at + 8)) {
+                (Some(dur), Some(t)) => (dur, t as i64),
+                _ => break,
+            }
+        } else {
+            match (u32_at(b, at), u32_at(b, at + 4)) {
+                (Some(dur), Some(t)) => (u64::from(dur), i64::from(t as i32)),
+                _ => break,
+            }
+        };
+
+        if media_time != -1 {
+            break;
+        }
+
+        total = total.saturating_add(duration);
+    }
+
+    if movie_timescale == 0 {
+        0.0
+    } else {
+        total as f64 / f64::from(movie_timescale)
+    }
+}
+
+/// One `trak` box.
+fn track(
+    d: &[u8],
+    trak: &BoxRef,
+    count: &mut usize,
+    movie_timescale: u32,
+) -> Result<Option<Track>, Mp4Error> {
+    let children = boxes(d, trak.body.clone(), count)?;
+    let elst = match find(&children, b"edts") {
+        Some(edts) => find(&boxes(d, edts.body.clone(), count)?, b"elst").map(|e| e.body.clone()),
+        None => None,
+    };
+    let edit_list = elst.is_some();
+    let start = elst.map_or(0.0, |b| empty_edits(d, &b, movie_timescale));
     let Some(mdia) = find(&children, b"mdia") else {
         return Ok(None);
     };
@@ -236,6 +285,7 @@ fn track(d: &[u8], trak: &BoxRef, count: &mut usize) -> Result<Option<Track>, Mp
         timescale,
         duration,
         edit_list,
+        start,
     };
 
     let stbl = match find(&mdia, b"minf") {
@@ -311,12 +361,12 @@ pub fn probe(d: &[u8]) -> Result<Mp4Info, Mp4Error> {
     let moov = boxes(d, moov.body.clone(), &mut count)?;
 
     info.fragmented |= find(&moov, b"mvex").is_some();
-    info.duration = find(&moov, b"mvhd")
-        .and_then(|m| header_times(d, &m.body))
-        .and_then(|(_, s)| s);
+    let movie = find(&moov, b"mvhd").and_then(|m| header_times(d, &m.body));
+
+    info.duration = movie.and_then(|(_, s)| s);
 
     for trak in moov.iter().filter(|b| &b.kind == b"trak") {
-        if let Some(t) = track(d, trak, &mut count)? {
+        if let Some(t) = track(d, trak, &mut count, movie.map_or(0, |(ts, _)| ts))? {
             info.tracks.push(t);
         }
     }
