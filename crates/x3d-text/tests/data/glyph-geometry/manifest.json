@@ -1,0 +1,2396 @@
+{
+ "format": "x3d-text glyph geometry 1",
+ "reference": "X_ITE 16.5.0, oracle/x_ite-pin (34cdf9f97), PolygonText glyph triangulation (libtess)",
+ "recorder": "oracle/x_ite-text.mjs --all-glyphs (headless Chrome, page oracle/x_ite-pin/src/shot.html)",
+ "browser": "156.0.8078.47",
+ "recording_sha256": "701edabe8b547ea6b4b6730355befb5ded7f94eaa8abf84256ad3378af9bd3e6",
+ "settings": {
+  "quality": "MEDIUM (PrimitiveQuality::Medium; X_ITE default)",
+  "units": "em (font units / unitsPerEm)",
+  "vertex": "x, y per point; 3 points per triangle",
+  "bound": "exact (f64 bits)"
+ },
+ "characters": "8AaWgeE&@Qi.,ofyéüß",
+ "vertices_file": "vertices.f64le.gz",
+ "vertices_gz_sha256": "f90903e2823a2d78840da3f7a3f63b24870acf91aeec67cb7c63d32b38b99c7a",
+ "vertices_raw_sha256": "cad01d6a5b51b14c894291880e196768e62a49baf78c33ffc5981579966f7f8f",
+ "coordinates": 174486,
+ "fonts": [
+  {
+   "name": "SERIF-PLAIN",
+   "file": "Droid/DroidSerif-Regular.woff2",
+   "file_sha256": "38392c0b6829bbd981c69a994aecabf3248fc30dafa5599d1571d3ed69993866",
+   "unitsPerEm": 2048,
+   "glyphs": [
+    {
+     "char": "8",
+     "index": 27,
+     "advance": 1145,
+     "triangles": 250,
+     "area": 0.15117913484573364,
+     "offset": 0,
+     "count": 1500,
+     "sha256": "5363a7335691ca407b5f36d5e44f1345bf0f8053a1d103a81cdd639ebacf4439"
+    },
+    {
+     "char": "A",
+     "index": 36,
+     "advance": 1444,
+     "triangles": 103,
+     "area": 0.14314686879515648,
+     "offset": 1500,
+     "count": 618,
+     "sha256": "0c53df9064683d4eb0e891de0c5c6592c0c468e7ac1cbe26fb53bd71c45e7372"
+    },
+    {
+     "char": "a",
+     "index": 68,
+     "advance": 1153,
+     "triangles": 178,
+     "area": 0.11572446301579475,
+     "offset": 2118,
+     "count": 1068,
+     "sha256": "a1379eba55eb078ac47eb8c821632a8af40c4592e5a62aa93e7d57bc61a7cf71"
+    },
+    {
+     "char": "W",
+     "index": 58,
+     "advance": 2144,
+     "triangles": 123,
+     "area": 0.23229939490556717,
+     "offset": 3186,
+     "count": 738,
+     "sha256": "c31abc8d528d3830642b0066e9c57d7e7547ad7b624ccc44e6781c95df01a841"
+    },
+    {
+     "char": "g",
+     "index": 74,
+     "advance": 1102,
+     "triangles": 380,
+     "area": 0.16319817304611206,
+     "offset": 3924,
+     "count": 2280,
+     "sha256": "238d2f4d16c4f93966d15bde1dd2a8bff80440a9483dcba8513ffa215d0f264e"
+    },
+    {
+     "char": "e",
+     "index": 72,
+     "advance": 1096,
+     "triangles": 123,
+     "area": 0.10892679169774055,
+     "offset": 6204,
+     "count": 738,
+     "sha256": "ec7b0c1f7995601d02b95489f11ea4ee8311ba8f1df52e8d4acf78a6e5de0813"
+    },
+    {
+     "char": "E",
+     "index": 40,
+     "advance": 1276,
+     "triangles": 82,
+     "area": 0.14280042424798012,
+     "offset": 6942,
+     "count": 492,
+     "sha256": "6fc7b01c9bd58b3d6db52441f585c30d832390f03d439e56a32836e37258491d"
+    },
+    {
+     "char": "&",
+     "index": 9,
+     "advance": 1520,
+     "triangles": 285,
+     "area": 0.18947385624051094,
+     "offset": 7434,
+     "count": 1710,
+     "sha256": "4fba5a3e315a51d8e6bb8c150890912e58f8221d5d954d592124925fa1bfc938"
+    },
+    {
+     "char": "@",
+     "index": 35,
+     "advance": 1886,
+     "triangles": 338,
+     "area": 0.2326032668352127,
+     "offset": 9144,
+     "count": 2028,
+     "sha256": "de02184589d587535a47a5cb712a874a9ccf06f44a4eb4368b2162a78710a3b1"
+    },
+    {
+     "char": "Q",
+     "index": 52,
+     "advance": 1520,
+     "triangles": 163,
+     "area": 0.19083905965089798,
+     "offset": 11172,
+     "count": 978,
+     "sha256": "176d2c0e7b649ce299a16dbb9b42aa8eedd84db029b27cb24e3b7680e81d9548"
+    },
+    {
+     "char": "i",
+     "index": 76,
+     "advance": 655,
+     "triangles": 118,
+     "area": 0.07598592340946198,
+     "offset": 12150,
+     "count": 708,
+     "sha256": "7d4defde28af575a473549b4810e88863420dd291782fdaf0def7960fbdfe5e3"
+    },
+    {
+     "char": ".",
+     "index": 17,
+     "advance": 512,
+     "triangles": 62,
+     "area": 0.014157652854919434,
+     "offset": 12858,
+     "count": 372,
+     "sha256": "72479cb63858ea229db0d49d43bfc027f8c20bba2e74173e0b61eab677b502dc"
+    },
+    {
+     "char": ",",
+     "index": 15,
+     "advance": 512,
+     "triangles": 71,
+     "area": 0.023800134658813477,
+     "offset": 13230,
+     "count": 426,
+     "sha256": "a036ae1821954d8b83a55da77749b08752f05ffadc070062859407bd88368c6a"
+    },
+    {
+     "char": "o",
+     "index": 82,
+     "advance": 1182,
+     "triangles": 112,
+     "area": 0.11051195487380028,
+     "offset": 13656,
+     "count": 672,
+     "sha256": "81047f9bc8b0c6cab6cd3a31975dc69c91cdf4aac1369466e1aaec22cd3528d7"
+    },
+    {
+     "char": "f",
+     "index": 73,
+     "advance": 756,
+     "triangles": 125,
+     "area": 0.10478722676634789,
+     "offset": 14328,
+     "count": 750,
+     "sha256": "b016953dfb69d01b2b1428fe419a799a02f268426cb1f77a2fca767d91eb3f66"
+    },
+    {
+     "char": "y",
+     "index": 92,
+     "advance": 1157,
+     "triangles": 143,
+     "area": 0.11871464550495148,
+     "offset": 15078,
+     "count": 858,
+     "sha256": "ae04ccb09910e976c30ee1be4134a836ff0d7d03f9980d3fef4fb62934c74e43"
+    },
+    {
+     "char": "é",
+     "index": 171,
+     "advance": 1096,
+     "triangles": 157,
+     "area": 0.1224784180521965,
+     "offset": 15936,
+     "count": 942,
+     "sha256": "eaf2ca18099b7ffa0eb9ae16b2d1590330e3b66210507e00ca458dc8cc16a42a"
+    },
+    {
+     "char": "ü",
+     "index": 190,
+     "advance": 1300,
+     "triangles": 233,
+     "area": 0.14430943131446838,
+     "offset": 16878,
+     "count": 1398,
+     "sha256": "20b3b3ca185d7c047d5f02ca550ed89c6ddaeec2a44edc522253a89739783dd6"
+    },
+    {
+     "char": "ß",
+     "index": 161,
+     "advance": 1325,
+     "triangles": 248,
+     "area": 0.17886195331811905,
+     "offset": 18276,
+     "count": 1488,
+     "sha256": "e0167fc2b3be97cce6916ec5056ae4122c9cdc1ad7a4bd57672527de43f04912"
+    }
+   ]
+  },
+  {
+   "name": "SERIF-ITALIC",
+   "file": "Droid/DroidSerif-Italic.woff2",
+   "file_sha256": "96d87c4f6eff8ef70c09b857ab291f838cfd57e2ff6bb00c999d9673f768227c",
+   "unitsPerEm": 2048,
+   "glyphs": [
+    {
+     "char": "8",
+     "index": 27,
+     "advance": 1145,
+     "triangles": 110,
+     "area": 0.1535649523139,
+     "offset": 19764,
+     "count": 660,
+     "sha256": "a50d208085ce4287e68aa663d66b024930edc96f3570a9570fe924f938db4f6a"
+    },
+    {
+     "char": "A",
+     "index": 36,
+     "advance": 1444,
+     "triangles": 59,
+     "area": 0.1431059166789055,
+     "offset": 20424,
+     "count": 354,
+     "sha256": "321838cd3735177bda9b009d5c773b21f77c8174736ebb8a6e4c3fb2d633d898"
+    },
+    {
+     "char": "a",
+     "index": 68,
+     "advance": 1186,
+     "triangles": 78,
+     "area": 0.12614549696445465,
+     "offset": 20778,
+     "count": 468,
+     "sha256": "a1f202b096656f7e163b534c1a4dd44545eba4ef26c125a6063d751619b66f31"
+    },
+    {
+     "char": "W",
+     "index": 58,
+     "advance": 2140,
+     "triangles": 67,
+     "area": 0.23155342042446136,
+     "offset": 21246,
+     "count": 402,
+     "sha256": "939a9226fc4066eb7602da5c2ec053bf891b95541fc4bffab435f842a3aefb0e"
+    },
+    {
+     "char": "g",
+     "index": 74,
+     "advance": 1139,
+     "triangles": 152,
+     "area": 0.16058950871229172,
+     "offset": 21648,
+     "count": 912,
+     "sha256": "38c8e18ef9ec0ca5e9377458f8684f2c97b49986395fc62231e75b05bcf21313"
+    },
+    {
+     "char": "e",
+     "index": 72,
+     "advance": 1010,
+     "triangles": 82,
+     "area": 0.10386167466640472,
+     "offset": 22560,
+     "count": 492,
+     "sha256": "2688073dea39bfc0649b5e4d75ce156ec6b35aca07319f50241a6f0bc4340a68"
+    },
+    {
+     "char": "E",
+     "index": 40,
+     "advance": 1276,
+     "triangles": 50,
+     "area": 0.14276455342769623,
+     "offset": 23052,
+     "count": 300,
+     "sha256": "b498e59140af7cd51ccc0272c1bb9f9084168e2e3975a7536d5af675743871e8"
+    },
+    {
+     "char": "&",
+     "index": 9,
+     "advance": 1520,
+     "triangles": 129,
+     "area": 0.19028835371136665,
+     "offset": 23352,
+     "count": 774,
+     "sha256": "f41647b761fb2f7cbb6bba829cec37893b60d1a110dd8d1d1faee8ebfa17dc58"
+    },
+    {
+     "char": "@",
+     "index": 35,
+     "advance": 1886,
+     "triangles": 142,
+     "area": 0.23170143365859985,
+     "offset": 24126,
+     "count": 852,
+     "sha256": "74dd5ac332b50e752e27359706aacc00ef8ab78b44bff2c2f8272c23dd34a43a"
+    },
+    {
+     "char": "Q",
+     "index": 52,
+     "advance": 1520,
+     "triangles": 85,
+     "area": 0.19333403557538986,
+     "offset": 24978,
+     "count": 510,
+     "sha256": "cbf9e762c8bfe6c256c685fe69a699c56c33cdd90f38f898f1df371b459d7b7e"
+    },
+    {
+     "char": "i",
+     "index": 76,
+     "advance": 623,
+     "triangles": 62,
+     "area": 0.07193110138177872,
+     "offset": 25488,
+     "count": 372,
+     "sha256": "1151edd5f387732719a7122aff9af789dcf236db748a0b61b57207a7587c3bca"
+    },
+    {
+     "char": ".",
+     "index": 17,
+     "advance": 512,
+     "triangles": 22,
+     "area": 0.01423759013414383,
+     "offset": 25860,
+     "count": 132,
+     "sha256": "108e28587a89ead8ce24b3171e6a6900a158ed6c540732f7a59b085501528ba1"
+    },
+    {
+     "char": ",",
+     "index": 15,
+     "advance": 512,
+     "triangles": 35,
+     "area": 0.02381940931081772,
+     "offset": 25992,
+     "count": 210,
+     "sha256": "1cd0cb151c27f18751a5ff21bf7a79a62b5ed936a67c8fe25a22b436bcb9ba81"
+    },
+    {
+     "char": "o",
+     "index": 82,
+     "advance": 1176,
+     "triangles": 56,
+     "area": 0.11450719833374023,
+     "offset": 26202,
+     "count": 336,
+     "sha256": "a770b798f78d4870301da858f178734089bb295c2e94878abfd7cda1eb703e53"
+    },
+    {
+     "char": "f",
+     "index": 73,
+     "advance": 651,
+     "triangles": 61,
+     "area": 0.11841310560703278,
+     "offset": 26538,
+     "count": 366,
+     "sha256": "3e2caa107605661b52435e068866b30c852b1c3a0f1988226dcf2ce849705170"
+    },
+    {
+     "char": "y",
+     "index": 92,
+     "advance": 1081,
+     "triangles": 61,
+     "area": 0.12203868106007576,
+     "offset": 26904,
+     "count": 366,
+     "sha256": "7f9ee4b2bbbe86d37fdb696ea5f36d8e8960461235f031f4be6215ceff1083c9"
+    },
+    {
+     "char": "é",
+     "index": 171,
+     "advance": 1010,
+     "triangles": 92,
+     "area": 0.1176338791847229,
+     "offset": 27270,
+     "count": 552,
+     "sha256": "514579bde798669615f113c57b0995e85ef8a604662da32e6af43ef717ff75a5"
+    },
+    {
+     "char": "ü",
+     "index": 190,
+     "advance": 1227,
+     "triangles": 104,
+     "area": 0.1426057294011116,
+     "offset": 27822,
+     "count": 624,
+     "sha256": "b059f7bf6a7db08f8d172bdabe19992194f9bfc9c0235c54ddf4924e23430b82"
+    },
+    {
+     "char": "ß",
+     "index": 161,
+     "advance": 1284,
+     "triangles": 118,
+     "area": 0.19822872430086136,
+     "offset": 28446,
+     "count": 708,
+     "sha256": "8a5461f7574521384334961a99903f3a98a6e782c2979ec125bffdb49f91e119"
+    }
+   ]
+  },
+  {
+   "name": "SERIF-BOLD",
+   "file": "Droid/DroidSerif-Bold.woff2",
+   "file_sha256": "2d081cebaf93a98d0df51bbf4745e5a531ae0741e5045f893347ff2e9ae02bdd",
+   "unitsPerEm": 2048,
+   "glyphs": [
+    {
+     "char": "8",
+     "index": 27,
+     "advance": 1145,
+     "triangles": 250,
+     "area": 0.20455514639616013,
+     "offset": 29154,
+     "count": 1500,
+     "sha256": "0f29eff039e5dd6c692b7f7d3184157edfc4ee0fba789be643bc2646be633b56"
+    },
+    {
+     "char": "A",
+     "index": 36,
+     "advance": 1542,
+     "triangles": 131,
+     "area": 0.19667255133390427,
+     "offset": 30654,
+     "count": 786,
+     "sha256": "4a1b6d86517b3e59892caff9f5489d44e27b23758c8fed49cd936e1bc3386118"
+    },
+    {
+     "char": "a",
+     "index": 68,
+     "advance": 1227,
+     "triangles": 178,
+     "area": 0.16814736276865005,
+     "offset": 31440,
+     "count": 1068,
+     "sha256": "015c3b0a15123bc9a5921f0e5b9222db4ac7dd5799738b91c67c5f2bdd5e269a"
+    },
+    {
+     "char": "W",
+     "index": 58,
+     "advance": 2185,
+     "triangles": 147,
+     "area": 0.31532299518585205,
+     "offset": 32508,
+     "count": 882,
+     "sha256": "8d5d3859e4f2fc69a57d1f1dafacf1df0ec9a1821d54dcec451a8c8f54bb48b7"
+    },
+    {
+     "char": "g",
+     "index": 74,
+     "advance": 1147,
+     "triangles": 364,
+     "area": 0.2265757918357849,
+     "offset": 33390,
+     "count": 2184,
+     "sha256": "05f2ac4cfa2d3e1bcefa9d70019024ff6534c2b6f1acbbdbe841ecfc8b053bbc"
+    },
+    {
+     "char": "e",
+     "index": 72,
+     "advance": 1169,
+     "triangles": 127,
+     "area": 0.15192530676722527,
+     "offset": 35574,
+     "count": 762,
+     "sha256": "f64c78fe6ba9b477d34fa3fe2d6fc2c14d07ff15eafd9e14bc8c5870e9e2c448"
+    },
+    {
+     "char": "E",
+     "index": 40,
+     "advance": 1337,
+     "triangles": 74,
+     "area": 0.1973480023443699,
+     "offset": 36336,
+     "count": 444,
+     "sha256": "c762984d0f7a9ad8c48c1d53f2c492adeb726711bec1bff9d93d50099ac00190"
+    },
+    {
+     "char": "&",
+     "index": 9,
+     "advance": 1640,
+     "triangles": 273,
+     "area": 0.25508493185043335,
+     "offset": 36780,
+     "count": 1638,
+     "sha256": "f917359c171ad3b4403ad3ad6448548985958defafad792a80c2d7c12aa62cbc"
+    },
+    {
+     "char": "@",
+     "index": 35,
+     "advance": 1886,
+     "triangles": 358,
+     "area": 0.2763691619038582,
+     "offset": 38418,
+     "count": 2148,
+     "sha256": "ca42f51d88dd376f4a1d36b960157ade65b8547532e86b4f4e6c710ad27b8f6a"
+    },
+    {
+     "char": "Q",
+     "index": 52,
+     "advance": 1612,
+     "triangles": 163,
+     "area": 0.2747034579515457,
+     "offset": 40566,
+     "count": 978,
+     "sha256": "e0737621bfc65c47a363c16d7893aee451ff634fb4db59f718ca11c42f10c22d"
+    },
+    {
+     "char": "i",
+     "index": 76,
+     "advance": 721,
+     "triangles": 118,
+     "area": 0.11702235043048859,
+     "offset": 41544,
+     "count": 708,
+     "sha256": "b23bfe35feeff6884c38705418d6785150482cf04aac32946bad58d84f5ddeec"
+    },
+    {
+     "char": ".",
+     "index": 17,
+     "advance": 602,
+     "triangles": 62,
+     "area": 0.021690040826797485,
+     "offset": 42252,
+     "count": 372,
+     "sha256": "476ba12f90f4541c00675935ac141e167489cfa92e2e18abf890db8977622f9c"
+    },
+    {
+     "char": ",",
+     "index": 15,
+     "advance": 602,
+     "triangles": 71,
+     "area": 0.03240659460425377,
+     "offset": 42624,
+     "count": 426,
+     "sha256": "2b6edc3f7129baa49b2fea6127f787de86f895b34fef81617e994b416f096392"
+    },
+    {
+     "char": "o",
+     "index": 82,
+     "advance": 1255,
+     "triangles": 112,
+     "area": 0.16323726624250412,
+     "offset": 43050,
+     "count": 672,
+     "sha256": "1731c9cb1c71addc7bdabc78db4845346ad39dba3daaf4ca2adafb65a70841cb"
+    },
+    {
+     "char": "f",
+     "index": 73,
+     "advance": 834,
+     "triangles": 117,
+     "area": 0.15935710072517395,
+     "offset": 43722,
+     "count": 702,
+     "sha256": "6f406e9aad3def46e38e996fdbefd25dd89c2cf32ac66965b3ef336562173a06"
+    },
+    {
+     "char": "y",
+     "index": 92,
+     "advance": 1186,
+     "triangles": 184,
+     "area": 0.15921282768249512,
+     "offset": 44424,
+     "count": 1104,
+     "sha256": "840a6f31a2d6aafd0654edaa109c2eec508c5c096a7b10bb9c9d38e1cdb1bea7"
+    },
+    {
+     "char": "é",
+     "index": 171,
+     "advance": 1169,
+     "triangles": 161,
+     "area": 0.1724839173257351,
+     "offset": 45528,
+     "count": 966,
+     "sha256": "87a5cd2d54c239e5035ecd9c5ea645925d9b227b1b8dd15febfcea0f086fcd67"
+    },
+    {
+     "char": "ü",
+     "index": 190,
+     "advance": 1366,
+     "triangles": 241,
+     "area": 0.210397619754076,
+     "offset": 46494,
+     "count": 1446,
+     "sha256": "f7fd1d27848621147c29eb6ecd0620c317a554a3046c147c478180c45bfac8df"
+    },
+    {
+     "char": "ß",
+     "index": 161,
+     "advance": 1446,
+     "triangles": 234,
+     "area": 0.2644543685019016,
+     "offset": 47940,
+     "count": 1404,
+     "sha256": "114733cab4ad5136ad7e71075745781466815deee1c2de570e2322c713f58b86"
+    }
+   ]
+  },
+  {
+   "name": "SERIF-BOLDITALIC",
+   "file": "Droid/DroidSerif-BoldItalic.woff2",
+   "file_sha256": "773df9608a7eb2ddaebf0629edb1b85af01aea031e722951238a24a4787d3745",
+   "unitsPerEm": 2048,
+   "glyphs": [
+    {
+     "char": "8",
+     "index": 27,
+     "advance": 1145,
+     "triangles": 230,
+     "area": 0.20209340378642082,
+     "offset": 49344,
+     "count": 1380,
+     "sha256": "13cdeefd4f61f2a615b215580ef8aeb7813be3eef03b0f158e07247b7f4bca4d"
+    },
+    {
+     "char": "A",
+     "index": 36,
+     "advance": 1542,
+     "triangles": 115,
+     "area": 0.1966099888086319,
+     "offset": 50724,
+     "count": 690,
+     "sha256": "066f18ec45f30f85aba042721061b620dc8150353411464c2c628736d6246a3e"
+    },
+    {
+     "char": "a",
+     "index": 68,
+     "advance": 1362,
+     "triangles": 206,
+     "area": 0.1815725415945053,
+     "offset": 51414,
+     "count": 1236,
+     "sha256": "58c9f57cea6c577a61b0ca16c911fa8db7ad5ef5fae95831a7a1046b41266609"
+    },
+    {
+     "char": "W",
+     "index": 58,
+     "advance": 2185,
+     "triangles": 131,
+     "area": 0.3117111623287201,
+     "offset": 52650,
+     "count": 786,
+     "sha256": "6f41fe433c482252b7d2dfa5bbf0131902c99a01be629b8b36ce422085cfbfec"
+    },
+    {
+     "char": "g",
+     "index": 74,
+     "advance": 1188,
+     "triangles": 364,
+     "area": 0.22095830366015434,
+     "offset": 53436,
+     "count": 2184,
+     "sha256": "1510613d4919b693c47a304bf10fd53ac4a5782f455499c2a2dbd5b504b5b8e6"
+    },
+    {
+     "char": "e",
+     "index": 72,
+     "advance": 1096,
+     "triangles": 169,
+     "area": 0.1406744197010994,
+     "offset": 55620,
+     "count": 1014,
+     "sha256": "b8b9d28e766d5017c365c2c1b842d7efbcf31d16ed929959724de3812b381aea"
+    },
+    {
+     "char": "E",
+     "index": 40,
+     "advance": 1296,
+     "triangles": 105,
+     "area": 0.1965520940721035,
+     "offset": 56634,
+     "count": 630,
+     "sha256": "dab4593e03560937fc43eeaa6e616553e7a295f5821653308930c1fc01e4e8db"
+    },
+    {
+     "char": "&",
+     "index": 9,
+     "advance": 1640,
+     "triangles": 237,
+     "area": 0.2497335858643055,
+     "offset": 57264,
+     "count": 1422,
+     "sha256": "76b33977e49ea6346f161832dce4f406e96bc58b2e5442e88f2c6063ef151e43"
+    },
+    {
+     "char": "@",
+     "index": 35,
+     "advance": 1886,
+     "triangles": 358,
+     "area": 0.27636318281292915,
+     "offset": 58686,
+     "count": 2148,
+     "sha256": "0bb5d60dd605bff60d1917f1dd64fc76f0dc491599f7e84dc66b63fe3ae458ff"
+    },
+    {
+     "char": "Q",
+     "index": 52,
+     "advance": 1612,
+     "triangles": 195,
+     "area": 0.2685065306723118,
+     "offset": 60834,
+     "count": 1170,
+     "sha256": "231620400345e2bf07695ce38fb3d4eb3347bb4e900f67cc00c8a66d5201961f"
+    },
+    {
+     "char": "i",
+     "index": 76,
+     "advance": 725,
+     "triangles": 154,
+     "area": 0.1134718582034111,
+     "offset": 62004,
+     "count": 924,
+     "sha256": "ca30ec19ec4a2f1c3765ef3f85052f377a89376182c10fc8f9fe1277e5b920f9"
+    },
+    {
+     "char": ".",
+     "index": 17,
+     "advance": 623,
+     "triangles": 54,
+     "area": 0.022061344236135483,
+     "offset": 62928,
+     "count": 324,
+     "sha256": "dde2a38b9c5b9c252a9b78601549d686761edc7babf94b7461250daa4bfe02b8"
+    },
+    {
+     "char": ",",
+     "index": 15,
+     "advance": 623,
+     "triangles": 75,
+     "area": 0.0331251434981823,
+     "offset": 63252,
+     "count": 450,
+     "sha256": "b04723a3e2e5650255d9e273909244668ece0979fe42f0b7db946498e862a023"
+    },
+    {
+     "char": "o",
+     "index": 82,
+     "advance": 1266,
+     "triangles": 144,
+     "area": 0.1626717671751976,
+     "offset": 63702,
+     "count": 864,
+     "sha256": "15d094ef3c05f19f00706122ee586a7b0b1998e967193d04c9440a9ebac0904f"
+    },
+    {
+     "char": "f",
+     "index": 73,
+     "advance": 827,
+     "triangles": 137,
+     "area": 0.1817685402929783,
+     "offset": 64566,
+     "count": 822,
+     "sha256": "a73c355eba1257761369dde7cac742e34c0b14680c73bfd93176d505aadd7e44"
+    },
+    {
+     "char": "y",
+     "index": 92,
+     "advance": 1200,
+     "triangles": 149,
+     "area": 0.16323136910796165,
+     "offset": 65388,
+     "count": 894,
+     "sha256": "ea252031e742f0a64951f01e6e9f6a0b2c051f1728ff2877e8193b218c67c962"
+    },
+    {
+     "char": "é",
+     "index": 171,
+     "advance": 1096,
+     "triangles": 211,
+     "area": 0.16110502555966377,
+     "offset": 66282,
+     "count": 1266,
+     "sha256": "594960d0a3102bc1388598696384ab5efede4f32df35655865d126a198318421"
+    },
+    {
+     "char": "ü",
+     "index": 190,
+     "advance": 1378,
+     "triangles": 252,
+     "area": 0.21058442816138268,
+     "offset": 67548,
+     "count": 1512,
+     "sha256": "b1b84c5348685d991cf400ff58534f2b24d2069819ea2f8e092473ce7a7fda7f"
+    },
+    {
+     "char": "ß",
+     "index": 161,
+     "advance": 1423,
+     "triangles": 294,
+     "area": 0.30224843695759773,
+     "offset": 69060,
+     "count": 1764,
+     "sha256": "7786e4646fd3c1cca2b8686329e24596dd6a7f8fb9bbde604876e6cd05f0ff1b"
+    }
+   ]
+  },
+  {
+   "name": "SANS-PLAIN",
+   "file": "Ubuntu/Ubuntu-R.woff2",
+   "file_sha256": "345a18eb5f47c521e65e9a282cbc07634bb651258a41e292c87ac6223b37f993",
+   "unitsPerEm": 1000,
+   "glyphs": [
+    {
+     "char": "8",
+     "index": 27,
+     "advance": 564,
+     "triangles": 221,
+     "area": 0.16404220312500004,
+     "offset": 70824,
+     "count": 1326,
+     "sha256": "95df73d250f956ac563585601e3a55f544bb37228d1d57c4c6a1fb8767eed518"
+    },
+    {
+     "char": "A",
+     "index": 36,
+     "advance": 663,
+     "triangles": 62,
+     "area": 0.15375184374999998,
+     "offset": 72150,
+     "count": 372,
+     "sha256": "37023e8775471aa34bb15578beaee25d003d7e5d26cbe6473810dc5b6dbe6f34"
+    },
+    {
+     "char": "a",
+     "index": 68,
+     "advance": 522,
+     "triangles": 156,
+     "area": 0.12021051562500006,
+     "offset": 72522,
+     "count": 936,
+     "sha256": "078ba31b96342cd33a12f5ab8a04db70a9ac4ec7aa8ae9a3e62ce7b9bc4b170f"
+    },
+    {
+     "char": "W",
+     "index": 58,
+     "advance": 929,
+     "triangles": 83,
+     "area": 0.22595979687499998,
+     "offset": 73458,
+     "count": 498,
+     "sha256": "3651e02765c1d76faae7cb7d8c52e25e491d6cbf2facdd639d1cb2d03a285be4"
+    },
+    {
+     "char": "g",
+     "index": 74,
+     "advance": 578,
+     "triangles": 125,
+     "area": 0.1626425781249999,
+     "offset": 73956,
+     "count": 750,
+     "sha256": "e1e0669d0da66ea1853b2cf92b6d853f45aac94b141cabb249fa1f0ab89abf92"
+    },
+    {
+     "char": "e",
+     "index": 72,
+     "advance": 559,
+     "triangles": 99,
+     "area": 0.12540387500000003,
+     "offset": 74706,
+     "count": 594,
+     "sha256": "7e1f740af5de7aa6299dbfb7c6bb480f805f0d3bc5a79945388ea85db8abfb13"
+    },
+    {
+     "char": "E",
+     "index": 40,
+     "advance": 571,
+     "triangles": 10,
+     "area": 0.14690200000000006,
+     "offset": 75300,
+     "count": 60,
+     "sha256": "ff0cd541602c923ea2d8a33c57d46093a37b5d164ae2868b2db4c3efbd7d6f24"
+    },
+    {
+     "char": "&",
+     "index": 9,
+     "advance": 666,
+     "triangles": 204,
+     "area": 0.17795195312499998,
+     "offset": 75360,
+     "count": 1224,
+     "sha256": "238852ffe47e6f228b125ecb3f9f627e72828eb06c3e829e7919f68fa556df12"
+    },
+    {
+     "char": "@",
+     "index": 35,
+     "advance": 950,
+     "triangles": 253,
+     "area": 0.28980370312500003,
+     "offset": 76584,
+     "count": 1518,
+     "sha256": "c312bb60e5219078a84579a854e7d379e795ecf7f2563d12679e3c0e2c0af9a2"
+    },
+    {
+     "char": "Q",
+     "index": 52,
+     "advance": 778,
+     "triangles": 163,
+     "area": 0.20567171874999987,
+     "offset": 78102,
+     "count": 978,
+     "sha256": "773b5576b91e607d22459ebcf405996433d99f7aa1bd12f19691a5b85f8e12e6"
+    },
+    {
+     "char": "i",
+     "index": 76,
+     "advance": 253,
+     "triangles": 32,
+     "area": 0.060013125,
+     "offset": 79080,
+     "count": 192,
+     "sha256": "45f37b080317cef7cf70648cbf3785adde3aec1df34bcd3a41b073871eb785af"
+    },
+    {
+     "char": ".",
+     "index": 17,
+     "advance": 246,
+     "triangles": 31,
+     "area": 0.014246500000000002,
+     "offset": 79272,
+     "count": 186,
+     "sha256": "1d46ca7e7a3bf6222628d051763fd23417ff1c04639d401c045c6294e41ecb51"
+    },
+    {
+     "char": ",",
+     "index": 15,
+     "advance": 246,
+     "triangles": 33,
+     "area": 0.02433584375,
+     "offset": 79458,
+     "count": 198,
+     "sha256": "2c7a8ea3c1a816216a35baf983c0d3ab835b8ec99ff39c0308e137861bfea8bc"
+    },
+    {
+     "char": "o",
+     "index": 82,
+     "advance": 590,
+     "triangles": 99,
+     "area": 0.12282359375,
+     "offset": 79656,
+     "count": 594,
+     "sha256": "f99eb9c04b653f81efab41d47ed028894abe969de89dbe1c3f2b739e1116cd76"
+    },
+    {
+     "char": "f",
+     "index": 73,
+     "advance": 386,
+     "triangles": 38,
+     "area": 0.10024253125,
+     "offset": 80250,
+     "count": 228,
+     "sha256": "0bb2e31d604863c67bdd98bdec1f6798a78157fb970c7e2eeaaebd05e86a29a3"
+    },
+    {
+     "char": "y",
+     "index": 92,
+     "advance": 497,
+     "triangles": 91,
+     "area": 0.117818125,
+     "offset": 80478,
+     "count": 546,
+     "sha256": "895c0c1ef6bc243ea5a9e0dc0d4a11f4562359ff559b7a5ea729b7a3ba6e0a84"
+    },
+    {
+     "char": "é",
+     "index": 196,
+     "advance": 559,
+     "triangles": 101,
+     "area": 0.13998037500000002,
+     "offset": 81024,
+     "count": 606,
+     "sha256": "903652d6bad2a0a9c7aef03cef63eab242bba03d14162c9087a8f32e7b12538c"
+    },
+    {
+     "char": "ü",
+     "index": 215,
+     "advance": 574,
+     "triangles": 114,
+     "area": 0.133012984375,
+     "offset": 81630,
+     "count": 684,
+     "sha256": "c2d99a5d7033cb65877db035ed8d00a37732d3b59a5d4bf46ba30f0d60cfb209"
+    },
+    {
+     "char": "ß",
+     "index": 186,
+     "advance": 623,
+     "triangles": 204,
+     "area": 0.178910828125,
+     "offset": 82314,
+     "count": 1224,
+     "sha256": "c87a7719dba10d7393d08c3f85ba31a6f1f106b6a96156d4861894716c4d6ebc"
+    }
+   ]
+  },
+  {
+   "name": "SANS-ITALIC",
+   "file": "Ubuntu/Ubuntu-RI.woff2",
+   "file_sha256": "f56302fd8bf941dd6f43a5dd995fcbd3f12864a5238734aa9c8950c7a8c0ab83",
+   "unitsPerEm": 1000,
+   "glyphs": [
+    {
+     "char": "8",
+     "index": 27,
+     "advance": 564,
+     "triangles": 209,
+     "area": 0.15999259375000005,
+     "offset": 83538,
+     "count": 1254,
+     "sha256": "bb4c5995c05dfca10baee87a08a174d20b0ad755b991c2b96cc9dfe35b0cab05"
+    },
+    {
+     "char": "A",
+     "index": 36,
+     "advance": 636,
+     "triangles": 55,
+     "area": 0.151307625,
+     "offset": 84792,
+     "count": 330,
+     "sha256": "419c4567fa639102d989382cd71f7d938503f07901b6ddca51234194c4acccd6"
+    },
+    {
+     "char": "a",
+     "index": 68,
+     "advance": 544,
+     "triangles": 132,
+     "area": 0.12347076562499999,
+     "offset": 85122,
+     "count": 792,
+     "sha256": "98c24af992784b99e52031f4937f3a07274ac4764107bba686aedd92fe9f903e"
+    },
+    {
+     "char": "W",
+     "index": 58,
+     "advance": 916,
+     "triangles": 87,
+     "area": 0.22541195312499995,
+     "offset": 85914,
+     "count": 522,
+     "sha256": "96859a9d560ba27f3e70838f9ad37d9aebce98ddb82c1e2a25676c5f9354b03e"
+    },
+    {
+     "char": "g",
+     "index": 74,
+     "advance": 550,
+     "triangles": 140,
+     "area": 0.15799106249999997,
+     "offset": 86436,
+     "count": 840,
+     "sha256": "9bc818857b840b14644cd4c68f0c84dd0af2a82080348040bd7c6be5ae89027c"
+    },
+    {
+     "char": "e",
+     "index": 72,
+     "advance": 518,
+     "triangles": 171,
+     "area": 0.11763882812500003,
+     "offset": 87276,
+     "count": 1026,
+     "sha256": "e02f92aba8b0084918895967a69824fdcef2fa966defc05818ba01331a860f44"
+    },
+    {
+     "char": "E",
+     "index": 40,
+     "advance": 557,
+     "triangles": 10,
+     "area": 0.14150600000000005,
+     "offset": 88302,
+     "count": 60,
+     "sha256": "2e8a2bc0e5545dda33ed034a24a07e9b368cc666c8a5a2f907a3f8f89ee65719"
+    },
+    {
+     "char": "&",
+     "index": 9,
+     "advance": 640,
+     "triangles": 203,
+     "area": 0.17767181250000008,
+     "offset": 88362,
+     "count": 1218,
+     "sha256": "ca7a66539fafcd526491abeb0266b0af8274dea05bdd08bd3ce6e6e74911dd2e"
+    },
+    {
+     "char": "@",
+     "index": 35,
+     "advance": 931,
+     "triangles": 247,
+     "area": 0.28659290625000017,
+     "offset": 89580,
+     "count": 1482,
+     "sha256": "41dc1f0ef7e08f417782fb6e8d8b3063f58759af37c025648fa3f428d2581b6b"
+    },
+    {
+     "char": "Q",
+     "index": 52,
+     "advance": 739,
+     "triangles": 154,
+     "area": 0.20227793749999992,
+     "offset": 91062,
+     "count": 924,
+     "sha256": "8c0fa9a1f03bd93724091aff0d8998f87d951265df69afc217610fbdcc8cafcf"
+    },
+    {
+     "char": "i",
+     "index": 76,
+     "advance": 249,
+     "triangles": 32,
+     "area": 0.059903343750000004,
+     "offset": 91986,
+     "count": 192,
+     "sha256": "17b007558a6c0a843a12561d711b3095f674c054c356224bcfe572fa8b450a1b"
+    },
+    {
+     "char": ".",
+     "index": 17,
+     "advance": 246,
+     "triangles": 39,
+     "area": 0.014137640625,
+     "offset": 92178,
+     "count": 234,
+     "sha256": "01b117876cc9f856dc575d248ea1f6f0983240609d39098c169e2c84d8fbf5cb"
+    },
+    {
+     "char": ",",
+     "index": 15,
+     "advance": 246,
+     "triangles": 34,
+     "area": 0.024082203124999996,
+     "offset": 92412,
+     "count": 204,
+     "sha256": "42d06855f97e3c42d531fa9c03c68670192999a04b305406510c30ea4989921c"
+    },
+    {
+     "char": "o",
+     "index": 82,
+     "advance": 555,
+     "triangles": 97,
+     "area": 0.11788709375000003,
+     "offset": 92616,
+     "count": 582,
+     "sha256": "fcd5a166cf1d7b90c21ec8c81a8e0223f4cca5bc52e495c7242ee0eb5fc8fc65"
+    },
+    {
+     "char": "f",
+     "index": 73,
+     "advance": 368,
+     "triangles": 86,
+     "area": 0.11563648437499999,
+     "offset": 93198,
+     "count": 516,
+     "sha256": "38f4295bcd4ce6625a6c7f1906c01c6568115d2e18e70e54f3aaaff79926cfd2"
+    },
+    {
+     "char": "y",
+     "index": 92,
+     "advance": 478,
+     "triangles": 101,
+     "area": 0.12111485937500001,
+     "offset": 93714,
+     "count": 606,
+     "sha256": "f382653f491e06a229933207be3841acab743e94a3258a5a9f5d5aeb92df6668"
+    },
+    {
+     "char": "é",
+     "index": 196,
+     "advance": 518,
+     "triangles": 173,
+     "area": 0.13387782812500004,
+     "offset": 94320,
+     "count": 1038,
+     "sha256": "e050b134bf33736d0bf3ec40827862e64859fc2df228855c05cc6c75a5244690"
+    },
+    {
+     "char": "ü",
+     "index": 215,
+     "advance": 550,
+     "triangles": 170,
+     "area": 0.13223932812500003,
+     "offset": 95358,
+     "count": 1020,
+     "sha256": "ed03856b3179b371f58fad6e310329430f1191d48db72249efb298a0d5156326"
+    },
+    {
+     "char": "ß",
+     "index": 186,
+     "advance": 600,
+     "triangles": 216,
+     "area": 0.19260907812499994,
+     "offset": 96378,
+     "count": 1296,
+     "sha256": "f1bda12491f9269957dc25e798a6ead311b3598fc46bbd9bdc291031689926d8"
+    }
+   ]
+  },
+  {
+   "name": "SANS-BOLD",
+   "file": "Ubuntu/Ubuntu-B.woff2",
+   "file_sha256": "1630328f6f031a28f277e37492d2197b3dee0314090fc12d46808f4a4c207619",
+   "unitsPerEm": 1000,
+   "glyphs": [
+    {
+     "char": "8",
+     "index": 27,
+     "advance": 568,
+     "triangles": 204,
+     "area": 0.235221609375,
+     "offset": 97674,
+     "count": 1224,
+     "sha256": "cbafc394cb4831bc1c979363e9e55d005259962d753afe232acd2b2ef67e32dc"
+    },
+    {
+     "char": "A",
+     "index": 36,
+     "advance": 721,
+     "triangles": 86,
+     "area": 0.23037343750000003,
+     "offset": 98898,
+     "count": 516,
+     "sha256": "c482d088c2789335f97a47cda8ad308e505557901be3de3d061b552d038a69fd"
+    },
+    {
+     "char": "a",
+     "index": 68,
+     "advance": 553,
+     "triangles": 141,
+     "area": 0.17528592187499997,
+     "offset": 99414,
+     "count": 846,
+     "sha256": "d1c2473b1df74683dc16fded0ad8f6cb4e5856bc42f6aafbaef4235548a525d6"
+    },
+    {
+     "char": "W",
+     "index": 58,
+     "advance": 948,
+     "triangles": 99,
+     "area": 0.330273015625,
+     "offset": 100260,
+     "count": 594,
+     "sha256": "21b99f8c560e17f65329d840ac207b107391a57a2a359b5408eaf9953336d02b"
+    },
+    {
+     "char": "g",
+     "index": 74,
+     "advance": 594,
+     "triangles": 114,
+     "area": 0.23505384374999988,
+     "offset": 100854,
+     "count": 684,
+     "sha256": "d390db6ccef9ccbb36533921b7a6074b193e1116096cbea366182d6cf6ab8e0f"
+    },
+    {
+     "char": "e",
+     "index": 72,
+     "advance": 584,
+     "triangles": 116,
+     "area": 0.1813388125000001,
+     "offset": 101538,
+     "count": 696,
+     "sha256": "988930491ec4826d42d720d12b74ebe4d6ca500325be430d6b33dfc747e1fcd7"
+    },
+    {
+     "char": "E",
+     "index": 40,
+     "advance": 606,
+     "triangles": 10,
+     "area": 0.22832100000000005,
+     "offset": 102234,
+     "count": 60,
+     "sha256": "fe9b4e55668b9d196bd0d164aa167316c5b0d255f49056cd2eae54e4b5647af4"
+    },
+    {
+     "char": "&",
+     "index": 9,
+     "advance": 705,
+     "triangles": 198,
+     "area": 0.2543290625,
+     "offset": 102294,
+     "count": 1188,
+     "sha256": "e80adb688f3108a6786184b06db3272cfa992802e51a1386c242bcbbfc811b20"
+    },
+    {
+     "char": "@",
+     "index": 35,
+     "advance": 974,
+     "triangles": 260,
+     "area": 0.3987816093750001,
+     "offset": 103482,
+     "count": 1560,
+     "sha256": "3db102ae2cc177ae96f01d6b83ed7f6dccf6db866fa8d100c51cda0358c552fb"
+    },
+    {
+     "char": "Q",
+     "index": 52,
+     "advance": 790,
+     "triangles": 163,
+     "area": 0.30758712499999985,
+     "offset": 105042,
+     "count": 978,
+     "sha256": "9f475328a83bb99748142ffe71d019c8a87c54b4d2eaf3a2e06bc619d19e8dc3"
+    },
+    {
+     "char": "i",
+     "index": 76,
+     "advance": 289,
+     "triangles": 32,
+     "area": 0.103270625,
+     "offset": 106020,
+     "count": 192,
+     "sha256": "94feb66a5b4621f6efdb35c3344ae7ff7115539f953b6d993e8b1ab3c8f25036"
+    },
+    {
+     "char": ".",
+     "index": 17,
+     "advance": 246,
+     "triangles": 33,
+     "area": 0.027269624999999995,
+     "offset": 106212,
+     "count": 198,
+     "sha256": "8c4d246d4a320a009b7db5edb738f23865243d19ea9f815107c9627ab56a9b72"
+    },
+    {
+     "char": ",",
+     "index": 15,
+     "advance": 246,
+     "triangles": 51,
+     "area": 0.04462554687500001,
+     "offset": 106410,
+     "count": 306,
+     "sha256": "f1aa76958d76eae25b29968511600d185e56b751620c713ce4d426f0a28f684d"
+    },
+    {
+     "char": "o",
+     "index": 82,
+     "advance": 607,
+     "triangles": 98,
+     "area": 0.17833178125000002,
+     "offset": 106716,
+     "count": 588,
+     "sha256": "bf678ddafa45b6155af98cef474ccb827114df360e2950b5a27b04d51c0b035d"
+    },
+    {
+     "char": "f",
+     "index": 73,
+     "advance": 422,
+     "triangles": 46,
+     "area": 0.15537054687500004,
+     "offset": 107304,
+     "count": 276,
+     "sha256": "e8b5f19f44e688dcc1d8d55c36de822334ec34f04fee7d42b505b4683dea8c12"
+    },
+    {
+     "char": "y",
+     "index": 92,
+     "advance": 547,
+     "triangles": 91,
+     "area": 0.1810934843749999,
+     "offset": 107580,
+     "count": 546,
+     "sha256": "a1205013f412f469458ca876e3aacbf5f0c5d19a7344de70de48bdd1a7cc730f"
+    },
+    {
+     "char": "é",
+     "index": 196,
+     "advance": 584,
+     "triangles": 118,
+     "area": 0.2044323125000001,
+     "offset": 108126,
+     "count": 708,
+     "sha256": "1d9d64ad46c0a32942df2e756f0c659829f44679e8491c216bc071c41819a61f"
+    },
+    {
+     "char": "ü",
+     "index": 215,
+     "advance": 589,
+     "triangles": 107,
+     "area": 0.20785517187500002,
+     "offset": 108834,
+     "count": 642,
+     "sha256": "feb8e4d620a78f4fe41ca78ea2a6c0019bbca83bf3ae50ec7ea323a7e4906331"
+    },
+    {
+     "char": "ß",
+     "index": 186,
+     "advance": 659,
+     "triangles": 167,
+     "area": 0.26189856250000004,
+     "offset": 109476,
+     "count": 1002,
+     "sha256": "077a484c5c05a911e048e253ebdc7d02471efbba53020f20d5716e5711929158"
+    }
+   ]
+  },
+  {
+   "name": "SANS-BOLDITALIC",
+   "file": "Ubuntu/Ubuntu-BI.woff2",
+   "file_sha256": "e65f7b7494000b2f92727b30f77a0f1d2e0fed2fe973bd699831cfb906980ae9",
+   "unitsPerEm": 1000,
+   "glyphs": [
+    {
+     "char": "8",
+     "index": 27,
+     "advance": 568,
+     "triangles": 212,
+     "area": 0.22484601562499998,
+     "offset": 110478,
+     "count": 1272,
+     "sha256": "297afa21c2cd06ad34e0618826d44ca802002ebbd071798a3c5f9bf171991819"
+    },
+    {
+     "char": "A",
+     "index": 36,
+     "advance": 714,
+     "triangles": 69,
+     "area": 0.218722109375,
+     "offset": 111750,
+     "count": 414,
+     "sha256": "22871553e93fbb7ee4e599627c35cecc05403f2fc31053c259a224eb9faa5299"
+    },
+    {
+     "char": "a",
+     "index": 68,
+     "advance": 588,
+     "triangles": 128,
+     "area": 0.18479926562500007,
+     "offset": 112164,
+     "count": 768,
+     "sha256": "87e9b4d0c8347cf3f06f429f03fad3e4548eb9e1c81c30e317387d4d0dec6c08"
+    },
+    {
+     "char": "W",
+     "index": 58,
+     "advance": 936,
+     "triangles": 115,
+     "area": 0.3332285312499999,
+     "offset": 112932,
+     "count": 690,
+     "sha256": "1b92339d193ac723b57c1a71c9bc27010f745b9fd734d1fc7434e5d5ccb5fa5f"
+    },
+    {
+     "char": "g",
+     "index": 74,
+     "advance": 567,
+     "triangles": 136,
+     "area": 0.23033174999999995,
+     "offset": 113622,
+     "count": 816,
+     "sha256": "f73193119dd08df9900d3cbed264748b75de4a651ab3536e69ddcf53a263edae"
+    },
+    {
+     "char": "e",
+     "index": 72,
+     "advance": 530,
+     "triangles": 120,
+     "area": 0.16438512500000013,
+     "offset": 114438,
+     "count": 720,
+     "sha256": "d6ca20db54ce99dbbeae5d82d4109f175f2bd2eba8de20c306c566f22e39ab5f"
+    },
+    {
+     "char": "E",
+     "index": 40,
+     "advance": 594,
+     "triangles": 10,
+     "area": 0.220121,
+     "offset": 115158,
+     "count": 60,
+     "sha256": "31a153b92ef0d97b09521ed27460763c361f44fae3974c14fd9b1b3783457cc3"
+    },
+    {
+     "char": "&",
+     "index": 9,
+     "advance": 663,
+     "triangles": 173,
+     "area": 0.25240057812499994,
+     "offset": 115218,
+     "count": 1038,
+     "sha256": "7dd0fc06e36c1b32fee7dc4332f752123bad12ef9925766f44827affc48e308f"
+    },
+    {
+     "char": "@",
+     "index": 35,
+     "advance": 941,
+     "triangles": 253,
+     "area": 0.3889974999999999,
+     "offset": 116256,
+     "count": 1518,
+     "sha256": "1cea1382503b8dcfead7c1d185d049c6a0aaee6fce4671d087a7975fba4a17e6"
+    },
+    {
+     "char": "Q",
+     "index": 52,
+     "advance": 756,
+     "triangles": 140,
+     "area": 0.29338320312500005,
+     "offset": 117774,
+     "count": 840,
+     "sha256": "b61d36403a527587274a5c948ba77c2043acaa24985fe455575ddc04bde0ad4a"
+    },
+    {
+     "char": "i",
+     "index": 76,
+     "advance": 283,
+     "triangles": 48,
+     "area": 0.10350300000000001,
+     "offset": 118614,
+     "count": 288,
+     "sha256": "b0875d58dca6661e2d6d9f09fb2fc5bc0526d690d8403761f166ca5a436ec221"
+    },
+    {
+     "char": ".",
+     "index": 17,
+     "advance": 252,
+     "triangles": 47,
+     "area": 0.026583718750000006,
+     "offset": 118902,
+     "count": 282,
+     "sha256": "b13c3cb3bb464fffb4be67bac3fa7323243d6fc5028950853443769ea2873e39"
+    },
+    {
+     "char": ",",
+     "index": 15,
+     "advance": 251,
+     "triangles": 17,
+     "area": 0.04445453125,
+     "offset": 119184,
+     "count": 102,
+     "sha256": "fb6ccfc9255553c00a8380681e8470fb14fdaf53d5221f7c69144743b8baaa32"
+    },
+    {
+     "char": "o",
+     "index": 82,
+     "advance": 574,
+     "triangles": 113,
+     "area": 0.17175815625000007,
+     "offset": 119286,
+     "count": 678,
+     "sha256": "fcec43edae69a161f5fe71c492c79e458eb4dc7a24a99320875c37d033709ab8"
+    },
+    {
+     "char": "f",
+     "index": 73,
+     "advance": 438,
+     "triangles": 64,
+     "area": 0.18232064062499995,
+     "offset": 119964,
+     "count": 384,
+     "sha256": "091d39c5e9cdaf25a4ae033e29287588b30255791072d9e411c141b121533cab"
+    },
+    {
+     "char": "y",
+     "index": 92,
+     "advance": 532,
+     "triangles": 89,
+     "area": 0.183011171875,
+     "offset": 120348,
+     "count": 534,
+     "sha256": "f148c994baedfb69b14e9abea1029286cab609ac304805a4d9df73edb5623473"
+    },
+    {
+     "char": "é",
+     "index": 196,
+     "advance": 530,
+     "triangles": 122,
+     "area": 0.18711062500000003,
+     "offset": 120882,
+     "count": 732,
+     "sha256": "a6f2ad29a3bd26770a7dae6f0e0ddf942551c52ad81fe884c04a781ec7946a4f"
+    },
+    {
+     "char": "ü",
+     "index": 215,
+     "advance": 581,
+     "triangles": 166,
+     "area": 0.2069950937500001,
+     "offset": 121614,
+     "count": 996,
+     "sha256": "2d19d070ce005839b44d48776418f14a6afae9682600e5d93cf8bf036a71b76a"
+    },
+    {
+     "char": "ß",
+     "index": 186,
+     "advance": 637,
+     "triangles": 199,
+     "area": 0.28940732812500014,
+     "offset": 122610,
+     "count": 1194,
+     "sha256": "fe4a4518f2278ca383e08ef1defda30a570d0a283c323d44fdf021e964b0e5f7"
+    }
+   ]
+  },
+  {
+   "name": "TYPEWRITER-PLAIN",
+   "file": "Ubuntu/UbuntuMono-R.woff2",
+   "file_sha256": "48a0aa372e8e6f359a438df2dba1d38d0497eabf5cbf49a723fd4efeef72c483",
+   "unitsPerEm": 1000,
+   "glyphs": [
+    {
+     "char": "8",
+     "index": 27,
+     "advance": 500,
+     "triangles": 180,
+     "area": 0.12842420312500005,
+     "offset": 123804,
+     "count": 1080,
+     "sha256": "5d9969fae384e9726584a892e6c3060ffb3924dab33f1b794f8a79e39add00e8"
+    },
+    {
+     "char": "A",
+     "index": 36,
+     "advance": 500,
+     "triangles": 55,
+     "area": 0.11088124999999995,
+     "offset": 124884,
+     "count": 330,
+     "sha256": "94ca912718d930731cb0425b3d330f60aef91644e487839e10c65c91d182b321"
+    },
+    {
+     "char": "a",
+     "index": 68,
+     "advance": 500,
+     "triangles": 136,
+     "area": 0.09793581250000001,
+     "offset": 125214,
+     "count": 816,
+     "sha256": "04af69ab0c8fa39a02aa28101f9d882378cd7f5342d8ae15d549eb7e5ccc2b05"
+    },
+    {
+     "char": "W",
+     "index": 58,
+     "advance": 500,
+     "triangles": 41,
+     "area": 0.12699109375000003,
+     "offset": 126030,
+     "count": 246,
+     "sha256": "b50282175de8370e9aa07ac8ba44c9e9f4e6a522df213eba06dc3062c7a75179"
+    },
+    {
+     "char": "g",
+     "index": 74,
+     "advance": 500,
+     "triangles": 125,
+     "area": 0.12814135937499999,
+     "offset": 126276,
+     "count": 750,
+     "sha256": "a1115de793bd45d32d5b4b0f0d3ea56cfca64ce607eadf7303b89a8cc0064ee9"
+    },
+    {
+     "char": "e",
+     "index": 72,
+     "advance": 500,
+     "triangles": 93,
+     "area": 0.10050440625,
+     "offset": 127026,
+     "count": 558,
+     "sha256": "be5f2186f2e566a6cc7fdffff4706a11b003f4abec3171482c2c18dda69e5ebd"
+    },
+    {
+     "char": "E",
+     "index": 40,
+     "advance": 500,
+     "triangles": 10,
+     "area": 0.10563800000000001,
+     "offset": 127584,
+     "count": 60,
+     "sha256": "4c673975a0e3baeb3d1a1e1c5f632b2c4f192e89bf033bf0d9f026365f29a6e4"
+    },
+    {
+     "char": "&",
+     "index": 9,
+     "advance": 500,
+     "triangles": 186,
+     "area": 0.13195373437500008,
+     "offset": 127644,
+     "count": 1116,
+     "sha256": "1e16aa1aada83cd561f6d500956492b074a9da6abf9690b7074eb317b1a9a85b"
+    },
+    {
+     "char": "@",
+     "index": 35,
+     "advance": 500,
+     "triangles": 171,
+     "area": 0.16383868749999994,
+     "offset": 128760,
+     "count": 1026,
+     "sha256": "993f81f77a276562466a1c81074aed83d9220dd81b35e0cd2d0103c71f68f5ec"
+    },
+    {
+     "char": "Q",
+     "index": 52,
+     "advance": 500,
+     "triangles": 123,
+     "area": 0.13788318749999998,
+     "offset": 129786,
+     "count": 738,
+     "sha256": "a59dc803fcf468e0527993afd9f99fcd6070447bd3ca8b002916917f4ac38cf7"
+    },
+    {
+     "char": "i",
+     "index": 76,
+     "advance": 500,
+     "triangles": 83,
+     "area": 0.07178843750000002,
+     "offset": 130524,
+     "count": 498,
+     "sha256": "e7ea6f49401a0664136bcbb512598144a3402586d76fa22f96867d47fa5f8e37"
+    },
+    {
+     "char": ".",
+     "index": 17,
+     "advance": 500,
+     "triangles": 30,
+     "area": 0.017775625000000003,
+     "offset": 131022,
+     "count": 180,
+     "sha256": "2abeae7453296340e1f0eae7f467f7aa9108e80b4d64c74854bd96cab42000fe"
+    },
+    {
+     "char": ",",
+     "index": 15,
+     "advance": 500,
+     "triangles": 55,
+     "area": 0.030992031250000003,
+     "offset": 131202,
+     "count": 330,
+     "sha256": "c569b9fdde08be8f8c541067d0015336594d0fba93ab1bbab330225281a7e540"
+    },
+    {
+     "char": "o",
+     "index": 82,
+     "advance": 500,
+     "triangles": 98,
+     "area": 0.095101765625,
+     "offset": 131532,
+     "count": 588,
+     "sha256": "0953552b17c287c8155589921d8cfc3113e8dc668d9ecf517021084013fc38f8"
+    },
+    {
+     "char": "f",
+     "index": 73,
+     "advance": 500,
+     "triangles": 58,
+     "area": 0.08919109375000003,
+     "offset": 132120,
+     "count": 348,
+     "sha256": "b31c6360f8281e0bef21a9e5370adba21906f9e2569814e7b4845c1907efbaf5"
+    },
+    {
+     "char": "y",
+     "index": 92,
+     "advance": 500,
+     "triangles": 92,
+     "area": 0.09405290625000001,
+     "offset": 132468,
+     "count": 552,
+     "sha256": "c7bc10213a742f4d53bd819b97c0e0b0f29085564a6882ecd8c646ef7693b56a"
+    },
+    {
+     "char": "é",
+     "index": 196,
+     "advance": 500,
+     "triangles": 95,
+     "area": 0.11214440625000001,
+     "offset": 133020,
+     "count": 570,
+     "sha256": "7113719277fc064022b7f015faa0de84f30552b74b4a8b67250899cd836a12da"
+    },
+    {
+     "char": "ü",
+     "index": 215,
+     "advance": 500,
+     "triangles": 112,
+     "area": 0.10477907812499998,
+     "offset": 133590,
+     "count": 672,
+     "sha256": "d8707595650f57f221ddf0fd062f8cff3e36705b24076112b24ddc0e79cf466a"
+    },
+    {
+     "char": "ß",
+     "index": 186,
+     "advance": 500,
+     "triangles": 188,
+     "area": 0.13856751562500003,
+     "offset": 134262,
+     "count": 1128,
+     "sha256": "ad15b6a25a4478aabe35d181a9a73e56970f502d2c542bfbf1b42754296142d8"
+    }
+   ]
+  },
+  {
+   "name": "TYPEWRITER-ITALIC",
+   "file": "Ubuntu/UbuntuMono-RI.woff2",
+   "file_sha256": "92862a6458c73923f884c2d72103d3b6c315eb4b971dad30217f20ef654ea3c8",
+   "unitsPerEm": 1000,
+   "glyphs": [
+    {
+     "char": "8",
+     "index": 27,
+     "advance": 500,
+     "triangles": 208,
+     "area": 0.12767032812499995,
+     "offset": 135390,
+     "count": 1248,
+     "sha256": "d37aa161caea703dc16bbf6516ecfb3be8d1aff95595e5da0c234f65dbf80bec"
+    },
+    {
+     "char": "A",
+     "index": 36,
+     "advance": 500,
+     "triangles": 55,
+     "area": 0.10900942187499998,
+     "offset": 136638,
+     "count": 330,
+     "sha256": "10d79530e18c29a69479b0670630e6e5e147f7e045a5caab507752d544923fd7"
+    },
+    {
+     "char": "a",
+     "index": 68,
+     "advance": 500,
+     "triangles": 132,
+     "area": 0.09760678125000001,
+     "offset": 136968,
+     "count": 792,
+     "sha256": "6fd17036896e295e722960311278f3a43addec547801611e69afb4245f2b91da"
+    },
+    {
+     "char": "W",
+     "index": 58,
+     "advance": 500,
+     "triangles": 93,
+     "area": 0.12524215625,
+     "offset": 137760,
+     "count": 558,
+     "sha256": "d70923b22f8c4520c133e6868109d10bbecaa6639689595e8758dec4bacadf25"
+    },
+    {
+     "char": "g",
+     "index": 74,
+     "advance": 500,
+     "triangles": 141,
+     "area": 0.12482407812500004,
+     "offset": 138318,
+     "count": 846,
+     "sha256": "e2ec77389d1dfa6d579d50992999fe5aa354f4e3801055627ed954ed7e5a58a9"
+    },
+    {
+     "char": "e",
+     "index": 72,
+     "advance": 500,
+     "triangles": 146,
+     "area": 0.099118890625,
+     "offset": 139164,
+     "count": 876,
+     "sha256": "e138bc7b8bd4ac42f71fe4748306392fec469778e8c927a3938aff1c3c4c79b2"
+    },
+    {
+     "char": "E",
+     "index": 40,
+     "advance": 500,
+     "triangles": 10,
+     "area": 0.10567399999999999,
+     "offset": 140040,
+     "count": 60,
+     "sha256": "10876bec830b0f5f064915370df7e33228d986cf1501e5650d8850af58fddb4e"
+    },
+    {
+     "char": "&",
+     "index": 9,
+     "advance": 500,
+     "triangles": 226,
+     "area": 0.1293090156250001,
+     "offset": 140100,
+     "count": 1356,
+     "sha256": "4ac62078083d9887f5361a1d6c82ad3e61d699670bcf09e92dbcf014ecdabd06"
+    },
+    {
+     "char": "@",
+     "index": 35,
+     "advance": 500,
+     "triangles": 197,
+     "area": 0.16161079687499993,
+     "offset": 141456,
+     "count": 1182,
+     "sha256": "15a5fd4abda117045ca0b9ff83644eaac9c93f6bb7fc7d1d4c911e66fa081a14"
+    },
+    {
+     "char": "Q",
+     "index": 52,
+     "advance": 500,
+     "triangles": 140,
+     "area": 0.13513760937499997,
+     "offset": 142638,
+     "count": 840,
+     "sha256": "cf8e5b0ab8ae1e7b84aa7e3aa6c1567ecaf4c939908e6132b12c2353361d3809"
+    },
+    {
+     "char": "i",
+     "index": 76,
+     "advance": 500,
+     "triangles": 98,
+     "area": 0.0686453125,
+     "offset": 143478,
+     "count": 588,
+     "sha256": "d04556e5c82e3893f702ed5270dac2fe56df618ec0d0ad34f1170d81a19a681f"
+    },
+    {
+     "char": ".",
+     "index": 17,
+     "advance": 500,
+     "triangles": 40,
+     "area": 0.017898312499999996,
+     "offset": 144066,
+     "count": 240,
+     "sha256": "c855b308f48f40787ecbd625b6e4d7df160f615714af156c9387d440cb23db4a"
+    },
+    {
+     "char": ",",
+     "index": 15,
+     "advance": 500,
+     "triangles": 55,
+     "area": 0.031385859375,
+     "offset": 144306,
+     "count": 330,
+     "sha256": "1951e7d7b42bbc9df7893ede44d78066a94a619515c11a0287f2868421c8ccac"
+    },
+    {
+     "char": "o",
+     "index": 82,
+     "advance": 500,
+     "triangles": 96,
+     "area": 0.09507392187499998,
+     "offset": 144636,
+     "count": 576,
+     "sha256": "89e8ca7038bee914a810c0112796ef29ca00d82a6edb736b0a41965b2f01e7e4"
+    },
+    {
+     "char": "f",
+     "index": 73,
+     "advance": 500,
+     "triangles": 86,
+     "area": 0.10739600000000002,
+     "offset": 145212,
+     "count": 516,
+     "sha256": "cd0ed6e6130482b48893e71f626b7825510d1a7847bbca8c1ebbee5121b18149"
+    },
+    {
+     "char": "y",
+     "index": 92,
+     "advance": 500,
+     "triangles": 100,
+     "area": 0.09657773437500002,
+     "offset": 145728,
+     "count": 600,
+     "sha256": "65cc3a42d46f7f9d92b442ba9766ac6f3b5774ed38a477c4729de76696894af5"
+    },
+    {
+     "char": "é",
+     "index": 196,
+     "advance": 500,
+     "triangles": 148,
+     "area": 0.112055890625,
+     "offset": 146328,
+     "count": 888,
+     "sha256": "b43f7dffe7d5e20ca14524b1688517b545393b22048988a5057596c134b7f725"
+    },
+    {
+     "char": "ü",
+     "index": 215,
+     "advance": 500,
+     "triangles": 163,
+     "area": 0.10460049999999997,
+     "offset": 147216,
+     "count": 978,
+     "sha256": "465c0cf373bf05b31027fbf58e1b67f1c11488f21ffe968c8355658aa6e2f9a3"
+    },
+    {
+     "char": "ß",
+     "index": 186,
+     "advance": 500,
+     "triangles": 220,
+     "area": 0.15588270312499997,
+     "offset": 148194,
+     "count": 1320,
+     "sha256": "0ed85d7c80ca340f31a708f6ef569ed1fcef0d853ed618c19a887487fa224cc5"
+    }
+   ]
+  },
+  {
+   "name": "TYPEWRITER-BOLD",
+   "file": "Ubuntu/UbuntuMono-B.woff2",
+   "file_sha256": "e9fdfb8e96df79dddf3d14c46dbf7b0e95b465c37962139214d25163051d3174",
+   "unitsPerEm": 1000,
+   "glyphs": [
+    {
+     "char": "8",
+     "index": 27,
+     "advance": 500,
+     "triangles": 164,
+     "area": 0.174226875,
+     "offset": 149514,
+     "count": 984,
+     "sha256": "fd0aea56d601c5c34844a507768c1efcf9227e87718239d0f4f4cbbbe22071db"
+    },
+    {
+     "char": "A",
+     "index": 36,
+     "advance": 500,
+     "triangles": 55,
+     "area": 0.15171957812500006,
+     "offset": 150498,
+     "count": 330,
+     "sha256": "82b2046e9f05fb14dc23419ef1df818e032a1bd587cee3ae78828761dc54701a"
+    },
+    {
+     "char": "a",
+     "index": 68,
+     "advance": 500,
+     "triangles": 129,
+     "area": 0.1325694531250001,
+     "offset": 150828,
+     "count": 774,
+     "sha256": "bd8f3e8c73ecc725ce7c8ae8b1e40418f0ded533e7be4a095271440d7149e195"
+    },
+    {
+     "char": "W",
+     "index": 58,
+     "advance": 500,
+     "triangles": 115,
+     "area": 0.16982226562499997,
+     "offset": 151602,
+     "count": 690,
+     "sha256": "b85261d544f7dda943a66ba02166bc31f078907bc04d636fdb2abb6f0c42ece3"
+    },
+    {
+     "char": "g",
+     "index": 74,
+     "advance": 500,
+     "triangles": 102,
+     "area": 0.17374162499999998,
+     "offset": 152292,
+     "count": 612,
+     "sha256": "2f9c14a3c7c1efbf5086e7ef9a279d570650143d13808962f1ef891d579a6dd9"
+    },
+    {
+     "char": "e",
+     "index": 72,
+     "advance": 500,
+     "triangles": 107,
+     "area": 0.13617987500000003,
+     "offset": 152904,
+     "count": 642,
+     "sha256": "678d42b6b87fc4448ca733526e633bfe51c7ca1e25889529eca0bff1a7ecd61d"
+    },
+    {
+     "char": "E",
+     "index": 40,
+     "advance": 500,
+     "triangles": 10,
+     "area": 0.15212700000000004,
+     "offset": 153546,
+     "count": 60,
+     "sha256": "5a8cd5ee8400570fa668bd6b5337cef09c3470866ba7cebcccd3fb4720757433"
+    },
+    {
+     "char": "&",
+     "index": 9,
+     "advance": 500,
+     "triangles": 180,
+     "area": 0.17085317187499996,
+     "offset": 153606,
+     "count": 1080,
+     "sha256": "e994951b69ba27d56267979a389fb4f1d13e302976a7e5894025738879804be8"
+    },
+    {
+     "char": "@",
+     "index": 35,
+     "advance": 500,
+     "triangles": 205,
+     "area": 0.2102810937500001,
+     "offset": 154686,
+     "count": 1230,
+     "sha256": "5029cfc8b950fd70c05e18fd55055fd33d464887b8111eafba1308ae951e5dea"
+    },
+    {
+     "char": "Q",
+     "index": 52,
+     "advance": 500,
+     "triangles": 115,
+     "area": 0.18851104687499998,
+     "offset": 155916,
+     "count": 690,
+     "sha256": "edbf698438cc2f85247d0d906d7e3a786f07982e36ea640779b437ab53a72f80"
+    },
+    {
+     "char": "i",
+     "index": 76,
+     "advance": 500,
+     "triangles": 76,
+     "area": 0.10535432812499997,
+     "offset": 156606,
+     "count": 456,
+     "sha256": "ba52bbfbdda4c31139ce3229ab0a4a3d7fc718aa7d994271b8a39b0881aaf5d8"
+    },
+    {
+     "char": ".",
+     "index": 17,
+     "advance": 500,
+     "triangles": 46,
+     "area": 0.025378203125,
+     "offset": 157062,
+     "count": 276,
+     "sha256": "1839c96393a9dcfb4bb3190089987f3123051c9cdfe58f4dbd215da443c12558"
+    },
+    {
+     "char": ",",
+     "index": 15,
+     "advance": 500,
+     "triangles": 58,
+     "area": 0.041994000000000004,
+     "offset": 157338,
+     "count": 348,
+     "sha256": "4cae9416ab6379109adf44eb0a6e87757fa69acb8a7daa09fc8c35515fc1e2b9"
+    },
+    {
+     "char": "o",
+     "index": 82,
+     "advance": 500,
+     "triangles": 99,
+     "area": 0.13190832812500006,
+     "offset": 157686,
+     "count": 594,
+     "sha256": "1b747ee6038d826799a92328fc542e3efe2d864dcddeb7e5fb4035932165b0d4"
+    },
+    {
+     "char": "f",
+     "index": 73,
+     "advance": 500,
+     "triangles": 58,
+     "area": 0.13369862499999996,
+     "offset": 158280,
+     "count": 348,
+     "sha256": "42963dac7e0f296304d848d85d1779f12308233f102a8a17f64379bb4c34b45a"
+    },
+    {
+     "char": "y",
+     "index": 92,
+     "advance": 500,
+     "triangles": 97,
+     "area": 0.13365601562499999,
+     "offset": 158628,
+     "count": 582,
+     "sha256": "b68cf8b702e9d9e907553f6a9bada2554776adf5b9ad45c9540824d2cdc883c9"
+    },
+    {
+     "char": "é",
+     "index": 196,
+     "advance": 500,
+     "triangles": 109,
+     "area": 0.15471037500000004,
+     "offset": 159210,
+     "count": 654,
+     "sha256": "3d5933cead4c86f4a375ad213787f2232c8f7dd2058e2eebc71c7cde386e813e"
+    },
+    {
+     "char": "ü",
+     "index": 215,
+     "advance": 500,
+     "triangles": 103,
+     "area": 0.15594578125,
+     "offset": 159864,
+     "count": 618,
+     "sha256": "d15e3379470a09149ab94eda0cf80d7ec656a54190d566df461b06614c89870d"
+    },
+    {
+     "char": "ß",
+     "index": 186,
+     "advance": 500,
+     "triangles": 156,
+     "area": 0.192934296875,
+     "offset": 160482,
+     "count": 936,
+     "sha256": "8fd2982beba535ae2e6ef3a0d4e7ac573c89387de8293feac4e84de2406bbca2"
+    }
+   ]
+  },
+  {
+   "name": "TYPEWRITER-BOLDITALIC",
+   "file": "Ubuntu/UbuntuMono-BI.woff2",
+   "file_sha256": "6d43ee9569b1b34b2f1426e1d508d155653deaf091221ec1c310808bcb47ce28",
+   "unitsPerEm": 1000,
+   "glyphs": [
+    {
+     "char": "8",
+     "index": 27,
+     "advance": 500,
+     "triangles": 195,
+     "area": 0.16840392187500008,
+     "offset": 161418,
+     "count": 1170,
+     "sha256": "d451c986f7008547f029e27d40eedd8cbce003eec98a1b8a62ef9723bb41545b"
+    },
+    {
+     "char": "A",
+     "index": 36,
+     "advance": 500,
+     "triangles": 63,
+     "area": 0.15066664062500001,
+     "offset": 162588,
+     "count": 378,
+     "sha256": "d6f682f456abd607ca542d8c5c00e49cadb25323d1fbfb41c8c1783db8c76238"
+    },
+    {
+     "char": "a",
+     "index": 68,
+     "advance": 500,
+     "triangles": 131,
+     "area": 0.13758323437500006,
+     "offset": 162966,
+     "count": 786,
+     "sha256": "f207091a34a37814471d3735a4920db8f97b3c5d61144333d29b8cb68e0a2c53"
+    },
+    {
+     "char": "W",
+     "index": 58,
+     "advance": 500,
+     "triangles": 55,
+     "area": 0.17160829687500004,
+     "offset": 163752,
+     "count": 330,
+     "sha256": "cf6eabcd602ed7ca0dafbd8bd0f686d6c985230531b12b9b567f5e0c6404a4c5"
+    },
+    {
+     "char": "g",
+     "index": 74,
+     "advance": 500,
+     "triangles": 121,
+     "area": 0.17212617187499993,
+     "offset": 164082,
+     "count": 726,
+     "sha256": "d6db357b7464e00c3388c6ee374f128ab19de85ad33edcceb67a9f2372506a66"
+    },
+    {
+     "char": "e",
+     "index": 72,
+     "advance": 500,
+     "triangles": 123,
+     "area": 0.13041378125,
+     "offset": 164808,
+     "count": 738,
+     "sha256": "dbe3e15233feca387c3c9ad198e3a04e1da5ad834505728fe9cafeb30a8fbfe4"
+    },
+    {
+     "char": "E",
+     "index": 40,
+     "advance": 500,
+     "triangles": 10,
+     "area": 0.14973,
+     "offset": 165546,
+     "count": 60,
+     "sha256": "52c2a94784622d10501f16d4920e6ef3336496722633c4be23617b9ddb2dd605"
+    },
+    {
+     "char": "&",
+     "index": 9,
+     "advance": 500,
+     "triangles": 201,
+     "area": 0.16812100000000005,
+     "offset": 165606,
+     "count": 1206,
+     "sha256": "0629712f043b26bf00a8aa1310d92ad35d5eb46c614027cd15e7e60620de36bf"
+    },
+    {
+     "char": "@",
+     "index": 35,
+     "advance": 500,
+     "triangles": 184,
+     "area": 0.20685182812499991,
+     "offset": 166812,
+     "count": 1104,
+     "sha256": "9b4ca28f46fc7c79d9a2d0e51a11b44dc1a818ce4dd07eb9524495b312a43469"
+    },
+    {
+     "char": "Q",
+     "index": 52,
+     "advance": 500,
+     "triangles": 139,
+     "area": 0.18638559375000002,
+     "offset": 167916,
+     "count": 834,
+     "sha256": "ff94d909542abd1fc10c7809a56344850e5e2837d3876c4ad8d1075961d0c82a"
+    },
+    {
+     "char": "i",
+     "index": 76,
+     "advance": 500,
+     "triangles": 88,
+     "area": 0.10429900000000006,
+     "offset": 168750,
+     "count": 528,
+     "sha256": "1a16bfc5bd68eeb3c51195a220bb2a29ed83d50bd6e34adfda159467ffd39643"
+    },
+    {
+     "char": ".",
+     "index": 17,
+     "advance": 500,
+     "triangles": 47,
+     "area": 0.024957859375000002,
+     "offset": 169278,
+     "count": 282,
+     "sha256": "abf965a104b812f885e74b7e889be1385341e0a6b10bbbdccb9eb01409073dd9"
+    },
+    {
+     "char": ",",
+     "index": 15,
+     "advance": 500,
+     "triangles": 55,
+     "area": 0.04279959375,
+     "offset": 169560,
+     "count": 330,
+     "sha256": "2e5515dcfd01e9879bac1da2fe46999e8d0ff66e20f0897b2a942ec42d98b2b9"
+    },
+    {
+     "char": "o",
+     "index": 82,
+     "advance": 500,
+     "triangles": 98,
+     "area": 0.12923056249999998,
+     "offset": 169890,
+     "count": 588,
+     "sha256": "7ae93f200b1dd8be69578cf57deff886b7d647fc510d34b3587aaca6b46c5261"
+    },
+    {
+     "char": "f",
+     "index": 73,
+     "advance": 500,
+     "triangles": 99,
+     "area": 0.15852890625000002,
+     "offset": 170478,
+     "count": 594,
+     "sha256": "bf441ed6d2104287d3484916ccd08305aadd79bb6c744c0c18537f73affb5fae"
+    },
+    {
+     "char": "y",
+     "index": 92,
+     "advance": 500,
+     "triangles": 85,
+     "area": 0.13900934375,
+     "offset": 171072,
+     "count": 510,
+     "sha256": "ca4b19fd34b0f4d8ee3a29a9f8a11fbdb26d6ed5eac25d565dd50bf0fcafc8ed"
+    },
+    {
+     "char": "é",
+     "index": 196,
+     "advance": 500,
+     "triangles": 125,
+     "area": 0.14931528125,
+     "offset": 171582,
+     "count": 750,
+     "sha256": "5ae080bf353b15303ca6e0ad51757f76f489d36fc2c9cf05a664b5681445b037"
+    },
+    {
+     "char": "ü",
+     "index": 215,
+     "advance": 500,
+     "triangles": 169,
+     "area": 0.15559634375,
+     "offset": 172332,
+     "count": 1014,
+     "sha256": "c42d5d47685b2f39717947cf4c1ead3137304b6906a3c5d18d8c9f73df939af3"
+    },
+    {
+     "char": "ß",
+     "index": 186,
+     "advance": 500,
+     "triangles": 190,
+     "area": 0.21834604687500006,
+     "offset": 173346,
+     "count": 1140,
+     "sha256": "c22dd7b3316daf4ce42db0efb72acb2c1107d656d403511d2eb737c30b4c1500"
+    }
+   ]
+  }
+ ]
+}

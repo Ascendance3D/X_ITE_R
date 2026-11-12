@@ -11,5 +11,7 @@ ttf-parser = "0.25"
 woff2-patched = "0.4"
 
 [dev-dependencies]
+flate2 = "1"
+sha2 = "0.10"
 x3d-evidence = { path = "../x3d-evidence" }
 serde_json = { version = "1", features = ["float_roundtrip"] }

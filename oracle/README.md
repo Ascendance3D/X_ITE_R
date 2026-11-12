@@ -241,6 +241,14 @@ metrics, kerning, glyph outlines and the Text/FontStyle layouts with libtess tri
 the pinned X_ITE); `x_ite-fog.mjs` -> `x_ite-fog.json` (sha256 `6f61289ad66357b9…`: 40 Fog
 node results and 384 samples of the real `Fog2.glsl.js` interpolant evaluated on the GPU).
 
+Glyph geometry fixture (2026-11-12): `node oracle/x_ite-text.mjs <out> --all-glyphs` records every font in full
+(without the flag the recorder writes the answer key's form, with full vertices for 3 of the 12 fonts). Write it outside
+`oracle/`; `check-output` refuses the key path. `python3 -I oracle/tools/glyph_fixture.py build <out>` turns it into
+`crates/x3d-text/tests/data/glyph-geometry/` (`manifest.json` with the pinned version, browser, font files and their
+SHA-256, settings and per-glyph counts and SHA-256; `vertices.f64le.gz`, 174486 coordinates). `glyph_fixture.py check`
+verifies the fixture. `crates/x3d-text/tests/glyph_geometry.rs` compares all 228 glyphs bit for bit. This fixture is
+tracked and is not an answer key; it does not replace or change `x_ite-text.json`.
+
 | set | command | result |
 | --- | --- | --- |
 | `synthetic-x8/` | `node oracle/x_ite-shot.mjs oracle/synthetic-x8 <out> --size 512x512 --jobs 8` | 125 of 125; captured twice, all PNGs identical (sha256 of the sorted hashes `a451b855…`); only index.json differs, by a blob: URL uuid in one error message |

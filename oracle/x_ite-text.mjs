@@ -4,8 +4,12 @@
  * PolygonText (libtess), and the layout arrays (vertices, texCoords, bounds) of Text nodes.
  *
  *   node oracle/x_ite-text.mjs oracle/x_ite-text.json
+ *   node oracle/x_ite-text.mjs /tmp/x_ite-text-all.json --all-glyphs
  *
  * Every case is synthetic. crates/x3d-text/tests/oracle.rs compares against the JSON.
+ * Without --all-glyphs, full glyph vertices are recorded for 3 of the 12 fonts (the answer key's form).
+ * With --all-glyphs, every font is recorded in full: the input of oracle/tools/glyph_fixture.py
+ * (crates/x3d-text/tests/data/glyph-geometry). Never write that form to the answer key path.
  */
 import { createServer } from "node:http";
 import { readFile, writeFile } from "node:fs/promises";
@@ -16,7 +20,8 @@ import { checkOutput } from "./check-output.mjs";
 
 const ROOT = normalize (join (fileURLToPath (import.meta.url), ".."));
 const { chromium } = createRequire (join (ROOT, "../../../x_ite-tests/")) ("playwright");
-const OUT = resolve (process .argv [2] ?? "oracle/x_ite-text.json");
+const ALL_GLYPHS = process .argv .slice (2) .includes ("--all-glyphs");
+const OUT = resolve (process .argv .slice (2) .find (a => a !== "--all-glyphs") ?? "oracle/x_ite-text.json");
 
 checkOutput (OUT);
 
@@ -218,7 +223,7 @@ try
 
    for (const family of FAMILIES)
       for (const style of STYLES)
-         result .fonts [`${family}-${style}`] = await page .evaluate (([ f, s ]) => window .fontInfo (f, s, [ "SERIF-PLAIN", "SANS-BOLD", "TYPEWRITER-ITALIC" ] .includes (`${f}-${s}`)), [ family, style ]);
+         result .fonts [`${family}-${style}`] = await page .evaluate (([ f, s, all ]) => window .fontInfo (f, s, all || [ "SERIF-PLAIN", "SANS-BOLD", "TYPEWRITER-ITALIC" ] .includes (`${f}-${s}`)), [ family, style, ALL_GLYPHS ]);
 
    for (const [ name, [ strings, fs, textFields ] ] of Object .entries (LAYOUTS))
       result .layouts [name] = await page .evaluate (([ a, b, c ]) => window .layout (a, b, c), [ strings, fs, textFields ]);
