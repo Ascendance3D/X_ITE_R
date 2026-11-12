@@ -24,6 +24,7 @@ use crate::*;
 
 #[cfg(feature = "native-video")]
 mod mpeg1_media;
+mod platform_media;
 
 /// The next token of a page video element: unique across the runtimes of a page.
 static NEXT_VIDEO_TOKEN: std::sync::atomic::AtomicU64 = std::sync::atomic::AtomicU64::new(1);

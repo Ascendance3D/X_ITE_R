@@ -44,6 +44,8 @@ pub mod geo;
 pub mod inline;
 pub mod inline_geometry;
 pub mod loader;
+// The MP4 container structure (ADR 0015): no codec, in every build.
+pub mod mp4probe;
 // MPEG-1 Video and Systems (issue #90): a native-video decoder. The browser build plays a MovieTexture in a <video>
 // element (`Fetcher::plays_video`) and never calls it, so the browser module leaves it out.
 #[cfg(feature = "native-video")]

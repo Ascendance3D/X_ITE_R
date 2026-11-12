@@ -14,6 +14,25 @@ pub enum WebmError {
     TooLarge,
     /// This build has no video decoder (the `native-video` feature is off; the browser build plays the video in the page).
     NoDecoder,
+    /// The container, or a codec in it, has no decoder in this build (ADR 0015): `container` is `"mp4"` or `"webm"`,
+    /// `codec` the sample-entry or codec code (`"hvc1"`, `"avc1+mp4a"`), or why no codec was found.
+    Unsupported {
+        container: &'static str,
+        codec: String,
+    },
+}
+
+/// One decoded picture: RGBA rows from the top, and its presentation time in milliseconds.
+pub struct VideoFrame {
+    pub rgba: Vec<u8>,
+    pub time_ms: f64,
+}
+
+/// The decoded pictures of a video track.
+pub struct Video {
+    pub width: u32,
+    pub height: u32,
+    pub frames: Vec<VideoFrame>,
 }
 
 /// The audio track of a WebM, as far as this build decodes it.
