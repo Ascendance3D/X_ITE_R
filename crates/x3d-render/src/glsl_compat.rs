@@ -1252,6 +1252,8 @@ struct Analysis {
     /// (name, type name, qualifiers, array)
     varyings: Vec<(String, String, Vec<String>, Option<u32>)>,
     outputs: Vec<(String, String, Vec<String>)>,
+    /// Fragment outputs: (name, line of the declaration, explicit location).
+    output_locations: Vec<(String, usize, Option<u32>)>,
     /// Lines of the preamble (types) before the user's text.
     prefix_lines: usize,
     es3: bool,
@@ -1474,6 +1476,7 @@ fn analyze(stage: Stage, source: &str, options: &[String]) -> Result<Analysis, S
         attributes: vec![],
         varyings: vec![],
         outputs: vec![],
+        output_locations: vec![],
         prefix_lines,
         es3,
         used,
@@ -1557,9 +1560,12 @@ fn analyze(stage: Stage, source: &str, options: &[String]) -> Result<Analysis, S
                 }
             }
             "out" if stage == Stage::Fragment => {
+                let location = layout_location(d.layout.as_deref());
+
                 for n in &d.names {
                     a.outputs
                         .push((n.name.clone(), d.type_name.clone(), d.qualifiers.clone()));
+                    a.output_locations.push((n.name.clone(), line, location));
                 }
             }
             "attribute" | "varying" => {
@@ -1637,12 +1643,28 @@ const BUILTIN_SAMPLING: &[(&str, &str)] = &[
 
 const BUILTIN_FETCH: &[&str] = &["texelFetch", "textureSize", "textureQueryLevels"];
 
+/// The `location` of a `layout (...)` qualifier, if it names one.
+fn layout_location(layout: Option<&str>) -> Option<u32> {
+    layout?.split(',').find_map(|p| {
+        let (k, v) = p.split_once('=')?;
+        (k.trim() == "location").then(|| v.trim().parse::<u32>().ok())?
+    })
+}
+
 fn emit(a: &Analysis, info: &LinkInfo) -> Result<Emitted, String> {
     let text = &a.scan.text;
     let boundary_line = a.prefix_lines;
     let line_of =
         |pos: usize| newlines(&text[..pos]) + 1 - boundary_line.min(newlines(&text[..pos]) + 1);
     let mut edits: Vec<(usize, usize, String)> = vec![];
+    // Fragment outputs without a location get distinct ones after the explicit locations, so that naga validates the
+    // stage and compile_part reports ANGLE's missing-location error (check_output_locations) after it.
+    let mut next_unlocated = a
+        .output_locations
+        .iter()
+        .filter_map(|o| o.2)
+        .max()
+        .map_or(0, |m| m + 1);
 
     // Declarations.
     for d in &a.scan.decls {
@@ -1752,18 +1774,14 @@ fn emit(a: &Analysis, info: &LinkInfo) -> Result<Emitted, String> {
             "out" if a.stage == Stage::Fragment => {
                 let mut parts = vec![];
 
-                for (k, n) in d.names.iter().enumerate() {
-                    let loc = d
-                        .layout
-                        .as_deref()
-                        .and_then(|l| {
-                            l.split(',').find_map(|p| {
-                                p.trim()
-                                    .strip_prefix("location=")
-                                    .and_then(|v| v.trim().parse::<u32>().ok())
-                            })
-                        })
-                        .unwrap_or(k as u32);
+                for n in &d.names {
+                    let loc = match layout_location(d.layout.as_deref()) {
+                        Some(l) => l,
+                        None => {
+                            next_unlocated += 1;
+                            next_unlocated - 1
+                        }
+                    };
                     parts.push(format!(
                         "layout(location={loc}) out {} {};",
                         d.type_name, n.name
@@ -2476,6 +2494,26 @@ pub fn compile_part(stage: Stage, source: &str, options: &[String]) -> Result<()
     let a = analyze(stage, source, &options)?;
     let p = link_analyses(&[&a], false)?;
     drop(p);
+    check_output_locations(&a)
+}
+
+/// ESSL 3.00 section 4.3.8.2: with more than one fragment output, every output needs a location. ANGLE's
+/// ValidateOutputs runs after the shader parses and reports each output without one; the first is returned.
+fn check_output_locations(a: &Analysis) -> Result<(), String> {
+    let unlocated: Vec<_> = a
+        .output_locations
+        .iter()
+        .filter(|o| o.2.is_none())
+        .collect();
+
+    if a.output_locations.len() > 1
+        && let Some((name, line, _)) = unlocated.first()
+    {
+        return Err(format!(
+            "ERROR: 0:{line}: '{name}' : when EXT_blend_func_extended extension is not enabled, must explicitly specify all locations when using multiple fragment outputs"
+        ));
+    }
+
     Ok(())
 }
 
