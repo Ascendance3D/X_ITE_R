@@ -1,0 +1,30 @@
+{
+ "upstream": "X_ITE 16.5.0 @ 34cdf9f97",
+ "source": "oracle/x_ite-pin/src",
+ "source_files_sha256": "4beee626206cc5f0d6fc0cc18a96c989e902acb2f9e25cb4d197dd33ec71c7a6",
+ "source_files_sha256_of": "the text of each .js file's path and sha256, in sorted order (not the bytes of the tree)",
+ "note": "Identity of the four generated files that are not tracked in Git. It proves that the data is the generator's output. It does not prove that a mapping is correct.",
+ "records": "csv, json: all functions. md: the named functions listed. UNMAPPED_FUNCTIONS.md: the applicable functions with UNRESOLVED_MAPPING.",
+ "files": {
+  "FUNCTION_LEDGER.csv": {
+   "bytes": 2132956,
+   "records": 12314,
+   "sha256": "2350c591b95a70af54a5fb0a3777c1e68a97ed4e77797b31e3b71de519c82018"
+  },
+  "FUNCTION_LEDGER.json": {
+   "bytes": 5587855,
+   "records": 12314,
+   "sha256": "2f015cb503b070e55c833f2e1acf232806b7ed086f12226b35310d3b8fb19b30"
+  },
+  "FUNCTION_LEDGER.md": {
+   "bytes": 606542,
+   "records": 5999,
+   "sha256": "177d4ccf0e2f63249a86123a6487856491e02a1f34b50978405908672e1b3086"
+  },
+  "UNMAPPED_FUNCTIONS.md": {
+   "bytes": 183974,
+   "records": 5939,
+   "sha256": "70389702a4960fb6ddbc7c45c3d5a40128f57e5379d530190242dec53b77f297"
+  }
+ }
+}

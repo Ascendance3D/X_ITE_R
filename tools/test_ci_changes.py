@@ -131,6 +131,13 @@ class Classification(unittest.TestCase):
             if path == ".github/workflows/code-review.yml" and "EXCLUDE_PATTERNS:" in rest and not re.search(
                     TREE_REFERENCE, rest.replace("ledger/snapshots/*/ledger.json", "")):
                 continue
+            # The "Function ledger manifest" step of "Fast checks" runs the two tools of ledger/functions/tools. "Fast checks"
+            # runs for every change, a change under ledger/ included, so the tree reaches the step that reads it and needs
+            # no suite. Only these two commands are exempt: with them removed, the line must hold no other reference.
+            if path == ".github/workflows/rust-tests.yml" and not re.search(TREE_REFERENCE, rest.replace(
+                    "node ledger/functions/tools/extract_functions.mjs", "").replace(
+                    "python3 -I -B ledger/functions/tools/build_function_ledger.py", "")):
+                continue
             self.assertTrue(is_comment_line(rest), line)
 
     def test_added_files_exist_and_are_not_read_by_a_suite(self):
