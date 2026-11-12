@@ -186,14 +186,28 @@ async function renderOne (file)
       {
          // One record for each canvas that was cleared (fillRect), drawn and read back; equal records are kept once, in sorted order.
          const canvases = [ ];
-         let calls = [ ];
+         let calls = [ ], open = false;
 
+         // ScreenText sets the size of its canvas (which resets the state), clears it (fillRect), draws and reads it back. A
+         // record is the calls from the clear to the read; a path or transform call outside a record would be lost, so it
+         // stops the recording. A read or a rejected call outside a record belongs to another use of a 2D canvas.
          for (const [ name, ... args ] of await page .evaluate (() => window .canvasLog))
          {
             if (name === "fillRect")
+            {
+               if (open)
+                  throw new Error (`--canvas: a fillRect after ${calls .length} canvas calls that were not read back`);
+
                calls = [ ];
+               open  = true;
+            }
             else if (name === "getImageData")
             {
+               if (!open)
+                  continue;
+
+               open = false;
+
                // The record must hold everything that made the pixels: a call that the replay does not know stops the recording.
                const unknown = calls .find (([ name, ... args ]) => CANVAS_REJECTED .includes (name) || (name === "fill" && args .length));
 
@@ -205,8 +219,10 @@ async function renderOne (file)
                if (!canvases .includes (record))
                   canvases .push (record);
             }
-            else
+            else if (open)
                calls .push ([ name, ... args ]);
+            else if (CANVAS_CALLS .includes (name))
+               throw new Error (`--canvas: the page called ${name} on a 2D canvas outside a record (no fillRect before it)`);
          }
 
          // Fonts arrive in any order, so the order in which the texts are drawn is not part of the record.
