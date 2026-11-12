@@ -1,0 +1,1603 @@
+{
+  "ok": true,
+  "poses": {
+    "1": {
+      "position": [
+        0,
+        2.6077313848835266,
+        12
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "start",
+      "viewer": "WALK",
+      "fieldOfViewScale": 1
+    },
+    "2": {
+      "position": [
+        0,
+        2.5096645579951935,
+        12
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "start",
+      "viewer": "WALK",
+      "fieldOfViewScale": 1
+    },
+    "3": {
+      "position": [
+        0,
+        2.4007014533290825,
+        12
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "start",
+      "viewer": "WALK",
+      "fieldOfViewScale": 1
+    },
+    "4": {
+      "position": [
+        0,
+        2.2808420708851935,
+        12
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "start",
+      "viewer": "WALK",
+      "fieldOfViewScale": 1
+    },
+    "5": {
+      "position": [
+        0,
+        2.1500864106635267,
+        12
+      ],
+      "orientation": [
+        0.5544244112997548,
+        -0.832132436167874,
+        0.013007033956544019,
+        0.0004975636703914615
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "start",
+      "viewer": "WALK",
+      "fieldOfViewScale": 1
+    },
+    "6": {
+      "position": [
+        0,
+        2.0084344726640824,
+        12
+      ],
+      "orientation": [
+        0.5543390596749268,
+        -0.832166206898672,
+        0.01440871288500241,
+        0.004042827902131722
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "start",
+      "viewer": "WALK",
+      "fieldOfViewScale": 1
+    },
+    "7": {
+      "position": [
+        0,
+        1.8558862568868602,
+        12
+      ],
+      "orientation": [
+        0.5541924841492968,
+        -0.8322186357145493,
+        0.01681763596181917,
+        0.012163958475246518
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "start",
+      "viewer": "WALK",
+      "fieldOfViewScale": 1
+    },
+    "8": {
+      "position": [
+        0,
+        1.69244176333186,
+        12
+      ],
+      "orientation": [
+        0.554014918214053,
+        -0.83227385137835,
+        0.019690269390891548,
+        0.025544146945517394
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "start",
+      "viewer": "WALK",
+      "fieldOfViewScale": 1
+    },
+    "9": {
+      "position": [
+        0,
+        1.5999998925953949,
+        12
+      ],
+      "orientation": [
+        0.5603083363308637,
+        -0.8279622376338424,
+        0.02308898634487081,
+        0.043919336139510906
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "start",
+      "viewer": "WALK",
+      "fieldOfViewScale": 1
+    },
+    "10": {
+      "position": [
+        0,
+        1.5999998925953949,
+        12
+      ],
+      "orientation": [
+        0.5867970755216632,
+        -0.8092972351844104,
+        0.026592805078302913,
+        0.0646727927827802
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "start",
+      "viewer": "WALK",
+      "fieldOfViewScale": 1
+    },
+    "11": {
+      "position": [
+        0,
+        1.5999998925953949,
+        12
+      ],
+      "orientation": [
+        0.63421539154683,
+        -0.7726067921687331,
+        0.029147586858715765,
+        0.08468746342779077
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "start",
+      "viewer": "WALK",
+      "fieldOfViewScale": 1
+    },
+    "12": {
+      "position": [
+        0,
+        1.5999998925953949,
+        12
+      ],
+      "orientation": [
+        0.7025666621636049,
+        -0.7109997925348743,
+        0.029654345915150083,
+        0.10138612412550943
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "start",
+      "viewer": "WALK",
+      "fieldOfViewScale": 1
+    },
+    "13": {
+      "position": [
+        0,
+        1.5999998925953949,
+        12
+      ],
+      "orientation": [
+        0.7890114461267589,
+        -0.6137781345598942,
+        0.02715399449610724,
+        0.11350814254859468
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "start",
+      "viewer": "WALK",
+      "fieldOfViewScale": 1
+    },
+    "14": {
+      "position": [
+        0,
+        1.5999998925953949,
+        12
+      ],
+      "orientation": [
+        0.8826182391292837,
+        -0.46961673516148517,
+        0.0210989576173729,
+        0.12207709795664969
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "start",
+      "viewer": "WALK",
+      "fieldOfViewScale": 1
+    },
+    "15": {
+      "position": [
+        0,
+        1.5999998925953949,
+        12
+      ],
+      "orientation": [
+        0.9561233149096837,
+        -0.2927108435241847,
+        0.012188878926626963,
+        0.13103047727208558
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "start",
+      "viewer": "WALK",
+      "fieldOfViewScale": 1
+    },
+    "16": {
+      "position": [
+        0,
+        1.5999998925953949,
+        12
+      ],
+      "orientation": [
+        0.9561233149096837,
+        -0.2927108435241847,
+        0.012188878926626963,
+        0.13103047727208558
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "start",
+      "viewer": "WALK",
+      "fieldOfViewScale": 1
+    },
+    "17": {
+      "position": [
+        0,
+        1.5999998925953949,
+        12
+      ],
+      "orientation": [
+        0.9561233149096837,
+        -0.2927108435241847,
+        0.012188878926626963,
+        0.13103047727208558
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "start",
+      "viewer": "WALK",
+      "fieldOfViewScale": 1
+    },
+    "18": {
+      "position": [
+        0,
+        1.5999998925953949,
+        12
+      ],
+      "orientation": [
+        0.9561233149096837,
+        -0.2927108435241847,
+        0.012188878926626963,
+        0.13103047727208558
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "start",
+      "viewer": "WALK",
+      "fieldOfViewScale": 1
+    },
+    "19": {
+      "position": [
+        0,
+        1.5999998925953949,
+        12
+      ],
+      "orientation": [
+        0.9561233149096837,
+        -0.2927108435241847,
+        0.012188878926626963,
+        0.13103047727208558
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "start",
+      "viewer": "WALK",
+      "fieldOfViewScale": 1
+    },
+    "20": {
+      "position": [
+        0,
+        1.5999998925953949,
+        12
+      ],
+      "orientation": [
+        0.9561233149096837,
+        -0.2927108435241847,
+        0.012188878926626963,
+        0.13103047727208558
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "start",
+      "viewer": "WALK",
+      "fieldOfViewScale": 1
+    },
+    "21": {
+      "position": [
+        0,
+        1.5999998925953949,
+        12
+      ],
+      "orientation": [
+        0.9561233149096837,
+        -0.2927108435241847,
+        0.012188878926626963,
+        0.13103047727208558
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "start",
+      "viewer": "WALK",
+      "fieldOfViewScale": 1
+    },
+    "22": {
+      "position": [
+        0,
+        1.5999998925953949,
+        12
+      ],
+      "orientation": [
+        0.9561233149096837,
+        -0.2927108435241847,
+        0.012188878926626963,
+        0.13103047727208558
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "start",
+      "viewer": "WALK",
+      "fieldOfViewScale": 1
+    },
+    "23": {
+      "position": [
+        0,
+        1.5999998925953949,
+        12
+      ],
+      "orientation": [
+        0.9561233149096837,
+        -0.2927108435241847,
+        0.012188878926626963,
+        0.13103047727208558
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "start",
+      "viewer": "WALK",
+      "fieldOfViewScale": 1
+    },
+    "24": {
+      "position": [
+        0,
+        1.5999998925953949,
+        12
+      ],
+      "orientation": [
+        0.9561233149096837,
+        -0.2927108435241847,
+        0.012188878926626963,
+        0.13103047727208558
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "start",
+      "viewer": "WALK",
+      "fieldOfViewScale": 1
+    },
+    "25": {
+      "position": [
+        0,
+        1.5999998925953949,
+        12
+      ],
+      "orientation": [
+        0.9561233149096837,
+        -0.2927108435241847,
+        0.012188878926626963,
+        0.13103047727208558
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "start",
+      "viewer": "WALK",
+      "fieldOfViewScale": 1
+    },
+    "26": {
+      "position": [
+        0,
+        1.5999998925953949,
+        12
+      ],
+      "orientation": [
+        0.9561233149096837,
+        -0.2927108435241847,
+        0.012188878926626963,
+        0.13103047727208558
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "start",
+      "viewer": "WALK",
+      "fieldOfViewScale": 1
+    },
+    "27": {
+      "position": [
+        0,
+        1.5999998925953949,
+        12
+      ],
+      "orientation": [
+        0.9561233149096837,
+        -0.2927108435241847,
+        0.012188878926626963,
+        0.13103047727208558
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "start",
+      "viewer": "WALK",
+      "fieldOfViewScale": 1
+    },
+    "28": {
+      "position": [
+        0,
+        1.5999998925953949,
+        12
+      ],
+      "orientation": [
+        0.9561233149096837,
+        -0.2927108435241847,
+        0.012188878926626963,
+        0.13103047727208558
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "start",
+      "viewer": "WALK",
+      "fieldOfViewScale": 1
+    },
+    "29": {
+      "position": [
+        0,
+        1.5999998925953949,
+        12
+      ],
+      "orientation": [
+        0.9561233149096837,
+        -0.2927108435241847,
+        0.012188878926626963,
+        0.13103047727208558
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "start",
+      "viewer": "WALK",
+      "fieldOfViewScale": 1
+    },
+    "30": {
+      "position": [
+        0,
+        1.5999998925953949,
+        12
+      ],
+      "orientation": [
+        0.9561233149096837,
+        -0.2927108435241847,
+        0.012188878926626963,
+        0.13103047727208558
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "start",
+      "viewer": "WALK",
+      "fieldOfViewScale": 1
+    },
+    "31": {
+      "position": [
+        0,
+        1.5999998925953949,
+        12
+      ],
+      "orientation": [
+        0.9561233149096837,
+        -0.2927108435241847,
+        0.012188878926626963,
+        0.13103047727208558
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "start",
+      "viewer": "WALK",
+      "fieldOfViewScale": 1
+    },
+    "32": {
+      "position": [
+        0,
+        1.5999998925953949,
+        12
+      ],
+      "orientation": [
+        0.9561233149096837,
+        -0.2927108435241847,
+        0.012188878926626963,
+        0.13103047727208558
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "start",
+      "viewer": "WALK",
+      "fieldOfViewScale": 1
+    },
+    "33": {
+      "position": [
+        0,
+        1.5999998925953949,
+        12
+      ],
+      "orientation": [
+        0.9561233149096837,
+        -0.2927108435241847,
+        0.012188878926626963,
+        0.13103047727208558
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "start",
+      "viewer": "WALK",
+      "fieldOfViewScale": 1
+    },
+    "34": {
+      "position": [
+        0,
+        1.5999998925953949,
+        12
+      ],
+      "orientation": [
+        0.9561233149096837,
+        -0.2927108435241847,
+        0.012188878926626963,
+        0.13103047727208558
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "start",
+      "viewer": "WALK",
+      "fieldOfViewScale": 1
+    },
+    "35": {
+      "position": [
+        0,
+        1.5999998925953949,
+        12
+      ],
+      "orientation": [
+        0.9561233149096837,
+        -0.2927108435241847,
+        0.012188878926626963,
+        0.13103047727208558
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "start",
+      "viewer": "WALK",
+      "fieldOfViewScale": 1
+    },
+    "36": {
+      "position": [
+        0,
+        1.5999998925953949,
+        12
+      ],
+      "orientation": [
+        0.9561233149096837,
+        -0.2927108435241847,
+        0.012188878926626963,
+        0.13103047727208558
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "start",
+      "viewer": "WALK",
+      "fieldOfViewScale": 1
+    },
+    "37": {
+      "position": [
+        0,
+        1.5999998925953949,
+        12
+      ],
+      "orientation": [
+        0.9561233149096837,
+        -0.2927108435241847,
+        0.012188878926626963,
+        0.13103047727208558
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "start",
+      "viewer": "WALK",
+      "fieldOfViewScale": 1
+    },
+    "38": {
+      "position": [
+        0,
+        1.5999998925953949,
+        12
+      ],
+      "orientation": [
+        0.9561233149096837,
+        -0.2927108435241847,
+        0.012188878926626963,
+        0.13103047727208558
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "start",
+      "viewer": "WALK",
+      "fieldOfViewScale": 1
+    },
+    "39": {
+      "position": [
+        0,
+        1.5999998925953949,
+        12
+      ],
+      "orientation": [
+        0.9561233149096837,
+        -0.2927108435241847,
+        0.012188878926626963,
+        0.13103047727208558
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "start",
+      "viewer": "WALK",
+      "fieldOfViewScale": 1
+    },
+    "40": {
+      "position": [
+        0,
+        1.5999998925953949,
+        12
+      ],
+      "orientation": [
+        0.9561233149096837,
+        -0.2927108435241847,
+        0.012188878926626963,
+        0.13103047727208558
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "start",
+      "viewer": "WALK",
+      "fieldOfViewScale": 1
+    },
+    "41": {
+      "position": [
+        0,
+        1.5999998925953949,
+        12
+      ],
+      "orientation": [
+        0.9561233149096837,
+        -0.2927108435241847,
+        0.012188878926626963,
+        0.13103047727208558
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "start",
+      "viewer": "WALK",
+      "fieldOfViewScale": 1
+    },
+    "42": {
+      "position": [
+        0,
+        1.5999998925953949,
+        12
+      ],
+      "orientation": [
+        0.9561233149096837,
+        -0.2927108435241847,
+        0.012188878926626963,
+        0.13103047727208558
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "start",
+      "viewer": "WALK",
+      "fieldOfViewScale": 1
+    },
+    "43": {
+      "position": [
+        0,
+        1.5999998925953949,
+        12
+      ],
+      "orientation": [
+        0.9561233149096837,
+        -0.2927108435241847,
+        0.012188878926626963,
+        0.13103047727208558
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "start",
+      "viewer": "WALK",
+      "fieldOfViewScale": 1
+    },
+    "44": {
+      "position": [
+        0,
+        1.5999998925953949,
+        12
+      ],
+      "orientation": [
+        0.9561233149096837,
+        -0.2927108435241847,
+        0.012188878926626963,
+        0.13103047727208558
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "start",
+      "viewer": "WALK",
+      "fieldOfViewScale": 1
+    },
+    "45": {
+      "position": [
+        0,
+        1.5999998925953949,
+        12
+      ],
+      "orientation": [
+        0.9561233149096837,
+        -0.2927108435241847,
+        0.012188878926626963,
+        0.13103047727208558
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "start",
+      "viewer": "WALK",
+      "fieldOfViewScale": 1
+    },
+    "46": {
+      "position": [
+        0,
+        1.5999998925953949,
+        12
+      ],
+      "orientation": [
+        0.9561233149096837,
+        -0.2927108435241847,
+        0.012188878926626963,
+        0.13103047727208558
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "start",
+      "viewer": "WALK",
+      "fieldOfViewScale": 1
+    },
+    "47": {
+      "position": [
+        0,
+        1.5999998925953949,
+        12
+      ],
+      "orientation": [
+        0.9561233149096837,
+        -0.2927108435241847,
+        0.012188878926626963,
+        0.13103047727208558
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "start",
+      "viewer": "WALK",
+      "fieldOfViewScale": 1
+    },
+    "48": {
+      "position": [
+        0,
+        1.5999998925953949,
+        12
+      ],
+      "orientation": [
+        0.9561233149096837,
+        -0.2927108435241847,
+        0.012188878926626963,
+        0.13103047727208558
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "start",
+      "viewer": "WALK",
+      "fieldOfViewScale": 1
+    },
+    "49": {
+      "position": [
+        0,
+        1.5999998925953949,
+        12
+      ],
+      "orientation": [
+        0.9561233149096837,
+        -0.2927108435241847,
+        0.012188878926626963,
+        0.13103047727208558
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "start",
+      "viewer": "WALK",
+      "fieldOfViewScale": 1
+    },
+    "50": {
+      "position": [
+        0,
+        1.5999998925953949,
+        12
+      ],
+      "orientation": [
+        0.9561233149096837,
+        -0.2927108435241847,
+        0.012188878926626963,
+        0.13103047727208558
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "start",
+      "viewer": "WALK",
+      "fieldOfViewScale": 1
+    },
+    "51": {
+      "position": [
+        0,
+        1.5999998925953949,
+        12
+      ],
+      "orientation": [
+        0.9561233149096837,
+        -0.2927108435241847,
+        0.012188878926626963,
+        0.13103047727208558
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "start",
+      "viewer": "WALK",
+      "fieldOfViewScale": 1
+    },
+    "52": {
+      "position": [
+        0,
+        1.5999998925953949,
+        12
+      ],
+      "orientation": [
+        0.9561233149096837,
+        -0.2927108435241847,
+        0.012188878926626963,
+        0.13103047727208558
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "start",
+      "viewer": "WALK",
+      "fieldOfViewScale": 1
+    },
+    "53": {
+      "position": [
+        0,
+        1.5999998925953949,
+        12
+      ],
+      "orientation": [
+        0.9561233149096837,
+        -0.2927108435241847,
+        0.012188878926626963,
+        0.13103047727208558
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "start",
+      "viewer": "WALK",
+      "fieldOfViewScale": 1
+    },
+    "54": {
+      "position": [
+        0,
+        1.5999998925953949,
+        12
+      ],
+      "orientation": [
+        0.9561233149096837,
+        -0.2927108435241847,
+        0.012188878926626963,
+        0.13103047727208558
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "start",
+      "viewer": "WALK",
+      "fieldOfViewScale": 1
+    },
+    "55": {
+      "position": [
+        0,
+        1.5999998925953949,
+        12
+      ],
+      "orientation": [
+        0.9561233149096837,
+        -0.2927108435241847,
+        0.012188878926626963,
+        0.13103047727208558
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "start",
+      "viewer": "WALK",
+      "fieldOfViewScale": 1
+    },
+    "56": {
+      "position": [
+        0,
+        1.5999998925953949,
+        12
+      ],
+      "orientation": [
+        0.9561233149096837,
+        -0.2927108435241847,
+        0.012188878926626963,
+        0.13103047727208558
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "start",
+      "viewer": "WALK",
+      "fieldOfViewScale": 1
+    },
+    "57": {
+      "position": [
+        0,
+        1.5999998925953949,
+        12
+      ],
+      "orientation": [
+        0.9561233149096837,
+        -0.2927108435241847,
+        0.012188878926626963,
+        0.13103047727208558
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "start",
+      "viewer": "WALK",
+      "fieldOfViewScale": 1
+    },
+    "58": {
+      "position": [
+        0,
+        1.5999998925953949,
+        12
+      ],
+      "orientation": [
+        0.9561233149096837,
+        -0.2927108435241847,
+        0.012188878926626963,
+        0.13103047727208558
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "start",
+      "viewer": "WALK",
+      "fieldOfViewScale": 1
+    },
+    "59": {
+      "position": [
+        0,
+        1.5999998925953949,
+        12
+      ],
+      "orientation": [
+        0.9561233149096837,
+        -0.2927108435241847,
+        0.012188878926626963,
+        0.13103047727208558
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "start",
+      "viewer": "WALK",
+      "fieldOfViewScale": 1
+    },
+    "60": {
+      "position": [
+        0,
+        1.5999998925953949,
+        12
+      ],
+      "orientation": [
+        0.9561233149096837,
+        -0.2927108435241847,
+        0.012188878926626963,
+        0.13103047727208558
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "start",
+      "viewer": "WALK",
+      "fieldOfViewScale": 1
+    }
+  },
+  "vrml": {
+    "1": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nNavigationInfo {\n  type [\n    \"WALK\",\n    \"ANY\"\n  ]\n  speed 4\n}\n\nViewpoint {\n  description \"start\"\n  position 0 3 12\n}\n\nDEF PX ProximitySensor {\n  size 1000 1000 1000\n}\n\nTransform {\n  translation 0 -0.1 0\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.4 0.4 0.4\n      }\n    }\n    geometry Box {\n      size 60 0.2 60\n    }\n  }\n}\n\nTransform {\n  translation 0 0.25 10\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.3 0.3 0.9\n      }\n    }\n    geometry Box {\n      size 3 0.5 1\n    }\n  }\n}\n\nTransform {\n  translation 0 2 7\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.9 0.3 0.2\n      }\n    }\n    geometry Box {\n      size 2 4 0.5\n    }\n  }\n}\n\nTransform {\n  translation -1.5 1.6 6\n  children [\n    DEF TS TouchSensor { }\n    Shape {\n      appearance Appearance {\n        material Material {\n          diffuseColor 0.2 0.8 0.3\n        }\n      }\n      geometry Box {\n        size 1.5 1.5 1.5\n      }\n    }\n  ]\n}\n\nDEF LOG Script {\n  inputOutput SFString hist \" PX_isActive=true PX_n=8\"\n  inputOnly   SFBool   TS_isActive\n  inputOnly   SFBool   TS_isOver\n  inputOnly   SFTime   TS_touchTime\n  inputOnly   SFBool   PX_isActive\n  inputOnly   SFVec3f  PX_position\n\n  url \"ecmascript:\n    var n = 0;\n    function TS_isActive (v) { hist = hist + ' TS_isActive=' + v; }\n    function TS_isOver (v) { hist = hist + ' TS_isOver=' + v; }\n    function TS_touchTime (v) { hist = hist + ' TS_touchTime'; }\n    function PX_isActive (v) { hist = hist + ' PX_isActive=' + v; }\n    function PX_position (v) { n = n + 1; hist = hist .replace (/ PX_n=\\\\d+$/, '') + ' PX_n=' + n; }\n  \"\n}\n\nROUTE TS.isActive TO LOG.TS_isActive\nROUTE TS.isOver TO LOG.TS_isOver\nROUTE TS.touchTime TO LOG.TS_touchTime\nROUTE PX.isActive TO LOG.PX_isActive\nROUTE PX.position_changed TO LOG.PX_position\n",
+    "2": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nNavigationInfo {\n  type [\n    \"WALK\",\n    \"ANY\"\n  ]\n  speed 4\n}\n\nViewpoint {\n  description \"start\"\n  position 0 3 12\n}\n\nDEF PX ProximitySensor {\n  size 1000 1000 1000\n}\n\nTransform {\n  translation 0 -0.1 0\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.4 0.4 0.4\n      }\n    }\n    geometry Box {\n      size 60 0.2 60\n    }\n  }\n}\n\nTransform {\n  translation 0 0.25 10\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.3 0.3 0.9\n      }\n    }\n    geometry Box {\n      size 3 0.5 1\n    }\n  }\n}\n\nTransform {\n  translation 0 2 7\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.9 0.3 0.2\n      }\n    }\n    geometry Box {\n      size 2 4 0.5\n    }\n  }\n}\n\nTransform {\n  translation -1.5 1.6 6\n  children [\n    DEF TS TouchSensor { }\n    Shape {\n      appearance Appearance {\n        material Material {\n          diffuseColor 0.2 0.8 0.3\n        }\n      }\n      geometry Box {\n        size 1.5 1.5 1.5\n      }\n    }\n  ]\n}\n\nDEF LOG Script {\n  inputOutput SFString hist \" PX_isActive=true PX_n=9\"\n  inputOnly   SFBool   TS_isActive\n  inputOnly   SFBool   TS_isOver\n  inputOnly   SFTime   TS_touchTime\n  inputOnly   SFBool   PX_isActive\n  inputOnly   SFVec3f  PX_position\n\n  url \"ecmascript:\n    var n = 0;\n    function TS_isActive (v) { hist = hist + ' TS_isActive=' + v; }\n    function TS_isOver (v) { hist = hist + ' TS_isOver=' + v; }\n    function TS_touchTime (v) { hist = hist + ' TS_touchTime'; }\n    function PX_isActive (v) { hist = hist + ' PX_isActive=' + v; }\n    function PX_position (v) { n = n + 1; hist = hist .replace (/ PX_n=\\\\d+$/, '') + ' PX_n=' + n; }\n  \"\n}\n\nROUTE TS.isActive TO LOG.TS_isActive\nROUTE TS.isOver TO LOG.TS_isOver\nROUTE TS.touchTime TO LOG.TS_touchTime\nROUTE PX.isActive TO LOG.PX_isActive\nROUTE PX.position_changed TO LOG.PX_position\n",
+    "3": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nNavigationInfo {\n  type [\n    \"WALK\",\n    \"ANY\"\n  ]\n  speed 4\n}\n\nViewpoint {\n  description \"start\"\n  position 0 3 12\n}\n\nDEF PX ProximitySensor {\n  size 1000 1000 1000\n}\n\nTransform {\n  translation 0 -0.1 0\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.4 0.4 0.4\n      }\n    }\n    geometry Box {\n      size 60 0.2 60\n    }\n  }\n}\n\nTransform {\n  translation 0 0.25 10\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.3 0.3 0.9\n      }\n    }\n    geometry Box {\n      size 3 0.5 1\n    }\n  }\n}\n\nTransform {\n  translation 0 2 7\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.9 0.3 0.2\n      }\n    }\n    geometry Box {\n      size 2 4 0.5\n    }\n  }\n}\n\nTransform {\n  translation -1.5 1.6 6\n  children [\n    DEF TS TouchSensor { }\n    Shape {\n      appearance Appearance {\n        material Material {\n          diffuseColor 0.2 0.8 0.3\n        }\n      }\n      geometry Box {\n        size 1.5 1.5 1.5\n      }\n    }\n  ]\n}\n\nDEF LOG Script {\n  inputOutput SFString hist \" PX_isActive=true PX_n=10\"\n  inputOnly   SFBool   TS_isActive\n  inputOnly   SFBool   TS_isOver\n  inputOnly   SFTime   TS_touchTime\n  inputOnly   SFBool   PX_isActive\n  inputOnly   SFVec3f  PX_position\n\n  url \"ecmascript:\n    var n = 0;\n    function TS_isActive (v) { hist = hist + ' TS_isActive=' + v; }\n    function TS_isOver (v) { hist = hist + ' TS_isOver=' + v; }\n    function TS_touchTime (v) { hist = hist + ' TS_touchTime'; }\n    function PX_isActive (v) { hist = hist + ' PX_isActive=' + v; }\n    function PX_position (v) { n = n + 1; hist = hist .replace (/ PX_n=\\\\d+$/, '') + ' PX_n=' + n; }\n  \"\n}\n\nROUTE TS.isActive TO LOG.TS_isActive\nROUTE TS.isOver TO LOG.TS_isOver\nROUTE TS.touchTime TO LOG.TS_touchTime\nROUTE PX.isActive TO LOG.PX_isActive\nROUTE PX.position_changed TO LOG.PX_position\n",
+    "4": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nNavigationInfo {\n  type [\n    \"WALK\",\n    \"ANY\"\n  ]\n  speed 4\n}\n\nViewpoint {\n  description \"start\"\n  position 0 3 12\n}\n\nDEF PX ProximitySensor {\n  size 1000 1000 1000\n}\n\nTransform {\n  translation 0 -0.1 0\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.4 0.4 0.4\n      }\n    }\n    geometry Box {\n      size 60 0.2 60\n    }\n  }\n}\n\nTransform {\n  translation 0 0.25 10\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.3 0.3 0.9\n      }\n    }\n    geometry Box {\n      size 3 0.5 1\n    }\n  }\n}\n\nTransform {\n  translation 0 2 7\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.9 0.3 0.2\n      }\n    }\n    geometry Box {\n      size 2 4 0.5\n    }\n  }\n}\n\nTransform {\n  translation -1.5 1.6 6\n  children [\n    DEF TS TouchSensor { }\n    Shape {\n      appearance Appearance {\n        material Material {\n          diffuseColor 0.2 0.8 0.3\n        }\n      }\n      geometry Box {\n        size 1.5 1.5 1.5\n      }\n    }\n  ]\n}\n\nDEF LOG Script {\n  inputOutput SFString hist \" PX_isActive=true PX_n=11\"\n  inputOnly   SFBool   TS_isActive\n  inputOnly   SFBool   TS_isOver\n  inputOnly   SFTime   TS_touchTime\n  inputOnly   SFBool   PX_isActive\n  inputOnly   SFVec3f  PX_position\n\n  url \"ecmascript:\n    var n = 0;\n    function TS_isActive (v) { hist = hist + ' TS_isActive=' + v; }\n    function TS_isOver (v) { hist = hist + ' TS_isOver=' + v; }\n    function TS_touchTime (v) { hist = hist + ' TS_touchTime'; }\n    function PX_isActive (v) { hist = hist + ' PX_isActive=' + v; }\n    function PX_position (v) { n = n + 1; hist = hist .replace (/ PX_n=\\\\d+$/, '') + ' PX_n=' + n; }\n  \"\n}\n\nROUTE TS.isActive TO LOG.TS_isActive\nROUTE TS.isOver TO LOG.TS_isOver\nROUTE TS.touchTime TO LOG.TS_touchTime\nROUTE PX.isActive TO LOG.PX_isActive\nROUTE PX.position_changed TO LOG.PX_position\n",
+    "5": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nNavigationInfo {\n  type [\n    \"WALK\",\n    \"ANY\"\n  ]\n  speed 4\n}\n\nViewpoint {\n  description \"start\"\n  position 0 3 12\n}\n\nDEF PX ProximitySensor {\n  size 1000 1000 1000\n}\n\nTransform {\n  translation 0 -0.1 0\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.4 0.4 0.4\n      }\n    }\n    geometry Box {\n      size 60 0.2 60\n    }\n  }\n}\n\nTransform {\n  translation 0 0.25 10\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.3 0.3 0.9\n      }\n    }\n    geometry Box {\n      size 3 0.5 1\n    }\n  }\n}\n\nTransform {\n  translation 0 2 7\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.9 0.3 0.2\n      }\n    }\n    geometry Box {\n      size 2 4 0.5\n    }\n  }\n}\n\nTransform {\n  translation -1.5 1.6 6\n  children [\n    DEF TS TouchSensor { }\n    Shape {\n      appearance Appearance {\n        material Material {\n          diffuseColor 0.2 0.8 0.3\n        }\n      }\n      geometry Box {\n        size 1.5 1.5 1.5\n      }\n    }\n  ]\n}\n\nDEF LOG Script {\n  inputOutput SFString hist \" PX_isActive=true PX_n=12\"\n  inputOnly   SFBool   TS_isActive\n  inputOnly   SFBool   TS_isOver\n  inputOnly   SFTime   TS_touchTime\n  inputOnly   SFBool   PX_isActive\n  inputOnly   SFVec3f  PX_position\n\n  url \"ecmascript:\n    var n = 0;\n    function TS_isActive (v) { hist = hist + ' TS_isActive=' + v; }\n    function TS_isOver (v) { hist = hist + ' TS_isOver=' + v; }\n    function TS_touchTime (v) { hist = hist + ' TS_touchTime'; }\n    function PX_isActive (v) { hist = hist + ' PX_isActive=' + v; }\n    function PX_position (v) { n = n + 1; hist = hist .replace (/ PX_n=\\\\d+$/, '') + ' PX_n=' + n; }\n  \"\n}\n\nROUTE TS.isActive TO LOG.TS_isActive\nROUTE TS.isOver TO LOG.TS_isOver\nROUTE TS.touchTime TO LOG.TS_touchTime\nROUTE PX.isActive TO LOG.PX_isActive\nROUTE PX.position_changed TO LOG.PX_position\n",
+    "6": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nNavigationInfo {\n  type [\n    \"WALK\",\n    \"ANY\"\n  ]\n  speed 4\n}\n\nViewpoint {\n  description \"start\"\n  position 0 3 12\n}\n\nDEF PX ProximitySensor {\n  size 1000 1000 1000\n}\n\nTransform {\n  translation 0 -0.1 0\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.4 0.4 0.4\n      }\n    }\n    geometry Box {\n      size 60 0.2 60\n    }\n  }\n}\n\nTransform {\n  translation 0 0.25 10\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.3 0.3 0.9\n      }\n    }\n    geometry Box {\n      size 3 0.5 1\n    }\n  }\n}\n\nTransform {\n  translation 0 2 7\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.9 0.3 0.2\n      }\n    }\n    geometry Box {\n      size 2 4 0.5\n    }\n  }\n}\n\nTransform {\n  translation -1.5 1.6 6\n  children [\n    DEF TS TouchSensor { }\n    Shape {\n      appearance Appearance {\n        material Material {\n          diffuseColor 0.2 0.8 0.3\n        }\n      }\n      geometry Box {\n        size 1.5 1.5 1.5\n      }\n    }\n  ]\n}\n\nDEF LOG Script {\n  inputOutput SFString hist \" PX_isActive=true PX_n=13\"\n  inputOnly   SFBool   TS_isActive\n  inputOnly   SFBool   TS_isOver\n  inputOnly   SFTime   TS_touchTime\n  inputOnly   SFBool   PX_isActive\n  inputOnly   SFVec3f  PX_position\n\n  url \"ecmascript:\n    var n = 0;\n    function TS_isActive (v) { hist = hist + ' TS_isActive=' + v; }\n    function TS_isOver (v) { hist = hist + ' TS_isOver=' + v; }\n    function TS_touchTime (v) { hist = hist + ' TS_touchTime'; }\n    function PX_isActive (v) { hist = hist + ' PX_isActive=' + v; }\n    function PX_position (v) { n = n + 1; hist = hist .replace (/ PX_n=\\\\d+$/, '') + ' PX_n=' + n; }\n  \"\n}\n\nROUTE TS.isActive TO LOG.TS_isActive\nROUTE TS.isOver TO LOG.TS_isOver\nROUTE TS.touchTime TO LOG.TS_touchTime\nROUTE PX.isActive TO LOG.PX_isActive\nROUTE PX.position_changed TO LOG.PX_position\n",
+    "7": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nNavigationInfo {\n  type [\n    \"WALK\",\n    \"ANY\"\n  ]\n  speed 4\n}\n\nViewpoint {\n  description \"start\"\n  position 0 3 12\n}\n\nDEF PX ProximitySensor {\n  size 1000 1000 1000\n}\n\nTransform {\n  translation 0 -0.1 0\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.4 0.4 0.4\n      }\n    }\n    geometry Box {\n      size 60 0.2 60\n    }\n  }\n}\n\nTransform {\n  translation 0 0.25 10\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.3 0.3 0.9\n      }\n    }\n    geometry Box {\n      size 3 0.5 1\n    }\n  }\n}\n\nTransform {\n  translation 0 2 7\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.9 0.3 0.2\n      }\n    }\n    geometry Box {\n      size 2 4 0.5\n    }\n  }\n}\n\nTransform {\n  translation -1.5 1.6 6\n  children [\n    DEF TS TouchSensor { }\n    Shape {\n      appearance Appearance {\n        material Material {\n          diffuseColor 0.2 0.8 0.3\n        }\n      }\n      geometry Box {\n        size 1.5 1.5 1.5\n      }\n    }\n  ]\n}\n\nDEF LOG Script {\n  inputOutput SFString hist \" PX_isActive=true PX_n=14\"\n  inputOnly   SFBool   TS_isActive\n  inputOnly   SFBool   TS_isOver\n  inputOnly   SFTime   TS_touchTime\n  inputOnly   SFBool   PX_isActive\n  inputOnly   SFVec3f  PX_position\n\n  url \"ecmascript:\n    var n = 0;\n    function TS_isActive (v) { hist = hist + ' TS_isActive=' + v; }\n    function TS_isOver (v) { hist = hist + ' TS_isOver=' + v; }\n    function TS_touchTime (v) { hist = hist + ' TS_touchTime'; }\n    function PX_isActive (v) { hist = hist + ' PX_isActive=' + v; }\n    function PX_position (v) { n = n + 1; hist = hist .replace (/ PX_n=\\\\d+$/, '') + ' PX_n=' + n; }\n  \"\n}\n\nROUTE TS.isActive TO LOG.TS_isActive\nROUTE TS.isOver TO LOG.TS_isOver\nROUTE TS.touchTime TO LOG.TS_touchTime\nROUTE PX.isActive TO LOG.PX_isActive\nROUTE PX.position_changed TO LOG.PX_position\n",
+    "8": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nNavigationInfo {\n  type [\n    \"WALK\",\n    \"ANY\"\n  ]\n  speed 4\n}\n\nViewpoint {\n  description \"start\"\n  position 0 3 12\n}\n\nDEF PX ProximitySensor {\n  size 1000 1000 1000\n}\n\nTransform {\n  translation 0 -0.1 0\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.4 0.4 0.4\n      }\n    }\n    geometry Box {\n      size 60 0.2 60\n    }\n  }\n}\n\nTransform {\n  translation 0 0.25 10\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.3 0.3 0.9\n      }\n    }\n    geometry Box {\n      size 3 0.5 1\n    }\n  }\n}\n\nTransform {\n  translation 0 2 7\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.9 0.3 0.2\n      }\n    }\n    geometry Box {\n      size 2 4 0.5\n    }\n  }\n}\n\nTransform {\n  translation -1.5 1.6 6\n  children [\n    DEF TS TouchSensor { }\n    Shape {\n      appearance Appearance {\n        material Material {\n          diffuseColor 0.2 0.8 0.3\n        }\n      }\n      geometry Box {\n        size 1.5 1.5 1.5\n      }\n    }\n  ]\n}\n\nDEF LOG Script {\n  inputOutput SFString hist \" PX_isActive=true PX_n=15\"\n  inputOnly   SFBool   TS_isActive\n  inputOnly   SFBool   TS_isOver\n  inputOnly   SFTime   TS_touchTime\n  inputOnly   SFBool   PX_isActive\n  inputOnly   SFVec3f  PX_position\n\n  url \"ecmascript:\n    var n = 0;\n    function TS_isActive (v) { hist = hist + ' TS_isActive=' + v; }\n    function TS_isOver (v) { hist = hist + ' TS_isOver=' + v; }\n    function TS_touchTime (v) { hist = hist + ' TS_touchTime'; }\n    function PX_isActive (v) { hist = hist + ' PX_isActive=' + v; }\n    function PX_position (v) { n = n + 1; hist = hist .replace (/ PX_n=\\\\d+$/, '') + ' PX_n=' + n; }\n  \"\n}\n\nROUTE TS.isActive TO LOG.TS_isActive\nROUTE TS.isOver TO LOG.TS_isOver\nROUTE TS.touchTime TO LOG.TS_touchTime\nROUTE PX.isActive TO LOG.PX_isActive\nROUTE PX.position_changed TO LOG.PX_position\n",
+    "9": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nNavigationInfo {\n  type [\n    \"WALK\",\n    \"ANY\"\n  ]\n  speed 4\n}\n\nViewpoint {\n  description \"start\"\n  position 0 3 12\n}\n\nDEF PX ProximitySensor {\n  size 1000 1000 1000\n}\n\nTransform {\n  translation 0 -0.1 0\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.4 0.4 0.4\n      }\n    }\n    geometry Box {\n      size 60 0.2 60\n    }\n  }\n}\n\nTransform {\n  translation 0 0.25 10\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.3 0.3 0.9\n      }\n    }\n    geometry Box {\n      size 3 0.5 1\n    }\n  }\n}\n\nTransform {\n  translation 0 2 7\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.9 0.3 0.2\n      }\n    }\n    geometry Box {\n      size 2 4 0.5\n    }\n  }\n}\n\nTransform {\n  translation -1.5 1.6 6\n  children [\n    DEF TS TouchSensor { }\n    Shape {\n      appearance Appearance {\n        material Material {\n          diffuseColor 0.2 0.8 0.3\n        }\n      }\n      geometry Box {\n        size 1.5 1.5 1.5\n      }\n    }\n  ]\n}\n\nDEF LOG Script {\n  inputOutput SFString hist \" PX_isActive=true PX_n=16\"\n  inputOnly   SFBool   TS_isActive\n  inputOnly   SFBool   TS_isOver\n  inputOnly   SFTime   TS_touchTime\n  inputOnly   SFBool   PX_isActive\n  inputOnly   SFVec3f  PX_position\n\n  url \"ecmascript:\n    var n = 0;\n    function TS_isActive (v) { hist = hist + ' TS_isActive=' + v; }\n    function TS_isOver (v) { hist = hist + ' TS_isOver=' + v; }\n    function TS_touchTime (v) { hist = hist + ' TS_touchTime'; }\n    function PX_isActive (v) { hist = hist + ' PX_isActive=' + v; }\n    function PX_position (v) { n = n + 1; hist = hist .replace (/ PX_n=\\\\d+$/, '') + ' PX_n=' + n; }\n  \"\n}\n\nROUTE TS.isActive TO LOG.TS_isActive\nROUTE TS.isOver TO LOG.TS_isOver\nROUTE TS.touchTime TO LOG.TS_touchTime\nROUTE PX.isActive TO LOG.PX_isActive\nROUTE PX.position_changed TO LOG.PX_position\n",
+    "10": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nNavigationInfo {\n  type [\n    \"WALK\",\n    \"ANY\"\n  ]\n  speed 4\n}\n\nViewpoint {\n  description \"start\"\n  position 0 3 12\n}\n\nDEF PX ProximitySensor {\n  size 1000 1000 1000\n}\n\nTransform {\n  translation 0 -0.1 0\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.4 0.4 0.4\n      }\n    }\n    geometry Box {\n      size 60 0.2 60\n    }\n  }\n}\n\nTransform {\n  translation 0 0.25 10\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.3 0.3 0.9\n      }\n    }\n    geometry Box {\n      size 3 0.5 1\n    }\n  }\n}\n\nTransform {\n  translation 0 2 7\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.9 0.3 0.2\n      }\n    }\n    geometry Box {\n      size 2 4 0.5\n    }\n  }\n}\n\nTransform {\n  translation -1.5 1.6 6\n  children [\n    DEF TS TouchSensor { }\n    Shape {\n      appearance Appearance {\n        material Material {\n          diffuseColor 0.2 0.8 0.3\n        }\n      }\n      geometry Box {\n        size 1.5 1.5 1.5\n      }\n    }\n  ]\n}\n\nDEF LOG Script {\n  inputOutput SFString hist \" PX_isActive=true PX_n=17\"\n  inputOnly   SFBool   TS_isActive\n  inputOnly   SFBool   TS_isOver\n  inputOnly   SFTime   TS_touchTime\n  inputOnly   SFBool   PX_isActive\n  inputOnly   SFVec3f  PX_position\n\n  url \"ecmascript:\n    var n = 0;\n    function TS_isActive (v) { hist = hist + ' TS_isActive=' + v; }\n    function TS_isOver (v) { hist = hist + ' TS_isOver=' + v; }\n    function TS_touchTime (v) { hist = hist + ' TS_touchTime'; }\n    function PX_isActive (v) { hist = hist + ' PX_isActive=' + v; }\n    function PX_position (v) { n = n + 1; hist = hist .replace (/ PX_n=\\\\d+$/, '') + ' PX_n=' + n; }\n  \"\n}\n\nROUTE TS.isActive TO LOG.TS_isActive\nROUTE TS.isOver TO LOG.TS_isOver\nROUTE TS.touchTime TO LOG.TS_touchTime\nROUTE PX.isActive TO LOG.PX_isActive\nROUTE PX.position_changed TO LOG.PX_position\n",
+    "11": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nNavigationInfo {\n  type [\n    \"WALK\",\n    \"ANY\"\n  ]\n  speed 4\n}\n\nViewpoint {\n  description \"start\"\n  position 0 3 12\n}\n\nDEF PX ProximitySensor {\n  size 1000 1000 1000\n}\n\nTransform {\n  translation 0 -0.1 0\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.4 0.4 0.4\n      }\n    }\n    geometry Box {\n      size 60 0.2 60\n    }\n  }\n}\n\nTransform {\n  translation 0 0.25 10\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.3 0.3 0.9\n      }\n    }\n    geometry Box {\n      size 3 0.5 1\n    }\n  }\n}\n\nTransform {\n  translation 0 2 7\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.9 0.3 0.2\n      }\n    }\n    geometry Box {\n      size 2 4 0.5\n    }\n  }\n}\n\nTransform {\n  translation -1.5 1.6 6\n  children [\n    DEF TS TouchSensor { }\n    Shape {\n      appearance Appearance {\n        material Material {\n          diffuseColor 0.2 0.8 0.3\n        }\n      }\n      geometry Box {\n        size 1.5 1.5 1.5\n      }\n    }\n  ]\n}\n\nDEF LOG Script {\n  inputOutput SFString hist \" PX_isActive=true PX_n=17\"\n  inputOnly   SFBool   TS_isActive\n  inputOnly   SFBool   TS_isOver\n  inputOnly   SFTime   TS_touchTime\n  inputOnly   SFBool   PX_isActive\n  inputOnly   SFVec3f  PX_position\n\n  url \"ecmascript:\n    var n = 0;\n    function TS_isActive (v) { hist = hist + ' TS_isActive=' + v; }\n    function TS_isOver (v) { hist = hist + ' TS_isOver=' + v; }\n    function TS_touchTime (v) { hist = hist + ' TS_touchTime'; }\n    function PX_isActive (v) { hist = hist + ' PX_isActive=' + v; }\n    function PX_position (v) { n = n + 1; hist = hist .replace (/ PX_n=\\\\d+$/, '') + ' PX_n=' + n; }\n  \"\n}\n\nROUTE TS.isActive TO LOG.TS_isActive\nROUTE TS.isOver TO LOG.TS_isOver\nROUTE TS.touchTime TO LOG.TS_touchTime\nROUTE PX.isActive TO LOG.PX_isActive\nROUTE PX.position_changed TO LOG.PX_position\n",
+    "12": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nNavigationInfo {\n  type [\n    \"WALK\",\n    \"ANY\"\n  ]\n  speed 4\n}\n\nViewpoint {\n  description \"start\"\n  position 0 3 12\n}\n\nDEF PX ProximitySensor {\n  size 1000 1000 1000\n}\n\nTransform {\n  translation 0 -0.1 0\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.4 0.4 0.4\n      }\n    }\n    geometry Box {\n      size 60 0.2 60\n    }\n  }\n}\n\nTransform {\n  translation 0 0.25 10\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.3 0.3 0.9\n      }\n    }\n    geometry Box {\n      size 3 0.5 1\n    }\n  }\n}\n\nTransform {\n  translation 0 2 7\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.9 0.3 0.2\n      }\n    }\n    geometry Box {\n      size 2 4 0.5\n    }\n  }\n}\n\nTransform {\n  translation -1.5 1.6 6\n  children [\n    DEF TS TouchSensor { }\n    Shape {\n      appearance Appearance {\n        material Material {\n          diffuseColor 0.2 0.8 0.3\n        }\n      }\n      geometry Box {\n        size 1.5 1.5 1.5\n      }\n    }\n  ]\n}\n\nDEF LOG Script {\n  inputOutput SFString hist \" PX_isActive=true PX_n=17\"\n  inputOnly   SFBool   TS_isActive\n  inputOnly   SFBool   TS_isOver\n  inputOnly   SFTime   TS_touchTime\n  inputOnly   SFBool   PX_isActive\n  inputOnly   SFVec3f  PX_position\n\n  url \"ecmascript:\n    var n = 0;\n    function TS_isActive (v) { hist = hist + ' TS_isActive=' + v; }\n    function TS_isOver (v) { hist = hist + ' TS_isOver=' + v; }\n    function TS_touchTime (v) { hist = hist + ' TS_touchTime'; }\n    function PX_isActive (v) { hist = hist + ' PX_isActive=' + v; }\n    function PX_position (v) { n = n + 1; hist = hist .replace (/ PX_n=\\\\d+$/, '') + ' PX_n=' + n; }\n  \"\n}\n\nROUTE TS.isActive TO LOG.TS_isActive\nROUTE TS.isOver TO LOG.TS_isOver\nROUTE TS.touchTime TO LOG.TS_touchTime\nROUTE PX.isActive TO LOG.PX_isActive\nROUTE PX.position_changed TO LOG.PX_position\n",
+    "13": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nNavigationInfo {\n  type [\n    \"WALK\",\n    \"ANY\"\n  ]\n  speed 4\n}\n\nViewpoint {\n  description \"start\"\n  position 0 3 12\n}\n\nDEF PX ProximitySensor {\n  size 1000 1000 1000\n}\n\nTransform {\n  translation 0 -0.1 0\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.4 0.4 0.4\n      }\n    }\n    geometry Box {\n      size 60 0.2 60\n    }\n  }\n}\n\nTransform {\n  translation 0 0.25 10\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.3 0.3 0.9\n      }\n    }\n    geometry Box {\n      size 3 0.5 1\n    }\n  }\n}\n\nTransform {\n  translation 0 2 7\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.9 0.3 0.2\n      }\n    }\n    geometry Box {\n      size 2 4 0.5\n    }\n  }\n}\n\nTransform {\n  translation -1.5 1.6 6\n  children [\n    DEF TS TouchSensor { }\n    Shape {\n      appearance Appearance {\n        material Material {\n          diffuseColor 0.2 0.8 0.3\n        }\n      }\n      geometry Box {\n        size 1.5 1.5 1.5\n      }\n    }\n  ]\n}\n\nDEF LOG Script {\n  inputOutput SFString hist \" PX_isActive=true PX_n=17\"\n  inputOnly   SFBool   TS_isActive\n  inputOnly   SFBool   TS_isOver\n  inputOnly   SFTime   TS_touchTime\n  inputOnly   SFBool   PX_isActive\n  inputOnly   SFVec3f  PX_position\n\n  url \"ecmascript:\n    var n = 0;\n    function TS_isActive (v) { hist = hist + ' TS_isActive=' + v; }\n    function TS_isOver (v) { hist = hist + ' TS_isOver=' + v; }\n    function TS_touchTime (v) { hist = hist + ' TS_touchTime'; }\n    function PX_isActive (v) { hist = hist + ' PX_isActive=' + v; }\n    function PX_position (v) { n = n + 1; hist = hist .replace (/ PX_n=\\\\d+$/, '') + ' PX_n=' + n; }\n  \"\n}\n\nROUTE TS.isActive TO LOG.TS_isActive\nROUTE TS.isOver TO LOG.TS_isOver\nROUTE TS.touchTime TO LOG.TS_touchTime\nROUTE PX.isActive TO LOG.PX_isActive\nROUTE PX.position_changed TO LOG.PX_position\n",
+    "14": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nNavigationInfo {\n  type [\n    \"WALK\",\n    \"ANY\"\n  ]\n  speed 4\n}\n\nViewpoint {\n  description \"start\"\n  position 0 3 12\n}\n\nDEF PX ProximitySensor {\n  size 1000 1000 1000\n}\n\nTransform {\n  translation 0 -0.1 0\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.4 0.4 0.4\n      }\n    }\n    geometry Box {\n      size 60 0.2 60\n    }\n  }\n}\n\nTransform {\n  translation 0 0.25 10\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.3 0.3 0.9\n      }\n    }\n    geometry Box {\n      size 3 0.5 1\n    }\n  }\n}\n\nTransform {\n  translation 0 2 7\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.9 0.3 0.2\n      }\n    }\n    geometry Box {\n      size 2 4 0.5\n    }\n  }\n}\n\nTransform {\n  translation -1.5 1.6 6\n  children [\n    DEF TS TouchSensor { }\n    Shape {\n      appearance Appearance {\n        material Material {\n          diffuseColor 0.2 0.8 0.3\n        }\n      }\n      geometry Box {\n        size 1.5 1.5 1.5\n      }\n    }\n  ]\n}\n\nDEF LOG Script {\n  inputOutput SFString hist \" PX_isActive=true PX_n=17\"\n  inputOnly   SFBool   TS_isActive\n  inputOnly   SFBool   TS_isOver\n  inputOnly   SFTime   TS_touchTime\n  inputOnly   SFBool   PX_isActive\n  inputOnly   SFVec3f  PX_position\n\n  url \"ecmascript:\n    var n = 0;\n    function TS_isActive (v) { hist = hist + ' TS_isActive=' + v; }\n    function TS_isOver (v) { hist = hist + ' TS_isOver=' + v; }\n    function TS_touchTime (v) { hist = hist + ' TS_touchTime'; }\n    function PX_isActive (v) { hist = hist + ' PX_isActive=' + v; }\n    function PX_position (v) { n = n + 1; hist = hist .replace (/ PX_n=\\\\d+$/, '') + ' PX_n=' + n; }\n  \"\n}\n\nROUTE TS.isActive TO LOG.TS_isActive\nROUTE TS.isOver TO LOG.TS_isOver\nROUTE TS.touchTime TO LOG.TS_touchTime\nROUTE PX.isActive TO LOG.PX_isActive\nROUTE PX.position_changed TO LOG.PX_position\n",
+    "15": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nNavigationInfo {\n  type [\n    \"WALK\",\n    \"ANY\"\n  ]\n  speed 4\n}\n\nViewpoint {\n  description \"start\"\n  position 0 3 12\n}\n\nDEF PX ProximitySensor {\n  size 1000 1000 1000\n}\n\nTransform {\n  translation 0 -0.1 0\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.4 0.4 0.4\n      }\n    }\n    geometry Box {\n      size 60 0.2 60\n    }\n  }\n}\n\nTransform {\n  translation 0 0.25 10\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.3 0.3 0.9\n      }\n    }\n    geometry Box {\n      size 3 0.5 1\n    }\n  }\n}\n\nTransform {\n  translation 0 2 7\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.9 0.3 0.2\n      }\n    }\n    geometry Box {\n      size 2 4 0.5\n    }\n  }\n}\n\nTransform {\n  translation -1.5 1.6 6\n  children [\n    DEF TS TouchSensor { }\n    Shape {\n      appearance Appearance {\n        material Material {\n          diffuseColor 0.2 0.8 0.3\n        }\n      }\n      geometry Box {\n        size 1.5 1.5 1.5\n      }\n    }\n  ]\n}\n\nDEF LOG Script {\n  inputOutput SFString hist \" PX_isActive=true PX_n=17\"\n  inputOnly   SFBool   TS_isActive\n  inputOnly   SFBool   TS_isOver\n  inputOnly   SFTime   TS_touchTime\n  inputOnly   SFBool   PX_isActive\n  inputOnly   SFVec3f  PX_position\n\n  url \"ecmascript:\n    var n = 0;\n    function TS_isActive (v) { hist = hist + ' TS_isActive=' + v; }\n    function TS_isOver (v) { hist = hist + ' TS_isOver=' + v; }\n    function TS_touchTime (v) { hist = hist + ' TS_touchTime'; }\n    function PX_isActive (v) { hist = hist + ' PX_isActive=' + v; }\n    function PX_position (v) { n = n + 1; hist = hist .replace (/ PX_n=\\\\d+$/, '') + ' PX_n=' + n; }\n  \"\n}\n\nROUTE TS.isActive TO LOG.TS_isActive\nROUTE TS.isOver TO LOG.TS_isOver\nROUTE TS.touchTime TO LOG.TS_touchTime\nROUTE PX.isActive TO LOG.PX_isActive\nROUTE PX.position_changed TO LOG.PX_position\n",
+    "16": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nNavigationInfo {\n  type [\n    \"WALK\",\n    \"ANY\"\n  ]\n  speed 4\n}\n\nViewpoint {\n  description \"start\"\n  position 0 3 12\n}\n\nDEF PX ProximitySensor {\n  size 1000 1000 1000\n}\n\nTransform {\n  translation 0 -0.1 0\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.4 0.4 0.4\n      }\n    }\n    geometry Box {\n      size 60 0.2 60\n    }\n  }\n}\n\nTransform {\n  translation 0 0.25 10\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.3 0.3 0.9\n      }\n    }\n    geometry Box {\n      size 3 0.5 1\n    }\n  }\n}\n\nTransform {\n  translation 0 2 7\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.9 0.3 0.2\n      }\n    }\n    geometry Box {\n      size 2 4 0.5\n    }\n  }\n}\n\nTransform {\n  translation -1.5 1.6 6\n  children [\n    DEF TS TouchSensor { }\n    Shape {\n      appearance Appearance {\n        material Material {\n          diffuseColor 0.2 0.8 0.3\n        }\n      }\n      geometry Box {\n        size 1.5 1.5 1.5\n      }\n    }\n  ]\n}\n\nDEF LOG Script {\n  inputOutput SFString hist \" PX_isActive=true PX_n=17\"\n  inputOnly   SFBool   TS_isActive\n  inputOnly   SFBool   TS_isOver\n  inputOnly   SFTime   TS_touchTime\n  inputOnly   SFBool   PX_isActive\n  inputOnly   SFVec3f  PX_position\n\n  url \"ecmascript:\n    var n = 0;\n    function TS_isActive (v) { hist = hist + ' TS_isActive=' + v; }\n    function TS_isOver (v) { hist = hist + ' TS_isOver=' + v; }\n    function TS_touchTime (v) { hist = hist + ' TS_touchTime'; }\n    function PX_isActive (v) { hist = hist + ' PX_isActive=' + v; }\n    function PX_position (v) { n = n + 1; hist = hist .replace (/ PX_n=\\\\d+$/, '') + ' PX_n=' + n; }\n  \"\n}\n\nROUTE TS.isActive TO LOG.TS_isActive\nROUTE TS.isOver TO LOG.TS_isOver\nROUTE TS.touchTime TO LOG.TS_touchTime\nROUTE PX.isActive TO LOG.PX_isActive\nROUTE PX.position_changed TO LOG.PX_position\n",
+    "17": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nNavigationInfo {\n  type [\n    \"WALK\",\n    \"ANY\"\n  ]\n  speed 4\n}\n\nViewpoint {\n  description \"start\"\n  position 0 3 12\n}\n\nDEF PX ProximitySensor {\n  size 1000 1000 1000\n}\n\nTransform {\n  translation 0 -0.1 0\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.4 0.4 0.4\n      }\n    }\n    geometry Box {\n      size 60 0.2 60\n    }\n  }\n}\n\nTransform {\n  translation 0 0.25 10\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.3 0.3 0.9\n      }\n    }\n    geometry Box {\n      size 3 0.5 1\n    }\n  }\n}\n\nTransform {\n  translation 0 2 7\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.9 0.3 0.2\n      }\n    }\n    geometry Box {\n      size 2 4 0.5\n    }\n  }\n}\n\nTransform {\n  translation -1.5 1.6 6\n  children [\n    DEF TS TouchSensor { }\n    Shape {\n      appearance Appearance {\n        material Material {\n          diffuseColor 0.2 0.8 0.3\n        }\n      }\n      geometry Box {\n        size 1.5 1.5 1.5\n      }\n    }\n  ]\n}\n\nDEF LOG Script {\n  inputOutput SFString hist \" PX_isActive=true PX_n=17\"\n  inputOnly   SFBool   TS_isActive\n  inputOnly   SFBool   TS_isOver\n  inputOnly   SFTime   TS_touchTime\n  inputOnly   SFBool   PX_isActive\n  inputOnly   SFVec3f  PX_position\n\n  url \"ecmascript:\n    var n = 0;\n    function TS_isActive (v) { hist = hist + ' TS_isActive=' + v; }\n    function TS_isOver (v) { hist = hist + ' TS_isOver=' + v; }\n    function TS_touchTime (v) { hist = hist + ' TS_touchTime'; }\n    function PX_isActive (v) { hist = hist + ' PX_isActive=' + v; }\n    function PX_position (v) { n = n + 1; hist = hist .replace (/ PX_n=\\\\d+$/, '') + ' PX_n=' + n; }\n  \"\n}\n\nROUTE TS.isActive TO LOG.TS_isActive\nROUTE TS.isOver TO LOG.TS_isOver\nROUTE TS.touchTime TO LOG.TS_touchTime\nROUTE PX.isActive TO LOG.PX_isActive\nROUTE PX.position_changed TO LOG.PX_position\n",
+    "18": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nNavigationInfo {\n  type [\n    \"WALK\",\n    \"ANY\"\n  ]\n  speed 4\n}\n\nViewpoint {\n  description \"start\"\n  position 0 3 12\n}\n\nDEF PX ProximitySensor {\n  size 1000 1000 1000\n}\n\nTransform {\n  translation 0 -0.1 0\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.4 0.4 0.4\n      }\n    }\n    geometry Box {\n      size 60 0.2 60\n    }\n  }\n}\n\nTransform {\n  translation 0 0.25 10\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.3 0.3 0.9\n      }\n    }\n    geometry Box {\n      size 3 0.5 1\n    }\n  }\n}\n\nTransform {\n  translation 0 2 7\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.9 0.3 0.2\n      }\n    }\n    geometry Box {\n      size 2 4 0.5\n    }\n  }\n}\n\nTransform {\n  translation -1.5 1.6 6\n  children [\n    DEF TS TouchSensor { }\n    Shape {\n      appearance Appearance {\n        material Material {\n          diffuseColor 0.2 0.8 0.3\n        }\n      }\n      geometry Box {\n        size 1.5 1.5 1.5\n      }\n    }\n  ]\n}\n\nDEF LOG Script {\n  inputOutput SFString hist \" PX_isActive=true PX_n=17\"\n  inputOnly   SFBool   TS_isActive\n  inputOnly   SFBool   TS_isOver\n  inputOnly   SFTime   TS_touchTime\n  inputOnly   SFBool   PX_isActive\n  inputOnly   SFVec3f  PX_position\n\n  url \"ecmascript:\n    var n = 0;\n    function TS_isActive (v) { hist = hist + ' TS_isActive=' + v; }\n    function TS_isOver (v) { hist = hist + ' TS_isOver=' + v; }\n    function TS_touchTime (v) { hist = hist + ' TS_touchTime'; }\n    function PX_isActive (v) { hist = hist + ' PX_isActive=' + v; }\n    function PX_position (v) { n = n + 1; hist = hist .replace (/ PX_n=\\\\d+$/, '') + ' PX_n=' + n; }\n  \"\n}\n\nROUTE TS.isActive TO LOG.TS_isActive\nROUTE TS.isOver TO LOG.TS_isOver\nROUTE TS.touchTime TO LOG.TS_touchTime\nROUTE PX.isActive TO LOG.PX_isActive\nROUTE PX.position_changed TO LOG.PX_position\n",
+    "19": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nNavigationInfo {\n  type [\n    \"WALK\",\n    \"ANY\"\n  ]\n  speed 4\n}\n\nViewpoint {\n  description \"start\"\n  position 0 3 12\n}\n\nDEF PX ProximitySensor {\n  size 1000 1000 1000\n}\n\nTransform {\n  translation 0 -0.1 0\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.4 0.4 0.4\n      }\n    }\n    geometry Box {\n      size 60 0.2 60\n    }\n  }\n}\n\nTransform {\n  translation 0 0.25 10\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.3 0.3 0.9\n      }\n    }\n    geometry Box {\n      size 3 0.5 1\n    }\n  }\n}\n\nTransform {\n  translation 0 2 7\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.9 0.3 0.2\n      }\n    }\n    geometry Box {\n      size 2 4 0.5\n    }\n  }\n}\n\nTransform {\n  translation -1.5 1.6 6\n  children [\n    DEF TS TouchSensor { }\n    Shape {\n      appearance Appearance {\n        material Material {\n          diffuseColor 0.2 0.8 0.3\n        }\n      }\n      geometry Box {\n        size 1.5 1.5 1.5\n      }\n    }\n  ]\n}\n\nDEF LOG Script {\n  inputOutput SFString hist \" PX_isActive=true PX_n=17\"\n  inputOnly   SFBool   TS_isActive\n  inputOnly   SFBool   TS_isOver\n  inputOnly   SFTime   TS_touchTime\n  inputOnly   SFBool   PX_isActive\n  inputOnly   SFVec3f  PX_position\n\n  url \"ecmascript:\n    var n = 0;\n    function TS_isActive (v) { hist = hist + ' TS_isActive=' + v; }\n    function TS_isOver (v) { hist = hist + ' TS_isOver=' + v; }\n    function TS_touchTime (v) { hist = hist + ' TS_touchTime'; }\n    function PX_isActive (v) { hist = hist + ' PX_isActive=' + v; }\n    function PX_position (v) { n = n + 1; hist = hist .replace (/ PX_n=\\\\d+$/, '') + ' PX_n=' + n; }\n  \"\n}\n\nROUTE TS.isActive TO LOG.TS_isActive\nROUTE TS.isOver TO LOG.TS_isOver\nROUTE TS.touchTime TO LOG.TS_touchTime\nROUTE PX.isActive TO LOG.PX_isActive\nROUTE PX.position_changed TO LOG.PX_position\n",
+    "20": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nNavigationInfo {\n  type [\n    \"WALK\",\n    \"ANY\"\n  ]\n  speed 4\n}\n\nViewpoint {\n  description \"start\"\n  position 0 3 12\n}\n\nDEF PX ProximitySensor {\n  size 1000 1000 1000\n}\n\nTransform {\n  translation 0 -0.1 0\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.4 0.4 0.4\n      }\n    }\n    geometry Box {\n      size 60 0.2 60\n    }\n  }\n}\n\nTransform {\n  translation 0 0.25 10\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.3 0.3 0.9\n      }\n    }\n    geometry Box {\n      size 3 0.5 1\n    }\n  }\n}\n\nTransform {\n  translation 0 2 7\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.9 0.3 0.2\n      }\n    }\n    geometry Box {\n      size 2 4 0.5\n    }\n  }\n}\n\nTransform {\n  translation -1.5 1.6 6\n  children [\n    DEF TS TouchSensor { }\n    Shape {\n      appearance Appearance {\n        material Material {\n          diffuseColor 0.2 0.8 0.3\n        }\n      }\n      geometry Box {\n        size 1.5 1.5 1.5\n      }\n    }\n  ]\n}\n\nDEF LOG Script {\n  inputOutput SFString hist \" PX_isActive=true PX_n=17\"\n  inputOnly   SFBool   TS_isActive\n  inputOnly   SFBool   TS_isOver\n  inputOnly   SFTime   TS_touchTime\n  inputOnly   SFBool   PX_isActive\n  inputOnly   SFVec3f  PX_position\n\n  url \"ecmascript:\n    var n = 0;\n    function TS_isActive (v) { hist = hist + ' TS_isActive=' + v; }\n    function TS_isOver (v) { hist = hist + ' TS_isOver=' + v; }\n    function TS_touchTime (v) { hist = hist + ' TS_touchTime'; }\n    function PX_isActive (v) { hist = hist + ' PX_isActive=' + v; }\n    function PX_position (v) { n = n + 1; hist = hist .replace (/ PX_n=\\\\d+$/, '') + ' PX_n=' + n; }\n  \"\n}\n\nROUTE TS.isActive TO LOG.TS_isActive\nROUTE TS.isOver TO LOG.TS_isOver\nROUTE TS.touchTime TO LOG.TS_touchTime\nROUTE PX.isActive TO LOG.PX_isActive\nROUTE PX.position_changed TO LOG.PX_position\n",
+    "21": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nNavigationInfo {\n  type [\n    \"WALK\",\n    \"ANY\"\n  ]\n  speed 4\n}\n\nViewpoint {\n  description \"start\"\n  position 0 3 12\n}\n\nDEF PX ProximitySensor {\n  size 1000 1000 1000\n}\n\nTransform {\n  translation 0 -0.1 0\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.4 0.4 0.4\n      }\n    }\n    geometry Box {\n      size 60 0.2 60\n    }\n  }\n}\n\nTransform {\n  translation 0 0.25 10\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.3 0.3 0.9\n      }\n    }\n    geometry Box {\n      size 3 0.5 1\n    }\n  }\n}\n\nTransform {\n  translation 0 2 7\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.9 0.3 0.2\n      }\n    }\n    geometry Box {\n      size 2 4 0.5\n    }\n  }\n}\n\nTransform {\n  translation -1.5 1.6 6\n  children [\n    DEF TS TouchSensor { }\n    Shape {\n      appearance Appearance {\n        material Material {\n          diffuseColor 0.2 0.8 0.3\n        }\n      }\n      geometry Box {\n        size 1.5 1.5 1.5\n      }\n    }\n  ]\n}\n\nDEF LOG Script {\n  inputOutput SFString hist \" PX_isActive=true PX_n=17\"\n  inputOnly   SFBool   TS_isActive\n  inputOnly   SFBool   TS_isOver\n  inputOnly   SFTime   TS_touchTime\n  inputOnly   SFBool   PX_isActive\n  inputOnly   SFVec3f  PX_position\n\n  url \"ecmascript:\n    var n = 0;\n    function TS_isActive (v) { hist = hist + ' TS_isActive=' + v; }\n    function TS_isOver (v) { hist = hist + ' TS_isOver=' + v; }\n    function TS_touchTime (v) { hist = hist + ' TS_touchTime'; }\n    function PX_isActive (v) { hist = hist + ' PX_isActive=' + v; }\n    function PX_position (v) { n = n + 1; hist = hist .replace (/ PX_n=\\\\d+$/, '') + ' PX_n=' + n; }\n  \"\n}\n\nROUTE TS.isActive TO LOG.TS_isActive\nROUTE TS.isOver TO LOG.TS_isOver\nROUTE TS.touchTime TO LOG.TS_touchTime\nROUTE PX.isActive TO LOG.PX_isActive\nROUTE PX.position_changed TO LOG.PX_position\n",
+    "22": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nNavigationInfo {\n  type [\n    \"WALK\",\n    \"ANY\"\n  ]\n  speed 4\n}\n\nViewpoint {\n  description \"start\"\n  position 0 3 12\n}\n\nDEF PX ProximitySensor {\n  size 1000 1000 1000\n}\n\nTransform {\n  translation 0 -0.1 0\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.4 0.4 0.4\n      }\n    }\n    geometry Box {\n      size 60 0.2 60\n    }\n  }\n}\n\nTransform {\n  translation 0 0.25 10\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.3 0.3 0.9\n      }\n    }\n    geometry Box {\n      size 3 0.5 1\n    }\n  }\n}\n\nTransform {\n  translation 0 2 7\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.9 0.3 0.2\n      }\n    }\n    geometry Box {\n      size 2 4 0.5\n    }\n  }\n}\n\nTransform {\n  translation -1.5 1.6 6\n  children [\n    DEF TS TouchSensor { }\n    Shape {\n      appearance Appearance {\n        material Material {\n          diffuseColor 0.2 0.8 0.3\n        }\n      }\n      geometry Box {\n        size 1.5 1.5 1.5\n      }\n    }\n  ]\n}\n\nDEF LOG Script {\n  inputOutput SFString hist \" PX_isActive=true PX_n=17\"\n  inputOnly   SFBool   TS_isActive\n  inputOnly   SFBool   TS_isOver\n  inputOnly   SFTime   TS_touchTime\n  inputOnly   SFBool   PX_isActive\n  inputOnly   SFVec3f  PX_position\n\n  url \"ecmascript:\n    var n = 0;\n    function TS_isActive (v) { hist = hist + ' TS_isActive=' + v; }\n    function TS_isOver (v) { hist = hist + ' TS_isOver=' + v; }\n    function TS_touchTime (v) { hist = hist + ' TS_touchTime'; }\n    function PX_isActive (v) { hist = hist + ' PX_isActive=' + v; }\n    function PX_position (v) { n = n + 1; hist = hist .replace (/ PX_n=\\\\d+$/, '') + ' PX_n=' + n; }\n  \"\n}\n\nROUTE TS.isActive TO LOG.TS_isActive\nROUTE TS.isOver TO LOG.TS_isOver\nROUTE TS.touchTime TO LOG.TS_touchTime\nROUTE PX.isActive TO LOG.PX_isActive\nROUTE PX.position_changed TO LOG.PX_position\n",
+    "23": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nNavigationInfo {\n  type [\n    \"WALK\",\n    \"ANY\"\n  ]\n  speed 4\n}\n\nViewpoint {\n  description \"start\"\n  position 0 3 12\n}\n\nDEF PX ProximitySensor {\n  size 1000 1000 1000\n}\n\nTransform {\n  translation 0 -0.1 0\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.4 0.4 0.4\n      }\n    }\n    geometry Box {\n      size 60 0.2 60\n    }\n  }\n}\n\nTransform {\n  translation 0 0.25 10\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.3 0.3 0.9\n      }\n    }\n    geometry Box {\n      size 3 0.5 1\n    }\n  }\n}\n\nTransform {\n  translation 0 2 7\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.9 0.3 0.2\n      }\n    }\n    geometry Box {\n      size 2 4 0.5\n    }\n  }\n}\n\nTransform {\n  translation -1.5 1.6 6\n  children [\n    DEF TS TouchSensor { }\n    Shape {\n      appearance Appearance {\n        material Material {\n          diffuseColor 0.2 0.8 0.3\n        }\n      }\n      geometry Box {\n        size 1.5 1.5 1.5\n      }\n    }\n  ]\n}\n\nDEF LOG Script {\n  inputOutput SFString hist \" PX_isActive=true PX_n=17\"\n  inputOnly   SFBool   TS_isActive\n  inputOnly   SFBool   TS_isOver\n  inputOnly   SFTime   TS_touchTime\n  inputOnly   SFBool   PX_isActive\n  inputOnly   SFVec3f  PX_position\n\n  url \"ecmascript:\n    var n = 0;\n    function TS_isActive (v) { hist = hist + ' TS_isActive=' + v; }\n    function TS_isOver (v) { hist = hist + ' TS_isOver=' + v; }\n    function TS_touchTime (v) { hist = hist + ' TS_touchTime'; }\n    function PX_isActive (v) { hist = hist + ' PX_isActive=' + v; }\n    function PX_position (v) { n = n + 1; hist = hist .replace (/ PX_n=\\\\d+$/, '') + ' PX_n=' + n; }\n  \"\n}\n\nROUTE TS.isActive TO LOG.TS_isActive\nROUTE TS.isOver TO LOG.TS_isOver\nROUTE TS.touchTime TO LOG.TS_touchTime\nROUTE PX.isActive TO LOG.PX_isActive\nROUTE PX.position_changed TO LOG.PX_position\n",
+    "24": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nNavigationInfo {\n  type [\n    \"WALK\",\n    \"ANY\"\n  ]\n  speed 4\n}\n\nViewpoint {\n  description \"start\"\n  position 0 3 12\n}\n\nDEF PX ProximitySensor {\n  size 1000 1000 1000\n}\n\nTransform {\n  translation 0 -0.1 0\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.4 0.4 0.4\n      }\n    }\n    geometry Box {\n      size 60 0.2 60\n    }\n  }\n}\n\nTransform {\n  translation 0 0.25 10\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.3 0.3 0.9\n      }\n    }\n    geometry Box {\n      size 3 0.5 1\n    }\n  }\n}\n\nTransform {\n  translation 0 2 7\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.9 0.3 0.2\n      }\n    }\n    geometry Box {\n      size 2 4 0.5\n    }\n  }\n}\n\nTransform {\n  translation -1.5 1.6 6\n  children [\n    DEF TS TouchSensor { }\n    Shape {\n      appearance Appearance {\n        material Material {\n          diffuseColor 0.2 0.8 0.3\n        }\n      }\n      geometry Box {\n        size 1.5 1.5 1.5\n      }\n    }\n  ]\n}\n\nDEF LOG Script {\n  inputOutput SFString hist \" PX_isActive=true PX_n=17\"\n  inputOnly   SFBool   TS_isActive\n  inputOnly   SFBool   TS_isOver\n  inputOnly   SFTime   TS_touchTime\n  inputOnly   SFBool   PX_isActive\n  inputOnly   SFVec3f  PX_position\n\n  url \"ecmascript:\n    var n = 0;\n    function TS_isActive (v) { hist = hist + ' TS_isActive=' + v; }\n    function TS_isOver (v) { hist = hist + ' TS_isOver=' + v; }\n    function TS_touchTime (v) { hist = hist + ' TS_touchTime'; }\n    function PX_isActive (v) { hist = hist + ' PX_isActive=' + v; }\n    function PX_position (v) { n = n + 1; hist = hist .replace (/ PX_n=\\\\d+$/, '') + ' PX_n=' + n; }\n  \"\n}\n\nROUTE TS.isActive TO LOG.TS_isActive\nROUTE TS.isOver TO LOG.TS_isOver\nROUTE TS.touchTime TO LOG.TS_touchTime\nROUTE PX.isActive TO LOG.PX_isActive\nROUTE PX.position_changed TO LOG.PX_position\n",
+    "25": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nNavigationInfo {\n  type [\n    \"WALK\",\n    \"ANY\"\n  ]\n  speed 4\n}\n\nViewpoint {\n  description \"start\"\n  position 0 3 12\n}\n\nDEF PX ProximitySensor {\n  size 1000 1000 1000\n}\n\nTransform {\n  translation 0 -0.1 0\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.4 0.4 0.4\n      }\n    }\n    geometry Box {\n      size 60 0.2 60\n    }\n  }\n}\n\nTransform {\n  translation 0 0.25 10\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.3 0.3 0.9\n      }\n    }\n    geometry Box {\n      size 3 0.5 1\n    }\n  }\n}\n\nTransform {\n  translation 0 2 7\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.9 0.3 0.2\n      }\n    }\n    geometry Box {\n      size 2 4 0.5\n    }\n  }\n}\n\nTransform {\n  translation -1.5 1.6 6\n  children [\n    DEF TS TouchSensor { }\n    Shape {\n      appearance Appearance {\n        material Material {\n          diffuseColor 0.2 0.8 0.3\n        }\n      }\n      geometry Box {\n        size 1.5 1.5 1.5\n      }\n    }\n  ]\n}\n\nDEF LOG Script {\n  inputOutput SFString hist \" PX_isActive=true PX_n=17\"\n  inputOnly   SFBool   TS_isActive\n  inputOnly   SFBool   TS_isOver\n  inputOnly   SFTime   TS_touchTime\n  inputOnly   SFBool   PX_isActive\n  inputOnly   SFVec3f  PX_position\n\n  url \"ecmascript:\n    var n = 0;\n    function TS_isActive (v) { hist = hist + ' TS_isActive=' + v; }\n    function TS_isOver (v) { hist = hist + ' TS_isOver=' + v; }\n    function TS_touchTime (v) { hist = hist + ' TS_touchTime'; }\n    function PX_isActive (v) { hist = hist + ' PX_isActive=' + v; }\n    function PX_position (v) { n = n + 1; hist = hist .replace (/ PX_n=\\\\d+$/, '') + ' PX_n=' + n; }\n  \"\n}\n\nROUTE TS.isActive TO LOG.TS_isActive\nROUTE TS.isOver TO LOG.TS_isOver\nROUTE TS.touchTime TO LOG.TS_touchTime\nROUTE PX.isActive TO LOG.PX_isActive\nROUTE PX.position_changed TO LOG.PX_position\n",
+    "26": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nNavigationInfo {\n  type [\n    \"WALK\",\n    \"ANY\"\n  ]\n  speed 4\n}\n\nViewpoint {\n  description \"start\"\n  position 0 3 12\n}\n\nDEF PX ProximitySensor {\n  size 1000 1000 1000\n}\n\nTransform {\n  translation 0 -0.1 0\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.4 0.4 0.4\n      }\n    }\n    geometry Box {\n      size 60 0.2 60\n    }\n  }\n}\n\nTransform {\n  translation 0 0.25 10\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.3 0.3 0.9\n      }\n    }\n    geometry Box {\n      size 3 0.5 1\n    }\n  }\n}\n\nTransform {\n  translation 0 2 7\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.9 0.3 0.2\n      }\n    }\n    geometry Box {\n      size 2 4 0.5\n    }\n  }\n}\n\nTransform {\n  translation -1.5 1.6 6\n  children [\n    DEF TS TouchSensor { }\n    Shape {\n      appearance Appearance {\n        material Material {\n          diffuseColor 0.2 0.8 0.3\n        }\n      }\n      geometry Box {\n        size 1.5 1.5 1.5\n      }\n    }\n  ]\n}\n\nDEF LOG Script {\n  inputOutput SFString hist \" PX_isActive=true PX_n=17\"\n  inputOnly   SFBool   TS_isActive\n  inputOnly   SFBool   TS_isOver\n  inputOnly   SFTime   TS_touchTime\n  inputOnly   SFBool   PX_isActive\n  inputOnly   SFVec3f  PX_position\n\n  url \"ecmascript:\n    var n = 0;\n    function TS_isActive (v) { hist = hist + ' TS_isActive=' + v; }\n    function TS_isOver (v) { hist = hist + ' TS_isOver=' + v; }\n    function TS_touchTime (v) { hist = hist + ' TS_touchTime'; }\n    function PX_isActive (v) { hist = hist + ' PX_isActive=' + v; }\n    function PX_position (v) { n = n + 1; hist = hist .replace (/ PX_n=\\\\d+$/, '') + ' PX_n=' + n; }\n  \"\n}\n\nROUTE TS.isActive TO LOG.TS_isActive\nROUTE TS.isOver TO LOG.TS_isOver\nROUTE TS.touchTime TO LOG.TS_touchTime\nROUTE PX.isActive TO LOG.PX_isActive\nROUTE PX.position_changed TO LOG.PX_position\n",
+    "27": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nNavigationInfo {\n  type [\n    \"WALK\",\n    \"ANY\"\n  ]\n  speed 4\n}\n\nViewpoint {\n  description \"start\"\n  position 0 3 12\n}\n\nDEF PX ProximitySensor {\n  size 1000 1000 1000\n}\n\nTransform {\n  translation 0 -0.1 0\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.4 0.4 0.4\n      }\n    }\n    geometry Box {\n      size 60 0.2 60\n    }\n  }\n}\n\nTransform {\n  translation 0 0.25 10\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.3 0.3 0.9\n      }\n    }\n    geometry Box {\n      size 3 0.5 1\n    }\n  }\n}\n\nTransform {\n  translation 0 2 7\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.9 0.3 0.2\n      }\n    }\n    geometry Box {\n      size 2 4 0.5\n    }\n  }\n}\n\nTransform {\n  translation -1.5 1.6 6\n  children [\n    DEF TS TouchSensor { }\n    Shape {\n      appearance Appearance {\n        material Material {\n          diffuseColor 0.2 0.8 0.3\n        }\n      }\n      geometry Box {\n        size 1.5 1.5 1.5\n      }\n    }\n  ]\n}\n\nDEF LOG Script {\n  inputOutput SFString hist \" PX_isActive=true PX_n=17\"\n  inputOnly   SFBool   TS_isActive\n  inputOnly   SFBool   TS_isOver\n  inputOnly   SFTime   TS_touchTime\n  inputOnly   SFBool   PX_isActive\n  inputOnly   SFVec3f  PX_position\n\n  url \"ecmascript:\n    var n = 0;\n    function TS_isActive (v) { hist = hist + ' TS_isActive=' + v; }\n    function TS_isOver (v) { hist = hist + ' TS_isOver=' + v; }\n    function TS_touchTime (v) { hist = hist + ' TS_touchTime'; }\n    function PX_isActive (v) { hist = hist + ' PX_isActive=' + v; }\n    function PX_position (v) { n = n + 1; hist = hist .replace (/ PX_n=\\\\d+$/, '') + ' PX_n=' + n; }\n  \"\n}\n\nROUTE TS.isActive TO LOG.TS_isActive\nROUTE TS.isOver TO LOG.TS_isOver\nROUTE TS.touchTime TO LOG.TS_touchTime\nROUTE PX.isActive TO LOG.PX_isActive\nROUTE PX.position_changed TO LOG.PX_position\n",
+    "28": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nNavigationInfo {\n  type [\n    \"WALK\",\n    \"ANY\"\n  ]\n  speed 4\n}\n\nViewpoint {\n  description \"start\"\n  position 0 3 12\n}\n\nDEF PX ProximitySensor {\n  size 1000 1000 1000\n}\n\nTransform {\n  translation 0 -0.1 0\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.4 0.4 0.4\n      }\n    }\n    geometry Box {\n      size 60 0.2 60\n    }\n  }\n}\n\nTransform {\n  translation 0 0.25 10\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.3 0.3 0.9\n      }\n    }\n    geometry Box {\n      size 3 0.5 1\n    }\n  }\n}\n\nTransform {\n  translation 0 2 7\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.9 0.3 0.2\n      }\n    }\n    geometry Box {\n      size 2 4 0.5\n    }\n  }\n}\n\nTransform {\n  translation -1.5 1.6 6\n  children [\n    DEF TS TouchSensor { }\n    Shape {\n      appearance Appearance {\n        material Material {\n          diffuseColor 0.2 0.8 0.3\n        }\n      }\n      geometry Box {\n        size 1.5 1.5 1.5\n      }\n    }\n  ]\n}\n\nDEF LOG Script {\n  inputOutput SFString hist \" PX_isActive=true PX_n=17\"\n  inputOnly   SFBool   TS_isActive\n  inputOnly   SFBool   TS_isOver\n  inputOnly   SFTime   TS_touchTime\n  inputOnly   SFBool   PX_isActive\n  inputOnly   SFVec3f  PX_position\n\n  url \"ecmascript:\n    var n = 0;\n    function TS_isActive (v) { hist = hist + ' TS_isActive=' + v; }\n    function TS_isOver (v) { hist = hist + ' TS_isOver=' + v; }\n    function TS_touchTime (v) { hist = hist + ' TS_touchTime'; }\n    function PX_isActive (v) { hist = hist + ' PX_isActive=' + v; }\n    function PX_position (v) { n = n + 1; hist = hist .replace (/ PX_n=\\\\d+$/, '') + ' PX_n=' + n; }\n  \"\n}\n\nROUTE TS.isActive TO LOG.TS_isActive\nROUTE TS.isOver TO LOG.TS_isOver\nROUTE TS.touchTime TO LOG.TS_touchTime\nROUTE PX.isActive TO LOG.PX_isActive\nROUTE PX.position_changed TO LOG.PX_position\n",
+    "29": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nNavigationInfo {\n  type [\n    \"WALK\",\n    \"ANY\"\n  ]\n  speed 4\n}\n\nViewpoint {\n  description \"start\"\n  position 0 3 12\n}\n\nDEF PX ProximitySensor {\n  size 1000 1000 1000\n}\n\nTransform {\n  translation 0 -0.1 0\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.4 0.4 0.4\n      }\n    }\n    geometry Box {\n      size 60 0.2 60\n    }\n  }\n}\n\nTransform {\n  translation 0 0.25 10\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.3 0.3 0.9\n      }\n    }\n    geometry Box {\n      size 3 0.5 1\n    }\n  }\n}\n\nTransform {\n  translation 0 2 7\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.9 0.3 0.2\n      }\n    }\n    geometry Box {\n      size 2 4 0.5\n    }\n  }\n}\n\nTransform {\n  translation -1.5 1.6 6\n  children [\n    DEF TS TouchSensor { }\n    Shape {\n      appearance Appearance {\n        material Material {\n          diffuseColor 0.2 0.8 0.3\n        }\n      }\n      geometry Box {\n        size 1.5 1.5 1.5\n      }\n    }\n  ]\n}\n\nDEF LOG Script {\n  inputOutput SFString hist \" PX_isActive=true PX_n=17\"\n  inputOnly   SFBool   TS_isActive\n  inputOnly   SFBool   TS_isOver\n  inputOnly   SFTime   TS_touchTime\n  inputOnly   SFBool   PX_isActive\n  inputOnly   SFVec3f  PX_position\n\n  url \"ecmascript:\n    var n = 0;\n    function TS_isActive (v) { hist = hist + ' TS_isActive=' + v; }\n    function TS_isOver (v) { hist = hist + ' TS_isOver=' + v; }\n    function TS_touchTime (v) { hist = hist + ' TS_touchTime'; }\n    function PX_isActive (v) { hist = hist + ' PX_isActive=' + v; }\n    function PX_position (v) { n = n + 1; hist = hist .replace (/ PX_n=\\\\d+$/, '') + ' PX_n=' + n; }\n  \"\n}\n\nROUTE TS.isActive TO LOG.TS_isActive\nROUTE TS.isOver TO LOG.TS_isOver\nROUTE TS.touchTime TO LOG.TS_touchTime\nROUTE PX.isActive TO LOG.PX_isActive\nROUTE PX.position_changed TO LOG.PX_position\n",
+    "30": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nNavigationInfo {\n  type [\n    \"WALK\",\n    \"ANY\"\n  ]\n  speed 4\n}\n\nViewpoint {\n  description \"start\"\n  position 0 3 12\n}\n\nDEF PX ProximitySensor {\n  size 1000 1000 1000\n}\n\nTransform {\n  translation 0 -0.1 0\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.4 0.4 0.4\n      }\n    }\n    geometry Box {\n      size 60 0.2 60\n    }\n  }\n}\n\nTransform {\n  translation 0 0.25 10\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.3 0.3 0.9\n      }\n    }\n    geometry Box {\n      size 3 0.5 1\n    }\n  }\n}\n\nTransform {\n  translation 0 2 7\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.9 0.3 0.2\n      }\n    }\n    geometry Box {\n      size 2 4 0.5\n    }\n  }\n}\n\nTransform {\n  translation -1.5 1.6 6\n  children [\n    DEF TS TouchSensor { }\n    Shape {\n      appearance Appearance {\n        material Material {\n          diffuseColor 0.2 0.8 0.3\n        }\n      }\n      geometry Box {\n        size 1.5 1.5 1.5\n      }\n    }\n  ]\n}\n\nDEF LOG Script {\n  inputOutput SFString hist \" PX_isActive=true PX_n=17\"\n  inputOnly   SFBool   TS_isActive\n  inputOnly   SFBool   TS_isOver\n  inputOnly   SFTime   TS_touchTime\n  inputOnly   SFBool   PX_isActive\n  inputOnly   SFVec3f  PX_position\n\n  url \"ecmascript:\n    var n = 0;\n    function TS_isActive (v) { hist = hist + ' TS_isActive=' + v; }\n    function TS_isOver (v) { hist = hist + ' TS_isOver=' + v; }\n    function TS_touchTime (v) { hist = hist + ' TS_touchTime'; }\n    function PX_isActive (v) { hist = hist + ' PX_isActive=' + v; }\n    function PX_position (v) { n = n + 1; hist = hist .replace (/ PX_n=\\\\d+$/, '') + ' PX_n=' + n; }\n  \"\n}\n\nROUTE TS.isActive TO LOG.TS_isActive\nROUTE TS.isOver TO LOG.TS_isOver\nROUTE TS.touchTime TO LOG.TS_touchTime\nROUTE PX.isActive TO LOG.PX_isActive\nROUTE PX.position_changed TO LOG.PX_position\n",
+    "31": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nNavigationInfo {\n  type [\n    \"WALK\",\n    \"ANY\"\n  ]\n  speed 4\n}\n\nViewpoint {\n  description \"start\"\n  position 0 3 12\n}\n\nDEF PX ProximitySensor {\n  size 1000 1000 1000\n}\n\nTransform {\n  translation 0 -0.1 0\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.4 0.4 0.4\n      }\n    }\n    geometry Box {\n      size 60 0.2 60\n    }\n  }\n}\n\nTransform {\n  translation 0 0.25 10\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.3 0.3 0.9\n      }\n    }\n    geometry Box {\n      size 3 0.5 1\n    }\n  }\n}\n\nTransform {\n  translation 0 2 7\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.9 0.3 0.2\n      }\n    }\n    geometry Box {\n      size 2 4 0.5\n    }\n  }\n}\n\nTransform {\n  translation -1.5 1.6 6\n  children [\n    DEF TS TouchSensor { }\n    Shape {\n      appearance Appearance {\n        material Material {\n          diffuseColor 0.2 0.8 0.3\n        }\n      }\n      geometry Box {\n        size 1.5 1.5 1.5\n      }\n    }\n  ]\n}\n\nDEF LOG Script {\n  inputOutput SFString hist \" PX_isActive=true PX_n=17\"\n  inputOnly   SFBool   TS_isActive\n  inputOnly   SFBool   TS_isOver\n  inputOnly   SFTime   TS_touchTime\n  inputOnly   SFBool   PX_isActive\n  inputOnly   SFVec3f  PX_position\n\n  url \"ecmascript:\n    var n = 0;\n    function TS_isActive (v) { hist = hist + ' TS_isActive=' + v; }\n    function TS_isOver (v) { hist = hist + ' TS_isOver=' + v; }\n    function TS_touchTime (v) { hist = hist + ' TS_touchTime'; }\n    function PX_isActive (v) { hist = hist + ' PX_isActive=' + v; }\n    function PX_position (v) { n = n + 1; hist = hist .replace (/ PX_n=\\\\d+$/, '') + ' PX_n=' + n; }\n  \"\n}\n\nROUTE TS.isActive TO LOG.TS_isActive\nROUTE TS.isOver TO LOG.TS_isOver\nROUTE TS.touchTime TO LOG.TS_touchTime\nROUTE PX.isActive TO LOG.PX_isActive\nROUTE PX.position_changed TO LOG.PX_position\n",
+    "32": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nNavigationInfo {\n  type [\n    \"WALK\",\n    \"ANY\"\n  ]\n  speed 4\n}\n\nViewpoint {\n  description \"start\"\n  position 0 3 12\n}\n\nDEF PX ProximitySensor {\n  size 1000 1000 1000\n}\n\nTransform {\n  translation 0 -0.1 0\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.4 0.4 0.4\n      }\n    }\n    geometry Box {\n      size 60 0.2 60\n    }\n  }\n}\n\nTransform {\n  translation 0 0.25 10\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.3 0.3 0.9\n      }\n    }\n    geometry Box {\n      size 3 0.5 1\n    }\n  }\n}\n\nTransform {\n  translation 0 2 7\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.9 0.3 0.2\n      }\n    }\n    geometry Box {\n      size 2 4 0.5\n    }\n  }\n}\n\nTransform {\n  translation -1.5 1.6 6\n  children [\n    DEF TS TouchSensor { }\n    Shape {\n      appearance Appearance {\n        material Material {\n          diffuseColor 0.2 0.8 0.3\n        }\n      }\n      geometry Box {\n        size 1.5 1.5 1.5\n      }\n    }\n  ]\n}\n\nDEF LOG Script {\n  inputOutput SFString hist \" PX_isActive=true PX_n=17\"\n  inputOnly   SFBool   TS_isActive\n  inputOnly   SFBool   TS_isOver\n  inputOnly   SFTime   TS_touchTime\n  inputOnly   SFBool   PX_isActive\n  inputOnly   SFVec3f  PX_position\n\n  url \"ecmascript:\n    var n = 0;\n    function TS_isActive (v) { hist = hist + ' TS_isActive=' + v; }\n    function TS_isOver (v) { hist = hist + ' TS_isOver=' + v; }\n    function TS_touchTime (v) { hist = hist + ' TS_touchTime'; }\n    function PX_isActive (v) { hist = hist + ' PX_isActive=' + v; }\n    function PX_position (v) { n = n + 1; hist = hist .replace (/ PX_n=\\\\d+$/, '') + ' PX_n=' + n; }\n  \"\n}\n\nROUTE TS.isActive TO LOG.TS_isActive\nROUTE TS.isOver TO LOG.TS_isOver\nROUTE TS.touchTime TO LOG.TS_touchTime\nROUTE PX.isActive TO LOG.PX_isActive\nROUTE PX.position_changed TO LOG.PX_position\n",
+    "33": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nNavigationInfo {\n  type [\n    \"WALK\",\n    \"ANY\"\n  ]\n  speed 4\n}\n\nViewpoint {\n  description \"start\"\n  position 0 3 12\n}\n\nDEF PX ProximitySensor {\n  size 1000 1000 1000\n}\n\nTransform {\n  translation 0 -0.1 0\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.4 0.4 0.4\n      }\n    }\n    geometry Box {\n      size 60 0.2 60\n    }\n  }\n}\n\nTransform {\n  translation 0 0.25 10\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.3 0.3 0.9\n      }\n    }\n    geometry Box {\n      size 3 0.5 1\n    }\n  }\n}\n\nTransform {\n  translation 0 2 7\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.9 0.3 0.2\n      }\n    }\n    geometry Box {\n      size 2 4 0.5\n    }\n  }\n}\n\nTransform {\n  translation -1.5 1.6 6\n  children [\n    DEF TS TouchSensor { }\n    Shape {\n      appearance Appearance {\n        material Material {\n          diffuseColor 0.2 0.8 0.3\n        }\n      }\n      geometry Box {\n        size 1.5 1.5 1.5\n      }\n    }\n  ]\n}\n\nDEF LOG Script {\n  inputOutput SFString hist \" PX_isActive=true PX_n=17\"\n  inputOnly   SFBool   TS_isActive\n  inputOnly   SFBool   TS_isOver\n  inputOnly   SFTime   TS_touchTime\n  inputOnly   SFBool   PX_isActive\n  inputOnly   SFVec3f  PX_position\n\n  url \"ecmascript:\n    var n = 0;\n    function TS_isActive (v) { hist = hist + ' TS_isActive=' + v; }\n    function TS_isOver (v) { hist = hist + ' TS_isOver=' + v; }\n    function TS_touchTime (v) { hist = hist + ' TS_touchTime'; }\n    function PX_isActive (v) { hist = hist + ' PX_isActive=' + v; }\n    function PX_position (v) { n = n + 1; hist = hist .replace (/ PX_n=\\\\d+$/, '') + ' PX_n=' + n; }\n  \"\n}\n\nROUTE TS.isActive TO LOG.TS_isActive\nROUTE TS.isOver TO LOG.TS_isOver\nROUTE TS.touchTime TO LOG.TS_touchTime\nROUTE PX.isActive TO LOG.PX_isActive\nROUTE PX.position_changed TO LOG.PX_position\n",
+    "34": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nNavigationInfo {\n  type [\n    \"WALK\",\n    \"ANY\"\n  ]\n  speed 4\n}\n\nViewpoint {\n  description \"start\"\n  position 0 3 12\n}\n\nDEF PX ProximitySensor {\n  size 1000 1000 1000\n}\n\nTransform {\n  translation 0 -0.1 0\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.4 0.4 0.4\n      }\n    }\n    geometry Box {\n      size 60 0.2 60\n    }\n  }\n}\n\nTransform {\n  translation 0 0.25 10\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.3 0.3 0.9\n      }\n    }\n    geometry Box {\n      size 3 0.5 1\n    }\n  }\n}\n\nTransform {\n  translation 0 2 7\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.9 0.3 0.2\n      }\n    }\n    geometry Box {\n      size 2 4 0.5\n    }\n  }\n}\n\nTransform {\n  translation -1.5 1.6 6\n  children [\n    DEF TS TouchSensor { }\n    Shape {\n      appearance Appearance {\n        material Material {\n          diffuseColor 0.2 0.8 0.3\n        }\n      }\n      geometry Box {\n        size 1.5 1.5 1.5\n      }\n    }\n  ]\n}\n\nDEF LOG Script {\n  inputOutput SFString hist \" PX_isActive=true PX_n=17\"\n  inputOnly   SFBool   TS_isActive\n  inputOnly   SFBool   TS_isOver\n  inputOnly   SFTime   TS_touchTime\n  inputOnly   SFBool   PX_isActive\n  inputOnly   SFVec3f  PX_position\n\n  url \"ecmascript:\n    var n = 0;\n    function TS_isActive (v) { hist = hist + ' TS_isActive=' + v; }\n    function TS_isOver (v) { hist = hist + ' TS_isOver=' + v; }\n    function TS_touchTime (v) { hist = hist + ' TS_touchTime'; }\n    function PX_isActive (v) { hist = hist + ' PX_isActive=' + v; }\n    function PX_position (v) { n = n + 1; hist = hist .replace (/ PX_n=\\\\d+$/, '') + ' PX_n=' + n; }\n  \"\n}\n\nROUTE TS.isActive TO LOG.TS_isActive\nROUTE TS.isOver TO LOG.TS_isOver\nROUTE TS.touchTime TO LOG.TS_touchTime\nROUTE PX.isActive TO LOG.PX_isActive\nROUTE PX.position_changed TO LOG.PX_position\n",
+    "35": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nNavigationInfo {\n  type [\n    \"WALK\",\n    \"ANY\"\n  ]\n  speed 4\n}\n\nViewpoint {\n  description \"start\"\n  position 0 3 12\n}\n\nDEF PX ProximitySensor {\n  size 1000 1000 1000\n}\n\nTransform {\n  translation 0 -0.1 0\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.4 0.4 0.4\n      }\n    }\n    geometry Box {\n      size 60 0.2 60\n    }\n  }\n}\n\nTransform {\n  translation 0 0.25 10\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.3 0.3 0.9\n      }\n    }\n    geometry Box {\n      size 3 0.5 1\n    }\n  }\n}\n\nTransform {\n  translation 0 2 7\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.9 0.3 0.2\n      }\n    }\n    geometry Box {\n      size 2 4 0.5\n    }\n  }\n}\n\nTransform {\n  translation -1.5 1.6 6\n  children [\n    DEF TS TouchSensor { }\n    Shape {\n      appearance Appearance {\n        material Material {\n          diffuseColor 0.2 0.8 0.3\n        }\n      }\n      geometry Box {\n        size 1.5 1.5 1.5\n      }\n    }\n  ]\n}\n\nDEF LOG Script {\n  inputOutput SFString hist \" PX_isActive=true PX_n=17\"\n  inputOnly   SFBool   TS_isActive\n  inputOnly   SFBool   TS_isOver\n  inputOnly   SFTime   TS_touchTime\n  inputOnly   SFBool   PX_isActive\n  inputOnly   SFVec3f  PX_position\n\n  url \"ecmascript:\n    var n = 0;\n    function TS_isActive (v) { hist = hist + ' TS_isActive=' + v; }\n    function TS_isOver (v) { hist = hist + ' TS_isOver=' + v; }\n    function TS_touchTime (v) { hist = hist + ' TS_touchTime'; }\n    function PX_isActive (v) { hist = hist + ' PX_isActive=' + v; }\n    function PX_position (v) { n = n + 1; hist = hist .replace (/ PX_n=\\\\d+$/, '') + ' PX_n=' + n; }\n  \"\n}\n\nROUTE TS.isActive TO LOG.TS_isActive\nROUTE TS.isOver TO LOG.TS_isOver\nROUTE TS.touchTime TO LOG.TS_touchTime\nROUTE PX.isActive TO LOG.PX_isActive\nROUTE PX.position_changed TO LOG.PX_position\n",
+    "36": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nNavigationInfo {\n  type [\n    \"WALK\",\n    \"ANY\"\n  ]\n  speed 4\n}\n\nViewpoint {\n  description \"start\"\n  position 0 3 12\n}\n\nDEF PX ProximitySensor {\n  size 1000 1000 1000\n}\n\nTransform {\n  translation 0 -0.1 0\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.4 0.4 0.4\n      }\n    }\n    geometry Box {\n      size 60 0.2 60\n    }\n  }\n}\n\nTransform {\n  translation 0 0.25 10\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.3 0.3 0.9\n      }\n    }\n    geometry Box {\n      size 3 0.5 1\n    }\n  }\n}\n\nTransform {\n  translation 0 2 7\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.9 0.3 0.2\n      }\n    }\n    geometry Box {\n      size 2 4 0.5\n    }\n  }\n}\n\nTransform {\n  translation -1.5 1.6 6\n  children [\n    DEF TS TouchSensor { }\n    Shape {\n      appearance Appearance {\n        material Material {\n          diffuseColor 0.2 0.8 0.3\n        }\n      }\n      geometry Box {\n        size 1.5 1.5 1.5\n      }\n    }\n  ]\n}\n\nDEF LOG Script {\n  inputOutput SFString hist \" PX_isActive=true PX_n=17\"\n  inputOnly   SFBool   TS_isActive\n  inputOnly   SFBool   TS_isOver\n  inputOnly   SFTime   TS_touchTime\n  inputOnly   SFBool   PX_isActive\n  inputOnly   SFVec3f  PX_position\n\n  url \"ecmascript:\n    var n = 0;\n    function TS_isActive (v) { hist = hist + ' TS_isActive=' + v; }\n    function TS_isOver (v) { hist = hist + ' TS_isOver=' + v; }\n    function TS_touchTime (v) { hist = hist + ' TS_touchTime'; }\n    function PX_isActive (v) { hist = hist + ' PX_isActive=' + v; }\n    function PX_position (v) { n = n + 1; hist = hist .replace (/ PX_n=\\\\d+$/, '') + ' PX_n=' + n; }\n  \"\n}\n\nROUTE TS.isActive TO LOG.TS_isActive\nROUTE TS.isOver TO LOG.TS_isOver\nROUTE TS.touchTime TO LOG.TS_touchTime\nROUTE PX.isActive TO LOG.PX_isActive\nROUTE PX.position_changed TO LOG.PX_position\n",
+    "37": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nNavigationInfo {\n  type [\n    \"WALK\",\n    \"ANY\"\n  ]\n  speed 4\n}\n\nViewpoint {\n  description \"start\"\n  position 0 3 12\n}\n\nDEF PX ProximitySensor {\n  size 1000 1000 1000\n}\n\nTransform {\n  translation 0 -0.1 0\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.4 0.4 0.4\n      }\n    }\n    geometry Box {\n      size 60 0.2 60\n    }\n  }\n}\n\nTransform {\n  translation 0 0.25 10\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.3 0.3 0.9\n      }\n    }\n    geometry Box {\n      size 3 0.5 1\n    }\n  }\n}\n\nTransform {\n  translation 0 2 7\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.9 0.3 0.2\n      }\n    }\n    geometry Box {\n      size 2 4 0.5\n    }\n  }\n}\n\nTransform {\n  translation -1.5 1.6 6\n  children [\n    DEF TS TouchSensor { }\n    Shape {\n      appearance Appearance {\n        material Material {\n          diffuseColor 0.2 0.8 0.3\n        }\n      }\n      geometry Box {\n        size 1.5 1.5 1.5\n      }\n    }\n  ]\n}\n\nDEF LOG Script {\n  inputOutput SFString hist \" PX_isActive=true PX_n=17\"\n  inputOnly   SFBool   TS_isActive\n  inputOnly   SFBool   TS_isOver\n  inputOnly   SFTime   TS_touchTime\n  inputOnly   SFBool   PX_isActive\n  inputOnly   SFVec3f  PX_position\n\n  url \"ecmascript:\n    var n = 0;\n    function TS_isActive (v) { hist = hist + ' TS_isActive=' + v; }\n    function TS_isOver (v) { hist = hist + ' TS_isOver=' + v; }\n    function TS_touchTime (v) { hist = hist + ' TS_touchTime'; }\n    function PX_isActive (v) { hist = hist + ' PX_isActive=' + v; }\n    function PX_position (v) { n = n + 1; hist = hist .replace (/ PX_n=\\\\d+$/, '') + ' PX_n=' + n; }\n  \"\n}\n\nROUTE TS.isActive TO LOG.TS_isActive\nROUTE TS.isOver TO LOG.TS_isOver\nROUTE TS.touchTime TO LOG.TS_touchTime\nROUTE PX.isActive TO LOG.PX_isActive\nROUTE PX.position_changed TO LOG.PX_position\n",
+    "38": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nNavigationInfo {\n  type [\n    \"WALK\",\n    \"ANY\"\n  ]\n  speed 4\n}\n\nViewpoint {\n  description \"start\"\n  position 0 3 12\n}\n\nDEF PX ProximitySensor {\n  size 1000 1000 1000\n}\n\nTransform {\n  translation 0 -0.1 0\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.4 0.4 0.4\n      }\n    }\n    geometry Box {\n      size 60 0.2 60\n    }\n  }\n}\n\nTransform {\n  translation 0 0.25 10\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.3 0.3 0.9\n      }\n    }\n    geometry Box {\n      size 3 0.5 1\n    }\n  }\n}\n\nTransform {\n  translation 0 2 7\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.9 0.3 0.2\n      }\n    }\n    geometry Box {\n      size 2 4 0.5\n    }\n  }\n}\n\nTransform {\n  translation -1.5 1.6 6\n  children [\n    DEF TS TouchSensor { }\n    Shape {\n      appearance Appearance {\n        material Material {\n          diffuseColor 0.2 0.8 0.3\n        }\n      }\n      geometry Box {\n        size 1.5 1.5 1.5\n      }\n    }\n  ]\n}\n\nDEF LOG Script {\n  inputOutput SFString hist \" PX_isActive=true PX_n=17\"\n  inputOnly   SFBool   TS_isActive\n  inputOnly   SFBool   TS_isOver\n  inputOnly   SFTime   TS_touchTime\n  inputOnly   SFBool   PX_isActive\n  inputOnly   SFVec3f  PX_position\n\n  url \"ecmascript:\n    var n = 0;\n    function TS_isActive (v) { hist = hist + ' TS_isActive=' + v; }\n    function TS_isOver (v) { hist = hist + ' TS_isOver=' + v; }\n    function TS_touchTime (v) { hist = hist + ' TS_touchTime'; }\n    function PX_isActive (v) { hist = hist + ' PX_isActive=' + v; }\n    function PX_position (v) { n = n + 1; hist = hist .replace (/ PX_n=\\\\d+$/, '') + ' PX_n=' + n; }\n  \"\n}\n\nROUTE TS.isActive TO LOG.TS_isActive\nROUTE TS.isOver TO LOG.TS_isOver\nROUTE TS.touchTime TO LOG.TS_touchTime\nROUTE PX.isActive TO LOG.PX_isActive\nROUTE PX.position_changed TO LOG.PX_position\n",
+    "39": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nNavigationInfo {\n  type [\n    \"WALK\",\n    \"ANY\"\n  ]\n  speed 4\n}\n\nViewpoint {\n  description \"start\"\n  position 0 3 12\n}\n\nDEF PX ProximitySensor {\n  size 1000 1000 1000\n}\n\nTransform {\n  translation 0 -0.1 0\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.4 0.4 0.4\n      }\n    }\n    geometry Box {\n      size 60 0.2 60\n    }\n  }\n}\n\nTransform {\n  translation 0 0.25 10\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.3 0.3 0.9\n      }\n    }\n    geometry Box {\n      size 3 0.5 1\n    }\n  }\n}\n\nTransform {\n  translation 0 2 7\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.9 0.3 0.2\n      }\n    }\n    geometry Box {\n      size 2 4 0.5\n    }\n  }\n}\n\nTransform {\n  translation -1.5 1.6 6\n  children [\n    DEF TS TouchSensor { }\n    Shape {\n      appearance Appearance {\n        material Material {\n          diffuseColor 0.2 0.8 0.3\n        }\n      }\n      geometry Box {\n        size 1.5 1.5 1.5\n      }\n    }\n  ]\n}\n\nDEF LOG Script {\n  inputOutput SFString hist \" PX_isActive=true PX_n=17\"\n  inputOnly   SFBool   TS_isActive\n  inputOnly   SFBool   TS_isOver\n  inputOnly   SFTime   TS_touchTime\n  inputOnly   SFBool   PX_isActive\n  inputOnly   SFVec3f  PX_position\n\n  url \"ecmascript:\n    var n = 0;\n    function TS_isActive (v) { hist = hist + ' TS_isActive=' + v; }\n    function TS_isOver (v) { hist = hist + ' TS_isOver=' + v; }\n    function TS_touchTime (v) { hist = hist + ' TS_touchTime'; }\n    function PX_isActive (v) { hist = hist + ' PX_isActive=' + v; }\n    function PX_position (v) { n = n + 1; hist = hist .replace (/ PX_n=\\\\d+$/, '') + ' PX_n=' + n; }\n  \"\n}\n\nROUTE TS.isActive TO LOG.TS_isActive\nROUTE TS.isOver TO LOG.TS_isOver\nROUTE TS.touchTime TO LOG.TS_touchTime\nROUTE PX.isActive TO LOG.PX_isActive\nROUTE PX.position_changed TO LOG.PX_position\n",
+    "40": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nNavigationInfo {\n  type [\n    \"WALK\",\n    \"ANY\"\n  ]\n  speed 4\n}\n\nViewpoint {\n  description \"start\"\n  position 0 3 12\n}\n\nDEF PX ProximitySensor {\n  size 1000 1000 1000\n}\n\nTransform {\n  translation 0 -0.1 0\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.4 0.4 0.4\n      }\n    }\n    geometry Box {\n      size 60 0.2 60\n    }\n  }\n}\n\nTransform {\n  translation 0 0.25 10\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.3 0.3 0.9\n      }\n    }\n    geometry Box {\n      size 3 0.5 1\n    }\n  }\n}\n\nTransform {\n  translation 0 2 7\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.9 0.3 0.2\n      }\n    }\n    geometry Box {\n      size 2 4 0.5\n    }\n  }\n}\n\nTransform {\n  translation -1.5 1.6 6\n  children [\n    DEF TS TouchSensor { }\n    Shape {\n      appearance Appearance {\n        material Material {\n          diffuseColor 0.2 0.8 0.3\n        }\n      }\n      geometry Box {\n        size 1.5 1.5 1.5\n      }\n    }\n  ]\n}\n\nDEF LOG Script {\n  inputOutput SFString hist \" PX_isActive=true PX_n=17\"\n  inputOnly   SFBool   TS_isActive\n  inputOnly   SFBool   TS_isOver\n  inputOnly   SFTime   TS_touchTime\n  inputOnly   SFBool   PX_isActive\n  inputOnly   SFVec3f  PX_position\n\n  url \"ecmascript:\n    var n = 0;\n    function TS_isActive (v) { hist = hist + ' TS_isActive=' + v; }\n    function TS_isOver (v) { hist = hist + ' TS_isOver=' + v; }\n    function TS_touchTime (v) { hist = hist + ' TS_touchTime'; }\n    function PX_isActive (v) { hist = hist + ' PX_isActive=' + v; }\n    function PX_position (v) { n = n + 1; hist = hist .replace (/ PX_n=\\\\d+$/, '') + ' PX_n=' + n; }\n  \"\n}\n\nROUTE TS.isActive TO LOG.TS_isActive\nROUTE TS.isOver TO LOG.TS_isOver\nROUTE TS.touchTime TO LOG.TS_touchTime\nROUTE PX.isActive TO LOG.PX_isActive\nROUTE PX.position_changed TO LOG.PX_position\n",
+    "41": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nNavigationInfo {\n  type [\n    \"WALK\",\n    \"ANY\"\n  ]\n  speed 4\n}\n\nViewpoint {\n  description \"start\"\n  position 0 3 12\n}\n\nDEF PX ProximitySensor {\n  size 1000 1000 1000\n}\n\nTransform {\n  translation 0 -0.1 0\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.4 0.4 0.4\n      }\n    }\n    geometry Box {\n      size 60 0.2 60\n    }\n  }\n}\n\nTransform {\n  translation 0 0.25 10\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.3 0.3 0.9\n      }\n    }\n    geometry Box {\n      size 3 0.5 1\n    }\n  }\n}\n\nTransform {\n  translation 0 2 7\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.9 0.3 0.2\n      }\n    }\n    geometry Box {\n      size 2 4 0.5\n    }\n  }\n}\n\nTransform {\n  translation -1.5 1.6 6\n  children [\n    DEF TS TouchSensor { }\n    Shape {\n      appearance Appearance {\n        material Material {\n          diffuseColor 0.2 0.8 0.3\n        }\n      }\n      geometry Box {\n        size 1.5 1.5 1.5\n      }\n    }\n  ]\n}\n\nDEF LOG Script {\n  inputOutput SFString hist \" PX_isActive=true PX_n=17\"\n  inputOnly   SFBool   TS_isActive\n  inputOnly   SFBool   TS_isOver\n  inputOnly   SFTime   TS_touchTime\n  inputOnly   SFBool   PX_isActive\n  inputOnly   SFVec3f  PX_position\n\n  url \"ecmascript:\n    var n = 0;\n    function TS_isActive (v) { hist = hist + ' TS_isActive=' + v; }\n    function TS_isOver (v) { hist = hist + ' TS_isOver=' + v; }\n    function TS_touchTime (v) { hist = hist + ' TS_touchTime'; }\n    function PX_isActive (v) { hist = hist + ' PX_isActive=' + v; }\n    function PX_position (v) { n = n + 1; hist = hist .replace (/ PX_n=\\\\d+$/, '') + ' PX_n=' + n; }\n  \"\n}\n\nROUTE TS.isActive TO LOG.TS_isActive\nROUTE TS.isOver TO LOG.TS_isOver\nROUTE TS.touchTime TO LOG.TS_touchTime\nROUTE PX.isActive TO LOG.PX_isActive\nROUTE PX.position_changed TO LOG.PX_position\n",
+    "42": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nNavigationInfo {\n  type [\n    \"WALK\",\n    \"ANY\"\n  ]\n  speed 4\n}\n\nViewpoint {\n  description \"start\"\n  position 0 3 12\n}\n\nDEF PX ProximitySensor {\n  size 1000 1000 1000\n}\n\nTransform {\n  translation 0 -0.1 0\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.4 0.4 0.4\n      }\n    }\n    geometry Box {\n      size 60 0.2 60\n    }\n  }\n}\n\nTransform {\n  translation 0 0.25 10\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.3 0.3 0.9\n      }\n    }\n    geometry Box {\n      size 3 0.5 1\n    }\n  }\n}\n\nTransform {\n  translation 0 2 7\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.9 0.3 0.2\n      }\n    }\n    geometry Box {\n      size 2 4 0.5\n    }\n  }\n}\n\nTransform {\n  translation -1.5 1.6 6\n  children [\n    DEF TS TouchSensor { }\n    Shape {\n      appearance Appearance {\n        material Material {\n          diffuseColor 0.2 0.8 0.3\n        }\n      }\n      geometry Box {\n        size 1.5 1.5 1.5\n      }\n    }\n  ]\n}\n\nDEF LOG Script {\n  inputOutput SFString hist \" PX_isActive=true PX_n=17\"\n  inputOnly   SFBool   TS_isActive\n  inputOnly   SFBool   TS_isOver\n  inputOnly   SFTime   TS_touchTime\n  inputOnly   SFBool   PX_isActive\n  inputOnly   SFVec3f  PX_position\n\n  url \"ecmascript:\n    var n = 0;\n    function TS_isActive (v) { hist = hist + ' TS_isActive=' + v; }\n    function TS_isOver (v) { hist = hist + ' TS_isOver=' + v; }\n    function TS_touchTime (v) { hist = hist + ' TS_touchTime'; }\n    function PX_isActive (v) { hist = hist + ' PX_isActive=' + v; }\n    function PX_position (v) { n = n + 1; hist = hist .replace (/ PX_n=\\\\d+$/, '') + ' PX_n=' + n; }\n  \"\n}\n\nROUTE TS.isActive TO LOG.TS_isActive\nROUTE TS.isOver TO LOG.TS_isOver\nROUTE TS.touchTime TO LOG.TS_touchTime\nROUTE PX.isActive TO LOG.PX_isActive\nROUTE PX.position_changed TO LOG.PX_position\n",
+    "43": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nNavigationInfo {\n  type [\n    \"WALK\",\n    \"ANY\"\n  ]\n  speed 4\n}\n\nViewpoint {\n  description \"start\"\n  position 0 3 12\n}\n\nDEF PX ProximitySensor {\n  size 1000 1000 1000\n}\n\nTransform {\n  translation 0 -0.1 0\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.4 0.4 0.4\n      }\n    }\n    geometry Box {\n      size 60 0.2 60\n    }\n  }\n}\n\nTransform {\n  translation 0 0.25 10\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.3 0.3 0.9\n      }\n    }\n    geometry Box {\n      size 3 0.5 1\n    }\n  }\n}\n\nTransform {\n  translation 0 2 7\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.9 0.3 0.2\n      }\n    }\n    geometry Box {\n      size 2 4 0.5\n    }\n  }\n}\n\nTransform {\n  translation -1.5 1.6 6\n  children [\n    DEF TS TouchSensor { }\n    Shape {\n      appearance Appearance {\n        material Material {\n          diffuseColor 0.2 0.8 0.3\n        }\n      }\n      geometry Box {\n        size 1.5 1.5 1.5\n      }\n    }\n  ]\n}\n\nDEF LOG Script {\n  inputOutput SFString hist \" PX_isActive=true PX_n=17\"\n  inputOnly   SFBool   TS_isActive\n  inputOnly   SFBool   TS_isOver\n  inputOnly   SFTime   TS_touchTime\n  inputOnly   SFBool   PX_isActive\n  inputOnly   SFVec3f  PX_position\n\n  url \"ecmascript:\n    var n = 0;\n    function TS_isActive (v) { hist = hist + ' TS_isActive=' + v; }\n    function TS_isOver (v) { hist = hist + ' TS_isOver=' + v; }\n    function TS_touchTime (v) { hist = hist + ' TS_touchTime'; }\n    function PX_isActive (v) { hist = hist + ' PX_isActive=' + v; }\n    function PX_position (v) { n = n + 1; hist = hist .replace (/ PX_n=\\\\d+$/, '') + ' PX_n=' + n; }\n  \"\n}\n\nROUTE TS.isActive TO LOG.TS_isActive\nROUTE TS.isOver TO LOG.TS_isOver\nROUTE TS.touchTime TO LOG.TS_touchTime\nROUTE PX.isActive TO LOG.PX_isActive\nROUTE PX.position_changed TO LOG.PX_position\n",
+    "44": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nNavigationInfo {\n  type [\n    \"WALK\",\n    \"ANY\"\n  ]\n  speed 4\n}\n\nViewpoint {\n  description \"start\"\n  position 0 3 12\n}\n\nDEF PX ProximitySensor {\n  size 1000 1000 1000\n}\n\nTransform {\n  translation 0 -0.1 0\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.4 0.4 0.4\n      }\n    }\n    geometry Box {\n      size 60 0.2 60\n    }\n  }\n}\n\nTransform {\n  translation 0 0.25 10\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.3 0.3 0.9\n      }\n    }\n    geometry Box {\n      size 3 0.5 1\n    }\n  }\n}\n\nTransform {\n  translation 0 2 7\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.9 0.3 0.2\n      }\n    }\n    geometry Box {\n      size 2 4 0.5\n    }\n  }\n}\n\nTransform {\n  translation -1.5 1.6 6\n  children [\n    DEF TS TouchSensor { }\n    Shape {\n      appearance Appearance {\n        material Material {\n          diffuseColor 0.2 0.8 0.3\n        }\n      }\n      geometry Box {\n        size 1.5 1.5 1.5\n      }\n    }\n  ]\n}\n\nDEF LOG Script {\n  inputOutput SFString hist \" PX_isActive=true PX_n=17\"\n  inputOnly   SFBool   TS_isActive\n  inputOnly   SFBool   TS_isOver\n  inputOnly   SFTime   TS_touchTime\n  inputOnly   SFBool   PX_isActive\n  inputOnly   SFVec3f  PX_position\n\n  url \"ecmascript:\n    var n = 0;\n    function TS_isActive (v) { hist = hist + ' TS_isActive=' + v; }\n    function TS_isOver (v) { hist = hist + ' TS_isOver=' + v; }\n    function TS_touchTime (v) { hist = hist + ' TS_touchTime'; }\n    function PX_isActive (v) { hist = hist + ' PX_isActive=' + v; }\n    function PX_position (v) { n = n + 1; hist = hist .replace (/ PX_n=\\\\d+$/, '') + ' PX_n=' + n; }\n  \"\n}\n\nROUTE TS.isActive TO LOG.TS_isActive\nROUTE TS.isOver TO LOG.TS_isOver\nROUTE TS.touchTime TO LOG.TS_touchTime\nROUTE PX.isActive TO LOG.PX_isActive\nROUTE PX.position_changed TO LOG.PX_position\n",
+    "45": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nNavigationInfo {\n  type [\n    \"WALK\",\n    \"ANY\"\n  ]\n  speed 4\n}\n\nViewpoint {\n  description \"start\"\n  position 0 3 12\n}\n\nDEF PX ProximitySensor {\n  size 1000 1000 1000\n}\n\nTransform {\n  translation 0 -0.1 0\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.4 0.4 0.4\n      }\n    }\n    geometry Box {\n      size 60 0.2 60\n    }\n  }\n}\n\nTransform {\n  translation 0 0.25 10\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.3 0.3 0.9\n      }\n    }\n    geometry Box {\n      size 3 0.5 1\n    }\n  }\n}\n\nTransform {\n  translation 0 2 7\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.9 0.3 0.2\n      }\n    }\n    geometry Box {\n      size 2 4 0.5\n    }\n  }\n}\n\nTransform {\n  translation -1.5 1.6 6\n  children [\n    DEF TS TouchSensor { }\n    Shape {\n      appearance Appearance {\n        material Material {\n          diffuseColor 0.2 0.8 0.3\n        }\n      }\n      geometry Box {\n        size 1.5 1.5 1.5\n      }\n    }\n  ]\n}\n\nDEF LOG Script {\n  inputOutput SFString hist \" PX_isActive=true PX_n=17\"\n  inputOnly   SFBool   TS_isActive\n  inputOnly   SFBool   TS_isOver\n  inputOnly   SFTime   TS_touchTime\n  inputOnly   SFBool   PX_isActive\n  inputOnly   SFVec3f  PX_position\n\n  url \"ecmascript:\n    var n = 0;\n    function TS_isActive (v) { hist = hist + ' TS_isActive=' + v; }\n    function TS_isOver (v) { hist = hist + ' TS_isOver=' + v; }\n    function TS_touchTime (v) { hist = hist + ' TS_touchTime'; }\n    function PX_isActive (v) { hist = hist + ' PX_isActive=' + v; }\n    function PX_position (v) { n = n + 1; hist = hist .replace (/ PX_n=\\\\d+$/, '') + ' PX_n=' + n; }\n  \"\n}\n\nROUTE TS.isActive TO LOG.TS_isActive\nROUTE TS.isOver TO LOG.TS_isOver\nROUTE TS.touchTime TO LOG.TS_touchTime\nROUTE PX.isActive TO LOG.PX_isActive\nROUTE PX.position_changed TO LOG.PX_position\n",
+    "46": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nNavigationInfo {\n  type [\n    \"WALK\",\n    \"ANY\"\n  ]\n  speed 4\n}\n\nViewpoint {\n  description \"start\"\n  position 0 3 12\n}\n\nDEF PX ProximitySensor {\n  size 1000 1000 1000\n}\n\nTransform {\n  translation 0 -0.1 0\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.4 0.4 0.4\n      }\n    }\n    geometry Box {\n      size 60 0.2 60\n    }\n  }\n}\n\nTransform {\n  translation 0 0.25 10\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.3 0.3 0.9\n      }\n    }\n    geometry Box {\n      size 3 0.5 1\n    }\n  }\n}\n\nTransform {\n  translation 0 2 7\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.9 0.3 0.2\n      }\n    }\n    geometry Box {\n      size 2 4 0.5\n    }\n  }\n}\n\nTransform {\n  translation -1.5 1.6 6\n  children [\n    DEF TS TouchSensor { }\n    Shape {\n      appearance Appearance {\n        material Material {\n          diffuseColor 0.2 0.8 0.3\n        }\n      }\n      geometry Box {\n        size 1.5 1.5 1.5\n      }\n    }\n  ]\n}\n\nDEF LOG Script {\n  inputOutput SFString hist \" PX_isActive=true PX_n=17\"\n  inputOnly   SFBool   TS_isActive\n  inputOnly   SFBool   TS_isOver\n  inputOnly   SFTime   TS_touchTime\n  inputOnly   SFBool   PX_isActive\n  inputOnly   SFVec3f  PX_position\n\n  url \"ecmascript:\n    var n = 0;\n    function TS_isActive (v) { hist = hist + ' TS_isActive=' + v; }\n    function TS_isOver (v) { hist = hist + ' TS_isOver=' + v; }\n    function TS_touchTime (v) { hist = hist + ' TS_touchTime'; }\n    function PX_isActive (v) { hist = hist + ' PX_isActive=' + v; }\n    function PX_position (v) { n = n + 1; hist = hist .replace (/ PX_n=\\\\d+$/, '') + ' PX_n=' + n; }\n  \"\n}\n\nROUTE TS.isActive TO LOG.TS_isActive\nROUTE TS.isOver TO LOG.TS_isOver\nROUTE TS.touchTime TO LOG.TS_touchTime\nROUTE PX.isActive TO LOG.PX_isActive\nROUTE PX.position_changed TO LOG.PX_position\n",
+    "47": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nNavigationInfo {\n  type [\n    \"WALK\",\n    \"ANY\"\n  ]\n  speed 4\n}\n\nViewpoint {\n  description \"start\"\n  position 0 3 12\n}\n\nDEF PX ProximitySensor {\n  size 1000 1000 1000\n}\n\nTransform {\n  translation 0 -0.1 0\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.4 0.4 0.4\n      }\n    }\n    geometry Box {\n      size 60 0.2 60\n    }\n  }\n}\n\nTransform {\n  translation 0 0.25 10\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.3 0.3 0.9\n      }\n    }\n    geometry Box {\n      size 3 0.5 1\n    }\n  }\n}\n\nTransform {\n  translation 0 2 7\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.9 0.3 0.2\n      }\n    }\n    geometry Box {\n      size 2 4 0.5\n    }\n  }\n}\n\nTransform {\n  translation -1.5 1.6 6\n  children [\n    DEF TS TouchSensor { }\n    Shape {\n      appearance Appearance {\n        material Material {\n          diffuseColor 0.2 0.8 0.3\n        }\n      }\n      geometry Box {\n        size 1.5 1.5 1.5\n      }\n    }\n  ]\n}\n\nDEF LOG Script {\n  inputOutput SFString hist \" PX_isActive=true PX_n=17\"\n  inputOnly   SFBool   TS_isActive\n  inputOnly   SFBool   TS_isOver\n  inputOnly   SFTime   TS_touchTime\n  inputOnly   SFBool   PX_isActive\n  inputOnly   SFVec3f  PX_position\n\n  url \"ecmascript:\n    var n = 0;\n    function TS_isActive (v) { hist = hist + ' TS_isActive=' + v; }\n    function TS_isOver (v) { hist = hist + ' TS_isOver=' + v; }\n    function TS_touchTime (v) { hist = hist + ' TS_touchTime'; }\n    function PX_isActive (v) { hist = hist + ' PX_isActive=' + v; }\n    function PX_position (v) { n = n + 1; hist = hist .replace (/ PX_n=\\\\d+$/, '') + ' PX_n=' + n; }\n  \"\n}\n\nROUTE TS.isActive TO LOG.TS_isActive\nROUTE TS.isOver TO LOG.TS_isOver\nROUTE TS.touchTime TO LOG.TS_touchTime\nROUTE PX.isActive TO LOG.PX_isActive\nROUTE PX.position_changed TO LOG.PX_position\n",
+    "48": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nNavigationInfo {\n  type [\n    \"WALK\",\n    \"ANY\"\n  ]\n  speed 4\n}\n\nViewpoint {\n  description \"start\"\n  position 0 3 12\n}\n\nDEF PX ProximitySensor {\n  size 1000 1000 1000\n}\n\nTransform {\n  translation 0 -0.1 0\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.4 0.4 0.4\n      }\n    }\n    geometry Box {\n      size 60 0.2 60\n    }\n  }\n}\n\nTransform {\n  translation 0 0.25 10\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.3 0.3 0.9\n      }\n    }\n    geometry Box {\n      size 3 0.5 1\n    }\n  }\n}\n\nTransform {\n  translation 0 2 7\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.9 0.3 0.2\n      }\n    }\n    geometry Box {\n      size 2 4 0.5\n    }\n  }\n}\n\nTransform {\n  translation -1.5 1.6 6\n  children [\n    DEF TS TouchSensor { }\n    Shape {\n      appearance Appearance {\n        material Material {\n          diffuseColor 0.2 0.8 0.3\n        }\n      }\n      geometry Box {\n        size 1.5 1.5 1.5\n      }\n    }\n  ]\n}\n\nDEF LOG Script {\n  inputOutput SFString hist \" PX_isActive=true PX_n=17\"\n  inputOnly   SFBool   TS_isActive\n  inputOnly   SFBool   TS_isOver\n  inputOnly   SFTime   TS_touchTime\n  inputOnly   SFBool   PX_isActive\n  inputOnly   SFVec3f  PX_position\n\n  url \"ecmascript:\n    var n = 0;\n    function TS_isActive (v) { hist = hist + ' TS_isActive=' + v; }\n    function TS_isOver (v) { hist = hist + ' TS_isOver=' + v; }\n    function TS_touchTime (v) { hist = hist + ' TS_touchTime'; }\n    function PX_isActive (v) { hist = hist + ' PX_isActive=' + v; }\n    function PX_position (v) { n = n + 1; hist = hist .replace (/ PX_n=\\\\d+$/, '') + ' PX_n=' + n; }\n  \"\n}\n\nROUTE TS.isActive TO LOG.TS_isActive\nROUTE TS.isOver TO LOG.TS_isOver\nROUTE TS.touchTime TO LOG.TS_touchTime\nROUTE PX.isActive TO LOG.PX_isActive\nROUTE PX.position_changed TO LOG.PX_position\n",
+    "49": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nNavigationInfo {\n  type [\n    \"WALK\",\n    \"ANY\"\n  ]\n  speed 4\n}\n\nViewpoint {\n  description \"start\"\n  position 0 3 12\n}\n\nDEF PX ProximitySensor {\n  size 1000 1000 1000\n}\n\nTransform {\n  translation 0 -0.1 0\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.4 0.4 0.4\n      }\n    }\n    geometry Box {\n      size 60 0.2 60\n    }\n  }\n}\n\nTransform {\n  translation 0 0.25 10\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.3 0.3 0.9\n      }\n    }\n    geometry Box {\n      size 3 0.5 1\n    }\n  }\n}\n\nTransform {\n  translation 0 2 7\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.9 0.3 0.2\n      }\n    }\n    geometry Box {\n      size 2 4 0.5\n    }\n  }\n}\n\nTransform {\n  translation -1.5 1.6 6\n  children [\n    DEF TS TouchSensor { }\n    Shape {\n      appearance Appearance {\n        material Material {\n          diffuseColor 0.2 0.8 0.3\n        }\n      }\n      geometry Box {\n        size 1.5 1.5 1.5\n      }\n    }\n  ]\n}\n\nDEF LOG Script {\n  inputOutput SFString hist \" PX_isActive=true PX_n=17\"\n  inputOnly   SFBool   TS_isActive\n  inputOnly   SFBool   TS_isOver\n  inputOnly   SFTime   TS_touchTime\n  inputOnly   SFBool   PX_isActive\n  inputOnly   SFVec3f  PX_position\n\n  url \"ecmascript:\n    var n = 0;\n    function TS_isActive (v) { hist = hist + ' TS_isActive=' + v; }\n    function TS_isOver (v) { hist = hist + ' TS_isOver=' + v; }\n    function TS_touchTime (v) { hist = hist + ' TS_touchTime'; }\n    function PX_isActive (v) { hist = hist + ' PX_isActive=' + v; }\n    function PX_position (v) { n = n + 1; hist = hist .replace (/ PX_n=\\\\d+$/, '') + ' PX_n=' + n; }\n  \"\n}\n\nROUTE TS.isActive TO LOG.TS_isActive\nROUTE TS.isOver TO LOG.TS_isOver\nROUTE TS.touchTime TO LOG.TS_touchTime\nROUTE PX.isActive TO LOG.PX_isActive\nROUTE PX.position_changed TO LOG.PX_position\n",
+    "50": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nNavigationInfo {\n  type [\n    \"WALK\",\n    \"ANY\"\n  ]\n  speed 4\n}\n\nViewpoint {\n  description \"start\"\n  position 0 3 12\n}\n\nDEF PX ProximitySensor {\n  size 1000 1000 1000\n}\n\nTransform {\n  translation 0 -0.1 0\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.4 0.4 0.4\n      }\n    }\n    geometry Box {\n      size 60 0.2 60\n    }\n  }\n}\n\nTransform {\n  translation 0 0.25 10\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.3 0.3 0.9\n      }\n    }\n    geometry Box {\n      size 3 0.5 1\n    }\n  }\n}\n\nTransform {\n  translation 0 2 7\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.9 0.3 0.2\n      }\n    }\n    geometry Box {\n      size 2 4 0.5\n    }\n  }\n}\n\nTransform {\n  translation -1.5 1.6 6\n  children [\n    DEF TS TouchSensor { }\n    Shape {\n      appearance Appearance {\n        material Material {\n          diffuseColor 0.2 0.8 0.3\n        }\n      }\n      geometry Box {\n        size 1.5 1.5 1.5\n      }\n    }\n  ]\n}\n\nDEF LOG Script {\n  inputOutput SFString hist \" PX_isActive=true PX_n=17\"\n  inputOnly   SFBool   TS_isActive\n  inputOnly   SFBool   TS_isOver\n  inputOnly   SFTime   TS_touchTime\n  inputOnly   SFBool   PX_isActive\n  inputOnly   SFVec3f  PX_position\n\n  url \"ecmascript:\n    var n = 0;\n    function TS_isActive (v) { hist = hist + ' TS_isActive=' + v; }\n    function TS_isOver (v) { hist = hist + ' TS_isOver=' + v; }\n    function TS_touchTime (v) { hist = hist + ' TS_touchTime'; }\n    function PX_isActive (v) { hist = hist + ' PX_isActive=' + v; }\n    function PX_position (v) { n = n + 1; hist = hist .replace (/ PX_n=\\\\d+$/, '') + ' PX_n=' + n; }\n  \"\n}\n\nROUTE TS.isActive TO LOG.TS_isActive\nROUTE TS.isOver TO LOG.TS_isOver\nROUTE TS.touchTime TO LOG.TS_touchTime\nROUTE PX.isActive TO LOG.PX_isActive\nROUTE PX.position_changed TO LOG.PX_position\n",
+    "51": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nNavigationInfo {\n  type [\n    \"WALK\",\n    \"ANY\"\n  ]\n  speed 4\n}\n\nViewpoint {\n  description \"start\"\n  position 0 3 12\n}\n\nDEF PX ProximitySensor {\n  size 1000 1000 1000\n}\n\nTransform {\n  translation 0 -0.1 0\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.4 0.4 0.4\n      }\n    }\n    geometry Box {\n      size 60 0.2 60\n    }\n  }\n}\n\nTransform {\n  translation 0 0.25 10\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.3 0.3 0.9\n      }\n    }\n    geometry Box {\n      size 3 0.5 1\n    }\n  }\n}\n\nTransform {\n  translation 0 2 7\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.9 0.3 0.2\n      }\n    }\n    geometry Box {\n      size 2 4 0.5\n    }\n  }\n}\n\nTransform {\n  translation -1.5 1.6 6\n  children [\n    DEF TS TouchSensor { }\n    Shape {\n      appearance Appearance {\n        material Material {\n          diffuseColor 0.2 0.8 0.3\n        }\n      }\n      geometry Box {\n        size 1.5 1.5 1.5\n      }\n    }\n  ]\n}\n\nDEF LOG Script {\n  inputOutput SFString hist \" PX_isActive=true PX_n=17\"\n  inputOnly   SFBool   TS_isActive\n  inputOnly   SFBool   TS_isOver\n  inputOnly   SFTime   TS_touchTime\n  inputOnly   SFBool   PX_isActive\n  inputOnly   SFVec3f  PX_position\n\n  url \"ecmascript:\n    var n = 0;\n    function TS_isActive (v) { hist = hist + ' TS_isActive=' + v; }\n    function TS_isOver (v) { hist = hist + ' TS_isOver=' + v; }\n    function TS_touchTime (v) { hist = hist + ' TS_touchTime'; }\n    function PX_isActive (v) { hist = hist + ' PX_isActive=' + v; }\n    function PX_position (v) { n = n + 1; hist = hist .replace (/ PX_n=\\\\d+$/, '') + ' PX_n=' + n; }\n  \"\n}\n\nROUTE TS.isActive TO LOG.TS_isActive\nROUTE TS.isOver TO LOG.TS_isOver\nROUTE TS.touchTime TO LOG.TS_touchTime\nROUTE PX.isActive TO LOG.PX_isActive\nROUTE PX.position_changed TO LOG.PX_position\n",
+    "52": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nNavigationInfo {\n  type [\n    \"WALK\",\n    \"ANY\"\n  ]\n  speed 4\n}\n\nViewpoint {\n  description \"start\"\n  position 0 3 12\n}\n\nDEF PX ProximitySensor {\n  size 1000 1000 1000\n}\n\nTransform {\n  translation 0 -0.1 0\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.4 0.4 0.4\n      }\n    }\n    geometry Box {\n      size 60 0.2 60\n    }\n  }\n}\n\nTransform {\n  translation 0 0.25 10\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.3 0.3 0.9\n      }\n    }\n    geometry Box {\n      size 3 0.5 1\n    }\n  }\n}\n\nTransform {\n  translation 0 2 7\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.9 0.3 0.2\n      }\n    }\n    geometry Box {\n      size 2 4 0.5\n    }\n  }\n}\n\nTransform {\n  translation -1.5 1.6 6\n  children [\n    DEF TS TouchSensor { }\n    Shape {\n      appearance Appearance {\n        material Material {\n          diffuseColor 0.2 0.8 0.3\n        }\n      }\n      geometry Box {\n        size 1.5 1.5 1.5\n      }\n    }\n  ]\n}\n\nDEF LOG Script {\n  inputOutput SFString hist \" PX_isActive=true PX_n=17\"\n  inputOnly   SFBool   TS_isActive\n  inputOnly   SFBool   TS_isOver\n  inputOnly   SFTime   TS_touchTime\n  inputOnly   SFBool   PX_isActive\n  inputOnly   SFVec3f  PX_position\n\n  url \"ecmascript:\n    var n = 0;\n    function TS_isActive (v) { hist = hist + ' TS_isActive=' + v; }\n    function TS_isOver (v) { hist = hist + ' TS_isOver=' + v; }\n    function TS_touchTime (v) { hist = hist + ' TS_touchTime'; }\n    function PX_isActive (v) { hist = hist + ' PX_isActive=' + v; }\n    function PX_position (v) { n = n + 1; hist = hist .replace (/ PX_n=\\\\d+$/, '') + ' PX_n=' + n; }\n  \"\n}\n\nROUTE TS.isActive TO LOG.TS_isActive\nROUTE TS.isOver TO LOG.TS_isOver\nROUTE TS.touchTime TO LOG.TS_touchTime\nROUTE PX.isActive TO LOG.PX_isActive\nROUTE PX.position_changed TO LOG.PX_position\n",
+    "53": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nNavigationInfo {\n  type [\n    \"WALK\",\n    \"ANY\"\n  ]\n  speed 4\n}\n\nViewpoint {\n  description \"start\"\n  position 0 3 12\n}\n\nDEF PX ProximitySensor {\n  size 1000 1000 1000\n}\n\nTransform {\n  translation 0 -0.1 0\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.4 0.4 0.4\n      }\n    }\n    geometry Box {\n      size 60 0.2 60\n    }\n  }\n}\n\nTransform {\n  translation 0 0.25 10\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.3 0.3 0.9\n      }\n    }\n    geometry Box {\n      size 3 0.5 1\n    }\n  }\n}\n\nTransform {\n  translation 0 2 7\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.9 0.3 0.2\n      }\n    }\n    geometry Box {\n      size 2 4 0.5\n    }\n  }\n}\n\nTransform {\n  translation -1.5 1.6 6\n  children [\n    DEF TS TouchSensor { }\n    Shape {\n      appearance Appearance {\n        material Material {\n          diffuseColor 0.2 0.8 0.3\n        }\n      }\n      geometry Box {\n        size 1.5 1.5 1.5\n      }\n    }\n  ]\n}\n\nDEF LOG Script {\n  inputOutput SFString hist \" PX_isActive=true PX_n=17\"\n  inputOnly   SFBool   TS_isActive\n  inputOnly   SFBool   TS_isOver\n  inputOnly   SFTime   TS_touchTime\n  inputOnly   SFBool   PX_isActive\n  inputOnly   SFVec3f  PX_position\n\n  url \"ecmascript:\n    var n = 0;\n    function TS_isActive (v) { hist = hist + ' TS_isActive=' + v; }\n    function TS_isOver (v) { hist = hist + ' TS_isOver=' + v; }\n    function TS_touchTime (v) { hist = hist + ' TS_touchTime'; }\n    function PX_isActive (v) { hist = hist + ' PX_isActive=' + v; }\n    function PX_position (v) { n = n + 1; hist = hist .replace (/ PX_n=\\\\d+$/, '') + ' PX_n=' + n; }\n  \"\n}\n\nROUTE TS.isActive TO LOG.TS_isActive\nROUTE TS.isOver TO LOG.TS_isOver\nROUTE TS.touchTime TO LOG.TS_touchTime\nROUTE PX.isActive TO LOG.PX_isActive\nROUTE PX.position_changed TO LOG.PX_position\n",
+    "54": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nNavigationInfo {\n  type [\n    \"WALK\",\n    \"ANY\"\n  ]\n  speed 4\n}\n\nViewpoint {\n  description \"start\"\n  position 0 3 12\n}\n\nDEF PX ProximitySensor {\n  size 1000 1000 1000\n}\n\nTransform {\n  translation 0 -0.1 0\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.4 0.4 0.4\n      }\n    }\n    geometry Box {\n      size 60 0.2 60\n    }\n  }\n}\n\nTransform {\n  translation 0 0.25 10\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.3 0.3 0.9\n      }\n    }\n    geometry Box {\n      size 3 0.5 1\n    }\n  }\n}\n\nTransform {\n  translation 0 2 7\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.9 0.3 0.2\n      }\n    }\n    geometry Box {\n      size 2 4 0.5\n    }\n  }\n}\n\nTransform {\n  translation -1.5 1.6 6\n  children [\n    DEF TS TouchSensor { }\n    Shape {\n      appearance Appearance {\n        material Material {\n          diffuseColor 0.2 0.8 0.3\n        }\n      }\n      geometry Box {\n        size 1.5 1.5 1.5\n      }\n    }\n  ]\n}\n\nDEF LOG Script {\n  inputOutput SFString hist \" PX_isActive=true PX_n=17\"\n  inputOnly   SFBool   TS_isActive\n  inputOnly   SFBool   TS_isOver\n  inputOnly   SFTime   TS_touchTime\n  inputOnly   SFBool   PX_isActive\n  inputOnly   SFVec3f  PX_position\n\n  url \"ecmascript:\n    var n = 0;\n    function TS_isActive (v) { hist = hist + ' TS_isActive=' + v; }\n    function TS_isOver (v) { hist = hist + ' TS_isOver=' + v; }\n    function TS_touchTime (v) { hist = hist + ' TS_touchTime'; }\n    function PX_isActive (v) { hist = hist + ' PX_isActive=' + v; }\n    function PX_position (v) { n = n + 1; hist = hist .replace (/ PX_n=\\\\d+$/, '') + ' PX_n=' + n; }\n  \"\n}\n\nROUTE TS.isActive TO LOG.TS_isActive\nROUTE TS.isOver TO LOG.TS_isOver\nROUTE TS.touchTime TO LOG.TS_touchTime\nROUTE PX.isActive TO LOG.PX_isActive\nROUTE PX.position_changed TO LOG.PX_position\n",
+    "55": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nNavigationInfo {\n  type [\n    \"WALK\",\n    \"ANY\"\n  ]\n  speed 4\n}\n\nViewpoint {\n  description \"start\"\n  position 0 3 12\n}\n\nDEF PX ProximitySensor {\n  size 1000 1000 1000\n}\n\nTransform {\n  translation 0 -0.1 0\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.4 0.4 0.4\n      }\n    }\n    geometry Box {\n      size 60 0.2 60\n    }\n  }\n}\n\nTransform {\n  translation 0 0.25 10\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.3 0.3 0.9\n      }\n    }\n    geometry Box {\n      size 3 0.5 1\n    }\n  }\n}\n\nTransform {\n  translation 0 2 7\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.9 0.3 0.2\n      }\n    }\n    geometry Box {\n      size 2 4 0.5\n    }\n  }\n}\n\nTransform {\n  translation -1.5 1.6 6\n  children [\n    DEF TS TouchSensor { }\n    Shape {\n      appearance Appearance {\n        material Material {\n          diffuseColor 0.2 0.8 0.3\n        }\n      }\n      geometry Box {\n        size 1.5 1.5 1.5\n      }\n    }\n  ]\n}\n\nDEF LOG Script {\n  inputOutput SFString hist \" PX_isActive=true PX_n=17\"\n  inputOnly   SFBool   TS_isActive\n  inputOnly   SFBool   TS_isOver\n  inputOnly   SFTime   TS_touchTime\n  inputOnly   SFBool   PX_isActive\n  inputOnly   SFVec3f  PX_position\n\n  url \"ecmascript:\n    var n = 0;\n    function TS_isActive (v) { hist = hist + ' TS_isActive=' + v; }\n    function TS_isOver (v) { hist = hist + ' TS_isOver=' + v; }\n    function TS_touchTime (v) { hist = hist + ' TS_touchTime'; }\n    function PX_isActive (v) { hist = hist + ' PX_isActive=' + v; }\n    function PX_position (v) { n = n + 1; hist = hist .replace (/ PX_n=\\\\d+$/, '') + ' PX_n=' + n; }\n  \"\n}\n\nROUTE TS.isActive TO LOG.TS_isActive\nROUTE TS.isOver TO LOG.TS_isOver\nROUTE TS.touchTime TO LOG.TS_touchTime\nROUTE PX.isActive TO LOG.PX_isActive\nROUTE PX.position_changed TO LOG.PX_position\n",
+    "56": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nNavigationInfo {\n  type [\n    \"WALK\",\n    \"ANY\"\n  ]\n  speed 4\n}\n\nViewpoint {\n  description \"start\"\n  position 0 3 12\n}\n\nDEF PX ProximitySensor {\n  size 1000 1000 1000\n}\n\nTransform {\n  translation 0 -0.1 0\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.4 0.4 0.4\n      }\n    }\n    geometry Box {\n      size 60 0.2 60\n    }\n  }\n}\n\nTransform {\n  translation 0 0.25 10\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.3 0.3 0.9\n      }\n    }\n    geometry Box {\n      size 3 0.5 1\n    }\n  }\n}\n\nTransform {\n  translation 0 2 7\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.9 0.3 0.2\n      }\n    }\n    geometry Box {\n      size 2 4 0.5\n    }\n  }\n}\n\nTransform {\n  translation -1.5 1.6 6\n  children [\n    DEF TS TouchSensor { }\n    Shape {\n      appearance Appearance {\n        material Material {\n          diffuseColor 0.2 0.8 0.3\n        }\n      }\n      geometry Box {\n        size 1.5 1.5 1.5\n      }\n    }\n  ]\n}\n\nDEF LOG Script {\n  inputOutput SFString hist \" PX_isActive=true PX_n=17\"\n  inputOnly   SFBool   TS_isActive\n  inputOnly   SFBool   TS_isOver\n  inputOnly   SFTime   TS_touchTime\n  inputOnly   SFBool   PX_isActive\n  inputOnly   SFVec3f  PX_position\n\n  url \"ecmascript:\n    var n = 0;\n    function TS_isActive (v) { hist = hist + ' TS_isActive=' + v; }\n    function TS_isOver (v) { hist = hist + ' TS_isOver=' + v; }\n    function TS_touchTime (v) { hist = hist + ' TS_touchTime'; }\n    function PX_isActive (v) { hist = hist + ' PX_isActive=' + v; }\n    function PX_position (v) { n = n + 1; hist = hist .replace (/ PX_n=\\\\d+$/, '') + ' PX_n=' + n; }\n  \"\n}\n\nROUTE TS.isActive TO LOG.TS_isActive\nROUTE TS.isOver TO LOG.TS_isOver\nROUTE TS.touchTime TO LOG.TS_touchTime\nROUTE PX.isActive TO LOG.PX_isActive\nROUTE PX.position_changed TO LOG.PX_position\n",
+    "57": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nNavigationInfo {\n  type [\n    \"WALK\",\n    \"ANY\"\n  ]\n  speed 4\n}\n\nViewpoint {\n  description \"start\"\n  position 0 3 12\n}\n\nDEF PX ProximitySensor {\n  size 1000 1000 1000\n}\n\nTransform {\n  translation 0 -0.1 0\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.4 0.4 0.4\n      }\n    }\n    geometry Box {\n      size 60 0.2 60\n    }\n  }\n}\n\nTransform {\n  translation 0 0.25 10\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.3 0.3 0.9\n      }\n    }\n    geometry Box {\n      size 3 0.5 1\n    }\n  }\n}\n\nTransform {\n  translation 0 2 7\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.9 0.3 0.2\n      }\n    }\n    geometry Box {\n      size 2 4 0.5\n    }\n  }\n}\n\nTransform {\n  translation -1.5 1.6 6\n  children [\n    DEF TS TouchSensor { }\n    Shape {\n      appearance Appearance {\n        material Material {\n          diffuseColor 0.2 0.8 0.3\n        }\n      }\n      geometry Box {\n        size 1.5 1.5 1.5\n      }\n    }\n  ]\n}\n\nDEF LOG Script {\n  inputOutput SFString hist \" PX_isActive=true PX_n=17\"\n  inputOnly   SFBool   TS_isActive\n  inputOnly   SFBool   TS_isOver\n  inputOnly   SFTime   TS_touchTime\n  inputOnly   SFBool   PX_isActive\n  inputOnly   SFVec3f  PX_position\n\n  url \"ecmascript:\n    var n = 0;\n    function TS_isActive (v) { hist = hist + ' TS_isActive=' + v; }\n    function TS_isOver (v) { hist = hist + ' TS_isOver=' + v; }\n    function TS_touchTime (v) { hist = hist + ' TS_touchTime'; }\n    function PX_isActive (v) { hist = hist + ' PX_isActive=' + v; }\n    function PX_position (v) { n = n + 1; hist = hist .replace (/ PX_n=\\\\d+$/, '') + ' PX_n=' + n; }\n  \"\n}\n\nROUTE TS.isActive TO LOG.TS_isActive\nROUTE TS.isOver TO LOG.TS_isOver\nROUTE TS.touchTime TO LOG.TS_touchTime\nROUTE PX.isActive TO LOG.PX_isActive\nROUTE PX.position_changed TO LOG.PX_position\n",
+    "58": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nNavigationInfo {\n  type [\n    \"WALK\",\n    \"ANY\"\n  ]\n  speed 4\n}\n\nViewpoint {\n  description \"start\"\n  position 0 3 12\n}\n\nDEF PX ProximitySensor {\n  size 1000 1000 1000\n}\n\nTransform {\n  translation 0 -0.1 0\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.4 0.4 0.4\n      }\n    }\n    geometry Box {\n      size 60 0.2 60\n    }\n  }\n}\n\nTransform {\n  translation 0 0.25 10\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.3 0.3 0.9\n      }\n    }\n    geometry Box {\n      size 3 0.5 1\n    }\n  }\n}\n\nTransform {\n  translation 0 2 7\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.9 0.3 0.2\n      }\n    }\n    geometry Box {\n      size 2 4 0.5\n    }\n  }\n}\n\nTransform {\n  translation -1.5 1.6 6\n  children [\n    DEF TS TouchSensor { }\n    Shape {\n      appearance Appearance {\n        material Material {\n          diffuseColor 0.2 0.8 0.3\n        }\n      }\n      geometry Box {\n        size 1.5 1.5 1.5\n      }\n    }\n  ]\n}\n\nDEF LOG Script {\n  inputOutput SFString hist \" PX_isActive=true PX_n=17\"\n  inputOnly   SFBool   TS_isActive\n  inputOnly   SFBool   TS_isOver\n  inputOnly   SFTime   TS_touchTime\n  inputOnly   SFBool   PX_isActive\n  inputOnly   SFVec3f  PX_position\n\n  url \"ecmascript:\n    var n = 0;\n    function TS_isActive (v) { hist = hist + ' TS_isActive=' + v; }\n    function TS_isOver (v) { hist = hist + ' TS_isOver=' + v; }\n    function TS_touchTime (v) { hist = hist + ' TS_touchTime'; }\n    function PX_isActive (v) { hist = hist + ' PX_isActive=' + v; }\n    function PX_position (v) { n = n + 1; hist = hist .replace (/ PX_n=\\\\d+$/, '') + ' PX_n=' + n; }\n  \"\n}\n\nROUTE TS.isActive TO LOG.TS_isActive\nROUTE TS.isOver TO LOG.TS_isOver\nROUTE TS.touchTime TO LOG.TS_touchTime\nROUTE PX.isActive TO LOG.PX_isActive\nROUTE PX.position_changed TO LOG.PX_position\n",
+    "59": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nNavigationInfo {\n  type [\n    \"WALK\",\n    \"ANY\"\n  ]\n  speed 4\n}\n\nViewpoint {\n  description \"start\"\n  position 0 3 12\n}\n\nDEF PX ProximitySensor {\n  size 1000 1000 1000\n}\n\nTransform {\n  translation 0 -0.1 0\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.4 0.4 0.4\n      }\n    }\n    geometry Box {\n      size 60 0.2 60\n    }\n  }\n}\n\nTransform {\n  translation 0 0.25 10\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.3 0.3 0.9\n      }\n    }\n    geometry Box {\n      size 3 0.5 1\n    }\n  }\n}\n\nTransform {\n  translation 0 2 7\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.9 0.3 0.2\n      }\n    }\n    geometry Box {\n      size 2 4 0.5\n    }\n  }\n}\n\nTransform {\n  translation -1.5 1.6 6\n  children [\n    DEF TS TouchSensor { }\n    Shape {\n      appearance Appearance {\n        material Material {\n          diffuseColor 0.2 0.8 0.3\n        }\n      }\n      geometry Box {\n        size 1.5 1.5 1.5\n      }\n    }\n  ]\n}\n\nDEF LOG Script {\n  inputOutput SFString hist \" PX_isActive=true PX_n=17\"\n  inputOnly   SFBool   TS_isActive\n  inputOnly   SFBool   TS_isOver\n  inputOnly   SFTime   TS_touchTime\n  inputOnly   SFBool   PX_isActive\n  inputOnly   SFVec3f  PX_position\n\n  url \"ecmascript:\n    var n = 0;\n    function TS_isActive (v) { hist = hist + ' TS_isActive=' + v; }\n    function TS_isOver (v) { hist = hist + ' TS_isOver=' + v; }\n    function TS_touchTime (v) { hist = hist + ' TS_touchTime'; }\n    function PX_isActive (v) { hist = hist + ' PX_isActive=' + v; }\n    function PX_position (v) { n = n + 1; hist = hist .replace (/ PX_n=\\\\d+$/, '') + ' PX_n=' + n; }\n  \"\n}\n\nROUTE TS.isActive TO LOG.TS_isActive\nROUTE TS.isOver TO LOG.TS_isOver\nROUTE TS.touchTime TO LOG.TS_touchTime\nROUTE PX.isActive TO LOG.PX_isActive\nROUTE PX.position_changed TO LOG.PX_position\n",
+    "60": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nNavigationInfo {\n  type [\n    \"WALK\",\n    \"ANY\"\n  ]\n  speed 4\n}\n\nViewpoint {\n  description \"start\"\n  position 0 3 12\n}\n\nDEF PX ProximitySensor {\n  size 1000 1000 1000\n}\n\nTransform {\n  translation 0 -0.1 0\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.4 0.4 0.4\n      }\n    }\n    geometry Box {\n      size 60 0.2 60\n    }\n  }\n}\n\nTransform {\n  translation 0 0.25 10\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.3 0.3 0.9\n      }\n    }\n    geometry Box {\n      size 3 0.5 1\n    }\n  }\n}\n\nTransform {\n  translation 0 2 7\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.9 0.3 0.2\n      }\n    }\n    geometry Box {\n      size 2 4 0.5\n    }\n  }\n}\n\nTransform {\n  translation -1.5 1.6 6\n  children [\n    DEF TS TouchSensor { }\n    Shape {\n      appearance Appearance {\n        material Material {\n          diffuseColor 0.2 0.8 0.3\n        }\n      }\n      geometry Box {\n        size 1.5 1.5 1.5\n      }\n    }\n  ]\n}\n\nDEF LOG Script {\n  inputOutput SFString hist \" PX_isActive=true PX_n=17\"\n  inputOnly   SFBool   TS_isActive\n  inputOnly   SFBool   TS_isOver\n  inputOnly   SFTime   TS_touchTime\n  inputOnly   SFBool   PX_isActive\n  inputOnly   SFVec3f  PX_position\n\n  url \"ecmascript:\n    var n = 0;\n    function TS_isActive (v) { hist = hist + ' TS_isActive=' + v; }\n    function TS_isOver (v) { hist = hist + ' TS_isOver=' + v; }\n    function TS_touchTime (v) { hist = hist + ' TS_touchTime'; }\n    function PX_isActive (v) { hist = hist + ' PX_isActive=' + v; }\n    function PX_position (v) { n = n + 1; hist = hist .replace (/ PX_n=\\\\d+$/, '') + ' PX_n=' + n; }\n  \"\n}\n\nROUTE TS.isActive TO LOG.TS_isActive\nROUTE TS.isOver TO LOG.TS_isOver\nROUTE TS.touchTime TO LOG.TS_touchTime\nROUTE PX.isActive TO LOG.PX_isActive\nROUTE PX.position_changed TO LOG.PX_position\n"
+  },
+  "prints": [],
+  "log": [],
+  "anchors": [],
+  "loadFrames": 3,
+  "warmupFrames": 8,
+  "geometry": {
+    "rect": [
+      0,
+      0,
+      512,
+      512
+    ],
+    "viewport": [
+      0,
+      0,
+      512,
+      512
+    ],
+    "scroll": [
+      0,
+      0
+    ]
+  },
+  "touchLog": [
+    [
+      2,
+      "touchstart",
+      [
+        [
+          226,
+          256
+        ]
+      ]
+    ],
+    [
+      3,
+      "touchstart",
+      [
+        [
+          226,
+          256
+        ],
+        [
+          286,
+          256
+        ]
+      ]
+    ],
+    [
+      4,
+      "touchmove",
+      [
+        [
+          232,
+          252
+        ],
+        [
+          292,
+          252
+        ]
+      ]
+    ],
+    [
+      5,
+      "touchmove",
+      [
+        [
+          238,
+          248
+        ],
+        [
+          298,
+          248
+        ]
+      ]
+    ],
+    [
+      6,
+      "touchmove",
+      [
+        [
+          244,
+          244
+        ],
+        [
+          304,
+          244
+        ]
+      ]
+    ],
+    [
+      7,
+      "touchmove",
+      [
+        [
+          250,
+          240
+        ],
+        [
+          310,
+          240
+        ]
+      ]
+    ],
+    [
+      8,
+      "touchmove",
+      [
+        [
+          256,
+          236
+        ],
+        [
+          316,
+          236
+        ]
+      ]
+    ],
+    [
+      9,
+      "touchmove",
+      [
+        [
+          248,
+          231
+        ],
+        [
+          308,
+          231
+        ]
+      ]
+    ],
+    [
+      10,
+      "touchmove",
+      [
+        [
+          240,
+          226
+        ],
+        [
+          300,
+          226
+        ]
+      ]
+    ],
+    [
+      11,
+      "touchmove",
+      [
+        [
+          232,
+          221
+        ],
+        [
+          292,
+          221
+        ]
+      ]
+    ],
+    [
+      12,
+      "touchmove",
+      [
+        [
+          224,
+          216
+        ],
+        [
+          284,
+          216
+        ]
+      ]
+    ],
+    [
+      13,
+      "touchmove",
+      [
+        [
+          216,
+          211
+        ],
+        [
+          276,
+          211
+        ]
+      ]
+    ],
+    [
+      16,
+      "touchend",
+      [
+        [
+          216,
+          211
+        ]
+      ]
+    ],
+    [
+      18,
+      "touchmove",
+      [
+        [
+          206,
+          206
+        ]
+      ]
+    ],
+    [
+      20,
+      "touchend",
+      []
+    ]
+  ],
+  "touchSplit": 0,
+  "innerWidth": 512
+}

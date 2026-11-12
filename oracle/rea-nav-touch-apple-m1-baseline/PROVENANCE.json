@@ -1,0 +1,77 @@
+{
+ "angle_backend": "metal",
+ "cases": {
+  "walk-cancel-during-move-msaa0": {
+   "differs_from_nvidia_in": [
+    "poses",
+    "vrml"
+   ],
+   "run_sha256": [
+    "3f1e301aac1a9c5e8c4fd7975013b5e9e32828ee3c32bd9564de86f1360146ff",
+    "3f1e301aac1a9c5e8c4fd7975013b5e9e32828ee3c32bd9564de86f1360146ff",
+    "3f1e301aac1a9c5e8c4fd7975013b5e9e32828ee3c32bd9564de86f1360146ff"
+   ]
+  },
+  "walk-end-during-move-msaa0": {
+   "differs_from_nvidia_in": [
+    "poses",
+    "vrml"
+   ],
+   "run_sha256": [
+    "07c985ff5065f1402a076826a3837835954912b126a592edfda4e0c8f27ac5e9",
+    "07c985ff5065f1402a076826a3837835954912b126a592edfda4e0c8f27ac5e9",
+    "07c985ff5065f1402a076826a3837835954912b126a592edfda4e0c8f27ac5e9"
+   ]
+  },
+  "walk-look-around-msaa0": {
+   "differs_from_nvidia_in": [
+    "poses",
+    "vrml"
+   ],
+   "run_sha256": [
+    "047fe82a17a59508da1289b4dee9f96c54f09127626759c3b9cf3d5512e4e4c0",
+    "047fe82a17a59508da1289b4dee9f96c54f09127626759c3b9cf3d5512e4e4c0",
+    "047fe82a17a59508da1289b4dee9f96c54f09127626759c3b9cf3d5512e4e4c0"
+   ]
+  },
+  "walk-on-sensor-msaa0": {
+   "differs_from_nvidia_in": [
+    "poses",
+    "vrml"
+   ],
+   "run_sha256": [
+    "04e2a3f788de5bfa0a366ba2b2db95e7f1d6dc185afa55f8410b1152a26347e9",
+    "04e2a3f788de5bfa0a366ba2b2db95e7f1d6dc185afa55f8410b1152a26347e9",
+    "04e2a3f788de5bfa0a366ba2b2db95e7f1d6dc185afa55f8410b1152a26347e9"
+   ]
+  },
+  "walk-one-two-one-msaa0": {
+   "differs_from_nvidia_in": [
+    "poses",
+    "vrml"
+   ],
+   "run_sha256": [
+    "5013bc6120788aeca1332ae5f616041be4847ccdd83cd7723bb9030392b78163",
+    "5013bc6120788aeca1332ae5f616041be4847ccdd83cd7723bb9030392b78163",
+    "5013bc6120788aeca1332ae5f616041be4847ccdd83cd7723bb9030392b78163"
+   ]
+  },
+  "walk-pitch-then-drive-msaa0": {
+   "differs_from_nvidia_in": [
+    "poses"
+   ],
+   "run_sha256": [
+    "ee02b9d9cbb6d55e1f50d20e96d9872c4474c5d16ace6e8c87454877d1f816a9",
+    "ee02b9d9cbb6d55e1f50d20e96d9872c4474c5d16ace6e8c87454877d1f816a9",
+    "ee02b9d9cbb6d55e1f50d20e96d9872c4474c5d16ace6e8c87454877d1f816a9"
+   ]
+  }
+ },
+ "chrome": "Google Chrome 156.0.8078.80",
+ "hardware": "Apple M1, macOS 27.2.1",
+ "pinned_x_ite": "16.5.0 34cdf9f97",
+ "platform": "apple-m1",
+ "recorded": "2026-11-12",
+ "recorder": "oracle/x_ite-anim.mjs, oracle/x_ite-anim-sized.mjs, oracle/x_ite-anim-msaa.mjs",
+ "rule": "3 identical runs; kept only where the NVIDIA recording differs"
+}
