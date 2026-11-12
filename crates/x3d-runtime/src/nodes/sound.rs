@@ -1555,26 +1555,46 @@ impl Runtime {
         self.audio().analyser_setting(n, "analyserSmoothing", &[v]);
     }
 
-    /// Analyser.set_time: the four data fields, every frame.
+    /// Analyser.set_time: the four data fields, every frame. In a page they are what the page read from its own
+    /// AnalyserNode ([`crate::sound::AudioEngine::set_page_analyser`]): no signal goes through the engine's graph there.
     fn analyser_set_time(&mut self, node: NodeId) {
         let n = self.snd(node).node.unwrap();
         let now = self.audio().current_time();
-        let (bytes_f, bytes_t, floats_f, floats_t) = match self.audio().get_mut(n) {
-            ANode::Analyser(_, a) => {
-                let bins = a.frequency_bin_count();
-                let mut bf = vec![0u8; bins];
-                let mut bt = vec![0u8; bins];
-                let mut ff = vec![0f32; bins];
-                let mut ft = vec![0f32; bins];
-                // getByteFrequencyData, getByteTimeDomainData, getFloatFrequencyData and
-                // getFloatTimeDomainData, with context .currentTime.
-                a.get_byte_frequency_data(&mut bf, now);
-                a.get_byte_time_domain_data(&mut bt);
-                a.get_float_frequency_data(&mut ff, now);
-                a.get_float_time_domain_data(&mut ft);
-                (bf, bt, ff, ft)
-            }
+        // A reading of another size (the page gets an fftSize change after the frame) is not used.
+        let bins = match self.audio().get(n) {
+            ANode::Analyser(_, a) => a.frequency_bin_count(),
             _ => return,
+        };
+        let page = self
+            .audio()
+            .page_analyser(n)
+            .filter(|r| r.bins() == Some(bins))
+            .cloned();
+        let (bytes_f, bytes_t, floats_f, floats_t) = if let Some(r) = page {
+            (
+                r.byte_frequency,
+                r.byte_time_domain,
+                r.float_frequency,
+                r.float_time_domain,
+            )
+        } else {
+            match self.audio().get_mut(n) {
+                ANode::Analyser(_, a) => {
+                    let bins = a.frequency_bin_count();
+                    let mut bf = vec![0u8; bins];
+                    let mut bt = vec![0u8; bins];
+                    let mut ff = vec![0f32; bins];
+                    let mut ft = vec![0f32; bins];
+                    // getByteFrequencyData, getByteTimeDomainData, getFloatFrequencyData and
+                    // getFloatTimeDomainData, with context .currentTime.
+                    a.get_byte_frequency_data(&mut bf, now);
+                    a.get_byte_time_domain_data(&mut bt);
+                    a.get_float_frequency_data(&mut ff, now);
+                    a.get_float_time_domain_data(&mut ft);
+                    (bf, bt, ff, ft)
+                }
+                _ => return,
+            }
         };
 
         self.snd(node).byte_bins = bytes_f.len();

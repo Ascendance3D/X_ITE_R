@@ -1856,3 +1856,96 @@ fn the_empty_audio_graph_of_a_page_with_a_context_is_the_destination_alone() {
     assert!(json.contains(r#""currentTime":2.5"#), "{json}");
     assert_eq!(json.matches(r#""kind""#).count(), 1, "{json}");
 }
+
+/// Analyser.set_time in a page: the engine's graph only records the calls, so the data fields come from what the page read
+/// from its own AnalyserNode (web/audio_mirror.mjs `readAnalysers`, `WebBrowser::set_analyser_data`).
+#[test]
+fn the_analyser_data_fields_of_a_page_come_from_the_page_reading() {
+    use x3d_runtime::sound::AnalyserReading;
+
+    x3d_runtime::sound::set_default_record_ops(true);
+
+    let text = "#X3D V4.0 utf8\nPROFILE Interchange\nCOMPONENT Sound:3\nAudioDestination { children DEF A Analyser { fftSize 32 children DEF O OscillatorSource { frequency 220 } } }\n";
+    let parsed = Session::parse(text.as_bytes(), URL, Box::new(Tone)).unwrap();
+    let mut s = Session::begin(parsed, NOW, 64, 64);
+    let a = s.named_node("A").unwrap();
+    let o = s.named_node("O").unwrap();
+
+    assert!(s.go_live(NOW));
+    s.set_field(a, "startTime", &NOW.to_string()).unwrap();
+    s.set_field(o, "startTime", &NOW.to_string()).unwrap();
+    s.step(NOW + 0.02);
+
+    let (uid, _) = s.take_audio_ops().unwrap();
+    let slot = s
+        .audio_graph()
+        .unwrap()
+        .nodes
+        .iter()
+        .find(|n| n.kind == "AnalyserNode")
+        .unwrap()
+        .id;
+    let reading = |bins: usize| AnalyserReading {
+        byte_frequency: (0..bins).map(|i| i as u8 + 1).collect(),
+        byte_time_domain: vec![200; bins],
+        float_frequency: vec![-12.5; bins],
+        float_time_domain: vec![0.25; bins],
+    };
+    // The numbers of a field's `toString ()`.
+    let value = |s: &Session, name: &str| -> Vec<f64> {
+        s.field(a, name)
+            .unwrap()
+            .value
+            .split(|c: char| !(c.is_ascii_digit() || c == '.' || c == '-' || c == 'e'))
+            .filter(|w| !w.is_empty())
+            .map(|w| w.parse().unwrap())
+            .collect()
+    };
+
+    // The page's reading of the analyser's size: the four fields are it.
+    s.audio_engine(uid)
+        .unwrap()
+        .set_page_analyser(slot, reading(16));
+    s.step(NOW + 0.04);
+
+    let expected: Vec<f64> = (1..=16).map(f64::from).collect();
+
+    assert_eq!(value(&s, "byteFrequencyData"), expected);
+    assert_eq!(value(&s, "byteTimeDomainData"), vec![200.0; 16]);
+    assert_eq!(value(&s, "floatFrequencyData"), vec![-12.5; 16]);
+    assert_eq!(value(&s, "floatTimeDomainData"), vec![0.25; 16]);
+
+    // A reading of another size (the page has not got an fftSize change yet) is not used: the engine's own data, of the
+    // analyser's size.
+    s.audio_engine(uid)
+        .unwrap()
+        .set_page_analyser(slot, reading(8));
+    s.step(NOW + 0.06);
+
+    let bytes = value(&s, "byteFrequencyData");
+
+    assert_eq!(bytes.len(), 16, "{bytes:?}");
+    assert_ne!(bytes, expected);
+
+    // A reading whose four arrays do not have one length is not used either.
+    let mut uneven = reading(16);
+
+    uneven.float_time_domain.pop();
+    s.audio_engine(uid).unwrap().set_page_analyser(slot, uneven);
+    s.step(NOW + 0.08);
+
+    assert_eq!(value(&s, "floatTimeDomainData").len(), 16);
+    assert_ne!(value(&s, "byteFrequencyData"), expected);
+
+    // A slot that is no AnalyserNode takes no reading.
+    s.audio_engine(uid)
+        .unwrap()
+        .set_page_analyser(0, reading(16));
+    assert!(
+        s.audio_engine(uid)
+            .unwrap()
+            .page_analyser(x3d_runtime::sound::AId(0))
+            .is_none()
+    );
+    assert!(s.audio_engine(uid + 1).is_none(), "another engine's number");
+}

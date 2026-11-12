@@ -8186,6 +8186,9 @@ class X3DBrowser
 
             this .#audioClock (engine);
             this .#videoMirror ?.push ();
+            // Analyser.set_time reads the page's AnalyserNodes in the frame's events (audio_mirror.mjs).
+            this .#audioMirror ?.readAnalysers (engine);
+
             if (xr)
             {
                // X3DWebXRContext.xrFrame: the planes, the gamepads and the viewer pose, then one draw per view. A frame

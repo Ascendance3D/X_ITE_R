@@ -219,6 +219,30 @@ pub struct AudioEngine {
         std::sync::Mutex<std::collections::HashMap<(usize, usize, usize), (u64, Arc<Vec<u8>>)>>,
     /// A number no other engine of this process has: the page names its mirror of this engine's nodes by it.
     uid: u64,
+    /// The data the page read from its AnalyserNode of each slot ([`AudioEngine::set_page_analyser`]).
+    page_analysers: std::collections::HashMap<usize, AnalyserReading>,
+}
+
+/// What a page read from one of its AnalyserNodes in a frame, in the order of X_ITE's Analyser.set_time:
+/// getByteFrequencyData, getByteTimeDomainData, getFloatFrequencyData and getFloatTimeDomainData.
+#[derive(Clone, Debug, Default, PartialEq)]
+pub struct AnalyserReading {
+    pub byte_frequency: Vec<u8>,
+    pub byte_time_domain: Vec<u8>,
+    pub float_frequency: Vec<f32>,
+    pub float_time_domain: Vec<f32>,
+}
+
+impl AnalyserReading {
+    /// The number of bins, when the four arrays have the same length (else the reading is not used).
+    pub fn bins(&self) -> Option<usize> {
+        let n = self.byte_frequency.len();
+
+        (self.byte_time_domain.len() == n
+            && self.float_frequency.len() == n
+            && self.float_time_domain.len() == n)
+            .then_some(n)
+    }
 }
 
 /// The state of an AudioBufferSourceNode as a page reads it back: its buffer, its loop attributes and
@@ -373,6 +397,7 @@ impl AudioEngine {
             sources: Default::default(),
             recording: DEFAULT_RECORD_OPS.load(std::sync::atomic::Ordering::Relaxed),
             ops: Default::default(),
+            page_analysers: Default::default(),
             encoded: Default::default(),
             uid: NEXT_UID.fetch_add(1, std::sync::atomic::Ordering::Relaxed),
         };
@@ -389,6 +414,23 @@ impl AudioEngine {
     /// Record the calls on the nodes from now on ([`ops`]), or stop.
     pub fn record_ops(&mut self, on: bool) {
         self.recording = on;
+    }
+
+    /// In a page, the engine's graph only records the calls (the page makes them on its own nodes, [`ops`]), so no
+    /// signal goes through the engine's AnalyserNodes. The page reads its AnalyserNode of slot `slot` each frame and gives
+    /// the data here; the Analyser node's data fields then come from it, as X_ITE reads them from the page's node
+    /// (Analyser.set_time). A slot that is not an AnalyserNode is ignored. The page gives a new reading every frame while
+    /// its node exists; the last one stays until then (a page AnalyserNode without input also keeps its last data), and
+    /// it is dropped with the node.
+    pub fn set_page_analyser(&mut self, slot: usize, reading: AnalyserReading) {
+        if matches!(self.nodes.get(slot), Some(Some(ANode::Analyser(..)))) {
+            self.page_analysers.insert(slot, reading);
+        }
+    }
+
+    /// The last reading the page gave for the AnalyserNode `id` ([`AudioEngine::set_page_analyser`]).
+    pub fn page_analyser(&self, id: AId) -> Option<&AnalyserReading> {
+        self.page_analysers.get(&id.0)
     }
 
     /// The calls recorded since the last call, oldest first.
@@ -452,6 +494,7 @@ impl AudioEngine {
             self.page_streams.remove(&i);
             self.pulled.remove(&i);
             self.sources.remove(&i);
+            self.page_analysers.remove(&i);
             self.nodes[i] = Some(node);
             self.serials[i] = serial;
             return AId(i);
@@ -577,6 +620,7 @@ impl AudioEngine {
         self.emit("release", vec![Arg::Int(id.0)]);
         self.nodes[id.0] = None;
         self.convolver_normalize.remove(&id.0);
+        self.page_analysers.remove(&id.0);
         self.update_pull();
     }
 
@@ -591,6 +635,7 @@ impl AudioEngine {
         self.emit("releaseKeep", vec![Arg::Int(id.0)]);
         self.nodes[id.0] = None;
         self.convolver_normalize.remove(&id.0);
+        self.page_analysers.remove(&id.0);
         self.update_pull();
     }
 
