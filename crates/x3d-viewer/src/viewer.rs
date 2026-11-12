@@ -210,6 +210,11 @@ pub struct Viewer3d {
     /// Date.now () / 1000, settable between frames (input events use it).
     pub date_now: f64,
     pub frame_rate: f64,
+    /// X3DTimeContext [_currentPosition]: the translation of the active viewpoint's camera space matrix at the last
+    /// frame (the origin before the first one).
+    current_position: Vector3,
+    /// X3DTimeContext [_currentSpeed] (`browser .currentSpeed`).
+    pub current_speed: f64,
     /// Seconds spent in the scene walks of [`Self::refresh_display_scan`] and [`Self::display_scan`] since the last
     /// [`Self::take_step_seconds`].
     traversal_seconds: f64,
@@ -557,6 +562,8 @@ impl Viewer3d {
             time: t0,
             date_now: t0,
             frame_rate: 60.0,
+            current_position: Vector3::ZERO,
+            current_speed: 0.0,
             traversal_seconds: 0.0,
             last_time: None,
             shift: false,
@@ -1108,9 +1115,12 @@ impl Viewer3d {
             }
         }
 
+        let speed = self.current_speed;
+
         self.for_each_rt(&mut |rt| {
             rt.now = now;
             rt.frame_rate = rate;
+            rt.current_speed = speed;
             rt.process_phase(name);
         });
 
@@ -1330,6 +1340,24 @@ impl Viewer3d {
         }
     }
 
+    /// X3DTimeContext.advanceTime: `currentSpeed` is the distance between the translations of the active viewpoint's
+    /// camera space matrix at this frame and at the last one, times the frame rate. The active viewpoint is the active
+    /// layer's bound one, the default viewpoint included, and its matrix is the one the last camera pass made. A
+    /// scripted run keeps 0: the recorder pages replace advanceTime (oracle/x_ite-pin/src/anim.html), so the pinned
+    /// page never runs this.
+    fn advance_speed(&mut self) {
+        if self.scripted_frame_rate.is_some() {
+            return;
+        }
+
+        let n = self.layer.viewpoint();
+        let m = self.layer.vp(n).camera_space.0;
+        let last = self.current_position;
+
+        self.current_position = Vector3::new(m[12], m[13], m[14]);
+        self.current_speed = last.distance(&self.current_position) * self.frame_rate;
+    }
+
     pub fn step(&mut self, now: f64) {
         if self.disposed {
             return;
@@ -1349,6 +1377,8 @@ impl Viewer3d {
                 self.frame_rate = 1.0 / dt;
             }
         }
+
+        self.advance_speed();
 
         self.forget_released();
 
@@ -4135,5 +4165,87 @@ impl Default for XrSourceHit {
             pressed: false,
             pulse: true,
         }
+    }
+}
+
+#[cfg(test)]
+mod current_speed_tests {
+    use super::Viewer3d;
+
+    /// The bound Viewpoint moves 1 m along z in each prepareEvents; the Script prints `Browser.currentSpeed` and
+    /// `Browser.getCurrentSpeed ()` before it moves it.
+    const WORLD: &str = "#X3D V3.3 utf8\nPROFILE Immersive\nCOMPONENT Scripting:1\n\
+        DEF VP Viewpoint { position 0 0 10 }\n\
+        Shape { geometry Box { } }\n\
+        DEF S Script {\n\
+          inputOutput SFNode vp USE VP\n\
+          inputOutput SFFloat z 10\n\
+          url \"ecmascript:\n\
+            function prepareEvents () { print ('speed ' + Browser .currentSpeed + ' ' + Browser .getCurrentSpeed ()); z = z + 1; vp .position = new SFVec3f (0, 0, z); }\n\
+          \"\n\
+        }\n";
+
+    /// Runs `frames` frames 1/60 s apart and returns the two values of each printed line.
+    fn speeds(name: &str, scripted: bool, frames: usize) -> Vec<(f64, f64)> {
+        let dir =
+            std::env::temp_dir().join(format!("x3d-current-speed-{}-{name}", std::process::id()));
+        std::fs::create_dir_all(&dir).unwrap();
+        let file = dir.join("w.x3dv");
+        std::fs::write(&file, WORLD).unwrap();
+        let t0 = 946684800.0;
+        let mut v = Viewer3d::load_opts(&file, None, t0, 32, 32, None, true).expect("viewer load");
+
+        if scripted {
+            v.scripted_frame_rate = Some(60.0);
+        }
+
+        for i in 1..=frames {
+            v.step(t0 + i as f64 / 60.0);
+        }
+
+        std::fs::remove_dir_all(&dir).ok();
+        v.rt.console
+            .iter()
+            .filter_map(|l| l.split("speed ").nth(1))
+            .map(|l| {
+                let mut n = l.split_whitespace().map(|x| x.parse::<f64>().unwrap());
+                (n.next().unwrap(), n.next().unwrap())
+            })
+            .collect()
+    }
+
+    /// X3DTimeContext.advanceTime (pinned X_ITE 16.5.0): `currentSpeed` is the distance the active viewpoint's camera
+    /// moved since the last frame times the frame rate. The move a Script makes in prepareEvents is seen by the camera
+    /// pass of that frame, so the next frame reports it: 1 m per frame at 60 frames per second is 60 m/s.
+    #[test]
+    fn current_speed_is_the_camera_distance_per_frame_times_the_frame_rate() {
+        let s = speeds("live", false, 8);
+
+        assert!(s.len() >= 6, "{s:?}");
+
+        // The Script runs twice while the world loads, before the first frame measures anything.
+        assert_eq!(&s[..2], &[(0.0, 0.0), (0.0, 0.0)], "{s:?}");
+
+        // X3DTimeContext starts [_currentPosition] at the origin, so the first frame measures the camera from there:
+        // the two moves of the load put it at z 12, 12 m at the first frame's rate of 60.
+        assert_eq!(s[2], (720.0, 720.0), "{s:?}");
+
+        for (k, (a, b)) in s.iter().enumerate().skip(3) {
+            assert_eq!(
+                a, b,
+                "frame {k}: currentSpeed and getCurrentSpeed () differ"
+            );
+            assert!((a - 60.0).abs() < 1e-2, "frame {k}: {a}, all {s:?}");
+        }
+    }
+
+    /// The recorder pages replace advanceTime, so the pinned page reports 0 while the viewer moves
+    /// (oracle/rea-b09-sai-baseline/update-speed); a scripted run does the same.
+    #[test]
+    fn a_scripted_run_keeps_current_speed_0_as_the_recorder_page() {
+        let s = speeds("scripted", true, 8);
+
+        assert!(s.len() >= 6, "{s:?}");
+        assert!(s.iter().all(|&(a, b)| a == 0.0 && b == 0.0), "{s:?}");
     }
 }
