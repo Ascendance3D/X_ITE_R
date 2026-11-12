@@ -5,7 +5,9 @@ oracle/rea-oit-i92-render-items-baseline/msaa4/unstable.json lists the worlds fo
 `orderIndependentTransparency` and Multisampling 4 gave three different pictures, so they have no single reference there. This tool
 measures how far the runs are apart and, when they are close, keeps the envelope of the runs:
 
-  XITE_TESTS=<x_ite-tests> python3 -I -B oracle/tools/rea_oit_msaa4_envelope.py record [runs]
+  XITE_TESTS=<x_ite-tests> python3 -I -B oracle/tools/rea_oit_msaa4_envelope.py record [runs] [--i92]
+
+(`--i92`: the same for oracle/rea-i92-render-items-baseline, the recordings with the option off; x_ite-shot-msaa.mjs without --oit.)
 
 shoots each listed world `runs` times (default 8, x_ite-shot-msaa.mjs --oit) and writes, for each world, the lowest and the highest
 value of every channel of every pixel over the runs (<world>.min.png, <world>.max.png) and index.json (the hash of every run, the
@@ -22,7 +24,10 @@ MAX_SPREAD = 2          # levels of 255
 MAX_DIFFERING = 0.001   # of the pixels
 
 root = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-base = os.path.join(root, "oracle", "rea-oit-i92-render-items-baseline")
+oit = "--i92" not in sys.argv
+if not oit:
+    sys.argv.remove("--i92")
+base = os.path.join(root, "oracle", "rea-oit-i92-render-items-baseline" if oit else "rea-i92-render-items-baseline")
 dest = os.path.join(base, "msaa4-envelope")
 tmp = "/tmp/rea-oit-msaa4-envelope"
 
@@ -42,7 +47,7 @@ def main():
     for i in range(1, runs + 1):
         out = os.path.join(tmp, f"run-{i}")
         cmd = ["node", os.path.join(root, "oracle", "x_ite-shot-msaa.mjs"), os.path.join(root, "oracle", "synthetic-rea-i92-render-items"), out,
-               "--only", ",".join(worlds), "--oit"]
+               "--only", ",".join(worlds)] + (["--oit"] if oit else [])
         subprocess.run(cmd, check=True, cwd=root, timeout=1800, stdout=subprocess.DEVNULL)
         indexes.append(json.load(open(os.path.join(out, "index.json"))))
     report, bad = {}, []
@@ -76,6 +81,8 @@ def main():
     if bad:
         sys.exit("\n".join(bad) + f"\nnothing written (see {tmp})")
     head = {k: v for k, v in indexes[0].items() if k != "results"}
+    if bool(head.get("oit")) != oit:
+        sys.exit(f"the runs say oit {head.get('oit')}, expected {oit}; nothing written")
     json.dump({**head, "runs": runs, "maxSpread": MAX_SPREAD, "maxDiffering": MAX_DIFFERING, "worlds": report},
               open(os.path.join(tmp, "out", "index.json"), "w"), indent=1)
     shutil.copytree(os.path.join(tmp, "out"), dest)
