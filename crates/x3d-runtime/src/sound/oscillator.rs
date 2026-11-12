@@ -198,6 +198,42 @@ impl WaveTables {
 
         (i2, i1, pitch_range - i1 as f32)
     }
+
+    /// The four-frequency WaveDataForFundamentalFrequency that ProcessARateVector calls, with the arithmetic of
+    /// Chromium's build for the target (periodic_wave_handler.cc): the x86 (SSE) version divides by the lowest
+    /// fundamental frequency and by the cents per range, like the scalar version; the ARM (NEON) version multiplies
+    /// by the reciprocals (`1 / lowest_fundamental_frequency_`, `1 / kCentsPerRange`, both in float). A table factor
+    /// can then differ in its last bit, so on arm64 an a-rate quantum of some frequencies (330 Hz) differs by about
+    /// 1e-7 from the x86 output. The k-rate path calls the scalar version on every target.
+    fn wave_data_vector(&self, fundamental_frequency: f32) -> (usize, usize, f32) {
+        #[cfg(target_arch = "aarch64")]
+        {
+            self.wave_data_neon(fundamental_frequency)
+        }
+        #[cfg(not(target_arch = "aarch64"))]
+        {
+            self.wave_data(fundamental_frequency)
+        }
+    }
+
+    /// The NEON arithmetic of the four-frequency WaveDataForFundamentalFrequency (`CPU_ARM_NEON`).
+    #[cfg_attr(not(any(target_arch = "aarch64", test)), allow(dead_code))]
+    fn wave_data_neon(&self, fundamental_frequency: f32) -> (usize, usize, f32) {
+        let f = fundamental_frequency.abs();
+        let ratio = if f > 0.0 {
+            f * (1.0 / self.lowest_fundamental_frequency)
+        } else {
+            0.5
+        };
+        let cents = ratio.log2() * CENTS_PER_OCTAVE;
+        let pitch_range = (1.0 + cents * (1.0 / CENTS_PER_RANGE))
+            .max(0.0)
+            .min((self.ranges - 1) as f32);
+        let i1 = pitch_range as usize;
+        let i2 = if i1 < self.ranges - 1 { i1 + 1 } else { i1 };
+
+        (i2, i1, pitch_range - i1 as f32)
+    }
 }
 
 /// DoInterpolation (oscillator_handler.cc).
@@ -671,7 +707,7 @@ fn process_a_rate(
         for m in 0..4 {
             let p = increments[k + m];
             big = big && p.abs() >= INTERPOLATE_2_POINT;
-            data[m] = wave.wave_data(inv_rate_scale * p);
+            data[m] = wave.wave_data_vector(inv_rate_scale * p);
         }
 
         if big {
@@ -740,4 +776,36 @@ fn process_a_rate(
     }
 
     virtual_read_index
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    /// The a-rate table lookup at 330 Hz and 48 kHz (the frequency of the arm64 rea_b05 difference): the x86 and the
+    /// NEON arithmetic give different table factors, and the vector lookup uses the one of the target's Chromium
+    /// build. On an Apple M1 the NEON form makes the selector, enabled-toggle, remove-children and splitter-outputs
+    /// worlds equal pinned X_ITE in Chrome on the same machine sample for sample (it was 35 to 70 samples off).
+    #[test]
+    fn the_a_rate_table_lookup_follows_the_target_arithmetic() {
+        let w = WaveTables::empty(48000.0);
+        let f = (1.0 / w.rate_scale) * (330.0 * w.rate_scale);
+        let (x86, neon) = (w.wave_data(f), w.wave_data_neon(f));
+
+        assert_eq!((x86.0, x86.1), (neon.0, neon.1), "same tables");
+        assert_ne!(
+            x86.2.to_bits(),
+            neon.2.to_bits(),
+            "the table factors differ in the last bits: {} and {}",
+            x86.2,
+            neon.2
+        );
+
+        let want = if cfg!(target_arch = "aarch64") {
+            neon
+        } else {
+            x86
+        };
+        assert_eq!(w.wave_data_vector(f), want);
+    }
 }
