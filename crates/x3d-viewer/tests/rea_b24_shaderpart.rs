@@ -15,10 +15,6 @@
 /// poses, pictures) is still compared. The log must still differ: a case that now matches fails until it is removed.
 const KNOWN: &[(&str, &str)] = &[
     (
-        "include-Vertex",
-        "ANGLE: 'out' invalid qualifier combination at line 114; the port's compiler reports gl_PointSize undeclared at line 166 (it checks later code first)",
-    ),
-    (
         "vertex-known",
         "a missing semicolon at a line end: ANGLE reports the next token's line, this port the statement's line; and a type error inside a function: ANGLE 'function return is not matching type', naga \"Function [0] 'f' is invalid\" (glsl_errors_b08.rs GAPS)",
     ),

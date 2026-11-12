@@ -1590,6 +1590,25 @@ fn analyze_deferred(
         let line = newlines(&a.scan.text[..d.range.0]) + 1 - prefix_lines;
         let err = |m: String| format!("ERROR: 0:{line}: '{}' : {m}", d.type_name);
 
+        // ESSL 3.00 section 4.3.9: interpolation qualifiers apply to vertex outputs and fragment inputs only. ANGLE
+        // (JoinVariableStorageQualifier) names the storage qualifier.
+        let io_end = match (stage, d.storage.as_str()) {
+            (Stage::Fragment, "out") | (Stage::Vertex, "in") => true,
+            _ => false,
+        };
+
+        if es3
+            && io_end
+            && d.qualifiers
+                .iter()
+                .any(|q| matches!(q.as_str(), "flat" | "smooth" | "centroid"))
+        {
+            return Err(format!(
+                "ERROR: 0:{line}: '{}' : invalid qualifier combination",
+                d.storage
+            ));
+        }
+
         match d.storage.as_str() {
             "uniform" => {
                 if let Some(dim) = sampler_dim(&d.type_name) {
