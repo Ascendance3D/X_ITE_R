@@ -4172,26 +4172,43 @@ impl Default for XrSourceHit {
 mod current_speed_tests {
     use super::Viewer3d;
 
-    /// The bound Viewpoint moves 1 m along z in each prepareEvents; the Script prints `Browser.currentSpeed` and
-    /// `Browser.getCurrentSpeed ()` before it moves it.
-    const WORLD: &str = "#X3D V3.3 utf8\nPROFILE Immersive\nCOMPONENT Scripting:1\n\
-        DEF VP Viewpoint { position 0 0 10 }\n\
-        Shape { geometry Box { } }\n\
-        DEF S Script {\n\
-          inputOutput SFNode vp USE VP\n\
-          inputOutput SFFloat z 10\n\
-          url \"ecmascript:\n\
-            function prepareEvents () { print ('speed ' + Browser .currentSpeed + ' ' + Browser .getCurrentSpeed ()); z = z + 1; vp .position = new SFVec3f (0, 0, z); }\n\
-          \"\n\
-        }\n";
+    /// The bound Viewpoint at (0 0 10); the Script prints `Browser.currentSpeed` and `Browser.getCurrentSpeed ()` in
+    /// each prepareEvents and then runs `step`, which changes the Viewpoint.
+    fn world(step: &str) -> String {
+        format!(
+            "#X3D V3.3 utf8\nPROFILE Immersive\nCOMPONENT Scripting:1\n\
+            DEF VP Viewpoint {{ position 0 0 10 }}\n\
+            Shape {{ geometry Box {{ }} }}\n\
+            DEF S Script {{\n\
+              inputOutput SFNode vp USE VP\n\
+              inputOutput SFFloat z 10\n\
+              inputOutput SFFloat a 0\n\
+              url \"ecmascript:\n\
+                function prepareEvents () {{ print ('speed ' + Browser .currentSpeed + ' ' + Browser .getCurrentSpeed ()); {step} }}\n\
+              \"\n\
+            }}\n"
+        )
+    }
 
-    /// Runs `frames` frames 1/60 s apart and returns the two values of each printed line.
-    fn speeds(name: &str, scripted: bool, frames: usize) -> Vec<(f64, f64)> {
+    /// Moves the Viewpoint 1 m along z.
+    const MOVE: &str = "z = z + 1; vp .position = new SFVec3f (0, 0, z);";
+
+    /// Turns the Viewpoint 0.1 rad about y and keeps its position.
+    const TURN: &str = "a = a + 0.1; vp .orientation = new SFRotation (0, 1, 0, a);";
+
+    /// Loads the world with `step`, runs `frames` frames 1/60 s apart, and returns the printed values of the load
+    /// (before the first frame) and of the frames, apart.
+    fn speeds(
+        name: &str,
+        step: &str,
+        scripted: bool,
+        frames: usize,
+    ) -> (Vec<(f64, f64)>, Vec<(f64, f64)>) {
         let dir =
             std::env::temp_dir().join(format!("x3d-current-speed-{}-{name}", std::process::id()));
         std::fs::create_dir_all(&dir).unwrap();
         let file = dir.join("w.x3dv");
-        std::fs::write(&file, WORLD).unwrap();
+        std::fs::write(&file, world(step)).unwrap();
         let t0 = 946684800.0;
         let mut v = Viewer3d::load_opts(&file, None, t0, 32, 32, None, true).expect("viewer load");
 
@@ -4199,19 +4216,26 @@ mod current_speed_tests {
             v.scripted_frame_rate = Some(60.0);
         }
 
+        let parse = |lines: &[String]| -> Vec<(f64, f64)> {
+            lines
+                .iter()
+                .filter_map(|l| l.split("speed ").nth(1))
+                .map(|l| {
+                    let mut n = l.split_whitespace().map(|x| x.parse::<f64>().unwrap());
+                    (n.next().unwrap(), n.next().unwrap())
+                })
+                .collect()
+        };
+
+        let load = parse(&v.rt.console);
+        let n = v.rt.console.len();
+
         for i in 1..=frames {
             v.step(t0 + i as f64 / 60.0);
         }
 
         std::fs::remove_dir_all(&dir).ok();
-        v.rt.console
-            .iter()
-            .filter_map(|l| l.split("speed ").nth(1))
-            .map(|l| {
-                let mut n = l.split_whitespace().map(|x| x.parse::<f64>().unwrap());
-                (n.next().unwrap(), n.next().unwrap())
-            })
-            .collect()
+        (load, parse(&v.rt.console[n..]))
     }
 
     /// X3DTimeContext.advanceTime (pinned X_ITE 16.5.0): `currentSpeed` is the distance the active viewpoint's camera
@@ -4219,18 +4243,19 @@ mod current_speed_tests {
     /// pass of that frame, so the next frame reports it: 1 m per frame at 60 frames per second is 60 m/s.
     #[test]
     fn current_speed_is_the_camera_distance_per_frame_times_the_frame_rate() {
-        let s = speeds("live", false, 8);
+        let (load, s) = speeds("live", MOVE, false, 8);
 
         assert!(s.len() >= 6, "{s:?}");
 
-        // The Script runs twice while the world loads, before the first frame measures anything.
-        assert_eq!(&s[..2], &[(0.0, 0.0), (0.0, 0.0)], "{s:?}");
+        // No frame has measured anything while the world loads.
+        assert!(load.iter().all(|&p| p == (0.0, 0.0)), "{load:?}");
 
         // X3DTimeContext starts [_currentPosition] at the origin, so the first frame measures the camera from there:
-        // the two moves of the load put it at z 12, 12 m at the first frame's rate of 60.
-        assert_eq!(s[2], (720.0, 720.0), "{s:?}");
+        // the moves of the load put it at z 10 + (one per load run), at the first frame's rate of 60.
+        let z = 10.0 + load.len() as f64;
+        assert_eq!(s[0], (z * 60.0, z * 60.0), "load {load:?}, frames {s:?}");
 
-        for (k, (a, b)) in s.iter().enumerate().skip(3) {
+        for (k, (a, b)) in s.iter().enumerate().skip(1) {
             assert_eq!(
                 a, b,
                 "frame {k}: currentSpeed and getCurrentSpeed () differ"
@@ -4243,9 +4268,27 @@ mod current_speed_tests {
     /// (oracle/rea-b09-sai-baseline/update-speed); a scripted run does the same.
     #[test]
     fn a_scripted_run_keeps_current_speed_0_as_the_recorder_page() {
-        let s = speeds("scripted", true, 8);
+        let (load, s) = speeds("scripted", MOVE, true, 8);
 
         assert!(s.len() >= 6, "{s:?}");
-        assert!(s.iter().all(|&(a, b)| a == 0.0 && b == 0.0), "{s:?}");
+        assert!(
+            load.iter().chain(&s).all(|&(a, b)| a == 0.0 && b == 0.0),
+            "{load:?} {s:?}"
+        );
+    }
+
+    /// advanceTime measures the translation of the camera-space matrix, the camera's position in the world, so a
+    /// Viewpoint that only turns has speed 0 after the first frame (which measures from the origin).
+    #[test]
+    fn a_viewpoint_that_only_turns_has_current_speed_0() {
+        let (_, s) = speeds("turn", TURN, false, 8);
+
+        assert!(s.len() >= 6, "{s:?}");
+        assert_eq!(s[0], (600.0, 600.0), "{s:?}");
+
+        for (k, &(a, b)) in s.iter().enumerate().skip(1) {
+            assert_eq!(a, b, "frame {k}");
+            assert!(a.abs() < 1e-6, "frame {k}: {a}, all {s:?}");
+        }
     }
 }

@@ -32,7 +32,7 @@ Only `engine` and `component-module` functions are applicable. Third-party libra
 
 | status | functions | share |
 | --- | --- | --- |
-| IMPLEMENTED_AND_VERIFIED | 0 | 0.0% |
+| IMPLEMENTED_AND_VERIFIED | 1 | 0.0% |
 | IMPLEMENTED_NOT_VERIFIED | 0 | 0.0% |
 | IMPLEMENTED_DIFFERENT | 0 | 0.0% |
 | PARTIALLY_IMPLEMENTED | 0 | 0.0% |
@@ -40,7 +40,7 @@ Only `engine` and `component-module` functions are applicable. Third-party libra
 | REPLACED_BY_RUST_DESIGN | 0 | 0.0% |
 | PLATFORM_SPECIFIC | 0 | 0.0% |
 | NOT_APPLICABLE | 0 | 0.0% |
-| UNRESOLVED_MAPPING | 5939 | 100.0% |
+| UNRESOLVED_MAPPING | 5938 | 100.0% |
 
 This table counts inspected dispositions. It is not a measure of how much of X_ITE the Rust engine implements: the engine's behavior is measured by the 346-entry ledger and its tests.
 
@@ -94,7 +94,7 @@ The 346-entry ledger (`ledger/ledger.json`, 346 entries) is read only here. Its 
 | `x_ite/Browser/Text` | 36 | 36 | 0 | 0 | 0 | 0 | 0 | 0 |
 | `x_ite/Browser/Texturing` | 51 | 51 | 0 | 0 | 0 | 0 | 0 | 0 |
 | `x_ite/Browser/Texturing3D` | 52 | 52 | 0 | 0 | 0 | 0 | 0 | 0 |
-| `x_ite/Browser/Time` | 5 | 5 | 0 | 0 | 0 | 0 | 0 | 0 |
+| `x_ite/Browser/Time` | 5 | 4 | 1 | 0 | 0 | 0 | 0 | 0 |
 | `x_ite/Browser/VolumeRendering` | 10 | 10 | 0 | 0 | 0 | 0 | 0 | 0 |
 | `x_ite/Browser/WebXR` | 16 | 16 | 0 | 0 | 0 | 0 | 0 | 0 |
 | `x_ite/Browser/X3DBrowser.js` | 79 | 79 | 0 | 0 | 0 | 0 | 0 | 0 |
