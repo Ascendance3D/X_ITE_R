@@ -42,6 +42,8 @@ native-video = ["x3d-runtime/native-video"]
 avif = ["dep:avif-rust"]
 # AV1 video in MovieTexture (x3d-runtime's `av1`, rav1d). Off by default; the AV1 render tests need it.
 av1 = ["x3d-runtime/av1"]
+# MP4 video and audio through the system GStreamer (x3d-runtime's `system-video-gst`, ADR 0015). Off by default.
+system-video-gst = ["x3d-runtime/system-video-gst"]
 
 [[bin]]
 name = "x3d-shot"

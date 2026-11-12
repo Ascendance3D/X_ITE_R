@@ -12,6 +12,8 @@ default = ["gpu", "script", "native-video"]
 native-video = ["x3d-runtime/native-video", "x3d-render/native-video"]
 # AV1 video in MovieTexture (x3d-runtime\'s `av1`, rav1d). Off by default.
 av1 = ["x3d-runtime/av1"]
+# MP4 video and audio through the system GStreamer (x3d-runtime's `system-video-gst`, ADR 0015). Off by default.
+system-video-gst = ["x3d-runtime/system-video-gst"]
 # Script nodes in QuickJS and the file loaders (`Viewer3d::load*`). QuickJS is C code that does not
 # build for wasm32-unknown-unknown: the browser build (x3d-web) turns this off and loads through
 # `Viewer3d::from_runtime`.

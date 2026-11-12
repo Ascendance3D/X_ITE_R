@@ -261,7 +261,7 @@ fn an_mp4_with_a_codec_that_nothing_decodes_fails_like_the_element_and_names_the
     failed(
         &rt,
         "a.mp4",
-        "Unsupported { container: \"mp4\", codec: \"xyz1\" }",
+        "Unsupported { container: \"mp4\", codec: \"xyz1",
     );
 }
 

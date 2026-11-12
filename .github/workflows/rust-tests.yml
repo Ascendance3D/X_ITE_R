@@ -312,6 +312,28 @@ jobs:
           cargo test --workspace --release --doc --no-fail-fast 2>&1 | tee doctests.log
           test "${PIPESTATUS[0]}" -eq 0
 
+      # MP4 video and audio through the system GStreamer (ADR 0015, feature system-video-gst). The feature links
+      # libgstreamer, so it is not in the main suite; this step installs the GStreamer development files and the H.264 and
+      # AAC decoders (gst-libav), then runs the MP4 and platform-decoder tests with the feature. The default nextest
+      # profile keeps the junit.xml files of the suite as they are.
+      - name: MP4 through GStreamer (ADR 0015)
+        if: success() || failure()
+        run: |
+          pkgs="libgstreamer1.0-dev libgstreamer-plugins-base1.0-dev gstreamer1.0-plugins-base gstreamer1.0-plugins-good gstreamer1.0-libav"
+          missing=""
+          for p in $pkgs; do dpkg -s "$p" >/dev/null 2>&1 || missing="$missing $p"; done
+          if [ -n "$missing" ]; then
+            if [ "$RUNNER_ENVIRONMENT" = self-hosted ]; then
+              echo "::error::missing packages on this self-hosted runner:$missing (sudo is not available there; install them on the runner image)"
+              exit 1
+            fi
+            flock /tmp/xite-ci-apt.lock sudo apt-get -o DPkg::Lock::Timeout=600 update
+            # shellcheck disable=SC2086
+            flock /tmp/xite-ci-apt.lock sudo apt-get -o DPkg::Lock::Timeout=600 install -y --no-install-recommends $missing
+          fi
+          cargo nextest run --release -p x3d-runtime --features av1,system-video-gst --no-fail-fast -E "binary(mp4_gst) or binary(mp4_probe) or test(sysvideo::)" 2>&1 | tee mp4-gst.log
+          test "${PIPESTATUS[0]}" -eq 0
+
       - name: Test counts
         if: always()
         run: |
@@ -324,6 +346,7 @@ jobs:
             echo "::warning::no nextest Summary line in suite.log; see the Rust suite step for the result"
             echo "nextest: no Summary line (see the Rust suite step)" >> "$GITHUB_STEP_SUMMARY"
           fi
+          grep -E '^ *Summary \[' mp4-gst.log 2>/dev/null | sed 's/^ */mp4 (GStreamer): /' | tee -a "$GITHUB_STEP_SUMMARY" || true
           { grep '^test result' doctests.log 2>/dev/null || true; } | awk '{n++; p+=$4; f+=$6; i+=$8} END {if (n) printf "doctests: passed %d, failed %d, ignored %d\n", p, f, i; else print "doctests: no test result line (see the Doctests step)"}' | tee -a "$GITHUB_STEP_SUMMARY"
           grep -E '^ +(FAIL|SIGSEGV|SIGABRT|SIGKILL|TIMEOUT|LEAK-FAIL) ' suite.log 2>/dev/null | sort -u | tee -a "$GITHUB_STEP_SUMMARY" || true
           grep -E '^test .* FAILED$' doctests.log 2>/dev/null | tee -a "$GITHUB_STEP_SUMMARY" || true

@@ -132,6 +132,9 @@ jobs:
         if: github.event_name != 'push' || steps.cache.outputs.cache-hit != 'true'
         run: |
           python3 -I -B tools/check_no_aac.py --binary crates/x3d-web/web/pkg/*.wasm
+          # cargo metadata --offline below reads every package of Cargo.lock; the web build fetches only the wasm ones
+          # (the native system-video crates of ADR 0015 are not in its cache).
+          cargo fetch --locked
           python3 -I -B tools/check_no_opus.py --cargo
           python3 -I -B tools/check_no_opus.py --binary crates/x3d-web/web/pkg/*.wasm
 
