@@ -39,7 +39,17 @@ Viewpoint { position 0 0 4 }
 ${sound ? "Sound { spatialize FALSE minFront 100 minBack 100 maxFront 100 maxBack 100 source DEF M MicrophoneSource { } }" : "DEF M MicrophoneSource { }"}
 `;
 
-const open = () => openPage (DESKTOP, { init: `(${KEEP_STREAMS}) (); (${installTap}) ();` });
+// getUserMedia refuses, as for a denied permission; console .error lines go to window .errors as well.
+const REFUSE = () =>
+{
+   const error = console .error;
+
+   window .errors = [ ];
+   console .error = (... args) => { window .errors .push (args .join (" ")); error .apply (console, args); };
+   MediaDevices .prototype .getUserMedia = () => Promise .reject (new DOMException ("Permission denied", "NotAllowedError"));
+};
+
+const open = (refuse = false) => openPage (DESKTOP, { init: `(${KEEP_STREAMS}) (); ${refuse ? `(${REFUSE}) ();` : ""} (${installTap}) ();` });
 
 // Sets a time field of M to the browser's time (or loads `text` and starts M), waits, and returns the level and state.
 async function after (page, { text, field }, ms = 2500)
@@ -68,6 +78,7 @@ async function after (page, { text, field }, ms = 2500)
          isActive: m .isActive,
          requests: window .requests,
          tracks: window .streams .map (s => s .getAudioTracks () .map (t => t .readyState) .join (",")),
+         errors: window .errors,
       };
    },
    { text, field, ms });
@@ -122,6 +133,29 @@ describe ("microphone 01", { skip: Boolean (ONLY) }, () =>
 
          assert .deepEqual (heard .tracks, [ "ended", "live" ], "the old world's stream stopped");
          assert .ok (heard .level > 0.01, `the new world is heard (level ${heard .level})`);
+      }
+      finally
+      {
+         await page .context () .close ();
+      }
+   });
+
+   test ("a refused getUserMedia logs its message, and the node stays silent and active", { timeout: CASE_TIMEOUT }, async () =>
+   {
+      const page   = await open (true);
+      const thrown = [ ];
+
+      page .on ("pageerror", error => thrown .push (error .message));
+
+      try
+      {
+         const refused = await after (page, { text: WORLD (true) });
+
+         assert .equal (refused .isActive, true);
+         assert .deepEqual (refused .tracks, [ ]);
+         assert .ok (refused .errors .includes ("Permission denied"), `the message is logged: ${JSON .stringify (refused .errors)}`);
+         assert .ok (refused .level < 1e-4, `silent (level ${refused .level})`);
+         assert .deepEqual (thrown, [ ], "no uncaught error");
       }
       finally
       {

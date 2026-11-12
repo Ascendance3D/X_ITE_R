@@ -283,6 +283,18 @@ fn a_page_engine_records_a_microphone_request_and_keeps_its_node() {
     m.apply_all(&e.take_ops());
     assert_same(&e, &m);
 
+    // Control characters are escaped too.
+    let id = e.microphone("tab\tline\nnul\u{0}").unwrap();
+    let json = to_json(&e.take_ops(), &mut Payloads::default());
+
+    assert!(
+        json.contains(&format!(
+            r#"["microphone",{},"tab\u0009line\u000anul\u0000"]"#,
+            id.0
+        )),
+        "{json}"
+    );
+
     // An engine that does not record (native, no output device) asks no page and has no microphone.
     let mut native = AudioEngine::new(AudioMode::Silent);
 
