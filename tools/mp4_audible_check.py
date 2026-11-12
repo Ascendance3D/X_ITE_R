@@ -24,6 +24,10 @@ def power(s, f):
 
 def main(path):
     raw = open(path, "rb").read()
+    # parec writes whole stereo float32 frames; anything else is not this script's recording.
+    if len(raw) % 8 or len(raw) < 8 * RATE:
+        print(f"result: FAIL (the recording has {len(raw)} bytes: not at least 1 s of stereo float32)")
+        return 1
     n = len(raw) // 8
     left = [v for v in struct.unpack(f"<{2 * n}f", raw[: 8 * n])[0::2]]
     win, hop = RATE // 50, RATE // 100
