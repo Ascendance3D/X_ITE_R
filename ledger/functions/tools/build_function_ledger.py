@@ -39,6 +39,8 @@ A status other than the default comes only from a record of dispositions.jsonl, 
 function and the Rust code. A source comment, a symbol name or a test name never sets a status. The builder checks that a
 record is complete and that its Rust and test symbols exist; it cannot check that a test exercises the equivalent behavior.
 That claim (`evidence`) is checked in the review of the pull request that adds the record.
+A Rust symbol is exact: `Type::function` for a function inside an `impl` of Type, `function` outside an `impl`. A test is a
+function with a `#[test]` attribute in the named file; a helper function is refused.
 
 A record of dispositions.jsonl (one JSON object on each line):
     {"id": "<record id>", "status": "...", "rust": [{"file": "crates/.../x.rs", "symbol": "Type::function"}],
@@ -223,12 +225,52 @@ def load_ledger():
 def ref(fn):
     return {"crate": fn["crate"], "file": fn["file"], "line": fn["line"], "symbol": fn["symbol"]}
 
-def has_fn(path, name):
-    """Whether the Rust file `path` (under the repository) defines a function `name` (the last segment of a symbol)."""
-    full = os.path.join(ROOT, path)
-    if not path.startswith("crates/") or ".." in path or not os.path.isfile(full):
-        return False
-    return re.search(r"\bfn\s+" + re.escape(name.split("::")[-1]) + r"\b", open(full, encoding="utf-8", errors="replace").read()) is not None
+TEST_ATTR = re.compile(r"^\s*#\[(?:\w+::)*test\b")
+
+def rust_index(path, cache={}):
+    """(symbols, tests) of the Rust file `path` (under crates/): every function as `Type::name` (inside an `impl` of Type, also
+    `impl Trait for Type`) or `name` (outside an `impl`), and the names of the functions with a `#[test]` attribute
+    (`#[test]`, `#[tokio::test]` and the like). None when the file does not exist."""
+    if path not in cache:
+        full = os.path.join(ROOT, path)
+        if not path.startswith("crates/") or ".." in path or not os.path.isfile(full):
+            cache[path] = None
+        else:
+            symbols, tests, impls, attr = set(), set(), [], False
+            for line in open(full, encoding="utf-8", errors="replace").read().split("\n"):
+                text = line.strip()
+                m = IMPL.match(line)
+                if m:
+                    indent = len(m.group(1))
+                    impls = [i for i in impls if i[0] < indent] + [(indent, m.group(2).split("::")[-1])]
+                elif text == "}":
+                    indent = len(line) - len(line.lstrip())
+                    impls = [i for i in impls if i[0] < indent]
+                if TEST_ATTR.match(line):
+                    attr = True
+                    continue
+                m = FN.match(line)
+                if m:
+                    indent = len(m.group(1))
+                    owner = next((t for i, t in reversed(impls) if i < indent), None)
+                    symbols.add(f"{owner}::{m.group(2)}" if owner else m.group(2))
+                    if attr:
+                        tests.add(m.group(2))
+                    attr = False
+                elif text and not text.startswith(("#[", "//")):
+                    attr = False
+            cache[path] = (symbols, tests)
+    return cache[path]
+
+def has_symbol(path, symbol):
+    """Whether the Rust file defines exactly this symbol: `Type::function`, or `function` outside an `impl`."""
+    index = rust_index(path)
+    return index is not None and symbol in index[0]
+
+def has_test(path, name):
+    """Whether the Rust file has a function `name` with a `#[test]` attribute."""
+    index = rust_index(path)
+    return index is not None and name in index[1]
 
 def load_dispositions(ids, files):
     """(by id, by file) of dispositions.jsonl, after the checks of the module documentation. Exits on a bad record."""
@@ -271,7 +313,7 @@ def load_dispositions(ids, files):
             if not rust:
                 err(f"{status} needs `rust`")
             for r in rust:
-                if not (isinstance(r, dict) and set(r) == {"file", "symbol"} and has_fn(r["file"], r["symbol"])):
+                if not (isinstance(r, dict) and set(r) == {"file", "symbol"} and has_symbol(r["file"], r["symbol"])):
                     err(f"Rust symbol not found: {r}")
         elif rust or tests:
             err(f"{status} takes no `rust` and no `tests`")
@@ -281,8 +323,8 @@ def load_dispositions(ids, files):
         elif len(str(d.get("reason", "")).strip()) < 20:
             err(f"{status} needs `reason`")
         for t in tests:
-            if not (isinstance(t, dict) and set(t) == {"file", "name"} and has_fn(t["file"], t["name"])):
-                err(f"test not found: {t}")
+            if not (isinstance(t, dict) and set(t) == {"file", "name"} and has_test(t["file"], t["name"])):
+                err(f"no function with a #[test] attribute: {t}")
     if bad:
         sys.exit("\n".join(bad))
     return by_id, by_file
