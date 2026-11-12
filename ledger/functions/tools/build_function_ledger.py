@@ -416,7 +416,7 @@ def render(files, records, items):
     meta = {
         "upstream": PIN, "source": "oracle/x_ite-pin/src", "files": len(files),
         "files_with_parse_error": sum(1 for f in files if "parseError" in f),
-        "source_sha256": source_sha,
+        "source_files_sha256": source_sha,
         "functions": total, "inline_functions": sum(1 for r in records if r["inline"]),
         "applicable_functions": len(app),
         "by_scope": dict(sorted(c_scope.items())),
@@ -515,8 +515,8 @@ def render(files, records, items):
                   v["REPLACED_BY_RUST_DESIGN"] + v["PLATFORM_SPECIFIC"] + v["NOT_APPLICABLE"]] for k, v in sorted(areas.items())],
                 ["area", "functions", "unresolved", "verified", "not verified", "different", "partial", "missing", "no Rust function needed"]), "",
           "## REA evidence", "",
-          "Static analysis of the whole pinned source (`analyze_javascript_application`, detail `summary`): parent `" + REA[0] + "`, summary `" + REA[1] + "`. REA parsed 765 JavaScript files (1793281 AST nodes, 0 parse failures); its graph is truncated and partial, it executed nothing, and it did not analyze Rust.", "",
-          "REA is the independent check of the parse (file count, no parse failure). The function list itself comes from the extractor in `tools/`, which is deterministic.", ""]
+          "Static analysis of the pinned source (`analyze_javascript_application`, detail `summary`): parent `" + REA[0] + "`, summary `" + REA[1] + "`. REA reported 765 files parsed (1793281 AST nodes, 0 parse failures); its graph is truncated and partial, it executed nothing, and it did not analyze Rust.", "",
+          f"REA is independent evidence that the source parses without a failure. It is not a check of the file count: the extractor reads the {len(files)} `.js` files, and REA reported one file more. The pinned source also has one TypeScript declaration file (`x_ite.d.ts`, no function body), which is the likely difference; REA's summary does not list its files, so this is not verified. The function list itself comes from the extractor in `tools/`, which is deterministic.", ""]
     small["FUNCTION_COVERAGE_SUMMARY.md"] = "\n".join(s)
 
     b = ["# Port completion backlog", "", HEAD,
@@ -545,7 +545,8 @@ def render(files, records, items):
 
     counts = {"FUNCTION_LEDGER.csv": total, "FUNCTION_LEDGER.json": total, "FUNCTION_LEDGER.md": md_rows, "UNMAPPED_FUNCTIONS.md": len(un)}
     manifest = {
-        "upstream": PIN, "source": "oracle/x_ite-pin/src", "source_sha256": source_sha,
+        "upstream": PIN, "source": "oracle/x_ite-pin/src", "source_files_sha256": source_sha,
+        "source_files_sha256_of": "the text of each .js file's path and sha256, in sorted order (not the bytes of the tree)",
         "note": "Identity of the four generated files that are not tracked in Git. It proves that the data is the generator's output. It does not prove that a mapping is correct.",
         "records": "csv, json: all functions. md: the named functions listed. UNMAPPED_FUNCTIONS.md: the applicable functions with UNRESOLVED_MAPPING.",
         "files": {name: {"bytes": len(large[name].encode("utf-8")), "records": counts[name],

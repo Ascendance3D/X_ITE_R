@@ -150,6 +150,6 @@ The 346-entry ledger (`ledger/ledger.json`, 346 entries) is read only here. Its 
 
 ## REA evidence
 
-Static analysis of the whole pinned source (`analyze_javascript_application`, detail `summary`): parent `ev_4b19e25b68ef315c508675fd4b3f73b3b165891f5c683cafe92b06a6e1e87313`, summary `ev_304fc670a11afcb98229572336aae2872b97e3f40960f15a63a9d2945bd1873a`. REA parsed 765 JavaScript files (1793281 AST nodes, 0 parse failures); its graph is truncated and partial, it executed nothing, and it did not analyze Rust.
+Static analysis of the pinned source (`analyze_javascript_application`, detail `summary`): parent `ev_4b19e25b68ef315c508675fd4b3f73b3b165891f5c683cafe92b06a6e1e87313`, summary `ev_304fc670a11afcb98229572336aae2872b97e3f40960f15a63a9d2945bd1873a`. REA reported 765 files parsed (1793281 AST nodes, 0 parse failures); its graph is truncated and partial, it executed nothing, and it did not analyze Rust.
 
-REA is the independent check of the parse (file count, no parse failure). The function list itself comes from the extractor in `tools/`, which is deterministic.
+REA is independent evidence that the source parses without a failure. It is not a check of the file count: the extractor reads the 764 `.js` files, and REA reported one file more. The pinned source also has one TypeScript declaration file (`x_ite.d.ts`, no function body), which is the likely difference; REA's summary does not list its files, so this is not verified. The function list itself comes from the extractor in `tools/`, which is deterministic.

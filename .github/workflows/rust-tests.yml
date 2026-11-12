@@ -204,6 +204,8 @@ jobs:
           rm -rf "$work"
           mkdir -p "$work"
           npm install --prefix "$work/npm" --no-save --no-audit --no-fund --ignore-scripts acorn@8.18.0
+          # The parser file that the extractor imports, by digest: another build of acorn fails here, before it is used.
+          echo "953573b8fdab71599749ea5f2b33d3e760c2116178f9423ee7458dbe39d59453  $work/npm/node_modules/acorn/dist/acorn.mjs" | sha256sum -c -
           node ledger/functions/tools/extract_functions.mjs "$work/npm/node_modules/acorn" oracle/x_ite-pin/src > "$work/functions.jsonl"
           python3 -I -B ledger/functions/tools/build_function_ledger.py "$work/functions.jsonl" --large-dir "$work/large" --check
           python3 -I -B ledger/functions/tools/build_function_ledger.py --verify-dir "$work/large"
