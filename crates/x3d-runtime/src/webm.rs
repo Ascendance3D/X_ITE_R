@@ -24,6 +24,12 @@ const ID_TRACK_ENTRY: u64 = 0xAE;
 const ID_TRACK_NUMBER: u64 = 0xD7;
 const ID_TRACK_TYPE: u64 = 0x83;
 const ID_CODEC_ID: u64 = 0x86;
+const ID_VIDEO: u64 = 0xE0;
+const ID_COLOUR: u64 = 0x55B0;
+const ID_MATRIX_COEFFICIENTS: u64 = 0x55B1;
+const ID_RANGE: u64 = 0x55B9;
+const ID_TRANSFER_CHARACTERISTICS: u64 = 0x55BA;
+const ID_PRIMARIES: u64 = 0x55BB;
 #[cfg(feature = "av1")]
 const ID_CODEC_PRIVATE: u64 = 0x63A2;
 const ID_CLUSTER: u64 = 0x1F43_B675;
@@ -334,7 +340,82 @@ fn color_config(frame: &[u8]) -> Option<(u32, bool)> {
 }
 
 /// The codec and the blocks of the first VP9 or VP8 video track of `data`, in file order.
+#[cfg(test)]
 fn demux(data: &[u8]) -> Result<(Codec, Vec<Block>), WebmError> {
+    demux_with_colour(data).map(|(codec, blocks, _)| (codec, blocks))
+}
+
+/// The Colour element of a video track (Matroska `Video > Colour`), the fields that Chromium's WebMColourParser reads
+/// into the decoder config's color space. A field that is not in the file is `None`.
+#[derive(Clone, Copy, Debug, Default, PartialEq)]
+struct Colour {
+    matrix: Option<u64>,
+    range: Option<u64>,
+    transfer: Option<u64>,
+    primaries: Option<u64>,
+}
+
+impl Colour {
+    fn read(data: &[u8], s: usize, e: usize) -> Colour {
+        let mut c = Colour::default();
+
+        for (id, cs, ce) in children(data, s, e) {
+            let v = Some(uint(&data[cs..ce]));
+
+            match id {
+                ID_MATRIX_COEFFICIENTS => c.matrix = v,
+                ID_RANGE => c.range = v,
+                ID_TRANSFER_CHARACTERISTICS => c.transfer = v,
+                ID_PRIMARIES => c.primaries = v,
+                _ => {}
+            }
+        }
+
+        c
+    }
+
+    /// The YUV to RGB matrix and the full-range flag that the container gives the decoded VP8 or VP9 picture, or `None`
+    /// when the bitstream's own description (VP9 `color_space` and `color_range`; VP8 has only BT.601) is used.
+    ///
+    /// Chromium's VpxVideoDecoder prefers the config's color space when it is valid ("it generally comes from the color tag
+    /// which is more expressive than the vp8 and vp9 bitstream"). The config comes from this element (WebMColourParser,
+    /// VideoColorSpace), and gfx::ColorSpace::IsValid needs all four fields known: primaries 1, 4 to 12 or 22; transfer 1 or
+    /// 4 to 18; matrix 0, 1, 4 to 9 or 11; range 1 (limited), 2 (full) or 3 (derived). A missing field, 2 (unspecified) or a
+    /// reserved value makes the config invalid. Measured against the pinned page with the authored streams of
+    /// `tests/data/webm-colour`: a container BT.601 or BT.709 matrix and a full range win over the bitstream, a container
+    /// matrix without primaries and transfer does not, and a VP8 stream takes the container's BT.709.
+    ///
+    /// Only the matrix and the range change the conversion (the port does no primaries or transfer conversion, as for the
+    /// bitstream tags). Of the valid configs, matrix 0 (RGB), 4 (FCC), 8 (YCoCg), 11 (YDZDX) and range 3 (derived) are not
+    /// converted here and were not measured: they keep the bitstream description.
+    fn config(&self) -> Option<(Matrix, bool)> {
+        let primaries = matches!(self.primaries?, 1 | 4..=12 | 22);
+        let transfer = matches!(self.transfer?, 1 | 4..=18);
+        let matrix = matches!(self.matrix?, 0 | 1 | 4..=9 | 11);
+        let full = match self.range? {
+            1 => false,
+            2 => true,
+            _ => return None,
+        };
+
+        if !(primaries && transfer && matrix) {
+            return None;
+        }
+
+        let m = match self.matrix? {
+            1 => BT709,
+            5 | 6 => BT601,
+            7 => matrix_of(0.212, 0.087),
+            9 => matrix_of(0.2627, 0.0593),
+            _ => return None,
+        };
+
+        Some((m, full))
+    }
+}
+
+/// [`demux`] and the Colour element of the chosen video track.
+fn demux_with_colour(data: &[u8]) -> Result<(Codec, Vec<Block>, Colour), WebmError> {
     let top = children(data, 0, data.len());
 
     if top.first().map(|t| t.0) != Some(ID_EBML) {
@@ -362,33 +443,41 @@ fn demux(data: &[u8]) -> Result<(Codec, Vec<Block>), WebmError> {
                 }
 
                 let (mut number, mut kind, mut codec) = (0, 0, &data[0..0]);
+                let mut colour = Colour::default();
 
                 for (cid, cs, ce) in children(data, ts, te) {
                     match cid {
                         ID_TRACK_NUMBER => number = uint(&data[cs..ce]),
                         ID_TRACK_TYPE => kind = uint(&data[cs..ce]),
                         ID_CODEC_ID => codec = &data[cs..ce],
+                        ID_VIDEO => {
+                            for (vid, vs, ve) in children(data, cs, ce) {
+                                if vid == ID_COLOUR {
+                                    colour = Colour::read(data, vs, ve);
+                                }
+                            }
+                        }
                         _ => {}
                     }
                 }
 
                 // The first supported video track wins; a later one never replaces it.
                 if track.is_none() && kind == 1 && codec == b"V_VP9" {
-                    track = Some((number, Codec::Vp9));
+                    track = Some((number, Codec::Vp9, colour));
                 } else if track.is_none() && kind == 1 && codec == b"V_VP8" {
-                    track = Some((number, Codec::Vp8));
+                    track = Some((number, Codec::Vp8, colour));
                 } else if cfg!(feature = "av1") && track.is_none() && kind == 1 && codec == b"V_AV1"
                 {
                     #[cfg(feature = "av1")]
                     {
-                        track = Some((number, Codec::Av1));
+                        track = Some((number, Codec::Av1, colour));
                     }
                 }
             }
         }
     }
 
-    let (track, codec) = track.ok_or(WebmError::NoVideoTrack)?;
+    let (track, codec, colour) = track.ok_or(WebmError::NoVideoTrack)?;
     let mut blocks = vec![];
 
     for &(id, s, e) in &segment {
@@ -437,17 +526,19 @@ fn demux(data: &[u8]) -> Result<(Codec, Vec<Block>), WebmError> {
         }
     }
 
-    Ok((codec, blocks))
+    Ok((codec, blocks, colour))
 }
 
 /// Demux `data`: the width/height are known only after decoding. The pictures are RGBA in memory, so `max_bytes` is
 /// the most that all of them may take together; a picture larger than [`MAX_LUMA_SAMPLES`] is not decoded.
 pub fn decode(data: &[u8], max_bytes: u64) -> Result<Video, WebmError> {
-    let (codec, blocks) = demux(data)?;
+    let (codec, blocks, colour) = demux_with_colour(data)?;
+    // AV1 keeps its sequence header's description: Chromium's Dav1dVideoDecoder builds the color space from it.
+    let config = colour.config();
 
     match codec {
-        Codec::Vp9 => decode_vp9(data, &blocks, max_bytes),
-        Codec::Vp8 => decode_vp8(data, &blocks, max_bytes),
+        Codec::Vp9 => decode_vp9(data, &blocks, max_bytes, config),
+        Codec::Vp8 => decode_vp8(data, &blocks, max_bytes, config),
         #[cfg(feature = "av1")]
         Codec::Av1 => decode_av1(data, &blocks, max_bytes),
     }
@@ -455,7 +546,13 @@ pub fn decode(data: &[u8], max_bytes: u64) -> Result<Video, WebmError> {
 
 /// The VP8 blocks of a file: one frame per block. A frame the decoder refuses ends the decode with an error (the
 /// caller treats the file as a video the engine cannot show); a frame that is not shown only updates the references.
-fn decode_vp8(data: &[u8], blocks: &[Block], max_bytes: u64) -> Result<Video, WebmError> {
+/// `config`: the container's matrix and range ([`Colour::config`]), which replace VP8's BT.601 limited range.
+fn decode_vp8(
+    data: &[u8],
+    blocks: &[Block],
+    max_bytes: u64,
+    config: Option<(Matrix, bool)>,
+) -> Result<Video, WebmError> {
     let mut decoder = vp8::Vp8Decoder::new(vp8::Limits {
         max_width: 16383,
         max_height: 16383,
@@ -500,17 +597,15 @@ fn decode_vp8(data: &[u8], blocks: &[Block], max_bytes: u64) -> Result<Video, We
             return Err(WebmError::TooLarge);
         }
 
+        let (matrix, full) = config.unwrap_or((VP8_MATRIX, false));
+        let [mut y, mut u, mut v] = [0, 1, 2].map(|i| f.planes[i].clone());
+
+        if full {
+            full_to_limited(&mut y, &mut u, &mut v);
+        }
+
         frames.push(VideoFrame {
-            rgba: yuv_to_rgba(
-                w,
-                h,
-                true,
-                true,
-                &f.planes[0],
-                &f.planes[1],
-                &f.planes[2],
-                VP8_MATRIX,
-            ),
+            rgba: yuv_to_rgba(w, h, true, true, &y, &u, &v, matrix),
             time_ms: b.time_ms,
         });
     }
@@ -689,7 +784,14 @@ fn decode_av1(data: &[u8], blocks: &[Block], max_bytes: u64) -> Result<Video, We
     })
 }
 
-fn decode_vp9(data: &[u8], blocks: &[Block], max_bytes: u64) -> Result<Video, WebmError> {
+/// `config`: the container's matrix and range ([`Colour::config`]); they replace the bitstream's description, except for
+/// an sRGB (GBR) picture, whose planes are not YUV.
+fn decode_vp9(
+    data: &[u8],
+    blocks: &[Block],
+    max_bytes: u64,
+    config: Option<(Matrix, bool)>,
+) -> Result<Video, WebmError> {
     let mut decoder = Decoder::new();
     let mut frames = vec![];
     let (mut width, mut height) = (0, 0);
@@ -754,7 +856,10 @@ fn decode_vp9(data: &[u8], blocks: &[Block], max_bytes: u64) -> Result<Video, We
                     .flat_map(|i| [v[i], y[i], u[i], 255])
                     .collect()
             } else {
-                if color.1 {
+                let (matrix, full) =
+                    config.unwrap_or((vp9_matrix(color.0, sx && sy, f.bit_depth), color.1));
+
+                if full {
                     full_to_limited(&mut y, &mut u, &mut v);
                 }
 
@@ -766,7 +871,7 @@ fn decode_vp9(data: &[u8], blocks: &[Block], max_bytes: u64) -> Result<Video, We
                     &y,
                     &u,
                     &v,
-                    vp9_matrix(color.0, sx && sy, f.bit_depth),
+                    matrix,
                     f.bit_depth == 8,
                 )
             };
@@ -1235,6 +1340,116 @@ mod tests {
                 );
             }
         }
+    }
+
+    /// Newly authored streams whose container Colour and bitstream description disagree (ffmpeg testsrc2 at 96x64,
+    /// libvpx-vp9 or libvpx, then the `vp9_metadata` bitstream filter rewrites only the VP9 `color_space` or
+    /// `color_range` bits; no third-party media). The name gives the container tag first, then the bitstream's.
+    fn webm_colour(name: &str) -> Vec<u8> {
+        std::fs::read(format!(
+            "{}/tests/data/webm-colour/{name}.webm",
+            env!("CARGO_MANIFEST_DIR")
+        ))
+        .unwrap()
+    }
+
+    fn largest_difference(a: &Video, b: &Video) -> u8 {
+        assert_eq!(a.frames.len(), b.frames.len());
+
+        a.frames
+            .iter()
+            .zip(&b.frames)
+            .flat_map(|(a, b)| a.rgba.iter().zip(&b.rgba).map(|(x, y)| x.abs_diff(*y)))
+            .max()
+            .unwrap()
+    }
+
+    #[test]
+    fn the_colour_element_of_the_video_track_is_read() {
+        for (name, want) in [
+            ("cont709-bits601", (Some(1), Some(1), Some(1), Some(1))),
+            (
+                "cont601full-bits601tv",
+                (Some(6), Some(2), Some(6), Some(6)),
+            ),
+            ("contmatrix601-bits709", (Some(6), Some(1), None, None)),
+            ("vp8-cont709", (Some(1), Some(1), Some(1), Some(1))),
+            ("vp8-untagged", (None, None, None, None)),
+        ] {
+            let c = demux_with_colour(&webm_colour(name)).unwrap().2;
+
+            assert_eq!((c.matrix, c.range, c.transfer, c.primaries), want, "{name}");
+        }
+    }
+
+    /// The validity rule of Chromium's gfx::ColorSpace::IsValid over the four fields that WebMColourParser reads.
+    #[test]
+    fn a_colour_config_needs_all_four_fields_known() {
+        let c = |matrix, range, transfer, primaries| Colour {
+            matrix,
+            range,
+            transfer,
+            primaries,
+        };
+        let bt709 = c(Some(1), Some(1), Some(1), Some(1));
+
+        assert_eq!(bt709.config(), Some((BT709, false)));
+        assert_eq!(
+            c(Some(6), Some(2), Some(6), Some(6)).config(),
+            Some((BT601, true))
+        );
+        assert_eq!(
+            c(Some(5), Some(1), Some(6), Some(5)).config(),
+            Some((BT601, false))
+        );
+
+        for invalid in [
+            c(None, Some(1), Some(1), Some(1)),
+            c(Some(1), None, Some(1), Some(1)),
+            c(Some(1), Some(1), None, Some(1)),
+            c(Some(1), Some(1), Some(1), None),
+            c(Some(2), Some(1), Some(1), Some(1)),
+            c(Some(1), Some(0), Some(1), Some(1)),
+            c(Some(1), Some(1), Some(2), Some(1)),
+            c(Some(1), Some(1), Some(1), Some(2)),
+            c(Some(3), Some(1), Some(1), Some(1)),
+            c(Some(1), Some(1), Some(3), Some(1)),
+            c(Some(1), Some(1), Some(1), Some(13)),
+            c(Some(6), Some(1), None, None),
+        ] {
+            assert_eq!(invalid.config(), None, "{invalid:?}");
+        }
+
+        // Valid for Chromium but not converted here: the bitstream description is kept.
+        assert_eq!(c(Some(0), Some(2), Some(13), Some(1)).config(), None);
+        assert_eq!(c(Some(1), Some(3), Some(1), Some(1)).config(), None);
+    }
+
+    /// Measured against the pinned page (headless Chrome 156, X_ITE 16.5.0, oracle/x_ite-shot.mjs, 2026-11-12): with
+    /// the bitstream's description, the streams whose tags disagree were up to 40 levels off on 28% to 48% of the
+    /// picture; with the container's they are within 3 levels.
+    #[test]
+    fn a_valid_container_colour_wins_over_the_bitstream() {
+        let d = |name| decode(&webm_colour(name), BUDGET).unwrap();
+
+        // Same pictures and container tag, different bitstream color_space: the same RGBA.
+        assert_eq!(
+            largest_difference(&d("cont601-bits709"), &d("cont601-bits601")),
+            0
+        );
+        assert_eq!(
+            largest_difference(&d("cont709-bits601"), &d("cont709-bits709")),
+            0
+        );
+        // A matrix alone is not a valid config: the bitstream's BT.709 is used, as for the BT.709 stream.
+        assert_eq!(
+            largest_difference(&d("contmatrix601-bits709"), &d("cont709-bits709")),
+            0
+        );
+        // The container's full range replaces the bitstream's limited range.
+        assert!(largest_difference(&d("cont601full-bits601tv"), &d("cont601-bits601")) > 8);
+        // VP8 takes the container's BT.709 instead of its BT.601.
+        assert!(largest_difference(&d("vp8-cont709"), &d("vp8-untagged")) > 20);
     }
 
     /// Newly authored VP9 streams with a color description (ffmpeg testsrc2 at 96x64, libvpx-vp9, `-colorspace`,
