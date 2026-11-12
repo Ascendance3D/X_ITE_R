@@ -1347,6 +1347,7 @@ impl Viewer3d {
     /// page never runs this.
     fn advance_speed(&mut self) {
         if self.scripted_frame_rate.is_some() {
+            self.current_speed = 0.0;
             return;
         }
 
@@ -4275,6 +4276,30 @@ mod current_speed_tests {
             load.iter().chain(&s).all(|&(a, b)| a == 0.0 && b == 0.0),
             "{load:?} {s:?}"
         );
+    }
+
+    /// A viewer that changes to a scripted clock reports 0 from its next frame, not the last live speed.
+    #[test]
+    fn a_change_to_a_scripted_clock_resets_current_speed() {
+        let dir =
+            std::env::temp_dir().join(format!("x3d-current-speed-{}-switch", std::process::id()));
+        std::fs::create_dir_all(&dir).unwrap();
+        let file = dir.join("w.x3dv");
+        std::fs::write(&file, world(MOVE)).unwrap();
+        let t0 = 946684800.0;
+        let mut v = Viewer3d::load_opts(&file, None, t0, 32, 32, None, true).expect("viewer load");
+
+        for i in 1..=4 {
+            v.step(t0 + i as f64 / 60.0);
+        }
+
+        assert!((v.current_speed - 60.0).abs() < 1e-2, "{}", v.current_speed);
+
+        v.scripted_frame_rate = Some(60.0);
+        v.step(t0 + 5.0 / 60.0);
+        std::fs::remove_dir_all(&dir).ok();
+
+        assert_eq!(v.current_speed, 0.0);
     }
 
     /// advanceTime measures the translation of the camera-space matrix, the camera's position in the world, so a
