@@ -1,4 +1,5 @@
-//! MP4 video and audio through the system GStreamer (ADR 0015, feature `system-video-gst`).
+//! MP4 video and audio through the platform decoder (ADR 0015): GStreamer on Linux (feature `system-video-gst`),
+//! AVFoundation on macOS (feature `system-video-avf`).
 //!
 //! The files are the synthetic ones of `tests/data/mp4` (`oracle/tools/gen_movie_mp4.py`): segment k (0.25 s each, 8 per
 //! play) shows the grey level `GREY[k]` and sounds a sine of `TONE[k]` Hz. The tests check the decode against that known
@@ -6,10 +7,13 @@
 //! Sound node whose source is the MovieTexture, the audio context renders offline in step with the frames (as x3d-drive
 //! does), and the tone in the rendered output at each moment must be the segment of the picture shown at that moment.
 //!
-//! Without a GStreamer decoder for H.264 and AAC the tests call `x3d_evidence::skip ("no-gstreamer-decoder")`: that
+//! Without a platform decoder for H.264 and AAC the tests call `x3d_evidence::skip ("no-platform-decoder")`: that
 //! fails under the strict policy and is a named skip only where X3D_EVIDENCE=ci allows it. It never passes silently.
 
-#![cfg(feature = "system-video-gst")]
+#![cfg(any(
+    feature = "system-video-gst",
+    all(feature = "system-video-avf", target_os = "macos")
+))]
 
 use std::path::PathBuf;
 use x3d_fields::{FieldValue, NodeId};
@@ -38,15 +42,15 @@ fn data(name: &str) -> Vec<u8> {
     .unwrap()
 }
 
-/// The decode of `name`, or a recorded skip when this GStreamer has no decoder for it.
+/// The decode of `name`, or a recorded skip when the platform has no decoder for it.
 fn decode(name: &str) -> Option<sysvideo::Decoded> {
     let d = data(name);
     let info = probe(&d).unwrap();
 
-    match sysvideo::gst::decode(&d, &info, 512 << 20) {
+    match sysvideo::decode_tracks(&d, &info, 512 << 20) {
         Ok(r) => Some(r),
         Err(e @ WebmError::Unsupported { .. }) => {
-            x3d_evidence::skip("no-gstreamer-decoder", None, format!("{name}: {e:?}"));
+            x3d_evidence::skip("no-platform-decoder", None, format!("{name}: {e:?}"));
             None
         }
         Err(e) => panic!("{name}: {e:?}"),
@@ -164,7 +168,7 @@ fn hevc_decodes_too_and_av1_names_its_codec_when_it_does_not() {
 
     let d = data("av1-aac.mp4");
 
-    match sysvideo::gst::decode(&d, &probe(&d).unwrap(), 512 << 20) {
+    match sysvideo::decode_tracks(&d, &probe(&d).unwrap(), 512 << 20) {
         Ok(r) => {
             eprintln!("av1-aac.mp4: decoders {:?}", r.decoders);
             assert_eq!(r.pictures.len(), 40);
@@ -241,14 +245,14 @@ fn the_limit_counts_pictures_and_sound_and_nothing_is_left_behind() {
 
     // The pictures alone fit; with the sound they do not.
     assert!(matches!(
-        sysvideo::gst::decode(&d, &info, pictures + 1000),
+        sysvideo::decode_tracks(&d, &info, pictures + 1000),
         Err(WebmError::TooLarge)
     ));
 
     let a = data("aac-only.m4a");
 
     assert!(matches!(
-        sysvideo::gst::decode(&a, &probe(&a).unwrap(), 100_000),
+        sysvideo::decode_tracks(&a, &probe(&a).unwrap(), 100_000),
         Err(WebmError::TooLarge)
     ));
 
