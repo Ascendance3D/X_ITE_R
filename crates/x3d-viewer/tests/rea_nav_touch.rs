@@ -319,9 +319,10 @@ fn rea_nav_touch_match_x_ite() {
 }
 
 /// The platform recordings of this base (no GPU needed): each is a case of the base, is chosen only when the platform is named,
-/// and holds the same frames as the NVIDIA recording of its case. The M1 run of 2026-11-12 kept exactly these 6 cases.
+/// and has the same frame indices as the NVIDIA recording of its case (the values differ; that is why the recording is kept).
+/// The M1 run of 2026-11-12 kept exactly these 6 cases.
 #[test]
-fn the_apple_m1_recordings_are_cases_of_the_base_with_the_same_frames() {
+fn the_apple_m1_recordings_are_cases_of_the_base_with_the_same_frame_indices() {
     let root = PathBuf::from(env!("CARGO_MANIFEST_DIR"))
         .join("../..")
         .canonicalize()
