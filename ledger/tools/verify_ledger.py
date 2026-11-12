@@ -136,6 +136,7 @@ HISTORY = [
     ("before-oitenv", "ledger_oitenv.py C", lambda: _first("ledger_oitenv", "C")),
     ("before-walkrate", "ledger_walkrate.py C", lambda: _first("ledger_walkrate", "C")),
     ("before-vp9color", "ledger_vp9color.py C", lambda: _first("ledger_vp9color", "C")),
+    ("before-soundmacos", "ledger_soundmacos.py C", lambda: _first("ledger_soundmacos", "C")),
 ]
 
 def load(p): return json.load(open(p))["items"]
