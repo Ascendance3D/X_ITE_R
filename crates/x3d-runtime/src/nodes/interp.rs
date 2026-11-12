@@ -257,7 +257,9 @@ impl Runtime {
             .map(|v| v.len())
             .unwrap_or(0);
 
-        if len > 0 && len < self.key(node).len() {
+        // The position nodes follow ISO/IEC 19775-1:2023 19.2.4, where the size of keyVelocity selects the rule (all keys,
+        // first and last key, or ignored). The authored field is not resized, so that rule can see its size.
+        if len > 0 && len < self.key(node).len() && !self.spline_iso(node) {
             // keyVelocity .resize (key .length, new SFVec3f ()): zero elements.
             if let Some(k) = self.pre(node, "keyVelocity") {
                 let mut v = self.value(k).clone();
@@ -279,10 +281,24 @@ impl Runtime {
         let key = self.key(node);
         let (n, key_value) = self.elements(node, "keyValue");
         let (_, key_velocity) = self.elements(node, "keyVelocity");
-        let (t0, t1) = catmull_rom_generate(n, closed, &key, &key_value, &key_velocity, normalize);
+        let (t0, t1) = if self.spline_iso(node) {
+            hermite_generate_iso(n, closed, &key, &key_value, &key_velocity, normalize)
+        } else {
+            catmull_rom_generate(n, closed, &key, &key_value, &key_velocity, normalize)
+        };
 
         self.nrt_mut(node).state = State::Spline { t0, t1 };
         self.refresh_fraction(node);
+    }
+
+    /// SplinePositionInterpolator and SplinePositionInterpolator2D use the velocity rules of ISO/IEC 19775-1:2023 19.2.3 and
+    /// 19.2.4 (owner decision 2026-11-12). Pinned X_ITE throws on their normalized path, so there is no working behavior to
+    /// match there. SplineScalarInterpolator keeps CatmullRomSplineInterpolator.generate, which is compared exactly.
+    fn spline_iso(&self, node: NodeId) -> bool {
+        matches!(
+            self.builtin_name(node),
+            Some("SplinePositionInterpolator" | "SplinePositionInterpolator2D")
+        )
     }
 
     /// SquadInterpolator.generate.
@@ -664,6 +680,97 @@ pub fn catmull_rom_generate(
         .enumerate()
         .map(|(i, v)| scale(v, fm.get(i).copied().unwrap_or(f64::NAN)))
         .collect();
+    (t0, t1)
+}
+
+/// (T0, T1) of ISO/IEC 19775-1:2023 19.2.4 for elements of `n` components, used with [`catmull_rom_interpolate`].
+///
+/// - keyVelocity of the size of keyValue gives T for every key. Size 2 gives T for the first and the last key; the other keys
+///   are calculated. Any other size is ignored (19.2.4, "the keyVelocity field is ignored").
+/// - normalizeVelocity TRUE: each given T is keyVelocity[i] × (Dtot / |keyVelocity[i]|), the last one included. A zero
+///   vector stays zero.
+/// - A calculated T is (v(i+1) - v(i-1)) / 2. At the first and the last key it is 0 unless the spline is closed.
+/// - closed is ignored when the first and last velocities are given, or when the first and last keyValue differ (19.2.3).
+///   Closed wraps the neighbours: t(-1) = t(N-2), v(-1) = v(N-2), t(N) = t(1), v(N) = v(1).
+/// - T0(i) = F+(i) T(i), T1(i) = F-(i) T(i). F± is 1 at the first and the last key of an open spline.
+pub fn hermite_generate_iso(
+    n: usize,
+    closed: bool,
+    key: &[f64],
+    key_value: &[Vec<f64>],
+    key_velocity: &[Vec<f64>],
+    normalize: bool,
+) -> (Vec<Vec<f64>>, Vec<Vec<f64>>) {
+    let zero = vec![0.0; n];
+    let len = key.len();
+
+    if len <= 1 {
+        return (vec![zero.clone()], vec![zero]);
+    }
+
+    let nan = vec![f64::NAN; n];
+    let kv = |i: usize| key_value.get(i).cloned().unwrap_or_else(|| nan.clone());
+    let last = len - 1;
+
+    // The keys whose velocity the author gives.
+    let given = |i: usize| -> Option<&Vec<f64>> {
+        if key_velocity.len() == len {
+            key_velocity.get(i)
+        } else if key_velocity.len() == 2 {
+            match i {
+                0 => key_velocity.first(),
+                i if i == last => key_velocity.get(1),
+                _ => None,
+            }
+        } else {
+            None
+        }
+    };
+    let ends_given = given(0).is_some() && given(last).is_some();
+    let closed = closed && !ends_given && kv(0) == kv(last);
+
+    let dtot: f64 = (0..last).map(|i| magnitude(&sub(&kv(i), &kv(i + 1)))).sum();
+    let half = |a: &[f64], b: &[f64]| sub(a, b).iter().map(|x| x / 2.0).collect::<Vec<f64>>();
+
+    let t: Vec<Vec<f64>> = (0..len)
+        .map(|i| match given(i) {
+            Some(v) if normalize => {
+                let m = magnitude(v);
+
+                if m != 0.0 && m.is_finite() {
+                    scale(v, dtot / m)
+                } else {
+                    v.clone()
+                }
+            }
+            Some(v) => v.clone(),
+            None if i > 0 && i < last => half(&kv(i + 1), &kv(i - 1)),
+            None if closed => half(&kv(1), &kv(len.saturating_sub(2))),
+            None => zero.clone(),
+        })
+        .collect();
+
+    // F- and F+ at each key.
+    let (mut fm, mut fp) = (vec![1.0; len], vec![1.0; len]);
+
+    if closed {
+        let d = key[1] - key[0] + key[last] - key[last - 1];
+
+        for i in [0, last] {
+            fm[i] = 2.0 * (key[1] - key[0]) / d;
+            fp[i] = 2.0 * (key[last] - key[last - 1]) / d;
+        }
+    }
+
+    for i in 1..last {
+        let d = key[i + 1] - key[i - 1];
+
+        fm[i] = 2.0 * (key[i + 1] - key[i]) / d;
+        fp[i] = 2.0 * (key[i] - key[i - 1]) / d;
+    }
+
+    let t0 = t.iter().zip(&fp).map(|(v, f)| scale(v, *f)).collect();
+    let t1 = t.iter().zip(&fm).map(|(v, f)| scale(v, *f)).collect();
     (t0, t1)
 }
 
