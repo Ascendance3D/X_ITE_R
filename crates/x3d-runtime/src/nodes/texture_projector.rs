@@ -519,6 +519,14 @@ fn looks_like_svg(data: &[u8]) -> bool {
     head.starts_with(b"<") && head.windows(4).any(|w| w.eq_ignore_ascii_case(b"<svg"))
 }
 
+/// IconAnnotation: `data` must decode as an image (the draft requires JPEG and PNG). Nothing is kept: the node has no
+/// display, so the decoded pixels have no user. The error text is that of ImageTexture.
+pub(crate) fn check_image(data: &[u8], url: &url::Url) -> Result<(), String> {
+    image::load_from_memory(data)
+        .map(|_| ())
+        .map_err(|_| format!("Error: Couldn't load image '{url}': error."))
+}
+
 #[cfg(test)]
 mod svg_tests {
     use super::looks_like_svg;

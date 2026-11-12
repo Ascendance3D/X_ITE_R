@@ -36,5 +36,6 @@
    "type": "key",
    "key": "c"
   }
- ]
+ ],
+ "settle": true
 }

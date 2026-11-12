@@ -273,7 +273,8 @@ impl Runtime {
             return;
         }
 
-        if !self.get_bool(node, "load") {
+        // IconAnnotation has no `load` field (the class lists none); it loads as with the X3DUrlObject default, TRUE.
+        if !self.get_bool(node, "load") && self.builtin_name(node) != Some("IconAnnotation") {
             return;
         }
 
@@ -507,7 +508,8 @@ impl Runtime {
                     self.inline_forget_failures(node);
                 }
 
-                if !self.get_bool(node, "load") {
+                if !self.get_bool(node, "load") && self.builtin_name(node) != Some("IconAnnotation")
+                {
                     return;
                 }
 
