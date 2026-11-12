@@ -20,6 +20,10 @@ use serde_json::Value;
 use std::path::PathBuf;
 use std::process::Command;
 
+/// The largest distance of a pose from X_ITE's. Measured on the RTX 3060 Ti with the page's frame rate
+/// (`Viewer3d::scripted_frame_rate`): 0 in every frame of every case. The bound stays for other GPUs, whose depth read is not measured.
+const POSE_TOLERANCE: f64 = 1e-4;
+
 fn nums(v: &Value) -> Vec<f64> {
     v.as_array()
         .map(|a| a.iter().filter_map(Value::as_f64).collect())
@@ -59,29 +63,14 @@ fn hist(v: &Value, frame: &str) -> String {
 struct Run {
     js: Value,
     rs: Value,
-    /// WALK with gravity: a standing avatar is settled by the depth read back from the GPU (an f32, about 2e-7 of noise; see
-    /// `World::gravitate_on`), so a pose that rests on the floor moves by that noise from frame to frame, and the pose agrees only
-    /// within 1e-4. A ProximitySensor `position_changed` is sent for every such wobble, so the count `PX_n` is not compared in
-    /// these worlds (it is, exactly, in `walk-nograv` and `fly`); the poses and the rest of the scene text are.
-    gravity: bool,
 }
 
-/// The scene text of a frame, without the count `PX_n` of ProximitySensor events when `strip`.
-fn scene_text(v: &Value, frame: &str, strip: bool) -> Option<String> {
-    let text = v["vrml"].get(frame)?.as_str()?.to_string();
-
-    if !strip {
-        return Some(text);
-    }
-
-    let Some(at) = text.find(" PX_n=") else {
-        return Some(text);
-    };
-    let digits = text[at + 6..]
-        .find(|c: char| !c.is_ascii_digit())
-        .unwrap_or(text.len() - at - 6);
-
-    Some(format!("{}{}", &text[..at], &text[at + 6 + digits..]))
+/// The scene text of a frame. It holds the count `PX_n` of ProximitySensor events, which is compared in every world: a WALK
+/// avatar that falls with a frame rate other than the page's (`getCurrentFrameRate` is `1 / dt` there) rests 2e-7 off X_ITE's
+/// height and moves by that much from frame to frame, and each such move sends a `position_changed` (measured before
+/// `Viewer3d::scripted_frame_rate`: X_ITE 2 events, X_ITE_R 55 in `walk-look-around`).
+fn scene_text(v: &Value, frame: &str) -> Option<String> {
+    Some(v["vrml"].get(frame)?.as_str()?.to_string())
 }
 
 fn run(name: &str) -> Result<Run, String> {
@@ -121,11 +110,7 @@ fn run(name: &str) -> Result<Run, String> {
         return Err(format!("ok js {} rs {}", js["ok"], rs["ok"]));
     }
 
-    Ok(Run {
-        js,
-        rs,
-        gravity: name.starts_with("walk-") && !name.starts_with("walk-nograv-"),
-    })
+    Ok(Run { js, rs })
 }
 
 /// The captured pose frames and the dumped scene text frames, sorted.
@@ -161,7 +146,7 @@ fn first_difference(r: &Run) -> Option<String> {
         let k = f.to_string();
         let d = pose_distance(&pose(&r.js, &k), &pose(&r.rs, &k));
 
-        if d > 1e-4 {
+        if d > POSE_TOLERANCE {
             return Some(format!(
                 "pose frame {k} differs by {d}: X_ITE {} {} / Rust {} {}",
                 r.js["poses"][&k]["position"],
@@ -171,7 +156,7 @@ fn first_difference(r: &Run) -> Option<String> {
             ));
         }
 
-        if scene_text(&r.js, &k, r.gravity) != scene_text(&r.rs, &k, r.gravity) {
+        if scene_text(&r.js, &k) != scene_text(&r.rs, &k) {
             return Some(format!(
                 "scene text differs at frame {k}: X_ITE {:?} / Rust {:?}",
                 hist(&r.js, &k),
@@ -209,7 +194,7 @@ fn check_cancel(name: &str, r: &Run, failures: &mut Vec<String>) {
             fail(format!("frames before the cancel must be equal, frame {k}"));
         }
 
-        if scene_text(&r.js, &ks, r.gravity) != scene_text(&r.rs, &ks, r.gravity) {
+        if scene_text(&r.js, &ks) != scene_text(&r.rs, &ks) {
             fail(format!("scene text before the cancel differs, frame {k}"));
         }
     }

@@ -229,6 +229,13 @@ pub struct Viewer3d {
     /// `currentFrameRate` still returns the wall-clock rate of the page's own early frames, so
     /// oracle/x_ite-anim*.mjs pin that property for scripts with `"pinFrameRate": true`.
     pub pinned_frame_rate: Option<f64>,
+    /// `browser .getCurrentFrameRate ()` as a scripted oracle page gives it. `None`: the measured frame interval
+    /// (X3DTimeContext.advanceTime: `1 / interval`). The recorder pages replace the function by `() => RATE` with
+    /// `RATE = 1 / dt` of the script (oracle/x_ite-pin/src/anim.html), so every internal reader (gravitate's fall step, the
+    /// viewers, LOD) gets exactly `1 / dt`. A rate measured from the script's clock is not that value: at the epoch time of the
+    /// scripts (946684800 s) a double has steps of 1.2e-7 s, so `1 / (now - last)` is 30.0000286 or 29.9999213 for a dt of
+    /// 1/30 s, and a fall then differs from X_ITE's by 2e-7.
+    pub scripted_frame_rate: Option<f64>,
     /// The RenderingProperties Multisampling, LogarithmicDepthBuffer and Shading and the OrderIndependentTransparency option the renderer
     /// was last told about ([`Viewer3d::take_rendering_changes`]).
     synced_rendering: (u32, bool, String, bool),
@@ -559,6 +566,7 @@ impl Viewer3d {
             slow_scroll: cfg!(target_os = "macos"),
             advance_only_time: false,
             pinned_frame_rate: None,
+            scripted_frame_rate: None,
             geom_cache: HashMap::new(),
             particle_depth_geometry: HashMap::new(),
             thick_line_systems: vec![],
@@ -1332,7 +1340,9 @@ impl Viewer3d {
             return;
         }
 
-        if let Some(last) = self.last_time {
+        if let Some(rate) = self.scripted_frame_rate {
+            self.frame_rate = rate;
+        } else if let Some(last) = self.last_time {
             let dt = now - last;
 
             if dt > 0.0 {
@@ -3937,6 +3947,36 @@ mod collision_gate_tests {
     }
 
     const X3D: &str = "#X3D V4.0 utf8\nPROFILE Immersive\n";
+
+    /// At the epoch time of the oracle scripts a frame interval of 1/30 s is not 1/30 s in a double, so the measured rate is not
+    /// 30. A scripted rate is the frame rate of every frame, as the recorder page's `getCurrentFrameRate` is.
+    #[test]
+    fn a_scripted_frame_rate_replaces_the_rate_measured_from_the_clock() {
+        let world = format!("{X3D}Transform {{ children Shape {{ geometry Box {{ }} }} }}\n");
+        let (t0, dt) = (946684800.0, 1.0 / 30.0);
+        let mut measured = viewer("rate-measured", &world, 0);
+        let mut scripted = viewer("rate-scripted", &world, 0);
+
+        scripted.scripted_frame_rate = Some(1.0 / dt);
+
+        for k in 1..=4 {
+            measured.step(t0 + k as f64 * dt);
+            scripted.step(t0 + k as f64 * dt);
+
+            // The first frame has no interval to measure.
+            if k > 1 {
+                assert_ne!(measured.frame_rate, 1.0 / dt, "frame {k}");
+                assert!((measured.frame_rate - 30.0).abs() < 1e-3, "frame {k}");
+            }
+
+            assert_eq!(scripted.frame_rate, 1.0 / dt, "frame {k}");
+        }
+
+        // Without a scripted rate the measured one is in use again.
+        scripted.scripted_frame_rate = None;
+        scripted.step(t0 + 5.0 * dt);
+        assert_ne!(scripted.frame_rate, 1.0 / dt);
+    }
 
     #[test]
     fn no_collision_node_and_an_examine_viewer_skip_the_collision_walk() {

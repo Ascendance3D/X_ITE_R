@@ -852,6 +852,8 @@ impl ApplicationHandler for ViewerWindow {
         if let (Some(s), Some(t0)) = (&self.opts.script, t0) {
             if let Some(v) = gfx.viewer.core() {
                 v.frame_rate = 1.0 / s["dt"].as_f64().unwrap_or(1.0 / 60.0);
+                // The recorder pages give this rate in every frame of a script.
+                v.scripted_frame_rate = Some(v.frame_rate);
 
                 for _ in 0..s["warmup"].as_u64().unwrap_or(8) {
                     v.step(t0);

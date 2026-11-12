@@ -61,6 +61,8 @@ fn main() {
         .spawn(move || {
             let mut v = Viewer3d::load(&file, None, t0, size.0, size.1).expect("load");
             v.frame_rate = 1.0 / dt;
+            // zfight.html: `getCurrentFrameRate` is `() => 1 / dt` in every frame.
+            v.scripted_frame_rate = Some(1.0 / dt);
             for _ in 0..8 {
                 v.step(t0);
             }

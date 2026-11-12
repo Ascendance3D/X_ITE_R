@@ -244,6 +244,8 @@ fn run(
     };
 
     v.frame_rate = 1.0 / dt;
+    // anim.html: `getCurrentFrameRate` is `() => 1 / dt` in every frame.
+    v.scripted_frame_rate = Some(1.0 / dt);
 
     let probe_frames: Vec<u64> = script
         .pointer("/pickProbes/frames")
