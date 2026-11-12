@@ -41,7 +41,9 @@ impl Scene {
 
             // X3DInterpolatorNode.initialize → set_key__ → set_keyValue__: a keyValue shorter
             // than key is resized to key's length, filled with its last value (or the type's
-            // default); the spline interpolators also resize a non-empty keyVelocity.
+            // default). X_ITE's SplinePositionInterpolator(2D) also resize a non-empty keyVelocity; here they
+            // do not, because ISO/IEC 19775-1:2023 19.2.4 selects its rule by the authored size
+            // (owner decision 2026-11-12, x3d-runtime nodes/interp.rs `hermite_generate_iso`).
             let resize: &[(&str, &[f64])] = match self.table.types[t].name.as_str() {
                 "ScalarInterpolator" | "SplineScalarInterpolator" => &[("keyValue", &[0.0])],
                 "PositionInterpolator" | "ColorInterpolator" => &[("keyValue", &[0.0, 0.0, 0.0])],
@@ -49,13 +51,8 @@ impl Scene {
                 "OrientationInterpolator" | "SquadOrientationInterpolator" => {
                     &[("keyValue", &[0.0, 0.0, 1.0, 0.0])]
                 }
-                "SplinePositionInterpolator" => &[
-                    ("keyValue", &[0.0, 0.0, 0.0]),
-                    ("keyVelocity", &[0.0, 0.0, 0.0]),
-                ],
-                "SplinePositionInterpolator2D" => {
-                    &[("keyValue", &[0.0, 0.0]), ("keyVelocity", &[0.0, 0.0])]
-                }
+                "SplinePositionInterpolator" => &[("keyValue", &[0.0, 0.0, 0.0])],
+                "SplinePositionInterpolator2D" => &[("keyValue", &[0.0, 0.0])],
                 "EaseInEaseOut" => &[("easeInEaseOut", &[0.0, 0.0])],
                 _ => &[],
             };
@@ -72,16 +69,6 @@ impl Scene {
                     };
                     let value = &mut self.node_mut(id).fields[i].value;
                     let len = value.len();
-
-                    // keyVelocity is only resized when it has values; it is filled with zeros.
-                    if *name == "keyVelocity" {
-                        if len != 0 && len < key_len {
-                            for _ in len..key_len {
-                                value.push_numbers(default);
-                            }
-                        }
-                        continue;
-                    }
 
                     if len < key_len {
                         let fill = last_element(value).unwrap_or_else(|| default.to_vec());

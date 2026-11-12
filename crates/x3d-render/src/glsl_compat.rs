@@ -295,6 +295,37 @@ fn strip_comments(s: &str) -> String {
 
 type Defines = HashMap<String, String>;
 
+/// A preprocessor expression error: a message for `'#if' : <message>`, or an identifier that is not a macro.
+#[derive(Debug)]
+enum ExprError {
+    Message(String),
+    /// ESSL 3.00 section 3.4: an undefined identifier not consumed by `defined` is an error. ANGLE names the token:
+    /// `'<name>' : unexpected token after conditional expression`.
+    Undefined(String),
+}
+
+impl From<String> for ExprError {
+    fn from(m: String) -> Self {
+        ExprError::Message(m)
+    }
+}
+
+impl From<&str> for ExprError {
+    fn from(m: &str) -> Self {
+        ExprError::Message(m.into())
+    }
+}
+
+impl ExprError {
+    /// The text of an array-size error (`'[' : <message>`); an undefined identifier is not one there.
+    fn message(self) -> String {
+        match self {
+            ExprError::Message(m) => m,
+            ExprError::Undefined(name) => format!("undefined identifier '{name}'"),
+        }
+    }
+}
+
 /// A preprocessor expression (`#if`): integers, defined, macros, the C operators.
 struct Expr<'a> {
     toks: Vec<Tok>,
@@ -302,6 +333,11 @@ struct Expr<'a> {
     pos: usize,
     defines: &'a Defines,
     depth: u32,
+    /// An undefined identifier is an error (`#if`, `#elif`); otherwise it is 0 (a constant array size).
+    strict: bool,
+    /// Inside an operand that is not evaluated (the right side of a short-circuited `&&` / `||`): ESSL 3.00
+    /// section 3.4 and ANGLE's ExpressionParser report no undefined identifier and no division by zero there.
+    ignore: u32,
 }
 
 impl Expr<'_> {
@@ -346,7 +382,7 @@ impl Expr<'_> {
         None
     }
 
-    fn binary(&mut self, level: usize) -> Result<i64, String> {
+    fn binary(&mut self, level: usize) -> Result<i64, ExprError> {
         const LEVELS: &[&[&str]] = &[
             &["||"],
             &["&&"],
@@ -363,7 +399,12 @@ impl Expr<'_> {
         let mut v = self.binary(level + 1)?;
 
         while let Some(op) = self.eat_op(LEVELS[level]) {
-            let r = self.binary(level + 1)?;
+            let skip = (op == "||" && v != 0) || (op == "&&" && v == 0);
+
+            self.ignore += skip as u32;
+            let r = self.binary(level + 1);
+            self.ignore -= skip as u32;
+            let r = r?;
 
             v = match op.as_str() {
                 "||" => (v != 0 || r != 0) as i64,
@@ -377,25 +418,26 @@ impl Expr<'_> {
                 "+" => v.wrapping_add(r),
                 "-" => v.wrapping_sub(r),
                 "*" => v.wrapping_mul(r),
-                "/" => {
-                    if r == 0 {
-                        return Err("division by zero".into());
+                "/" | "%" if r == 0 => {
+                    if self.ignore == 0 {
+                        return Err(if op == "/" {
+                            "division by zero"
+                        } else {
+                            "modulus by zero"
+                        }
+                        .into());
                     }
-                    v / r
+                    0
                 }
-                _ => {
-                    if r == 0 {
-                        return Err("modulus by zero".into());
-                    }
-                    v % r
-                }
+                "/" => v.wrapping_div(r),
+                _ => v.wrapping_rem(r),
             };
         }
 
         Ok(v)
     }
 
-    fn unary(&mut self) -> Result<i64, String> {
+    fn unary(&mut self) -> Result<i64, ExprError> {
         match self.peek() {
             Some("!") => {
                 self.pos += 1;
@@ -452,13 +494,14 @@ impl Expr<'_> {
                         .strip_prefix("0x")
                         .or_else(|| digits.strip_prefix("0X"))
                     {
-                        i64::from_str_radix(h, 16).map_err(|e| e.to_string())
+                        i64::from_str_radix(h, 16).map_err(|e| e.to_string().into())
                     } else {
-                        digits.parse::<i64>().map_err(|e| e.to_string())
+                        digits.parse::<i64>().map_err(|e| e.to_string().into())
                     };
                 }
 
-                // A macro: evaluate its body; an unknown identifier is 0.
+                // A macro: evaluate its body. An unknown identifier is an error in a directive (unless it is not
+                // evaluated) and 0 in an array size.
                 match self.defines.get(&t) {
                     Some(body) if self.depth < 16 => {
                         let toks = lex(body);
@@ -468,12 +511,17 @@ impl Expr<'_> {
                             pos: 0,
                             defines: self.defines,
                             depth: self.depth + 1,
+                            strict: self.strict,
+                            ignore: self.ignore,
                         };
                         if e.toks.is_empty() {
                             Ok(0)
                         } else {
                             e.binary(0)
                         }
+                    }
+                    None if self.strict && self.ignore == 0 && tok.kind == Kind::Ident => {
+                        Err(ExprError::Undefined(t))
                     }
                     _ => Ok(0),
                 }
@@ -483,13 +531,15 @@ impl Expr<'_> {
     }
 }
 
-fn eval_expr(s: &str, defines: &Defines) -> Result<i64, String> {
+fn eval_expr(s: &str, defines: &Defines, strict: bool) -> Result<i64, ExprError> {
     let mut e = Expr {
         toks: lex(s),
         src: s,
         pos: 0,
         defines,
         depth: 0,
+        strict,
+        ignore: 0,
     };
     let v = e.binary(0)?;
 
@@ -531,6 +581,13 @@ fn resolve_conditionals(s: &str, defines: &mut Defines) -> Result<(String, Optio
             .unwrap_or(rest.len());
         let (word, arg) = (&rest[..word_end], rest[word_end..].trim());
         let err = |m: String| format!("ERROR: 0:{}: '#{}' : {}", n + 1, word, m);
+        let expr_err = |e: ExprError| match e {
+            ExprError::Message(m) => err(m),
+            ExprError::Undefined(name) => format!(
+                "ERROR: 0:{}: '{name}' : unexpected token after conditional expression",
+                n + 1
+            ),
+        };
 
         match word {
             "ifdef" | "ifndef" => {
@@ -540,7 +597,7 @@ fn resolve_conditionals(s: &str, defines: &mut Defines) -> Result<(String, Optio
             }
             "if" => {
                 let v = if active {
-                    eval_expr(arg, defines).map_err(|m| err(m))? != 0
+                    eval_expr(arg, defines, true).map_err(expr_err)? != 0
                 } else {
                     false
                 };
@@ -551,7 +608,7 @@ fn resolve_conditionals(s: &str, defines: &mut Defines) -> Result<(String, Optio
                     return Err(err("unexpected #elif".into()));
                 };
                 let v = if top.2 && !top.1 {
-                    eval_expr(arg, defines).map_err(|m| err(m))? != 0
+                    eval_expr(arg, defines, true).map_err(expr_err)? != 0
                 } else {
                     false
                 };
@@ -704,7 +761,7 @@ fn is_precision(w: &str) -> bool {
 
 /// A constant array size: an integer, or a macro / expression the preprocessor can evaluate.
 fn eval_size(expr: &str, defines: &Defines) -> Result<u32, String> {
-    let v = eval_expr(expr, defines)?;
+    let v = eval_expr(expr, defines, false).map_err(ExprError::message)?;
 
     if !(1..=65536).contains(&v) {
         return Err(format!("array size {v} out of range"));

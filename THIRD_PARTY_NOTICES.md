@@ -476,3 +476,28 @@ The package pages (`crates/x3d-web/web/site/fonts/`, `site/fonts/` in the packag
   (https://github.com/JetBrains/JetBrainsMono). License text: `site/fonts/OFL-JetBrainsMono.txt`.
 
 Each is licensed under the SIL Open Font License, Version 1.1.
+
+## IRCAM LISTEN HRTF database, subject 1003 (data; license not verified)
+
+`vendor/web-audio-api/resources/IRC_1003_C.bin` holds head-related impulse responses. The web-audio-api crate
+(1.7.0, MIT) includes it in `src/node/panner.rs` (`include_bytes!`), and its HRTF `PannerNode` uses it. SpatialSound
+uses that panner when `enableHRTF` is TRUE (ADR 0005).
+
+- File SHA-256: `255384294111337bfad309cc81bfe4b65ea07c81bd0a978f962d485819d92633`
+- Origin: the LISTEN HRTF database of IRCAM (Institut de Recherche et Coordination Acoustique/Musique), Room Acoustics
+  Team, http://recherche.ircam.fr/equipes/salles/listen/, subject 1003, compensated (diffuse-field equalized) set.
+  Copyright (c) 2002 IRCAM. All Rights Reserved.
+- Conversion: the `hrir_sphere_builder` tool (https://github.com/mrDIMAS/hrir_sphere_builder, MIT code) made the binary
+  sphere file from the IRCAM data. The README of web-audio-api acknowledges IRCAM as the data source.
+- Rights status: **not verified at the primary source.** The MIT licenses of the crate and of the conversion tool cover
+  their code, not this data. On 2026-11-12 the IRCAM LISTEN pages returned HTTP 403. The archived versions of those
+  pages (Internet Archive, 2004 to 2019) and the archived subject archive `IRC_1003.zip` (SHA-256
+  `c6f045e2ff369e8e648947ce8d23a4ab4b2f5dfc7b05ad9552c889c9897e18b7`) contain no license or terms text.
+- Public statements from secondary sources, which agree: the Debian copyright record of libmysofa (`listen-ircam`
+  data) and the licensing notice of the Ambisonic Toolkit (ATK) quote IRCAM as follows: "The Listen database is public
+  and available for any use." Both also say that IRCAM asks for an acknowledgment of the database in the description of
+  the work. These statements are not a license text from IRCAM.
+
+Acknowledgment: the HRTF spatialization of SpatialSound uses head-related impulse responses of the LISTEN HRTF
+database (subject 1003, compensated), Copyright (c) 2002 IRCAM, Room Acoustics Team,
+http://recherche.ircam.fr/equipes/salles/listen/.
