@@ -13,12 +13,10 @@
 
 /// Cases whose console log differs from X_ITE on purpose, with the reason; every other part of the case (scene text,
 /// poses, pictures) is still compared. The log must still differ: a case that now matches fails until it is removed.
-const KNOWN: &[(&str, &str)] = &[
-    (
-        "vertex-known",
-        "a missing semicolon at a line end: ANGLE reports the next token's line, this port the statement's line; and a type error inside a function: ANGLE 'function return is not matching type', naga \"Function [0] 'f' is invalid\" (glsl_errors_b08.rs GAPS)",
-    ),
-];
+const KNOWN: &[(&str, &str)] = &[(
+    "vertex-known",
+    "a missing semicolon at a line end: ANGLE reports the next token's line, this port the statement's line; and a type error inside a function: ANGLE 'function return is not matching type', naga \"Function [0] 'f' is invalid\" (glsl_errors_b08.rs GAPS)",
+)];
 
 /// Pinned picture difference of every case, measured on the RTX 3060 Ti (Vulkan, NVIDIA driver): (case, MSAA, pixels
 /// that differ from X_ITE in any channel, summed over the captured pictures of the case, largest channel difference).
