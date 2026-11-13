@@ -48,7 +48,16 @@ fn start(
 /// GL cannot translate the scatter-depth compute shader (`textureLoad` of a depth texture), so
 /// the renderer cannot start there. That is an error naming the backend, not wgpu's panic.
 /// On the NVIDIA Linux driver the GL device does not start; Mesa's runs it
-/// (`__EGL_VENDOR_LIBRARY_FILENAMES=/usr/share/glvnd/egl_vendor.d/50_mesa.json`).
+/// (`__EGL_VENDOR_LIBRARY_FILENAMES=/usr/share/glvnd/egl_vendor.d/50_mesa.json`, which
+/// tools/strict-suite.sh sets). Without it, strict mode fails here with `backend-absent: no GL
+/// device (Parent device is lost)`. The cause (measured 2026-11-12, RTX 3060 Ti, driver
+/// 595.99.02): NVIDIA's EGL gives a desktop OpenGL 3.3 core context (GLSL 330). wgpu-hal 30.0.1
+/// sets `COMPUTE_SHADERS` from `GL_ARB_compute_shader` alone (gles/adapter.rs), so wgpu-core
+/// makes its indirect-call validation compute pipeline in `request_device`. naga's GLSL writer
+/// needs version 420 (ES 310) for a compute shader, the pipeline fails ("The selected version
+/// doesn't support Features(BUFFER_STORAGE | COMPUTE_SHADER | DYNAMIC_ARRAY_SIZE)"), and
+/// wgpu-core reports the device as lost. Without `InstanceFlags::VALIDATION_INDIRECT_CALL` the
+/// NVIDIA GL device starts and `create_viewer` gives the expected error, as on Mesa.
 #[test]
 fn gl_backend_cannot_run_the_renderer_and_says_so() {
     let mut desc = wgpu::InstanceDescriptor::new_without_display_handle();
