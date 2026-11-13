@@ -144,6 +144,7 @@ HISTORY = [
     ("before-biquadmac", "ledger_biquadmac.py C", lambda: _first("ledger_biquadmac", "C")),
     ("before-mp4", "ledger_mp4.py C", lambda: _first("ledger_mp4", "C")),
     ("before-websound", "ledger_websound.py C", lambda: _first("ledger_websound", "C")),
+    ("before-analyser", "ledger_analyser.py C", lambda: _first("ledger_analyser", "C")),
 ]
 
 def load(p): return json.load(open(p))["items"]
