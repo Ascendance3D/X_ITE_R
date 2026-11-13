@@ -953,6 +953,23 @@ scripts["errors-runtime"] = runtime_json(20 + 8 * len(ok_cases) + 8, [k for k, _
 worlds["errors-gaps-runtime.wrl"] = errors_world(gap_cases)
 scripts["errors-gaps-runtime"] = runtime_json(20 + 8 * len(gap_cases) + 8, [k for k, _, _ in gap_cases], step=8)
 
+# Loops and conditions of GLSL ES 1.00 (a world without #version): the condition of a for loop and of ?: must be a scalar bool
+# (6.3, 5.7), and ANGLE applies Appendix A (4: only for loops) to WebGL shaders of this version, so while and do-while are
+# rejected. A separate world, so the errors-runtime baseline stays as recorded. Case "e" is valid.
+LOOP_FRAG = [
+    ("a", "while loop", "precision mediump float;\nvoid main() { float x = 1.0;\n while (x > 0.5) { x = 0.0; }\n gl_FragColor = vec4 (x); }\n"),
+    ("b", "for float condition", "precision mediump float;\nvoid main() { float s = 0.0;\n for (float i = 1.0; i; i -= 1.0) { s += 1.0; }\n gl_FragColor = vec4 (s); }\n"),
+    ("c", "do-while loop", "precision mediump float;\nvoid main() { float x = 1.0;\n do { x = 0.0; } while (x > 0.5);\n gl_FragColor = vec4 (x); }\n"),
+    ("d", "ternary float condition", "precision mediump float;\nvoid main() { float x = 1.0;\n float y = x ? 1.0 : 0.0;\n gl_FragColor = vec4 (y); }\n"),
+    ("e", "bool conditions", "precision mediump float;\nvoid main() { float x = 0.0;\n for (int i = 0; i < 2; ++ i) { x += 0.4; }\n gl_FragColor = vec4 (x > 0.5 ? 1.0 : 0.0, x, 0.4, 1.0); }\n"),
+    ("f", "while float condition", "precision mediump float;\nvoid main() { float x = 1.0;\n while (x) { x = 0.0; }\n gl_FragColor = vec4 (x); }\n"),
+    ("g", "ternary bvec2 condition", "precision mediump float;\nvoid main() { bvec2 b = bvec2 (true);\n float y = b ? 1.0 : 0.0;\n gl_FragColor = vec4 (y); }\n"),
+    ("h", "while from a macro", "precision mediump float;\n#define W while\nvoid main() { float x = 1.0;\n W (x > 0.5) { x = 0.0; }\n gl_FragColor = vec4 (x); }\n"),
+    ("i", "unused loop macros", "precision mediump float;\n#define LOOP while (true) { }\n#define DO do { } while (false);\nvoid main() { gl_FragColor = vec4 (0.3, 0.6, 0.9, 1.0); }\n"),
+]
+worlds["errors-loops-runtime.wrl"] = errors_world(LOOP_FRAG)
+scripts["errors-loops-runtime"] = runtime_json(20 + 8 * len(LOOP_FRAG) + 8, [k for k, _, _ in LOOP_FRAG], step=8)
+
 # Link error text: the vertex shader is fixed (VS), the fragment ShaderPart's url is set, one key per mismatch
 # between the stages; `Couldn't initialize ComposedShader 'CS': <ANGLE link log>` is compared with X_ITE's.
 LINK_FRAG = [

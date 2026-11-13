@@ -1968,6 +1968,7 @@ fn emit(a: &Analysis, info: &LinkInfo) -> Result<Emitted, String> {
             ))
         })
         .collect();
+    let loop_macros = loop_macros(text, boundary_line);
     let mut i = 0;
 
     while i < toks.len() {
@@ -1979,6 +1980,10 @@ fn emit(a: &Analysis, info: &LinkInfo) -> Result<Emitted, String> {
             }
 
             if let Some(e) = constructor_too_many_arguments(masked, &toks, i, &line_of) {
+                return Err(e);
+            }
+
+            if let Some(e) = loop_not_allowed(a, masked, &t, &loop_macros, &line_of) {
                 return Err(e);
             }
         }
@@ -2377,6 +2382,98 @@ fn constructor_components(ty: &str) -> Option<usize> {
 /// GLSL ES 1.00 section 5.4.2 (3.00 section 5.4.2): a scalar or vector constructor with an argument after the last
 /// one it uses is an error; naga follows GLSL 4.50 and drops the extra components. ANGLE's text for the
 /// constructor at token `i`, when every argument is a literal or a scalar or vector constructor (so the component
+/// GLSL ES 1.00 Appendix A section 4: only `for` loops are required. ANGLE (ValidateLimitations) applies it to the
+/// WebGL shaders of version 1.00 and reports `'while'` or `'do' : This type of loop is not allowed` at the keyword,
+/// before the condition is checked (errors-loops-runtime cases a, c and f). naga compiles both loops. GLSL ES 3.00 has
+/// no such limit. For a `do` loop the `do` comes first, so its `while` is never reached.
+///
+/// A macro of the user's source that expands to `while` or `do` is reported at the line where it is used, with the
+/// first loop keyword of its expansion (case h); a macro that is never used is never parsed (case i).
+fn loop_not_allowed(
+    a: &Analysis,
+    masked: &str,
+    t: &Tok,
+    loop_macros: &HashMap<&str, &'static str>,
+    line_of: &dyn Fn(usize) -> usize,
+) -> Option<String> {
+    let word = text_of(masked, t);
+    let keyword = match word {
+        "while" => "while",
+        "do" => "do",
+        _ => loop_macros.get(word).copied()?,
+    };
+
+    (!a.es3).then(|| {
+        format!(
+            "ERROR: 0:{}: '{keyword}' : This type of loop is not allowed",
+            line_of(t.start)
+        )
+    })
+}
+
+/// The `#define`s of the user's source (the lines from `boundary_line`) whose expansion has a `while` or a `do`, with
+/// the first of the two in the expansion. A name in a body is expanded through the other macros (depth 8); the
+/// parameters of a function-like macro are not. The lines are read in order, so `#undef` removes a macro. Inactive
+/// `#if` branches are not in `text`, and GLSL ES 1.00 has no line continuation (3.1).
+fn loop_macros(text: &str, boundary_line: usize) -> HashMap<&str, &'static str> {
+    let mut bodies: HashMap<&str, Vec<&str>> = HashMap::new();
+
+    for line in text.lines().skip(boundary_line) {
+        let Some(rest) = line.trim_start().strip_prefix('#') else {
+            continue;
+        };
+        let rest = rest.trim_start();
+        let (directive, rest) = rest.split_at(rest.find([' ', '\t']).unwrap_or(rest.len()));
+        let rest = rest.trim_start();
+        let end = rest
+            .find(|c: char| !(c.is_ascii_alphanumeric() || c == '_'))
+            .unwrap_or(rest.len());
+        let (name, mut body) = rest.split_at(end);
+
+        match directive {
+            "undef" => {
+                bodies.remove(name);
+                continue;
+            }
+            "define" if !name.is_empty() => {}
+            _ => continue,
+        }
+
+        // A function-like macro: its parameters are replaced by the arguments, not expanded as macros.
+        let mut params: Vec<&str> = vec![];
+
+        if body.starts_with('(') {
+            let close = body.find(')').unwrap_or(body.len() - 1);
+            params = body[1..close].split(',').map(str::trim).collect();
+            body = &body[close + 1..];
+        }
+
+        let words = body
+            .split(|c: char| !(c.is_ascii_alphanumeric() || c == '_'))
+            .filter(|w| !w.is_empty() && !params.contains(w))
+            .collect();
+        bodies.insert(name, words);
+    }
+
+    fn first_loop(
+        name: &str,
+        bodies: &HashMap<&str, Vec<&str>>,
+        depth: u32,
+    ) -> Option<&'static str> {
+        bodies.get(name)?.iter().find_map(|w| match *w {
+            "while" => Some("while"),
+            "do" => Some("do"),
+            _ if depth < 8 && *w != name => first_loop(w, bodies, depth + 1),
+            _ => None,
+        })
+    }
+
+    bodies
+        .keys()
+        .filter_map(|name| Some((*name, first_loop(name, &bodies, 0)?)))
+        .collect()
+}
+
 /// count of each is known); otherwise no text is made.
 fn constructor_too_many_arguments(
     masked: &str,
@@ -2826,6 +2923,38 @@ fn to_wgsl(stage: Stage, e: &Emitted) -> Result<String, String> {
             let span = module.functions[*handle].expressions.get_span(*condition);
 
             if span.is_defined() {
+                let loc = span.location(&e.text);
+                let line = (loc.line_number as usize)
+                    .saturating_sub(e.line_base)
+                    .max(1);
+                return format!("ERROR: 0:{line}: '' : boolean expression expected");
+            }
+        }
+
+        // GLSL ES 1.00 / 3.00 section 6.3: the condition of a for loop is a scalar bool. naga's frontend makes
+        // `if (!condition) break;` of it, so a float or int condition fails as the operand of that `!`, which has
+        // the span of the condition. A `!` the user wrote starts with `!` in the text and keeps naga's text.
+        if let naga::valid::ValidationError::Function {
+            handle,
+            source:
+                naga::valid::FunctionError::Expression {
+                    handle: not,
+                    source:
+                        naga::valid::ExpressionError::InvalidUnaryOperandType(
+                            naga::UnaryOperator::LogicalNot,
+                            _,
+                        ),
+                },
+            ..
+        } = err.as_inner()
+        {
+            let span = module.functions[*handle].expressions.get_span(*not);
+
+            if span.is_defined()
+                && e.text
+                    .get(span.to_range().unwrap_or_default())
+                    .is_some_and(|t| !t.trim_start().starts_with('!'))
+            {
                 let loc = span.location(&e.text);
                 let line = (loc.line_number as usize)
                     .saturating_sub(e.line_base)
