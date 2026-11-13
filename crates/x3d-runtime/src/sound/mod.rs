@@ -114,6 +114,10 @@ pub enum ANode {
     Panner(Box<PannerSet>),
     StreamDestination(MediaStreamAudioDestinationNode),
     StreamSource(MediaStreamAudioSourceNode),
+    /// A page's MediaStreamAudioSourceNode ([`AudioEngine::microphone`] in a recording engine): the page asks for the
+    /// microphone itself (web/audio_mirror.mjs); the engine keeps a node without input in its place. The page's own
+    /// stand-in is a GainNode that the stream is connected into; both report MediaStreamAudioSourceNode in the graph.
+    PageStreamSource(web_audio_api::worklet::AudioWorkletNode),
     Destination(AudioDestinationNode),
 }
 
@@ -165,6 +169,7 @@ impl ANode {
             ANode::Panner(p) => p.active(),
             ANode::StreamDestination(n) => n,
             ANode::StreamSource(n) => n,
+            ANode::PageStreamSource(n) => n,
             ANode::Destination(n) => n,
         }
     }
@@ -528,7 +533,9 @@ impl AudioEngine {
                     ANode::Merger(_) => "ChannelMergerNode",
                     ANode::Panner(_) => "PannerNode",
                     ANode::StreamDestination(_) => "MediaStreamAudioDestinationNode",
-                    ANode::StreamSource(_) => "MediaStreamAudioSourceNode",
+                    ANode::StreamSource(_) | ANode::PageStreamSource(_) => {
+                        "MediaStreamAudioSourceNode"
+                    }
                     ANode::Destination(_) => "AudioDestinationNode",
                 };
                 let kind = if self.page_streams.contains(&i) {
@@ -1795,6 +1802,30 @@ impl AudioEngine {
     /// The microphone: `new MediaStreamAudioSourceNode (audioContext, { mediaStream })` for the
     /// stream of getUserMedia. Only a realtime context can open one.
     pub fn microphone(&mut self, device_id: &str) -> Result<AId, String> {
+        // A page's engine (it records its calls, and has no output device): MicrophoneSource.set_start's getUserMedia is
+        // the page's (op "microphone"). The page makes a stand-in node at once and connects the stream into it when
+        // getUserMedia gives it; a refused or failed request logs its message there and leaves the node silent.
+        if self.recording && !self.is_realtime() {
+            use web_audio_api::worklet::{AudioWorkletNode, AudioWorkletNodeOptions};
+
+            let options = AudioWorkletNodeOptions {
+                number_of_inputs: 1,
+                number_of_outputs: 1,
+                output_channel_count: vec![],
+                parameter_data: Default::default(),
+                processor_options: Arc::new(gain::Shared::new(0.0)),
+                audio_node_options: Default::default(),
+            };
+            let node = AudioWorkletNode::new::<gain::Processor>(self.base(), options);
+            let id = self.add(ANode::PageStreamSource(node));
+
+            self.emit(
+                "microphone",
+                vec![Arg::Int(id.0), Arg::Text(device_id.to_string())],
+            );
+            return Ok(id);
+        }
+
         let Ctx::Realtime(ctx) = &self.ctx else {
             return Err("Requested device not found".to_string());
         };

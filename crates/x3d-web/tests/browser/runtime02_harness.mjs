@@ -657,6 +657,14 @@ let browser;
 // autoplay policy of the sound 01 cases). The groups of one file must agree: the file has one browser.
 let browserArgs = null;
 
+// Extra Chromium flags for a test file without case groups (for example a fake microphone). Call it when the module
+// loads, before the browser starts; the flags of one file must agree.
+export function useBrowserArgs (args)
+{
+   assert .ok (browserArgs === null || JSON .stringify (browserArgs) === JSON .stringify (args), "a test file needs one set of browser flags");
+   browserArgs = args;
+}
+
 before (async () =>
 {
    server  = await startServer (CRATE);

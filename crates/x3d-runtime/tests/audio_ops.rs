@@ -248,3 +248,58 @@ fn a_decoded_buffer_goes_to_the_page_as_the_file_it_came_from() {
         "made by createBuffer: its samples"
     );
 }
+
+/// MicrophoneSource.set_start in a page: the page asks getUserMedia itself (op "microphone" with the mediaDeviceID), so
+/// the engine gives a node in place of the stream; a native silent engine still has no device.
+#[test]
+fn a_page_engine_records_a_microphone_request_and_keeps_its_node() {
+    let mut e = engine();
+    let mic = e
+        .microphone("a \"quoted\" id")
+        .expect("a page's engine has a stand-in node");
+    let gain = e.gain(1.0);
+
+    e.connect(mic, gain);
+
+    let ops = e.take_ops();
+    let request = ops.iter().find(|o| o.name == "microphone").unwrap();
+
+    assert_eq!(
+        request.args,
+        vec![Arg::Int(mic.0), Arg::Text("a \"quoted\" id".into())]
+    );
+    assert!(
+        to_json(&ops, &mut Payloads::default()).contains(r#"["microphone",1,"a \"quoted\" id"]"#)
+    );
+
+    let mut m = Model::new();
+
+    m.apply_all(&ops);
+    assert_same(&e, &m);
+    assert_eq!(m.nodes[&mic.0].kind, "MediaStreamAudioSourceNode");
+
+    // The node goes with a release, as the page's stand-in does.
+    e.release(mic);
+    m.apply_all(&e.take_ops());
+    assert_same(&e, &m);
+
+    // Control characters are escaped too.
+    let id = e.microphone("tab\tline\nnul\u{0}").unwrap();
+    let json = to_json(&e.take_ops(), &mut Payloads::default());
+
+    assert!(
+        json.contains(&format!(
+            r#"["microphone",{},"tab\u0009line\u000anul\u0000"]"#,
+            id.0
+        )),
+        "{json}"
+    );
+
+    // An engine that does not record (native, no output device) asks no page and has no microphone.
+    let mut native = AudioEngine::new(AudioMode::Silent);
+
+    assert_eq!(
+        native.microphone("").unwrap_err(),
+        "Requested device not found"
+    );
+}
