@@ -47,6 +47,8 @@ function on_key (k)
    if (k == 'e') fp .url = new MFString ('data:x-shader/x-fragment,%0Aprecision mediump float;%0Avoid main() { float x = 0.0;%0A for (int i = 0; i < 2; ++ i) { x += 0.4; }%0A gl_FragColor = vec4 (x > 0.5 ? 1.0 : 0.0, x, 0.4, 1.0); }%0A');
    if (k == 'f') fp .url = new MFString ('data:x-shader/x-fragment,%0Aprecision mediump float;%0Avoid main() { float x = 1.0;%0A while (x) { x = 0.0; }%0A gl_FragColor = vec4 (x); }%0A');
    if (k == 'g') fp .url = new MFString ('data:x-shader/x-fragment,%0Aprecision mediump float;%0Avoid main() { bvec2 b = bvec2 (true);%0A float y = b ? 1.0 : 0.0;%0A gl_FragColor = vec4 (y); }%0A');
+   if (k == 'h') fp .url = new MFString ('data:x-shader/x-fragment,%0Aprecision mediump float;%0A%23define W while%0Avoid main() { float x = 1.0;%0A W (x > 0.5) { x = 0.0; }%0A gl_FragColor = vec4 (x); }%0A');
+   if (k == 'i') fp .url = new MFString ('data:x-shader/x-fragment,%0Aprecision mediump float;%0A%23define LOOP while (true) { }%0A%23define DO do { } while (false);%0Avoid main() { gl_FragColor = vec4 (0.3, 0.6, 0.9, 1.0); }%0A');
 }
 "
 }

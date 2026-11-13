@@ -52,6 +52,16 @@ const CASES: &[(&str, &str, Option<&str>)] = &[
         "\nprecision mediump float;\nvoid main() { bvec2 b = bvec2 (true);\n float y = b ? 1.0 : 0.0;\n gl_FragColor = vec4 (y); }\n",
         Some("ERROR: 0:4: '' : boolean expression expected"),
     ),
+    (
+        "h while from a macro",
+        "\nprecision mediump float;\n#define W while\nvoid main() { float x = 1.0;\n W (x > 0.5) { x = 0.0; }\n gl_FragColor = vec4 (x); }\n",
+        Some("ERROR: 0:5: 'while' : This type of loop is not allowed"),
+    ),
+    (
+        "i unused loop macros",
+        "\nprecision mediump float;\n#define LOOP while (true) { }\n#define DO do { } while (false);\nvoid main() { gl_FragColor = vec4 (0.3, 0.6, 0.9, 1.0); }\n",
+        None,
+    ),
 ];
 
 fn rust(source: &str) -> Option<String> {
@@ -96,6 +106,21 @@ fn only_a_loop_statement_is_rejected() {
     }
 }
 
+/// As case h (recorded): a macro that expands to another macro with a loop, and a function-like macro with a `do` loop,
+/// are loops where
+/// they are used.
+#[test]
+fn a_loop_through_macros_is_rejected() {
+    assert_eq!(
+        rust("\nprecision mediump float;\n#define W while\n#define LOOP W (false)\nvoid main() {\n LOOP { }\n gl_FragColor = vec4 (1.0); }\n").as_deref(),
+        Some("ERROR: 0:6: 'while' : This type of loop is not allowed")
+    );
+    assert_eq!(
+        rust("\nprecision mediump float;\n#define ONCE(s) do { s; } while (false)\nvoid main() { float x = 0.0;\n ONCE (x = 1.0);\n gl_FragColor = vec4 (x); }\n").as_deref(),
+        Some("ERROR: 0:5: 'do' : This type of loop is not allowed")
+    );
+}
+
 /// GLSL ES 3.00 has no Appendix A: while and do-while compile.
 #[test]
 fn es3_keeps_while_and_do() {
@@ -112,13 +137,16 @@ fn es3_keeps_while_and_do() {
 /// A `!` that the user wrote on a float is not a loop condition: it keeps naga's text.
 #[test]
 fn a_user_not_on_a_float_is_not_a_loop_condition() {
-    let got = rust(
-        "\nprecision mediump float;\nvoid main() { float x = 1.0;\n bool b = !x;\n gl_FragColor = vec4 (1.0); }\n",
-    );
+    // naga's text (no ANGLE recording of a `!` on a float exists); not the loop condition text.
+    for not in ["!x", "! x", "!(x)"] {
+        let source = format!(
+            "\nprecision mediump float;\nvoid main() {{ float x = 1.0;\n bool b = {not};\n gl_FragColor = vec4 (1.0); }}\n"
+        );
 
-    assert!(got.is_some());
-    assert_ne!(
-        got.as_deref(),
-        Some("ERROR: 0:4: '' : boolean expression expected")
-    );
+        assert_eq!(
+            rust(&source).as_deref(),
+            Some("ERROR: 0:1: Function [1] '_x3d_main' is invalid"),
+            "{not}"
+        );
+    }
 }

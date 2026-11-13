@@ -964,6 +964,8 @@ LOOP_FRAG = [
     ("e", "bool conditions", "precision mediump float;\nvoid main() { float x = 0.0;\n for (int i = 0; i < 2; ++ i) { x += 0.4; }\n gl_FragColor = vec4 (x > 0.5 ? 1.0 : 0.0, x, 0.4, 1.0); }\n"),
     ("f", "while float condition", "precision mediump float;\nvoid main() { float x = 1.0;\n while (x) { x = 0.0; }\n gl_FragColor = vec4 (x); }\n"),
     ("g", "ternary bvec2 condition", "precision mediump float;\nvoid main() { bvec2 b = bvec2 (true);\n float y = b ? 1.0 : 0.0;\n gl_FragColor = vec4 (y); }\n"),
+    ("h", "while from a macro", "precision mediump float;\n#define W while\nvoid main() { float x = 1.0;\n W (x > 0.5) { x = 0.0; }\n gl_FragColor = vec4 (x); }\n"),
+    ("i", "unused loop macros", "precision mediump float;\n#define LOOP while (true) { }\n#define DO do { } while (false);\nvoid main() { gl_FragColor = vec4 (0.3, 0.6, 0.9, 1.0); }\n"),
 ]
 worlds["errors-loops-runtime.wrl"] = errors_world(LOOP_FRAG)
 scripts["errors-loops-runtime"] = runtime_json(20 + 8 * len(LOOP_FRAG) + 8, [k for k, _, _ in LOOP_FRAG], step=8)

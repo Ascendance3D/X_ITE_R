@@ -1968,6 +1968,7 @@ fn emit(a: &Analysis, info: &LinkInfo) -> Result<Emitted, String> {
             ))
         })
         .collect();
+    let loop_macros = loop_macros(text, boundary_line);
     let mut i = 0;
 
     while i < toks.len() {
@@ -1982,7 +1983,7 @@ fn emit(a: &Analysis, info: &LinkInfo) -> Result<Emitted, String> {
                 return Err(e);
             }
 
-            if let Some(e) = loop_not_allowed(a, masked, &t, &line_of) {
+            if let Some(e) = loop_not_allowed(a, masked, &t, &loop_macros, &line_of) {
                 return Err(e);
             }
         }
@@ -2385,20 +2386,83 @@ fn constructor_components(ty: &str) -> Option<usize> {
 /// WebGL shaders of version 1.00 and reports `'while'` or `'do' : This type of loop is not allowed` at the keyword,
 /// before the condition is checked (errors-loops-runtime cases a, c and f). naga compiles both loops. GLSL ES 3.00 has
 /// no such limit. For a `do` loop the `do` comes first, so its `while` is never reached.
+///
+/// A macro of the user's source that expands to `while` or `do` is reported at the line where it is used, with the
+/// first loop keyword of its expansion (case h); a macro that is never used is never parsed (case i).
 fn loop_not_allowed(
     a: &Analysis,
     masked: &str,
     t: &Tok,
+    loop_macros: &HashMap<&str, &'static str>,
     line_of: &dyn Fn(usize) -> usize,
 ) -> Option<String> {
     let word = text_of(masked, t);
+    let keyword = match word {
+        "while" => "while",
+        "do" => "do",
+        _ => loop_macros.get(word).copied()?,
+    };
 
-    (!a.es3 && matches!(word, "while" | "do")).then(|| {
+    (!a.es3).then(|| {
         format!(
-            "ERROR: 0:{}: '{word}' : This type of loop is not allowed",
+            "ERROR: 0:{}: '{keyword}' : This type of loop is not allowed",
             line_of(t.start)
         )
     })
+}
+
+/// The `#define`s of the user's source (the lines from `boundary_line`) whose expansion has a `while` or a `do`, with
+/// the first of the two in the expansion. A name in a body is expanded through the other macros (depth 8).
+fn loop_macros(text: &str, boundary_line: usize) -> HashMap<&str, &'static str> {
+    let mut bodies: HashMap<&str, Vec<&str>> = HashMap::new();
+
+    for line in text.lines().skip(boundary_line) {
+        let Some(rest) = line.trim_start().strip_prefix('#') else {
+            continue;
+        };
+        let Some(rest) = rest.trim_start().strip_prefix("define") else {
+            continue;
+        };
+
+        if !rest.starts_with([' ', '\t']) {
+            continue;
+        }
+
+        let rest = rest.trim_start();
+        let end = rest
+            .find(|c: char| !(c.is_ascii_alphanumeric() || c == '_'))
+            .unwrap_or(rest.len());
+        let (name, mut body) = rest.split_at(end);
+
+        // A function-like macro: the parameters are not part of the body.
+        if body.starts_with('(') {
+            body = body.find(')').map_or("", |k| &body[k + 1..]);
+        }
+
+        let words = body
+            .split(|c: char| !(c.is_ascii_alphanumeric() || c == '_'))
+            .filter(|w| !w.is_empty())
+            .collect();
+        bodies.insert(name, words);
+    }
+
+    fn first_loop(
+        name: &str,
+        bodies: &HashMap<&str, Vec<&str>>,
+        depth: u32,
+    ) -> Option<&'static str> {
+        bodies.get(name)?.iter().find_map(|w| match *w {
+            "while" => Some("while"),
+            "do" => Some("do"),
+            _ if depth < 8 && *w != name => first_loop(w, bodies, depth + 1),
+            _ => None,
+        })
+    }
+
+    bodies
+        .keys()
+        .filter_map(|name| Some((*name, first_loop(name, &bodies, 0)?)))
+        .collect()
 }
 
 /// count of each is known); otherwise no text is made.
