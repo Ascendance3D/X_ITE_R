@@ -2412,7 +2412,9 @@ fn loop_not_allowed(
 }
 
 /// The `#define`s of the user's source (the lines from `boundary_line`) whose expansion has a `while` or a `do`, with
-/// the first of the two in the expansion. A name in a body is expanded through the other macros (depth 8).
+/// the first of the two in the expansion. A name in a body is expanded through the other macros (depth 8); the
+/// parameters of a function-like macro are not. The lines are read in order, so `#undef` removes a macro. Inactive
+/// `#if` branches are not in `text`, and GLSL ES 1.00 has no line continuation (3.1).
 fn loop_macros(text: &str, boundary_line: usize) -> HashMap<&str, &'static str> {
     let mut bodies: HashMap<&str, Vec<&str>> = HashMap::new();
 
@@ -2420,28 +2422,35 @@ fn loop_macros(text: &str, boundary_line: usize) -> HashMap<&str, &'static str> 
         let Some(rest) = line.trim_start().strip_prefix('#') else {
             continue;
         };
-        let Some(rest) = rest.trim_start().strip_prefix("define") else {
-            continue;
-        };
-
-        if !rest.starts_with([' ', '\t']) {
-            continue;
-        }
-
+        let rest = rest.trim_start();
+        let (directive, rest) = rest.split_at(rest.find([' ', '\t']).unwrap_or(rest.len()));
         let rest = rest.trim_start();
         let end = rest
             .find(|c: char| !(c.is_ascii_alphanumeric() || c == '_'))
             .unwrap_or(rest.len());
         let (name, mut body) = rest.split_at(end);
 
-        // A function-like macro: the parameters are not part of the body.
+        match directive {
+            "undef" => {
+                bodies.remove(name);
+                continue;
+            }
+            "define" if !name.is_empty() => {}
+            _ => continue,
+        }
+
+        // A function-like macro: its parameters are replaced by the arguments, not expanded as macros.
+        let mut params: Vec<&str> = vec![];
+
         if body.starts_with('(') {
-            body = body.find(')').map_or("", |k| &body[k + 1..]);
+            let close = body.find(')').unwrap_or(body.len() - 1);
+            params = body[1..close].split(',').map(str::trim).collect();
+            body = &body[close + 1..];
         }
 
         let words = body
             .split(|c: char| !(c.is_ascii_alphanumeric() || c == '_'))
-            .filter(|w| !w.is_empty())
+            .filter(|w| !w.is_empty() && !params.contains(w))
             .collect();
         bodies.insert(name, words);
     }
