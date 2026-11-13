@@ -22,15 +22,15 @@ sorts that text into requirement kinds.
 
 | kind | items | unique items |
 | --- | ---: | ---: |
-| F missing functionality | 15 | 12 |
+| F missing functionality | 14 | 11 |
 | P platform verification | 15 | 13 |
-| D recorded difference | 63 | — |
+| D recorded difference | 64 | — |
 | T missing test coverage | 11 | 11 |
 | U upstream or dependency blocker | 5 | 5 |
 | O owner review | 1 | 1 |
 
-11 entries have only D or O items: node:ParticleSystem, node:WindPhysicsModel, node:Script, node:BlendedVolumeStyle,
-node:ShadedVolumeStyle, sub:parse.glb2 (no item of its own; it shares the glTF decoders), sub:exec.context-api (O),
+12 entries have only D or O items: node:ParticleSystem, node:WindPhysicsModel, node:Script, node:BlendedVolumeStyle,
+node:ShadedVolumeStyle, node:Inline, sub:parse.glb2 (no item of its own; it shares the glTF decoders), sub:exec.context-api (O),
 sub:proto.externproto, sub:io.file-loader, sub:nav.collision-gravity, sub:pointer.picking. No code work remains in them.
 A promotion needs the normal ledger review and, where an owner decision keeps the entry PARTIAL, the owner.
 
@@ -39,7 +39,7 @@ A promotion needs the normal ledger review and, where an owner decision keeps th
 | entry | F | P | D | T | U | open items (F, P, T, U, O) |
 | --- | ---: | ---: | ---: | ---: | ---: | --- |
 | node:GaussianSplats | 0 | 1 | 4 | 1 | 0 | P: low-power machines and displays above 60 Hz not measured. T: the sort transient at SH degree above 0 |
-| node:Inline | 1 | 0 | 5 | 0 | 0 | F: c07 overlap-frames is an open, undecided difference (`synthetic-inline-reload-known.tsv`) |
+| node:Inline | 0 | 0 | 6 | 0 | 0 | — (the ledger calls c07 overlap-frames an "open difference", but ADR 0014 section 4 keeps its step 5 by owner decision of 2026-11-04: a D item) |
 | node:BoundedPhysicsModel | 1 | 1 | 2 | 1 | 0 | F: a bare Runtime without the viewer's geometry provider has empty geometry. P: the ARRAY_SIZE clamp is measured on one GPU; no pinned Metal measurement (`docs/particle-array-size-backends.md`; #89 is closed, the item is not). T: the start timer only for an event at frame 1 |
 | node:ParticleSystem | 0 | 0 | 2 | 0 | 0 | — |
 | node:VolumeEmitter | 1 | 1 | 2 | 0 | 0 | F and P: as node:BoundedPhysicsModel (shared) |
@@ -81,12 +81,16 @@ The D items of each entry are in its `missing` field (`ledger/SUMMARY.md`) and i
 
 Work that an agent can do on this host, with no new hardware and no new owner decision:
 
-1. **node:Inline c07 overlap-frames.** The only undecided difference in a core node. Reproduce it against the pinned recording, then fix it or bring evidence for an ADR row.
-2. **node:AudioClip / node:Sound: mirror the StreamAudioDestination MediaStream in the browser.** One functional gap that closes an item in two entries.
-3. **node:MovieTexture: MPEG-1 audio/video start-offset alignment (native).** The decoders exist; the alignment is open.
-4. **node:BufferAudioSource: exact SincResampler output** (now within 5e-5 of Chromium).
-5. **sub:parse.svg: achromatic and exact-zero noise** after conversions and var() origins.
-6. **Test coverage** (T items that need only this host and the reference Chrome 156): the browser MP4/WebM/Ogg sound path against a pinned recording; a glTF MP4 case (Linux GStreamer); the BoundedPhysicsModel start timer after frame 1; a CID-keyed seac world for FontLibrary.
+1. **node:MovieTexture: MPEG-1 audio/video start-offset alignment (native).** The decoders exist; the streams both start at 0
+   (`docs/mpeg1-implementation.md`, "Not done"). The pinned page cannot play MPEG-1, so the reference is the stream time stamps
+   (ffmpeg's start times), not an X_ITE recording.
+2. **node:AudioClip / node:Sound: the StreamAudioDestination MediaStream in the browser.** Low observable value: X_ITE makes a
+   `MediaStreamAudioDestinationNode` that it keeps private and never plays, and the engine's graph (`audioGraph ()`) already has
+   the node. The page mirror has no node for it (`stream_destination` emits no op when `to_output` is false). Only the page's own
+   graph differs; nothing is audible.
+3. **node:BufferAudioSource: exact SincResampler output** (now within 5e-5 of Chromium).
+4. **sub:parse.svg: achromatic and exact-zero noise** after conversions and var() origins.
+5. **Test coverage** (T items that need only this host and the reference Chrome 156): the browser MP4/WebM/Ogg sound path against a pinned recording; a glTF MP4 case (Linux GStreamer); the BoundedPhysicsModel start timer after frame 1; a CID-keyed seac world for FontLibrary.
 
 Not in this list: the GLSL ES type checks (the active Quick Wins lane owns them), native Opus (needs a decoder admission
 record, `docs/decoder-admission.md`), native OpenXR (needs an approved plan), the per-node audio device and the bare-Runtime
