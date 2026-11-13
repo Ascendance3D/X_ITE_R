@@ -96,6 +96,7 @@ async function after (page, { text, field }, ms = 2500)
          isActive: m .isActive,
          requests: window .requests,
          tracks: window .streams .map (s => s .getAudioTracks () .map (t => t .readyState) .join (",")),
+         enabled: window .streams .map (s => s .getAudioTracks () .map (t => t .enabled) .join (",")),
          errors: window .errors,
       };
    },
@@ -129,6 +130,38 @@ describe ("microphone 01", { skip: Boolean (ONLY) }, () =>
          assert .equal (again .requests .length, 2);
          assert .deepEqual (again .tracks, [ "ended", "live" ]);
          assert .ok (again .level > 0.01, `started again: heard (level ${again .level})`);
+      }
+      finally
+      {
+         await page .context () .close ();
+      }
+   });
+
+   test ("pauseTime disables the tracks and is silent, and resumeTime enables them again", { timeout: CASE_TIMEOUT }, async () =>
+   {
+      const page = await open ();
+
+      try
+      {
+         const started = await after (page, { text: WORLD (true) });
+
+         assert .deepEqual (started .enabled, [ "true" ]);
+         assert .ok (started .level > 0.01, `heard (level ${started .level})`);
+
+         // MicrophoneSource.set_pause: disconnect, and track .enabled = false.
+         const paused = await after (page, { field: "pauseTime" });
+
+         assert .equal (paused .isActive, true);
+         assert .deepEqual (paused .tracks, [ "live" ]);
+         assert .deepEqual (paused .enabled, [ "false" ], "set_pause disables the tracks");
+         assert .ok (paused .level < 1e-4, `paused: silent (level ${paused .level})`);
+
+         // MicrophoneSource.set_resume: connect, and track .enabled = true; no new request.
+         const resumed = await after (page, { field: "resumeTime" });
+
+         assert .equal (resumed .requests .length, 1);
+         assert .deepEqual (resumed .enabled, [ "true" ], "set_resume enables the tracks");
+         assert .ok (resumed .level > 0.01, `resumed: heard (level ${resumed .level})`);
       }
       finally
       {
