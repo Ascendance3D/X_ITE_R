@@ -2698,8 +2698,9 @@ fn to_wgsl(stage: Stage, e: &Emitted) -> Result<String, String> {
                 .max(1);
             return format!("ERROR: 0:{line}: 'return' : function return is not matching type:");
         }
-        // GLSL ES 1.00 / 3.00 sections 6.2 and 6.3: the condition of an if or a loop is a scalar bool. ANGLE
-        // (checkIsScalarBool) reports it at the condition.
+        // GLSL ES 1.00 / 3.00 section 6.2: the condition of an if is a scalar bool. ANGLE (checkIsScalarBool)
+        // reports it at the condition. Only an if: naga negates a while or for condition before it validates it, so
+        // a loop keeps naga's text.
         if let naga::valid::ValidationError::Function {
             handle,
             source: naga::valid::FunctionError::InvalidIfType(condition),
@@ -2715,6 +2716,24 @@ fn to_wgsl(stage: Stage, e: &Emitted) -> Result<String, String> {
                     .max(1);
                 return format!("ERROR: 0:{line}: '' : boolean expression expected");
             }
+        }
+
+        // GLSL ES has no implicit conversion; naga's text has no line.
+        if let naga::valid::ValidationError::Function {
+            handle,
+            source: naga::valid::FunctionError::InvalidStoreTypes { pointer, value },
+            ..
+        } = err.as_inner()
+            && let Some(text) = dimension_mismatch(
+                &module,
+                &module.functions[*handle],
+                *pointer,
+                *value,
+                &e.text,
+                e.line_base,
+            )
+        {
+            return text;
         }
 
         format!("ERROR: 0:1: {}", err.as_inner())
@@ -2733,25 +2752,86 @@ fn to_wgsl(stage: Stage, e: &Emitted) -> Result<String, String> {
     Ok(wgsl)
 }
 
+/// The span of the first statement of `block` (nested blocks included) that `matches` takes.
+fn statement_span(
+    block: &naga::Block,
+    matches: &dyn Fn(&naga::Statement) -> bool,
+) -> Option<naga::Span> {
+    use naga::Statement as S;
+
+    block.span_iter().find_map(|(st, span)| match st {
+        _ if matches(st) => Some(*span),
+        S::Block(b) => statement_span(b, matches),
+        S::If { accept, reject, .. } => {
+            statement_span(accept, matches).or_else(|| statement_span(reject, matches))
+        }
+        S::Loop {
+            body, continuing, ..
+        } => statement_span(body, matches).or_else(|| statement_span(continuing, matches)),
+        S::Switch { cases, .. } => cases.iter().find_map(|c| statement_span(&c.body, matches)),
+        _ => None,
+    })
+}
+
 /// The span of the first `return` statement of `block` (nested blocks included) that returns `value`.
 fn return_span(
     block: &naga::Block,
     value: Option<naga::Handle<naga::Expression>>,
 ) -> Option<naga::Span> {
-    use naga::Statement as S;
+    statement_span(
+        block,
+        &|st| matches!(st, naga::Statement::Return { value: v } if *v == value),
+    )
+}
 
-    block.span_iter().find_map(|(st, span)| match st {
-        S::Return { value: v } if *v == value => Some(*span),
-        S::Block(b) => return_span(b, value),
-        S::If { accept, reject, .. } => {
-            return_span(accept, value).or_else(|| return_span(reject, value))
-        }
-        S::Loop {
-            body, continuing, ..
-        } => return_span(body, value).or_else(|| return_span(continuing, value)),
-        S::Switch { cases, .. } => cases.iter().find_map(|c| return_span(&c.body, value)),
+/// The scalar kind and component count of a scalar or a vector.
+fn scalar_shape(ty: &naga::TypeInner) -> Option<(naga::ScalarKind, u8)> {
+    match ty {
+        naga::TypeInner::Scalar(s) => Some((s.kind, 1)),
+        naga::TypeInner::Vector { size, scalar } => Some((scalar.kind, *size as u8)),
         _ => None,
-    })
+    }
+}
+
+/// ANGLE's text for a store of a scalar or vector into a variable of the same kind and another component count
+/// (binaryOpCommonCheck: `'=' : dimension mismatch`), at the line of the assignment.
+fn dimension_mismatch(
+    module: &naga::Module,
+    f: &naga::Function,
+    pointer: naga::Handle<naga::Expression>,
+    value: naga::Handle<naga::Expression>,
+    text: &str,
+    line_base: usize,
+) -> Option<String> {
+    let ctx = naga::proc::ResolveContext::with_locals(module, &f.local_variables, &f.arguments);
+    let mut types = naga::front::Typifier::new();
+    types.grow(pointer.max(value), &f.expressions, &ctx).ok()?;
+    let target = match types.get(pointer, &module.types) {
+        naga::TypeInner::Pointer { base, .. } => scalar_shape(&module.types[*base].inner)?,
+        naga::TypeInner::ValuePointer { size, scalar, .. } => {
+            (scalar.kind, size.map_or(1, |s| s as u8))
+        }
+        _ => return None,
+    };
+    let source = scalar_shape(types.get(value, &module.types))?;
+
+    if target.0 != source.0 || target.1 == source.1 {
+        return None;
+    }
+
+    let span = statement_span(
+        &f.body,
+        &|st| matches!(st, naga::Statement::Store { pointer: p, value: v } if *p == pointer && *v == value),
+    )?;
+
+    if !span.is_defined() {
+        return None;
+    }
+
+    let line = (span.location(text).line_number as usize)
+        .saturating_sub(line_base)
+        .max(1);
+    Some(format!("ERROR: 0:{line}: '=' : dimension mismatch"))
 }
 
 // ---- public API -------------------------------------------------------------------------------
