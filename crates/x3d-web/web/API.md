@@ -308,9 +308,9 @@ The `update` attribute and the `AutoUpdate` option call `beginUpdate` and `endUp
 
 ## Graphics
 
-The renderer is WebGPU only (wgpu 30 `Backends::BROWSER_WEBGPU`). There is no WebGL renderer.
+The renderer draws with WebGPU (wgpu 30 `Backends::BROWSER_WEBGPU`) when the browser has a usable WebGPU adapter, and else with wgpu's WebGL2 backend (`Backends::GL`, the `webgl` feature) on the same canvas, once (`WebBrowser::create` in `src/wasm.rs`). `backend="webgpu"` or `backend="webgl2"` selects one. On WebGL2 the renderer uses its downlevel profile and logs the limits that are below the WebGPU defaults.
 Before it makes the renderer, the engine checks the adapter's limits against what the renderer needs. A shortfall stops the start with `X_ITE_R cannot start: ...` in the element and names the limit.
-A lost device (driver reset, GPU process crash, a background tab the browser reclaims) stops the frame loop, calls the `CONNECTION_ERROR` callbacks and shows `X_ITE_R stopped: the WebGPU device is lost.`.
+A lost device (driver reset, GPU process crash, a background tab the browser reclaims) stops the frame loop, calls the `CONNECTION_ERROR` callbacks and shows `X_ITE_R stopped: the WebGPU device is lost.` (`the WebGL2 device is lost.` on WebGL2, from the canvas's context-lost event).
 
 WebGPU compatibility mode (`requestAdapter ({ featureLevel: "compatibility" })`, for devices with OpenGL ES 3.1 class GPUs) is not used. wgpu 30's `RequestAdapterOptions` has no `featureLevel` field and its WebGPU backend always requests a core adapter, so the engine cannot ask for one. This is the blocker until wgpu has the option.
 
