@@ -970,6 +970,33 @@ LOOP_FRAG = [
 worlds["errors-loops-runtime.wrl"] = errors_world(LOOP_FRAG)
 scripts["errors-loops-runtime"] = runtime_json(20 + 8 * len(LOOP_FRAG) + 8, [k for k, _, _ in LOOP_FRAG], step=8)
 
+# GLSL ES 1.00 Appendix A section 4 for loops: one loop index, declared and initialized in the init with a constant, compared
+# with a constant expression, changed only by the loop expression (++, --, += or -= a constant). Case "h" is valid.
+FOR_FRAG = [
+    ("a", "uniform bound", "precision mediump float;\nuniform float n;\nvoid main() { float s = 0.0;\n for (float i = 0.0; i < n; i += 1.0) { s += 0.1; }\n gl_FragColor = vec4 (s); }\n"),
+    ("b", "index changed in the body", "precision mediump float;\nvoid main() { float s = 0.0;\n for (int i = 0; i < 2; ++ i) { i = 3; s += 0.5; }\n gl_FragColor = vec4 (s); }\n"),
+    ("c", "index not declared in the init", "precision mediump float;\nvoid main() { float s = 0.0; int i;\n for (i = 0; i < 2; ++ i) { s += 0.5; }\n gl_FragColor = vec4 (s); }\n"),
+    ("d", "constant on the left", "precision mediump float;\nvoid main() { float s = 0.0;\n for (int i = 0; 2 > i; ++ i) { s += 0.5; }\n gl_FragColor = vec4 (s); }\n"),
+    ("e", "index multiplied", "precision mediump float;\nvoid main() { float s = 0.0;\n for (int i = 1; i < 8; i *= 2) { s += 0.2; }\n gl_FragColor = vec4 (s); }\n"),
+    ("f", "no condition", "precision mediump float;\nvoid main() { float s = 0.0;\n for (int i = 0; ; ++ i) { s += 0.5; break; }\n gl_FragColor = vec4 (s); }\n"),
+    ("g", "variable init", "precision mediump float;\nuniform int k;\nvoid main() { float s = 0.0;\n for (int i = k; i < 2; ++ i) { s += 0.5; }\n gl_FragColor = vec4 (s); }\n"),
+    ("h", "valid forms", "precision mediump float;\nconst int N = 3;\nvoid main() { float s = 0.0;\n for (int i = N; i >= 0; i -= 1) { s += 0.1; }\n for (float f = 0.0; f != 1.0; f += 0.5) { s += 0.1; }\n gl_FragColor = vec4 (s, 0.5, 0.2, 1.0); }\n"),
+    ("i", "index as inout argument", "precision mediump float;\nvoid bump (inout int j) { j += 1; }\nvoid main() { float s = 0.0;\n for (int i = 0; i < 2; ++ i) { bump (i); s += 0.5; }\n gl_FragColor = vec4 (s); }\n"),
+    ("j", "two index variables", "precision mediump float;\nvoid main() { float s = 0.0;\n for (int i = 0, j = 1; i < 2; ++ i) { s += 0.5; }\n gl_FragColor = vec4 (s); }\n"),
+    ("k", "no init", "precision mediump float;\nvoid main() { float s = 0.0; int i = 0;\n for (; i < 2; ++ i) { s += 0.5; }\n gl_FragColor = vec4 (s); }\n"),
+    ("l", "no expression", "precision mediump float;\nvoid main() { float s = 0.0;\n for (int i = 0; i < 2;) { s += 0.5; break; }\n gl_FragColor = vec4 (s); }\n"),
+    ("m", "macro and const bounds", "precision mediump float;\n#define N 2\nconst float H = 0.5;\nvoid main() { float s = 0.0;\n for (int i = 0; i < N * 2 + 1; i ++) { s += 0.1; }\n for (float f = 0.0; f < H + float (N); f += H) { s += 0.1; }\n for (int i = x3d_MaxLights; i > 0; i --) { s += 0.01; }\n gl_FragColor = vec4 (s, 0.4, 0.7, 1.0); }\n"),
+    ("n", "step not constant", "precision mediump float;\nuniform int k;\nvoid main() { float s = 0.0;\n for (int i = 0; i < 8; i += k) { s += 0.2; }\n gl_FragColor = vec4 (s); }\n"),
+    ("o", "inner bound on the outer index", "precision mediump float;\nvoid main() { float s = 0.0;\n for (int i = 0; i < 2; ++ i) {\n for (int j = 0; j < i; ++ j) { s += 0.5; } }\n gl_FragColor = vec4 (s); }\n"),
+    ("p", "declaration without value", "precision mediump float;\nvoid main() { float s = 0.0;\n for (int i; i < 2; ++ i) { s += 0.5; }\n gl_FragColor = vec4 (s); }\n"),
+    ("q", "index of type bool", "precision mediump float;\nvoid main() { float s = 0.0;\n for (bool b = true; b == true; b = false) { s += 0.5; }\n gl_FragColor = vec4 (s); }\n"),
+    ("r", "condition with &&", "precision mediump float;\nvoid main() { float s = 0.0;\n for (int i = 0; i < 2 && s < 1.0; ++ i) { s += 0.5; }\n gl_FragColor = vec4 (s); }\n"),
+    ("s", "condition not relational", "precision mediump float;\nvoid main() { float s = 0.0;\n for (int i = 0; i + 1; ++ i) { s += 0.5; }\n gl_FragColor = vec4 (s); }\n"),
+    ("t", "index read and used in the body", "precision mediump float;\nuniform float a [3];\nvoid main() { float s = 0.0;\n for (int i = 0; i < 3; ++ i) { float t = float (i); s += a [i] + t; int k = i; k += 1; }\n gl_FragColor = vec4 (s, 0.3, 0.3, 1.0); }\n"),
+]
+worlds["errors-for-runtime.wrl"] = errors_world(FOR_FRAG)
+scripts["errors-for-runtime"] = runtime_json(20 + 8 * len(FOR_FRAG) + 8, [k for k, _, _ in FOR_FRAG], step=8)
+
 # Link error text: the vertex shader is fixed (VS), the fragment ShaderPart's url is set, one key per mismatch
 # between the stages; `Couldn't initialize ComposedShader 'CS': <ANGLE link log>` is compared with X_ITE's.
 LINK_FRAG = [

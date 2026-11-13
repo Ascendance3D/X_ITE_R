@@ -129,6 +129,7 @@ fn macros_that_are_not_loops() {
         "\nprecision mediump float;\n#define W while\n#undef W\nfloat W (float v) { return v; }\nvoid main() { gl_FragColor = vec4 (W (1.0)); }\n",
         "\nprecision mediump float;\n#define x while\n#define F(x) x\nvoid main() { float y = F (1.0); gl_FragColor = vec4 (y); }\n",
         "\nprecision mediump float;\n#if 0\n#define W while\n#endif\n#define F(v) v\nvoid main() { gl_FragColor = vec4 (F (1.0)); }\n",
+        "\nprecision mediump float;\n#define VALUE /* while do */ 1.0\n#define ONE 1.0 // do while\nvoid main() { gl_FragColor = vec4 (VALUE * ONE); }\n",
     ];
 
     for source in ok {
