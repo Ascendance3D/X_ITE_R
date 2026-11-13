@@ -20,8 +20,9 @@ debug = "line-tables-only"
 web-audio-api = { path = "vendor/web-audio-api" }
 # rav1d 1.1.0 with the one-line fix of vendor/rav1d/VENDOR.md (a damaged AV1 tile aborts the process in upstream).
 rav1d = { path = "vendor/rav1d" }
-# wgpu-hal 30.0.1 with the one added statement of vendor/wgpu-hal/VENDOR.md: no empty pool-size array in vkCreateDescriptorPool, which
-# crashes the Intel Gen11 Windows driver 31.0.101.2140 (issue #89). Remove it as VENDOR.md says.
+# wgpu-hal 30.0.1 with the two patches of vendor/wgpu-hal/VENDOR.md: no empty pool-size array in vkCreateDescriptorPool, which
+# crashes the Intel Gen11 Windows driver 31.0.101.2140 (issue #89), and no GL compute shaders below GLSL 420 / ES 310, which naga
+# cannot write (the NVIDIA Linux GL device did not start). Remove them as VENDOR.md says.
 wgpu-hal = { path = "vendor/wgpu-hal" }
 
 # vp9dec at opt-level 3 overflows the stack of rustc 1.95 (SIGSEGV in LLVM); 2 builds.

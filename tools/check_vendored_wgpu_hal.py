@@ -1,15 +1,16 @@
 #!/usr/bin/env python3
-"""vendor/wgpu-hal is the upstream crate plus one recorded patch (issue #89):
+"""vendor/wgpu-hal is the upstream crate plus two recorded patches (issue #89, and the GLES compute check):
     python3 -I -B tools/check_vendored_wgpu_hal.py [path/to/wgpu-hal-30.0.1.crate]
     python3 -I -B tools/check_vendored_wgpu_hal.py --self-test
 
 Without an argument it downloads the crate from static.crates.io. Either way the file must have the recorded sha256, which
 is also the checksum that Cargo.lock held for wgpu-hal before the patch (VENDOR.md). Then:
 
-  * every file of the crate except src/vulkan/descriptor.rs must be byte-identical in vendor/wgpu-hal;
-  * src/vulkan/descriptor.rs must equal the crate's file with x3d-descriptor-pool.patch applied (the patch is kept in the
-    directory, visible to the review);
-  * the directory must hold nothing else except VENDOR.md and x3d-descriptor-pool.patch (the allowlist below);
+  * every file of the crate except the patched ones (PATCHES below) must be byte-identical in vendor/wgpu-hal;
+  * each patched file must equal the crate's file with its patch applied (the patches are kept in the directory, visible
+    to the review): src/vulkan/descriptor.rs with x3d-descriptor-pool.patch, src/gles/adapter.rs with
+    x3d-gles-compute.patch;
+  * the directory must hold nothing else except VENDOR.md and the patches (the allowlist below);
   * the crate's Cargo.toml must be the vendored one (checked above), the root Cargo.toml must patch wgpu-hal to this path,
     and Cargo.lock must list wgpu-hal 30.0.1 without a registry source.
 
@@ -30,9 +31,12 @@ VERSION = "30.0.1"
 SHA256 = "b6b7fb58561a792bc237628ba0792e332de418fefe145f13b5ed8201e6d52f58"
 URL = f"https://static.crates.io/crates/wgpu-hal/{NAME}.crate"
 OMITTED = (".cargo-ok",)
-PATCHED = "src/vulkan/descriptor.rs"
-PATCH_FILE = "x3d-descriptor-pool.patch"
-OURS = ("VENDOR.md", PATCH_FILE)
+# Each patched file of the crate and the patch (in this directory) that makes it.
+PATCHES = {
+    "src/vulkan/descriptor.rs": "x3d-descriptor-pool.patch",
+    "src/gles/adapter.rs": "x3d-gles-compute.patch",
+}
+OURS = ("VENDOR.md", *PATCHES.values())
 
 
 def load_crate(argv):
@@ -93,17 +97,18 @@ def compare(files, mine):
     for k in sorted(want):
         if k not in mine:
             bad.append(f"{k}: missing")
-        elif k == PATCHED:
-            if PATCH_FILE not in mine:
-                bad.append(f"{PATCH_FILE}: missing")
+        elif k in PATCHES:
+            patch_file = PATCHES[k]
+            if patch_file not in mine:
+                bad.append(f"{patch_file}: missing")
                 continue
             try:
-                patched = apply_patch(files[k], mine[PATCH_FILE])
+                patched = apply_patch(files[k], mine[patch_file])
             except ValueError as e:
-                bad.append(f"{PATCH_FILE}: does not apply to the crate's {k}: {e}")
+                bad.append(f"{patch_file}: does not apply to the crate's {k}: {e}")
                 continue
             if mine[k] != patched:
-                bad.append(f"{k}: is not the crate's file with {PATCH_FILE} applied")
+                bad.append(f"{k}: is not the crate's file with {patch_file} applied")
             if mine[k] == files[k]:
                 bad.append(f"{k}: equals the crate's file, the patch is not applied")
         elif mine[k] != files[k]:
@@ -113,6 +118,9 @@ def compare(files, mine):
     for k in OURS:
         if k not in mine:
             bad.append(f"{k}: missing")
+    for k in PATCHES:
+        if k not in want:
+            bad.append(f"{k}: patched, but not in the crate")
     return bad
 
 
@@ -150,29 +158,43 @@ def self_test():
         except ValueError:
             continue
         raise SystemExit("self-test: a patch that does not fit was applied")
-    global PATCHED
-    saved = PATCHED
-    PATCHED = "f"
+    global PATCHES, OURS
+    saved = PATCHES, OURS
+    PATCHES = {"f": "f.patch", "h/i": "i.patch"}
+    OURS = ("VENDOR.md", *PATCHES.values())
     try:
-        crate = {"f": orig, "g": b"g\n", "h/i": b"i\n"}
-        good = {"f": apply_patch(orig, patch), "g": b"g\n", "h/i": b"i\n", PATCH_FILE: patch, "VENDOR.md": b"doc\n"}
+        orig_i = b"i\r\nj\r\n"
+        patch_i = b"--- a/h/i\n+++ b/h/i\n@@ -1,2 +1,2 @@\n-i\r\n+I\r\n j\r\n"
+        crate = {"f": orig, "g": b"g\n", "h/i": orig_i}
+        good = {
+            "f": apply_patch(orig, patch),
+            "g": b"g\n",
+            "h/i": apply_patch(orig_i, patch_i),
+            "f.patch": patch,
+            "i.patch": patch_i,
+            "VENDOR.md": b"doc\n",
+        }
         assert compare(crate, good) == [], compare(crate, good)
         for label, change in (
             ("changed file", lambda d: d.update(g=b"G\n")),
-            ("missing file", lambda d: d.pop("h/i")),
+            ("missing file", lambda d: d.pop("g")),
             ("extra file", lambda d: d.update(extra=b"x\n")),
             ("patched file edited", lambda d: d.update(f=d["f"] + b"y\r\n")),
             ("patched file unpatched", lambda d: d.update(f=orig)),
-            ("patch missing", lambda d: d.pop(PATCH_FILE)),
+            ("patch missing", lambda d: d.pop("f.patch")),
             ("doc missing", lambda d: d.pop("VENDOR.md")),
+            ("second patched file unpatched", lambda d: d.update({"h/i": orig_i})),
+            ("second patch missing", lambda d: d.pop("i.patch")),
         ):
             tampered = dict(good)
             change(tampered)
             if not compare(crate, tampered):
                 raise SystemExit(f"self-test: {label} was not detected")
+        if not compare({"f": orig, "g": b"g\n"}, {k: v for k, v in good.items() if k != "h/i"}):
+            raise SystemExit("self-test: a patched file that is not in the crate was not detected")
     finally:
-        PATCHED = saved
-    print("self-test ok: the patch applier fits and refuses, and the comparison catches 7 kinds of change")
+        PATCHES, OURS = saved
+    print("self-test ok: the patch applier fits and refuses, and the comparison catches 10 kinds of change")
     return 0
 
 
@@ -184,7 +206,7 @@ def main(argv):
         print("FAIL", b)
     if bad:
         return 1
-    print(f"vendor/wgpu-hal is {NAME} plus {PATCH_FILE}")
+    print(f"vendor/wgpu-hal is {NAME} plus {', '.join(PATCHES.values())}")
     return 0
 
 

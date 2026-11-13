@@ -1,0 +1,23 @@
+--- a/src/gles/adapter.rs
++++ b/src/gles/adapter.rs
+@@ -310,8 +310,18 @@
+ 
+         let supports_storage =
+             supported((3, 1), (4, 3)) || extensions.contains("GL_ARB_shader_storage_buffer_object");
+-        let supports_compute =
+-            supported((3, 1), (4, 3)) || extensions.contains("GL_ARB_compute_shader");
++        // x3d patch (vendor/wgpu-hal/VENDOR.md): naga's GLSL writer emits a compute shader only from GLSL 420 (ES 310) on
++        // (naga back/glsl/features.rs, COMPUTE_SHADER). NVIDIA's EGL on Linux gives a desktop OpenGL 3.3 core context (GLSL 330) that lists
++        // GL_ARB_compute_shader; with compute claimed from the extension alone, wgpu-core's indirect-call validation pipeline
++        // failed in naga and `request_device` reported the device as lost. Remove this when the published wgpu-hal checks the
++        // shading language version (VENDOR.md, "Removal condition").
++        let glsl_compute = match shading_language_version {
++            naga::back::glsl::Version::Desktop(v) => v >= 420,
++            naga::back::glsl::Version::Embedded { version, .. } => version >= 310,
++        };
++        let supports_compute = (supported((3, 1), (4, 3))
++            || extensions.contains("GL_ARB_compute_shader"))
++            && glsl_compute;
+         let supports_work_group_params = supports_compute;
+ 
+         // ANGLE provides renderer strings like: "ANGLE (Apple, Apple M1 Pro, OpenGL 4.1)"

@@ -18,7 +18,7 @@
 # doctests with `cargo test --doc`, in its own build directory (CARGO_BUILD_BUILD_DIR and CARGO_TARGET_DIR) under a
 # lock, and prints the wall-clock time, CPU time and counts of each step. It runs strict (X3D_EVIDENCE unset), so a
 # missing key or adapter fails. It sets the Mesa EGL vendor, which lets gl_backend_cannot_run_the_renderer_and_says_so
-# start a GL device; the NVIDIA one does not (backend-absent).
+# start a GL device and reach create_viewer; on the NVIDIA one (GLSL 330, no compute shaders) the test checks the adapter error.
 #
 # The "Fast checks" job runs first, on every PR: the reference pins, the answer-key guard, rustfmt, actionlint and
 # tools/ci_changes.py, which decides from the changed paths whether the suite is needed. A docs-only, metadata-only,
@@ -161,8 +161,9 @@ jobs:
           # vendor/rav1d is rav1d 1.1.0 plus one recorded change to src/decode.rs (owner decision 2026-11-03, PR #363). The check
           # downloads the crate, verifies its sha256 and compares every file byte for byte; the review skips the identical files.
           python3 -I -B tools/check_vendored_rav1d.py
-          # vendor/wgpu-hal is wgpu-hal 30.0.1 plus one recorded patch to src/vulkan/descriptor.rs (owner decision 2026-11-04, issue #89;
-          # vendor/wgpu-hal/VENDOR.md). The check downloads the crate, verifies its sha256, compares every file and the patch.
+          # vendor/wgpu-hal is wgpu-hal 30.0.1 plus two recorded patches, to src/vulkan/descriptor.rs (owner decision 2026-11-04, issue
+          # #89) and src/gles/adapter.rs (owner decision 2026-11-12; vendor/wgpu-hal/VENDOR.md). The check downloads the crate, verifies
+          # its sha256, compares every file and the patches.
           python3 -I -B tools/check_vendored_wgpu_hal.py --self-test
           python3 -I -B tools/check_vendored_wgpu_hal.py
 
