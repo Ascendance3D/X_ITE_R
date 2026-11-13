@@ -143,6 +143,29 @@ pub fn adapter_error(backends: wgpu::Backends, e: &wgpu::RequestAdapterError) ->
     format!("no adapter for the surface: {e}")
 }
 
+/// Why the renderer cannot run on an adapter with `flags` of `backend`, before a device is asked for: the native renderer
+/// needs compute shaders (the scatter-depth pass, x3d_render::scatter_gpu), and a device with the default limits needs
+/// compute limits. `None` when the adapter has compute shaders.
+pub fn compute_error(backend: wgpu::Backend, flags: wgpu::DownlevelFlags) -> Option<String> {
+    (!flags.contains(wgpu::DownlevelFlags::COMPUTE_SHADERS)).then(|| {
+        format!(
+            "the {backend:?} backend cannot run this renderer: the adapter has no compute shaders"
+        )
+    })
+}
+
+/// [`compute_error`] of `adapter`: an error naming the backend, as [`create_viewer`] gives, and not the limit error of
+/// `request_device`. Call it before `request_device`.
+pub fn check_adapter(adapter: &wgpu::Adapter) -> Result<(), String> {
+    match compute_error(
+        adapter.get_info().backend,
+        adapter.get_downlevel_capabilities().flags,
+    ) {
+        Some(e) => Err(e),
+        None => Ok(()),
+    }
+}
+
 /// The viewer on `device`, with its renderer's shaders and pipelines checked: a backend that
 /// cannot create them is an error naming the backend.
 ///
@@ -209,6 +232,25 @@ impl GpuErrors {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn an_adapter_without_compute_names_its_backend() {
+        assert_eq!(
+            compute_error(wgpu::Backend::Gl, wgpu::DownlevelFlags::empty()),
+            Some(
+                "the Gl backend cannot run this renderer: the adapter has no compute shaders"
+                    .to_string()
+            )
+        );
+        assert_eq!(
+            compute_error(wgpu::Backend::Gl, wgpu::DownlevelFlags::COMPUTE_SHADERS),
+            None
+        );
+        assert_eq!(
+            compute_error(wgpu::Backend::Vulkan, wgpu::DownlevelFlags::all()),
+            None
+        );
+    }
 
     #[test]
     fn windows_default_backend_is_dx12() {

@@ -18,6 +18,7 @@ use {
 const T0: f64 = 946684800.0;
 const FORMAT: wgpu::TextureFormat = wgpu::TextureFormat::Bgra8Unorm;
 
+#[cfg(windows)]
 /// An adapter and device of `desc` (with the viewer's wanted features, as `x3d-view` asks, when
 /// `wanted`); why not, when there is none.
 fn start(
@@ -45,40 +46,57 @@ fn start(
     })
 }
 
-/// GL cannot translate the scatter-depth compute shader (`textureLoad` of a depth texture), so
-/// the renderer cannot start there. That is an error naming the backend, not wgpu's panic.
-/// On the NVIDIA Linux driver the GL device does not start; Mesa's runs it
-/// (`__EGL_VENDOR_LIBRARY_FILENAMES=/usr/share/glvnd/egl_vendor.d/50_mesa.json`, which
-/// tools/strict-suite.sh sets). Without it, strict mode fails here with `backend-absent: no GL
-/// device (Parent device is lost)`. The cause (measured 2026-11-12, RTX 3060 Ti, driver
-/// 595.99.02): NVIDIA's EGL gives a desktop OpenGL 3.3 core context (GLSL 330). wgpu-hal 30.0.1
-/// sets `COMPUTE_SHADERS` from `GL_ARB_compute_shader` alone (gles/adapter.rs), so wgpu-core
-/// makes its indirect-call validation compute pipeline in `request_device`. naga's GLSL writer
-/// needs version 420 (ES 310) for a compute shader, the pipeline fails ("The selected version
-/// doesn't support Features(BUFFER_STORAGE | COMPUTE_SHADER | DYNAMIC_ARRAY_SIZE)"), and
-/// wgpu-core reports the device as lost. Without `InstanceFlags::VALIDATION_INDIRECT_CALL` the
-/// NVIDIA GL device starts and `create_viewer` gives the expected error, as on Mesa.
+/// GL cannot run the renderer: it says so naming the backend, not with wgpu's panic or a device error. On a GL adapter
+/// with compute shaders (Mesa, `__EGL_VENDOR_LIBRARY_FILENAMES=/usr/share/glvnd/egl_vendor.d/50_mesa.json`, which
+/// tools/strict-suite.sh sets) GL cannot translate the scatter-depth compute shader (`textureLoad` of a depth texture), so
+/// `create_viewer` fails. NVIDIA's EGL on Linux gives a desktop OpenGL 3.3 core context (GLSL 330), on which naga writes no
+/// compute shader: the adapter has no compute shaders (vendor/wgpu-hal/VENDOR.md, the GLES compute patch), and
+/// `check_adapter` fails before `request_device`, as x3d-view's start does. Before that patch the NVIDIA GL device did
+/// not start (`Parent device is lost`, wgpu-core's indirect-call validation pipeline failed in naga).
 #[test]
 fn gl_backend_cannot_run_the_renderer_and_says_so() {
     let mut desc = wgpu::InstanceDescriptor::new_without_display_handle();
     desc.backends = wgpu::Backends::GL;
-    let (adapter, device, queue) = match start(desc, false) {
-        Ok(s) => s,
+    let adapter = match gl_adapter(desc) {
+        Ok(a) => a,
         Err(e) => {
-            return x3d_evidence::skip("backend-absent", None, format_args!("no GL device ({e})"));
+            return x3d_evidence::skip("backend-absent", None, format_args!("no GL adapter ({e})"));
         }
     };
+    let e = match x3d_viewer::backend::check_adapter(&adapter) {
+        Err(e) => e,
+        Ok(()) => {
+            let (device, queue) = serialized(|| {
+                pollster::block_on(adapter.request_device(&wgpu::DeviceDescriptor {
+                    label: Some("backend test"),
+                    ..Default::default()
+                }))
+            })
+            .expect("a GL adapter with compute shaders starts a device");
 
-    match create_viewer(&device, &queue, (64, 64), &adapter, FORMAT) {
-        Err(e) => {
-            eprintln!("{e}");
-            assert!(e.contains("Gl backend cannot run this renderer"), "{e}");
+            match create_viewer(&device, &queue, (64, 64), &adapter, FORMAT) {
+                Err(e) => e,
+                Ok(_) => panic!(
+                    "the renderer started on GL ({}); update this test",
+                    adapter.get_info().name
+                ),
+            }
         }
-        Ok(_) => panic!(
-            "the renderer started on GL ({}); update this test",
-            adapter.get_info().name
-        ),
-    }
+    };
+    eprintln!("{e}");
+    assert!(e.contains("Gl backend cannot run this renderer"), "{e}");
+}
+
+/// The GL adapter of `desc`; why not, when there is none.
+fn gl_adapter(desc: wgpu::InstanceDescriptor) -> Result<wgpu::Adapter, String> {
+    serialized(|| {
+        let instance = wgpu::Instance::new(desc);
+        pollster::block_on(instance.request_adapter(&wgpu::RequestAdapterOptions {
+            power_preference: wgpu::PowerPreference::HighPerformance,
+            ..Default::default()
+        }))
+        .map_err(|e| e.to_string())
+    })
 }
 
 /// The Windows default: DX12 with `dxcompiler.dll` beside the test executable. One box, 30

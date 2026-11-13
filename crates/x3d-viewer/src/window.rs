@@ -694,6 +694,7 @@ fn create_gfx(event_loop: &ActiveEventLoop, opts: &Options) -> Result<Gfx, Strin
     }))
     .map_err(|e| backend::adapter_error(backends, &e))?;
     startup_mark("adapter");
+    backend::check_adapter(&adapter)?;
     let adapter_info = adapter.get_info();
     let (device, queue) = pollster::block_on(adapter.request_device(&wgpu::DeviceDescriptor {
         label: Some("x3d-view"),
