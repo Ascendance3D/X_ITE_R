@@ -20,6 +20,8 @@ pub struct Demuxed {
     pub video: Vec<u8>,
     /// Presentation time of the first video packet that has one, in seconds.
     pub first_video_pts: Option<f64>,
+    /// Presentation time of the first packet of the first audio stream that has one, in seconds.
+    pub first_audio_pts: Option<f64>,
     /// Does the stream carry an audio stream?
     pub has_audio: bool,
     /// The audio elementary stream: the payloads of the packets of the first audio stream, concatenated (decoded by
@@ -47,6 +49,23 @@ fn time_stamp(b: &[u8]) -> Option<f64> {
     Some(t as f64 / 90_000.0)
 }
 
+/// The start of the video and of the audio on the movie's time line, in seconds: `(video lead, audio lead)`.
+///
+/// The time line starts at the earlier of the two first presentation time stamps, as ffmpeg's start time of the file
+/// (the minimum of the stream start times) does, so the stream that starts later is delayed by the difference and
+/// nothing is cut. A stream without a time stamp, or a stream without audio, gives no lead (both start at 0). The pinned
+/// X_ITE cannot play MPEG-1, so the reference is the stream's time stamps (ffprobe `start_time`), not a recording.
+pub fn start_leads(d: &Demuxed) -> (f64, f64) {
+    match (d.first_video_pts, d.first_audio_pts) {
+        (Some(v), Some(a)) if v.is_finite() && a.is_finite() => {
+            let origin = v.min(a);
+
+            (v - origin, a - origin)
+        }
+        _ => (0.0, 0.0),
+    }
+}
+
 /// Splits an MPEG-1 Systems stream (data starting with a pack start code).
 pub fn demux(data: &[u8]) -> Result<Demuxed, Mpeg1Error> {
     if !is_system_stream(data) {
@@ -56,6 +75,7 @@ pub fn demux(data: &[u8]) -> Result<Demuxed, Mpeg1Error> {
     let mut out = Demuxed {
         video: vec![],
         first_video_pts: None,
+        first_audio_pts: None,
         has_audio: false,
         audio: vec![],
     };
@@ -120,7 +140,11 @@ pub fn demux(data: &[u8]) -> Result<Demuxed, Mpeg1Error> {
                         audio_id = Some(id);
 
                         // A bad audio packet header costs the sound its packet, not the pictures theirs.
-                        if let Ok((payload, _)) = packet(&data[start..end]) {
+                        if let Ok((payload, pts)) = packet(&data[start..end]) {
+                            if out.first_audio_pts.is_none() {
+                                out.first_audio_pts = pts;
+                            }
+
                             out.audio.extend_from_slice(payload);
                         }
                     }

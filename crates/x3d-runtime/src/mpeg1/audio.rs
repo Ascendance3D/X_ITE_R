@@ -169,7 +169,23 @@ pub fn track(data: &[u8], max_bytes: u64) -> AudioTrack {
     }
 
     match std::panic::catch_unwind(|| decode(&demuxed.audio, max_bytes)) {
-        Ok(Ok((channels, rate))) => AudioTrack::Decoded { channels, rate },
+        Ok(Ok((mut channels, rate))) => {
+            // The audio starts at its own time stamp on the movie's time line (demux::start_leads): leading silence when
+            // the video starts first. The silence counts against the same byte budget; a lead that does not fit is left out.
+            let lead = (super::demux::start_leads(&demuxed).1 * f64::from(rate)).round() as usize;
+            let bytes = channels
+                .iter()
+                .map(|c| (c.len() + lead) as u64 * 4)
+                .sum::<u64>();
+
+            if lead > 0 && bytes <= max_bytes {
+                for c in &mut channels {
+                    c.splice(0..0, std::iter::repeat_n(0.0, lead));
+                }
+            }
+
+            AudioTrack::Decoded { channels, rate }
+        }
         Ok(Err(AudioError::LayerI)) => AudioTrack::Unsupported("MPEG-1 audio layer I".to_string()),
         _ => AudioTrack::Corrupt,
     }
