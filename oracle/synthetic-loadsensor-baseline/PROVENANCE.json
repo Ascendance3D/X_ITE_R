@@ -1,0 +1,11 @@
+{
+ "world": "oracle/synthetic-loadsensor/ls-first-events.wrl",
+ "script": "oracle/synthetic-loadsensor/ls-first-events.json",
+ "recorder": "oracle/x_ite-anim.mjs",
+ "x_ite": "16.5.0 (oracle/x_ite-pin, PINNED_COMMIT)",
+ "chrome": "156.0.8078.47",
+ "chrome_package": "google-chrome-stable_156.0.8078.47-1_amd64.deb, sha256 6c92cd22e90c6e3e255d782991543fa2091db8614e8536a971a7433a5c4d7ac8, extracted to a separate directory and given to the recorder with XITE_CHROME",
+ "angle": "--use-gl=angle --use-angle=gl (the recorder default)",
+ "date": "2026-11-12",
+ "note": "The order of the events of one LoadSensor is the reference. The order between the three LoadSensors follows the fetch timing: Chrome 157.0.8103.78 gave the same events of each LoadSensor in another interleaving (the Inline last)."
+}
