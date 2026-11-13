@@ -1973,6 +1973,12 @@ fn emit(a: &Analysis, info: &LinkInfo) -> Result<Emitted, String> {
     while i < toks.len() {
         let t = toks[i];
 
+        if t.kind == Kind::Ident && newlines(&text[..t.start]) >= boundary_line {
+            if let Some(e) = int_initializes_float(a, masked, &toks, i, &line_of) {
+                return Err(e);
+            }
+        }
+
         if t.kind != Kind::Ident || in_decl(t.start) {
             i += 1;
             continue;
@@ -2261,6 +2267,94 @@ fn emit(a: &Analysis, info: &LinkInfo) -> Result<Emitted, String> {
 }
 
 /// The column count and column type of a matrix attribute type.
+/// GLSL ES has no implicit conversion (1.00 and 3.00 section 4.1.10); naga follows GLSL 4.50 and converts. ANGLE's
+/// text (assignError) for `[const] [precision] float|vecN name = [-]<int literal>` at token `i` (the type), when
+/// the declaration starts a statement. The variable's precision is the explicit one, else the default of the stage
+/// (`precision mediump float;`, highp in a vertex shader). Without a default fragment precision ANGLE fails earlier,
+/// so no text is made.
+fn int_initializes_float(
+    a: &Analysis,
+    masked: &str,
+    toks: &[Tok],
+    i: usize,
+    line_of: &dyn Fn(usize) -> usize,
+) -> Option<String> {
+    let tok = |k: usize| toks.get(k).map(|x| text_of(masked, x));
+    let ty = tok(i)?;
+    let components = match ty {
+        "float" => 1,
+        "vec2" => 2,
+        "vec3" => 3,
+        "vec4" => 4,
+        _ => return None,
+    };
+
+    if toks.get(i + 1)?.kind != Kind::Ident || tok(i + 2)? != "=" {
+        return None;
+    }
+
+    // The words before the type: precision and const, after a statement boundary (or `for (`).
+    let mut k = i;
+    let mut precision = None;
+    let mut constant = false;
+
+    while let Some(p) = k.checked_sub(1).and_then(tok) {
+        if is_precision(p) && precision.is_none() {
+            precision = Some(p);
+        } else if p == "const" && !constant {
+            constant = true;
+        } else {
+            break;
+        }
+
+        k -= 1;
+    }
+
+    let start = match k.checked_sub(1).and_then(tok) {
+        None | Some(";" | "{" | "}") => true,
+        Some("(") => k.checked_sub(2).and_then(tok) == Some("for"),
+        _ => false,
+    };
+
+    if !start {
+        return None;
+    }
+
+    let mut v = i + 3;
+
+    if matches!(tok(v)?, "-" | "+") {
+        v += 1;
+    }
+
+    let literal = toks.get(v)?;
+    let digits = text_of(masked, literal);
+    let integer = literal.kind == Kind::Number
+        && (digits.starts_with("0x")
+            || digits.starts_with("0X")
+            || !digits.contains(['.', 'e', 'E']))
+        && !digits.ends_with(['f', 'F', 'u', 'U']);
+
+    if !integer || !matches!(tok(v + 1)?, ";" | ",") {
+        return None;
+    }
+
+    let precision = precision
+        .map(str::to_string)
+        .or_else(|| a.scan.default_precision.get("float").cloned())
+        .or_else(|| (a.stage == Stage::Vertex).then(|| "highp".to_string()))?;
+    let shape = if components == 1 {
+        "float".to_string()
+    } else {
+        format!("{components}-component vector of float")
+    };
+
+    Some(format!(
+        "ERROR: 0:{}: '=' : cannot convert from 'const int' to '{}{precision} {shape}'",
+        line_of(toks[i + 2].start),
+        if constant { "const " } else { "" }
+    ))
+}
+
 fn matrix_columns(ty: &str) -> Option<(u32, &'static str)> {
     match ty {
         "mat3" => Some((3, "vec3")),
