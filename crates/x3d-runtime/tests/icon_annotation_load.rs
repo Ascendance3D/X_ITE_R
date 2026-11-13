@@ -10,8 +10,8 @@
 //! left fails it. Nothing is displayed: the draft gives no normative layout. The node has no `load` field, so it loads as
 //! with the X3DUrlObject default, TRUE.
 //!
-//! The decode check is the one of ImageTexture (`image::load_from_memory`), so other formats that the image crate
-//! decodes also complete the load. The tests cover JPEG and PNG, the formats the draft names.
+//! The candidate check is the one of ImageTexture (`check_image`): data in no image format fails the candidate, and an
+//! SVG document does not. The tests cover JPEG and PNG, the formats the draft names, and data in no image format.
 
 use std::cell::RefCell;
 use std::collections::HashMap;
