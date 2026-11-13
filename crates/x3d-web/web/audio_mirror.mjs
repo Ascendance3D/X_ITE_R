@@ -127,7 +127,17 @@ export class AudioMirror
          if (this .#disposed || !this .#live (standIn))
             return mediaStream .getTracks () .forEach (track => track .stop ());
 
-         new MediaStreamAudioSourceNode (this .#context, { mediaStream }) .connect (standIn);
+         // A stream that cannot be connected stops its tracks; the message is logged below.
+         try
+         {
+            new MediaStreamAudioSourceNode (this .#context, { mediaStream }) .connect (standIn);
+         }
+         catch (error)
+         {
+            mediaStream .getTracks () .forEach (track => track .stop ());
+            throw error;
+         }
+
          this .#streams .set (standIn, mediaStream);
       })
       .catch (error => console .error (error ?.message ?? String (error)));

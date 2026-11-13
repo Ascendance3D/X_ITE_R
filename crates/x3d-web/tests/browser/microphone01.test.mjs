@@ -56,7 +56,18 @@ const REFUSE = () =>
    };
 };
 
-const open = (refuse = false) => openPage (DESKTOP, { init: `(${KEEP_STREAMS}) (); ${refuse ? `(${REFUSE}) ();` : ""} (${installTap}) ();` });
+// getUserMedia gives a stream, and the page cannot make its MediaStreamAudioSourceNode; console .error lines go to
+// window .errors as well.
+const NO_SOURCE = () =>
+{
+   const error = console .error;
+
+   window .errors = [ ];
+   console .error = (... args) => { window .errors .push (args .join (" ")); error .apply (console, args); };
+   window .MediaStreamAudioSourceNode = class { constructor () { throw new DOMException ("No source", "InvalidStateError"); } };
+};
+
+const open = (refuse = false, noSource = false) => openPage (DESKTOP, { init: `(${KEEP_STREAMS}) (); ${refuse ? `(${REFUSE}) ();` : ""} ${noSource ? `(${NO_SOURCE}) ();` : ""} (${installTap}) ();` });
 
 // Sets a time field of M to the browser's time (or loads `text` and starts M), waits, and returns the level and state.
 async function after (page, { text, field }, ms = 2500)
@@ -163,6 +174,29 @@ describe ("microphone 01", { skip: Boolean (ONLY) }, () =>
          assert .deepEqual (refused .tracks, [ ]);
          assert .ok (refused .errors .includes ("Permission denied"), `the message is logged: ${JSON .stringify (refused .errors)}`);
          assert .ok (refused .level < 1e-4, `silent (level ${refused .level})`);
+         assert .deepEqual (thrown, [ ], "no uncaught error");
+      }
+      finally
+      {
+         await page .context () .close ();
+      }
+   });
+
+   test ("a stream that cannot be connected is stopped, and its message is logged", { timeout: CASE_TIMEOUT }, async () =>
+   {
+      const page   = await open (false, true);
+      const thrown = [ ];
+
+      page .on ("pageerror", error => thrown .push (error .message));
+
+      try
+      {
+         const failed = await after (page, { text: WORLD (true) }, 500);
+
+         assert .equal (failed .isActive, true);
+         assert .deepEqual (failed .tracks, [ "ended" ], "the tracks of the stream stop");
+         assert .ok (failed .errors .includes ("No source"), `the message is logged: ${JSON .stringify (failed .errors)}`);
+         assert .ok (failed .level < 1e-4, `silent (level ${failed .level})`);
          assert .deepEqual (thrown, [ ], "no uncaught error");
       }
       finally
