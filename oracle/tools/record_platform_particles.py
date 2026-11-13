@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
-"""Platform recordings of the pinned X_ITE for the ParticleSystem pointing and collision tests (rea_b14, rea_b15, rea_b21, rea_b22).
+"""Platform recordings of the pinned X_ITE for the ParticleSystem pointing and collision tests (rea_b14, rea_b15, rea_b21, rea_b22),
+and the VolumeEmitter ARRAY_SIZE clamp cases (rea_b17).
 
 Like record_platform_baseline.py (read it for the rules), for the baselines recorded by `x3d-oracle particles`: every case of the base is
 recorded three times ON THE TARGET MACHINE; `js.json` and `js.f32` of the three runs must be identical (else the case is listed in
@@ -41,7 +42,8 @@ opt = lambda n, d=None: args[args.index(n) + 1] if n in args else d
 platform, base, hardware, only = opt("--platform"), opt("--base"), opt("--hardware", ""), opt("--only")
 oracle = opt("--oracle", os.path.join(root, "target", "release", "x3d-oracle"))
 SYNTH = {"rea-b14-particle-pick-baseline": "synthetic-rea-b14-particle-pick", "rea-b15-particle-collision-baseline": "synthetic-rea-b15-particle-collision",
-         "rea-b21-wide-lines-baseline": "synthetic-rea-b21-wide-lines", "rea-b22-two-layer-shadows-baseline": "synthetic-rea-b22-two-layer-shadows"}
+         "rea-b21-wide-lines-baseline": "synthetic-rea-b21-wide-lines", "rea-b22-two-layer-shadows-baseline": "synthetic-rea-b22-two-layer-shadows",
+         "rea-b17-emitter-hits-baseline": "synthetic-rea-b17-emitter-hits"}
 assert platform and base in SYNTH, "--platform and --base (one of %s) are required" % sorted(SYNTH)
 assert os.environ.get("X3D_ORACLE_CHROME") and os.environ.get("X3D_ORACLE_ANGLE"), "set X3D_ORACLE_CHROME and X3D_ORACLE_ANGLE"
 
