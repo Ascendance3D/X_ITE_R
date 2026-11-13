@@ -1977,6 +1977,10 @@ fn emit(a: &Analysis, info: &LinkInfo) -> Result<Emitted, String> {
             if let Some(e) = int_initializes_float(a, masked, &toks, i, &line_of) {
                 return Err(e);
             }
+
+            if let Some(e) = constructor_too_many_arguments(masked, &toks, i, &line_of) {
+                return Err(e);
+            }
         }
 
         if t.kind != Kind::Ident || in_decl(t.start) {
@@ -2353,6 +2357,118 @@ fn int_initializes_float(
         line_of(toks[i + 2].start),
         if constant { "const " } else { "" }
     ))
+}
+
+/// The component count of a scalar or vector constructor type name.
+fn constructor_components(ty: &str) -> Option<usize> {
+    match ty {
+        "float" | "int" | "uint" | "bool" => Some(1),
+        _ => {
+            let n = ty
+                .strip_prefix("vec")
+                .or_else(|| ty.strip_prefix("ivec"))
+                .or_else(|| ty.strip_prefix("uvec"))
+                .or_else(|| ty.strip_prefix("bvec"))?;
+            matches!(n, "2" | "3" | "4").then(|| n.parse().ok())?
+        }
+    }
+}
+
+/// GLSL ES 1.00 section 5.4.2 (3.00 section 5.4.2): a scalar or vector constructor with an argument after the last
+/// one it uses is an error; naga follows GLSL 4.50 and drops the extra components. ANGLE's text for the
+/// constructor at token `i`, when every argument is a literal or a scalar or vector constructor (so the component
+/// count of each is known); otherwise no text is made.
+fn constructor_too_many_arguments(
+    masked: &str,
+    toks: &[Tok],
+    i: usize,
+    line_of: &dyn Fn(usize) -> usize,
+) -> Option<String> {
+    let tok = |k: usize| toks.get(k).map(|x| text_of(masked, x));
+    let needed = constructor_components(tok(i)?)?;
+
+    if tok(i + 1)? != "(" {
+        return None;
+    }
+
+    // The arguments at depth 1, as token ranges.
+    let mut args = vec![];
+    let mut depth = 0usize;
+    let mut start = i + 2;
+    let mut k = i + 1;
+
+    loop {
+        match tok(k)? {
+            "(" => depth += 1,
+            ")" => {
+                depth -= 1;
+
+                if depth == 0 {
+                    args.push((start, k));
+                    break;
+                }
+            }
+            "," if depth == 1 => {
+                args.push((start, k));
+                start = k + 1;
+            }
+            _ => {}
+        }
+
+        k += 1;
+    }
+
+    // The component count of one argument, when it is known.
+    let components = |(b, e): (usize, usize)| -> Option<usize> {
+        let b = if matches!(tok(b)?, "-" | "+") {
+            b + 1
+        } else {
+            b
+        };
+
+        if e == b + 1 && (toks[b].kind == Kind::Number || matches!(tok(b)?, "true" | "false")) {
+            return Some(1);
+        }
+
+        // `type ( ... )` that spans the whole argument.
+        let n = constructor_components(tok(b)?)?;
+        let mut depth = 0usize;
+
+        for j in b + 1..e {
+            match tok(j)? {
+                "(" => depth += 1,
+                ")" => {
+                    depth -= 1;
+
+                    if depth == 0 && j + 1 != e {
+                        return None;
+                    }
+                }
+                _ => {}
+            }
+        }
+
+        (tok(b + 1)? == "(").then_some(n)
+    };
+
+    if args.len() < 2 || args.iter().any(|&(b, e)| b >= e) {
+        return None;
+    }
+
+    let mut used = 0;
+
+    for &arg in &args {
+        if used >= needed {
+            return Some(format!(
+                "ERROR: 0:{}: 'constructor' : too many arguments",
+                line_of(toks[i].start)
+            ));
+        }
+
+        used += components(arg)?;
+    }
+
+    None
 }
 
 fn matrix_columns(ty: &str) -> Option<(u32, &'static str)> {
