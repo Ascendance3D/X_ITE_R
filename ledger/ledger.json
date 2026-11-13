@@ -7147,11 +7147,12 @@
    "behavior": "",
    "tests": [
     "oracle/synthetic-rea/sai-scene.wrl",
-    "crates/x3d-viewer/tests/rea_batch09_sai.rs ctxev-* cfg-scene cfg-comp scx-print"
+    "crates/x3d-viewer/tests/rea_batch09_sai.rs ctxev-* cfg-scene cfg-comp scx-print",
+    "crates/x3d-viewer/tests/rea_batch09_sai.rs scx-api scx-members (instanceof, prototype chain, member owners, typeName and toString of Browser.currentScene, getExecutionContext () and created scenes; oracle/rea-b09-sai-baseline, issue #77)"
    ],
-   "missing": "X3DExecutionContext / X3DScene class chain (brx-obj-open: the port's scene objects are plain objects); kept PARTIAL by owner decision 2026-10-20 until its full REA requirements pass",
+   "missing": "kept PARTIAL by owner decision 2026-10-20 until its full REA requirements pass; that decision does not list the remaining requirements, so a promotion needs owner review. The X3DExecutionContext / X3DScene class chain (brx-obj-open, named here before) is ported (commit 5ec9ae2b, issue #77) and compared (scx-api, scx-members, scx-print)",
    "oracle": "",
-   "notes": "b09 cloud: timing differences A-C fixed (createX3DFromString parse as a microtask, SFNode creation on a stream's first read, Inline change events after the frame); component state of a scene exact (cfg-comp). Checkpoint after 804802d: scx-print (3 identical X_ITE recordings, exact): toVRMLString / toXMLString / toJSONString of routes and imported nodes throw X_ITE's errors, exported nodes and PROTO / EXTERNPROTO declarations print, a loaded EXTERNPROTO hands out its PROTO (getProtoDeclaration) | Recovery audit 2026-10-25 (origin/master cdfbffc): rust path crates/x3d-script/src/prelude.js was split into crates/x3d-script/src/prelude/ in 6a1305c."
+   "notes": "b09 cloud: timing differences A-C fixed (createX3DFromString parse as a microtask, SFNode creation on a stream's first read, Inline change events after the frame); component state of a scene exact (cfg-comp). Checkpoint after 804802d: scx-print (3 identical X_ITE recordings, exact): toVRMLString / toXMLString / toJSONString of routes and imported nodes throw X_ITE's errors, exported nodes and PROTO / EXTERNPROTO declarations print, a loaded EXTERNPROTO hands out its PROTO (getProtoDeclaration) | Recovery audit 2026-10-25 (origin/master cdfbffc): rust path crates/x3d-script/src/prelude.js was split into crates/x3d-script/src/prelude/ in 6a1305c. | 2026-11-13 (compatibility closure report): `missing` no longer says the scene objects are plain objects; issue #77 found the class chain ported by commit 5ec9ae2b (crates/x3d-script/src/prelude/rest.js X3DExecutionContextClass, X3DSceneClass) and compared by scx-api, scx-members and scx-print. Text and evidence only; the entry stays PARTIAL (owner decision 2026-10-20)."
   },
   {
    "id": "sub:exec.scene",

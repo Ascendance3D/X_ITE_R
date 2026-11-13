@@ -156,6 +156,7 @@ HISTORY = [
     ("before-classify", "ledger_classify.py C E", lambda: _first("ledger_classify", "C"), lambda: importlib.import_module("ledger_classify").E),
     ("before-shaderglsl", "ledger_shaderglsl.py C", lambda: _first("ledger_shaderglsl", "C")),
     ("before-missingsync", "ledger_missingsync.py C", lambda: _first("ledger_missingsync", "C")),
+    ("before-ctxapi", "ledger_ctxapi.py C", lambda: _first("ledger_ctxapi", "C")),
 ]
 
 def load(p): return json.load(open(p))["items"]
