@@ -22,7 +22,9 @@ def render():
     raw = open(LEDGER, "rb").read()
     items = json.loads(raw)["items"]
     st = collections.Counter(i["status"] for i in items)
-    cl = collections.Counter(i["classification"]["class"] for i in items if "classification" in i)
+    # The schema does not limit `classification` to DIFFERENT entries, so the section counts only those.
+    diff_cl = [i for i in items if i["status"] == "DIFFERENT" and "classification" in i]
+    cl = collections.Counter(i["classification"]["class"] for i in diff_cl)
     out = [
         "# Coverage ledger summary",
         "",
@@ -54,8 +56,7 @@ def render():
     ]
     out += [
         f"| `{i['id']}` | {i['classification']['class']} | {cell(i['classification'].get('impact', ''))} |"
-        for i in items
-        if "classification" in i
+        for i in diff_cl
     ]
     out += [
         "",
