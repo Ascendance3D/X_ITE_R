@@ -32,3 +32,5 @@ links-runtime oracle/synthetic-rea-b08-shaders/links-runtime.wrl oracle/syntheti
 links-runtime oracle/synthetic-rea-b08-shaders/links-runtime.wrl oracle/synthetic-rea-b08-shaders/links-runtime.json 4
 stubs-runtime oracle/synthetic-rea-b08-shaders/stubs-runtime.wrl oracle/synthetic-rea-b08-shaders/stubs-runtime.json 0
 stubs-runtime oracle/synthetic-rea-b08-shaders/stubs-runtime.wrl oracle/synthetic-rea-b08-shaders/stubs-runtime.json 4
+errors-loops-runtime oracle/synthetic-rea-b08-shaders/errors-loops-runtime.wrl oracle/synthetic-rea-b08-shaders/errors-loops-runtime.json 0
+errors-loops-runtime oracle/synthetic-rea-b08-shaders/errors-loops-runtime.wrl oracle/synthetic-rea-b08-shaders/errors-loops-runtime.json 4

@@ -1981,6 +1981,10 @@ fn emit(a: &Analysis, info: &LinkInfo) -> Result<Emitted, String> {
             if let Some(e) = constructor_too_many_arguments(masked, &toks, i, &line_of) {
                 return Err(e);
             }
+
+            if let Some(e) = loop_not_allowed(a, masked, &t, &line_of) {
+                return Err(e);
+            }
         }
 
         if t.kind != Kind::Ident || in_decl(t.start) {
@@ -2377,6 +2381,26 @@ fn constructor_components(ty: &str) -> Option<usize> {
 /// GLSL ES 1.00 section 5.4.2 (3.00 section 5.4.2): a scalar or vector constructor with an argument after the last
 /// one it uses is an error; naga follows GLSL 4.50 and drops the extra components. ANGLE's text for the
 /// constructor at token `i`, when every argument is a literal or a scalar or vector constructor (so the component
+/// GLSL ES 1.00 Appendix A section 4: only `for` loops are required. ANGLE (ValidateLimitations) applies it to the
+/// WebGL shaders of version 1.00 and reports `'while'` or `'do' : This type of loop is not allowed` at the keyword,
+/// before the condition is checked (errors-loops-runtime cases a, c and f). naga compiles both loops. GLSL ES 3.00 has
+/// no such limit. For a `do` loop the `do` comes first, so its `while` is never reached.
+fn loop_not_allowed(
+    a: &Analysis,
+    masked: &str,
+    t: &Tok,
+    line_of: &dyn Fn(usize) -> usize,
+) -> Option<String> {
+    let word = text_of(masked, t);
+
+    (!a.es3 && matches!(word, "while" | "do")).then(|| {
+        format!(
+            "ERROR: 0:{}: '{word}' : This type of loop is not allowed",
+            line_of(t.start)
+        )
+    })
+}
+
 /// count of each is known); otherwise no text is made.
 fn constructor_too_many_arguments(
     masked: &str,
@@ -2826,6 +2850,38 @@ fn to_wgsl(stage: Stage, e: &Emitted) -> Result<String, String> {
             let span = module.functions[*handle].expressions.get_span(*condition);
 
             if span.is_defined() {
+                let loc = span.location(&e.text);
+                let line = (loc.line_number as usize)
+                    .saturating_sub(e.line_base)
+                    .max(1);
+                return format!("ERROR: 0:{line}: '' : boolean expression expected");
+            }
+        }
+
+        // GLSL ES 1.00 / 3.00 section 6.3: the condition of a for loop is a scalar bool. naga's frontend makes
+        // `if (!condition) break;` of it, so a float or int condition fails as the operand of that `!`, which has
+        // the span of the condition. A `!` the user wrote starts with `!` in the text and keeps naga's text.
+        if let naga::valid::ValidationError::Function {
+            handle,
+            source:
+                naga::valid::FunctionError::Expression {
+                    handle: not,
+                    source:
+                        naga::valid::ExpressionError::InvalidUnaryOperandType(
+                            naga::UnaryOperator::LogicalNot,
+                            _,
+                        ),
+                },
+            ..
+        } = err.as_inner()
+        {
+            let span = module.functions[*handle].expressions.get_span(*not);
+
+            if span.is_defined()
+                && e.text
+                    .get(span.to_range().unwrap_or_default())
+                    .is_some_and(|t| !t.trim_start().starts_with('!'))
+            {
                 let loc = span.location(&e.text);
                 let line = (loc.line_number as usize)
                     .saturating_sub(e.line_base)

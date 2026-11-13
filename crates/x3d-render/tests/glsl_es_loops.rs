@@ -1,0 +1,124 @@
+//! Loops and conditions of a GLSL ES 1.00 fragment ShaderPart (a source without `#version`) against the log of the
+//! pinned X_ITE (ANGLE on the owner's GPU), the cases of `errors-loops-runtime.wrl` (oracle/tools/gen_rea_b08_shaders.py
+//! LOOP_FRAG; X_ITE 16.5.0 `34cdf9f97`, Chrome 156.0.8078.47, baseline oracle/rea-b08-shaders-baseline/errors-loops-runtime-msaa0,
+//! the key of each text from one run per key).
+//!
+//! - GLSL ES 1.00 Appendix A section 4: only `for` loops are required. ANGLE (ValidateLimitations) applies it to the
+//!   WebGL shaders of this version and rejects `while` and `do` with `'<keyword>' : This type of loop is not
+//!   allowed`. naga compiles both.
+//! - GLSL ES 1.00 sections 6.3 and 5.7: the condition of a `for` loop, of a `while` loop and of `?:` is a scalar bool.
+//!   ANGLE reports `'' : boolean expression expected`; naga gives "Function [1] '_x3d_main' is invalid" or
+//!   compiles. A float `while` condition gets the loop text: ANGLE checks the loop type first.
+//!
+//! The sources start with an empty line, as the data URL of the world does. `#version 300 es` sources keep every
+//! loop (GLSL ES 3.00 has no Appendix A limits).
+
+use x3d_render::glsl_compat::{Stage, compile_part};
+
+/// (key, source, X_ITE's log; `None`: X_ITE compiled the source).
+const CASES: &[(&str, &str, Option<&str>)] = &[
+    (
+        "a while loop",
+        "\nprecision mediump float;\nvoid main() { float x = 1.0;\n while (x > 0.5) { x = 0.0; }\n gl_FragColor = vec4 (x); }\n",
+        Some("ERROR: 0:4: 'while' : This type of loop is not allowed"),
+    ),
+    (
+        "b for float condition",
+        "\nprecision mediump float;\nvoid main() { float s = 0.0;\n for (float i = 1.0; i; i -= 1.0) { s += 1.0; }\n gl_FragColor = vec4 (s); }\n",
+        Some("ERROR: 0:4: '' : boolean expression expected"),
+    ),
+    (
+        "c do-while loop",
+        "\nprecision mediump float;\nvoid main() { float x = 1.0;\n do { x = 0.0; } while (x > 0.5);\n gl_FragColor = vec4 (x); }\n",
+        Some("ERROR: 0:4: 'do' : This type of loop is not allowed"),
+    ),
+    (
+        "d ternary float condition",
+        "\nprecision mediump float;\nvoid main() { float x = 1.0;\n float y = x ? 1.0 : 0.0;\n gl_FragColor = vec4 (y); }\n",
+        Some("ERROR: 0:4: '' : boolean expression expected"),
+    ),
+    (
+        "e bool conditions",
+        "\nprecision mediump float;\nvoid main() { float x = 0.0;\n for (int i = 0; i < 2; ++ i) { x += 0.4; }\n gl_FragColor = vec4 (x > 0.5 ? 1.0 : 0.0, x, 0.4, 1.0); }\n",
+        None,
+    ),
+    (
+        "f while float condition",
+        "\nprecision mediump float;\nvoid main() { float x = 1.0;\n while (x) { x = 0.0; }\n gl_FragColor = vec4 (x); }\n",
+        Some("ERROR: 0:4: 'while' : This type of loop is not allowed"),
+    ),
+    (
+        "g ternary bvec2 condition",
+        "\nprecision mediump float;\nvoid main() { bvec2 b = bvec2 (true);\n float y = b ? 1.0 : 0.0;\n gl_FragColor = vec4 (y); }\n",
+        Some("ERROR: 0:4: '' : boolean expression expected"),
+    ),
+];
+
+fn rust(source: &str) -> Option<String> {
+    // ShaderCompiler.process runs first in ShaderPart.loadData (it ends every line with a newline).
+    compile_part(
+        Stage::Fragment,
+        &x3d_runtime::nodes::shader_include::process(source),
+        &[],
+    )
+    .err()
+}
+
+#[test]
+fn loop_and_condition_errors_match_x_ite() {
+    let wrong: Vec<String> = CASES
+        .iter()
+        .filter_map(|(name, source, want)| {
+            let got = rust(source);
+            (got.as_deref() != *want).then(|| format!("{name}: got {got:?}, X_ITE {want:?}"))
+        })
+        .collect();
+
+    assert!(
+        wrong.is_empty(),
+        "{} of {} differ:\n{}",
+        wrong.len(),
+        CASES.len(),
+        wrong.join("\n")
+    );
+}
+
+/// The words `while` and `do` in a comment, an identifier or a `#define` that is not used are not loops.
+#[test]
+fn only_a_loop_statement_is_rejected() {
+    let ok = [
+        "\nprecision mediump float;\n// while (true) do { }\nvoid main() { float whiled = 1.0; gl_FragColor = vec4 (whiled); }\n",
+        "\nprecision mediump float;\n#if 0\nvoid f () { while (true) { } }\n#endif\nvoid main() { gl_FragColor = vec4 (1.0); }\n",
+    ];
+
+    for source in ok {
+        assert_eq!(rust(source), None, "{source}");
+    }
+}
+
+/// GLSL ES 3.00 has no Appendix A: while and do-while compile.
+#[test]
+fn es3_keeps_while_and_do() {
+    let es3 = |body: &str| {
+        format!(
+            "#version 300 es\nprecision mediump float;\nout vec4 color;\nvoid main() {{ float x = 1.0;\n{body}\n color = vec4 (x); }}\n"
+        )
+    };
+
+    assert_eq!(rust(&es3(" while (x > 0.5) { x = 0.0; }")), None);
+    assert_eq!(rust(&es3(" do { x = 0.0; } while (x > 0.5);")), None);
+}
+
+/// A `!` that the user wrote on a float is not a loop condition: it keeps naga's text.
+#[test]
+fn a_user_not_on_a_float_is_not_a_loop_condition() {
+    let got = rust(
+        "\nprecision mediump float;\nvoid main() { float x = 1.0;\n bool b = !x;\n gl_FragColor = vec4 (1.0); }\n",
+    );
+
+    assert!(got.is_some());
+    assert_ne!(
+        got.as_deref(),
+        Some("ERROR: 0:4: '' : boolean expression expected")
+    );
+}
