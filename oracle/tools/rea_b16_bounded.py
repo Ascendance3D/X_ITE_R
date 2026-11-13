@@ -25,7 +25,9 @@ for i in (1, 2, 3):
     out = f"/tmp/rea-b16-bounded-record/{name}-{i}"
     shutil.rmtree(out, ignore_errors=True)
     os.makedirs(out)
-    subprocess.run([oracle, "particles", world, script, "--out", os.path.join(out, "js.json")],
+    # XITE_CHROME: the reference browser (owner decision 2026-11-12: Chrome 156.0.8078.47); without it x3d-oracle's default.
+    chrome = ["--chrome", os.environ["XITE_CHROME"]] if os.environ.get("XITE_CHROME") else []
+    subprocess.run([oracle, "particles", world, script, "--out", os.path.join(out, "js.json")] + chrome,
                    check=True, cwd=root, timeout=300, stdout=subprocess.DEVNULL)
     runs.append(out)
 a = runs[0]

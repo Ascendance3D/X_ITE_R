@@ -189,10 +189,10 @@ CASES.update({
 LATE = lift(1.45)
 
 
-def ts_late(frames_start):
+def ts_late(frames_start, event_frame=1):
     return (ps(FALL, [bm(FLOOR_COORD)]) + "DEF ST TimeSensor { }\n"
             + switch_script(LATE, "  inputOutput SFNode co USE CO\n") + "ROUTE ST.isActive TO SW.go\n",
-            {"events": [{"frame": 1, "node": "ST", "field": "startTime", "value": T0 + frames_start * DT}]})
+            {"events": [{"frame": event_frame, "node": "ST", "field": "startTime", "value": T0 + frames_start * DT}]})
 
 
 CASES.update({
@@ -202,6 +202,14 @@ CASES.update({
         "done = true; " + LATE, "  inputOutput SFNode co USE CO\n", f"!done && value >= {T0 + 22.5 * DT!r}"), {}),
     "bp-tick-miss": (ps(FALL, [bm(FLOOR_COORD)]) + timed_script(
         "done = true; " + LATE, "  inputOutput SFNode co USE CO\n", f"!done && value >= {T0 + 23.5 * DT!r}"), {}),
+})
+
+# The same two start times, set by an event at frame 15 instead of frame 1: the start timeout of an event that arrives
+# later in the run (the cases above measure only an event at frame 1). Added at the end, so the seeds of the earlier
+# cases do not change.
+CASES.update({
+    "bp-ts-late-event-hit": ts_late(22.9, 15),
+    "bp-ts-late-event-miss": ts_late(23.1, 15),
 })
 
 

@@ -92,6 +92,8 @@ cases! {
     ts_file_rebuild => "bp-ts-file-rebuild",
     ts_hit => "bp-ts-hit",
     ts_miss => "bp-ts-miss",
+    ts_late_event_hit => "bp-ts-late-event-hit",
+    ts_late_event_miss => "bp-ts-late-event-miss",
     tick_rebuild => "bp-tick-rebuild",
     tick_replace => "bp-tick-replace",
     tick_repeat => "bp-tick-repeat",

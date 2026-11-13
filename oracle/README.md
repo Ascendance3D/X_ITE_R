@@ -617,7 +617,9 @@ or a looping TimeSensor's `time` that the Script tests). Measured on the pinned 
 timeout only for a `startTime` event, not for the value read from the file, so a future `startTime` in the file never
 starts the sensor (`bp-ts-file-rebuild`; this, not the oracle protocol, is why the first attempt saw no Script run).
 The `bp-ts-*` cases set `startTime` by an event at frame 1 and use the page's virtual timers; such a timer fires in the
-first step at or after its `startTime` (`bp-ts-hit` 22.9 frames, `bp-ts-miss` 23.1 frames). The records of these cases
+first step at or after its `startTime` (`bp-ts-hit` 22.9 frames, `bp-ts-miss` 23.1 frames). `bp-ts-late-event-hit` and
+`bp-ts-late-event-miss` set the same two start times by an event at frame 15 (recorded 2026-11-13 with the reference
+Chrome 156.0.8078.47, `XITE_CHROME`): the timer fires in the same steps. The records of these cases
 are flat: `rea-b16-bounded-baseline/NAME.js.json` and `NAME/js.f32`.
 
 The wide and stippled instanced line baselines `rea-b18-particle-lines-baseline/` (ParticleSystem LINE particles
