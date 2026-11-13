@@ -1087,9 +1087,10 @@ fn scan(text: &str, defines: &Defines, es3: bool) -> Result<Scan, String> {
                 || name == ";"
                 || !name.as_bytes().first().is_some_and(|c| is_ident_start(*c))
             {
+                // ANGLE reports the line of the unexpected token.
                 return Err(format!(
                     "ERROR: 0:{}: '{}' : syntax error",
-                    line_of(item[0].start),
+                    line_of(item.get(k).map_or(item[0].start, |t| t.start)),
                     name
                 ));
             }
@@ -1122,9 +1123,11 @@ fn scan(text: &str, defines: &Defines, es3: bool) -> Result<Scan, String> {
                 Some(&",") => k += 1,
                 Some(&";") => break,
                 _ => {
+                    // ANGLE reports the line of the unexpected token (a semicolon missing at a line end: the next
+                    // line).
                     return Err(format!(
                         "ERROR: 0:{}: '{}' : syntax error",
-                        line_of(item[0].start),
+                        line_of(item.get(k).map_or(item[0].start, |t| t.start)),
                         words.get(k).copied().unwrap_or("")
                     ));
                 }
@@ -2585,7 +2588,25 @@ fn to_wgsl(stage: Stage, e: &Emitted) -> Result<String, String> {
         naga::valid::Capabilities::empty(),
     )
     .validate(&module)
-    .map_err(|err| format!("ERROR: 0:1: {}", err.as_inner()))?;
+    .map_err(|err| {
+        // ANGLE's text for a function that returns a value of another type, at the returned value.
+        if let naga::valid::ValidationError::Function {
+            handle,
+            source: naga::valid::FunctionError::InvalidReturnType { expression, .. },
+            ..
+        } = err.as_inner()
+            && let Some(span) = return_span(&module.functions[*handle].body, *expression)
+            && span.is_defined()
+        {
+            let loc = span.location(&e.text);
+            let line = (loc.line_number as usize)
+                .saturating_sub(e.line_base)
+                .max(1);
+            return format!("ERROR: 0:{line}: 'return' : function return is not matching type:");
+        }
+
+        format!("ERROR: 0:1: {}", err.as_inner())
+    })?;
     let wgsl =
         naga::back::wgsl::write_string(&module, &info, naga::back::wgsl::WriterFlags::empty())
             .map_err(|err| format!("ERROR: 0:1: {err}"))?;
@@ -2598,6 +2619,27 @@ fn to_wgsl(stage: Stage, e: &Emitted) -> Result<String, String> {
     .validate(&again)
     .map_err(|err| format!("ERROR: 0:1: {}", err.as_inner()))?;
     Ok(wgsl)
+}
+
+/// The span of the first `return` statement of `block` (nested blocks included) that returns `value`.
+fn return_span(
+    block: &naga::Block,
+    value: Option<naga::Handle<naga::Expression>>,
+) -> Option<naga::Span> {
+    use naga::Statement as S;
+
+    block.span_iter().find_map(|(st, span)| match st {
+        S::Return { value: v } if *v == value => Some(*span),
+        S::Block(b) => return_span(b, value),
+        S::If { accept, reject, .. } => {
+            return_span(accept, value).or_else(|| return_span(reject, value))
+        }
+        S::Loop {
+            body, continuing, ..
+        } => return_span(body, value).or_else(|| return_span(continuing, value)),
+        S::Switch { cases, .. } => cases.iter().find_map(|c| return_span(&c.body, value)),
+        _ => None,
+    })
 }
 
 // ---- public API -------------------------------------------------------------------------------

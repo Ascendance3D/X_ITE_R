@@ -153,8 +153,8 @@ vertex_world = lambda steps: world(
     script(["VP"], steps))
 worlds["vertex-steps.wrl"] = vertex_world(vs_steps)
 scripts["vertex-steps"] = runtime_json([k for k, _ in vs_steps])
-# KNOWN differences of the Rust log (see rea_b24_shaderpart.rs KNOWN): the position of a syntax error after a line
-# end, and a type error inside a function.
+# Two compile errors whose ANGLE text the port once missed (now matched, crates/x3d-render/tests/glsl_token_lines.rs):
+# the position of a syntax error after a line end, and a type error inside a function.
 vk_steps = [("a", setf("vp", "vertex", VS_B)), ("b", setf("vp", "vertex", VS)), ("c", setf("vp", "vertex", VS_K)), ("d", setf("vp", "vertex", VS))]
 worlds["vertex-known.wrl"] = vertex_world(vk_steps)
 scripts["vertex-known"] = runtime_json([k for k, _ in vk_steps])
