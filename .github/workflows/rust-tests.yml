@@ -137,6 +137,13 @@ jobs:
           python3 -I -B tools/verify-reference-pin.py
           python3 -I -B tools/verify-reference-pin.py --self-test
 
+      # The ledger replays its promotion history and checks the classification rules (owner decision 2026-11-12); --self-test
+      # proves that it fails on a changed status, a changed DIFFERENT entry and each broken classification rule.
+      - name: Ledger
+        run: |
+          python3 -I -B ledger/tools/verify_ledger.py
+          python3 -I -B ledger/tools/verify_ledger.py --self-test
+
       # gpu-tests.yml (the GPU runner) lists the same GPU tests as GPU_TESTS below.
       - name: GPU test lists
         run: python3 -I -B tools/check_gpu_test_lists.py

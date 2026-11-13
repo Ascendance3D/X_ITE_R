@@ -9,9 +9,14 @@ Reads the authoritative ledger (default ledger/ledger.json) and checks, without 
     ends at the authoritative ledger.
   - totals equal to the totals that follow from the first snapshot (ledger/before) and the statuses of the chain; they are not
     fixed numbers, so a new batch adds one step to HISTORY (its snapshot in ledger/before-bNN and its tool's change set)
-  - the 21 DIFFERENT entries that remain (25 in ledger/before-cloud, less the four pointing sensors that left in issue #67) equal the Batch 09 snapshot byte for byte
+  - the 21 DIFFERENT entries that remain (25 in ledger/before-cloud, less the four pointing sensors that left in issue #67) equal the Batch 09 snapshot
+    byte for byte, except the evidence fields (EVIDENCE_FIELDS) that a step names in its evidence set (owner decision 2026-11-12: evidence of a
+    DIFFERENT entry may be added, its status and its other fields stay; the earlier notes stay as a prefix)
+  - the optional `classification` object of an entry (owner decision 2026-11-12; CLASSES and the rules in classification_errors): it is
+    independent of `status`, and a step that changes a status outside its change set fails as before
   - every file path named in an entry's tests / rust fields exists (missing ones are reported, never fixed)
 Exit 1 on a hard failure; missing evidence paths are listed as warnings and do not change the exit code.
+--self-test runs the negative cases (SELF_TEST): each changed copy of the ledger must fail with its message.
 
 BASELINE_B09 keeps the totals this tool enforced before Batch 11 (the Batch 09 ledger after the ten promotions); it is printed
 for reference only."""
@@ -19,17 +24,19 @@ import collections, importlib, json, os, re, sys
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, HERE)
+from ledger_classification import CLASSES, EVIDENCE_FIELDS, classification_errors, frozen  # noqa: E402
 ROOT = os.path.abspath(os.path.join(HERE, "..", ".."))
 LEDGER = os.path.join(HERE, "..")
 SNAPS = os.path.join(LEDGER, "snapshots")
-AUTH = sys.argv[1] if len(sys.argv) > 1 else os.path.join(LEDGER, "ledger.json")
+SELF = sys.argv[1:] == ["--self-test"]
+AUTH = sys.argv[1] if len(sys.argv) > 1 and not SELF else os.path.join(LEDGER, "ledger.json")
 ALLOWED = {"COMPLETE", "PARTIAL", "DIFFERENT", "NOT_TESTED", "MISSING"}
 LEFT_DIFFERENT = {"node:PlaneSensor", "node:SphereSensor", "node:CylinderSensor", "node:TouchSensor"}  # owner decision 2026-10-31, issue #67
 BASELINE_B09 = {"COMPLETE": 245, "PARTIAL": 74, "DIFFERENT": 25, "NOT_TESTED": 0, "MISSING": 2}
 PATH = re.compile(r"\b((?:crates|oracle|tools|evidence|upstream)/[\w./@+-]+\.(?:rs|wrl|x3dv|x3d|html|mjs|json|js|py|sh|md|png)\b)")
 
-# (snapshot the step starts from, tool, its change set as {id: status or None}); a step ends at the next one's snapshot, the last
-# at the authoritative ledger.
+# (snapshot the step starts from, tool, its change set as {id: status or None}[, its evidence set: the DIFFERENT entries whose
+# EVIDENCE_FIELDS it changes]); a step ends at the next one's snapshot, the last at the authoritative ledger.
 def _first(name, attr): return {k: v[0] for k, v in getattr(importlib.import_module(name), attr).items()}
 HISTORY = [
     ("before", "ledger_b09.py P", lambda: _first("ledger_b09", "P")),
@@ -145,9 +152,55 @@ HISTORY = [
     ("before-mp4", "ledger_mp4.py C", lambda: _first("ledger_mp4", "C")),
     ("before-websound", "ledger_websound.py C", lambda: _first("ledger_websound", "C")),
     ("before-analyser", "ledger_analyser.py C", lambda: _first("ledger_analyser", "C")),
+    ("before-loadsensor", "ledger_loadsensor.py C", lambda: _first("ledger_loadsensor", "C")),
+    ("before-classify", "ledger_classify.py C E", lambda: _first("ledger_classify", "C"), lambda: importlib.import_module("ledger_classify").E),
 ]
 
 def load(p): return json.load(open(p))["items"]
+
+# Negative cases: (what the copy changes, the message it must give). Run with --self-test.
+def _set_class(c): return lambda d: d["node:Sound"].__setitem__("classification", c)
+SELF_TEST = [
+    ("class not allowed", _set_class({"class": "COMPLETE", "reviewed": "2026-11-12"}), "classification class 'COMPLETE' not allowed"),
+    ("no reviewed date", _set_class({"class": "UNVERIFIED"}), "classification needs reviewed"),
+    ("unknown key", _set_class({"class": "UNVERIFIED", "reviewed": "2026-11-12", "status": "COMPLETE"}), "classification key 'status' unknown"),
+    ("ISO_COMPLIANT without verified ISO", _set_class({"class": "ISO_COMPLIANT", "reviewed": "2026-11-12", "iso": {"state": "UNVERIFIED"}}), "ISO_COMPLIANT needs iso.state VERIFIED"),
+    ("VERIFIED without clauses", _set_class({"class": "UNVERIFIED", "reviewed": "2026-11-12", "iso": {"state": "VERIFIED", "clauses": [], "source": "x"}}), "iso VERIFIED needs clauses"),
+    ("VERIFIED without source", _set_class({"class": "UNVERIFIED", "reviewed": "2026-11-12", "iso": {"state": "VERIFIED", "clauses": ["19775-1:2023 16.4.1"]}}), "iso VERIFIED needs its source"),
+    ("documented difference without a decision", _set_class({"class": "DOCUMENTED_DIFFERENCE", "reviewed": "2026-11-12", "impact": "x"}), "DOCUMENTED_DIFFERENCE needs decision.ref and impact"),
+    ("corrected defect without a test", _set_class({"class": "UPSTREAM_DEFECT_CORRECTED", "reviewed": "2026-11-12", "upstream_defects": [{"summary": "s", "evidence": "e"}]}), "UPSTREAM_DEFECT_CORRECTED needs upstream_defects with rust_test"),
+    ("gap without missing text", lambda d: (d["node:Sound"].__setitem__("missing", ""), _set_class({"class": "IMPLEMENTATION_GAP", "reviewed": "2026-11-12"})(d)), "IMPLEMENTATION_GAP needs missing text"),
+    ("a status change outside a change set", lambda d: d["node:Box"].__setitem__("status", "PARTIAL"), "entry outside the change set changed: node:Box"),
+    ("a DIFFERENT status change", lambda d: d["node:SpatialSound"].__setitem__("status", "COMPLETE"), "DIFFERENT entry changed: node:SpatialSound"),
+    ("a DIFFERENT non-evidence field", lambda d: d["node:SpatialSound"].__setitem__("missing", "x"), "DIFFERENT entry changed: node:SpatialSound"),
+    ("an evidence field outside a change set", lambda d: d["node:Box"]["tests"].append("x"), "entry outside the change set changed: node:Box"),
+    ("an entry less", lambda d: d.pop("node:Sound"), "IDs: 345 total"),
+]
+
+if SELF:
+    import subprocess, tempfile
+    failed = 0
+    with tempfile.TemporaryDirectory() as tmp:
+        for name, change, message in SELF_TEST:
+            doc = json.load(open(os.path.join(LEDGER, "ledger.json")))
+            by_id = {i["id"]: i for i in doc["items"]}
+            change(by_id)
+            doc["items"] = [i for i in doc["items"] if i["id"] in by_id]
+            path = os.path.join(tmp, "ledger.json")
+            json.dump(doc, open(path, "w"), indent=1)
+            r = subprocess.run([sys.executable, "-I", "-B", os.path.abspath(__file__), path], capture_output=True, text=True)
+            ok = r.returncode == 1 and message in r.stdout
+            failed += not ok
+            print(("PASS" if ok else "FAIL"), name, "" if ok else f"(exit {r.returncode}, want the message {message!r})")
+        # A valid classification on a PARTIAL entry gives no classification message.
+        doc = json.load(open(os.path.join(LEDGER, "ledger.json")))
+        sample = next(i for i in doc["items"] if i["id"] == "node:Sound")
+        sample["classification"] = {"class": "IMPLEMENTATION_GAP", "reviewed": "2026-11-12", "iso": {"state": "UNVERIFIED"}}
+        errors = classification_errors(sample)
+        failed += bool(errors)
+        print("PASS" if not errors else "FAIL", "a valid classification", errors or "")
+    print(f"{len(SELF_TEST) + 1 - failed} of {len(SELF_TEST) + 1} self-test cases pass"); sys.exit(1 if failed else 0)
+
 items = load(AUTH)
 bad, warn = [], []
 ids = [i["id"] for i in items]
@@ -155,21 +208,25 @@ if len(ids) != 346 or len(set(ids)) != 346: bad.append(f"IDs: {len(ids)} total, 
 cur = {i["id"]: i for i in items}
 for i in items:
     if i["status"] not in ALLOWED: bad.append(f"{i['id']}: status {i['status']!r} not allowed")
+    bad += classification_errors(i)
 
-snaps = [os.path.join(SNAPS, s, "ledger.json") for s, _, _ in HISTORY]
+snaps = [os.path.join(SNAPS, s, "ledger.json") for s, *_ in HISTORY]
 status = {i["id"]: i["status"] for i in load(snaps[0])}  # replayed through the chain
-for n, (snap, tool, changes) in enumerate(HISTORY):
+for n, (snap, tool, changes, *evidence) in enumerate(HISTORY):
     last = n == len(HISTORY) - 1
     a = {i["id"]: i for i in load(snaps[n])}
     b = cur if last else {i["id"]: i for i in load(snaps[n + 1])}
     step = f"{snap} -> {'ledger.json' if last else HISTORY[n + 1][0]} ({tool})"
     if set(a) != set(b): bad.append(f"{step}: ID set differs: {sorted(set(a) ^ set(b))}"); continue
     C = changes()
+    E = evidence[0]() if evidence else set()
     for k in a:
         if k not in C:
             if a[k] != b[k]: bad.append(f"{step}: entry outside the change set changed: {k}")
             continue
-        if "DIFFERENT" in (a[k]["status"], b[k]["status"]) and k not in LEFT_DIFFERENT: bad.append(f"{step}: DIFFERENT entry in the change set: {k}")
+        if "DIFFERENT" in (a[k]["status"], b[k]["status"]) and k not in LEFT_DIFFERENT:
+            if k not in E: bad.append(f"{step}: DIFFERENT entry in the change set: {k}")
+            elif a[k]["status"] != b[k]["status"] or frozen(a[k]) != frozen(b[k]): bad.append(f"{step}: {k}: an evidence step changed its status or a field outside {sorted(EVIDENCE_FIELDS)}")
         want = C[k] or a[k]["status"]
         if b[k]["status"] != want: bad.append(f"{step}: {k} is {b[k]['status']}, the tool sets {want}")
         if a[k].get("notes") and not b[k]["notes"].startswith(a[k]["notes"]): bad.append(f"{step}: {k}: earlier notes lost")
@@ -185,7 +242,8 @@ snap = {i["id"]: i for i in load(os.path.join(SNAPS, "before-cloud", "ledger.jso
 diff = [k for k, v in snap.items() if v["status"] == "DIFFERENT" and k not in LEFT_DIFFERENT]
 if len(diff) != 21: bad.append(f"snapshot has {len(diff)} DIFFERENT, want 21")
 for k in diff:
-    if cur.get(k) != snap[k]: bad.append(f"DIFFERENT entry changed: {k}")
+    e = cur.get(k)
+    if e is None or frozen(e) != frozen(snap[k]) or not e["notes"].startswith(snap[k]["notes"]): bad.append(f"DIFFERENT entry changed: {k}")
 
 # Folders renamed on 2026-11-01 (docs/renames.md). A frozen entry may still name the old path; it counts as present when the new path exists.
 RENAMED = (("_batch09_context/tools/", "ledger/tools/"), ("_batch09_context/ledger/", "ledger/"), ("_batch09_context/", "ledger/history/b09/"),

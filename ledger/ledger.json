@@ -20,7 +20,24 @@
    ],
    "missing": "",
    "oracle": "scene text (named substitutions only), log, poses, images vs the X_ITE stand-in",
-   "notes": "REA batch 04: the dormant X_ITE classes cannot initialize (AnnotationLayer: X3DLayerNode reads _hidden/_visible/_children it lacks; IconAnnotation: X3DUrlObject reads _load it lacks); evidence/boundary/annotation-layer-x_ite-probe.json. Rust: an empty layer, and an url object with an empty requestImmediateLoad like GeoMetadata."
+   "notes": "REA batch 04: the dormant X_ITE classes cannot initialize (AnnotationLayer: X3DLayerNode reads _hidden/_visible/_children it lacks; IconAnnotation: X3DUrlObject reads _load it lacks); evidence/boundary/annotation-layer-x_ite-probe.json. Rust: an empty layer, and an url object with an empty requestImmediateLoad like GeoMetadata.",
+   "classification": {
+    "class": "UNVERIFIED",
+    "iso": {
+     "state": "UNVERIFIED"
+    },
+    "decision": {
+     "ref": "ADR 0002; owner decision 2026-10-17 'Do both'"
+    },
+    "upstream_defects": [
+     {
+      "summary": "the X_ITE class cannot initialize: X3DLayerNode reads _hidden, _visible and _children that it lacks",
+      "evidence": "REA batch 04 probe (notes); crates/x3d-viewer/tests/rea_batch04.rs against the stand-in references"
+     }
+    ],
+    "impact": "Rust gives an empty layer; ISO leaves the presentation of annotations to the browser",
+    "reviewed": "2026-11-12"
+   }
   },
   {
    "id": "node:AnnotationTarget",
@@ -40,7 +57,19 @@
    ],
    "missing": "",
    "oracle": "scene text, log, poses, images exact vs the dormant X_ITE classes",
-   "notes": "REA batch 04, owner decision 2026-10-17 'Do both': X_ITE 16.5.0 ships the Annotation classes but does not register the component (COMPONENT Annotation fails there). Rust registers it (crates/x3d-scene/data/x_ite-nodes-annotation.json, dumped from the dormant classes by oracle/x_ite-nodes-annotation.mjs); behavior equals the dormant classes."
+   "notes": "REA batch 04, owner decision 2026-10-17 'Do both': X_ITE 16.5.0 ships the Annotation classes but does not register the component (COMPONENT Annotation fails there). Rust registers it (crates/x3d-scene/data/x_ite-nodes-annotation.json, dumped from the dormant classes by oracle/x_ite-nodes-annotation.mjs); behavior equals the dormant classes.",
+   "classification": {
+    "class": "DOCUMENTED_DIFFERENCE",
+    "iso": {
+     "state": "UNVERIFIED"
+    },
+    "decision": {
+     "ref": "ADR 0002; owner decision 2026-10-17 'Do both'",
+     "reason": "X_ITE 16.5.0 ships the Annotation classes but does not register the component"
+    },
+    "impact": "COMPONENT Annotation fails in X_ITE 16.5.0; Rust registers the component and gives the node its fields",
+    "reviewed": "2026-11-12"
+   }
   },
   {
    "id": "node:GroupAnnotation",
@@ -63,7 +92,19 @@
    ],
    "missing": "",
    "oracle": "scene text, log, poses, images exact vs the dormant X_ITE classes",
-   "notes": "REA batch 04, owner decision 2026-10-17 'Do both': X_ITE 16.5.0 ships the Annotation classes but does not register the component (COMPONENT Annotation fails there). Rust registers it (crates/x3d-scene/data/x_ite-nodes-annotation.json, dumped from the dormant classes by oracle/x_ite-nodes-annotation.mjs); behavior equals the dormant classes."
+   "notes": "REA batch 04, owner decision 2026-10-17 'Do both': X_ITE 16.5.0 ships the Annotation classes but does not register the component (COMPONENT Annotation fails there). Rust registers it (crates/x3d-scene/data/x_ite-nodes-annotation.json, dumped from the dormant classes by oracle/x_ite-nodes-annotation.mjs); behavior equals the dormant classes.",
+   "classification": {
+    "class": "DOCUMENTED_DIFFERENCE",
+    "iso": {
+     "state": "UNVERIFIED"
+    },
+    "decision": {
+     "ref": "ADR 0002; owner decision 2026-10-17 'Do both'",
+     "reason": "X_ITE 16.5.0 ships the Annotation classes but does not register the component"
+    },
+    "impact": "COMPONENT Annotation fails in X_ITE 16.5.0; Rust registers the component and gives the node its fields",
+    "reviewed": "2026-11-12"
+   }
   },
   {
    "id": "node:IconAnnotation",
@@ -80,11 +121,29 @@
    "status": "DIFFERENT",
    "behavior": "fields, events and observable behavior of the upstream class",
    "tests": [
-    "oracle/synthetic-rea-b04/annotation-layer.wrl, icon-annotation.wrl against stand-in references (oracle/rea-batch04-baseline/standins.json: empty Layer, GeoMetadata), rea_batch04.rs MSAA 0/4"
+    "oracle/synthetic-rea-b04/annotation-layer.wrl, icon-annotation.wrl against stand-in references (oracle/rea-batch04-baseline/standins.json: empty Layer, GeoMetadata), rea_batch04.rs MSAA 0/4",
+    "crates/x3d-runtime/tests/icon_annotation_load.rs (5 tests: PNG and JPEG complete, the fallback skips missing and non-image candidates, the first image ends it, an empty url does not start, the candidates are the ones of ImageTexture)"
    ],
    "missing": "",
    "oracle": "scene text (named substitutions only), log, poses, images vs the X_ITE stand-in",
-   "notes": "REA batch 04: the dormant X_ITE classes cannot initialize (AnnotationLayer: X3DLayerNode reads _hidden/_visible/_children it lacks; IconAnnotation: X3DUrlObject reads _load it lacks); evidence/boundary/annotation-layer-x_ite-probe.json. Rust: an empty layer, and an url object with an empty requestImmediateLoad like GeoMetadata."
+   "notes": "REA batch 04: the dormant X_ITE classes cannot initialize (AnnotationLayer: X3DLayerNode reads _hidden/_visible/_children it lacks; IconAnnotation: X3DUrlObject reads _load it lacks); evidence/boundary/annotation-layer-x_ite-probe.json. Rust: an empty layer, and an url object with an empty requestImmediateLoad like GeoMetadata. | 2026-11-12 (PR #585; evidence only, status unchanged): IconAnnotation loads its url with the candidates of ImageTexture (ADR 0002, amendment 2026-11-12); the stand-in of oracle/synthetic-rea-b04/icon-annotation.wrl is now ImageTexture, no longer GeoMetadata (rea_batch04.rs, MSAA 0 and 4). Beyond X_ITE, whose class cannot initialize; no default icon and no display. No ISO claim: the local 2023 capture has no Annotation clause.",
+   "classification": {
+    "class": "UNVERIFIED",
+    "iso": {
+     "state": "UNVERIFIED"
+    },
+    "decision": {
+     "ref": "ADR 0002 and its amendment; owner decision 2026-10-17 'Do both'"
+    },
+    "upstream_defects": [
+     {
+      "summary": "the X_ITE class cannot initialize: X3DUrlObject reads _load that it lacks",
+      "evidence": "REA batch 04 probe (notes); crates/x3d-viewer/tests/rea_batch04.rs against the stand-in references"
+     }
+    ],
+    "impact": "Rust loads the url with the candidates of ImageTexture (beyond X_ITE, whose class cannot initialize); no default icon and no display",
+    "reviewed": "2026-11-12"
+   }
   },
   {
    "id": "node:TextAnnotation",
@@ -104,7 +163,19 @@
    ],
    "missing": "",
    "oracle": "scene text, log, poses, images exact vs the dormant X_ITE classes",
-   "notes": "REA batch 04, owner decision 2026-10-17 'Do both': X_ITE 16.5.0 ships the Annotation classes but does not register the component (COMPONENT Annotation fails there). Rust registers it (crates/x3d-scene/data/x_ite-nodes-annotation.json, dumped from the dormant classes by oracle/x_ite-nodes-annotation.mjs); behavior equals the dormant classes."
+   "notes": "REA batch 04, owner decision 2026-10-17 'Do both': X_ITE 16.5.0 ships the Annotation classes but does not register the component (COMPONENT Annotation fails there). Rust registers it (crates/x3d-scene/data/x_ite-nodes-annotation.json, dumped from the dormant classes by oracle/x_ite-nodes-annotation.mjs); behavior equals the dormant classes.",
+   "classification": {
+    "class": "DOCUMENTED_DIFFERENCE",
+    "iso": {
+     "state": "UNVERIFIED"
+    },
+    "decision": {
+     "ref": "ADR 0002; owner decision 2026-10-17 'Do both'",
+     "reason": "X_ITE 16.5.0 ships the Annotation classes but does not register the component"
+    },
+    "impact": "COMPONENT Annotation fails in X_ITE 16.5.0; Rust registers the component and gives the node its fields",
+    "reviewed": "2026-11-12"
+   }
   },
   {
    "id": "node:URLAnnotation",
@@ -124,7 +195,19 @@
    ],
    "missing": "",
    "oracle": "scene text, log, poses, images exact vs the dormant X_ITE classes",
-   "notes": "REA batch 04, owner decision 2026-10-17 'Do both': X_ITE 16.5.0 ships the Annotation classes but does not register the component (COMPONENT Annotation fails there). Rust registers it (crates/x3d-scene/data/x_ite-nodes-annotation.json, dumped from the dormant classes by oracle/x_ite-nodes-annotation.mjs); behavior equals the dormant classes."
+   "notes": "REA batch 04, owner decision 2026-10-17 'Do both': X_ITE 16.5.0 ships the Annotation classes but does not register the component (COMPONENT Annotation fails there). Rust registers it (crates/x3d-scene/data/x_ite-nodes-annotation.json, dumped from the dormant classes by oracle/x_ite-nodes-annotation.mjs); behavior equals the dormant classes.",
+   "classification": {
+    "class": "DOCUMENTED_DIFFERENCE",
+    "iso": {
+     "state": "UNVERIFIED"
+    },
+    "decision": {
+     "ref": "ADR 0002; owner decision 2026-10-17 'Do both'",
+     "reason": "X_ITE 16.5.0 ships the Annotation classes but does not register the component"
+    },
+    "impact": "COMPONENT Annotation fails in X_ITE 16.5.0; Rust registers the component and gives the node its fields",
+    "reviewed": "2026-11-12"
+   }
   },
   {
    "id": "node:CADAssembly",
@@ -2306,11 +2389,36 @@
    "status": "DIFFERENT",
    "behavior": "fields, events and observable behavior of the upstream class",
    "tests": [
-    "oracle/synthetic-rea/interp-ext.wrl"
+    "oracle/synthetic-rea/interp-ext.wrl",
+    "crates/x3d-runtime/tests/spline_normalize_velocity.rs"
    ],
    "missing": "",
    "oracle": "",
-   "notes": "exact on all tested paths; upstream bug: normalizeVelocity TRUE with non-empty keyVelocity throws 'value.norm is not a function' (SFVec fields have no norm) and X_ITE fails the scene load; Rust computes the normalized velocity. Owner decision 2026-10-16: keep the math; difference stays listed."
+   "notes": "exact on all tested paths; upstream bug: normalizeVelocity TRUE with non-empty keyVelocity throws 'value.norm is not a function' (SFVec fields have no norm) and X_ITE fails the scene load; Rust computes the normalized velocity. Owner decision 2026-10-16: keep the math; difference stays listed. | 2026-11-12 (PRs #577, #581; evidence only, status unchanged): ISO/IEC 19775-1:2023 19.2.3 and 19.2.4 apply: the final velocity is normalized, the keyVelocity size rule (equal to keyValue, or 2 for the first and last key, else ignored), and closed is ignored when the velocities of the first and last key are given or their keyValues differ. oracle/synthetic-rea/interp-ext.wrl SP3 now differs from X_ITE on purpose (keyVelocity of size 2): value and keyVelocity text, all 130 frames. SplineScalarInterpolator is unchanged.",
+   "classification": {
+    "class": "UPSTREAM_DEFECT_CORRECTED",
+    "iso": {
+     "state": "VERIFIED",
+     "clauses": [
+      "19775-1:2023 19.2.3",
+      "19775-1:2023 19.2.4"
+     ],
+     "source": "ISO/IEC 19775-1:2023 (X3D V4.0) Part 1, components/interpolators.md of the owner's local standards capture; both clauses read in full on 2026-11-12"
+    },
+    "decision": {
+     "ref": "owner decision 2026-10-16 (keep the math); PR #581 (the 19.2.3 and 19.2.4 rules)",
+     "reason": "X_ITE 16.5.0 throws; ISO 19775-1 gives the rules"
+    },
+    "upstream_defects": [
+     {
+      "summary": "normalizeVelocity TRUE with a non-empty keyVelocity throws 'value.norm is not a function' (SFVec fields have no norm), and X_ITE fails the scene load",
+      "evidence": "oracle/synthetic-rea/interp-ext.wrl",
+      "rust_test": "crates/x3d-runtime/tests/spline_normalize_velocity.rs"
+     }
+    ],
+    "impact": "equal to X_ITE on its working paths; SP3 of interp-ext.wrl (keyVelocity of size 2) differs from X_ITE on purpose in value and keyVelocity text in all 130 frames (19.2.4: first and last velocity)",
+    "reviewed": "2026-11-12"
+   }
   },
   {
    "id": "node:SplinePositionInterpolator2D",
@@ -2328,11 +2436,36 @@
    "status": "DIFFERENT",
    "behavior": "fields, events and observable behavior of the upstream class",
    "tests": [
-    "oracle/synthetic-rea/interp-ext.wrl"
+    "oracle/synthetic-rea/interp-ext.wrl",
+    "crates/x3d-runtime/tests/spline_normalize_velocity.rs"
    ],
    "missing": "",
    "oracle": "",
-   "notes": "exact on all tested paths; upstream bug: normalizeVelocity TRUE with non-empty keyVelocity throws 'value.norm is not a function' (SFVec fields have no norm) and X_ITE fails the scene load; Rust computes the normalized velocity. Owner decision 2026-10-16: keep the math; difference stays listed."
+   "notes": "exact on all tested paths; upstream bug: normalizeVelocity TRUE with non-empty keyVelocity throws 'value.norm is not a function' (SFVec fields have no norm) and X_ITE fails the scene load; Rust computes the normalized velocity. Owner decision 2026-10-16: keep the math; difference stays listed. | 2026-11-12 (PRs #577, #581; evidence only, status unchanged): ISO/IEC 19775-1:2023 19.2.3 and 19.2.4 apply: the final velocity is normalized, the keyVelocity size rule (equal to keyValue, or 2 for the first and last key, else ignored), and closed is ignored when the velocities of the first and last key are given or their keyValues differ. oracle/synthetic-rea/interp-ext.wrl SP3 now differs from X_ITE on purpose (keyVelocity of size 2): value and keyVelocity text, all 130 frames. SplineScalarInterpolator is unchanged.",
+   "classification": {
+    "class": "UPSTREAM_DEFECT_CORRECTED",
+    "iso": {
+     "state": "VERIFIED",
+     "clauses": [
+      "19775-1:2023 19.2.3",
+      "19775-1:2023 19.2.4"
+     ],
+     "source": "ISO/IEC 19775-1:2023 (X3D V4.0) Part 1, components/interpolators.md of the owner's local standards capture; both clauses read in full on 2026-11-12"
+    },
+    "decision": {
+     "ref": "owner decision 2026-10-16 (keep the math); PR #581 (the 19.2.3 and 19.2.4 rules)",
+     "reason": "X_ITE 16.5.0 throws; ISO 19775-1 gives the rules"
+    },
+    "upstream_defects": [
+     {
+      "summary": "normalizeVelocity TRUE with a non-empty keyVelocity throws 'value.norm is not a function' (SFVec fields have no norm), and X_ITE fails the scene load",
+      "evidence": "oracle/synthetic-rea/interp-ext.wrl",
+      "rust_test": "crates/x3d-runtime/tests/spline_normalize_velocity.rs"
+     }
+    ],
+    "impact": "equal to X_ITE on its working paths; SP3 of interp-ext.wrl (keyVelocity of size 2) differs from X_ITE on purpose in value and keyVelocity text in all 130 frames (19.2.4: first and last velocity)",
+    "reviewed": "2026-11-12"
+   }
   },
   {
    "id": "node:SplineScalarInterpolator",
@@ -2760,7 +2893,19 @@
    ],
    "missing": "",
    "oracle": "X3DGeometryNode arrays exact for unweighted input; ISO 19775-1 clause 27 reference for the ISO rules; GPU image compare; stepped runtime trace",
-   "notes": "REA batch 04, owner decision 2026-10-17 'ISO everywhere': follows ISO/IEC 19775-1 clause 27 where X_ITE 16.5.0 differs (rational weights I1, weight count I2, seam-weight closed rule I3, CW trimming loops I4, NurbsTextureCoordinate weights I8, NurbsSet bboxDisplay TRUE I9). Equal to X_ITE for unweighted input."
+   "notes": "REA batch 04, owner decision 2026-10-17 'ISO everywhere': follows ISO/IEC 19775-1 clause 27 where X_ITE 16.5.0 differs (rational weights I1, weight count I2, seam-weight closed rule I3, CW trimming loops I4, NurbsTextureCoordinate weights I8, NurbsSet bboxDisplay TRUE I9). Equal to X_ITE for unweighted input.",
+   "classification": {
+    "class": "DOCUMENTED_DIFFERENCE",
+    "iso": {
+     "state": "UNVERIFIED"
+    },
+    "decision": {
+     "ref": "owner decision 2026-10-17 'ISO everywhere' (REA batch 04)",
+     "reason": "follow ISO/IEC 19775-1 clause 27 where X_ITE 16.5.0 differs"
+    },
+    "impact": "equal to X_ITE for unweighted input; differs where the notes name the X_ITE 16.5.0 departures (I1-I8)",
+    "reviewed": "2026-11-12"
+   }
   },
   {
    "id": "node:NurbsCurve2D",
@@ -2780,7 +2925,19 @@
    ],
    "missing": "",
    "oracle": "X3DGeometryNode arrays exact for unweighted input; ISO 19775-1 clause 27 reference for the ISO rules; GPU image compare; stepped runtime trace",
-   "notes": "REA batch 04, owner decision 2026-10-17 'ISO everywhere': follows ISO/IEC 19775-1 clause 27 where X_ITE 16.5.0 differs (rational weights I1, weight count I2, seam-weight closed rule I3, CW trimming loops I4, NurbsTextureCoordinate weights I8, NurbsSet bboxDisplay TRUE I9). Equal to X_ITE for unweighted input."
+   "notes": "REA batch 04, owner decision 2026-10-17 'ISO everywhere': follows ISO/IEC 19775-1 clause 27 where X_ITE 16.5.0 differs (rational weights I1, weight count I2, seam-weight closed rule I3, CW trimming loops I4, NurbsTextureCoordinate weights I8, NurbsSet bboxDisplay TRUE I9). Equal to X_ITE for unweighted input.",
+   "classification": {
+    "class": "DOCUMENTED_DIFFERENCE",
+    "iso": {
+     "state": "UNVERIFIED"
+    },
+    "decision": {
+     "ref": "owner decision 2026-10-17 'ISO everywhere' (REA batch 04)",
+     "reason": "follow ISO/IEC 19775-1 clause 27 where X_ITE 16.5.0 differs"
+    },
+    "impact": "equal to X_ITE for unweighted input; differs where the notes name the X_ITE 16.5.0 departures (I1-I8)",
+    "reviewed": "2026-11-12"
+   }
   },
   {
    "id": "node:NurbsOrientationInterpolator",
@@ -2802,7 +2959,19 @@
    ],
    "missing": "",
    "oracle": "ISO 19775-1 clause 27 reference; stepped runtime trace vs X_ITE where equal",
-   "notes": "REA batch 04, owner decision 'ISO everywhere': the fraction is the knot parameter clamped to the domain (I5); rational position and tangent (I6); surface: raw (u, v), normal = rational Su x Sv (I7). X_ITE projects the fraction and does not divide by the weights."
+   "notes": "REA batch 04, owner decision 'ISO everywhere': the fraction is the knot parameter clamped to the domain (I5); rational position and tangent (I6); surface: raw (u, v), normal = rational Su x Sv (I7). X_ITE projects the fraction and does not divide by the weights.",
+   "classification": {
+    "class": "DOCUMENTED_DIFFERENCE",
+    "iso": {
+     "state": "UNVERIFIED"
+    },
+    "decision": {
+     "ref": "owner decision 2026-10-17 'ISO everywhere' (REA batch 04)",
+     "reason": "follow ISO/IEC 19775-1 clause 27 where X_ITE 16.5.0 differs"
+    },
+    "impact": "equal to X_ITE for unweighted input; differs where the notes name the X_ITE 16.5.0 departures (I1-I8)",
+    "reviewed": "2026-11-12"
+   }
   },
   {
    "id": "node:NurbsPatchSurface",
@@ -2823,7 +2992,19 @@
    ],
    "missing": "",
    "oracle": "X3DGeometryNode arrays exact for unweighted input; ISO 19775-1 clause 27 reference for the ISO rules; GPU image compare; stepped runtime trace",
-   "notes": "REA batch 04, owner decision 2026-10-17 'ISO everywhere': follows ISO/IEC 19775-1 clause 27 where X_ITE 16.5.0 differs (rational weights I1, weight count I2, seam-weight closed rule I3, CW trimming loops I4, NurbsTextureCoordinate weights I8, NurbsSet bboxDisplay TRUE I9). Equal to X_ITE for unweighted input."
+   "notes": "REA batch 04, owner decision 2026-10-17 'ISO everywhere': follows ISO/IEC 19775-1 clause 27 where X_ITE 16.5.0 differs (rational weights I1, weight count I2, seam-weight closed rule I3, CW trimming loops I4, NurbsTextureCoordinate weights I8, NurbsSet bboxDisplay TRUE I9). Equal to X_ITE for unweighted input.",
+   "classification": {
+    "class": "DOCUMENTED_DIFFERENCE",
+    "iso": {
+     "state": "UNVERIFIED"
+    },
+    "decision": {
+     "ref": "owner decision 2026-10-17 'ISO everywhere' (REA batch 04)",
+     "reason": "follow ISO/IEC 19775-1 clause 27 where X_ITE 16.5.0 differs"
+    },
+    "impact": "equal to X_ITE for unweighted input; differs where the notes name the X_ITE 16.5.0 departures (I1-I8)",
+    "reviewed": "2026-11-12"
+   }
   },
   {
    "id": "node:NurbsPositionInterpolator",
@@ -2845,7 +3026,19 @@
    ],
    "missing": "",
    "oracle": "ISO 19775-1 clause 27 reference; stepped runtime trace vs X_ITE where equal",
-   "notes": "REA batch 04, owner decision 'ISO everywhere': the fraction is the knot parameter clamped to the domain (I5); rational position and tangent (I6); surface: raw (u, v), normal = rational Su x Sv (I7). X_ITE projects the fraction and does not divide by the weights."
+   "notes": "REA batch 04, owner decision 'ISO everywhere': the fraction is the knot parameter clamped to the domain (I5); rational position and tangent (I6); surface: raw (u, v), normal = rational Su x Sv (I7). X_ITE projects the fraction and does not divide by the weights.",
+   "classification": {
+    "class": "DOCUMENTED_DIFFERENCE",
+    "iso": {
+     "state": "UNVERIFIED"
+    },
+    "decision": {
+     "ref": "owner decision 2026-10-17 'ISO everywhere' (REA batch 04)",
+     "reason": "follow ISO/IEC 19775-1 clause 27 where X_ITE 16.5.0 differs"
+    },
+    "impact": "equal to X_ITE for unweighted input; differs where the notes name the X_ITE 16.5.0 departures (I1-I8)",
+    "reviewed": "2026-11-12"
+   }
   },
   {
    "id": "node:NurbsSet",
@@ -2868,7 +3061,19 @@
    ],
    "missing": "",
    "oracle": "X3DGeometryNode arrays exact for unweighted input; ISO 19775-1 clause 27 reference for the ISO rules; GPU image compare; stepped runtime trace",
-   "notes": "REA batch 04, owner decision 2026-10-17 'ISO everywhere': follows ISO/IEC 19775-1 clause 27 where X_ITE 16.5.0 differs (rational weights I1, weight count I2, seam-weight closed rule I3, CW trimming loops I4, NurbsTextureCoordinate weights I8, NurbsSet bboxDisplay TRUE I9). Equal to X_ITE for unweighted input."
+   "notes": "REA batch 04, owner decision 2026-10-17 'ISO everywhere': follows ISO/IEC 19775-1 clause 27 where X_ITE 16.5.0 differs (rational weights I1, weight count I2, seam-weight closed rule I3, CW trimming loops I4, NurbsTextureCoordinate weights I8, NurbsSet bboxDisplay TRUE I9). Equal to X_ITE for unweighted input.",
+   "classification": {
+    "class": "DOCUMENTED_DIFFERENCE",
+    "iso": {
+     "state": "UNVERIFIED"
+    },
+    "decision": {
+     "ref": "owner decision 2026-10-17 'ISO everywhere' (REA batch 04)",
+     "reason": "follow ISO/IEC 19775-1 clause 27 where X_ITE 16.5.0 differs"
+    },
+    "impact": "equal to X_ITE for unweighted input; differs where the notes name the X_ITE 16.5.0 departures (I1-I8)",
+    "reviewed": "2026-11-12"
+   }
   },
   {
    "id": "node:NurbsSurfaceInterpolator",
@@ -2890,7 +3095,19 @@
    ],
    "missing": "",
    "oracle": "ISO 19775-1 clause 27 reference; stepped runtime trace vs X_ITE where equal",
-   "notes": "REA batch 04, owner decision 'ISO everywhere': the fraction is the knot parameter clamped to the domain (I5); rational position and tangent (I6); surface: raw (u, v), normal = rational Su x Sv (I7). X_ITE projects the fraction and does not divide by the weights."
+   "notes": "REA batch 04, owner decision 'ISO everywhere': the fraction is the knot parameter clamped to the domain (I5); rational position and tangent (I6); surface: raw (u, v), normal = rational Su x Sv (I7). X_ITE projects the fraction and does not divide by the weights.",
+   "classification": {
+    "class": "DOCUMENTED_DIFFERENCE",
+    "iso": {
+     "state": "UNVERIFIED"
+    },
+    "decision": {
+     "ref": "owner decision 2026-10-17 'ISO everywhere' (REA batch 04)",
+     "reason": "follow ISO/IEC 19775-1 clause 27 where X_ITE 16.5.0 differs"
+    },
+    "impact": "equal to X_ITE for unweighted input; differs where the notes name the X_ITE 16.5.0 departures (I1-I8)",
+    "reviewed": "2026-11-12"
+   }
   },
   {
    "id": "node:NurbsSweptSurface",
@@ -2910,7 +3127,19 @@
    ],
    "missing": "",
    "oracle": "X3DGeometryNode arrays exact for unweighted input; ISO 19775-1 clause 27 reference for the ISO rules; GPU image compare; stepped runtime trace",
-   "notes": "REA batch 04, owner decision 2026-10-17 'ISO everywhere': follows ISO/IEC 19775-1 clause 27 where X_ITE 16.5.0 differs (rational weights I1, weight count I2, seam-weight closed rule I3, CW trimming loops I4, NurbsTextureCoordinate weights I8, NurbsSet bboxDisplay TRUE I9). Equal to X_ITE for unweighted input."
+   "notes": "REA batch 04, owner decision 2026-10-17 'ISO everywhere': follows ISO/IEC 19775-1 clause 27 where X_ITE 16.5.0 differs (rational weights I1, weight count I2, seam-weight closed rule I3, CW trimming loops I4, NurbsTextureCoordinate weights I8, NurbsSet bboxDisplay TRUE I9). Equal to X_ITE for unweighted input.",
+   "classification": {
+    "class": "DOCUMENTED_DIFFERENCE",
+    "iso": {
+     "state": "UNVERIFIED"
+    },
+    "decision": {
+     "ref": "owner decision 2026-10-17 'ISO everywhere' (REA batch 04)",
+     "reason": "follow ISO/IEC 19775-1 clause 27 where X_ITE 16.5.0 differs"
+    },
+    "impact": "equal to X_ITE for unweighted input; differs where the notes name the X_ITE 16.5.0 departures (I1-I8)",
+    "reviewed": "2026-11-12"
+   }
   },
   {
    "id": "node:NurbsSwungSurface",
@@ -2930,7 +3159,19 @@
    ],
    "missing": "",
    "oracle": "X3DGeometryNode arrays exact for unweighted input; ISO 19775-1 clause 27 reference for the ISO rules; GPU image compare; stepped runtime trace",
-   "notes": "REA batch 04, owner decision 2026-10-17 'ISO everywhere': follows ISO/IEC 19775-1 clause 27 where X_ITE 16.5.0 differs (rational weights I1, weight count I2, seam-weight closed rule I3, CW trimming loops I4, NurbsTextureCoordinate weights I8, NurbsSet bboxDisplay TRUE I9). Equal to X_ITE for unweighted input."
+   "notes": "REA batch 04, owner decision 2026-10-17 'ISO everywhere': follows ISO/IEC 19775-1 clause 27 where X_ITE 16.5.0 differs (rational weights I1, weight count I2, seam-weight closed rule I3, CW trimming loops I4, NurbsTextureCoordinate weights I8, NurbsSet bboxDisplay TRUE I9). Equal to X_ITE for unweighted input.",
+   "classification": {
+    "class": "DOCUMENTED_DIFFERENCE",
+    "iso": {
+     "state": "UNVERIFIED"
+    },
+    "decision": {
+     "ref": "owner decision 2026-10-17 'ISO everywhere' (REA batch 04)",
+     "reason": "follow ISO/IEC 19775-1 clause 27 where X_ITE 16.5.0 differs"
+    },
+    "impact": "equal to X_ITE for unweighted input; differs where the notes name the X_ITE 16.5.0 departures (I1-I8)",
+    "reviewed": "2026-11-12"
+   }
   },
   {
    "id": "node:NurbsTextureCoordinate",
@@ -2950,7 +3191,19 @@
    ],
    "missing": "",
    "oracle": "X3DGeometryNode arrays exact for unweighted input; ISO 19775-1 clause 27 reference for the ISO rules; GPU image compare; stepped runtime trace",
-   "notes": "REA batch 04, owner decision 2026-10-17 'ISO everywhere': follows ISO/IEC 19775-1 clause 27 where X_ITE 16.5.0 differs (rational weights I1, weight count I2, seam-weight closed rule I3, CW trimming loops I4, NurbsTextureCoordinate weights I8, NurbsSet bboxDisplay TRUE I9). Equal to X_ITE for unweighted input."
+   "notes": "REA batch 04, owner decision 2026-10-17 'ISO everywhere': follows ISO/IEC 19775-1 clause 27 where X_ITE 16.5.0 differs (rational weights I1, weight count I2, seam-weight closed rule I3, CW trimming loops I4, NurbsTextureCoordinate weights I8, NurbsSet bboxDisplay TRUE I9). Equal to X_ITE for unweighted input.",
+   "classification": {
+    "class": "DOCUMENTED_DIFFERENCE",
+    "iso": {
+     "state": "UNVERIFIED"
+    },
+    "decision": {
+     "ref": "owner decision 2026-10-17 'ISO everywhere' (REA batch 04)",
+     "reason": "follow ISO/IEC 19775-1 clause 27 where X_ITE 16.5.0 differs"
+    },
+    "impact": "equal to X_ITE for unweighted input; differs where the notes name the X_ITE 16.5.0 departures (I1-I8)",
+    "reviewed": "2026-11-12"
+   }
   },
   {
    "id": "node:NurbsTrimmedSurface",
@@ -2972,7 +3225,19 @@
    ],
    "missing": "",
    "oracle": "X3DGeometryNode arrays exact for unweighted input; ISO 19775-1 clause 27 reference for the ISO rules; GPU image compare; stepped runtime trace",
-   "notes": "REA batch 04, owner decision 2026-10-17 'ISO everywhere': follows ISO/IEC 19775-1 clause 27 where X_ITE 16.5.0 differs (rational weights I1, weight count I2, seam-weight closed rule I3, CW trimming loops I4, NurbsTextureCoordinate weights I8, NurbsSet bboxDisplay TRUE I9). Equal to X_ITE for unweighted input."
+   "notes": "REA batch 04, owner decision 2026-10-17 'ISO everywhere': follows ISO/IEC 19775-1 clause 27 where X_ITE 16.5.0 differs (rational weights I1, weight count I2, seam-weight closed rule I3, CW trimming loops I4, NurbsTextureCoordinate weights I8, NurbsSet bboxDisplay TRUE I9). Equal to X_ITE for unweighted input.",
+   "classification": {
+    "class": "DOCUMENTED_DIFFERENCE",
+    "iso": {
+     "state": "UNVERIFIED"
+    },
+    "decision": {
+     "ref": "owner decision 2026-10-17 'ISO everywhere' (REA batch 04)",
+     "reason": "follow ISO/IEC 19775-1 clause 27 where X_ITE 16.5.0 differs"
+    },
+    "impact": "equal to X_ITE for unweighted input; differs where the notes name the X_ITE 16.5.0 departures (I1-I8)",
+    "reviewed": "2026-11-12"
+   }
   },
   {
    "id": "node:Billboard",
@@ -3263,16 +3528,18 @@
    "upstream_lines": 198,
    "in_node_table": true,
    "rust": [
-    "crates/x3d-runtime/src/nodes/mod.rs"
+    "crates/x3d-runtime/src/nodes/mod.rs",
+    "crates/x3d-runtime/src/nodes/load_sensor.rs"
    ],
    "status": "COMPLETE",
    "behavior": "fields, events and observable behavior of the upstream class",
    "tests": [
-    "oracle/synthetic-rea/load-sensor.wrl, load-sensor-fail.wrl"
+    "oracle/synthetic-rea/load-sensor.wrl, load-sensor-fail.wrl",
+    "crates/x3d-viewer/tests/load_sensor_first_events.rs (an ImageTexture, an Inline and an AudioClip loaded at world load, each with its own LoadSensor: the events of each LoadSensor equal pinned X_ITE 16.5.0, oracle/synthetic-loadsensor-baseline, at 7 frames)"
    ],
    "missing": "",
    "oracle": "x10_compare scene text exact (401 + 7 checks, settle)",
-   "notes": "loadState private field on every url object Rust loads (Inline, ImageTexture, MovieTexture, AudioClip, Script); watchList alias via 3.x table; url objects whose loading Rust does not model stay NOT_STARTED (tracked on those nodes)"
+   "notes": "loadState private field on every url object Rust loads (Inline, ImageTexture, MovieTexture, AudioClip, Script); watchList alias via 3.x table; url objects whose loading Rust does not model stay NOT_STARTED (tracked on those nodes) | 2026-11-12 (PR #589): a LoadSensor that watches an url object loaded at world load gives isActive TRUE, progress 0 at its initialize, then isActive FALSE, isLoaded TRUE, progress 1, loadTime, as pinned X_ITE 16.5.0 (recorded with Chrome 156.0.8078.47, the reference browser; Chrome 157.0.8103.78 gives the same events of each LoadSensor in another order between them). Before, an ImageTexture was COMPLETE_STATE when its fetch ended, in the cascade of the initialize, and its LoadSensor gave only isActive FALSE, progress 1, isLoaded TRUE. ImageTexture.setImage sets COMPLETE_STATE after the decode (ImageTexture.js:78-129); the port now does so in apply_decoded_images."
   },
   {
    "id": "node:BoundedPhysicsModel",
@@ -5211,7 +5478,19 @@
    ],
    "missing": "",
    "oracle": "scene text, X_ITE log, Script prints, suspend frames and every audio sample exact in the listed worlds",
-   "notes": "exact on all tested paths except enableHRTF TRUE: the HRTF PannerNode is web-audio-api's, with its own HRIR set; Chromium's IRCAM Composite data (platform/audio/resources) has no stated license and is not ported. Measured max difference 0.126 / 0.141 (spatial-hrtf.wrl). Owner decision 2026-10-17: accept the HRTF difference; it stays listed."
+   "notes": "exact on all tested paths except enableHRTF TRUE: the HRTF PannerNode is web-audio-api's, with its own HRIR set; Chromium's IRCAM Composite data (platform/audio/resources) has no stated license and is not ported. Measured max difference 0.126 / 0.141 (spatial-hrtf.wrl). Owner decision 2026-10-17: accept the HRTF difference; it stays listed.",
+   "classification": {
+    "class": "DOCUMENTED_DIFFERENCE",
+    "iso": {
+     "state": "NOT_APPLICABLE"
+    },
+    "decision": {
+     "ref": "ADR 0005; owner decision 2026-10-17",
+     "reason": "Chromium's IRCAM Composite HRTF data has no stated license and is not redistributed"
+    },
+    "impact": "only enableHRTF TRUE: measured maximum difference 0.126 / 0.141 (spatial-hrtf.wrl); the rights of the web-audio-api HRIR data are not verified at the primary source (THIRD_PARTY_NOTICES.md)",
+    "reviewed": "2026-11-12"
+   }
   },
   {
    "id": "node:StreamAudioDestination",
@@ -5423,11 +5702,12 @@
    "behavior": "fields, events and observable behavior of the upstream class",
    "tests": [
     "crates/x3d-viewer/tests/rea_batch09_sai.rs node-texturing",
-    "crates/x3d-render/tests/render_rea_b09_visual.rs vis-items-textures, vis-items-appearance, vis-texturing (oracle/synthetic-rea-b09-visual; MSAA 0 and 4)"
+    "crates/x3d-render/tests/render_rea_b09_visual.rs vis-items-textures, vis-items-appearance, vis-texturing (oracle/synthetic-rea-b09-visual; MSAA 0 and 4)",
+    "crates/x3d-viewer/tests/load_sensor_first_events.rs (an ImageTexture, an Inline and an AudioClip loaded at world load, each with its own LoadSensor: the events of each LoadSensor equal pinned X_ITE 16.5.0, oracle/synthetic-loadsensor-baseline, at 7 frames)"
    ],
    "missing": "",
    "oracle": "oracle/render-rea-b09-visual-baseline and oracle/render-msaa4-rea-b09-visual-baseline: vis-items-textures, vis-items-appearance, vis-texturing (pinned X_ITE 16.5.0 (oracle/x_ite-pin, 34cdf9f97), headless Chrome 156 / ANGLE on the RTX 3060 Ti, three identical recordings)",
-   "notes": "b09 cloud checkpoint after b2e5b9f: node-texturing (3 identical X_ITE recordings, exact): field definitions (name, access type, data type, default value), a created node's VRML / XML / JSON text, and on a live node a callback on every field that sends events, every inputOnly / inputOutput field (not node fields) set to a sample value, the callbacks in order with their values, the node's text after | Issue #90 2026-10-29 (desktop GPU run, RTX 3060 Ti): vis-items-textures 0 pixels over 8 at MSAA 0 and 4: Cylinder, Cone, ElevationGrid, Extrusion mapping, url fallback after a missing file, modulation with Material, an alpha texture with repeatS / repeatT FALSE."
+   "notes": "b09 cloud checkpoint after b2e5b9f: node-texturing (3 identical X_ITE recordings, exact): field definitions (name, access type, data type, default value), a created node's VRML / XML / JSON text, and on a live node a callback on every field that sends events, every inputOnly / inputOutput field (not node fields) set to a sample value, the callbacks in order with their values, the node's text after | Issue #90 2026-10-29 (desktop GPU run, RTX 3060 Ti): vis-items-textures 0 pixels over 8 at MSAA 0 and 4: Cylinder, Cone, ElevationGrid, Extrusion mapping, url fallback after a missing file, modulation with Material, an alpha texture with repeatS / repeatT FALSE. | 2026-11-12 (PR #589): a LoadSensor that watches an url object loaded at world load gives isActive TRUE, progress 0 at its initialize, then isActive FALSE, isLoaded TRUE, progress 1, loadTime, as pinned X_ITE 16.5.0 (recorded with Chrome 156.0.8078.47, the reference browser; Chrome 157.0.8103.78 gives the same events of each LoadSensor in another order between them). Before, an ImageTexture was COMPLETE_STATE when its fetch ended, in the cascade of the initialize, and its LoadSensor gave only isActive FALSE, progress 1, isLoaded TRUE. ImageTexture.setImage sets COMPLETE_STATE after the decode (ImageTexture.js:78-129); the port now does so in apply_decoded_images."
   },
   {
    "id": "node:MovieTexture",
@@ -7151,13 +7431,36 @@
    "component": "Browser",
    "upstream": "src/x_ite/Browser/DOMIntegration.js",
    "upstream_version": "16.5.0 @ 34cdf9f97",
-   "rust": [],
+   "rust": [
+    "crates/x3d-web/web/x_ite_r.mjs",
+    "crates/x3d-runtime/src/dom.rs",
+    "crates/x3d-web/src/session.rs",
+    "crates/x3d-web/src/wasm.rs",
+    "crates/x3d-web/src/chain.rs"
+   ],
    "status": "DIFFERENT",
    "behavior": "",
-   "tests": [],
+   "tests": [
+    "crates/x3d-web/tests/browser/dom01.test.mjs",
+    "crates/x3d-web/tests/browser/dom02.test.mjs",
+    "crates/x3d-web/tests/browser/dom03.test.mjs",
+    "crates/x3d-web/tests/dom_mutation.rs"
+   ],
    "missing": "",
    "oracle": "",
-   "notes": "DOM-only feature; native host has no DOM"
+   "notes": "DOM-only feature; native host has no DOM | 2026-11-12 (owner decision: status stays DIFFERENT; evidence only): the browser build has the DOM integration: web/x_ite_r.mjs (the MutationObserver of the canvas and its scene elements), x3d-runtime dom.rs, x3d-web session.rs (xml_targets), wasm.rs (xmlChild) and chain.rs (the Inline load state that DOMIntegration listens to). Tests dom01, dom02, dom03 (oracle/web-browser-dom-01/02/03-baseline) and dom_mutation.rs. Remaining difference: the first-load Inline event order (ADR 0001, issue #146). The native host has no DOM by design.",
+   "classification": {
+    "class": "DOCUMENTED_DIFFERENCE",
+    "iso": {
+     "state": "NOT_APPLICABLE"
+    },
+    "decision": {
+     "ref": "ADR 0001; owner decision 2026-11-12 (status stays DIFFERENT)",
+     "reason": "a native host has no DOM"
+    },
+    "impact": "native builds have no DOM integration; in the browser the first-load Inline event order differs (ADR 0001, issue #146)",
+    "reviewed": "2026-11-12"
+   }
   },
   {
    "id": "sub:browser.webxr",
