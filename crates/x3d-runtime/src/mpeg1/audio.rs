@@ -169,7 +169,33 @@ pub fn track(data: &[u8], max_bytes: u64) -> AudioTrack {
     }
 
     match std::panic::catch_unwind(|| decode(&demuxed.audio, max_bytes)) {
-        Ok(Ok((channels, rate))) => AudioTrack::Decoded { channels, rate },
+        Ok(Ok((mut channels, rate))) => {
+            // The audio starts at its own time stamp on the movie's time line (demux::start_leads): leading silence when
+            // the video starts first. The silence counts against the same byte budget. A lead whose silence does not fit
+            // cannot be played aligned, so the track is Corrupt (the time stamps are not usable), never shifted to 0.
+            let lead = (super::demux::start_leads(&demuxed).1 * f64::from(rate)).round();
+            // Checked: a lead from extreme time stamps must not overflow the count or the conversion. The range is
+            // half-open because u64::MAX as f64 rounds up to 2^64, which does not fit in a u64.
+            let fits = (lead.is_finite() && (0.0..u64::MAX as f64).contains(&lead))
+                .then(|| lead as u64)
+                .and_then(|lead| {
+                    let bytes = channels.iter().try_fold(0u64, |total, c| {
+                        total.checked_add((c.len() as u64).checked_add(lead)?.checked_mul(4)?)
+                    })?;
+                    (bytes <= max_bytes).then_some(usize::try_from(lead).ok()?)
+                });
+            let Some(lead) = fits else {
+                return AudioTrack::Corrupt;
+            };
+
+            if lead > 0 {
+                for c in &mut channels {
+                    c.splice(0..0, std::iter::repeat_n(0.0, lead));
+                }
+            }
+
+            AudioTrack::Decoded { channels, rate }
+        }
         Ok(Err(AudioError::LayerI)) => AudioTrack::Unsupported("MPEG-1 audio layer I".to_string()),
         _ => AudioTrack::Corrupt,
     }

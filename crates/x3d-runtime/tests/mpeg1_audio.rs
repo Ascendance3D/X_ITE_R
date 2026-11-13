@@ -581,3 +581,217 @@ fn an_mpeg1_movie_without_sound_has_no_sound_and_no_diagnostic() {
     assert!(playing_buffers(&mut rt).is_empty());
     assert!(rt.log.iter().all(|l| !l.contains("audio")), "{:?}", rt.log);
 }
+
+// --- the start of the audio and of the pictures ------------------------------------------------------------------
+
+/// (file, video start, audio start) in seconds: `ffprobe -show_entries stream=codec_type,start_time` (ffmpeg 6.1.1), which
+/// prints six decimals. The reference for the time line, because the pinned X_ITE cannot play MPEG-1.
+const STARTS: [(&str, f64, f64); 4] = [
+    ("sys-av-64x48.mpg", 0.540000, 0.529089),
+    ("sys-av-stereo-48k.mpg", 0.540000, 0.529978),
+    ("sys-av-noise-32k.mpg", 0.540000, 0.524967),
+    ("sys-av-mp3-44k.mpg", 0.540000, 0.514944),
+];
+
+#[test]
+fn the_first_time_stamps_equal_ffprobe_and_the_later_stream_is_delayed() {
+    for (name, video, audio_start) in STARTS {
+        let d = demux::demux(&data(name)).unwrap();
+        let (v, a) = (d.first_video_pts.unwrap(), d.first_audio_pts.unwrap());
+
+        // Six printed decimals: within half a microsecond, plus the 90 kHz tick.
+        assert!((v - video).abs() < 6e-7, "{name}: video {v}");
+        assert!((a - audio_start).abs() < 6e-7, "{name}: audio {a}");
+
+        // In every fixture the audio starts first: the pictures wait, the sound starts at 0.
+        let (video_lead, audio_lead) = demux::start_leads(&d);
+
+        assert_eq!(audio_lead, 0.0, "{name}");
+        assert!((video_lead - (v - a)).abs() < 1e-12, "{name}");
+
+        // The first picture is held by the lead, so the later pictures keep their time stamps: the movie is longer by
+        // the lead. The sound is unchanged (the_movie_media_carries_the_decoded_track_and_its_pictures).
+        let media = MovieMedia::decode_mpeg1(&data(name)).unwrap();
+        let video = x3d_runtime::mpeg1::decode(&data(name), BUDGET).unwrap();
+        let pictures = video.frames.len() as f64 / video.framerate;
+
+        assert!(
+            (media.duration() - (pictures + video_lead)).abs() < 1e-9,
+            "{name}: {}",
+            media.duration()
+        );
+    }
+}
+
+/// [`packet`] with a presentation time stamp (`0010` marker, 90 kHz ticks).
+fn packet_pts(id: u8, payload: &[u8], ticks: u64) -> Vec<u8> {
+    let mut p = vec![0, 0, 1, id];
+
+    p.extend_from_slice(&(payload.len() as u16 + 5).to_be_bytes());
+    p.extend_from_slice(&[
+        0x21 | (((ticks >> 30) & 0x07) as u8) << 1,
+        (ticks >> 22) as u8,
+        ((((ticks >> 15) & 0x7F) as u8) << 1) | 1,
+        (ticks >> 7) as u8,
+        (((ticks & 0x7F) as u8) << 1) | 1,
+    ]);
+    p.extend_from_slice(payload);
+    p
+}
+
+/// [`mux`] with one time stamp on the first video packet and one on the first audio packet.
+fn mux_pts(
+    video: &[u8],
+    audio: &[u8],
+    chunk: usize,
+    video_ticks: u64,
+    audio_ticks: u64,
+) -> Vec<u8> {
+    let mut out = vec![];
+    let (v, a): (Vec<&[u8]>, Vec<&[u8]>) =
+        (video.chunks(chunk).collect(), audio.chunks(chunk).collect());
+
+    for i in 0..v.len().max(a.len()) {
+        out.extend_from_slice(&PACK);
+
+        if let Some(c) = v.get(i) {
+            out.extend(if i == 0 {
+                packet_pts(0xE0, c, video_ticks)
+            } else {
+                packet(0xE0, c)
+            });
+        }
+
+        if let Some(c) = a.get(i) {
+            out.extend(if i == 0 {
+                packet_pts(0xC0, c, audio_ticks)
+            } else {
+                packet(0xC0, c)
+            });
+        }
+    }
+
+    out.extend_from_slice(&[0, 0, 1, 0xB9]);
+    out
+}
+
+#[test]
+fn audio_that_starts_after_the_pictures_begins_with_silence() {
+    let es = audio_es("sys-av-stereo-48k.mpg");
+    let plain = decoded(audio::track(
+        &mux(&video_es(), &[(0xC0, &es)], 2000),
+        BUDGET,
+    ));
+
+    // The audio starts 0.25 s (22500 ticks) after the first picture: 12000 silent frames at 48 kHz, then the same sound.
+    let stream = mux_pts(&video_es(), &es, 2000, 45000, 67500);
+    let d = demux::demux(&stream).unwrap();
+
+    assert_eq!(demux::start_leads(&d), (0.0, 0.25));
+
+    let (got, rate) = decoded(audio::track(&stream, BUDGET));
+
+    assert_eq!(rate, 48000.0);
+
+    for (c, p) in got.iter().zip(&plain.0) {
+        assert_eq!(c.len(), p.len() + 12000);
+        assert!(c[..12000].iter().all(|&s| s == 0.0));
+        assert_eq!(&c[12000..], &p[..]);
+    }
+
+    // The pictures start at 0: the movie is as long as its pictures.
+    let media = MovieMedia::decode_mpeg1(&stream).unwrap();
+    let video = x3d_runtime::mpeg1::decode(&stream, BUDGET).unwrap();
+
+    assert!((media.duration() - video.frames.len() as f64 / video.framerate).abs() < 1e-9);
+}
+
+#[test]
+fn without_two_time_stamps_both_streams_start_at_zero() {
+    // The hand-built streams of the tests above carry no time stamps.
+    let es = audio_es("sys-av-stereo-48k.mpg");
+    let d = demux::demux(&mux(&video_es(), &[(0xC0, &es)], 2000)).unwrap();
+
+    assert_eq!((d.first_video_pts, d.first_audio_pts), (None, None));
+    assert_eq!(demux::start_leads(&d), (0.0, 0.0));
+
+    // Only the video packets carry a time stamp: the audio packets have the "no time stamps" byte.
+    let video = video_es();
+    let (v, a): (Vec<&[u8]>, Vec<&[u8]>) =
+        (video.chunks(2000).collect(), es.chunks(2000).collect());
+    let mut stream = vec![];
+
+    for i in 0..v.len().max(a.len()) {
+        stream.extend_from_slice(&PACK);
+
+        if let Some(c) = v.get(i) {
+            stream.extend(packet_pts(0xE0, c, 45000 + 3003 * i as u64));
+        }
+
+        if let Some(c) = a.get(i) {
+            stream.extend(packet(0xC0, c));
+        }
+    }
+
+    stream.extend_from_slice(&[0, 0, 1, 0xB9]);
+
+    let d = demux::demux(&stream).unwrap();
+
+    assert_eq!((d.first_video_pts, d.first_audio_pts), (Some(0.5), None));
+    assert_eq!(demux::start_leads(&d), (0.0, 0.0));
+}
+
+#[test]
+fn the_earliest_time_stamp_of_a_stream_is_its_start() {
+    // Video packets in file order with time stamps 0.6 s, 0.5 s, 0.7 s (reordered pictures): the stream starts at 0.5 s.
+    let es = audio_es("sys-av-stereo-48k.mpg");
+    let video = video_es();
+    let (v, a): (Vec<&[u8]>, Vec<&[u8]>) =
+        (video.chunks(2000).collect(), es.chunks(2000).collect());
+    let ticks = [54000, 45000, 63000];
+    let mut stream = vec![];
+
+    for i in 0..v.len().max(a.len()) {
+        stream.extend_from_slice(&PACK);
+
+        if let Some(c) = v.get(i) {
+            stream.extend(match ticks.get(i) {
+                Some(&t) => packet_pts(0xE0, c, t),
+                None => packet(0xE0, c),
+            });
+        }
+
+        if let Some(c) = a.get(i) {
+            stream.extend(if i == 0 {
+                packet_pts(0xC0, c, 40500)
+            } else {
+                packet(0xC0, c)
+            });
+        }
+    }
+
+    stream.extend_from_slice(&[0, 0, 1, 0xB9]);
+
+    let d = demux::demux(&stream).unwrap();
+
+    assert_eq!(d.first_video_pts, Some(0.5));
+    assert_eq!(d.first_audio_pts, Some(0.45));
+    assert!((demux::start_leads(&d).0 - 0.05).abs() < 1e-12);
+}
+
+#[test]
+fn leading_silence_that_does_not_fit_the_budget_makes_the_track_corrupt() {
+    // The audio starts 100 s after the pictures: 4.8 million silent frames per channel at 48 kHz, 38.4 MB for two
+    // channels, over a 16 MiB budget. The sound is not shifted to 0; the track is Corrupt.
+    let es = audio_es("sys-av-stereo-48k.mpg");
+    let stream = mux_pts(&video_es(), &es, 2000, 45000, 45000 + 9_000_000);
+
+    assert!(matches!(
+        audio::track(&stream, 16 << 20),
+        AudioTrack::Corrupt
+    ));
+    // A budget that holds the silence plays it.
+    let (got, _) = decoded(audio::track(&stream, BUDGET));
+
+    assert_eq!(got[0].len(), 23040 + 4_800_000);
+}
