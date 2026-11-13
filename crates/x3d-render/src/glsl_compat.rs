@@ -1738,6 +1738,24 @@ struct Emitted {
     text: String,
     /// Lines in front of the user's first line (naga's line - this = the user's line).
     line_base: usize,
+    /// The first Appendix A loop error (loop_not_allowed, for_loop_limits). ANGLE reports its errors in source order,
+    /// so an error that naga finds on an earlier line comes first (deferred_loop_error).
+    loop_error: Option<String>,
+}
+
+/// ANGLE reports the errors of a source in source order (a float `if` condition on the line before a `while` is
+/// reported, not the loop; recorded with pinned X_ITE, 2026-11-13). The loop error is kept unless the other error has
+/// a real, earlier line. naga's texts without a line are written at line 1 and do not count.
+fn first_in_source(loop_error: Option<String>, other: String) -> String {
+    match loop_error {
+        Some(l)
+            if !error_line(&other)
+                .is_some_and(|n| n > 1 && error_line(&l).is_some_and(|m| n < m)) =>
+        {
+            l
+        }
+        _ => other,
+    }
 }
 
 struct LinkInfo<'a> {
@@ -1778,6 +1796,22 @@ fn layout_location(layout: Option<&str>) -> Option<u32> {
 }
 
 fn emit(a: &Analysis, info: &LinkInfo) -> Result<Emitted, String> {
+    let mut loop_error = None;
+
+    match emit_inner(a, info, &mut loop_error) {
+        Ok(mut e) => {
+            e.loop_error = loop_error;
+            Ok(e)
+        }
+        Err(e) => Err(first_in_source(loop_error, e)),
+    }
+}
+
+fn emit_inner(
+    a: &Analysis,
+    info: &LinkInfo,
+    loop_error: &mut Option<String>,
+) -> Result<Emitted, String> {
     let text = &a.scan.text;
     let boundary_line = a.prefix_lines;
     let line_of =
@@ -1984,12 +2018,9 @@ fn emit(a: &Analysis, info: &LinkInfo) -> Result<Emitted, String> {
                 return Err(e);
             }
 
-            if let Some(e) = loop_not_allowed(a, masked, &t, &loop_macros, &line_of) {
-                return Err(e);
-            }
-
-            if let Some(e) = for_loop_limits(a, &loop_env, masked, &toks, i, &line_of) {
-                return Err(e);
+            if loop_error.is_none() {
+                *loop_error = loop_not_allowed(a, masked, &t, &loop_macros, &line_of)
+                    .or_else(|| for_loop_limits(a, &loop_env, masked, &toks, i, &line_of));
             }
         }
 
@@ -2277,6 +2308,7 @@ fn emit(a: &Analysis, info: &LinkInfo) -> Result<Emitted, String> {
     Ok(Emitted {
         text: format!("{head}{body}{main}"),
         line_base: line_base + a.prefix_lines,
+        loop_error: None,
     })
 }
 
@@ -3828,7 +3860,11 @@ fn link_analyses(parts: &[&Analysis], both: bool) -> Result<Program, String> {
     for p in parts {
         let e = emit(p, &info)?;
         e.text.hash(&mut h);
-        let w = to_wgsl(p.stage, &e)?;
+        let w = match (to_wgsl(p.stage, &e), e.loop_error) {
+            (Ok(_), Some(l)) => return Err(l),
+            (Ok(w), None) => w,
+            (Err(other), l) => return Err(first_in_source(l, other)),
+        };
 
         match p.stage {
             Stage::Vertex => vs_wgsl = w,
