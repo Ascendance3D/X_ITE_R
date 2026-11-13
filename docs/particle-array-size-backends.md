@@ -43,10 +43,30 @@ miss, the selected particle and the shape name stay exact. The decision is unit-
 | `rea_b15_particle_collision_matches_x_ite` | strict (1e-6): fails, worst distance difference 5.24e-5, normals exact, hit states exact. At 1e-4: **pass** | numeric difference: the software rasterizer's depth rounding; within 1e-4 |
 | `rea_b14_particle_pick_matches_x_ite` | strict: fails in 22 of the cases with 0 hit or selection differences in all of them. At 1e-4: 19 of the 22 cases pass; `pp-cone-geometry` (9 probes), `pp-cone-geometry-sphere` (136) and `pp-overlap-equal-depth` (3) still differ | the 19 cases: numeric difference within 1e-4. The three: **not within the tolerance and not closed.** The selected particle and the point agree (points within 4e-4 at most in the probes shown); the texture coordinate differs at a quad-edge pixel (0.995 against 0.727 in one probe) and the sphere normals by more than 1e-4. This looks like the software rasterizer's coverage and attribute interpolation at an edge pixel, but a second software backend has not confirmed it, so it stays open: it is not called a hardware constraint without that evidence. Owner decision: widen the software tolerance for these three, or leave the software backend out of the criterion |
 
+## The clamp on physical Metal (2026-11-13)
+
+The pinned X_ITE 16.5.0 was recorded on the approved physical Mac: Apple M1, macOS 27.2.1, Google Chrome 157.0.8103.52 with ANGLE
+on Metal (`X3D_ORACLE_ANGLE=metal`), with `oracle/tools/record_platform_particles.py --platform apple-m1 --base
+rea-b17-emitter-hits-baseline`. That is all 27 VolumeEmitter cases of `rea_b17`: 31 to 128 hits in the emitter, and
+`ve-speed-64-bounded`, which has more than 32 hits in the emitter and in a BoundedPhysicsModel at the same time. Each case was
+recorded three times and the three runs were identical.
+
+| comparison | result |
+| --- | --- |
+| `js.json` (the seeds, the particle counts, every recorded integer) against the NVIDIA recording | identical in all 27 cases |
+| `js.f32` (the transform-feedback dump) against the NVIDIA recording | 0 values more than 1e-3 apart; the largest difference is 2.38e-6 (`ve-hits-33-uneven`), float rounding only. Between 422 and 1965 values per case differ in the last bits |
+| the port's CPU replay (`rea_b17_emitter_hits`) with the Metal records in place of the NVIDIA ones (a local test only) | 28 of 28 pass |
+
+On ANGLE Metal, the pinned page's out-of-range GLSL write gives the same result as on the RTX 3060 Ti: the same hits are stored
+and the same pair is picked. The clamp is therefore measured on Metal, and the port matches it. The Metal records are not
+committed: they differ only by float rounding, and `rea_b17` reads only the NVIDIA baseline. The 27 records are kept in the lane
+report (combined SHA-256 `cb1ed3a20b0466edc012dbd4362ab756858463886200228170b3d8a683c1d3cb`).
+
+Limit: the reference browser is Chrome 156.0.8078.47 (owner decision 2026-11-12). The Mac had Chrome 157.0.8103.52, so this is a
+measurement on Metal with the next Chrome version, not a run of the reference browser. The `rea_b16` cases other than
+`ve-speed-64-bounded` were not recorded on the Mac: `record_platform_particles.py` does not support the flat `rea_b16` layout.
+
 ## Not done, and why
 
-* The pinned X_ITE's WebGL clamp has not been measured on Metal. It needs the oracle recorder (`x3d-oracle particles`, Chromium
-  under Playwright) on a Metal device. The hosted macOS runner could run Chromium, but no recorder job exists for it, and its
-  result would be virtualized. Physical Metal needs a physical Mac (owner approval: provide the second machine).
 * The 16 `GPU_TESTS` on the virtualized macOS device: several of them need private answer keys that a hosted runner does not hold
   (`oracle/answer-keys.tsv`). The particle tests above need none, so only they run.
