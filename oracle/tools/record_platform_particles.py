@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """Platform recordings of the pinned X_ITE for the ParticleSystem pointing and collision tests (rea_b14, rea_b15, rea_b21, rea_b22),
-and the VolumeEmitter ARRAY_SIZE clamp cases (rea_b17).
+and the ARRAY_SIZE clamp cases of the VolumeEmitter (rea_b17) and the BoundedPhysicsModel (rea_b16).
 
 Like record_platform_baseline.py (read it for the rules), for the baselines recorded by `x3d-oracle particles`: every case of the base is
 recorded three times ON THE TARGET MACHINE; `js.json` and `js.f32` of the three runs must be identical (else the case is listed in
@@ -43,7 +43,7 @@ platform, base, hardware, only = opt("--platform"), opt("--base"), opt("--hardwa
 oracle = opt("--oracle", os.path.join(root, "target", "release", "x3d-oracle"))
 SYNTH = {"rea-b14-particle-pick-baseline": "synthetic-rea-b14-particle-pick", "rea-b15-particle-collision-baseline": "synthetic-rea-b15-particle-collision",
          "rea-b21-wide-lines-baseline": "synthetic-rea-b21-wide-lines", "rea-b22-two-layer-shadows-baseline": "synthetic-rea-b22-two-layer-shadows",
-         "rea-b17-emitter-hits-baseline": "synthetic-rea-b17-emitter-hits"}
+         "rea-b17-emitter-hits-baseline": "synthetic-rea-b17-emitter-hits", "rea-b16-bounded-baseline": "synthetic-rea-b16-bounded"}
 assert platform and base in SYNTH, "--platform and --base (one of %s) are required" % sorted(SYNTH)
 assert os.environ.get("X3D_ORACLE_CHROME") and os.environ.get("X3D_ORACLE_ANGLE"), "set X3D_ORACLE_CHROME and X3D_ORACLE_ANGLE"
 
@@ -51,6 +51,13 @@ src, dest = os.path.join(root, "oracle", base), os.path.join(root, "oracle", f"{
 synth = os.path.join(root, "oracle", SYNTH[base])
 names = sorted(n for n in os.listdir(src) if os.path.isdir(os.path.join(src, n)) and (not only or only in n))
 sha = lambda p: hashlib.sha256(open(p, "rb").read()).hexdigest()
+
+
+def nvidia(name, f):
+    """The NVIDIA recording's file f ("js.json" or "js.f32") of a case. rea_b16's Script cases keep js.json flat:
+    NAME.js.json beside the directory NAME/ (crates/x3d-viewer/tests/rea_b16_bounded_physics.rs)."""
+    flat = os.path.join(src, name + "." + f)
+    return flat if f == "js.json" and os.path.isfile(flat) else os.path.join(src, name, f)
 tmp = tempfile.mkdtemp(prefix="platform-particles-")
 kept, same, unstable, prov, pictures = [], [], [], {}, []
 
@@ -79,7 +86,7 @@ for name in names:
                 shutil.copyfile(mine, os.path.join(dest, f"{name}.{png}"))
                 prov.setdefault(name, {})[png] = sha(mine)
                 pictures.append(f"{name}.{png}")
-    if all(filecmp.cmp(os.path.join(runs[0], f), os.path.join(src, name, f), shallow=False) for f in ("js.json", "js.f32")):
+    if all(filecmp.cmp(os.path.join(runs[0], f), nvidia(name, f), shallow=False) for f in ("js.json", "js.f32")):
         same.append(name)
         continue
     os.makedirs(dest, exist_ok=True)
