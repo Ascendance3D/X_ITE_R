@@ -1,7 +1,10 @@
 """The classification rules of the ledger (owner decision 2026-11-12), used by verify_ledger.py and the ledger step tools.
 
 The optional `classification` object of an entry is independent of its `status`. EVIDENCE_FIELDS are the fields that a step may
-change on a DIFFERENT entry it names in its evidence set; the status and the other fields stay."""
+change on a DIFFERENT entry it names in its evidence set; the status and the other fields stay.
+
+`class` and `reviewed` are required. `iso` is optional except for ISO_COMPLIANT: an absent `iso` means that no ISO clause was
+checked for the entry (the same as state UNVERIFIED)."""
 import re
 
 # The classification (owner decision 2026-11-12). It does not change a status or the totals.
