@@ -61,7 +61,7 @@ A scene is loaded when nothing is parked; then it can replace the world. Droppin
 - `cargo check --target wasm32-unknown-unknown`: `x3d-fields`, `x3d-scene`, `x3d-text`, `x3d-parse` and `x3d-runtime` built unchanged. `x3d-script` failed in `rquickjs-sys`, and `x3d-render` failed only through it.
 - With QuickJS off, `x3d-render` had one error (the pipeline thread). `x3d-viewer` had none after the feature gate.
 - wgpu 30's default features include `webgpu`. Headless Chromium 151 (Playwright) and Chrome 156 expose WebGPU on Vulkan, also on Mesa lavapipe without a GPU.
-- WebGL2 was not tried. The renderer targets WebGPU limits, and the WebGPU path works.
+- WebGL2 was not tried at the time of this choice. A WebGL2 fallback was added later (`webgl` feature, `backend="webgl2"`; see web/API.md, "Graphics").
 
 ## Tests
 

@@ -139,10 +139,12 @@ jobs:
 
       # The ledger replays its promotion history and checks the classification rules (owner decision 2026-11-12); --self-test
       # proves that it fails on a changed status, a changed DIFFERENT entry and each broken classification rule.
+      # ledger_summary.py --check fails when ledger/SUMMARY.md (the generated totals and remaining gaps) is not current.
       - name: Ledger
         run: |
           python3 -I -B ledger/tools/verify_ledger.py
           python3 -I -B ledger/tools/verify_ledger.py --self-test
+          python3 -I -B ledger/tools/ledger_summary.py --check
 
       # gpu-tests.yml (the GPU runner) lists the same GPU tests as GPU_TESTS below.
       - name: GPU test lists

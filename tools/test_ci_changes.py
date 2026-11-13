@@ -135,8 +135,10 @@ class Classification(unittest.TestCase):
             # runs for every change, a change under ledger/ included, so the tree reaches the step that reads it and needs
             # no suite. Only these two commands are exempt: with them removed, the line must hold no other reference.
             # The "Ledger" step of "Fast checks" runs verify_ledger.py and its --self-test (owner decision 2026-11-12, the
-            # classification schema) for the same reason; only these commands are exempt.
+            # classification schema) for the same reason, and so does ledger_summary.py --check (the generated
+            # ledger/SUMMARY.md, 2026-11-13); only these commands are exempt.
             if path == ".github/workflows/rust-tests.yml" and not re.search(TREE_REFERENCE, rest.replace(
+                    "python3 -I -B ledger/tools/ledger_summary.py --check", "").replace(
                     "node ledger/functions/tools/extract_functions.mjs", "").replace(
                     "python3 -I -B ledger/functions/tools/build_function_ledger.py", "").replace(
                     "python3 -I -B ledger/tools/verify_ledger.py --self-test", "").replace(
