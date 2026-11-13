@@ -1,5 +1,5 @@
 {
- "_comment": "REA batch 04: cases whose X_ITE world is a stand-in reference. X_ITE 16.5.0 runs `world` from cases.txt; Rust runs rs_world, and each [old, new] of subs is applied to the Rust scene text before the comparison. annotation-layer: the dormant X_ITE AnnotationLayer cannot initialize (X3DLayerNode.initialize reads _hidden, _visible, _children, which it does not define; evidence/boundary/annotation-layer-x_ite-probe.json), so an empty Layer stands in. Only the node name, its own fields, the component statement and the isPickable/pickable field name are excused. icon-annotation: the dormant X_ITE IconAnnotation cannot initialize either (X3DUrlObject.initialize reads _load, which it does not define); GeoMetadata, whose requestImmediateLoad is also empty, stands in. Only the node name and the component statement are excused.",
+ "_comment": "REA batch 04: cases whose X_ITE world is a stand-in reference. X_ITE 16.5.0 runs `world` from cases.txt; Rust runs rs_world, and each [old, new] of subs is applied to the Rust scene text before the comparison. annotation-layer: the dormant X_ITE AnnotationLayer cannot initialize (X3DLayerNode.initialize reads _hidden, _visible, _children, which it does not define; evidence/boundary/annotation-layer-x_ite-probe.json), so an empty Layer stands in. Only the node name, its own fields, the component statement and the isPickable/pickable field name are excused. icon-annotation: the dormant X_ITE IconAnnotation cannot initialize either (X3DUrlObject.initialize reads _load, which it does not define), and its requestImmediateLoad is empty. Since the owner decision of 2026-11-12 the port fetches the IconAnnotation image like an ImageTexture (an enhancement beyond X_ITE), so ImageTexture stands in (until then GeoMetadata, whose requestImmediateLoad is also empty). Only the node name and the component statement are excused.",
  "annotation-layer": {
   "rs_world": "oracle/synthetic-rea-b04/annotation-layer.wrl",
   "subs": [
@@ -34,7 +34,7 @@
    ],
    [
     "DEF IA IconAnnotation {",
-    "DEF IA GeoMetadata {"
+    "DEF IA ImageTexture {"
    ]
   ]
  }

@@ -1453,6 +1453,7 @@ impl Runtime {
         let image_texture = type_name == "ImageTexture";
         let atlas = type_name == "ImageTextureAtlas";
         let image_3d = type_name == "ImageTexture3D";
+        let icon = type_name == "IconAnnotation";
 
         self.allow_fetch_wait();
 
@@ -1472,6 +1473,10 @@ impl Runtime {
                         }
                         if image_3d {
                             return rt.image_texture_3d_set_data(node, &data);
+                        }
+                        // The ImageTexture check: data in no image format fails the candidate, so the next url is tried.
+                        if icon {
+                            return crate::nodes::texture_projector::check_image(&data, &url);
                         }
                         Ok(())
                     }

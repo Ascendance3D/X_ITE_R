@@ -301,7 +301,8 @@ impl Runtime {
             | "ImageCubeMapTexture"
             | "ImageTextureAtlas"
             | "ImageTexture3D"
-            | "ShaderPart" => {
+            | "ShaderPart"
+            | "IconAnnotation" => {
                 self.add_private_field(
                     node,
                     "loadState",
@@ -427,6 +428,10 @@ impl Runtime {
             | "ImageCubeMapTexture"
             | "ImageTextureAtlas"
             | "ImageTexture3D" => self.inline_initialize(node),
+            // An enhancement beyond pinned X_ITE (owner decision 2026-11-12): the dormant X_ITE class cannot initialize, and
+            // its requestImmediateLoad is empty. Here it is an X3DUrlObject that fetches its image like an ImageTexture
+            // (url fallback, loadState, LoadSensor), without a display: the draft gives no normative layout.
+            "IconAnnotation" => self.inline_initialize(node),
             "FontLibrary" => self.font_library_initialize(node),
             "ShaderPart" => self.shader_part_initialize(node),
             "ComposedShader" => self.composed_shader_initialize(node),

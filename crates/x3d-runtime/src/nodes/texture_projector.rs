@@ -116,14 +116,9 @@ impl Runtime {
         data: &[u8],
         url: &url::Url,
     ) -> Result<(), String> {
-        let reader = image::ImageReader::new(std::io::Cursor::new(data)).with_guessed_format();
+        check_image(data, url)?;
 
-        if let Ok(r) = &reader
-            && r.format().is_none()
-            && !looks_like_svg(data)
-        {
-            return Err(format!("Error: Couldn't load image '{url}': error."));
-        }
+        let reader = image::ImageReader::new(std::io::Cursor::new(data)).with_guessed_format();
 
         if let Ok((width, height)) = reader
             .map_err(image::ImageError::IoError)
@@ -517,6 +512,22 @@ fn looks_like_svg(data: &[u8]) -> bool {
     let head = &data[..data.len().min(4096)];
 
     head.starts_with(b"<") && head.windows(4).any(|w| w.eq_ignore_ascii_case(b"<svg"))
+}
+
+/// The candidate check of ImageTexture, also used by IconAnnotation: data in no image format fails the candidate, like
+/// the `<img>` of `loadImage` (`onerror`). SVG is no format of the image crate but the browser's `<img>` decodes it, so
+/// it does not fail. IconAnnotation keeps nothing: the node has no display (the draft requires JPEG and PNG support).
+pub(crate) fn check_image(data: &[u8], url: &url::Url) -> Result<(), String> {
+    let reader = image::ImageReader::new(std::io::Cursor::new(data)).with_guessed_format();
+
+    if let Ok(r) = &reader
+        && r.format().is_none()
+        && !looks_like_svg(data)
+    {
+        return Err(format!("Error: Couldn't load image '{url}': error."));
+    }
+
+    Ok(())
 }
 
 #[cfg(test)]
