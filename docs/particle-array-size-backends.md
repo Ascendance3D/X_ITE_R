@@ -62,9 +62,19 @@ and the same pair is picked. The clamp is therefore measured on Metal, and the p
 committed: they differ only by float rounding, and `rea_b17` reads only the NVIDIA baseline. The 27 records are kept in the lane
 report (`sha256sum * | sha256sum` in the record directory: `4bdaf4293387a8e66d6f393682eb145671fcc61044d8d4a6e7f2ac2f392cd281`).
 
+The same run for the 39 BoundedPhysicsModel cases of `rea_b16` (`--base rea-b16-bounded-baseline`; the recorder reads
+the flat `NAME.js.json` of the Script cases), three identical runs each:
+
+| comparison | result |
+| --- | --- |
+| `js.json` against the NVIDIA recording | identical in all 39 cases |
+| `js.f32` against the NVIDIA recording | 4 cases identical; in the other 35, 0 values more than 1e-3 apart, the largest difference 9.54e-7 (`bp-damping-change`) |
+| the port's replay (`rea_b16_bounded_physics`) with the Metal records in place of the NVIDIA ones (a local test only) | 40 of 40 pass |
+
+The 35 differing `rea_b16` records are kept in the lane report as well (`253e5e8c3294c10b12abb55ba045142c9820721f7a6ec7b88d298525380e462e`).
+
 Limit: the reference browser is Chrome 156.0.8078.47 (owner decision 2026-11-12). The Mac had Chrome 157.0.8103.52, so this is a
-measurement on Metal with the next Chrome version, not a run of the reference browser. The `rea_b16` cases other than
-`ve-speed-64-bounded` were not recorded on the Mac: `record_platform_particles.py` does not support the flat `rea_b16` layout.
+measurement on Metal with the next Chrome version, not a run of the reference browser.
 
 ## Not done, and why
 
