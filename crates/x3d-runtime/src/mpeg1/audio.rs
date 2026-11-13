@@ -174,16 +174,20 @@ pub fn track(data: &[u8], max_bytes: u64) -> AudioTrack {
             // the video starts first. The silence counts against the same byte budget. A lead whose silence does not fit
             // cannot be played aligned, so the track is Corrupt (the time stamps are not usable), never shifted to 0.
             let lead = (super::demux::start_leads(&demuxed).1 * f64::from(rate)).round();
-            let bytes = channels
-                .iter()
-                .map(|c| (c.len() as f64 + lead) * 4.0)
-                .sum::<f64>();
-
-            if bytes > max_bytes as f64 {
+            let frames = channels.first().map_or(0, Vec::len) as u64;
+            // Checked: a lead from extreme time stamps must not overflow the count or the conversion to usize.
+            let fits = (lead.is_finite() && (0.0..=u64::MAX as f64).contains(&lead))
+                .then(|| lead as u64)
+                .and_then(|lead| {
+                    let bytes = lead
+                        .checked_add(frames)?
+                        .checked_mul(4)?
+                        .checked_mul(channels.len() as u64)?;
+                    (bytes <= max_bytes).then_some(usize::try_from(lead).ok()?)
+                });
+            let Some(lead) = fits else {
                 return AudioTrack::Corrupt;
-            }
-
-            let lead = lead as usize;
+            };
 
             if lead > 0 {
                 for c in &mut channels {

@@ -17,7 +17,9 @@ impl MovieMedia {
         let mut delays = vec![delay; video.frames.len()];
 
         // The pictures start at their own time stamp on the movie's time line (mpeg1::demux::start_leads): when the audio
-        // starts first, the first picture is held longer by the difference, so every later picture keeps its time stamp.
+        // starts first, the first picture is held longer by the difference. The pictures come out in display order
+        // (mpeg1::video), so the first one has the stream's earliest time stamp, and at the constant picture rate every
+        // later picture keeps its time stamp.
         if mpeg1::demux::is_system_stream(data)
             && let Ok(demuxed) = mpeg1::demux::demux(data)
             && let Some(first) = delays.first_mut()
