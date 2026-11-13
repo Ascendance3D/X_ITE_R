@@ -2814,8 +2814,9 @@ fn to_wgsl(stage: Stage, e: &Emitted) -> Result<String, String> {
                 .max(1);
             return format!("ERROR: 0:{line}: 'return' : function return is not matching type:");
         }
-        // GLSL ES 1.00 / 3.00 sections 6.2 and 6.3: the condition of an if or a loop is a scalar bool. ANGLE
-        // (checkIsScalarBool) reports it at the condition.
+        // GLSL ES 1.00 / 3.00 section 6.2: the condition of an if is a scalar bool. ANGLE (checkIsScalarBool)
+        // reports it at the condition. Only an if: naga negates a while or for condition before it validates it, so
+        // a loop keeps naga's text.
         if let naga::valid::ValidationError::Function {
             handle,
             source: naga::valid::FunctionError::InvalidIfType(condition),
