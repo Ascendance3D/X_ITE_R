@@ -94,12 +94,9 @@ const CASES: &[(&str, &str, Option<&str>)] = &[
 /// Cases whose log differs: naga type checks GLSL 4.50 (it accepts a constructor with too many arguments, and
 /// reports a type error in a function as "Function is invalid" without a line), ANGLE checks GLSL ES 1.00. A full
 /// ES type checker is not in this port; these stay different (a shader that X_ITE rejects and falls back from is
-/// then accepted, or rejected with another text). The port makes the ES check of case h (glsl_es_int_float).
-const GAPS: &[&str] = &[
-    "a type mismatch",
-    "d constructor too many args",
-    "k if not bool",
-];
+/// then accepted, or rejected with another text). The port makes the ES checks of cases h (glsl_es_int_float) and k
+/// (glsl_es_bool_condition).
+const GAPS: &[&str] = &["a type mismatch", "d constructor too many args"];
 
 fn rust(source: &str) -> Option<String> {
     // ShaderCompiler.process runs first in ShaderPart.loadData (it ends every line with a newline).

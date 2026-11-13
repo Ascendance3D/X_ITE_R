@@ -2698,6 +2698,24 @@ fn to_wgsl(stage: Stage, e: &Emitted) -> Result<String, String> {
                 .max(1);
             return format!("ERROR: 0:{line}: 'return' : function return is not matching type:");
         }
+        // GLSL ES 1.00 / 3.00 sections 6.2 and 6.3: the condition of an if or a loop is a scalar bool. ANGLE
+        // (checkIsScalarBool) reports it at the condition.
+        if let naga::valid::ValidationError::Function {
+            handle,
+            source: naga::valid::FunctionError::InvalidIfType(condition),
+            ..
+        } = err.as_inner()
+        {
+            let span = module.functions[*handle].expressions.get_span(*condition);
+
+            if span.is_defined() {
+                let loc = span.location(&e.text);
+                let line = (loc.line_number as usize)
+                    .saturating_sub(e.line_base)
+                    .max(1);
+                return format!("ERROR: 0:{line}: '' : boolean expression expected");
+            }
+        }
 
         format!("ERROR: 0:1: {}", err.as_inner())
     })?;
