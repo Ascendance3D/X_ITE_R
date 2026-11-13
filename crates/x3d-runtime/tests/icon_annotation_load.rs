@@ -6,12 +6,13 @@
 //! PNG for IconAnnotation. The adopted ISO/IEC 19775-1:2023 text has no Annotation clause.
 //!
 //! The port fetches the url like an ImageTexture (X3DUrlObject requestImmediateLoad, FileLoader fallback): a candidate
-//! that does not fetch or does not decode is skipped, the first image that decodes completes the load, and no candidate
-//! left fails it. Nothing is displayed: the draft gives no normative layout. The node has no `load` field, so it loads as
-//! with the X3DUrlObject default, TRUE.
+//! that does not fetch, or that the candidate check rejects, is skipped. The first candidate that passes completes the
+//! load, and no candidate left fails it. Nothing is displayed: the draft gives no normative layout. The node has no
+//! `load` field, so it loads as with the X3DUrlObject default, TRUE.
 //!
 //! The candidate check is the one of ImageTexture (`check_image`): data in no image format fails the candidate, and an
-//! SVG document does not. The tests cover JPEG and PNG, the formats the draft names, and data in no image format.
+//! SVG document does not. The check does not decode the pixels, so a damaged file with a valid image header passes, as
+//! for ImageTexture. The tests cover JPEG and PNG, the formats the draft names, and data in no image format.
 
 use std::cell::RefCell;
 use std::collections::HashMap;
@@ -86,7 +87,7 @@ fn png_and_jpeg_complete() {
 }
 
 #[test]
-fn fallback_skips_missing_and_undecodable_candidates() {
+fn fallback_skips_missing_and_non_image_candidates() {
     let (rt, node, requests) = run("\"missing.png\" \"not-an-image.png\" \"icon.jpg\"");
     assert_eq!(load_state(&rt, node), LoadState::Complete);
     assert_eq!(
@@ -104,7 +105,7 @@ fn fallback_skips_missing_and_undecodable_candidates() {
 }
 
 #[test]
-fn first_decodable_candidate_ends_the_fallback() {
+fn first_image_candidate_ends_the_fallback() {
     let (rt, node, requests) = run("\"icon.jpg\" \"icon.png\"");
     assert_eq!(load_state(&rt, node), LoadState::Complete);
     assert_eq!(
@@ -119,4 +120,41 @@ fn empty_url_does_not_start() {
     let (rt, node, requests) = run("");
     assert_eq!(load_state(&rt, node), LoadState::NotStarted);
     assert!(requests.borrow().is_empty());
+}
+
+#[test]
+fn candidates_are_the_ones_of_image_texture() {
+    let mut damaged = encoded(image::ImageFormat::Png);
+    damaged.truncate(20);
+    let mut map = files(Requests::default()).0;
+    map.insert("http://oracle/damaged.png".to_string(), damaged);
+    map.insert(
+        "http://oracle/icon.svg".to_string(),
+        b"<?xml version=\"1.0\"?><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"4\" height=\"2\"/>".to_vec(),
+    );
+
+    for urls in [
+        "\"icon.png\"",
+        "\"icon.jpg\"",
+        "\"icon.svg\"",
+        "\"damaged.png\"",
+        "\"not-an-image.png\"",
+        "\"missing.png\" \"not-an-image.png\" \"icon.jpg\"",
+    ] {
+        let text = format!(
+            "#X3D V4.0 utf8\nPROFILE Interchange\nCOMPONENT Annotation:1\n\
+             DEF IA IconAnnotation {{ url [ {urls} ] }}\n\
+             Shape {{ appearance Appearance {{ texture DEF IT ImageTexture {{ url [ {urls} ] }} }} geometry Box {{}} }}\n"
+        );
+        let scene = x3d_parse::parse_bytes(text.as_bytes(), "http://oracle/t.x3dv").unwrap();
+        let mut rt = Runtime::new(scene, Box::new(Files(map.clone(), Requests::default())));
+        rt.load_world();
+        let icon = rt.scene.get_named_node(x3d_scene::ROOT, "IA").unwrap();
+        let texture = rt.scene.get_named_node(x3d_scene::ROOT, "IT").unwrap();
+        assert_eq!(
+            load_state(&rt, icon),
+            load_state(&rt, texture),
+            "IconAnnotation and ImageTexture for {urls}"
+        );
+    }
 }

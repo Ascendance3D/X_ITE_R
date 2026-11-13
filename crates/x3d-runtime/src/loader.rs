@@ -1474,7 +1474,7 @@ impl Runtime {
                         if image_3d {
                             return rt.image_texture_3d_set_data(node, &data);
                         }
-                        // An image that does not decode fails the candidate, so the next url is tried.
+                        // The ImageTexture check: data in no image format fails the candidate, so the next url is tried.
                         if icon {
                             return crate::nodes::texture_projector::check_image(&data, &url);
                         }
