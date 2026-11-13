@@ -105,7 +105,7 @@ impl Runtime {
     ///
     /// The image decode (`await this .loadImage (objectURL)`) ends after the events that were
     /// pending when the fetch ended, so the size waits for [`Runtime::apply_decoded_images`].
-    /// The load state is still set when the fetch ends, before the size (X_ITE sets the size first).
+    /// COMPLETE_STATE waits for the decode too, after the size, as in X_ITE (`url_load`).
     ///
     /// Data in no image format fails the candidate, like the `<img>` of `loadImage` (`onerror`). X_ITE names the
     /// blob URL of the data; the engine has none and names the file URL. SVG is no format of the image crate but
@@ -196,7 +196,14 @@ impl Runtime {
     pub(crate) fn apply_decoded_images(&mut self) {
         for (node, decoded) in std::mem::take(&mut self.decoded_images) {
             match decoded {
-                Decoded::Image(width, height) => self.set_texture_2d_size(node, width, height),
+                Decoded::Image(width, height) => {
+                    self.set_texture_2d_size(node, width, height);
+
+                    // A new request of the node (IN_PROGRESS_STATE) removes its decode entry first.
+                    if self.url_load_state(node) == nodes::LoadState::InProgress {
+                        self.set_load_state(node, nodes::LoadState::Complete);
+                    }
+                }
                 Decoded::Atlas(slicing, outputs) => {
                     self.nrt_mut(node).atlas = Some(slicing);
                     self.image_texture_atlas_outputs(node, outputs);

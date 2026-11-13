@@ -1511,6 +1511,18 @@ impl Runtime {
             self.image_texture_3d_clear(node);
         }
 
+        // ImageTexture.setImage: setTextureData and COMPLETE_STATE wait for the decode (`await this .loadImage
+        // (objectURL)`, ImageTexture.js:78), so a LoadSensor sees IN_PROGRESS_STATE first. An image without a
+        // readable size (SVG) has no decode entry and is complete now.
+        if image_texture
+            && ok
+            && self.decoded_images.iter().any(|(n, d)| {
+                *n == node && matches!(d, nodes::texture_projector::Decoded::Image(..))
+            })
+        {
+            return;
+        }
+
         self.set_load_state(
             node,
             if ok {

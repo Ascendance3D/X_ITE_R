@@ -1,0 +1,48 @@
+#X3D V4.0 utf8
+# The first events of a LoadSensor whose url objects load at world load (ImageTexture and Inline; an
+# AudioClip with a looping file), each with its own LoadSensor. Every event goes into `log` in order.
+PROFILE Interchange
+COMPONENT Networking:3
+COMPONENT Scripting:1
+COMPONENT Sound:1
+Viewpoint { position 0 0 6 }
+Shape { appearance Appearance { texture DEF T ImageTexture { url "checker.png" } } geometry Box { } }
+DEF I Inline { url "inline-box.wrl" }
+DEF C AudioClip { url "tone.wav" }
+DEF LT LoadSensor { children USE T }
+DEF LI LoadSensor { children USE I }
+DEF LC LoadSensor { children USE C }
+DEF R Script {
+  directOutput TRUE
+  inputOnly SFBool t_active inputOnly SFBool t_loaded inputOnly SFFloat t_progress inputOnly SFTime t_time
+  inputOnly SFBool i_active inputOnly SFBool i_loaded inputOnly SFFloat i_progress inputOnly SFTime i_time
+  inputOnly SFBool c_active inputOnly SFBool c_loaded inputOnly SFFloat c_progress inputOnly SFTime c_time
+  inputOutput SFString log ""
+  url "javascript:
+function initialize () { log = 'I '; }
+function t_active (v) { log += 'TA' + v + ' '; }
+function t_loaded (v) { log += 'TL' + v + ' '; }
+function t_progress (v) { log += 'TP' + v + ' '; }
+function t_time (v, t) { log += 'TT '; }
+function i_active (v) { log += 'IA' + v + ' '; }
+function i_loaded (v) { log += 'IL' + v + ' '; }
+function i_progress (v) { log += 'IP' + v + ' '; }
+function i_time (v, t) { log += 'IT '; }
+function c_active (v) { log += 'CA' + v + ' '; }
+function c_loaded (v) { log += 'CL' + v + ' '; }
+function c_progress (v) { log += 'CP' + v + ' '; }
+function c_time (v, t) { log += 'CT '; }
+"
+}
+ROUTE LT.isActive TO R.t_active
+ROUTE LT.isLoaded TO R.t_loaded
+ROUTE LT.progress TO R.t_progress
+ROUTE LT.loadTime TO R.t_time
+ROUTE LI.isActive TO R.i_active
+ROUTE LI.isLoaded TO R.i_loaded
+ROUTE LI.progress TO R.i_progress
+ROUTE LI.loadTime TO R.i_time
+ROUTE LC.isActive TO R.c_active
+ROUTE LC.isLoaded TO R.c_loaded
+ROUTE LC.progress TO R.c_progress
+ROUTE LC.loadTime TO R.c_time
