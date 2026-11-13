@@ -715,12 +715,83 @@ fn without_two_time_stamps_both_streams_start_at_zero() {
     assert_eq!((d.first_video_pts, d.first_audio_pts), (None, None));
     assert_eq!(demux::start_leads(&d), (0.0, 0.0));
 
-    // Only the video has one.
-    let d = demux::demux(&mux_pts(&video_es(), &es, 2000, 45000, 0)).unwrap();
-    let only_video = demux::Demuxed {
-        first_audio_pts: None,
-        ..d
-    };
+    // Only the video packets carry a time stamp: the audio packets have the "no time stamps" byte.
+    let video = video_es();
+    let (v, a): (Vec<&[u8]>, Vec<&[u8]>) =
+        (video.chunks(2000).collect(), es.chunks(2000).collect());
+    let mut stream = vec![];
 
-    assert_eq!(demux::start_leads(&only_video), (0.0, 0.0));
+    for i in 0..v.len().max(a.len()) {
+        stream.extend_from_slice(&PACK);
+
+        if let Some(c) = v.get(i) {
+            stream.extend(packet_pts(0xE0, c, 45000 + 3003 * i as u64));
+        }
+
+        if let Some(c) = a.get(i) {
+            stream.extend(packet(0xC0, c));
+        }
+    }
+
+    stream.extend_from_slice(&[0, 0, 1, 0xB9]);
+
+    let d = demux::demux(&stream).unwrap();
+
+    assert_eq!((d.first_video_pts, d.first_audio_pts), (Some(0.5), None));
+    assert_eq!(demux::start_leads(&d), (0.0, 0.0));
+}
+
+#[test]
+fn the_earliest_time_stamp_of_a_stream_is_its_start() {
+    // Video packets in file order with time stamps 0.6 s, 0.5 s, 0.7 s (reordered pictures): the stream starts at 0.5 s.
+    let es = audio_es("sys-av-stereo-48k.mpg");
+    let video = video_es();
+    let (v, a): (Vec<&[u8]>, Vec<&[u8]>) =
+        (video.chunks(2000).collect(), es.chunks(2000).collect());
+    let ticks = [54000, 45000, 63000];
+    let mut stream = vec![];
+
+    for i in 0..v.len().max(a.len()) {
+        stream.extend_from_slice(&PACK);
+
+        if let Some(c) = v.get(i) {
+            stream.extend(match ticks.get(i) {
+                Some(&t) => packet_pts(0xE0, c, t),
+                None => packet(0xE0, c),
+            });
+        }
+
+        if let Some(c) = a.get(i) {
+            stream.extend(if i == 0 {
+                packet_pts(0xC0, c, 40500)
+            } else {
+                packet(0xC0, c)
+            });
+        }
+    }
+
+    stream.extend_from_slice(&[0, 0, 1, 0xB9]);
+
+    let d = demux::demux(&stream).unwrap();
+
+    assert_eq!(d.first_video_pts, Some(0.5));
+    assert_eq!(d.first_audio_pts, Some(0.45));
+    assert!((demux::start_leads(&d).0 - 0.05).abs() < 1e-12);
+}
+
+#[test]
+fn leading_silence_that_does_not_fit_the_budget_makes_the_track_corrupt() {
+    // The audio starts 100 s after the pictures: 4.8 million silent frames per channel at 48 kHz, 38.4 MB for two
+    // channels, over a 16 MiB budget. The sound is not shifted to 0; the track is Corrupt.
+    let es = audio_es("sys-av-stereo-48k.mpg");
+    let stream = mux_pts(&video_es(), &es, 2000, 45000, 45000 + 9_000_000);
+
+    assert!(matches!(
+        audio::track(&stream, 16 << 20),
+        AudioTrack::Corrupt
+    ));
+    // A budget that holds the silence plays it.
+    let (got, _) = decoded(audio::track(&stream, BUDGET));
+
+    assert_eq!(got[0].len(), 23040 + 4_800_000);
 }

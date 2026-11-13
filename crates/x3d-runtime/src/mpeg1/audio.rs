@@ -171,14 +171,21 @@ pub fn track(data: &[u8], max_bytes: u64) -> AudioTrack {
     match std::panic::catch_unwind(|| decode(&demuxed.audio, max_bytes)) {
         Ok(Ok((mut channels, rate))) => {
             // The audio starts at its own time stamp on the movie's time line (demux::start_leads): leading silence when
-            // the video starts first. The silence counts against the same byte budget; a lead that does not fit is left out.
-            let lead = (super::demux::start_leads(&demuxed).1 * f64::from(rate)).round() as usize;
+            // the video starts first. The silence counts against the same byte budget. A lead whose silence does not fit
+            // cannot be played aligned, so the track is Corrupt (the time stamps are not usable), never shifted to 0.
+            let lead = (super::demux::start_leads(&demuxed).1 * f64::from(rate)).round();
             let bytes = channels
                 .iter()
-                .map(|c| (c.len() + lead) as u64 * 4)
-                .sum::<u64>();
+                .map(|c| (c.len() as f64 + lead) * 4.0)
+                .sum::<f64>();
 
-            if lead > 0 && bytes <= max_bytes {
+            if bytes > max_bytes as f64 {
+                return AudioTrack::Corrupt;
+            }
+
+            let lead = lead as usize;
+
+            if lead > 0 {
                 for c in &mut channels {
                     c.splice(0..0, std::iter::repeat_n(0.0, lead));
                 }

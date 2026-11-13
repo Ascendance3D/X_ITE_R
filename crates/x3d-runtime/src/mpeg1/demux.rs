@@ -18,9 +18,10 @@ const START_SYSTEM_HEADER: u8 = 0xBB;
 pub struct Demuxed {
     /// The video elementary stream: the payloads of the packets of the first video stream, concatenated.
     pub video: Vec<u8>,
-    /// Presentation time of the first video packet that has one, in seconds.
+    /// The earliest presentation time stamp of the first video stream, in seconds (the minimum over its packets: with
+    /// reordered pictures the first packet in file order need not be the first picture shown).
     pub first_video_pts: Option<f64>,
-    /// Presentation time of the first packet of the first audio stream that has one, in seconds.
+    /// The earliest presentation time stamp of the first audio stream, in seconds.
     pub first_audio_pts: Option<f64>,
     /// Does the stream carry an audio stream?
     pub has_audio: bool,
@@ -49,9 +50,17 @@ fn time_stamp(b: &[u8]) -> Option<f64> {
     Some(t as f64 / 90_000.0)
 }
 
+/// The smaller of two optional time stamps.
+fn earliest(a: Option<f64>, b: Option<f64>) -> Option<f64> {
+    match (a, b) {
+        (Some(a), Some(b)) => Some(a.min(b)),
+        _ => a.or(b),
+    }
+}
+
 /// The start of the video and of the audio on the movie's time line, in seconds: `(video lead, audio lead)`.
 ///
-/// The time line starts at the earlier of the two first presentation time stamps, as ffmpeg's start time of the file
+/// The time line starts at the earlier of the two streams' earliest presentation time stamps, as ffmpeg's start time of the file
 /// (the minimum of the stream start times) does, so the stream that starts later is delayed by the difference and
 /// nothing is cut. A stream without a time stamp, or a stream without audio, gives no lead (both start at 0). The pinned
 /// X_ITE cannot play MPEG-1, so the reference is the stream's time stamps (ffprobe `start_time`), not a recording.
@@ -131,9 +140,7 @@ pub fn demux(data: &[u8]) -> Result<Demuxed, Mpeg1Error> {
 
                         let (payload, pts) = packet(&data[start..end])?;
 
-                        if out.first_video_pts.is_none() {
-                            out.first_video_pts = pts;
-                        }
+                        out.first_video_pts = earliest(out.first_video_pts, pts);
 
                         out.video.extend_from_slice(payload);
                     } else if is_audio && audio_id.is_none_or(|a| a == id) {
@@ -141,9 +148,7 @@ pub fn demux(data: &[u8]) -> Result<Demuxed, Mpeg1Error> {
 
                         // A bad audio packet header costs the sound its packet, not the pictures theirs.
                         if let Ok((payload, pts)) = packet(&data[start..end]) {
-                            if out.first_audio_pts.is_none() {
-                                out.first_audio_pts = pts;
-                            }
+                            out.first_audio_pts = earliest(out.first_audio_pts, pts);
 
                             out.audio.extend_from_slice(payload);
                         }

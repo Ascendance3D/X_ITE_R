@@ -137,7 +137,8 @@ the `native-video` feature).
 Time line (2026-11-13): the movie's time line starts at the earlier of the first audio and first video time stamps, as ffmpeg's file
 start time (the minimum of the stream start times) does. The stream that starts later is delayed by the difference: leading silence
 for the audio, a longer first picture for the video. Nothing is cut (`mpeg1::demux::start_leads`). A stream without a time stamp gives no
-lead. Leading silence that does not fit in the decode budget is left out. The pinned X_ITE cannot play MPEG-1, so the reference is
+lead. The start of a stream is its earliest time stamp (the minimum over its packets, because reordered pictures need not
+start in file order). Leading silence that does not fit in the decode budget makes the track Corrupt: the sound is never shifted to 0. The pinned X_ITE cannot play MPEG-1, so the reference is
 ffprobe's `start_time` of each stream (ffmpeg 6.1.1): the four fixtures have their audio 10.0 to 25.1 ms before the video, and
 `the_first_time_stamps_equal_ffprobe_and_the_later_stream_is_delayed` checks the time stamps and the delayed pictures;
 `audio_that_starts_after_the_pictures_begins_with_silence` checks a hand-built stream whose audio starts 0.25 s later. Not done: Layer I (no decoder enabled: symphonia's `mp1` feature is a one-line change if it is
