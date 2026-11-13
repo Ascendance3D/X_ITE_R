@@ -25,6 +25,7 @@ export class AudioMirror
    #elements = new Map ();    // MediaStreamAudioDestinationNode -> the <audio> element that plays its stream
    #analyserData = new WeakMap (); // AnalyserNode -> the arrays readAnalysers fills
    #streams = new Map ();     // the stand-in GainNode of a MicrophoneSource -> its getUserMedia MediaStream
+   #enabled = new WeakMap (); // the stand-in GainNode of a MicrophoneSource -> `track .enabled` of its tracks (op "tracksEnabled")
 
    // `context`: the page's AudioContext. `read .buffer (index)`: [ sampleRate, ... Float32Array ] of an op's `{ buffer }`
    // argument; `read .bytes (index)`: the Uint8Array of its `{ encoded }` argument (the file an AudioBuffer was decoded from).
@@ -139,10 +140,21 @@ export class AudioMirror
          }
 
          this .#streams .set (standIn, mediaStream);
+         this .#setTracksEnabled (standIn, this .#enabled .get (standIn) ?? true);
       })
       .catch (error => console .error (error ?.message ?? String (error)));
 
       return standIn;
+   }
+
+   // MicrophoneSource.set_pause and set_resume: the tracks of the stream are disabled and enabled. A stream that comes
+   // later gets the state of its node.
+   #setTracksEnabled (standIn, enabled)
+   {
+      this .#enabled .set (standIn, enabled);
+
+      for (const track of this .#streams .get (standIn) ?.getTracks () ?? [ ])
+         track .enabled = enabled;
    }
 
    // Whether a node is still one of an engine's nodes.
@@ -272,6 +284,7 @@ export class AudioMirror
          case "compressor":  return make (context .createDynamicsCompressor ());
          case "analyser":    return make (context .createAnalyser ());
          case "microphone":   return make (this .#microphone (a [0]));
+         case "tracksEnabled": return this .#setTracksEnabled (node (), a [0]);
          case "splitter":    return make (context .createChannelSplitter (a [0]));
          case "merger":      return make (context .createChannelMerger (a [0]));
          case "panner":      return make (context .createPanner ());

@@ -1799,6 +1799,15 @@ impl AudioEngine {
         id
     }
 
+    /// MicrophoneSource.set_pause and set_resume: `track .enabled` of the stream's tracks. Only the page's stream has it
+    /// (op "tracksEnabled"); web-audio-api's MediaStreamAudioSourceNode has no track state, so a native node only
+    /// disconnects.
+    pub fn microphone_tracks_enabled(&mut self, id: AId, enabled: bool) {
+        if matches!(self.nodes.get(id.0), Some(Some(ANode::PageStreamSource(_)))) {
+            self.emit("tracksEnabled", vec![Arg::Int(id.0), Arg::Bool(enabled)]);
+        }
+    }
+
     /// The microphone: `new MediaStreamAudioSourceNode (audioContext, { mediaStream })` for the
     /// stream of getUserMedia. Only a realtime context can open one.
     pub fn microphone(&mut self, device_id: &str) -> Result<AId, String> {

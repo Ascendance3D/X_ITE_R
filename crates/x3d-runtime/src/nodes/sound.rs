@@ -1339,8 +1339,9 @@ impl Runtime {
         };
 
         if self.time_node_live(node) {
-            // disconnect; tracks disabled.
+            // disconnect; the tracks are disabled.
             self.audio().disconnect(source);
+            self.audio().microphone_tracks_enabled(source, false);
         } else {
             self.mic_set_stop(node, true);
         }
@@ -1356,6 +1357,7 @@ impl Runtime {
         };
         let target = self.snd(node).audio_source.unwrap();
         self.audio().connect(source, target);
+        self.audio().microphone_tracks_enabled(source, true);
     }
 
     fn mic_set_stop(&mut self, node: NodeId, restore: bool) {

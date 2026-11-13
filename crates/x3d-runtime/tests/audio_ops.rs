@@ -249,6 +249,36 @@ fn a_decoded_buffer_goes_to_the_page_as_the_file_it_came_from() {
     );
 }
 
+/// MicrophoneSource.set_pause and set_resume in a page: op "tracksEnabled" sets `track .enabled` of the page's stream; another
+/// node gives no op.
+#[test]
+fn a_page_microphone_records_the_enabled_state_of_its_tracks() {
+    let mut e = engine();
+    let mic = e.microphone("").unwrap();
+    let gain = e.gain(1.0);
+
+    e.take_ops();
+    e.microphone_tracks_enabled(mic, false);
+    e.microphone_tracks_enabled(mic, true);
+    e.microphone_tracks_enabled(gain, false);
+
+    let ops = e.take_ops();
+
+    assert_eq!(
+        ops.iter()
+            .map(|o| (o.name, o.args.clone()))
+            .collect::<Vec<_>>(),
+        vec![
+            ("tracksEnabled", vec![Arg::Int(mic.0), Arg::Bool(false)]),
+            ("tracksEnabled", vec![Arg::Int(mic.0), Arg::Bool(true)]),
+        ]
+    );
+    assert!(
+        to_json(&ops, &mut Payloads::default())
+            .contains(&format!(r#"["tracksEnabled",{},false]"#, mic.0))
+    );
+}
+
 /// MicrophoneSource.set_start in a page: the page asks getUserMedia itself (op "microphone" with the mediaDeviceID), so
 /// the engine gives a node in place of the stream; a native silent engine still has no device.
 #[test]
