@@ -1969,6 +1969,7 @@ fn emit(a: &Analysis, info: &LinkInfo) -> Result<Emitted, String> {
         })
         .collect();
     let loop_macros = loop_macros(text, boundary_line);
+    let loop_env = loop_env(text, masked, &toks);
     let mut i = 0;
 
     while i < toks.len() {
@@ -1984,6 +1985,10 @@ fn emit(a: &Analysis, info: &LinkInfo) -> Result<Emitted, String> {
             }
 
             if let Some(e) = loop_not_allowed(a, masked, &t, &loop_macros, &line_of) {
+                return Err(e);
+            }
+
+            if let Some(e) = for_loop_limits(a, &loop_env, masked, &toks, i, &line_of) {
                 return Err(e);
             }
         }
@@ -2409,6 +2414,437 @@ fn loop_not_allowed(
             line_of(t.start)
         )
     })
+}
+
+/// GLSL's operators of more than one character; `op_at` joins adjacent punctuation tokens into the longest of them.
+const MULTI_OPS: &[&str] = &[
+    "<<=", ">>=", "++", "--", "+=", "-=", "*=", "/=", "%=", "<=", ">=", "==", "!=", "&&", "||",
+    "^^", "<<", ">>", "&=", "|=", "^=",
+];
+
+/// The operator at token `k` and its number of tokens.
+fn op_at<'s>(masked: &'s str, toks: &[Tok], k: usize) -> Option<(&'s str, usize)> {
+    let t = toks.get(k)?;
+
+    if t.kind != Kind::Punct {
+        return None;
+    }
+
+    let mut end = k + 1;
+
+    while end < toks.len()
+        && end - k < 3
+        && toks[end].kind == Kind::Punct
+        && toks[end].start == toks[end - 1].end
+    {
+        end += 1;
+    }
+
+    (1..=end - k).rev().find_map(|n| {
+        let s = &masked[t.start..toks[k + n - 1].end];
+        (n == 1 || MULTI_OPS.contains(&s)).then_some((s, n))
+    })
+}
+
+/// What the Appendix A loop checks need to know of the whole source: the names of `const` variables, the `#define`
+/// bodies (and X_ITE's own `x3d_MaxLights`), the user's functions with the `out` / `inout` flag of each parameter.
+struct LoopEnv<'s> {
+    consts: HashSet<&'s str>,
+    macros: HashMap<&'s str, &'s str>,
+    functions: HashMap<&'s str, Vec<bool>>,
+}
+
+fn loop_env<'s>(text: &'s str, masked: &'s str, toks: &[Tok]) -> LoopEnv<'s> {
+    let word = |k: usize| toks.get(k).map_or("", |t| text_of(masked, t));
+    let mut consts = HashSet::new();
+    let mut macros: HashMap<&str, &str> = [
+        ("x3d_MaxLights", "8"),
+        ("GL_ES", "1"),
+        ("__VERSION__", "100"),
+    ]
+    .into_iter()
+    .collect();
+    let mut functions = HashMap::new();
+
+    for line in text.lines() {
+        let Some(rest) = line.trim_start().strip_prefix('#') else {
+            continue;
+        };
+        let Some(rest) = rest.trim_start().strip_prefix("define") else {
+            continue;
+        };
+
+        if rest.starts_with([' ', '\t']) {
+            let rest = rest.trim_start();
+            let end = rest
+                .find(|c: char| !(c.is_ascii_alphanumeric() || c == '_'))
+                .unwrap_or(rest.len());
+            macros.insert(&rest[..end], rest[end..].trim());
+        }
+    }
+
+    let mut braces = 0usize;
+
+    for k in 0..toks.len() {
+        match word(k) {
+            "{" => braces += 1,
+            "}" => braces = braces.saturating_sub(1),
+            "const" => {
+                // const [precision] type name [= value] [, name [= value]] ;
+                let mut j = k + 1;
+
+                while is_precision(word(j)) {
+                    j += 1;
+                }
+
+                j += 1;
+                let mut depth = 0usize;
+
+                if toks.get(j).is_some_and(|t| t.kind == Kind::Ident) {
+                    consts.insert(word(j));
+                }
+
+                while j < toks.len() {
+                    match word(j) {
+                        "(" | "[" => depth += 1,
+                        ")" | "]" => depth = depth.saturating_sub(1),
+                        "," if depth == 0 => {
+                            if toks.get(j + 1).is_some_and(|t| t.kind == Kind::Ident) {
+                                consts.insert(word(j + 1));
+                            }
+                        }
+                        ";" => break,
+                        _ => {}
+                    }
+
+                    j += 1;
+                }
+            }
+            "(" if braces == 0
+                && k >= 2
+                && toks[k - 1].kind == Kind::Ident
+                && toks[k - 2].kind == Kind::Ident =>
+            {
+                // A function prototype or definition at file scope: type name ( params ) { or ;
+                let mut params = vec![false];
+                let mut depth = 0usize;
+                let mut j = k;
+
+                while j < toks.len() {
+                    match word(j) {
+                        "(" => depth += 1,
+                        ")" => {
+                            depth -= 1;
+
+                            if depth == 0 {
+                                break;
+                            }
+                        }
+                        "," if depth == 1 => params.push(false),
+                        "out" | "inout" if depth == 1 => *params.last_mut().unwrap() = true,
+                        _ => {}
+                    }
+
+                    j += 1;
+                }
+
+                if matches!(word(j + 1), "{" | ";") {
+                    functions.entry(word(k - 1)).or_insert(params);
+                }
+            }
+            _ => {}
+        }
+    }
+
+    LoopEnv {
+        consts,
+        macros,
+        functions,
+    }
+}
+
+/// Whether the tokens `range` are a constant expression for ANGLE: numbers, `true` / `false`, `const` variables,
+/// `gl_Max*` constants, macros with a constant body, and calls of constructors and built-in functions (a call of the
+/// user's function is not constant). Any other name (a uniform, a local variable, a loop index) is not.
+fn is_constant(
+    env: &LoopEnv,
+    masked: &str,
+    toks: &[Tok],
+    range: (usize, usize),
+    depth: u32,
+) -> bool {
+    (range.0..range.1).all(|k| {
+        let t = &toks[k];
+        let w = text_of(masked, t);
+
+        if t.kind != Kind::Ident
+            || matches!(w, "true" | "false")
+            || w.starts_with("gl_Max")
+            || env.consts.contains(w)
+            || (k > range.0 && text_of(masked, &toks[k - 1]) == ".")
+        {
+            return true;
+        }
+
+        if let Some(body) = env.macros.get(w) {
+            let body_toks = lex(body);
+            return depth < 8
+                && is_constant(env, body, &body_toks, (0, body_toks.len()), depth + 1);
+        }
+
+        toks.get(k + 1).is_some_and(|n| text_of(masked, n) == "(") && !env.functions.contains_key(w)
+    })
+}
+
+/// GLSL ES 1.00 Appendix A section 4: ANGLE (ValidateLimitations) accepts a `for` loop in a WebGL shader of version
+/// 1.00 only in this form, and reports the first difference (errors-for-runtime cases):
+///
+/// - init: one declaration `int|float index = constant` (`'for' : Invalid init declaration`, `'<type>' : Invalid type
+///   for loop index`, `'<index>' : Loop index cannot be initialized with non-constant expression`);
+/// - condition: `index relop constant` (`'for' : Missing condition`, `'for' : Invalid condition`, `'<index>' : Loop
+///   index cannot be compared with non-constant expression`); a condition without a comparison is left to the bool
+///   check of the condition;
+/// - expression: `++` / `--` or `+=` / `-=` a constant (`'for' : Missing expression`, `'<op>' : Invalid operator`,
+///   `'<index>' : Loop index cannot be modified by non-constant expression`);
+/// - body: no assignment to the index, also not as an `out` / `inout` argument (`'<index>' : Loop index cannot be
+///   statically assigned to within the body of the loop`).
+///
+/// `i` is the `for` token. GLSL ES 3.00 has no such limits.
+fn for_loop_limits(
+    a: &Analysis,
+    env: &LoopEnv,
+    masked: &str,
+    toks: &[Tok],
+    i: usize,
+    line_of: &dyn Fn(usize) -> usize,
+) -> Option<String> {
+    let word = |k: usize| toks.get(k).map_or("", |t| text_of(masked, t));
+
+    if a.es3 || word(i) != "for" || word(i + 1) != "(" {
+        return None;
+    }
+
+    let line = |k: usize| line_of(toks[k].start);
+    let err = |k: usize, token: &str, message: &str| {
+        Some(format!("ERROR: 0:{}: '{token}' : {message}", line(k)))
+    };
+
+    // The header: ( init ; condition ; expression ).
+    let mut depth = 0usize;
+    let mut semis = vec![];
+    let mut close = None;
+
+    for k in i + 1..toks.len() {
+        match word(k) {
+            "(" | "[" | "{" => depth += 1,
+            ")" | "]" | "}" => {
+                depth -= 1;
+
+                if depth == 0 {
+                    close = Some(k);
+                    break;
+                }
+            }
+            ";" if depth == 1 => semis.push(k),
+            _ => {}
+        }
+    }
+
+    let close = close?;
+    let [s1, s2] = semis[..] else { return None };
+    let depth0 = |range: (usize, usize)| {
+        let mut d = 0usize;
+        let mut out = vec![];
+
+        for k in range.0..range.1 {
+            match word(k) {
+                "(" | "[" => d += 1,
+                ")" | "]" => d = d.saturating_sub(1),
+                _ if d == 0 => out.push(k),
+                _ => {}
+            }
+        }
+
+        out
+    };
+
+    // Init.
+    let mut k = i + 2;
+
+    while k < s1 && is_precision(word(k)) {
+        k += 1;
+    }
+
+    let is_ident = |k: usize| k < toks.len() && toks[k].kind == Kind::Ident;
+
+    if !(k + 2 < s1 && is_ident(k) && is_ident(k + 1) && word(k + 2) == "=")
+        || depth0((k + 3, s1)).iter().any(|&j| word(j) == ",")
+    {
+        return err(i, "for", "Invalid init declaration");
+    }
+
+    if !matches!(word(k), "int" | "float") {
+        return err(k, word(k), "Invalid type for loop index");
+    }
+
+    let index = word(k + 1);
+
+    if !is_constant(env, masked, toks, (k + 3, s1), 0) {
+        return err(
+            k + 1,
+            index,
+            "Loop index cannot be initialized with non-constant expression",
+        );
+    }
+
+    // Condition.
+    if s1 + 1 == s2 {
+        return err(i, "for", "Missing condition");
+    }
+
+    let top: Vec<(usize, &str)> = depth0((s1 + 1, s2))
+        .into_iter()
+        .filter_map(|j| op_at(masked, toks, j).map(|(op, _)| (j, op)))
+        .collect();
+    let relational: Vec<usize> = top
+        .iter()
+        .filter(|(_, op)| matches!(*op, "<" | ">" | "<=" | ">=" | "==" | "!="))
+        .map(|(j, _)| *j)
+        .collect();
+    let logical = top
+        .iter()
+        .any(|(_, op)| matches!(*op, "&&" | "||" | "^^" | "?"));
+
+    if relational.is_empty() && !logical {
+        return None;
+    }
+
+    if logical || relational.len() != 1 || relational[0] != s1 + 2 || word(s1 + 1) != index {
+        return err(i, "for", "Invalid condition");
+    }
+
+    let (_, op_len) = op_at(masked, toks, s1 + 2)?;
+
+    if !is_constant(env, masked, toks, (s1 + 2 + op_len, s2), 0) {
+        return err(
+            s1 + 1,
+            index,
+            "Loop index cannot be compared with non-constant expression",
+        );
+    }
+
+    // Expression.
+    if s2 + 1 == close {
+        return err(i, "for", "Missing expression");
+    }
+
+    if word(s2 + 1) == index {
+        let (op, n) = op_at(masked, toks, s2 + 2)?;
+
+        match op {
+            "++" | "--" if s2 + 2 + n == close => {}
+            "+=" | "-=" => {
+                if !is_constant(env, masked, toks, (s2 + 2 + n, close), 0) {
+                    return err(
+                        s2 + 1,
+                        index,
+                        "Loop index cannot be modified by non-constant expression",
+                    );
+                }
+            }
+            _ => return err(s2 + 2, op, "Invalid operator"),
+        }
+    } else if !matches!(op_at(masked, toks, s2 + 1), Some(("++" | "--", 2)))
+        || word(s2 + 3) != index
+        || s2 + 4 != close
+    {
+        return None;
+    }
+
+    // Body: a block, or one statement up to its `;`.
+    let mut end = close + 1;
+    let mut depth = 0usize;
+
+    while end < toks.len() {
+        match word(end) {
+            "(" | "[" | "{" => depth += 1,
+            ")" | "]" | "}" => {
+                depth = depth.saturating_sub(1);
+
+                if depth == 0 && word(close + 1) == "{" {
+                    break;
+                }
+            }
+            ";" if depth == 0 => break,
+            _ => {}
+        }
+
+        end += 1;
+    }
+
+    for k in close + 1..end.min(toks.len()) {
+        if word(k) != index || toks[k].kind != Kind::Ident || word(k - 1) == "." {
+            continue;
+        }
+
+        let before = k >= 2 && matches!(op_at(masked, toks, k - 2), Some(("++" | "--", 2)));
+        let after = op_at(masked, toks, k + 1).is_some_and(|(op, _)| {
+            matches!(
+                op,
+                "=" | "++"
+                    | "--"
+                    | "+="
+                    | "-="
+                    | "*="
+                    | "/="
+                    | "%="
+                    | "<<="
+                    | ">>="
+                    | "&="
+                    | "|="
+                    | "^="
+            )
+        });
+        let out_argument =
+            matches!(word(k - 1), "(" | ",") && matches!(word(k + 1), ")" | ",") && {
+                // The call around the argument and the argument's position.
+                let mut d = 0usize;
+                let mut position = 0usize;
+                let mut j = k;
+
+                loop {
+                    j -= 1;
+
+                    match word(j) {
+                        ")" | "]" => d += 1,
+                        "(" | "[" if d > 0 => d -= 1,
+                        "(" => break,
+                        "," if d == 0 => position += 1,
+                        _ => {}
+                    }
+
+                    if j == 0 {
+                        break;
+                    }
+                }
+
+                j > 0
+                    && env
+                        .functions
+                        .get(word(j - 1))
+                        .is_some_and(|p| p.get(position).copied().unwrap_or(false))
+            };
+
+        if before || after || out_argument {
+            return err(
+                k,
+                index,
+                "Loop index cannot be statically assigned to within the body of the loop",
+            );
+        }
+    }
+
+    None
 }
 
 /// The `#define`s of the user's source (the lines from `boundary_line`) whose expansion has a `while` or a `do`, with
