@@ -137,6 +137,34 @@ fn macros_that_are_not_loops() {
     }
 }
 
+/// ANGLE reports the errors of a source in source order. Recorded with pinned X_ITE (Chrome 156.0.8078.47, 2026-11-13):
+/// a float `if` condition on the line before a `while` gives the bool error, and a `while` before it gives the loop
+/// error. A vertex `while` gives the loop error as a fragment one does.
+#[test]
+fn errors_in_source_order() {
+    assert_eq!(
+        rust("\nprecision mediump float;\nvoid main() { float x = 1.0;\n if (x) { x = 0.5; }\n while (x > 0.5) { x = 0.0; }\n gl_FragColor = vec4 (x); }\n").as_deref(),
+        Some("ERROR: 0:4: '' : boolean expression expected")
+    );
+    assert_eq!(
+        rust("\nprecision mediump float;\nvoid main() { float x = 1.0;\n while (x > 0.5) { x = 0.0; }\n if (x) { x = 0.5; }\n gl_FragColor = vec4 (x); }\n").as_deref(),
+        Some("ERROR: 0:4: 'while' : This type of loop is not allowed")
+    );
+
+    let vertex = "\nattribute vec4 x3d_Vertex;\nuniform mat4 x3d_ProjectionMatrix;\nuniform mat4 x3d_ModelViewMatrix;\nvarying vec3 vN;\nvarying vec3 vP;\nvarying vec2 vT;\nvarying vec4 vC;\nvoid main() { float s = 0.0;\n while (s < 1.0) { s += 1.0; }\n vN = vec3 (s); vP = vec3 (0.0); vT = vec2 (0.0); vC = vec4 (1.0);\n gl_Position = x3d_ProjectionMatrix * x3d_ModelViewMatrix * x3d_Vertex; }\n";
+
+    assert_eq!(
+        compile_part(
+            Stage::Vertex,
+            &x3d_runtime::nodes::shader_include::process(vertex),
+            &[]
+        )
+        .err()
+        .as_deref(),
+        Some("ERROR: 0:10: 'while' : This type of loop is not allowed")
+    );
+}
+
 /// GLSL ES 3.00 has no Appendix A: while and do-while compile.
 #[test]
 fn es3_keeps_while_and_do() {
