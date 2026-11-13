@@ -60,7 +60,7 @@ recorded three times and the three runs were identical.
 On ANGLE Metal, the pinned page's out-of-range GLSL write gives the same result as on the RTX 3060 Ti: the same hits are stored
 and the same pair is picked. The clamp is therefore measured on Metal, and the port matches it. The Metal records are not
 committed: they differ only by float rounding, and `rea_b17` reads only the NVIDIA baseline. The 27 records are kept in the lane
-report (combined SHA-256 `cb1ed3a20b0466edc012dbd4362ab756858463886200228170b3d8a683c1d3cb`).
+report (`sha256sum * | sha256sum` in the record directory: `4bdaf4293387a8e66d6f393682eb145671fcc61044d8d4a6e7f2ac2f392cd281`).
 
 Limit: the reference browser is Chrome 156.0.8078.47 (owner decision 2026-11-12). The Mac had Chrome 157.0.8103.52, so this is a
 measurement on Metal with the next Chrome version, not a run of the reference browser. The `rea_b16` cases other than
